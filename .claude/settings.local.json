@@ -42,7 +42,13 @@
       "Bash(curl -s https://karelhlas.vercel.app/)",
       "Bash(curl -s -o /dev/null -w \"robots HTTP %{http_code}\\\\n\" https://karelhlas.vercel.app/robots.txt)",
       "Bash(curl -s -o /dev/null -w \"sitemap HTTP %{http_code}\\\\n\" https://karelhlas.vercel.app/sitemap.xml)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(curl -s -o /dev/null -w \"opengraph-image HTTP %{http_code}\\\\n\" https://karelhlas.vercel.app/opengraph-image)",
+      "Bash(rm -rf p s)",
+      "Bash(mkdir -p p s)",
+      "Bash(unzip -o \"/Users/karlik-macbook/Desktop/TP_2025–26/INF_1P.xlsx\" \"xl/*\" -d /tmp/p)",
+      "Bash(unzip -o \"/Users/karlik-macbook/Desktop/TP_2025–26/INF_1S.xlsx\" \"xl/*\" -d /tmp/s)",
+      "Bash(node /tmp/parse2.js /tmp/p)"
     ]
   }
 }
