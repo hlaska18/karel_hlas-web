@@ -1,0 +1,43 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm --version)",
+      "Bash(npm install *)",
+      "Bash(npm run *)",
+      "mcp__Claude_Preview__preview_start",
+      "Bash(sips -Z 1600 -s formatOptions 72 karel.JPG --out karel-web.jpg)",
+      "Bash(rm -f karel.JPG)",
+      "Bash(mv karel-web.jpg karel.jpg)",
+      "Bash(command -v exiftool)",
+      "Bash(exiftool -all= -overwrite_original karel.jpg)",
+      "Bash(python3 -c \"import PIL\")",
+      "Bash(python3 -)",
+      "Bash(sips -s format png karel.jpg --out _tmp.png)",
+      "Bash(sips -s format jpeg -s formatOptions 78 _tmp.png --out karel.jpg)",
+      "Bash(node -e ' *)",
+      "Bash(rm -rf /tmp/tp)",
+      "Bash(mkdir -p /tmp/tp)",
+      "Bash(unzip -o /Users/karlik-macbook/Desktop/TP_2025–26/INF_1L.xlsx xl/*)",
+      "Bash(node /tmp/parse_xlsx.js)",
+      "Bash(npx tsc *)",
+      "Bash(xargs kill -9)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}, %{size_download} bytes\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/)",
+      "Bash(curl -s --retry 20 --retry-delay 1 --retry-connrefused -o /dev/null -w \"Server odpovídá: HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s --retry 20 --retry-delay 1 --retry-connrefused -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s --retry 25 --retry-delay 1 --retry-connrefused -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s --retry 25 --retry-delay 1 --retry-connrefused -o /dev/null -w \"homepage HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s http://localhost:3000/robots.txt)",
+      "Bash(curl -s http://localhost:3000/sitemap.xml)",
+      "Bash(curl -s -o /tmp/og.png -w \"og-image HTTP %{http_code}, %{content_type}, %{size_download} bytes\\\\n\" http://localhost:3000/opengraph-image)",
+      "Bash(git --version)",
+      "Bash(command -v gh)",
+      "Bash(gh --version)",
+      "Bash(gh auth *)",
+      "Bash(git init *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(command -v brew)"
+    ]
+  }
+}
