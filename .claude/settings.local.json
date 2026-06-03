@@ -48,7 +48,12 @@
       "Bash(mkdir -p p s)",
       "Bash(unzip -o \"/Users/karlik-macbook/Desktop/TP_2025–26/INF_1P.xlsx\" \"xl/*\" -d /tmp/p)",
       "Bash(unzip -o \"/Users/karlik-macbook/Desktop/TP_2025–26/INF_1S.xlsx\" \"xl/*\" -d /tmp/s)",
-      "Bash(node /tmp/parse2.js /tmp/p)"
+      "Bash(node /tmp/parse2.js /tmp/p)",
+      "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s --retry 30 --retry-delay 1 --retry-connrefused --max-time 90 -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s --max-time 20 http://localhost:3000/)",
+      "Bash(curl -s --retry 40 --retry-delay 1 --retry-connrefused --max-time 120 -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
+      "Bash(curl -s --max-time 30 http://localhost:3000/)"
     ]
   }
 }
