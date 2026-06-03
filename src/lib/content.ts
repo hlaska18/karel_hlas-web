@@ -11,8 +11,10 @@ export const SITE = {
   name: "Karel Hlas",
   fullName: "Mgr. Karel Hlas",
   initials: "KH",
-  domain: "karelhlas.xyz",
-  url: "https://karelhlas.xyz",
+  // Web zatím běží zdarma na Vercelu. Až koupíš doménu karelhlas.xyz,
+  // vrať tyto dvě hodnoty na "karelhlas.xyz" a přidej doménu ve Vercelu.
+  domain: "karelhlas.vercel.app",
+  url: "https://karelhlas.vercel.app",
   email: "hlas@sps-tabor.cz",
   phoneDisplay: "381 500 025",
   phoneHref: "+420381500025",

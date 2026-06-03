@@ -80,7 +80,7 @@ export default function OpengraphImage() {
             }}
           />
           <div style={{ display: "flex", fontSize: "34px", color: "#d1fae5" }}>
-            karelhlas.xyz
+            karelhlas.vercel.app
           </div>
         </div>
       </div>
