@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FileText,
   Presentation,
@@ -13,7 +13,7 @@ import {
   ChevronDown,
 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { COURSES, type Material, type Lang, type CurriculumItem } from "@/lib/content";
+import { COURSES, type Material, type Lang, type CurriculumItem, type Course } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
 
@@ -104,29 +104,63 @@ export function Curriculum() {
           )}
         </Reveal>
 
-        {/* časové osy – plynulé „roztažení" přes CSS grid-rows (bez JS knihovny) */}
+        {/* časové osy – obsah se renderuje až po otevření (menší HTML = rychlejší načtení) */}
         <div>
-          {COURSES.map((course) => {
-            const open = openId === course.id;
-            return (
-              <div
-                key={course.id}
-                id={`osa-${course.id}`}
-                className={`grid transition-[grid-template-rows] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-                  open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-                }`}
-              >
-                <div className="overflow-hidden">
-                  <Timeline items={course.items} l={l} lang={lang} />
-                </div>
-              </div>
-            );
-          })}
+          {COURSES.map((course) => (
+            <CourseTimeline
+              key={course.id}
+              course={course}
+              open={openId === course.id}
+              l={l}
+              lang={lang}
+            />
+          ))}
         </div>
 
         <SectionJump href="#top" label={tr.footer.top} direction="up" />
       </div>
     </section>
+  );
+}
+
+function CourseTimeline({
+  course,
+  open,
+  l,
+  lang,
+}: {
+  course: Course;
+  open: boolean;
+  l: ReturnType<typeof useLang>["tr"]["lessons"];
+  lang: Lang;
+}) {
+  // Obsah se připojí až po otevření (menší výchozí HTML). Rozbalení je plynulé
+  // díky CSS grid-rows: po připojení obsahu přepneme na 1fr v dalším snímku.
+  const [mounted, setMounted] = useState(false);
+  const [grown, setGrown] = useState(false);
+
+  useEffect(() => {
+    if (open) {
+      setMounted(true);
+      const r = requestAnimationFrame(() => requestAnimationFrame(() => setGrown(true)));
+      return () => cancelAnimationFrame(r);
+    }
+    setGrown(false);
+    const t = setTimeout(() => setMounted(false), 850);
+    return () => clearTimeout(t);
+  }, [open]);
+
+  return (
+    <div
+      id={`osa-${course.id}`}
+      className={`grid transition-[grid-template-rows] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        grown ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+      }`}
+    >
+      <div className="overflow-hidden">
+        {mounted && <Timeline items={course.items} l={l} lang={lang} />}
+      </div>
+    </div>
   );
 }
 
