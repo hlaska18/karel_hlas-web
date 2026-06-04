@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import {
   FileText,
   Presentation,
@@ -38,7 +37,6 @@ export function Curriculum() {
   const { lang, tr } = useLang();
   const l = tr.lessons;
   const [openId, setOpenId] = useState<string | null>(null);
-  const openCourse = COURSES.find((c) => c.id === openId) ?? null;
 
   return (
     <section id="vyuka" className="relative py-10 sm:py-14">
@@ -72,7 +70,7 @@ export function Curriculum() {
                   type="button"
                   onClick={() => setOpenId(open ? null : course.id)}
                   aria-expanded={open}
-                  aria-controls="vyuka-osa"
+                  aria-controls={`osa-${course.id}`}
                   className={`group flex items-center gap-4 rounded-2xl px-5 py-4 text-left transition duration-300 hover:-translate-y-0.5 ${
                     open ? "glass-accent" : "glass"
                   }`}
@@ -106,25 +104,25 @@ export function Curriculum() {
           )}
         </Reveal>
 
-        {/* časová osa – vždy viditelná po otevření */}
-        <AnimatePresence initial={false}>
-          {openCourse && (
-            <motion.div
-              key={openCourse.id}
-              id="vyuka-osa"
-              initial={{ height: 0, opacity: 0 }}
-              animate={{ height: "auto", opacity: 1 }}
-              exit={{ height: 0, opacity: 0 }}
-              transition={{
-                height: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
-                opacity: { duration: 0.6, ease: "easeOut" },
-              }}
-              className="overflow-hidden"
-            >
-              <Timeline items={openCourse.items} l={l} lang={lang} />
-            </motion.div>
-          )}
-        </AnimatePresence>
+        {/* časové osy – plynulé „roztažení" přes CSS grid-rows (bez JS knihovny) */}
+        <div>
+          {COURSES.map((course) => {
+            const open = openId === course.id;
+            return (
+              <div
+                key={course.id}
+                id={`osa-${course.id}`}
+                className={`grid transition-[grid-template-rows] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+                  open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+                }`}
+              >
+                <div className="overflow-hidden">
+                  <Timeline items={course.items} l={l} lang={lang} />
+                </div>
+              </div>
+            );
+          })}
+        </div>
 
         <SectionJump href="#top" label={tr.footer.top} direction="up" />
       </div>
@@ -142,25 +140,9 @@ function Timeline({
   lang: Lang;
 }) {
   return (
-    <motion.ol
-      className="relative mt-12 ml-1.5 border-l border-black/10 dark:border-white/10"
-      initial="hidden"
-      animate="show"
-      variants={{ show: { transition: { staggerChildren: 0.22, delayChildren: 0.25 } } }}
-    >
+    <ol className="relative mt-10 ml-1.5 border-l border-black/10 dark:border-white/10">
       {items.map((item, i) => (
-        <motion.li
-          key={i}
-          variants={{
-            hidden: { opacity: 0, y: 24 },
-            show: {
-              opacity: 1,
-              y: 0,
-              transition: { duration: 0.7, ease: [0.22, 1, 0.36, 1] },
-            },
-          }}
-          className="relative pb-12 pl-8 last:pb-0 sm:pl-12"
-        >
+        <li key={i} className="relative pb-12 pl-8 last:pb-0 sm:pl-12">
           <span
             aria-hidden
             className="absolute -left-[7px] top-1.5 h-3.5 w-3.5 rounded-full bg-accent-500 ring-4 ring-[var(--bg)]"
@@ -249,8 +231,8 @@ function Timeline({
               )}
             </div>
           </div>
-        </motion.li>
+        </li>
       ))}
-    </motion.ol>
+    </ol>
   );
 }
