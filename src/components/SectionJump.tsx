@@ -17,7 +17,7 @@ export function SectionJump({
   return (
     <a
       href={href}
-      className="mt-10 flex w-fit items-center gap-2 text-xs font-medium uppercase tracking-widest text-zinc-400 transition hover:text-accent-600 dark:text-zinc-500 dark:hover:text-accent-400 sm:mt-12"
+      className="mt-10 flex w-fit items-center gap-2 text-xs font-medium uppercase tracking-widest text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400 dark:hover:text-accent-400 sm:mt-12"
     >
       <Icon className="h-4 w-4 animate-bounce" />
       {label}

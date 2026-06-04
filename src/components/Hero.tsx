@@ -67,7 +67,7 @@ export function Hero() {
       {/* Scroll indikátor */}
       <a
         href="#about"
-        className="container-page hidden items-center gap-2 pb-10 text-xs font-medium uppercase tracking-widest text-zinc-400 transition hover:text-accent-600 dark:hover:text-accent-400 sm:flex"
+        className="container-page hidden items-center gap-2 pb-10 text-xs font-medium uppercase tracking-widest text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400 dark:hover:text-accent-400 sm:flex"
       >
         <ArrowDown className="h-4 w-4 animate-bounce" />
         {tr.hero.scroll}

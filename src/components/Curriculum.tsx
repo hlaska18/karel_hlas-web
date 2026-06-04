@@ -88,7 +88,7 @@ export function Curriculum() {
                   </span>
                   <ChevronDown
                     className={`h-5 w-5 shrink-0 transition-transform duration-300 ${
-                      open ? "rotate-180 text-accent-600 dark:text-accent-400" : "text-zinc-400"
+                      open ? "rotate-180 text-accent-600 dark:text-accent-400" : "text-zinc-500"
                     }`}
                   />
                 </button>
@@ -191,7 +191,7 @@ function Timeline({
           </h3>
 
           {item.goal[lang] && (
-            <p className="mt-2 flex items-start gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-2 flex items-start gap-2 text-sm text-zinc-600 dark:text-zinc-400">
               <Target className="mt-0.5 h-4 w-4 shrink-0 text-accent-500" />
               <span>
                 <span className="font-semibold text-zinc-600 dark:text-zinc-300">
@@ -246,7 +246,7 @@ function Timeline({
                             <ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
                           </a>
                         ) : (
-                          <span className="flex items-center gap-3 rounded-xl border border-dashed border-black/10 px-3.5 py-2.5 text-sm text-zinc-400 dark:border-white/10 dark:text-zinc-500">
+                          <span className="flex items-center gap-3 rounded-xl border border-dashed border-black/10 px-3.5 py-2.5 text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
                             <MaterialIcon kind={mat.kind} />
                             <span className="flex-1">{mat.label[lang]}</span>
                             <span className="rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:bg-white/10 dark:text-zinc-400">
@@ -259,7 +259,7 @@ function Timeline({
                   })}
                 </ul>
               ) : (
-                <p className="mt-3 rounded-xl border border-dashed border-black/10 px-3.5 py-3 text-sm text-zinc-400 dark:border-white/10 dark:text-zinc-500">
+                <p className="mt-3 rounded-xl border border-dashed border-black/10 px-3.5 py-3 text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
                   {l.noMaterials}
                 </p>
               )}

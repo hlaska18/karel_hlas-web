@@ -1,14 +1,9 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Space_Grotesk } from "next/font/google";
+import { Space_Grotesk } from "next/font/google";
+import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { SITE, SOCIALS } from "@/lib/content";
-
-const inter = Inter({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-sans",
-  display: "swap",
-});
 
 const display = Space_Grotesk({
   subsets: ["latin", "latin-ext"],
@@ -103,7 +98,7 @@ export default function RootLayout({
   return (
     <html lang="cs" suppressHydrationWarning>
       <body
-        className={`${inter.variable} ${display.variable} font-sans antialiased selection:bg-accent-500 selection:text-white`}
+        className={`${display.variable} font-sans antialiased selection:bg-accent-500 selection:text-white`}
       >
         <a
           href="#main"
@@ -116,6 +111,7 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
+        <Analytics />
       </body>
     </html>
   );
