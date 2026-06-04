@@ -19,7 +19,10 @@ function kindFromExt(ext: string): Material["kind"] {
     [".py", ".js", ".ts", ".tsx", ".ipynb", ".html", ".css", ".json", ".zip", ".java", ".c", ".cpp", ".sql"].includes(e)
   )
     return "code";
-  if ([".pdf", ".doc", ".docx", ".odt", ".txt", ".rtf", ".xls", ".xlsx", ".csv"].includes(e)) return "doc";
+  if (
+    [".pdf", ".doc", ".docx", ".odt", ".txt", ".rtf", ".xls", ".xlsx", ".xlsm", ".csv", ".accdb"].includes(e)
+  )
+    return "doc";
   return "link";
 }
 
@@ -29,10 +32,8 @@ function isHidden(name: string): boolean {
 
 function cleanLabel(file: string): string {
   const ext = path.extname(file);
-  const base = file
-    .slice(0, file.length - ext.length)
-    .replace(/^\d+[\s._-]+/, "")
-    .trim();
+  // podtržítka → mezery (čísla úloh ponecháváme, slouží i k řazení)
+  const base = file.slice(0, file.length - ext.length).replace(/_/g, " ").trim();
   return base || file;
 }
 

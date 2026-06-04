@@ -1,0 +1,500 @@
+Datum;Kód zákazníka;Zboží;Kategorie zboží;Tržba;Název dne týdne;Jméno prodávajícího
+10.03.2019;SK005;Banány;Tropické ovoce;7 565 Kè;nedìle;Eva
+11.03.2019;SK003;Banány;Tropické ovoce;8 908 Kè;pondìlí;Beáta
+12.03.2019;PO001;Banány;Tropické ovoce;11 111 Kè;úterý;Dana
+13.03.2019;SK005;Banány;Tropické ovoce;11 150 Kè;støeda;Cyril
+14.03.2019;SK005;Banány;Tropické ovoce;10 247 Kè;ètvrtek;Cyril
+15.03.2019;CZ004;Banány;Tropické ovoce;9 973 Kè;pátek;Cyril
+15.03.2019;SK003;Banány;Tropické ovoce;10 083 Kè;pátek;Beáta
+15.03.2019;GE003;Banány;Tropické ovoce;10 864 Kè;pátek;Dana
+15.03.2019;CZ002;Banány;Tropické ovoce;9 840 Kè;pátek;Beáta
+16.03.2019;GE001;Banány;Tropické ovoce;9 008 Kè;sobota;Beáta
+16.03.2019;CZ001;Banány;Tropické ovoce;9 224 Kè;sobota;Cyril
+17.03.2019;PO003;Banány;Tropické ovoce;9 907 Kè;nedìle;Beáta
+18.03.2019;CZ004;Banány;Tropické ovoce;10 623 Kè;pondìlí;Eva
+18.03.2019;CZ005;Banány;Tropické ovoce;11 297 Kè;pondìlí;Adam
+18.03.2019;SK003;Banány;Tropické ovoce;10 983 Kè;pondìlí;Adam
+19.03.2019;SK001;Banány;Tropické ovoce;11 070 Kè;úterý;Beáta
+19.03.2019;SK004;Banány;Tropické ovoce;9 855 Kè;úterý;Beáta
+20.03.2019;SK003;Banány;Tropické ovoce;9 035 Kè;støeda;Beáta
+20.03.2019;CZ002;Banány;Tropické ovoce;9 714 Kè;støeda;Eva
+20.03.2019;GE002;Banány;Tropické ovoce;11 938 Kè;støeda;Cyril
+20.03.2019;PO002;Banány;Tropické ovoce;10 169 Kè;støeda;Beáta
+20.03.2019;PO002;Banány;Tropické ovoce;10 015 Kè;støeda;Beáta
+20.03.2019;SK003;Banány;Tropické ovoce;8 404 Kè;støeda;Cyril
+21.03.2019;CZ005;Banány;Tropické ovoce;8 766 Kè;ètvrtek;Eva
+22.03.2019;PO001;Banány;Tropické ovoce;10 383 Kè;pátek;Cyril
+24.03.2019;SK005;Banány;Tropické ovoce;10 597 Kè;nedìle;Cyril
+24.03.2019;PO002;Banány;Tropické ovoce;8 931 Kè;nedìle;Eva
+24.03.2019;GE001;Banány;Tropické ovoce;9 975 Kè;nedìle;Adam
+25.03.2019;CZ002;Banány;Tropické ovoce;9 264 Kè;pondìlí;Beáta
+25.03.2019;PO001;Banány;Tropické ovoce;7 418 Kè;pondìlí;Cyril
+25.03.2019;SK001;Banány;Tropické ovoce;10 432 Kè;pondìlí;Adam
+25.03.2019;CZ001;Banány;Tropické ovoce;10 056 Kè;pondìlí;Beáta
+26.03.2019;SK005;Banány;Tropické ovoce;8 937 Kè;úterý;Beáta
+26.03.2019;CZ002;Banány;Tropické ovoce;10 022 Kè;úterý;Eva
+27.03.2019;CZ002;Banány;Tropické ovoce;10 140 Kè;støeda;Cyril
+27.03.2019;CZ005;Banány;Tropické ovoce;8 997 Kè;støeda;Beáta
+28.03.2019;GE001;Banány;Tropické ovoce;8 809 Kè;ètvrtek;Beáta
+29.03.2019;GE001;Banány;Tropické ovoce;10 510 Kè;pátek;Cyril
+29.03.2019;SK003;Banány;Tropické ovoce;11 171 Kè;pátek;Beáta
+30.03.2019;GE002;Banány;Tropické ovoce;9 086 Kè;sobota;Cyril
+31.03.2019;SK002;Banány;Tropické ovoce;9 122 Kè;nedìle;Cyril
+01.04.2019;CZ003;Banány;Tropické ovoce;10 851 Kè;pondìlí;Dana
+02.04.2019;PO001;Banány;Tropické ovoce;11 282 Kè;úterý;Cyril
+04.04.2019;CZ004;Banány;Tropické ovoce;9 829 Kè;ètvrtek;Beáta
+06.04.2019;PO001;Banány;Tropické ovoce;9 425 Kè;sobota;Beáta
+06.04.2019;PO001;Banány;Tropické ovoce;10 079 Kè;sobota;Adam
+06.04.2019;GE003;Banány;Tropické ovoce;10 189 Kè;sobota;Dana
+07.04.2019;GE001;Banány;Tropické ovoce;8 926 Kè;nedìle;Beáta
+07.04.2019;CZ004;Banány;Tropické ovoce;9 592 Kè;nedìle;Eva
+09.04.2019;PO001;Banány;Tropické ovoce;9 852 Kè;úterý;Beáta
+09.04.2019;CZ002;Banány;Tropické ovoce;9 879 Kè;úterý;Beáta
+10.04.2019;PO002;Banány;Tropické ovoce;10 579 Kè;støeda;Cyril
+10.03.2019;CZ001;Celer;Zelenina;6 516 Kè;nedìle;Cyril
+11.03.2019;SK003;Celer;Zelenina;5 413 Kè;pondìlí;Adam
+11.03.2019;CZ001;Celer;Zelenina;9 115 Kè;pondìlí;Cyril
+12.03.2019;CZ005;Celer;Zelenina;6 754 Kè;úterý;Beáta
+13.03.2019;SK003;Celer;Zelenina;7 492 Kè;støeda;Adam
+14.03.2019;CZ002;Celer;Zelenina;9 018 Kè;ètvrtek;Beáta
+15.03.2019;CZ001;Celer;Zelenina;8 938 Kè;pátek;Beáta
+15.03.2019;CZ005;Celer;Zelenina;8 540 Kè;pátek;Beáta
+16.03.2019;SK004;Celer;Zelenina;7 185 Kè;sobota;Cyril
+16.03.2019;PO001;Celer;Zelenina;10 493 Kè;sobota;Eva
+19.03.2019;SK005;Celer;Zelenina;8 232 Kè;úterý;Beáta
+19.03.2019;CZ001;Celer;Zelenina;9 676 Kè;úterý;Eva
+20.03.2019;CZ004;Celer;Zelenina;7 605 Kè;støeda;Eva
+20.03.2019;CZ004;Celer;Zelenina;5 423 Kè;støeda;Beáta
+21.03.2019;SK003;Celer;Zelenina;9 005 Kè;ètvrtek;Beáta
+21.03.2019;PO001;Celer;Zelenina;8 530 Kè;ètvrtek;Cyril
+21.03.2019;CZ003;Celer;Zelenina;7 303 Kè;ètvrtek;Adam
+22.03.2019;PO001;Celer;Zelenina;9 136 Kè;pátek;Cyril
+22.03.2019;PO002;Celer;Zelenina;7 862 Kè;pátek;Beáta
+23.03.2019;PO001;Celer;Zelenina;5 916 Kè;sobota;Beáta
+23.03.2019;SK004;Celer;Zelenina;8 310 Kè;sobota;Dana
+23.03.2019;PO003;Celer;Zelenina;8 554 Kè;sobota;Cyril
+23.03.2019;CZ003;Celer;Zelenina;9 398 Kè;sobota;Beáta
+23.03.2019;SK004;Celer;Zelenina;8 469 Kè;sobota;Beáta
+25.03.2019;PO001;Celer;Zelenina;7 651 Kè;pondìlí;Beáta
+25.03.2019;CZ003;Celer;Zelenina;5 956 Kè;pondìlí;Beáta
+27.03.2019;SK004;Celer;Zelenina;7 749 Kè;støeda;Cyril
+27.03.2019;PO002;Celer;Zelenina;8 424 Kè;støeda;Beáta
+28.03.2019;CZ001;Celer;Zelenina;7 930 Kè;ètvrtek;Beáta
+28.03.2019;GE001;Celer;Zelenina;10 005 Kè;ètvrtek;Cyril
+28.03.2019;SK003;Celer;Zelenina;8 565 Kè;ètvrtek;Cyril
+28.03.2019;CZ001;Celer;Zelenina;7 318 Kè;ètvrtek;Beáta
+28.03.2019;SK002;Celer;Zelenina;9 367 Kè;ètvrtek;Beáta
+28.03.2019;CZ001;Celer;Zelenina;9 136 Kè;ètvrtek;Cyril
+29.03.2019;CZ003;Celer;Zelenina;8 275 Kè;pátek;Beáta
+29.03.2019;CZ004;Celer;Zelenina;7 982 Kè;pátek;Beáta
+30.03.2019;CZ001;Celer;Zelenina;9 462 Kè;sobota;Beáta
+30.03.2019;PO003;Celer;Zelenina;9 147 Kè;sobota;Beáta
+01.04.2019;PO003;Celer;Zelenina;10 155 Kè;pondìlí;Beáta
+01.04.2019;CZ002;Celer;Zelenina;7 398 Kè;pondìlí;Cyril
+02.04.2019;SK005;Celer;Zelenina;8 681 Kè;úterý;Dana
+02.04.2019;GE001;Celer;Zelenina;8 204 Kè;úterý;Eva
+02.04.2019;SK004;Celer;Zelenina;7 520 Kè;úterý;Cyril
+02.04.2019;GE002;Celer;Zelenina;5 719 Kè;úterý;Beáta
+03.04.2019;GE001;Celer;Zelenina;8 235 Kè;støeda;Adam
+03.04.2019;PO001;Celer;Zelenina;9 225 Kè;støeda;Beáta
+03.04.2019;CZ003;Celer;Zelenina;9 711 Kè;støeda;Cyril
+04.04.2019;CZ002;Celer;Zelenina;7 864 Kè;ètvrtek;Adam
+04.04.2019;GE003;Celer;Zelenina;9 449 Kè;ètvrtek;Beáta
+04.04.2019;CZ005;Celer;Zelenina;8 093 Kè;ètvrtek;Beáta
+04.04.2019;CZ003;Celer;Zelenina;7 705 Kè;ètvrtek;Beáta
+05.04.2019;PO003;Celer;Zelenina;8 505 Kè;pátek;Adam
+05.04.2019;GE002;Celer;Zelenina;5 961 Kè;pátek;Cyril
+05.04.2019;PO001;Celer;Zelenina;8 291 Kè;pátek;Cyril
+05.04.2019;PO001;Celer;Zelenina;7 515 Kè;pátek;Cyril
+06.04.2019;CZ001;Celer;Zelenina;8 325 Kè;sobota;Eva
+07.04.2019;SK004;Celer;Zelenina;7 757 Kè;nedìle;Dana
+07.04.2019;SK004;Celer;Zelenina;9 736 Kè;nedìle;Cyril
+08.04.2019;GE001;Celer;Zelenina;8 889 Kè;pondìlí;Eva
+08.04.2019;SK003;Celer;Zelenina;9 101 Kè;pondìlí;Eva
+08.04.2019;SK002;Celer;Zelenina;8 082 Kè;pondìlí;Cyril
+09.04.2019;PO003;Celer;Zelenina;8 068 Kè;úterý;Cyril
+11.04.2019;PO003;Celer;Zelenina;8 882 Kè;ètvrtek;Beáta
+13.03.2019;SK002;Citron;Ovoce;7 420 Kè;støeda;Cyril
+13.03.2019;PO002;Citron;Ovoce;6 518 Kè;støeda;Eva
+13.03.2019;GE001;Citron;Ovoce;9 907 Kè;støeda;Beáta
+14.03.2019;SK005;Citron;Ovoce;8 922 Kè;ètvrtek;Beáta
+14.03.2019;SK004;Citron;Ovoce;7 041 Kè;ètvrtek;Adam
+15.03.2019;SK001;Citron;Ovoce;8 554 Kè;pátek;Adam
+15.03.2019;GE003;Citron;Ovoce;4 505 Kè;pátek;Beáta
+16.03.2019;SK005;Citron;Ovoce;7 951 Kè;sobota;Beáta
+17.03.2019;SK003;Citron;Ovoce;8 030 Kè;nedìle;Beáta
+17.03.2019;CZ003;Citron;Ovoce;6 521 Kè;nedìle;Beáta
+18.03.2019;CZ001;Citron;Ovoce;6 873 Kè;pondìlí;Beáta
+19.03.2019;SK003;Citron;Ovoce;6 918 Kè;úterý;Dana
+20.03.2019;SK002;Citron;Ovoce;9 993 Kè;støeda;Beáta
+21.03.2019;PO001;Citron;Ovoce;6 534 Kè;ètvrtek;Beáta
+21.03.2019;CZ005;Citron;Ovoce;6 636 Kè;ètvrtek;Beáta
+22.03.2019;CZ004;Citron;Ovoce;7 927 Kè;pátek;Dana
+22.03.2019;GE003;Citron;Ovoce;7 683 Kè;pátek;Beáta
+22.03.2019;CZ002;Citron;Ovoce;7 762 Kè;pátek;Eva
+22.03.2019;SK003;Citron;Ovoce;9 558 Kè;pátek;Beáta
+24.03.2019;GE001;Citron;Ovoce;7 385 Kè;nedìle;Beáta
+24.03.2019;SK001;Citron;Ovoce;7 761 Kè;nedìle;Cyril
+24.03.2019;SK002;Citron;Ovoce;8 161 Kè;nedìle;Beáta
+25.03.2019;SK003;Citron;Ovoce;5 498 Kè;pondìlí;Adam
+25.03.2019;PO001;Citron;Ovoce;5 492 Kè;pondìlí;Cyril
+26.03.2019;PO002;Citron;Ovoce;7 547 Kè;úterý;Beáta
+26.03.2019;SK002;Citron;Ovoce;7 597 Kè;úterý;Beáta
+27.03.2019;PO003;Citron;Ovoce;7 774 Kè;støeda;Beáta
+28.03.2019;SK001;Citron;Ovoce;7 337 Kè;ètvrtek;Beáta
+29.03.2019;GE003;Citron;Ovoce;7 653 Kè;pátek;Cyril
+29.03.2019;GE001;Citron;Ovoce;6 513 Kè;pátek;Beáta
+29.03.2019;CZ004;Citron;Ovoce;7 488 Kè;pátek;Beáta
+30.03.2019;PO003;Citron;Ovoce;6 075 Kè;sobota;Cyril
+30.03.2019;GE003;Citron;Ovoce;8 554 Kè;sobota;Beáta
+31.03.2019;CZ002;Citron;Ovoce;9 796 Kè;nedìle;Cyril
+31.03.2019;CZ001;Citron;Ovoce;8 417 Kè;nedìle;Beáta
+01.04.2019;SK001;Citron;Ovoce;7 710 Kè;pondìlí;Beáta
+02.04.2019;SK003;Citron;Ovoce;6 454 Kè;úterý;Beáta
+02.04.2019;CZ002;Citron;Ovoce;8 927 Kè;úterý;Dana
+02.04.2019;CZ001;Citron;Ovoce;8 882 Kè;úterý;Beáta
+03.04.2019;SK002;Citron;Ovoce;7 975 Kè;støeda;Beáta
+03.04.2019;CZ003;Citron;Ovoce;6 581 Kè;støeda;Beáta
+04.04.2019;PO003;Citron;Ovoce;5 737 Kè;ètvrtek;Cyril
+04.04.2019;GE003;Citron;Ovoce;8 929 Kè;ètvrtek;Beáta
+05.04.2019;SK003;Citron;Ovoce;7 387 Kè;pátek;Eva
+06.04.2019;PO003;Citron;Ovoce;8 692 Kè;sobota;Beáta
+07.04.2019;SK005;Citron;Ovoce;7 251 Kè;nedìle;Cyril
+07.04.2019;SK002;Citron;Ovoce;8 316 Kè;nedìle;Beáta
+07.04.2019;CZ004;Citron;Ovoce;9 050 Kè;nedìle;Adam
+08.04.2019;GE001;Citron;Ovoce;9 613 Kè;pondìlí;Dana
+08.04.2019;PO003;Citron;Ovoce;8 817 Kè;pondìlí;Cyril
+09.04.2019;PO003;Citron;Ovoce;5 329 Kè;úterý;Dana
+10.04.2019;CZ005;Citron;Ovoce;7 392 Kè;støeda;Beáta
+10.04.2019;CZ004;Citron;Ovoce;7 938 Kè;støeda;Beáta
+10.04.2019;GE003;Citron;Ovoce;8 274 Kè;støeda;Beáta
+10.04.2019;SK004;Citron;Ovoce;6 675 Kè;støeda;Beáta
+10.04.2019;CZ003;Citron;Ovoce;7 535 Kè;støeda;Beáta
+10.03.2019;SK002;Jablka;Ovoce;6 798 Kè;nedìle;Beáta
+11.03.2019;PO001;Jablka;Ovoce;10 473 Kè;pondìlí;Eva
+12.03.2019;CZ001;Jablka;Ovoce;9 357 Kè;úterý;Adam
+12.03.2019;CZ004;Jablka;Ovoce;8 168 Kè;úterý;Beáta
+13.03.2019;SK004;Jablka;Ovoce;8 029 Kè;støeda;Beáta
+13.03.2019;GE002;Jablka;Ovoce;8 959 Kè;støeda;Beáta
+14.03.2019;CZ005;Jablka;Ovoce;8 112 Kè;ètvrtek;Beáta
+14.03.2019;GE001;Jablka;Ovoce;7 760 Kè;ètvrtek;Eva
+15.03.2019;GE002;Jablka;Ovoce;7 555 Kè;pátek;Beáta
+15.03.2019;SK004;Jablka;Ovoce;8 945 Kè;pátek;Beáta
+15.03.2019;SK001;Jablka;Ovoce;8 567 Kè;pátek;Cyril
+16.03.2019;SK005;Jablka;Ovoce;10 063 Kè;sobota;Cyril
+17.03.2019;CZ004;Jablka;Ovoce;8 028 Kè;nedìle;Dana
+17.03.2019;PO003;Jablka;Ovoce;9 416 Kè;nedìle;Beáta
+18.03.2019;GE002;Jablka;Ovoce;8 703 Kè;pondìlí;Beáta
+18.03.2019;PO003;Jablka;Ovoce;9 653 Kè;pondìlí;Eva
+18.03.2019;GE002;Jablka;Ovoce;7 427 Kè;pondìlí;Dana
+19.03.2019;CZ005;Jablka;Ovoce;7 577 Kè;úterý;Beáta
+19.03.2019;CZ002;Jablka;Ovoce;7 955 Kè;úterý;Dana
+22.03.2019;PO003;Jablka;Ovoce;5 635 Kè;pátek;Cyril
+22.03.2019;SK005;Jablka;Ovoce;8 554 Kè;pátek;Beáta
+22.03.2019;PO003;Jablka;Ovoce;8 707 Kè;pátek;Cyril
+22.03.2019;SK002;Jablka;Ovoce;7 162 Kè;pátek;Eva
+22.03.2019;CZ004;Jablka;Ovoce;7 914 Kè;pátek;Beáta
+25.03.2019;PO003;Jablka;Ovoce;7 846 Kè;pondìlí;Eva
+26.03.2019;SK005;Jablka;Ovoce;9 709 Kè;úterý;Beáta
+26.03.2019;CZ004;Jablka;Ovoce;5 205 Kè;úterý;Cyril
+28.03.2019;SK003;Jablka;Ovoce;7 679 Kè;ètvrtek;Dana
+28.03.2019;GE002;Jablka;Ovoce;8 784 Kè;ètvrtek;Adam
+28.03.2019;CZ001;Jablka;Ovoce;8 461 Kè;ètvrtek;Eva
+29.03.2019;CZ003;Jablka;Ovoce;8 469 Kè;pátek;Beáta
+31.03.2019;PO003;Jablka;Ovoce;8 036 Kè;nedìle;Cyril
+31.03.2019;PO001;Jablka;Ovoce;8 275 Kè;nedìle;Cyril
+31.03.2019;PO002;Jablka;Ovoce;7 136 Kè;nedìle;Beáta
+01.04.2019;PO001;Jablka;Ovoce;7 637 Kè;pondìlí;Beáta
+02.04.2019;CZ004;Jablka;Ovoce;9 103 Kè;úterý;Beáta
+03.04.2019;PO002;Jablka;Ovoce;7 883 Kè;støeda;Beáta
+04.04.2019;PO002;Jablka;Ovoce;7 337 Kè;ètvrtek;Beáta
+04.04.2019;PO002;Jablka;Ovoce;7 553 Kè;ètvrtek;Dana
+04.04.2019;GE002;Jablka;Ovoce;8 537 Kè;ètvrtek;Adam
+05.04.2019;SK005;Jablka;Ovoce;8 194 Kè;pátek;Beáta
+05.04.2019;SK003;Jablka;Ovoce;8 980 Kè;pátek;Beáta
+05.04.2019;SK004;Jablka;Ovoce;9 214 Kè;pátek;Beáta
+05.04.2019;PO001;Jablka;Ovoce;7 213 Kè;pátek;Beáta
+07.04.2019;CZ005;Jablka;Ovoce;8 729 Kè;nedìle;Dana
+08.04.2019;CZ002;Jablka;Ovoce;7 336 Kè;pondìlí;Adam
+08.04.2019;GE001;Jablka;Ovoce;7 816 Kè;pondìlí;Eva
+08.04.2019;CZ005;Jablka;Ovoce;8 067 Kè;pondìlí;Adam
+08.04.2019;CZ005;Jablka;Ovoce;8 497 Kè;pondìlí;Beáta
+08.04.2019;PO002;Jablka;Ovoce;9 211 Kè;pondìlí;Eva
+09.04.2019;SK004;Jablka;Ovoce;9 093 Kè;úterý;Cyril
+09.04.2019;SK005;Jablka;Ovoce;7 600 Kè;úterý;Dana
+10.04.2019;GE002;Jablka;Ovoce;9 401 Kè;støeda;Dana
+10.04.2019;CZ004;Jablka;Ovoce;8 191 Kè;støeda;Adam
+10.04.2019;SK005;Jablka;Ovoce;8 160 Kè;støeda;Beáta
+11.04.2019;SK001;Jablka;Ovoce;7 568 Kè;ètvrtek;Beáta
+13.03.2019;SK003;Melouny;Tropické ovoce;11 055 Kè;støeda;Cyril
+14.03.2019;SK004;Melouny;Tropické ovoce;9 271 Kè;ètvrtek;Beáta
+14.03.2019;SK005;Melouny;Tropické ovoce;8 136 Kè;ètvrtek;Beáta
+14.03.2019;SK004;Melouny;Tropické ovoce;9 174 Kè;ètvrtek;Dana
+15.03.2019;CZ003;Melouny;Tropické ovoce;9 519 Kè;pátek;Cyril
+15.03.2019;CZ001;Melouny;Tropické ovoce;9 186 Kè;pátek;Beáta
+16.03.2019;CZ003;Melouny;Tropické ovoce;8 818 Kè;sobota;Beáta
+16.03.2019;PO002;Melouny;Tropické ovoce;10 064 Kè;sobota;Beáta
+16.03.2019;PO003;Melouny;Tropické ovoce;11 475 Kè;sobota;Cyril
+16.03.2019;CZ003;Melouny;Tropické ovoce;10 430 Kè;sobota;Beáta
+16.03.2019;SK002;Melouny;Tropické ovoce;10 309 Kè;sobota;Beáta
+17.03.2019;GE001;Melouny;Tropické ovoce;10 557 Kè;nedìle;Beáta
+17.03.2019;SK004;Melouny;Tropické ovoce;11 232 Kè;nedìle;Beáta
+18.03.2019;CZ004;Melouny;Tropické ovoce;11 280 Kè;pondìlí;Beáta
+21.03.2019;GE003;Melouny;Tropické ovoce;10 507 Kè;ètvrtek;Beáta
+21.03.2019;SK001;Melouny;Tropické ovoce;8 604 Kè;ètvrtek;Dana
+21.03.2019;SK005;Melouny;Tropické ovoce;7 580 Kè;ètvrtek;Dana
+22.03.2019;PO001;Melouny;Tropické ovoce;10 771 Kè;pátek;Beáta
+22.03.2019;PO001;Melouny;Tropické ovoce;9 091 Kè;pátek;Beáta
+22.03.2019;PO001;Melouny;Tropické ovoce;8 828 Kè;pátek;Adam
+24.03.2019;GE001;Melouny;Tropické ovoce;10 900 Kè;nedìle;Eva
+24.03.2019;GE002;Melouny;Tropické ovoce;9 509 Kè;nedìle;Beáta
+24.03.2019;GE001;Melouny;Tropické ovoce;10 210 Kè;nedìle;Cyril
+24.03.2019;CZ005;Melouny;Tropické ovoce;10 458 Kè;nedìle;Cyril
+24.03.2019;GE001;Melouny;Tropické ovoce;8 580 Kè;nedìle;Eva
+26.03.2019;CZ004;Melouny;Tropické ovoce;9 122 Kè;úterý;Beáta
+27.03.2019;GE001;Melouny;Tropické ovoce;10 883 Kè;støeda;Beáta
+28.03.2019;SK004;Melouny;Tropické ovoce;11 153 Kè;ètvrtek;Dana
+28.03.2019;GE003;Melouny;Tropické ovoce;10 828 Kè;ètvrtek;Cyril
+28.03.2019;CZ002;Melouny;Tropické ovoce;7 449 Kè;ètvrtek;Cyril
+28.03.2019;SK002;Melouny;Tropické ovoce;11 282 Kè;ètvrtek;Beáta
+29.03.2019;PO001;Melouny;Tropické ovoce;10 420 Kè;pátek;Cyril
+30.03.2019;SK003;Melouny;Tropické ovoce;10 442 Kè;sobota;Beáta
+30.03.2019;SK001;Melouny;Tropické ovoce;8 981 Kè;sobota;Beáta
+30.03.2019;GE003;Melouny;Tropické ovoce;10 500 Kè;sobota;Beáta
+31.03.2019;GE003;Melouny;Tropické ovoce;9 702 Kè;nedìle;Beáta
+01.04.2019;PO002;Melouny;Tropické ovoce;12 030 Kè;pondìlí;Beáta
+03.04.2019;GE001;Melouny;Tropické ovoce;10 852 Kè;støeda;Beáta
+03.04.2019;PO001;Melouny;Tropické ovoce;9 505 Kè;støeda;Cyril
+03.04.2019;CZ001;Melouny;Tropické ovoce;9 170 Kè;støeda;Dana
+03.04.2019;CZ001;Melouny;Tropické ovoce;10 803 Kè;støeda;Beáta
+04.04.2019;CZ005;Melouny;Tropické ovoce;10 006 Kè;ètvrtek;Cyril
+05.04.2019;CZ005;Melouny;Tropické ovoce;9 603 Kè;pátek;Beáta
+06.04.2019;CZ001;Melouny;Tropické ovoce;9 849 Kè;sobota;Beáta
+07.04.2019;SK004;Melouny;Tropické ovoce;9 492 Kè;nedìle;Beáta
+08.04.2019;SK004;Melouny;Tropické ovoce;10 272 Kè;pondìlí;Cyril
+08.04.2019;PO001;Melouny;Tropické ovoce;11 015 Kè;pondìlí;Dana
+09.04.2019;CZ005;Melouny;Tropické ovoce;9 077 Kè;úterý;Beáta
+10.04.2019;PO003;Melouny;Tropické ovoce;10 185 Kè;støeda;Beáta
+10.04.2019;SK002;Melouny;Tropické ovoce;10 400 Kè;støeda;Beáta
+10.04.2019;PO002;Melouny;Tropické ovoce;11 098 Kè;støeda;Beáta
+11.04.2019;CZ003;Melouny;Tropické ovoce;9 203 Kè;ètvrtek;Dana
+12.03.2019;SK002;Mrkev;Zelenina;6 093 Kè;úterý;Cyril
+13.03.2019;GE001;Mrkev;Zelenina;8 354 Kè;støeda;Eva
+14.03.2019;PO003;Mrkev;Zelenina;5 885 Kè;ètvrtek;Beáta
+14.03.2019;PO001;Mrkev;Zelenina;7 533 Kè;ètvrtek;Beáta
+15.03.2019;GE001;Mrkev;Zelenina;7 723 Kè;pátek;Dana
+15.03.2019;SK001;Mrkev;Zelenina;7 779 Kè;pátek;Beáta
+15.03.2019;GE003;Mrkev;Zelenina;7 977 Kè;pátek;Adam
+16.03.2019;SK003;Mrkev;Zelenina;7 809 Kè;sobota;Cyril
+17.03.2019;PO001;Mrkev;Zelenina;5 976 Kè;nedìle;Beáta
+17.03.2019;PO002;Mrkev;Zelenina;6 741 Kè;nedìle;Cyril
+18.03.2019;SK003;Mrkev;Zelenina;5 976 Kè;pondìlí;Beáta
+18.03.2019;SK003;Mrkev;Zelenina;5 732 Kè;pondìlí;Cyril
+18.03.2019;CZ003;Mrkev;Zelenina;7 356 Kè;pondìlí;Cyril
+18.03.2019;CZ004;Mrkev;Zelenina;7 792 Kè;pondìlí;Beáta
+18.03.2019;SK002;Mrkev;Zelenina;6 445 Kè;pondìlí;Cyril
+19.03.2019;GE003;Mrkev;Zelenina;7 090 Kè;úterý;Dana
+19.03.2019;SK005;Mrkev;Zelenina;6 841 Kè;úterý;Eva
+19.03.2019;CZ002;Mrkev;Zelenina;6 843 Kè;úterý;Adam
+19.03.2019;CZ001;Mrkev;Zelenina;8 913 Kè;úterý;Dana
+20.03.2019;CZ001;Mrkev;Zelenina;7 296 Kè;støeda;Beáta
+20.03.2019;SK001;Mrkev;Zelenina;6 009 Kè;støeda;Dana
+20.03.2019;GE001;Mrkev;Zelenina;5 965 Kè;støeda;Beáta
+20.03.2019;CZ001;Mrkev;Zelenina;3 929 Kè;støeda;Cyril
+21.03.2019;PO001;Mrkev;Zelenina;7 848 Kè;ètvrtek;Dana
+22.03.2019;CZ005;Mrkev;Zelenina;7 637 Kè;pátek;Adam
+22.03.2019;PO002;Mrkev;Zelenina;6 235 Kè;pátek;Dana
+24.03.2019;SK001;Mrkev;Zelenina;5 752 Kè;nedìle;Beáta
+24.03.2019;GE003;Mrkev;Zelenina;8 616 Kè;nedìle;Adam
+24.03.2019;SK001;Mrkev;Zelenina;6 359 Kè;nedìle;Beáta
+26.03.2019;GE002;Mrkev;Zelenina;7 009 Kè;úterý;Cyril
+27.03.2019;SK005;Mrkev;Zelenina;6 652 Kè;støeda;Cyril
+28.03.2019;CZ004;Mrkev;Zelenina;5 952 Kè;ètvrtek;Cyril
+29.03.2019;CZ003;Mrkev;Zelenina;6 397 Kè;pátek;Beáta
+30.03.2019;SK002;Mrkev;Zelenina;7 462 Kè;sobota;Adam
+30.03.2019;CZ001;Mrkev;Zelenina;7 789 Kè;sobota;Dana
+31.03.2019;GE001;Mrkev;Zelenina;5 730 Kè;nedìle;Cyril
+31.03.2019;CZ001;Mrkev;Zelenina;5 868 Kè;nedìle;Cyril
+31.03.2019;SK004;Mrkev;Zelenina;6 494 Kè;nedìle;Dana
+02.04.2019;SK001;Mrkev;Zelenina;6 802 Kè;úterý;Adam
+03.04.2019;CZ003;Mrkev;Zelenina;7 436 Kè;støeda;Adam
+03.04.2019;GE002;Mrkev;Zelenina;5 661 Kè;støeda;Beáta
+05.04.2019;SK002;Mrkev;Zelenina;5 705 Kè;pátek;Beáta
+05.04.2019;SK001;Mrkev;Zelenina;7 228 Kè;pátek;Beáta
+05.04.2019;SK001;Mrkev;Zelenina;7 460 Kè;pátek;Beáta
+05.04.2019;GE001;Mrkev;Zelenina;6 295 Kè;pátek;Cyril
+06.04.2019;SK003;Mrkev;Zelenina;5 848 Kè;sobota;Dana
+06.04.2019;GE002;Mrkev;Zelenina;7 291 Kè;sobota;Cyril
+06.04.2019;SK005;Mrkev;Zelenina;5 677 Kè;sobota;Adam
+07.04.2019;SK003;Mrkev;Zelenina;7 727 Kè;nedìle;Dana
+07.04.2019;PO001;Mrkev;Zelenina;5 291 Kè;nedìle;Beáta
+07.04.2019;CZ002;Mrkev;Zelenina;7 814 Kè;nedìle;Beáta
+08.04.2019;SK002;Mrkev;Zelenina;6 728 Kè;pondìlí;Dana
+08.04.2019;SK001;Mrkev;Zelenina;6 979 Kè;pondìlí;Beáta
+08.04.2019;SK003;Mrkev;Zelenina;6 890 Kè;pondìlí;Beáta
+08.04.2019;PO001;Mrkev;Zelenina;6 082 Kè;pondìlí;Adam
+09.04.2019;PO001;Mrkev;Zelenina;5 523 Kè;úterý;Cyril
+09.04.2019;PO003;Mrkev;Zelenina;4 362 Kè;úterý;Beáta
+10.04.2019;CZ005;Mrkev;Zelenina;7 454 Kè;støeda;Beáta
+10.04.2019;GE002;Mrkev;Zelenina;7 802 Kè;støeda;Eva
+10.04.2019;GE003;Mrkev;Zelenina;5 986 Kè;støeda;Cyril
+10.03.2019;SK005;Papriky;Zelenina;6 902 Kè;nedìle;Beáta
+11.03.2019;SK001;Papriky;Zelenina;6 926 Kè;pondìlí;Cyril
+12.03.2019;SK001;Papriky;Zelenina;8 935 Kè;úterý;Adam
+13.03.2019;PO003;Papriky;Zelenina;7 418 Kè;støeda;Beáta
+13.03.2019;CZ002;Papriky;Zelenina;10 583 Kè;støeda;Beáta
+14.03.2019;SK003;Papriky;Zelenina;9 768 Kè;ètvrtek;Beáta
+14.03.2019;CZ002;Papriky;Zelenina;9 755 Kè;ètvrtek;Cyril
+14.03.2019;GE002;Papriky;Zelenina;9 466 Kè;ètvrtek;Beáta
+14.03.2019;SK002;Papriky;Zelenina;9 469 Kè;ètvrtek;Beáta
+14.03.2019;CZ001;Papriky;Zelenina;7 416 Kè;ètvrtek;Beáta
+14.03.2019;PO001;Papriky;Zelenina;9 254 Kè;ètvrtek;Cyril
+14.03.2019;PO002;Papriky;Zelenina;6 579 Kè;ètvrtek;Beáta
+15.03.2019;GE002;Papriky;Zelenina;8 339 Kè;pátek;Beáta
+16.03.2019;CZ001;Papriky;Zelenina;9 713 Kè;sobota;Beáta
+16.03.2019;CZ001;Papriky;Zelenina;8 030 Kè;sobota;Eva
+16.03.2019;CZ002;Papriky;Zelenina;8 221 Kè;sobota;Beáta
+17.03.2019;PO001;Papriky;Zelenina;9 050 Kè;nedìle;Cyril
+17.03.2019;GE002;Papriky;Zelenina;9 220 Kè;nedìle;Beáta
+18.03.2019;CZ003;Papriky;Zelenina;7 697 Kè;pondìlí;Beáta
+19.03.2019;PO003;Papriky;Zelenina;8 401 Kè;úterý;Dana
+19.03.2019;SK002;Papriky;Zelenina;7 635 Kè;úterý;Dana
+20.03.2019;GE003;Papriky;Zelenina;7 390 Kè;støeda;Beáta
+20.03.2019;CZ003;Papriky;Zelenina;7 362 Kè;støeda;Eva
+21.03.2019;SK001;Papriky;Zelenina;7 423 Kè;ètvrtek;Cyril
+21.03.2019;SK003;Papriky;Zelenina;9 607 Kè;ètvrtek;Beáta
+23.03.2019;CZ002;Papriky;Zelenina;8 960 Kè;sobota;Beáta
+24.03.2019;CZ002;Papriky;Zelenina;9 408 Kè;nedìle;Dana
+25.03.2019;SK004;Papriky;Zelenina;7 698 Kè;pondìlí;Dana
+25.03.2019;SK005;Papriky;Zelenina;10 206 Kè;pondìlí;Cyril
+25.03.2019;CZ005;Papriky;Zelenina;8 194 Kè;pondìlí;Beáta
+26.03.2019;CZ003;Papriky;Zelenina;9 503 Kè;úterý;Cyril
+26.03.2019;SK001;Papriky;Zelenina;10 639 Kè;úterý;Cyril
+26.03.2019;CZ005;Papriky;Zelenina;9 751 Kè;úterý;Adam
+28.03.2019;PO003;Papriky;Zelenina;9 449 Kè;ètvrtek;Beáta
+29.03.2019;SK004;Papriky;Zelenina;8 452 Kè;pátek;Eva
+29.03.2019;PO003;Papriky;Zelenina;8 617 Kè;pátek;Eva
+30.03.2019;GE003;Papriky;Zelenina;8 271 Kè;sobota;Beáta
+31.03.2019;SK003;Papriky;Zelenina;7 956 Kè;nedìle;Cyril
+31.03.2019;PO002;Papriky;Zelenina;7 611 Kè;nedìle;Beáta
+31.03.2019;GE001;Papriky;Zelenina;9 528 Kè;nedìle;Beáta
+31.03.2019;SK004;Papriky;Zelenina;9 605 Kè;nedìle;Beáta
+31.03.2019;GE002;Papriky;Zelenina;7 415 Kè;nedìle;Beáta
+02.04.2019;SK002;Papriky;Zelenina;8 907 Kè;úterý;Beáta
+02.04.2019;SK003;Papriky;Zelenina;7 809 Kè;úterý;Cyril
+02.04.2019;CZ005;Papriky;Zelenina;8 238 Kè;úterý;Dana
+02.04.2019;PO003;Papriky;Zelenina;8 950 Kè;úterý;Beáta
+02.04.2019;GE002;Papriky;Zelenina;7 531 Kè;úterý;Eva
+02.04.2019;CZ003;Papriky;Zelenina;8 950 Kè;úterý;Dana
+03.04.2019;PO002;Papriky;Zelenina;7 374 Kè;støeda;Beáta
+03.04.2019;GE003;Papriky;Zelenina;9 242 Kè;støeda;Beáta
+03.04.2019;SK004;Papriky;Zelenina;5 843 Kè;støeda;Beáta
+05.04.2019;CZ004;Papriky;Zelenina;7 684 Kè;pátek;Cyril
+06.04.2019;CZ004;Papriky;Zelenina;7 414 Kè;sobota;Beáta
+06.04.2019;SK002;Papriky;Zelenina;8 957 Kè;sobota;Beáta
+06.04.2019;CZ002;Papriky;Zelenina;8 808 Kè;sobota;Cyril
+06.04.2019;GE001;Papriky;Zelenina;9 942 Kè;sobota;Adam
+06.04.2019;GE002;Papriky;Zelenina;7 578 Kè;sobota;Beáta
+07.04.2019;GE001;Papriky;Zelenina;9 594 Kè;nedìle;Beáta
+08.04.2019;CZ003;Papriky;Zelenina;9 729 Kè;pondìlí;Cyril
+09.04.2019;PO003;Papriky;Zelenina;9 769 Kè;úterý;Beáta
+09.04.2019;GE001;Papriky;Zelenina;8 014 Kè;úterý;Beáta
+09.04.2019;PO001;Papriky;Zelenina;8 833 Kè;úterý;Cyril
+10.04.2019;GE003;Papriky;Zelenina;8 396 Kè;støeda;Dana
+10.04.2019;SK005;Papriky;Zelenina;8 047 Kè;støeda;Cyril
+11.04.2019;SK004;Papriky;Zelenina;8 082 Kè;ètvrtek;Beáta
+11.04.2019;SK001;Papriky;Zelenina;8 233 Kè;ètvrtek;Dana
+12.03.2019;GE002;Pomeranèe;Ovoce;14 637 Kè;úterý;Beáta
+12.03.2019;CZ001;Pomeranèe;Ovoce;12 441 Kè;úterý;Dana
+13.03.2019;SK005;Pomeranèe;Ovoce;12 013 Kè;støeda;Dana
+13.03.2019;GE002;Pomeranèe;Ovoce;12 541 Kè;støeda;Beáta
+14.03.2019;CZ002;Pomeranèe;Ovoce;12 201 Kè;ètvrtek;Eva
+14.03.2019;SK005;Pomeranèe;Ovoce;11 510 Kè;ètvrtek;Cyril
+15.03.2019;GE001;Pomeranèe;Ovoce;9 027 Kè;pátek;Eva
+15.03.2019;SK002;Pomeranèe;Ovoce;11 957 Kè;pátek;Beáta
+16.03.2019;CZ002;Pomeranèe;Ovoce;9 587 Kè;sobota;Cyril
+17.03.2019;SK003;Pomeranèe;Ovoce;9 968 Kè;nedìle;Dana
+18.03.2019;CZ002;Pomeranèe;Ovoce;7 047 Kè;pondìlí;Beáta
+18.03.2019;SK004;Pomeranèe;Ovoce;10 589 Kè;pondìlí;Cyril
+18.03.2019;CZ002;Pomeranèe;Ovoce;13 023 Kè;pondìlí;Beáta
+20.03.2019;PO001;Pomeranèe;Ovoce;10 733 Kè;støeda;Beáta
+20.03.2019;PO001;Pomeranèe;Ovoce;11 854 Kè;støeda;Eva
+20.03.2019;GE001;Pomeranèe;Ovoce;14 282 Kè;støeda;Beáta
+21.03.2019;CZ005;Pomeranèe;Ovoce;9 019 Kè;ètvrtek;Cyril
+21.03.2019;SK004;Pomeranèe;Ovoce;13 447 Kè;ètvrtek;Adam
+22.03.2019;SK001;Pomeranèe;Ovoce;9 323 Kè;pátek;Beáta
+22.03.2019;CZ003;Pomeranèe;Ovoce;10 309 Kè;pátek;Beáta
+24.03.2019;CZ005;Pomeranèe;Ovoce;10 529 Kè;nedìle;Beáta
+24.03.2019;CZ004;Pomeranèe;Ovoce;10 004 Kè;nedìle;Beáta
+24.03.2019;CZ002;Pomeranèe;Ovoce;14 284 Kè;nedìle;Beáta
+25.03.2019;SK003;Pomeranèe;Ovoce;13 374 Kè;pondìlí;Adam
+25.03.2019;SK005;Pomeranèe;Ovoce;15 028 Kè;pondìlí;Beáta
+25.03.2019;SK004;Pomeranèe;Ovoce;7 042 Kè;pondìlí;Dana
+26.03.2019;SK001;Pomeranèe;Ovoce;13 044 Kè;úterý;Dana
+27.03.2019;SK003;Pomeranèe;Ovoce;8 808 Kè;støeda;Beáta
+27.03.2019;GE002;Pomeranèe;Ovoce;7 683 Kè;støeda;Beáta
+28.03.2019;PO003;Pomeranèe;Ovoce;14 889 Kè;ètvrtek;Beáta
+28.03.2019;PO002;Pomeranèe;Ovoce;9 829 Kè;ètvrtek;Adam
+28.03.2019;SK002;Pomeranèe;Ovoce;10 151 Kè;ètvrtek;Adam
+29.03.2019;CZ004;Pomeranèe;Ovoce;10 011 Kè;pátek;Cyril
+30.03.2019;SK004;Pomeranèe;Ovoce;10 104 Kè;sobota;Beáta
+30.03.2019;GE001;Pomeranèe;Ovoce;10 303 Kè;sobota;Dana
+30.03.2019;PO002;Pomeranèe;Ovoce;10 755 Kè;sobota;Cyril
+30.03.2019;SK004;Pomeranèe;Ovoce;13 271 Kè;sobota;Beáta
+31.03.2019;SK003;Pomeranèe;Ovoce;9 063 Kè;nedìle;Beáta
+31.03.2019;CZ004;Pomeranèe;Ovoce;9 882 Kè;nedìle;Cyril
+31.03.2019;CZ003;Pomeranèe;Ovoce;13 116 Kè;nedìle;Beáta
+03.04.2019;CZ004;Pomeranèe;Ovoce;13 432 Kè;støeda;Beáta
+04.04.2019;SK003;Pomeranèe;Ovoce;12 867 Kè;ètvrtek;Cyril
+05.04.2019;SK005;Pomeranèe;Ovoce;12 043 Kè;pátek;Adam
+06.04.2019;PO001;Pomeranèe;Ovoce;8 065 Kè;sobota;Cyril
+06.04.2019;CZ004;Pomeranèe;Ovoce;12 198 Kè;sobota;Eva
+08.04.2019;PO002;Pomeranèe;Ovoce;11 170 Kè;pondìlí;Beáta
+09.04.2019;PO001;Pomeranèe;Ovoce;9 252 Kè;úterý;Cyril
+10.03.2019;CZ001;Rajèata;Zelenina;6 266 Kè;nedìle;Cyril
+11.03.2019;CZ005;Rajèata;Zelenina;10 143 Kè;pondìlí;Cyril
+12.03.2019;GE002;Rajèata;Zelenina;9 092 Kè;úterý;Beáta
+13.03.2019;CZ003;Rajèata;Zelenina;8 953 Kè;støeda;Dana
+13.03.2019;SK004;Rajèata;Zelenina;7 576 Kè;støeda;Beáta
+14.03.2019;SK003;Rajèata;Zelenina;8 880 Kè;ètvrtek;Cyril
+14.03.2019;CZ004;Rajèata;Zelenina;8 408 Kè;ètvrtek;Beáta
+15.03.2019;GE003;Rajèata;Zelenina;9 214 Kè;pátek;Beáta
+15.03.2019;PO003;Rajèata;Zelenina;8 916 Kè;pátek;Beáta
+16.03.2019;GE002;Rajèata;Zelenina;7 417 Kè;sobota;Cyril
+17.03.2019;GE003;Rajèata;Zelenina;7 764 Kè;nedìle;Dana
+18.03.2019;SK001;Rajèata;Zelenina;7 884 Kè;pondìlí;Beáta
+18.03.2019;SK004;Rajèata;Zelenina;8 644 Kè;pondìlí;Cyril
+18.03.2019;PO003;Rajèata;Zelenina;7 304 Kè;pondìlí;Adam
+18.03.2019;GE003;Rajèata;Zelenina;8 760 Kè;pondìlí;Eva
+19.03.2019;SK002;Rajèata;Zelenina;8 159 Kè;úterý;Beáta
+20.03.2019;SK005;Rajèata;Zelenina;9 644 Kè;støeda;Beáta
+21.03.2019;CZ005;Rajèata;Zelenina;8 723 Kè;ètvrtek;Cyril
+24.03.2019;CZ002;Rajèata;Zelenina;9 350 Kè;nedìle;Adam
+24.03.2019;PO001;Rajèata;Zelenina;9 448 Kè;nedìle;Beáta
+25.03.2019;SK005;Rajèata;Zelenina;9 810 Kè;pondìlí;Cyril
+27.03.2019;CZ003;Rajèata;Zelenina;9 298 Kè;støeda;Beáta
+27.03.2019;CZ001;Rajèata;Zelenina;9 577 Kè;støeda;Cyril
+28.03.2019;CZ003;Rajèata;Zelenina;9 073 Kè;ètvrtek;Beáta
+28.03.2019;CZ004;Rajèata;Zelenina;7 318 Kè;ètvrtek;Beáta
+28.03.2019;SK001;Rajèata;Zelenina;9 465 Kè;ètvrtek;Adam
+28.03.2019;CZ002;Rajèata;Zelenina;9 002 Kè;ètvrtek;Cyril
+31.03.2019;CZ003;Rajèata;Zelenina;9 212 Kè;nedìle;Adam
+01.04.2019;CZ002;Rajèata;Zelenina;9 044 Kè;pondìlí;Beáta
+01.04.2019;GE001;Rajèata;Zelenina;8 918 Kè;pondìlí;Cyril
+02.04.2019;SK005;Rajèata;Zelenina;9 261 Kè;úterý;Beáta
+02.04.2019;CZ004;Rajèata;Zelenina;9 132 Kè;úterý;Beáta
+02.04.2019;SK004;Rajèata;Zelenina;10 120 Kè;úterý;Beáta
+02.04.2019;GE001;Rajèata;Zelenina;7 687 Kè;úterý;Beáta
+03.04.2019;SK005;Rajèata;Zelenina;10 471 Kè;støeda;Beáta
+03.04.2019;PO002;Rajèata;Zelenina;5 606 Kè;støeda;Beáta
+05.04.2019;CZ001;Rajèata;Zelenina;8 466 Kè;pátek;Cyril
+05.04.2019;SK003;Rajèata;Zelenina;7 607 Kè;pátek;Beáta
+05.04.2019;CZ004;Rajèata;Zelenina;9 514 Kè;pátek;Cyril
+05.04.2019;GE001;Rajèata;Zelenina;9 727 Kè;pátek;Beáta
+05.04.2019;GE003;Rajèata;Zelenina;8 548 Kè;pátek;Beáta
+06.04.2019;SK003;Rajèata;Zelenina;9 512 Kè;sobota;Beáta
+06.04.2019;PO002;Rajèata;Zelenina;10 140 Kè;sobota;Eva
+08.04.2019;CZ005;Rajèata;Zelenina;7 923 Kè;pondìlí;Adam
+09.04.2019;CZ003;Rajèata;Zelenina;8 394 Kè;úterý;Cyril
+10.04.2019;SK004;Rajèata;Zelenina;9 475 Kè;støeda;Cyril
+10.04.2019;GE003;Rajèata;Zelenina;8 224 Kè;støeda;Beáta

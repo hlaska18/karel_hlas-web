@@ -1,0 +1,58 @@
+﻿ID;Řidič;Vozidlo;Datum;Odjezd;Příjezd;Doba cesty;Vzdálenost;Odkud;Kam;Tachometr začátek;Tachometr konec;Nákladová cena;Fakturační cena;Změněno v zařízení
+1;Kopecký Tomáš;Nákladní automobil;02.01.2019;7:14;7:59;0:45;60;Rekonstrukce Kladno;Rekonstrukce Kladno;36 626;36 686; 168,00 Kč ; 186,00 Kč ;Web
+2;Procházková Lenka;Soukromý automobil;03.01.2019;7:15;7:32;0:17;14;Kancelář Praha;Finanční úřad;0;14; 33,60 Kč ; 36,40 Kč ;Web
+3;Kopecký Tomáš;Nákladní automobil;04.01.2019;7:15;8:01;0:46;49;Kancelář Praha;Rekonstrukce Kladno;36 686;36 735; 137,20 Kč ; 151,90 Kč ;Web
+4;Kopecký Tomáš;Nákladní automobil;04.01.2019;15:46;16:31;0:45;49;Rekonstrukce Kladno;Kancelář Praha;36 735;36 784; 137,20 Kč ; 151,90 Kč ;Web
+5;Kopecký Tomáš;Nákladní automobil;07.01.2019;9:10;9:45;0:35;49;Rekonstrukce Kladno;Kancelář Praha;36 784;36 833; 137,20 Kč ; 151,90 Kč ;Web
+6;Kopecký Tomáš;Nákladní automobil;07.01.2019;9:45;10:22;0:37;49;Kancelář Praha;Rekonstrukce Kladno;36 833;36 882; 137,20 Kč ; 151,90 Kč ;Web
+7;Kopecký Tomáš;Nákladní automobil;07.01.2019;16:45;17:31;0:46;49;Rekonstrukce Kladno;Kancelář Praha;36 882;36 931; 137,20 Kč ; 151,90 Kč ;Web
+8;Urban Petr;Osobní automobil;07.01.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;14 320;14 369; 107,80 Kč ; 127,40 Kč ;Web
+9;Urban Petr;Osobní automobil;07.01.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;14 369;14 418; 107,80 Kč ; 127,40 Kč ;Web
+10;Kopecký Tomáš;Nákladní automobil;08.01.2019;7:36;8:16;0:40;49;Rekonstrukce Kladno;Kancelář Praha;36 931;36 980; 137,20 Kč ; 151,90 Kč ;Web
+11;Kopecký Tomáš;Nákladní automobil;08.01.2019;8:16;8:53;0:37;49;Kancelář Praha;Rekonstrukce Kladno;36 980;37 029; 137,20 Kč ; 151,90 Kč ;Web
+12;Kopecký Tomáš;Nákladní automobil;08.01.2019;9:58;10:41;0:43;49;Rekonstrukce Kladno;Kancelář Praha;37 029;37 078; 137,20 Kč ; 151,90 Kč ;Web
+13;Kopecký Tomáš;Nákladní automobil;08.01.2019;10:41;11:26;0:45;49;Kancelář Praha;Rekonstrukce Kladno;37 078;37 127; 137,20 Kč ; 151,90 Kč ;Web
+14;Kopecký Tomáš;Nákladní automobil;08.01.2019;15:57;16:32;0:35;49;Rekonstrukce Kladno;Kancelář Praha;37 127;37 176; 137,20 Kč ; 151,90 Kč ;Web
+15;Urban Petr;Osobní automobil;09.01.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;14 418;14 467; 107,80 Kč ; 127,40 Kč ;Web
+16;Urban Petr;Osobní automobil;09.01.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;14 467;14 516; 107,80 Kč ; 127,40 Kč ;Telefon
+17;Procházková Lenka;Soukromý automobil;11.01.2019;7:40;7:58;0:18;16;Kancelář Praha;Stavební úřad;14;30; 38,40 Kč ; 41,60 Kč ;Telefon
+18;Procházková Lenka;Soukromý automobil;11.01.2019;11:15;11:33;0:18;16;Stavební úřad;Kancelář Praha;30;46; 38,40 Kč ; 41,60 Kč ;Web
+19;Urban Petr;Osobní automobil;16.01.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;14 516;14 565; 107,80 Kč ; 127,40 Kč ;Web
+20;Urban Petr;Osobní automobil;16.01.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;14 565;14 614; 107,80 Kč ; 127,40 Kč ;Web
+21;Procházková Lenka;Soukromý automobil;18.01.2019;14:03;14:20;0:17;16;Kancelář Praha;Stavební úřad;46;62; 38,40 Kč ; 41,60 Kč ;Web
+22;Urban Petr;Osobní automobil;18.01.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;14 614;14 663; 107,80 Kč ; 127,40 Kč ;Telefon
+23;Urban Petr;Osobní automobil;18.01.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;14 663;14 712; 107,80 Kč ; 127,40 Kč ;Web
+24;Procházková Lenka;Soukromý automobil;22.01.2019;8:47;9:06;0:19;16;Stavební úřad;Kancelář Praha;62;78; 38,40 Kč ; 41,60 Kč ;Web
+25;Urban Petr;Osobní automobil;23.01.2019;;;0:00;15;Kancelář Praha;Rekonstrukce Praha 2;14 712;14 727; 33,00 Kč ; 39,00 Kč ;Web
+26;Urban Petr;Osobní automobil;23.01.2019;;;0:00;15;Rekonstrukce Praha 2;Kancelář Praha;14 727;14 742; 33,00 Kč ; 39,00 Kč ;Web
+27;Urban Petr;Osobní automobil;24.01.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;14 742;14 791; 107,80 Kč ; 127,40 Kč ;Web
+28;Urban Petr;Osobní automobil;24.01.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;14 791;14 840; 107,80 Kč ; 127,40 Kč ;Web
+29;Kopecký Tomáš;Nákladní automobil;28.01.2019;8:36;9:25;0:49;49;Rekonstrukce Kladno;Kancelář Praha;37 176;37 225; 137,20 Kč ; 151,90 Kč ;Telefon
+30;Kopecký Tomáš;Nákladní automobil;28.01.2019;9:25;10:08;0:43;49;Kancelář Praha;Rekonstrukce Kladno;37 225;37 274; 137,20 Kč ; 151,90 Kč ;Web
+31;Kopecký Tomáš;Nákladní automobil;28.01.2019;15:40;16:23;0:43;49;Rekonstrukce Kladno;Kancelář Praha;37 274;37 323; 137,20 Kč ; 151,90 Kč ;Web
+32;Procházková Lenka;Soukromý automobil;04.02.2019;10:15;10:31;0:16;16;Kancelář Praha;Stavební úřad;78;94; 38,40 Kč ; 41,60 Kč ;Telefon
+33;Kopecký Tomáš;Nákladní automobil;05.02.2019;14:23;16:30;2:07;60;Rekonstrukce Kladno;Rekonstrukce Kladno;37 323;37 383; 168,00 Kč ; 186,00 Kč ;Web
+34;Urban Petr;Osobní automobil;05.02.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;14 840;14 889; 127,40 Kč ; 137,20 Kč ;Web
+35;Urban Petr;Osobní automobil;05.02.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;14 889;14 938; 127,40 Kč ; 137,20 Kč ;Web
+36;Kopecký Tomáš;Nákladní automobil;06.02.2019;7:30;8:15;0:45;49;Kancelář Praha;Rekonstrukce Kladno;37 383;37 432; 137,20 Kč ; 151,90 Kč ;Web
+37;Kopecký Tomáš;Nákladní automobil;06.02.2019;12:30;13:15;0:45;49;Rekonstrukce Kladno;Kancelář Praha;37 432;37 481; 137,20 Kč ; 151,90 Kč ;Web
+38;Procházková Lenka;Soukromý automobil;08.02.2019;12:15;12:30;0:15;14;Kancelář Praha;Finanční úřad;94;108; 33,60 Kč ; 36,40 Kč ;Telefon
+39;Procházková Lenka;Soukromý automobil;11.02.2019;11:14;11:30;0:16;16;Stavební úřad;Kancelář Praha;108;124; 38,40 Kč ; 41,60 Kč ;Web
+40;Urban Petr;Osobní automobil;12.02.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;14 938;14 987; 127,40 Kč ; 137,20 Kč ;Web
+41;Urban Petr;Osobní automobil;12.02.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;14 987;15 036; 127,40 Kč ; 137,20 Kč ;Telefon
+42;Kopecký Tomáš;Nákladní automobil;15.02.2019;7:15;7:59;0:44;49;Kancelář Praha;Rekonstrukce Kladno;37 481;37 530; 137,20 Kč ; 151,90 Kč ;Web
+43;Kopecký Tomáš;Nákladní automobil;15.02.2019;8:30;9:14;0:44;49;Rekonstrukce Kladno;Kancelář Praha;37 530;37 579; 137,20 Kč ; 151,90 Kč ;Web
+44;Kopecký Tomáš;Nákladní automobil;15.02.2019;9:14;10:00;0:46;49;Kancelář Praha;Rekonstrukce Kladno;37 579;37 628; 137,20 Kč ; 151,90 Kč ;Web
+45;Kopecký Tomáš;Nákladní automobil;15.02.2019;12:30;13:11;0:41;49;Rekonstrukce Kladno;Kancelář Praha;37 628;37 677; 137,20 Kč ; 151,90 Kč ;Web
+46;Urban Petr;Osobní automobil;15.02.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;15 036;15 085; 127,40 Kč ; 137,20 Kč ;Web
+47;Urban Petr;Osobní automobil;15.02.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;15 085;15 134; 127,40 Kč ; 137,20 Kč ;Web
+48;Urban Petr;Osobní automobil;18.02.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;15 134;15 183; 127,40 Kč ; 137,20 Kč ;Web
+49;Urban Petr;Osobní automobil;18.02.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;15 183;15 232; 127,40 Kč ; 137,20 Kč ;Web
+50;Procházková Lenka;Soukromý automobil;19.02.2019;8:30;8:47;0:17;16;Stavební úřad;Kancelář Praha;124;140; 38,40 Kč ; 41,60 Kč ;Telefon
+51;Kopecký Tomáš;Nákladní automobil;22.02.2019;7:15;8:00;0:45;49;Kancelář Praha;Rekonstrukce Kladno;37 677;37 726; 137,20 Kč ; 151,90 Kč ;Web
+52;Kopecký Tomáš;Nákladní automobil;22.02.2019;17:45;18:30;0:45;49;Rekonstrukce Kladno;Kancelář Praha;37 726;37 775; 137,20 Kč ; 151,90 Kč ;Web
+53;Urban Petr;Osobní automobil;22.02.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;15 232;15 281; 127,40 Kč ; 137,20 Kč ;Web
+54;Urban Petr;Osobní automobil;22.02.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;15 281;15 330; 127,40 Kč ; 137,20 Kč ;Web
+55;Urban Petr;Osobní automobil;25.02.2019;;;0:00;49;Kancelář Praha;Rekonstrukce Kladno;15 330;15 379; 127,40 Kč ; 137,20 Kč ;Web
+56;Urban Petr;Osobní automobil;25.02.2019;;;0:00;49;Rekonstrukce Kladno;Kancelář Praha;15 379;15 428; 127,40 Kč ; 137,20 Kč ;Telefon
+;;;;;;;;;;;;;;
