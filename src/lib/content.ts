@@ -294,7 +294,16 @@ export const COURSES: Course[] = [
             "Cyberspace threats & attack prevention",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: {
+              cs: "Kybertest.cz – test kybernetické bezpečnosti",
+              en: "Kybertest.cz – cybersecurity test",
+            },
+            href: "https://www.kybertest.cz",
+            kind: "link",
+          },
+        ],
       },
       {
         month: { cs: "Květen", en: "May" },
@@ -373,6 +382,14 @@ export const COURSES: Course[] = [
             label: { cs: "Školní řád a BOZP (PDF)", en: "School rules & safety (PDF)" },
             href: "https://www.sps-tabor.cz/wp-content/uploads/2026/02/2025_Skolni-rad_akt.pdf",
             kind: "doc",
+          },
+          {
+            label: {
+              cs: "Kybertest.cz – test kybernetické bezpečnosti",
+              en: "Kybertest.cz – cybersecurity test",
+            },
+            href: "https://www.kybertest.cz",
+            kind: "link",
           },
         ],
       },
@@ -577,6 +594,14 @@ export const COURSES: Course[] = [
             label: { cs: "Školní řád a BOZP (PDF)", en: "School rules & safety (PDF)" },
             href: "https://www.sps-tabor.cz/wp-content/uploads/2026/02/2025_Skolni-rad_akt.pdf",
             kind: "doc",
+          },
+          {
+            label: {
+              cs: "Kybertest.cz – test kybernetické bezpečnosti",
+              en: "Kybertest.cz – cybersecurity test",
+            },
+            href: "https://www.kybertest.cz",
+            kind: "link",
           },
         ],
       },
