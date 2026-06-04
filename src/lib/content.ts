@@ -368,7 +368,13 @@ export const COURSES: Course[] = [
             "Cloud drives & access, school licences",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: { cs: "Školní řád a BOZP (PDF)", en: "School rules & safety (PDF)" },
+            href: "https://www.sps-tabor.cz/wp-content/uploads/2026/02/2025_Skolni-rad_akt.pdf",
+            kind: "doc",
+          },
+        ],
       },
       {
         month: { cs: "Září – Říjen", en: "September – October" },
@@ -566,7 +572,13 @@ export const COURSES: Course[] = [
             "Cloud drives & access, school licences",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: { cs: "Školní řád a BOZP (PDF)", en: "School rules & safety (PDF)" },
+            href: "https://www.sps-tabor.cz/wp-content/uploads/2026/02/2025_Skolni-rad_akt.pdf",
+            kind: "doc",
+          },
+        ],
       },
       {
         month: { cs: "Září – Říjen", en: "September – October" },
