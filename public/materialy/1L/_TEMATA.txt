@@ -1,0 +1,12 @@
+Sem (do číslovaných podsložek) dávej materiály k jednotlivým tématům.
+Číslo složky = pořadí tématu na webu. Název souboru = popisek odkazu.
+
+1/  →  Organizace, bezpečnost a školní informační systémy
+2/  →  Úvod do informatiky a digitální gramotnost
+3/  →  Textový procesor a práce s dokumenty
+4/  →  Tabulkové procesory a práce s daty
+5/  →  Programování a algoritmizace
+6/  →  Počítačová grafika a práce s multimédii
+7/  →  Internet, bezpečnost a práce s informacemi
+8/  →  Základy databází a práce s informacemi
+9/  →  Časová rezerva a opakování

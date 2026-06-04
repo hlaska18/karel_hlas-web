@@ -14,6 +14,7 @@ import {
 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { COURSES, type Material, type Lang, type CurriculumItem, type Course } from "@/lib/content";
+import type { FolderMaterials } from "@/lib/materials";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
 
@@ -33,7 +34,11 @@ function MaterialIcon({ kind }: { kind?: Material["kind"] }) {
   }
 }
 
-export function Curriculum() {
+export function Curriculum({
+  folderMaterials = {},
+}: {
+  folderMaterials?: FolderMaterials;
+}) {
   const { lang, tr } = useLang();
   const l = tr.lessons;
   const [openId, setOpenId] = useState<string | null>(null);
@@ -113,6 +118,7 @@ export function Curriculum() {
               open={openId === course.id}
               l={l}
               lang={lang}
+              courseMaterials={folderMaterials[course.id]}
             />
           ))}
         </div>
@@ -128,11 +134,13 @@ function CourseTimeline({
   open,
   l,
   lang,
+  courseMaterials,
 }: {
   course: Course;
   open: boolean;
   l: ReturnType<typeof useLang>["tr"]["lessons"];
   lang: Lang;
+  courseMaterials?: Record<number, Material[]>;
 }) {
   // Obsah se připojí až po otevření (menší výchozí HTML). Rozbalení je plynulé
   // díky CSS grid-rows: po připojení obsahu přepneme na 1fr v dalším snímku.
@@ -158,7 +166,9 @@ function CourseTimeline({
       }`}
     >
       <div className="overflow-hidden">
-        {mounted && <Timeline items={course.items} l={l} lang={lang} />}
+        {mounted && (
+          <Timeline items={course.items} l={l} lang={lang} courseMaterials={courseMaterials} />
+        )}
       </div>
     </div>
   );
@@ -168,14 +178,18 @@ function Timeline({
   items,
   l,
   lang,
+  courseMaterials,
 }: {
   items: CurriculumItem[];
   l: ReturnType<typeof useLang>["tr"]["lessons"];
   lang: Lang;
+  courseMaterials?: Record<number, Material[]>;
 }) {
   return (
     <ol className="relative mt-10 ml-1.5 border-l border-black/10 dark:border-white/10">
-      {items.map((item, i) => (
+      {items.map((item, i) => {
+        const mats = [...item.materials, ...(courseMaterials?.[i] ?? [])];
+        return (
         <li key={i} className="relative pb-12 pl-8 last:pb-0 sm:pl-12">
           <span
             aria-hidden
@@ -226,9 +240,9 @@ function Timeline({
               <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
                 {l.materialsLabel}
               </p>
-              {item.materials.length > 0 ? (
+              {mats.length > 0 ? (
                 <ul className="mt-3 flex flex-col gap-2">
-                  {item.materials.map((mat, k) => {
+                  {mats.map((mat, k) => {
                     const ready = Boolean(mat.href) && mat.href !== "#";
                     return (
                       <li key={k}>
@@ -266,7 +280,8 @@ function Timeline({
             </div>
           </div>
         </li>
-      ))}
+        );
+      })}
     </ol>
   );
 }

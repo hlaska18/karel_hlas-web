@@ -4,8 +4,10 @@ import { About } from "@/components/About";
 import { Curriculum } from "@/components/Curriculum";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
+import { getFolderMaterials } from "@/lib/materials";
 
 export default function Home() {
+  const folderMaterials = getFolderMaterials();
   return (
     <>
       <Header />
@@ -13,7 +15,7 @@ export default function Home() {
         <Hero />
         <About />
         <Contact />
-        <Curriculum />
+        <Curriculum folderMaterials={folderMaterials} />
       </main>
       <Footer />
     </>

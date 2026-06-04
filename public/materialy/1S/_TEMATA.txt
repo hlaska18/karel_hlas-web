@@ -1,0 +1,12 @@
+Sem (do číslovaných podsložek) dávej materiály k jednotlivým tématům.
+Číslo složky = pořadí tématu na webu. Název souboru = popisek odkazu.
+
+1/  →  Organizace, bezpečnost a školní informační systémy
+2/  →  Operační systémy a práce se soubory
+3/  →  Kancelářské aplikace
+4/  →  Základy programování a algoritmizace (Minecraft EE)
+5/  →  Základy skriptování a automatizace
+6/  →  Vyhledávání a ověřování informací, práce s AI
+7/  →  Úvod do internetu věcí (IoT)
+8/  →  Grafika a technická dokumentace
+9/  →  Časová rezerva a opakování

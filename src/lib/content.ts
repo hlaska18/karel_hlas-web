@@ -105,11 +105,6 @@ export const COURSES: Course[] = [
         },
         materials: [
           {
-            label: { cs: "Úvodní prezentace", en: "Intro slides" },
-            href: "#",
-            kind: "slides",
-          },
-          {
             label: { cs: "Školní řád a BOZP (PDF)", en: "School rules & safety (PDF)" },
             href: "https://www.sps-tabor.cz/wp-content/uploads/2026/02/2025_Skolni-rad_akt.pdf",
             kind: "doc",
