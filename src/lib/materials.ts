@@ -1,11 +1,12 @@
 import fs from "fs";
 import path from "path";
-import type { Material } from "@/lib/content";
+import type { Material, MaterialEntry } from "@/lib/content";
 
 /**
- * Načte materiály ze složek public/materialy/<kurz>/<čísloTématu>/<soubory>.
+ * Načte materiály ze složek public/materialy/<kurz>/<čísloTématu>/…
+ *  - soubor přímo ve složce tématu  → jednotlivý odkaz
+ *  - PODSLOŽKA ve složce tématu      → rozbalovací skupina (název = název složky)
  * Běží při buildu na serveru (po pushnutí nových souborů Vercel přebuilduje).
- * Díky tomu stačí soubor přetáhnout do správné složky – žádná editace kódu.
  */
 
 const ROOT = path.join(process.cwd(), "public", "materialy");
@@ -22,12 +23,34 @@ function kindFromExt(ext: string): Material["kind"] {
   return "link";
 }
 
-export type FolderMaterials = Record<string, Record<number, Material[]>>;
+function isHidden(name: string): boolean {
+  return name.startsWith(".") || /^_tema|^readme/i.test(name);
+}
+
+function cleanLabel(file: string): string {
+  const ext = path.extname(file);
+  const base = file
+    .slice(0, file.length - ext.length)
+    .replace(/^\d+[\s._-]+/, "")
+    .trim();
+  return base || file;
+}
+
+function fileToMaterial(courseId: string, segments: string[], file: string): Material {
+  const parts = [courseId, ...segments, file].map((s) => encodeURIComponent(s));
+  const href = "/materialy/" + parts.join("/");
+  const label = cleanLabel(file);
+  return { label: { cs: label, en: label }, href, kind: kindFromExt(path.extname(file)) };
+}
+
+const byName = (a: string, b: string) => a.localeCompare(b, "cs", { numeric: true });
+
+export type FolderMaterials = Record<string, Record<number, MaterialEntry[]>>;
 
 export function getFolderMaterials(): FolderMaterials {
   const out: FolderMaterials = {};
 
-  let courseDirs: string[] = [];
+  let courseDirs: string[];
   try {
     courseDirs = fs
       .readdirSync(ROOT, { withFileTypes: true })
@@ -39,7 +62,7 @@ export function getFolderMaterials(): FolderMaterials {
 
   for (const courseId of courseDirs) {
     const courseDir = path.join(ROOT, courseId);
-    let topicDirs: string[] = [];
+    let topicDirs: string[];
     try {
       topicDirs = fs
         .readdirSync(courseDir, { withFileTypes: true })
@@ -52,33 +75,40 @@ export function getFolderMaterials(): FolderMaterials {
     for (const topicDir of topicDirs) {
       const m = topicDir.match(/^(\d+)/);
       if (!m) continue;
-      const topicIndex = parseInt(m[1], 10) - 1; // složka „4" → index 3
+      const topicIndex = parseInt(m[1], 10) - 1;
       if (topicIndex < 0) continue;
 
       const dir = path.join(courseDir, topicDir);
-      let files: string[] = [];
+      let dirents: fs.Dirent[];
       try {
-        files = fs
-          .readdirSync(dir)
-          .filter((f) => !f.startsWith(".") && !/^readme|_tema/i.test(f));
+        dirents = fs.readdirSync(dir, { withFileTypes: true });
       } catch {
         continue;
       }
-      files.sort((a, b) => a.localeCompare(b, "cs"));
 
-      const mats: Material[] = files.map((file) => {
-        const ext = path.extname(file);
-        const base =
-          file.slice(0, file.length - ext.length).replace(/^\d+[\s._-]+/, "").trim() || file;
-        const href = `/materialy/${encodeURIComponent(courseId)}/${encodeURIComponent(
-          topicDir,
-        )}/${encodeURIComponent(file)}`;
-        return { label: { cs: base, en: base }, href, kind: kindFromExt(ext) };
-      });
+      const entries: MaterialEntry[] = [];
+      const sorted = dirents.filter((d) => !isHidden(d.name)).sort((a, b) => byName(a.name, b.name));
 
-      if (mats.length) {
+      for (const d of sorted) {
+        if (d.isDirectory()) {
+          const subDir = path.join(dir, d.name);
+          let files: string[] = [];
+          try {
+            files = fs.readdirSync(subDir).filter((f) => !isHidden(f));
+          } catch {
+            /* ignore */
+          }
+          files.sort(byName);
+          const items = files.map((f) => fileToMaterial(courseId, [topicDir, d.name], f));
+          if (items.length) entries.push({ label: { cs: d.name, en: d.name }, items });
+        } else if (d.isFile()) {
+          entries.push(fileToMaterial(courseId, [topicDir], d.name));
+        }
+      }
+
+      if (entries.length) {
         out[courseId] = out[courseId] ?? {};
-        out[courseId][topicIndex] = mats;
+        out[courseId][topicIndex] = entries;
       }
     }
   }

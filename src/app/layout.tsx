@@ -3,6 +3,7 @@ import { Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
+import { SmoothScroll } from "@/components/SmoothScroll";
 import { SITE, SOCIALS } from "@/lib/content";
 
 const display = Space_Grotesk({
@@ -112,6 +113,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(personJsonLd) }}
         />
         <Analytics />
+        <SmoothScroll />
       </body>
     </html>
   );

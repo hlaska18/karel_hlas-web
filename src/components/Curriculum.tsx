@@ -11,9 +11,18 @@ import {
   Target,
   GraduationCap,
   ChevronDown,
+  Folder,
 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { COURSES, type Material, type Lang, type CurriculumItem, type Course } from "@/lib/content";
+import {
+  COURSES,
+  type Material,
+  type MaterialGroup,
+  type MaterialEntry,
+  type Lang,
+  type CurriculumItem,
+  type Course,
+} from "@/lib/content";
 import type { FolderMaterials } from "@/lib/materials";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
@@ -140,7 +149,7 @@ function CourseTimeline({
   open: boolean;
   l: ReturnType<typeof useLang>["tr"]["lessons"];
   lang: Lang;
-  courseMaterials?: Record<number, Material[]>;
+  courseMaterials?: Record<number, MaterialEntry[]>;
 }) {
   // Obsah se připojí až po otevření (menší výchozí HTML). Rozbalení je plynulé
   // díky CSS grid-rows: po připojení obsahu přepneme na 1fr v dalším snímku.
@@ -183,7 +192,7 @@ function Timeline({
   items: CurriculumItem[];
   l: ReturnType<typeof useLang>["tr"]["lessons"];
   lang: Lang;
-  courseMaterials?: Record<number, Material[]>;
+  courseMaterials?: Record<number, MaterialEntry[]>;
 }) {
   return (
     <ol className="relative mt-10 ml-1.5 border-l border-black/10 dark:border-white/10">
@@ -242,35 +251,13 @@ function Timeline({
               </p>
               {mats.length > 0 ? (
                 <ul className="mt-3 flex flex-col gap-2">
-                  {mats.map((mat, k) => {
-                    const ready = Boolean(mat.href) && mat.href !== "#";
-                    return (
-                      <li key={k}>
-                        {ready ? (
-                          <a
-                            href={mat.href}
-                            target={mat.href.startsWith("http") ? "_blank" : undefined}
-                            rel={mat.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                            className="glass-soft group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
-                          >
-                            <span className="text-accent-500">
-                              <MaterialIcon kind={mat.kind} />
-                            </span>
-                            <span className="flex-1">{mat.label[lang]}</span>
-                            <ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
-                          </a>
-                        ) : (
-                          <span className="flex items-center gap-3 rounded-xl border border-dashed border-black/10 px-3.5 py-2.5 text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
-                            <MaterialIcon kind={mat.kind} />
-                            <span className="flex-1">{mat.label[lang]}</span>
-                            <span className="rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:bg-white/10 dark:text-zinc-400">
-                              {l.soon}
-                            </span>
-                          </span>
-                        )}
-                      </li>
-                    );
-                  })}
+                  {mats.map((entry, k) =>
+                    "items" in entry ? (
+                      <MaterialGroupItem key={k} group={entry} l={l} lang={lang} />
+                    ) : (
+                      <MaterialLink key={k} mat={entry} l={l} lang={lang} />
+                    ),
+                  )}
                 </ul>
               ) : (
                 <p className="mt-3 rounded-xl border border-dashed border-black/10 px-3.5 py-3 text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
@@ -283,5 +270,88 @@ function Timeline({
         );
       })}
     </ol>
+  );
+}
+
+type Lessons = ReturnType<typeof useLang>["tr"]["lessons"];
+
+function MaterialLink({ mat, l, lang }: { mat: Material; l: Lessons; lang: Lang }) {
+  const ready = Boolean(mat.href) && mat.href !== "#";
+  if (!ready) {
+    return (
+      <li>
+        <span className="flex items-center gap-3 rounded-xl border border-dashed border-black/10 px-3.5 py-2.5 text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
+          <MaterialIcon kind={mat.kind} />
+          <span className="flex-1">{mat.label[lang]}</span>
+          <span className="rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:bg-white/10 dark:text-zinc-400">
+            {l.soon}
+          </span>
+        </span>
+      </li>
+    );
+  }
+  return (
+    <li>
+      <a
+        href={mat.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="glass-soft group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
+      >
+        <span className="text-accent-500">
+          <MaterialIcon kind={mat.kind} />
+        </span>
+        <span className="flex-1">{mat.label[lang]}</span>
+        <ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
+      </a>
+    </li>
+  );
+}
+
+function MaterialGroupItem({ group, l, lang }: { group: MaterialGroup; l: Lessons; lang: Lang }) {
+  const [open, setOpen] = useState(false);
+  return (
+    <li>
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="glass-soft flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
+      >
+        <span className="text-accent-500">
+          <Folder className="h-4 w-4 shrink-0" />
+        </span>
+        <span className="flex-1 text-left">{group.label[lang]}</span>
+        <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400">
+          {group.items.length}
+        </span>
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 transition-transform duration-300 ${
+            open ? "rotate-180 text-accent-600 dark:text-accent-400" : ""
+          }`}
+        />
+      </button>
+
+      {open && (
+        <ul className="ml-3 mt-1.5 flex flex-col gap-1 border-l border-black/10 pl-3 dark:border-white/10">
+          {group.items.map((m, k) => (
+            <li key={k}>
+              <a
+                href={m.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-zinc-600 transition hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
+              >
+                <span className="text-accent-500">
+                  <MaterialIcon kind={m.kind} />
+                </span>
+                <span className="flex-1">{m.label[lang]}</span>
+                <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+    </li>
   );
 }

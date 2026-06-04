@@ -56,6 +56,15 @@ export type Material = {
   kind?: "doc" | "slides" | "video" | "code" | "link";
 };
 
+/** Skupina materiálů = podsložka (rozbalí se po kliknutí). */
+export type MaterialGroup = {
+  label: { cs: string; en: string };
+  items: Material[];
+};
+
+/** Položka v seznamu materiálů: buď jeden soubor/odkaz, nebo skupina. */
+export type MaterialEntry = Material | MaterialGroup;
+
 export type CurriculumItem = {
   month: { cs: string; en: string };
   title: { cs: string; en: string };
