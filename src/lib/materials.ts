@@ -20,7 +20,7 @@ function kindFromExt(ext: string): Material["kind"] {
   )
     return "code";
   if (
-    [".pdf", ".doc", ".docx", ".odt", ".txt", ".rtf", ".xls", ".xlsx", ".xlsm", ".csv", ".accdb"].includes(e)
+    [".pdf", ".doc", ".docx", ".odt", ".txt", ".rtf", ".xls", ".xlsx", ".xlsm", ".csv", ".accdb", ".pbix"].includes(e)
   )
     return "doc";
   return "link";
