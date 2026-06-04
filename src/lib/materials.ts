@@ -30,11 +30,21 @@ function isHidden(name: string): boolean {
   return name.startsWith(".") || /^_tema|^readme/i.test(name);
 }
 
+/**
+ * Zobrazovaný název. Řadicí prefix „1. " / „2) " na začátku se NEzobrazí
+ * (slouží jen k pořadí). Podtržítka → mezery. Vnitřní čísla úloh („01_…",
+ * „PracL01…") zůstávají, protože nemají tečku/závorku za číslem.
+ */
+function displayName(name: string): string {
+  return name
+    .replace(/^\d+[.)]\s+/, "")
+    .replace(/_/g, " ")
+    .trim();
+}
+
 function cleanLabel(file: string): string {
   const ext = path.extname(file);
-  // podtržítka → mezery (čísla úloh ponecháváme, slouží i k řazení)
-  const base = file.slice(0, file.length - ext.length).replace(/_/g, " ").trim();
-  return base || file;
+  return displayName(file.slice(0, file.length - ext.length)) || file;
 }
 
 function fileToMaterial(courseId: string, segments: string[], file: string): Material {
@@ -101,7 +111,10 @@ export function getFolderMaterials(): FolderMaterials {
           }
           files.sort(byName);
           const items = files.map((f) => fileToMaterial(courseId, [topicDir, d.name], f));
-          if (items.length) entries.push({ label: { cs: d.name, en: d.name }, items });
+          if (items.length) {
+            const gl = displayName(d.name);
+            entries.push({ label: { cs: gl, en: gl }, items });
+          }
         } else if (d.isFile()) {
           entries.push(fileToMaterial(courseId, [topicDir], d.name));
         }
