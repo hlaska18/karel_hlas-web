@@ -1,13 +1,12 @@
 import { ReactNode } from "react";
 
 /**
- * Lehký „nájezd" obsahu čistě přes CSS – animace se spustí ihned při
- * vykreslení (nečeká na JavaScript), takže obsah je na mobilu hned vidět.
- * Při systémovém nastavení „omezit pohyb" se animace vypne (viz globals.css).
+ * Jednoduchý wrapper – obsah se vykreslí OKAMŽITĚ, bez animace, která by
+ * blokovala jeho zobrazení (důležité pro rychlé načtení na mobilu).
+ * Parametry delay/y jsou ponechány kvůli zpětné kompatibilitě, ale ignorují se.
  */
 export function Reveal({
   children,
-  delay = 0,
   className = "",
 }: {
   children: ReactNode;
@@ -15,12 +14,5 @@ export function Reveal({
   y?: number;
   className?: string;
 }) {
-  return (
-    <div
-      className={`animate-fade-up ${className}`}
-      style={delay ? { animationDelay: `${delay}s` } : undefined}
-    >
-      {children}
-    </div>
-  );
+  return <div className={className}>{children}</div>;
 }
