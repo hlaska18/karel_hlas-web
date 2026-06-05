@@ -354,6 +354,11 @@ export const COURSES: Course[] = [
             href: "https://digitalizace.rvp.cz/files/bezpecna-hesla.pdf",
             kind: "doc",
           },
+          {
+            label: { cs: "DigiVýuka: Digitální stopa", en: "DigiVýuka: Digital footprint" },
+            href: "https://www.digivyuka.cz/mod/book/view.php?id=71",
+            kind: "link",
+          },
         ],
       },
       {
