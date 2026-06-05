@@ -148,7 +148,16 @@ export const COURSES: Course[] = [
             "Basics of the command line (Windows)",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: {
+              cs: "Microsoft Learn: Příkazový řádek – syntaxe",
+              en: "Microsoft Learn: Command-line syntax",
+            },
+            href: "https://learn.microsoft.com/cs-cz/dotnet/standard/commandline/syntax",
+            kind: "doc",
+          },
+        ],
       },
       {
         month: { cs: "Říjen", en: "October" },
@@ -236,7 +245,26 @@ export const COURSES: Course[] = [
             "Variables, functions & input/output operations",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: { cs: "Crash Course: Computer Science", en: "Crash Course: Computer Science" },
+            href: "https://thecrashcourse.com/topic/computerscience/",
+            kind: "video",
+          },
+          {
+            label: {
+              cs: "Minecraft Education: Coding Fundamentals",
+              en: "Minecraft Education: Coding Fundamentals",
+            },
+            href: "https://education.minecraft.net/en-us/resources/computer-science/coding-fundamentals",
+            kind: "code",
+          },
+          {
+            label: { cs: "Minecraft Education: Python 101", en: "Minecraft Education: Python 101" },
+            href: "https://education.minecraft.net/en-us/resources/computer-science/python-101",
+            kind: "code",
+          },
+        ],
       },
       {
         month: { cs: "Únor – Březen", en: "February – March" },
@@ -446,7 +474,26 @@ export const COURSES: Course[] = [
             "Using Minecraft to model production systems",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: { cs: "Crash Course: Computer Science", en: "Crash Course: Computer Science" },
+            href: "https://thecrashcourse.com/topic/computerscience/",
+            kind: "video",
+          },
+          {
+            label: {
+              cs: "Minecraft Education: Coding Fundamentals",
+              en: "Minecraft Education: Coding Fundamentals",
+            },
+            href: "https://education.minecraft.net/en-us/resources/computer-science/coding-fundamentals",
+            kind: "code",
+          },
+          {
+            label: { cs: "Minecraft Education: Python 101", en: "Minecraft Education: Python 101" },
+            href: "https://education.minecraft.net/en-us/resources/computer-science/python-101",
+            kind: "code",
+          },
+        ],
       },
       {
         month: { cs: "Březen", en: "March" },
@@ -658,7 +705,26 @@ export const COURSES: Course[] = [
             "Using Minecraft to model production systems",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: { cs: "Crash Course: Computer Science", en: "Crash Course: Computer Science" },
+            href: "https://thecrashcourse.com/topic/computerscience/",
+            kind: "video",
+          },
+          {
+            label: {
+              cs: "Minecraft Education: Coding Fundamentals",
+              en: "Minecraft Education: Coding Fundamentals",
+            },
+            href: "https://education.minecraft.net/en-us/resources/computer-science/coding-fundamentals",
+            kind: "code",
+          },
+          {
+            label: { cs: "Minecraft Education: Python 101", en: "Minecraft Education: Python 101" },
+            href: "https://education.minecraft.net/en-us/resources/computer-science/python-101",
+            kind: "code",
+          },
+        ],
       },
       {
         month: { cs: "Březen", en: "March" },
