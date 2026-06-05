@@ -33,7 +33,10 @@ export const metadata: Metadata = {
   authors: [{ name: "Karel Hlas", url: SITE.url }],
   creator: "Karel Hlas",
   applicationName: "Karel Hlas",
-  alternates: { canonical: "/" },
+  alternates: {
+    canonical: "/",
+    languages: { cs: "/", en: "/en", "x-default": "/" },
+  },
   openGraph: {
     title: "Karel Hlas — Učitel informatiky a angličtiny",
     description:
