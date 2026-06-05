@@ -339,6 +339,21 @@ export const COURSES: Course[] = [
             href: "https://www.kybertest.cz",
             kind: "link",
           },
+          {
+            label: { cs: "Kyberpříběhy (PDF)", en: "Cyber stories (PDF)" },
+            href: "https://digitalizace.rvp.cz/files/aidig-kyberpribehy.pdf",
+            kind: "doc",
+          },
+          {
+            label: { cs: "Kyberbezpečnost a anonymita (PDF)", en: "Cybersecurity & anonymity (PDF)" },
+            href: "https://digitalizace.rvp.cz/files/aidigi-kyberbsanon.pdf",
+            kind: "doc",
+          },
+          {
+            label: { cs: "Bezpečná hesla (PDF)", en: "Safe passwords (PDF)" },
+            href: "https://digitalizace.rvp.cz/files/bezpecna-hesla.pdf",
+            kind: "doc",
+          },
         ],
       },
       {
@@ -418,14 +433,6 @@ export const COURSES: Course[] = [
             label: { cs: "Školní řád a BOZP (PDF)", en: "School rules & safety (PDF)" },
             href: "https://www.sps-tabor.cz/wp-content/uploads/2026/02/2025_Skolni-rad_akt.pdf",
             kind: "doc",
-          },
-          {
-            label: {
-              cs: "Kybertest.cz – test kybernetické bezpečnosti",
-              en: "Kybertest.cz – cybersecurity test",
-            },
-            href: "https://www.kybertest.cz",
-            kind: "link",
           },
         ],
       },
@@ -565,7 +572,16 @@ export const COURSES: Course[] = [
             "Fake news",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: {
+              cs: "Kybertest.cz – test kybernetické bezpečnosti",
+              en: "Kybertest.cz – cybersecurity test",
+            },
+            href: "https://www.kybertest.cz",
+            kind: "link",
+          },
+        ],
       },
       {
         month: { cs: "Květen", en: "May" },
@@ -658,14 +674,6 @@ export const COURSES: Course[] = [
             href: "https://www.sps-tabor.cz/wp-content/uploads/2026/02/2025_Skolni-rad_akt.pdf",
             kind: "doc",
           },
-          {
-            label: {
-              cs: "Kybertest.cz – test kybernetické bezpečnosti",
-              en: "Kybertest.cz – cybersecurity test",
-            },
-            href: "https://www.kybertest.cz",
-            kind: "link",
-          },
         ],
       },
       {
@@ -804,7 +812,16 @@ export const COURSES: Course[] = [
             "Fake news",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: {
+              cs: "Kybertest.cz – test kybernetické bezpečnosti",
+              en: "Kybertest.cz – cybersecurity test",
+            },
+            href: "https://www.kybertest.cz",
+            kind: "link",
+          },
+        ],
       },
       {
         month: { cs: "Květen", en: "May" },
