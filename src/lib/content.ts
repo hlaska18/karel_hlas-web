@@ -300,7 +300,13 @@ export const COURSES: Course[] = [
             "Creating infographics & presentations",
           ],
         },
-        materials: [],
+        materials: [
+          {
+            label: { cs: "Canva: Základy grafického designu", en: "Canva: Graphic design basics" },
+            href: "https://www.canva.com/design-school/courses/graphic-design-basics-from-the-experts",
+            kind: "video",
+          },
+        ],
       },
       {
         month: { cs: "Duben", en: "April" },
