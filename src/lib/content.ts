@@ -264,6 +264,14 @@ export const COURSES: Course[] = [
             href: "https://education.minecraft.net/en-us/resources/computer-science/python-101",
             kind: "code",
           },
+          {
+            label: {
+              cs: "Jak naimportovat svět do Minecraft Education Edition",
+              en: "How to import a world into Minecraft Education Edition",
+            },
+            href: "https://www.google.com/search?q=how+to+import+a+world+to+minecraft+education+edition",
+            kind: "link",
+          },
         ],
       },
       {
@@ -492,6 +500,14 @@ export const COURSES: Course[] = [
             label: { cs: "Minecraft Education: Python 101", en: "Minecraft Education: Python 101" },
             href: "https://education.minecraft.net/en-us/resources/computer-science/python-101",
             kind: "code",
+          },
+          {
+            label: {
+              cs: "Jak naimportovat svět do Minecraft Education Edition",
+              en: "How to import a world into Minecraft Education Edition",
+            },
+            href: "https://www.google.com/search?q=how+to+import+a+world+to+minecraft+education+edition",
+            kind: "link",
           },
         ],
       },
@@ -723,6 +739,14 @@ export const COURSES: Course[] = [
             label: { cs: "Minecraft Education: Python 101", en: "Minecraft Education: Python 101" },
             href: "https://education.minecraft.net/en-us/resources/computer-science/python-101",
             kind: "code",
+          },
+          {
+            label: {
+              cs: "Jak naimportovat svět do Minecraft Education Edition",
+              en: "How to import a world into Minecraft Education Edition",
+            },
+            href: "https://www.google.com/search?q=how+to+import+a+world+to+minecraft+education+edition",
+            kind: "link",
           },
         ],
       },
