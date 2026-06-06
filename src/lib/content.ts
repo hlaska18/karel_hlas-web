@@ -70,6 +70,8 @@ export type CurriculumItem = {
   title: { cs: string; en: string };
   goal: { cs: string; en: string };
   topics: { cs: string[]; en: string[] };
+  /** Metodická poznámka / časování – zobrazí se jen v učitelském pohledu. */
+  teacherNote?: string;
   materials: Material[];
 };
 
@@ -130,6 +132,8 @@ export const COURSES: Course[] = [
           cs: "Znát základy práce s počítačem, operačním systémem a kybernetickou bezpečností.",
           en: "Know the basics of the computer, operating system and cybersecurity.",
         },
+        teacherNote:
+          "UKÁZKA (pro učitele): úvod věnuj přihlášení do školních systémů a kyberbezpečnosti; příkazový řádek zařaď až po základech OS. (~3 h)",
         topics: {
           cs: [
             "Práce s operačním systémem a základní nastavení",
@@ -926,6 +930,9 @@ type Dict = {
     materialsLabel: string;
     noMaterials: string;
     soon: string;
+    viewStudent: string;
+    viewTeacher: string;
+    teacherNoteLabel: string;
   };
   contact: {
     kicker: string;
@@ -1010,6 +1017,9 @@ export const t: Record<Lang, Dict> = {
       materialsLabel: "Materiály",
       noMaterials: "Materiály budou postupně doplňovány.",
       soon: "brzy",
+      viewStudent: "Žák",
+      viewTeacher: "Učitel",
+      teacherNoteLabel: "Pro učitele",
     },
     contact: {
       kicker: "Kontakt",
@@ -1098,6 +1108,9 @@ export const t: Record<Lang, Dict> = {
       materialsLabel: "Materials",
       noMaterials: "Materials will be added gradually.",
       soon: "soon",
+      viewStudent: "Student",
+      viewTeacher: "Teacher",
+      teacherNoteLabel: "For teachers",
     },
     contact: {
       kicker: "Contact",
