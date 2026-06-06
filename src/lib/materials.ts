@@ -30,6 +30,11 @@ function isHidden(name: string): boolean {
   return name.startsWith(".") || /^_tema|^readme/i.test(name);
 }
 
+/** Učitelská podsložka – její obsah se ukáže jen v učitelském pohledu. Konvence: „_ucitel". */
+function isTeacherDir(name: string): boolean {
+  return /^_?(u[čc]itel|pro[ _]u[čc]itel)/i.test(name);
+}
+
 /**
  * Zobrazovaný název. Řadicí prefix „1. " / „2) " na začátku se NEzobrazí
  * (slouží jen k pořadí). Podtržítka → mezery. Vnitřní čísla úloh („01_…",
@@ -98,6 +103,7 @@ export function getFolderMaterials(): FolderMaterials {
       }
 
       const entries: MaterialEntry[] = [];
+      const teacherEntries: MaterialEntry[] = [];
       const sorted = dirents.filter((d) => !isHidden(d.name)).sort((a, b) => byName(a.name, b.name));
 
       for (const d of sorted) {
@@ -110,6 +116,18 @@ export function getFolderMaterials(): FolderMaterials {
             /* ignore */
           }
           files.sort(byName);
+
+          if (isTeacherDir(d.name)) {
+            // Učitelská podsložka → jednotlivé materiály jen pro učitelský pohled.
+            for (const f of files) {
+              teacherEntries.push({
+                ...fileToMaterial(courseId, [topicDir, d.name], f),
+                teacherOnly: true,
+              });
+            }
+            continue;
+          }
+
           const items = files.map((f) => fileToMaterial(courseId, [topicDir, d.name], f));
           if (items.length) {
             const gl = displayName(d.name);
@@ -120,9 +138,11 @@ export function getFolderMaterials(): FolderMaterials {
         }
       }
 
-      if (entries.length) {
+      // Učitelské materiály vždy až za žákovskými.
+      const all = [...entries, ...teacherEntries];
+      if (all.length) {
         out[courseId] = out[courseId] ?? {};
-        out[courseId][topicIndex] = entries;
+        out[courseId][topicIndex] = all;
       }
     }
   }

@@ -8,5 +8,11 @@ JAK PŘIDAT MATERIÁL (bez cloudu, bez editace kódu):
 
 3) V GitHub Desktopu klikni Push. Za ~1–2 min se materiál objeví u tématu.
 
+PODSLOŽKY:
+ - Obyčejná podsložka (např. "Pracovní listy/") = rozbalovací skupina materiálů.
+ - Podsložka "_ucitel/" = UČITELSKÉ materiály. Ukážou se POUZE v učitelském
+   pohledu (přepínač Žák/Učitel) a mají odznak "Pro učitele". Žáci je nevidí.
+   Příklad: public/materialy/1L/8/_ucitel/Metodika.pdf
+
 Kurzy:  1L = Technické lyceum · 1S = Strojírenství · 1P = Pozemní stavitelství
 Tip: velká videa sem nedávej (radši YouTube odkaz) – web má mít rozumnou velikost.

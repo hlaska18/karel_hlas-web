@@ -269,7 +269,9 @@ function Timeline({
   return (
     <ol className="relative mt-10 ml-1.5 border-l border-black/10 dark:border-white/10">
       {items.map((item, i) => {
-        const mats = [...item.materials, ...(courseMaterials?.[i] ?? [])];
+        const mats = [...item.materials, ...(courseMaterials?.[i] ?? [])].filter(
+          (m) => teacherView || !m.teacherOnly,
+        );
         return (
         <li key={i} className="relative pb-12 pl-8 last:pb-0 sm:pl-12">
           <span
@@ -388,6 +390,11 @@ function MaterialLink({ mat, l, lang }: { mat: Material; l: Lessons; lang: Lang 
           <MaterialIcon kind={mat.kind} />
         </span>
         <span className="flex-1">{mat.label[lang]}</span>
+        {mat.teacherOnly && (
+          <span className="rounded-full bg-accent-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-700 dark:bg-accent-400/15 dark:text-accent-300">
+            {l.teacherNoteLabel}
+          </span>
+        )}
         <ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
       </a>
     </li>

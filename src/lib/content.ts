@@ -54,12 +54,16 @@ export type Material = {
   label: { cs: string; en: string };
   href: string;
   kind?: "doc" | "slides" | "video" | "code" | "link";
+  /** Jen pro učitelský pohled (žáci ho nevidí). */
+  teacherOnly?: boolean;
 };
 
 /** Skupina materiálů = podsložka (rozbalí se po kliknutí). */
 export type MaterialGroup = {
   label: { cs: string; en: string };
   items: Material[];
+  /** Jen pro učitelský pohled (žáci ho nevidí). */
+  teacherOnly?: boolean;
 };
 
 /** Položka v seznamu materiálů: buď jeden soubor/odkaz, nebo skupina. */
