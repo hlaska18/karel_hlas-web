@@ -415,6 +415,11 @@ function MaterialGroupItem({ group, l, lang }: { group: MaterialGroup; l: Lesson
           <Folder className="h-4 w-4 shrink-0" />
         </span>
         <span className="flex-1 text-left">{group.label[lang]}</span>
+        {group.teacherOnly && (
+          <span className="rounded-full bg-accent-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-700 dark:bg-accent-400/15 dark:text-accent-300">
+            {l.teacherNoteLabel}
+          </span>
+        )}
         <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400">
           {group.items.length}
         </span>

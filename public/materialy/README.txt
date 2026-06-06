@@ -13,6 +13,8 @@ PODSLOŽKY:
  - Podsložka "_ucitel/" = UČITELSKÉ materiály. Ukážou se POUZE v učitelském
    pohledu (přepínač Žák/Učitel) a mají odznak "Pro učitele". Žáci je nevidí.
    Příklad: public/materialy/1L/8/_ucitel/Metodika.pdf
+   Uvnitř "_ucitel/" může být i podsložka = rozbalovací učitelská skupina, např.
+   public/materialy/1L/5/_ucitel/Python - metodické listy/MetodL00.pdf
 
 Kurzy:  1L = Technické lyceum · 1S = Strojírenství · 1P = Pozemní stavitelství
 Tip: velká videa sem nedávej (radši YouTube odkaz) – web má mít rozumnou velikost.

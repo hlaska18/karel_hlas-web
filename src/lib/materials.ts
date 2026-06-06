@@ -118,12 +118,38 @@ export function getFolderMaterials(): FolderMaterials {
           files.sort(byName);
 
           if (isTeacherDir(d.name)) {
-            // Učitelská podsložka → jednotlivé materiály jen pro učitelský pohled.
-            for (const f of files) {
-              teacherEntries.push({
-                ...fileToMaterial(courseId, [topicDir, d.name], f),
-                teacherOnly: true,
-              });
+            // Učitelská podsložka (jen pro učitelský pohled):
+            //   soubor uvnitř  → jednotlivý materiál
+            //   PODSLOŽKA      → rozbalovací skupina
+            let tents: fs.Dirent[] = [];
+            try {
+              tents = fs
+                .readdirSync(subDir, { withFileTypes: true })
+                .filter((x) => !isHidden(x.name));
+            } catch {
+              /* ignore */
+            }
+            tents.sort((a, b) => byName(a.name, b.name));
+            for (const t of tents) {
+              if (t.isDirectory()) {
+                let gf: string[] = [];
+                try {
+                  gf = fs.readdirSync(path.join(subDir, t.name)).filter((f) => !isHidden(f));
+                } catch {
+                  /* ignore */
+                }
+                gf.sort(byName);
+                const items = gf.map((f) => fileToMaterial(courseId, [topicDir, d.name, t.name], f));
+                if (items.length) {
+                  const gl = displayName(t.name);
+                  teacherEntries.push({ label: { cs: gl, en: gl }, items, teacherOnly: true });
+                }
+              } else if (t.isFile()) {
+                teacherEntries.push({
+                  ...fileToMaterial(courseId, [topicDir, d.name], t.name),
+                  teacherOnly: true,
+                });
+              }
             }
             continue;
           }
