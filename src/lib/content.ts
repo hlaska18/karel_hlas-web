@@ -1067,7 +1067,7 @@ export const t: Record<Lang, Dict> = {
     nav: { about: "About", lessons: "Lessons", contact: "Contact" },
     hero: {
       badge: "SPŠ Tábor · CS & English",
-      role: "Computer Science & English Teacher",
+      role: "Computer Science & English Language Teacher",
       tagline:
         "Finding practical, easy-to-grasp ways to bring modern technology and languages closer to students.",
       ctaLessons: "Lessons & materials",
@@ -1076,10 +1076,10 @@ export const t: Record<Lang, Dict> = {
     },
     about: {
       kicker: "About me",
-      heading: "A teacher who loves technology and people",
+      heading: "A teacher who loves technology",
       paragraphs: [
-        "I'm a teacher of Computer Science and English at the Secondary Technical School of Engineering and Construction in Tábor, Czech Republic. I studied the Technical Lyceum here, specialising in programming and robotics, and then completed both my Bachelor's and Master's degrees at the Faculty of Education, University of South Bohemia.",
-        "I started out as a teaching assistant and Computer Science teacher at lower-secondary school; today I teach at upper-secondary level. I'm passionate about modern technology, education, web development and programming. In my lessons I look for practical, clear ways to introduce new ideas. In my free time I enjoy bowling, always trying to improve — and this site is a space where I present my interests, projects and work.",
+        "I'm a teacher of Computer Science and English Language at the Secondary Technical School of Mechanical and Civil Engineering in Tábor, Czech Republic. I studied the Technical Lyceum here, specialising in programming and robotics, and then completed both my Bachelor's and Master's degrees at the Faculty of Education, University of South Bohemia.",
+        "I started out as a teaching assistant and Computer Science teacher at primary and lower secondary school; today I teach at upper-secondary level. I'm passionate about modern technology, education, web development and programming. In my lessons I look for practical, clear ways to introduce new ideas. In my free time I enjoy bowling, always trying to improve — and this site is a space where I present my interests, projects and work.",
       ],
       eduTitle: "Education",
       expTitle: "Experience",
@@ -1087,19 +1087,14 @@ export const t: Record<Lang, Dict> = {
       interests: ["Modern technology", "Education", "Web development", "Programming", "Bowling"],
       education: [
         {
-          period: "2006–2015",
-          place: "Primary & Nursery School Sezimovo Ústí",
-          detail: "9. května 489, Tábor District",
-        },
-        {
           period: "2015–2019",
-          place: "Technical School, Tábor",
-          detail: "Technical Lyceum — programming & robotics",
+          place: "Secondary Technical School of Mechanical and Civil Engineering",
+          detail: "programming & robotics",
         },
         {
           period: "2019–2026",
           place: "Faculty of Education, USB",
-          detail: "Bachelor's & Master's — teaching",
+          detail: "Bachelor's & Master's — teaching of English Language and CS",
         },
       ],
       experience: [
