@@ -22,5 +22,10 @@ ODZNAKY (jen v učitelském pohledu): u každého materiálu se ukáže "Pro uč
 (metodika→učitel, pracovní list/úloha/žák→žáci, jinak oba) nebo přes složky
 _ucitel/_zaci. Když chceš jinak, napiš mi a nastavím to natvrdo.
 
+ANGLICKÁ VERZE: názvy viditelných materiálů/složek mají anglický překlad
+(tabulka v src/lib/materials.ts). Nový materiál se v EN verzi zobrazí česky,
+dokud mi nedáš vědět – pak doplním anglický název. (Vnitřní číslované listy
+zůstávají česky.)
+
 Kurzy:  1L = Technické lyceum · 1S = Strojírenství · 1P = Pozemní stavitelství
 Tip: velká videa sem nedávej (radši YouTube odkaz) – web má mít rozumnou velikost.

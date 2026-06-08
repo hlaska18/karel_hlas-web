@@ -57,11 +57,36 @@ function cleanLabel(file: string): string {
   return displayName(file.slice(0, file.length - ext.length)) || file;
 }
 
+/**
+ * Anglické názvy viditelných materiálů/složek (klíč = český zobrazovaný název).
+ * Soubory zůstávají pojmenované česky; když název v tabulce není, použije se čeština.
+ * Nový materiál → sem doplnit anglický název (jinak se v EN zobrazí česky).
+ */
+const NAME_EN: Record<string, string> = {
+  "Úlohy v Excelu": "Excel exercises",
+  "Úlohy ve Wordu": "Word exercises",
+  "Excel - materiály k úlohám": "Excel – exercise materials",
+  "Word - materiály k úlohám": "Word – exercise materials",
+  "Návod na stažení Microsoft365 aplikací": "How to install Microsoft 365 apps",
+  PowerBI: "Power BI",
+  "Python - pracovní listy": "Python worksheets",
+  "Python - metodické listy": "Python teaching notes",
+  "Python - testy z minulých let": "Python past tests",
+  "Žákovský list": "Student worksheet",
+  Metodika: "Teaching methodology",
+  "Plán hodiny": "Lesson plan",
+};
+
+/** Anglický popisek z tabulky (NFC kvůli macOS NFD názvům); fallback = čeština. */
+function enLabel(cs: string): string {
+  return NAME_EN[cs.normalize("NFC")] ?? cs;
+}
+
 function fileToMaterial(courseId: string, segments: string[], file: string): Material {
   const parts = [courseId, ...segments, file].map((s) => encodeURIComponent(s));
   const href = "/materialy/" + parts.join("/");
   const label = cleanLabel(file);
-  return { label: { cs: label, en: label }, href, kind: kindFromExt(path.extname(file)) };
+  return { label: { cs: label, en: enLabel(label) }, href, kind: kindFromExt(path.extname(file)) };
 }
 
 const byName = (a: string, b: string) => a.localeCompare(b, "cs", { numeric: true });
@@ -97,7 +122,7 @@ function expandMarkerDir(
       const items = gf.map((f) => fileToMaterial(courseId, [topicDir, markerName, t.name], f));
       if (items.length) {
         const gl = displayName(t.name);
-        result.push({ label: { cs: gl, en: gl }, items, ...tag });
+        result.push({ label: { cs: gl, en: enLabel(gl) }, items, ...tag });
       }
     } else if (t.isFile()) {
       result.push({ ...fileToMaterial(courseId, [topicDir, markerName], t.name), ...tag });
@@ -183,7 +208,7 @@ export function getFolderMaterials(): FolderMaterials {
           const items = files.map((f) => fileToMaterial(courseId, [topicDir, d.name], f));
           if (items.length) {
             const gl = displayName(d.name);
-            entries.push({ label: { cs: gl, en: gl }, items });
+            entries.push({ label: { cs: gl, en: enLabel(gl) }, items });
           }
         } else if (d.isFile()) {
           entries.push(fileToMaterial(courseId, [topicDir], d.name));
