@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
   FileText,
   Presentation,
@@ -215,23 +215,35 @@ function CourseTimeline({
   teacherView: boolean;
 }) {
   // Obsah se připojí až po otevření (menší výchozí HTML). Rozbalení je plynulé
-  // díky CSS grid-rows: po připojení obsahu přepneme na 1fr v dalším snímku.
+  // díky CSS grid-rows: po PŘIPOJENÍ obsahu (a vykreslení 0fr) přepneme na 1fr.
   const [mounted, setMounted] = useState(false);
   const [grown, setGrown] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
 
+  // Připojení / odpojení obsahu podle stavu otevřeno.
   useEffect(() => {
     if (open) {
       setMounted(true);
-      const r = requestAnimationFrame(() => requestAnimationFrame(() => setGrown(true)));
-      return () => cancelAnimationFrame(r);
+      return;
     }
     setGrown(false);
     const t = setTimeout(() => setMounted(false), 850);
     return () => clearTimeout(t);
   }, [open]);
 
+  // Rozbalení spustíme až KDYŽ je obsah připojený (efekt běží po jeho vykreslení).
+  // Vynutíme přepočet (reflow), aby byl 0fr spolehlivě výchozí stav transition –
+  // jinak u velkého obsahu (lyceum) prohlížeč 0fr přeskočí a „skočí to".
+  useEffect(() => {
+    if (!open || !mounted) return;
+    ref.current?.getBoundingClientRect();
+    const id = requestAnimationFrame(() => setGrown(true));
+    return () => cancelAnimationFrame(id);
+  }, [open, mounted]);
+
   return (
     <div
+      ref={ref}
       id={`osa-${course.id}`}
       className={`grid transition-[grid-template-rows] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
         grown ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
