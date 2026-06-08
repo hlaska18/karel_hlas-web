@@ -308,7 +308,7 @@ function Timeline({
                   {l.teacherNoteLabel}
                 </p>
                 <p className="mt-1 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
-                  {item.teacherNote}
+                  {item.teacherNote[lang]}
                 </p>
               </div>
             </div>
