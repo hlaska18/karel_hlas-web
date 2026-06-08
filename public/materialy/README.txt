@@ -15,6 +15,12 @@ PODSLOŽKY:
    Příklad: public/materialy/1L/8/_ucitel/Metodika.pdf
    Uvnitř "_ucitel/" může být i podsložka = rozbalovací učitelská skupina, např.
    public/materialy/1L/5/_ucitel/Python - metodické listy/MetodL00.pdf
+ - Podsložka "_zaci/" = materiály s odznakem "Pro žáky" (vidí je všichni).
+
+ODZNAKY (jen v učitelském pohledu): u každého materiálu se ukáže "Pro učitele",
+"Pro žáky", nebo "Pro učitele i žáky". Přiřadí se automaticky podle názvu
+(metodika→učitel, pracovní list/úloha/žák→žáci, jinak oba) nebo přes složky
+_ucitel/_zaci. Když chceš jinak, napiš mi a nastavím to natvrdo.
 
 Kurzy:  1L = Technické lyceum · 1S = Strojírenství · 1P = Pozemní stavitelství
 Tip: velká videa sem nedávej (radši YouTube odkaz) – web má mít rozumnou velikost.

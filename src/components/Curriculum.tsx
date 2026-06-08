@@ -23,6 +23,7 @@ import {
   type Lang,
   type CurriculumItem,
   type Course,
+  type Audience,
 } from "@/lib/content";
 import type { FolderMaterials } from "@/lib/materials";
 import { Reveal } from "@/components/Reveal";
@@ -341,9 +342,9 @@ function Timeline({
                 <ul className="mt-3 flex flex-col gap-2">
                   {mats.map((entry, k) =>
                     "items" in entry ? (
-                      <MaterialGroupItem key={k} group={entry} l={l} lang={lang} />
+                      <MaterialGroupItem key={k} group={entry} l={l} lang={lang} teacherView={teacherView} />
                     ) : (
-                      <MaterialLink key={k} mat={entry} l={l} lang={lang} />
+                      <MaterialLink key={k} mat={entry} l={l} lang={lang} teacherView={teacherView} />
                     ),
                   )}
                 </ul>
@@ -363,7 +364,49 @@ function Timeline({
 
 type Lessons = ReturnType<typeof useLang>["tr"]["lessons"];
 
-function MaterialLink({ mat, l, lang }: { mat: Material; l: Lessons; lang: Lang }) {
+/** Komu je materiál určený: vynucené `audience` → učitelské (_ucitel) → odhad z názvu → oba. */
+function audienceOf(entry: Material | MaterialGroup): Audience {
+  if (entry.audience) return entry.audience;
+  if (entry.teacherOnly) return "teacher";
+  // NFC kvůli macOS názvům souborů v rozloženém Unicode (NFD) – jinak „í/á" nesedí.
+  const name = `${entry.label.cs} ${entry.label.en}`.normalize("NFC").toLowerCase();
+  if (/(žák|zák|pracovn[íi] list|úloh|uloh|cvi[čc]en)/.test(name)) return "student";
+  return "both";
+}
+
+const AUDIENCE_STYLE: Record<Audience, string> = {
+  teacher: "bg-accent-600 text-white",
+  student: "bg-accent-100 text-accent-700 dark:bg-accent-400/15 dark:text-accent-300",
+  both: "bg-zinc-200/70 text-zinc-600 dark:bg-white/10 dark:text-zinc-400",
+};
+
+function AudienceBadge({ audience, l }: { audience: Audience; l: Lessons }) {
+  const text =
+    audience === "teacher"
+      ? l.audienceTeacher
+      : audience === "student"
+        ? l.audienceStudent
+        : l.audienceBoth;
+  return (
+    <span
+      className={`shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${AUDIENCE_STYLE[audience]}`}
+    >
+      {text}
+    </span>
+  );
+}
+
+function MaterialLink({
+  mat,
+  l,
+  lang,
+  teacherView,
+}: {
+  mat: Material;
+  l: Lessons;
+  lang: Lang;
+  teacherView: boolean;
+}) {
   const ready = Boolean(mat.href) && mat.href !== "#";
   if (!ready) {
     return (
@@ -390,18 +433,24 @@ function MaterialLink({ mat, l, lang }: { mat: Material; l: Lessons; lang: Lang 
           <MaterialIcon kind={mat.kind} />
         </span>
         <span className="flex-1">{mat.label[lang]}</span>
-        {mat.teacherOnly && (
-          <span className="rounded-full bg-accent-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-700 dark:bg-accent-400/15 dark:text-accent-300">
-            {l.teacherNoteLabel}
-          </span>
-        )}
+        {teacherView && <AudienceBadge audience={audienceOf(mat)} l={l} />}
         <ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
       </a>
     </li>
   );
 }
 
-function MaterialGroupItem({ group, l, lang }: { group: MaterialGroup; l: Lessons; lang: Lang }) {
+function MaterialGroupItem({
+  group,
+  l,
+  lang,
+  teacherView,
+}: {
+  group: MaterialGroup;
+  l: Lessons;
+  lang: Lang;
+  teacherView: boolean;
+}) {
   const [open, setOpen] = useState(false);
   return (
     <li>
@@ -415,11 +464,7 @@ function MaterialGroupItem({ group, l, lang }: { group: MaterialGroup; l: Lesson
           <Folder className="h-4 w-4 shrink-0" />
         </span>
         <span className="flex-1 text-left">{group.label[lang]}</span>
-        {group.teacherOnly && (
-          <span className="rounded-full bg-accent-100 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-accent-700 dark:bg-accent-400/15 dark:text-accent-300">
-            {l.teacherNoteLabel}
-          </span>
-        )}
+        {teacherView && <AudienceBadge audience={audienceOf(group)} l={l} />}
         <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400">
           {group.items.length}
         </span>

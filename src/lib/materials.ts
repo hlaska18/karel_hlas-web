@@ -1,6 +1,6 @@
 import fs from "fs";
 import path from "path";
-import type { Material, MaterialEntry } from "@/lib/content";
+import type { Material, MaterialEntry, Audience } from "@/lib/content";
 
 /**
  * Načte materiály ze složek public/materialy/<kurz>/<čísloTématu>/…
@@ -35,6 +35,11 @@ function isTeacherDir(name: string): boolean {
   return /^_?(u[čc]itel|pro[ _]u[čc]itel)/i.test(name);
 }
 
+/** Žákovská podsložka – odznak „Pro žáky" (vidí všichni). Konvence: „_zaci". */
+function isStudentDir(name: string): boolean {
+  return /^_(zaci|zaky|žáci|žáky|zak|student)/i.test(name);
+}
+
 /**
  * Zobrazovaný název. Řadicí prefix „1. " / „2) " na začátku se NEzobrazí
  * (slouží jen k pořadí). Podtržítka → mezery. Vnitřní čísla úloh („01_…",
@@ -60,6 +65,46 @@ function fileToMaterial(courseId: string, segments: string[], file: string): Mat
 }
 
 const byName = (a: string, b: string) => a.localeCompare(b, "cs", { numeric: true });
+
+/** Rozbalí obsah značkové podsložky (_ucitel/_zaci): soubory → položky, podsložky → skupiny. */
+function expandMarkerDir(
+  courseId: string,
+  topicDir: string,
+  markerName: string,
+  subDir: string,
+  opts: { teacherOnly?: boolean; audience: Audience },
+): MaterialEntry[] {
+  const result: MaterialEntry[] = [];
+  let tents: fs.Dirent[] = [];
+  try {
+    tents = fs.readdirSync(subDir, { withFileTypes: true }).filter((x) => !isHidden(x.name));
+  } catch {
+    return result;
+  }
+  tents.sort((a, b) => byName(a.name, b.name));
+  const tag = opts.teacherOnly
+    ? { audience: opts.audience, teacherOnly: true }
+    : { audience: opts.audience };
+  for (const t of tents) {
+    if (t.isDirectory()) {
+      let gf: string[] = [];
+      try {
+        gf = fs.readdirSync(path.join(subDir, t.name)).filter((f) => !isHidden(f));
+      } catch {
+        /* ignore */
+      }
+      gf.sort(byName);
+      const items = gf.map((f) => fileToMaterial(courseId, [topicDir, markerName, t.name], f));
+      if (items.length) {
+        const gl = displayName(t.name);
+        result.push({ label: { cs: gl, en: gl }, items, ...tag });
+      }
+    } else if (t.isFile()) {
+      result.push({ ...fileToMaterial(courseId, [topicDir, markerName], t.name), ...tag });
+    }
+  }
+  return result;
+}
 
 export type FolderMaterials = Record<string, Record<number, MaterialEntry[]>>;
 
@@ -118,39 +163,20 @@ export function getFolderMaterials(): FolderMaterials {
           files.sort(byName);
 
           if (isTeacherDir(d.name)) {
-            // Učitelská podsložka (jen pro učitelský pohled):
-            //   soubor uvnitř  → jednotlivý materiál
-            //   PODSLOŽKA      → rozbalovací skupina
-            let tents: fs.Dirent[] = [];
-            try {
-              tents = fs
-                .readdirSync(subDir, { withFileTypes: true })
-                .filter((x) => !isHidden(x.name));
-            } catch {
-              /* ignore */
-            }
-            tents.sort((a, b) => byName(a.name, b.name));
-            for (const t of tents) {
-              if (t.isDirectory()) {
-                let gf: string[] = [];
-                try {
-                  gf = fs.readdirSync(path.join(subDir, t.name)).filter((f) => !isHidden(f));
-                } catch {
-                  /* ignore */
-                }
-                gf.sort(byName);
-                const items = gf.map((f) => fileToMaterial(courseId, [topicDir, d.name, t.name], f));
-                if (items.length) {
-                  const gl = displayName(t.name);
-                  teacherEntries.push({ label: { cs: gl, en: gl }, items, teacherOnly: true });
-                }
-              } else if (t.isFile()) {
-                teacherEntries.push({
-                  ...fileToMaterial(courseId, [topicDir, d.name], t.name),
-                  teacherOnly: true,
-                });
-              }
-            }
+            // Učitelská podsložka (jen v učitelském pohledu, odznak „Pro učitele").
+            teacherEntries.push(
+              ...expandMarkerDir(courseId, topicDir, d.name, subDir, {
+                teacherOnly: true,
+                audience: "teacher",
+              }),
+            );
+            continue;
+          }
+          if (isStudentDir(d.name)) {
+            // Žákovská podsložka (vidí všichni, odznak „Pro žáky").
+            entries.push(
+              ...expandMarkerDir(courseId, topicDir, d.name, subDir, { audience: "student" }),
+            );
             continue;
           }
 

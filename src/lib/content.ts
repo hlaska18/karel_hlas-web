@@ -50,12 +50,17 @@ export const SOCIALS: Social[] = [
  * Další ročník přidáš jako další objekt do pole COURSES.
  * ─────────────────────────────────────────────────────────────────────── */
 
+/** Pro koho je materiál určený (odznak v učitelském pohledu). */
+export type Audience = "teacher" | "student" | "both";
+
 export type Material = {
   label: { cs: string; en: string };
   href: string;
   kind?: "doc" | "slides" | "video" | "code" | "link";
   /** Jen pro učitelský pohled (žáci ho nevidí). */
   teacherOnly?: boolean;
+  /** Vynutí odznak publika; jinak se odvodí automaticky z názvu. */
+  audience?: Audience;
 };
 
 /** Skupina materiálů = podsložka (rozbalí se po kliknutí). */
@@ -64,6 +69,8 @@ export type MaterialGroup = {
   items: Material[];
   /** Jen pro učitelský pohled (žáci ho nevidí). */
   teacherOnly?: boolean;
+  /** Vynutí odznak publika; jinak se odvodí automaticky z názvu. */
+  audience?: Audience;
 };
 
 /** Položka v seznamu materiálů: buď jeden soubor/odkaz, nebo skupina. */
@@ -937,6 +944,9 @@ type Dict = {
     viewStudent: string;
     viewTeacher: string;
     teacherNoteLabel: string;
+    audienceTeacher: string;
+    audienceStudent: string;
+    audienceBoth: string;
   };
   contact: {
     kicker: string;
@@ -1024,6 +1034,9 @@ export const t: Record<Lang, Dict> = {
       viewStudent: "Žák",
       viewTeacher: "Učitel",
       teacherNoteLabel: "Pro učitele",
+      audienceTeacher: "Pro učitele",
+      audienceStudent: "Pro žáky",
+      audienceBoth: "Pro učitele i žáky",
     },
     contact: {
       kicker: "Kontakt",
@@ -1115,6 +1128,9 @@ export const t: Record<Lang, Dict> = {
       viewStudent: "Student",
       viewTeacher: "Teacher",
       teacherNoteLabel: "For teachers",
+      audienceTeacher: "For teachers",
+      audienceStudent: "For students",
+      audienceBoth: "Teachers & students",
     },
     contact: {
       kicker: "Contact",
