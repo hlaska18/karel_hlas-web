@@ -23,18 +23,23 @@ export function About() {
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           {/* Text */}
-          <Reveal delay={0.05}>
-            <div className="space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg">
+          <div>
+            <Reveal
+              delay={0.05}
+              className="space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg"
+            >
               {a.paragraphs.map((p, i) => (
                 <p key={i}>{p}</p>
               ))}
-            </div>
+            </Reveal>
 
             <div className="mt-8">
-              <p className="text-sm font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-                {a.interestsTitle}
-              </p>
-              <ul className="mt-4 flex flex-wrap gap-2.5">
+              <Reveal delay={0.1}>
+                <p className="text-sm font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+                  {a.interestsTitle}
+                </p>
+              </Reveal>
+              <Reveal as="ul" stagger className="mt-4 flex flex-wrap gap-2.5">
                 {a.interests.map((tag) => (
                   <li
                     key={tag}
@@ -43,25 +48,27 @@ export function About() {
                     {tag}
                   </li>
                 ))}
-              </ul>
+              </Reveal>
             </div>
-          </Reveal>
+          </div>
 
           {/* Timeline */}
-          <Reveal delay={0.1}>
-            <div className="space-y-8">
+          <div className="space-y-8">
+            <Reveal delay={0.1}>
               <TimelineGroup
                 icon={<GraduationCap className="h-5 w-5" />}
                 title={a.eduTitle}
                 items={a.education}
               />
+            </Reveal>
+            <Reveal delay={0.18}>
               <TimelineGroup
                 icon={<Briefcase className="h-5 w-5" />}
                 title={a.expTitle}
                 items={a.experience}
               />
-            </div>
-          </Reveal>
+            </Reveal>
+          </div>
         </div>
         <SectionJump href="#contact" label={tr.nav.contact} />
       </div>

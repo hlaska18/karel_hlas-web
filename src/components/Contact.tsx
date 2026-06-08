@@ -62,62 +62,60 @@ export function Contact() {
           </Reveal>
 
           {/* Kontaktní řádky */}
-          <Reveal delay={0.05} className="lg:col-span-2">
-            <div className="grid h-full gap-3 sm:grid-cols-2">
-              <ContactRow
-                icon={<Mail className="h-5 w-5" />}
-                label={c.emailLabel}
-                value={SITE.email}
-                href={`mailto:${SITE.email}`}
-              />
-              <ContactRow
-                icon={<Phone className="h-5 w-5" />}
-                label={c.phoneLabel}
-                value={SITE.phoneDisplay}
-                href={`tel:${SITE.phoneHref}`}
-              />
-              <ContactRow
-                icon={<DoorOpen className="h-5 w-5" />}
-                label={c.cabinetLabel}
-                value={SITE.cabinet}
-              />
-              <ContactRow
-                icon={<CalendarClock className="h-5 w-5" />}
-                label={c.consultLabel}
-                value={c.consultValue}
-                href={SITE.eduPageUrl}
-                external
-              />
-            </div>
+          <Reveal as="div" stagger className="grid h-full gap-3 sm:grid-cols-2 lg:col-span-2">
+            <ContactRow
+              icon={<Mail className="h-5 w-5" />}
+              label={c.emailLabel}
+              value={SITE.email}
+              href={`mailto:${SITE.email}`}
+            />
+            <ContactRow
+              icon={<Phone className="h-5 w-5" />}
+              label={c.phoneLabel}
+              value={SITE.phoneDisplay}
+              href={`tel:${SITE.phoneHref}`}
+            />
+            <ContactRow
+              icon={<DoorOpen className="h-5 w-5" />}
+              label={c.cabinetLabel}
+              value={SITE.cabinet}
+            />
+            <ContactRow
+              icon={<CalendarClock className="h-5 w-5" />}
+              label={c.consultLabel}
+              value={c.consultValue}
+              href={SITE.eduPageUrl}
+              external
+            />
           </Reveal>
         </div>
 
         {/* Sociální sítě */}
-        <Reveal delay={0.1}>
-          <div className="mt-10">
+        <div className="mt-10">
+          <Reveal>
             <p className="text-sm font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
               {c.socialsTitle}
             </p>
-            <div className="mt-4 flex flex-wrap gap-3">
-              {SOCIALS.map((s) => (
-                <a
-                  key={s.href}
-                  href={s.href}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="glass-soft group inline-flex items-center gap-2.5 rounded-full px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:-translate-y-0.5 hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
-                >
-                  {s.network === "instagram" ? (
-                    <Instagram className="h-4 w-4" />
-                  ) : (
-                    <Youtube className="h-4 w-4" />
-                  )}
-                  {s.handle}
-                </a>
-              ))}
-            </div>
-          </div>
-        </Reveal>
+          </Reveal>
+          <Reveal as="div" stagger className="mt-4 flex flex-wrap gap-3">
+            {SOCIALS.map((s) => (
+              <a
+                key={s.href}
+                href={s.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="glass-soft group inline-flex items-center gap-2.5 rounded-full px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:-translate-y-0.5 hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
+              >
+                {s.network === "instagram" ? (
+                  <Instagram className="h-4 w-4" />
+                ) : (
+                  <Youtube className="h-4 w-4" />
+                )}
+                {s.handle}
+              </a>
+            ))}
+          </Reveal>
+        </div>
         <SectionJump href="#vyuka" label={tr.nav.lessons} />
       </div>
     </section>

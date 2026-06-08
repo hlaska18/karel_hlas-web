@@ -136,9 +136,8 @@ export function Curriculum({
         </Reveal>
 
         {/* výběr ročníku */}
-        <Reveal delay={0.05}>
-          <div className="mt-10 flex flex-wrap gap-4">
-            {COURSES.map((course) => {
+        <Reveal as="div" stagger className="mt-10 flex flex-wrap gap-4">
+          {COURSES.map((course) => {
               const open = openId === course.id;
               return (
                 <button
@@ -170,15 +169,14 @@ export function Curriculum({
                 </button>
               );
             })}
-          </div>
-
-          {!openId && (
-            <p className="mt-4 flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-              <ChevronDown className="h-4 w-4 animate-bounce" />
-              {l.pick}
-            </p>
-          )}
         </Reveal>
+
+        {!openId && (
+          <p className="mt-4 flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+            <ChevronDown className="h-4 w-4 animate-bounce" />
+            {l.pick}
+          </p>
+        )}
 
         {/* časové osy – obsah se renderuje až po otevření (menší HTML = rychlejší načtení) */}
         <div>
