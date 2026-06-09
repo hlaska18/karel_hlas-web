@@ -143,10 +143,6 @@ export const COURSES: Course[] = [
           cs: "Znát základy práce s počítačem, operačním systémem a kybernetickou bezpečností.",
           en: "Know the basics of the computer, operating system and cybersecurity.",
         },
-        teacherNote: {
-          cs: "UKÁZKA (pro učitele): úvod věnuj přihlášení do školních systémů a kyberbezpečnosti; příkazový řádek zařaď až po základech OS. (~3 h)",
-          en: "EXAMPLE (for teachers): start with logging into the school systems and cybersecurity; introduce the command line only after the OS basics. (~3 h)",
-        },
         topics: {
           cs: [
             "Práce s operačním systémem a základní nastavení",
