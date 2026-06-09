@@ -1022,7 +1022,7 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     lessons: {
-      kicker: "Pro studenty",
+      kicker: "Pro žáky i učitele",
       heading: "Výuka informatiky",
       intro:
         "Vyber si svůj ročník — rozbalí se časová osa témat, kterými během roku projdeme, a materiály ke studiu.",
@@ -1111,7 +1111,7 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     lessons: {
-      kicker: "For students",
+      kicker: "For students & teachers",
       heading: "Computer Science lessons",
       intro:
         "Pick your year — a timeline of the topics we'll cover during the year and the study materials will unfold.",
