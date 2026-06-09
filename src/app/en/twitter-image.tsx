@@ -1,1 +1,1 @@
-export { default, alt, size, contentType } from "../twitter-image";
+export { default, alt, size, contentType } from "./opengraph-image";
