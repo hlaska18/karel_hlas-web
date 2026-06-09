@@ -220,24 +220,20 @@ function CourseTimeline({
   const [grown, setGrown] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
-  // Připojení / odpojení obsahu podle stavu otevřeno.
+  // Otevření připojí obsah a NECHÁ ho připojený; zavření jen sbalí (0fr).
+  // Tím odpadá drahé opětovné připojení velkého lycea při návratu, které rušilo
+  // animaci. Načítání stránky zůstává lehké – dokud ročník neotevřeš, nepřipojí se.
   useEffect(() => {
-    if (open) {
-      setMounted(true);
-      return;
-    }
-    setGrown(false);
-    const t = setTimeout(() => setMounted(false), 850);
-    return () => clearTimeout(t);
+    if (open) setMounted(true);
+    else setGrown(false);
   }, [open]);
 
-  // Rozbalení spustíme až KDYŽ je obsah připojený (efekt běží po jeho vykreslení).
-  // Vynutíme přepočet (reflow), aby byl 0fr spolehlivě výchozí stav transition –
-  // jinak u velkého obsahu (lyceum) prohlížeč 0fr přeskočí a „skočí to".
+  // Rozbalení až po připojení obsahu (po vykreslení 0fr) + reflow → spolehlivá
+  // animace i u opakovaného otevření (obsah už je v DOM, jen se přepne na 1fr).
   useEffect(() => {
     if (!open || !mounted) return;
     ref.current?.getBoundingClientRect();
-    const id = requestAnimationFrame(() => setGrown(true));
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setGrown(true)));
     return () => cancelAnimationFrame(id);
   }, [open, mounted]);
 
