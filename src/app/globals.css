@@ -230,4 +230,36 @@
       transform: none;
     }
   }
+
+  /* postupné naběhnutí témat časové osy po otevření ročníku (bez výškové animace) */
+  .timeline-in > li {
+    animation: revealUp 0.55s cubic-bezier(0.22, 1, 0.36, 1) both;
+  }
+  .timeline-in > li:nth-child(1) {
+    animation-delay: 0.03s;
+  }
+  .timeline-in > li:nth-child(2) {
+    animation-delay: 0.09s;
+  }
+  .timeline-in > li:nth-child(3) {
+    animation-delay: 0.15s;
+  }
+  .timeline-in > li:nth-child(4) {
+    animation-delay: 0.21s;
+  }
+  .timeline-in > li:nth-child(5) {
+    animation-delay: 0.27s;
+  }
+  .timeline-in > li:nth-child(6) {
+    animation-delay: 0.33s;
+  }
+  .timeline-in > li:nth-child(7) {
+    animation-delay: 0.39s;
+  }
+  .timeline-in > li:nth-child(8) {
+    animation-delay: 0.45s;
+  }
+  .timeline-in > li:nth-child(n + 9) {
+    animation-delay: 0.51s;
+  }
 }
