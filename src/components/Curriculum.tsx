@@ -214,10 +214,30 @@ function CourseTimeline({
   courseMaterials?: Record<number, MaterialEntry[]>;
   teacherView: boolean;
 }) {
-  // Zatím BEZ animace: po kliknutí se plán zobrazí ihned. Animace doděláme postupně.
+  // Krok 1: animujeme JEN otevírání (0fr→1fr). Zavírání je zatím okamžité,
+  // ať otestujeme otevření v izolaci (dřív tam u lycea vznikal problém).
+  const [grown, setGrown] = useState(false);
+
+  useEffect(() => {
+    if (!open) {
+      setGrown(false);
+      return;
+    }
+    setGrown(false);
+    const id = requestAnimationFrame(() => requestAnimationFrame(() => setGrown(true)));
+    return () => cancelAnimationFrame(id);
+  }, [open]);
+
+  if (!open) return <div id={`osa-${course.id}`} />;
+
   return (
-    <div id={`osa-${course.id}`}>
-      {open && (
+    <div
+      id={`osa-${course.id}`}
+      className={`grid transition-[grid-template-rows] duration-[700ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
+        grown ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+      }`}
+    >
+      <div className="overflow-hidden">
         <Timeline
           items={course.items}
           l={l}
@@ -225,7 +245,7 @@ function CourseTimeline({
           courseMaterials={courseMaterials}
           teacherView={teacherView}
         />
-      )}
+      </div>
     </div>
   );
 }
