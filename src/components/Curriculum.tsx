@@ -102,13 +102,12 @@ export function Curriculum({
             {l.intro}
           </p>
 
-          {/* přepínač Žák / Učitel + nápověda „klikni…" hned vedle */}
-          <div className="mt-6 flex flex-wrap items-center gap-x-5 gap-y-3">
-            <div
-              role="group"
-              aria-label={`${l.viewStudent} / ${l.viewTeacher}`}
-              className="glass-soft inline-flex items-center gap-1 rounded-full p-1 text-sm"
-            >
+          {/* přepínač Žák / Učitel */}
+          <div
+            role="group"
+            aria-label={`${l.viewStudent} / ${l.viewTeacher}`}
+            className="glass-soft mt-6 inline-flex items-center gap-1 rounded-full p-1 text-sm"
+          >
             <button
               type="button"
               onClick={() => changeView(false)}
@@ -133,13 +132,6 @@ export function Curriculum({
             >
               {l.viewTeacher}
             </button>
-            </div>
-            {!openId && (
-              <p className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                <ChevronDown className="h-4 w-4 animate-bounce" />
-                {l.pick}
-              </p>
-            )}
           </div>
         </Reveal>
 
