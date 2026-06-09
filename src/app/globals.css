@@ -18,11 +18,15 @@
   html {
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
+    /* Vypnuto kotvení scrollu – jinak prohlížeč při rozbalení velké časové osy
+       (lyceum nahoře) sám odscrolluje a plynulá animace „uteče z očí". */
+    overflow-anchor: none;
   }
 
   body {
     background-color: var(--bg);
     color: var(--fg);
+    overflow-anchor: none;
   }
 
   ::selection {
