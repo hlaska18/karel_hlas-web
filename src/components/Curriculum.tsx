@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import {
   FileText,
   Presentation,
@@ -214,48 +214,18 @@ function CourseTimeline({
   courseMaterials?: Record<number, MaterialEntry[]>;
   teacherView: boolean;
 }) {
-  // Obsah se připojí až po otevření (menší výchozí HTML). Rozbalení je plynulé
-  // díky CSS grid-rows: po PŘIPOJENÍ obsahu (a vykreslení 0fr) přepneme na 1fr.
-  const [mounted, setMounted] = useState(false);
-  const [grown, setGrown] = useState(false);
-  const ref = useRef<HTMLDivElement>(null);
-
-  // Otevření připojí obsah a NECHÁ ho připojený; zavření jen sbalí (0fr).
-  // Tím odpadá drahé opětovné připojení velkého lycea při návratu, které rušilo
-  // animaci. Načítání stránky zůstává lehké – dokud ročník neotevřeš, nepřipojí se.
-  useEffect(() => {
-    if (open) setMounted(true);
-    else setGrown(false);
-  }, [open]);
-
-  // Rozbalení až po připojení obsahu (po vykreslení 0fr) + reflow → spolehlivá
-  // animace i u opakovaného otevření (obsah už je v DOM, jen se přepne na 1fr).
-  useEffect(() => {
-    if (!open || !mounted) return;
-    ref.current?.getBoundingClientRect();
-    const id = requestAnimationFrame(() => requestAnimationFrame(() => setGrown(true)));
-    return () => cancelAnimationFrame(id);
-  }, [open, mounted]);
-
+  // Zatím BEZ animace: po kliknutí se plán zobrazí ihned. Animace doděláme postupně.
   return (
-    <div
-      ref={ref}
-      id={`osa-${course.id}`}
-      className={`grid transition-[grid-template-rows] duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        grown ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-      }`}
-    >
-      <div className="overflow-hidden">
-        {mounted && (
-          <Timeline
-            items={course.items}
-            l={l}
-            lang={lang}
-            courseMaterials={courseMaterials}
-            teacherView={teacherView}
-          />
-        )}
-      </div>
+    <div id={`osa-${course.id}`}>
+      {open && (
+        <Timeline
+          items={course.items}
+          l={l}
+          lang={lang}
+          courseMaterials={courseMaterials}
+          teacherView={teacherView}
+        />
+      )}
     </div>
   );
 }
