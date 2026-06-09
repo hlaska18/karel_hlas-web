@@ -23,7 +23,7 @@ export function About() {
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           {/* Text */}
-          <div>
+          <div className="flex flex-col">
             <Reveal
               delay={0.05}
               className="space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg"
@@ -50,6 +50,14 @@ export function About() {
                 ))}
               </Reveal>
             </div>
+
+            {/* KONTAKT zarovnaný na spodek (desktop) – levý sloupec se roztáhne
+                na výšku pravého, takže spodní hrana = spodek boxu Praxe. */}
+            <SectionJump
+              href="#contact"
+              label={tr.nav.contact}
+              className="mt-auto hidden pt-12 lg:flex"
+            />
           </div>
 
           {/* Timeline */}
@@ -70,7 +78,12 @@ export function About() {
             </Reveal>
           </div>
         </div>
-        <SectionJump href="#contact" label={tr.nav.contact} />
+        {/* mobil: KONTAKT až pod vším */}
+        <SectionJump
+          href="#contact"
+          label={tr.nav.contact}
+          className="mt-10 flex sm:mt-12 lg:hidden"
+        />
       </div>
     </section>
   );
