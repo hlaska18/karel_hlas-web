@@ -18,6 +18,22 @@ export const metadata: Metadata = {
     siteName: "Karel Hlas",
     locale: "en_US",
     type: "website",
+    images: [
+      {
+        url: "/og-en.jpg",
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: "Karel Hlas — Computer Science & English Language Teacher",
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Karel Hlas — Computer Science & English Teacher",
+    description:
+      "Personal website of a Computer Science & English teacher at SPŠ Tábor.",
+    images: ["/og-en.jpg"],
   },
 };
 

@@ -45,12 +45,22 @@ export const metadata: Metadata = {
     siteName: "Karel Hlas",
     locale: "cs_CZ",
     type: "website",
+    images: [
+      {
+        url: "/og.jpg",
+        width: 1200,
+        height: 630,
+        type: "image/jpeg",
+        alt: "Karel Hlas — Učitel informatiky a angličtiny",
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Karel Hlas — Učitel informatiky a angličtiny",
     description:
       "Osobní stránka učitele informatiky a angličtiny na SPŠ Tábor.",
+    images: ["/og.jpg"],
   },
   robots: {
     index: true,
