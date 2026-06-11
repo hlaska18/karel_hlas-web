@@ -30,3 +30,6 @@ next-env.d.ts
 # editor
 .vscode
 .idea
+
+# Claude Code – lokalni skilly (neverzovat)
+.claude/skills/
