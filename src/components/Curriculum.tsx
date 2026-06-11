@@ -387,6 +387,7 @@ function MaterialLink({
           <span className="rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:bg-white/10 dark:text-zinc-400">
             {l.soon}
           </span>
+          <span className="w-11 shrink-0" />
         </span>
       </li>
     );
@@ -404,7 +405,10 @@ function MaterialLink({
         </span>
         <span className="flex-1">{mat.label[lang]}</span>
         {teacherView && <AudienceBadge audience={audienceOf(mat)} l={l} />}
-        <ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
+        {/* pevný pravý slot – stejná šířka jako počet+šipka u složek, ať vše lícuje */}
+        <span className="flex w-11 shrink-0 items-center justify-end">
+          <ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
+        </span>
       </a>
     </li>
   );
@@ -435,14 +439,17 @@ function MaterialGroupItem({
         </span>
         <span className="flex-1 text-left">{group.label[lang]}</span>
         {teacherView && <AudienceBadge audience={audienceOf(group)} l={l} />}
-        <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400">
-          {group.items.length}
+        {/* pevný pravý slot (počet + šipka) – zarovnaný se soubory */}
+        <span className="flex w-11 shrink-0 items-center justify-end gap-1">
+          <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400">
+            {group.items.length}
+          </span>
+          <ChevronDown
+            className={`h-4 w-4 shrink-0 transition-transform duration-300 ${
+              open ? "rotate-180 text-accent-600 dark:text-accent-400" : ""
+            }`}
+          />
         </span>
-        <ChevronDown
-          className={`h-4 w-4 shrink-0 transition-transform duration-300 ${
-            open ? "rotate-180 text-accent-600 dark:text-accent-400" : ""
-          }`}
-        />
       </button>
 
       {open && (
