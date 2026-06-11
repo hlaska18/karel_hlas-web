@@ -69,6 +69,8 @@ const NAME_EN: Record<string, string> = {
   "Word - materiály k úlohám": "Word – exercise materials",
   "Návod na stažení Microsoft365 aplikací": "How to install Microsoft 365 apps",
   PowerBI: "Power BI",
+  "Pracovní listy": "Worksheets",
+  "Plány hodin": "Lesson plans",
   "Python - pracovní listy": "Python worksheets",
   "Python - metodické listy": "Python teaching notes",
   "Python - testy z minulých let": "Python past tests",
