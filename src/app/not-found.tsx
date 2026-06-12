@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, GraduationCap } from "lucide-react";
+import { LiquidButton, LiquidGlassFilter } from "@/components/ui/liquid-glass-button";
 
 /**
  * Vlastní 404 ve stylu webu. Jazyk se pozná z adresy (/en/... → angličtina);
@@ -46,20 +46,15 @@ export default function NotFound() {
         <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">{t.desc}</p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <Link
-            href={home}
-            className="group inline-flex items-center gap-2 rounded-full bg-accent-600 px-5 py-3 text-sm font-semibold text-white shadow-lg shadow-accent-600/20 transition hover:bg-accent-500 hover:shadow-accent-500/30"
-          >
+          <LiquidGlassFilter />
+          <LiquidButton href={home} variant="primary">
             <ArrowLeft className="h-4 w-4 transition group-hover:-translate-x-0.5" />
             {t.home}
-          </Link>
-          <Link
-            href={`${home}#vyuka`}
-            className="inline-flex items-center gap-2 rounded-full border border-black/10 px-5 py-3 text-sm font-semibold text-zinc-800 transition hover:border-accent-400 hover:text-accent-600 dark:border-white/15 dark:text-zinc-100 dark:hover:text-accent-400"
-          >
+          </LiquidButton>
+          <LiquidButton href={`${home}#vyuka`} variant="glass">
             <GraduationCap className="h-4 w-4" />
             {t.lessons}
-          </Link>
+          </LiquidButton>
         </div>
       </div>
     </main>
