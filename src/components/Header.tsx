@@ -1,11 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import { Menu, X, User, Mail, GraduationCap } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LangToggle } from "@/components/LangToggle";
+import GradientMenu from "@/components/ui/gradient-menu";
 
 export function Header() {
   const { tr } = useLang();
@@ -42,17 +43,33 @@ export function Header() {
           </span>
         </a>
 
-        {/* Desktop nav */}
-        <div className="hidden items-center gap-1 md:flex">
-          {links.map((l) => (
-            <a
-              key={l.href}
-              href={l.href}
-              className="rounded-full px-3.5 py-2 text-sm font-medium text-zinc-600 transition hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
-            >
-              {l.label}
-            </a>
-          ))}
+        {/* Desktop nav – GradientMenu (liquid glass kroužky → smaragdové pilulky) */}
+        <div className="hidden md:block">
+          <GradientMenu
+            items={[
+              {
+                href: "#about",
+                label: tr.nav.about,
+                icon: <User className="h-5 w-5" />,
+                from: "#34d399",
+                to: "#10b981",
+              },
+              {
+                href: "#contact",
+                label: tr.nav.contact,
+                icon: <Mail className="h-5 w-5" />,
+                from: "#10b981",
+                to: "#059669",
+              },
+              {
+                href: "#vyuka",
+                label: tr.nav.lessons,
+                icon: <GraduationCap className="h-5 w-5" />,
+                from: "#059669",
+                to: "#047857",
+              },
+            ]}
+          />
         </div>
 
         <div className="flex items-center gap-2">
