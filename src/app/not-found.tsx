@@ -2,7 +2,7 @@
 
 import { usePathname } from "next/navigation";
 import { ArrowLeft, GraduationCap } from "lucide-react";
-import { LiquidButton, LiquidGlassFilter } from "@/components/ui/liquid-glass-button";
+import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 /**
  * Vlastní 404 ve stylu webu. Jazyk se pozná z adresy (/en/... → angličtina);
@@ -46,15 +46,12 @@ export default function NotFound() {
         <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">{t.desc}</p>
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
-          <LiquidGlassFilter />
-          <LiquidButton href={home} variant="primary">
-            <ArrowLeft className="h-4 w-4 transition group-hover:-translate-x-0.5" />
-            {t.home}
-          </LiquidButton>
-          <LiquidButton href={`${home}#vyuka`} variant="glass">
-            <GraduationCap className="h-4 w-4" />
-            {t.lessons}
-          </LiquidButton>
+          <InteractiveHoverButton href={home} text={t.home} icon={<ArrowLeft className="h-4 w-4" />} />
+          <InteractiveHoverButton
+            href={`${home}#vyuka`}
+            text={t.lessons}
+            icon={<GraduationCap className="h-4 w-4" />}
+          />
         </div>
       </div>
     </main>

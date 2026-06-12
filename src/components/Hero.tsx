@@ -4,7 +4,7 @@ import { ArrowDown, Mail } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { Portrait } from "@/components/Portrait";
-import { LiquidButton, LiquidGlassFilter } from "@/components/ui/liquid-glass-button";
+import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Hero() {
   const { tr } = useLang();
@@ -38,15 +38,16 @@ export function Hero() {
           </p>
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
-            <LiquidGlassFilter />
-            <LiquidButton href="#vyuka" variant="primary">
-              {tr.hero.ctaLessons}
-              <ArrowDown className="h-4 w-4 transition group-hover:translate-y-0.5" />
-            </LiquidButton>
-            <LiquidButton href="#contact" variant="glass">
-              <Mail className="h-4 w-4" />
-              {tr.hero.ctaContact}
-            </LiquidButton>
+            <InteractiveHoverButton
+              href="#vyuka"
+              text={tr.hero.ctaLessons}
+              icon={<ArrowDown className="h-4 w-4" />}
+            />
+            <InteractiveHoverButton
+              href="#contact"
+              text={tr.hero.ctaContact}
+              icon={<Mail className="h-4 w-4" />}
+            />
           </div>
         </div>
 
