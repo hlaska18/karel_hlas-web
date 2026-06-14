@@ -990,7 +990,7 @@ export const t: Record<Lang, Dict> = {
     },
     about: {
       kicker: "O mně",
-      heading: "Učitel, kterého baví technologie i lidé",
+      heading: "Učitel, kterého baví technologie",
       paragraphs: [
         "Jsem učitel informatiky a angličtiny na Střední průmyslové škole strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum se zaměřením na programování a robotiku a poté bakalářské i magisterské studium na Pedagogické fakultě Jihočeské univerzity.",
         "Začínal jsem jako asistent pedagoga a učitel informatiky na druhém stupni základní školy, dnes učím na střední škole. Zajímají mě moderní technologie, vzdělávání, tvorba webových stránek a programování. Ve výuce hledám praktické a srozumitelné způsoby, jak žákům přiblížit nové poznatky. Ve volném čase mě baví bowling, ve kterém se pořád snažím zlepšovat — a tato stránka je prostor, kde představuji své zájmy, projekty a práci.",
@@ -1025,7 +1025,7 @@ export const t: Record<Lang, Dict> = {
         },
         {
           period: "Nyní",
-          place: "SPŠ Tábor",
+          place: "SPŠ strojní a stavební, Tábor",
           detail: "Učitel informatiky a angličtiny",
         },
       ],
@@ -1115,7 +1115,7 @@ export const t: Record<Lang, Dict> = {
         },
         {
           period: "Now",
-          place: "SPŠ Tábor",
+          place: "Secondary Technical School of Mechanical and Civil Engineering",
           detail: "Computer Science & English teacher",
         },
       ],

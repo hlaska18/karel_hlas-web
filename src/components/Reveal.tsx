@@ -4,10 +4,11 @@ import { useEffect, useRef, useState, type CSSProperties, type ElementType, type
 
 /**
  * Odhalení při scrollu (fade + jemně zdola), spustí se JEN POPRVÉ.
- *  - Nad ohybem (už viditelné při načtení) se NESCHOVÁVÁ → žádné blikání,
- *    bezpečné pro výkon (obsah je vždy hned vidět; animace je jen nadstavba).
- *  - `stagger` = postupně odhalí přímé potomky (nadpis, karty, položky…).
- *  - Bez JS / reduced-motion → obsah zůstává viditelný.
+ *  - Skrytí řídí CSS (`html.js-reveal …`), které platí jen když je JS +
+ *    IntersectionObserver → žádné měření pozice v JS (spolehlivé i v Safari),
+ *    žádné blikání (skryto už před prvním vykreslením).
+ *  - Bez JS / bez IO / reduced-motion → obsah zůstává viditelný.
+ *  - `stagger` = postupně odhalí přímé potomky.
  */
 export function Reveal({
   children,
@@ -29,24 +30,24 @@ export function Reveal({
 }) {
   const Tag = (as ?? "div") as ElementType;
   const ref = useRef<HTMLElement | null>(null);
-  const [phase, setPhase] = useState<"idle" | "hidden" | "show">("idle");
+  const [shown, setShown] = useState(false);
 
   useEffect(() => {
     const el = ref.current;
     if (!el) return;
-    if (!("IntersectionObserver" in window)) return; // bez podpory → necháme viditelné
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const vh = window.innerHeight;
-    // 0-viewport (atypické prostředí) nebo už nad ohybem → necháme hned viditelné.
-    if (!vh || el.getBoundingClientRect().top < vh * 0.88) return;
-
-    setPhase("hidden");
+    if (!("IntersectionObserver" in window)) {
+      setShown(true);
+      return;
+    }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      setShown(true);
+      return;
+    }
     const io = new IntersectionObserver(
       (entries, obs) => {
         for (const e of entries) {
           if (e.isIntersecting) {
-            setPhase("show");
+            setShown(true);
             obs.disconnect();
             break;
           }
@@ -58,21 +59,13 @@ export function Reveal({
     return () => io.disconnect();
   }, []);
 
-  const classes = [className];
-  let style: CSSProperties | undefined;
-
-  if (stagger) {
-    if (phase !== "idle") classes.push("reveal-stagger");
-    if (phase === "show") classes.push("is-in");
-  } else if (phase === "hidden") {
-    classes.push("reveal-init");
-  } else if (phase === "show") {
-    classes.push("reveal-in");
-    if (delay) style = { transitionDelay: `${delay}s` };
-  }
+  const base = stagger ? "reveal-stagger" : "reveal-anim";
+  const cls = `${className} ${base}${shown ? " is-in" : ""}`.trim();
+  const style: CSSProperties | undefined =
+    !stagger && delay && shown ? { transitionDelay: `${delay}s` } : undefined;
 
   return (
-    <Tag ref={ref} className={classes.join(" ").trim()} style={style}>
+    <Tag ref={ref} className={cls} style={style}>
       {children}
     </Tag>
   );

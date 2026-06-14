@@ -114,6 +114,14 @@ export default function RootLayout({
       <body
         className={`${display.variable} font-sans antialiased selection:bg-accent-500 selection:text-white`}
       >
+        {/* Před vykreslením označíme html.js-reveal (jen když je IntersectionObserver),
+            aby se odhalovací sekce skryly hned a odhalily až při scrollu (bez blikání). */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html:
+              "try{if('IntersectionObserver' in window)document.documentElement.classList.add('js-reveal')}catch(e){}",
+          }}
+        />
         <a
           href="#main"
           className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-accent-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
