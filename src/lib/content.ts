@@ -41,6 +41,17 @@ export const SOCIALS: Social[] = [
   { network: "youtube", handle: "@karelhlas", href: "https://www.youtube.com/@karelhlas" },
 ];
 
+/**
+ * Certifikáty / odznaky (sekce O mně). `circle: true` = kruhový odznak,
+ * který se ořízne do kruhu (skryje plné rohové pozadí). Nový odznak: vlož
+ * obrázek do public/images/badges/ a přidej sem řádek.
+ */
+export type Badge = { src: string; alt: string; circle?: boolean };
+
+export const BADGES: Badge[] = [
+  { src: "/images/badges/ai-skills-for-students.png", alt: "AI Skills for Students" },
+];
+
 /* ───────────────────────── VÝUKA / ČASOVÁ OSA ─────────────────────────
  * Kurzy (ročníky) s tematickým plánem. Materiály doplňuj postupně do pole
  * `materials` u jednotlivých témat:
@@ -924,6 +935,7 @@ type Dict = {
     eduTitle: string;
     expTitle: string;
     interestsTitle: string;
+    badgesTitle: string;
     interests: string[];
     education: TimelineItem[];
     experience: TimelineItem[];
@@ -986,6 +998,7 @@ export const t: Record<Lang, Dict> = {
       eduTitle: "Vzdělání",
       expTitle: "Praxe",
       interestsTitle: "Co mě baví",
+      badgesTitle: "Certifikáty a odznaky",
       interests: ["Moderní technologie", "Vzdělávání", "Tvorba webů", "Programování", "Bowling"],
       education: [
         {
@@ -1080,6 +1093,7 @@ export const t: Record<Lang, Dict> = {
       eduTitle: "Education",
       expTitle: "Experience",
       interestsTitle: "What I enjoy",
+      badgesTitle: "Certificates & badges",
       interests: ["Modern technology", "Education", "Web development", "Programming", "Bowling"],
       education: [
         {

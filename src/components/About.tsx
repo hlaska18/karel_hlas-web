@@ -1,7 +1,9 @@
 "use client";
 
+import Image from "next/image";
 import { GraduationCap, Briefcase } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { BADGES } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
 
@@ -50,6 +52,31 @@ export function About() {
                 ))}
               </Reveal>
             </div>
+
+            {BADGES.length > 0 && (
+              <div className="mt-8">
+                <Reveal delay={0.1}>
+                  <p className="text-sm font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+                    {a.badgesTitle}
+                  </p>
+                </Reveal>
+                <Reveal as="ul" stagger className="mt-4 flex flex-wrap items-center gap-4">
+                  {BADGES.map((b) => (
+                    <li key={b.src} title={b.alt} className="transition hover:-translate-y-0.5">
+                      <Image
+                        src={b.src}
+                        alt={b.alt}
+                        width={72}
+                        height={72}
+                        className={`h-16 w-16 ${
+                          b.circle ? "rounded-full object-cover" : "object-contain"
+                        } drop-shadow-sm`}
+                      />
+                    </li>
+                  ))}
+                </Reveal>
+              </div>
+            )}
 
             {/* KONTAKT zarovnaný na spodek (desktop) – levý sloupec se roztáhne
                 na výšku pravého, takže spodní hrana = spodek boxu Praxe. */}
