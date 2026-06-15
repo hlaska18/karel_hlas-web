@@ -49,7 +49,11 @@ export const SOCIALS: Social[] = [
 export type Badge = { src: string; alt: string; circle?: boolean; href?: string };
 
 export const BADGES: Badge[] = [
-  { src: "/images/badges/ai-skills-for-students.png", alt: "Canva: AI skills for students" },
+  {
+    src: "/images/badges/ai-skills-for-students.png",
+    alt: "Canva: AI skills for students",
+    href: "https://www.canva.com/design-school/courses/ai-skills-for-students-course",
+  },
   {
     src: "/images/badges/ai-ve-vyuce.png",
     alt: "Microsoft: Úvod do konceptů AI",
