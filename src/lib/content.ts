@@ -50,6 +50,19 @@ export type Badge = { src: string; alt: string; circle?: boolean };
 
 export const BADGES: Badge[] = [
   { src: "/images/badges/ai-skills-for-students.png", alt: "AI Skills for Students" },
+  { src: "/images/badges/ai-ve-vyuce.png", alt: "AI ve výuce" },
+  { src: "/images/badges/ai-kniha.png", alt: "AI" },
+  { src: "/images/badges/copilot.png", alt: "Microsoft Copilot" },
+  { src: "/images/badges/copilot-vyuka.png", alt: "Microsoft Copilot ve výuce" },
+  { src: "/images/badges/kyberbezpecnost.png", alt: "Kybernetická bezpečnost" },
+  { src: "/images/badges/accessibility.png", alt: "Přístupnost" },
+  { src: "/images/badges/accessibility-kontakty.png", alt: "Přístupnost" },
+  { src: "/images/badges/minecraft.png", alt: "Minecraft Education" },
+  { src: "/images/badges/oceneni.png", alt: "Ocenění" },
+  { src: "/images/badges/veo.png", alt: "Google Veo" },
+  { src: "/images/badges/gemini-zeleny.png", alt: "Google Gemini" },
+  { src: "/images/badges/gemini-oranzovy.png", alt: "Google Gemini" },
+  { src: "/images/badges/gemini-plachetnice.png", alt: "Google Gemini" },
 ];
 
 /* ───────────────────────── VÝUKA / ČASOVÁ OSA ─────────────────────────
