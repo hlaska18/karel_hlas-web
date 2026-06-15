@@ -95,10 +95,22 @@ export const BADGES: Badge[] = [
     alt: "Microsoft: Build an initial agent with Microsoft Copilot Studio",
     href: "https://learn.microsoft.com/cs-cz/training/modules/create-copilots-copilot-studio/",
   },
-  { src: "/images/badges/veo.png", alt: "Coursiv: Master of Veo" },
-  { src: "/images/badges/perplexity.png", alt: "Coursiv: Master of Perplexity" },
-  { src: "/images/badges/claude.png", alt: "Coursiv: Master of Claude" },
-  { src: "/images/badges/midjourney.png", alt: "Coursiv: Master of Midjourney" },
+  { src: "/images/badges/veo.png", alt: "Coursiv: Master of Veo", href: "/certs/master-of-veo.pdf" },
+  {
+    src: "/images/badges/perplexity.png",
+    alt: "Coursiv: Master of Perplexity",
+    href: "/certs/master-of-perplexity.pdf",
+  },
+  {
+    src: "/images/badges/claude.png",
+    alt: "Coursiv: Master of Claude",
+    href: "/certs/master-of-claude.pdf",
+  },
+  {
+    src: "/images/badges/midjourney.png",
+    alt: "Coursiv: Master of Midjourney",
+    href: "/certs/master-of-midjourney.pdf",
+  },
 ];
 
 /* ───────────────────────── VÝUKA / ČASOVÁ OSA ─────────────────────────
