@@ -33,8 +33,7 @@ export function SmoothScroll() {
       const targetY = Math.max(0, el.getBoundingClientRect().top + startY - OFFSET);
       const distance = targetY - startY;
 
-      const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduce || Math.abs(distance) < 2) {
+      if (Math.abs(distance) < 2) {
         window.scrollTo(0, targetY);
         history.replaceState(null, "", href);
         return;

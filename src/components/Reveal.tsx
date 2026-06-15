@@ -7,7 +7,8 @@ import { useEffect, useRef, useState, type CSSProperties, type ElementType, type
  *  - Skrytí řídí CSS (`html.js-reveal …`), které platí jen když je JS +
  *    IntersectionObserver → žádné měření pozice v JS (spolehlivé i v Safari),
  *    žádné blikání (skryto už před prvním vykreslením).
- *  - Bez JS / bez IO / reduced-motion → obsah zůstává viditelný.
+ *  - Bez JS / bez IO → obsah zůstává viditelný.
+ *  - Reduced-motion (omezit pohyb v OS) animace NEvypíná – běží vždy.
  *  - `stagger` = postupně odhalí přímé potomky.
  */
 export function Reveal({
@@ -36,10 +37,6 @@ export function Reveal({
     const el = ref.current;
     if (!el) return;
     if (!("IntersectionObserver" in window)) {
-      setShown(true);
-      return;
-    }
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       setShown(true);
       return;
     }
