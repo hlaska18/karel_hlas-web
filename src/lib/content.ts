@@ -58,6 +58,7 @@ export const BADGES: Badge[] = [
   {
     src: "/images/badges/ai-kniha.png",
     alt: "Microsoft: Umožnit vyučujícím prozkoumat potenciál umělé inteligence",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/empower-educators-explore-potential-artificial-intelligence/",
   },
   {
     src: "/images/badges/copilot.png",
@@ -67,6 +68,7 @@ export const BADGES: Badge[] = [
   {
     src: "/images/badges/copilot-vyuka.png",
     alt: "Microsoft: Vylepšení výuky a učení pomocí Microsoft 365 Copilot Chat",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/enhance-teaching-learning-microsoft-copilot/",
   },
   {
     src: "/images/badges/kyberbezpecnost.png",
@@ -93,10 +95,10 @@ export const BADGES: Badge[] = [
     alt: "Microsoft: Build an initial agent with Microsoft Copilot Studio",
     href: "https://learn.microsoft.com/cs-cz/training/modules/create-copilots-copilot-studio/",
   },
-  { src: "/images/badges/veo.png", alt: "Google Veo" },
-  { src: "/images/badges/gemini-zeleny.png", alt: "Google Gemini" },
-  { src: "/images/badges/gemini-oranzovy.png", alt: "Google Gemini" },
-  { src: "/images/badges/gemini-plachetnice.png", alt: "Google Gemini" },
+  { src: "/images/badges/veo.png", alt: "Coursiv: Master of Veo" },
+  { src: "/images/badges/perplexity.png", alt: "Coursiv: Master of Perplexity" },
+  { src: "/images/badges/claude.png", alt: "Coursiv: Master of Claude" },
+  { src: "/images/badges/midjourney.png", alt: "Coursiv: Master of Midjourney" },
 ];
 
 /* ───────────────────────── VÝUKA / ČASOVÁ OSA ─────────────────────────
