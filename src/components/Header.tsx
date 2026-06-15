@@ -6,7 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LangToggle } from "@/components/LangToggle";
-import GradientMenu from "@/components/ui/gradient-menu";
+import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Header() {
   const { tr } = useLang();
@@ -43,32 +43,25 @@ export function Header() {
           </span>
         </a>
 
-        {/* Desktop nav – GradientMenu (liquid glass kroužky → smaragdové pilulky) */}
-        <div className="hidden md:block">
-          <GradientMenu
-            items={[
-              {
-                href: "#about",
-                label: tr.nav.about,
-                icon: <User className="h-5 w-5" />,
-                from: "#34d399",
-                to: "#10b981",
-              },
-              {
-                href: "#contact",
-                label: tr.nav.contact,
-                icon: <Mail className="h-5 w-5" />,
-                from: "#10b981",
-                to: "#059669",
-              },
-              {
-                href: "#vyuka",
-                label: tr.nav.lessons,
-                icon: <GraduationCap className="h-5 w-5" />,
-                from: "#059669",
-                to: "#047857",
-              },
-            ]}
+        {/* Desktop nav – stejná pilulková tlačítka jako v úvodu (InteractiveHoverButton) */}
+        <div className="hidden items-center gap-2.5 md:flex">
+          <InteractiveHoverButton
+            href="#about"
+            text={tr.nav.about}
+            size="sm"
+            icon={<User className="h-4 w-4" />}
+          />
+          <InteractiveHoverButton
+            href="#contact"
+            text={tr.nav.contact}
+            size="sm"
+            icon={<Mail className="h-4 w-4" />}
+          />
+          <InteractiveHoverButton
+            href="#vyuka"
+            text={tr.nav.lessons}
+            size="sm"
+            icon={<GraduationCap className="h-4 w-4" />}
           />
         </div>
 
