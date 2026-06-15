@@ -61,8 +61,8 @@ export function About() {
                   </p>
                 </Reveal>
                 <Reveal as="ul" stagger className="mt-4 flex flex-wrap items-center gap-4">
-                  {BADGES.map((b) => (
-                    <li key={b.src} title={b.alt} className="transition hover:-translate-y-0.5">
+                  {BADGES.map((b) => {
+                    const img = (
                       <Image
                         src={b.src}
                         alt={b.alt}
@@ -72,8 +72,27 @@ export function About() {
                           b.circle ? "rounded-full object-cover" : "object-contain"
                         } drop-shadow-sm`}
                       />
-                    </li>
-                  ))}
+                    );
+                    return (
+                      <li key={b.src} className="transition hover:-translate-y-1">
+                        {b.href ? (
+                          <a
+                            href={b.href}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            title={b.alt}
+                            className="block cursor-pointer"
+                          >
+                            {img}
+                          </a>
+                        ) : (
+                          <span title={b.alt} className="block">
+                            {img}
+                          </span>
+                        )}
+                      </li>
+                    );
+                  })}
                 </Reveal>
               </div>
             )}

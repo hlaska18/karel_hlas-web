@@ -46,19 +46,53 @@ export const SOCIALS: Social[] = [
  * který se ořízne do kruhu (skryje plné rohové pozadí). Nový odznak: vlož
  * obrázek do public/images/badges/ a přidej sem řádek.
  */
-export type Badge = { src: string; alt: string; circle?: boolean };
+export type Badge = { src: string; alt: string; circle?: boolean; href?: string };
 
 export const BADGES: Badge[] = [
-  { src: "/images/badges/ai-skills-for-students.png", alt: "AI Skills for Students" },
-  { src: "/images/badges/ai-ve-vyuce.png", alt: "AI ve výuce" },
-  { src: "/images/badges/ai-kniha.png", alt: "AI" },
-  { src: "/images/badges/copilot.png", alt: "Microsoft Copilot" },
-  { src: "/images/badges/copilot-vyuka.png", alt: "Microsoft Copilot ve výuce" },
-  { src: "/images/badges/kyberbezpecnost.png", alt: "Kybernetická bezpečnost" },
-  { src: "/images/badges/accessibility.png", alt: "Přístupnost" },
-  { src: "/images/badges/accessibility-kontakty.png", alt: "Přístupnost" },
-  { src: "/images/badges/minecraft.png", alt: "Minecraft Education" },
-  { src: "/images/badges/oceneni.png", alt: "Ocenění" },
+  { src: "/images/badges/ai-skills-for-students.png", alt: "Canva: AI skills for students" },
+  {
+    src: "/images/badges/ai-ve-vyuce.png",
+    alt: "Microsoft: Úvod do konceptů AI",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/get-started-ai-fundamentals/",
+  },
+  {
+    src: "/images/badges/ai-kniha.png",
+    alt: "Microsoft: Umožnit vyučujícím prozkoumat potenciál umělé inteligence",
+  },
+  {
+    src: "/images/badges/copilot.png",
+    alt: "Microsoft: Návrh cíle snů pomocí Microsoft Copilotu",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/design-dream-destination-ai-copilot/",
+  },
+  {
+    src: "/images/badges/copilot-vyuka.png",
+    alt: "Microsoft: Vylepšení výuky a učení pomocí Microsoft 365 Copilot Chat",
+  },
+  {
+    src: "/images/badges/kyberbezpecnost.png",
+    alt: "Microsoft: Build cybersecurity resilience in K-12 classrooms with Microsoft tools",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/build-cybersecurity-resilience-k-12-classrooms-microsoft-tools/",
+  },
+  {
+    src: "/images/badges/accessibility.png",
+    alt: "Microsoft: Umožněte každému studentu inkluzivní učebnu",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/empower-every-student-with-inclusive-classroom/",
+  },
+  {
+    src: "/images/badges/accessibility-kontakty.png",
+    alt: "Microsoft: Přístupnost – Vytvoření základu inkluzivního učení",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/accessibility-build-foundation-inclusive-learning/",
+  },
+  {
+    src: "/images/badges/minecraft.png",
+    alt: "Microsoft: Minecraft Trainer Academy",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/minecraft-trainer-academy-minecraft-education-classroom/",
+  },
+  {
+    src: "/images/badges/oceneni.png",
+    alt: "Microsoft: Build an initial agent with Microsoft Copilot Studio",
+    href: "https://learn.microsoft.com/cs-cz/training/modules/create-copilots-copilot-studio/",
+  },
   { src: "/images/badges/veo.png", alt: "Google Veo" },
   { src: "/images/badges/gemini-zeleny.png", alt: "Google Gemini" },
   { src: "/images/badges/gemini-oranzovy.png", alt: "Google Gemini" },
