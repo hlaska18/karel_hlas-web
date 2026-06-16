@@ -1,5 +1,6 @@
 import fs from "fs";
 import path from "path";
+import { COURSES } from "@/lib/content";
 import type { Material, MaterialEntry, Audience } from "@/lib/content";
 
 /**
@@ -226,5 +227,142 @@ export function getFolderMaterials(): FolderMaterials {
     }
   }
 
+  return out;
+}
+
+/* ─────────────────────────── BANKA MATERIÁLŮ ───────────────────────────
+ * Plochý seznam VŠECH souborů napříč kurzy/tématy + metadata (kurz, téma,
+ * typ, velikost, publikum). Slouží stránce /pro-ucitele (vyhledávání + filtry).
+ * Běží při buildu na serveru (čte filesystem). */
+
+export type BankItem = {
+  href: string;
+  label: { cs: string; en: string };
+  /** Přípona bez tečky, malými písmeny (např. "docx"). */
+  ext: string;
+  kind: Material["kind"];
+  sizeBytes: number;
+  courseId: string;
+  /** Lidsky čitelný kurz, např. „1. ročník · Technické lyceum". */
+  courseLabel: { cs: string; en: string };
+  /** Pořadové číslo tématu (1-based). */
+  topicNo: number;
+  /** Název tématu z plánu (COURSES); fallback „Téma N". */
+  topicLabel: { cs: string; en: string };
+  /** „teacher" = metodika/plány (složka _ucitel); „student" = pro žáky. */
+  audience: Audience;
+  /** Název podsložky, pokud soubor leží ve skupině. */
+  group?: { cs: string; en: string };
+};
+
+function courseLabelOf(courseId: string): { cs: string; en: string } {
+  const c = COURSES.find((x) => x.id === courseId);
+  if (!c) return { cs: courseId, en: courseId };
+  return { cs: `${c.year.cs} · ${c.field.cs}`, en: `${c.year.en} · ${c.field.en}` };
+}
+
+function topicLabelOf(courseId: string, topicIndex: number): { cs: string; en: string } {
+  const item = COURSES.find((x) => x.id === courseId)?.items[topicIndex];
+  if (item) return { cs: item.title.cs, en: item.title.en };
+  return { cs: `Téma ${topicIndex + 1}`, en: `Topic ${topicIndex + 1}` };
+}
+
+export function getBankItems(): BankItem[] {
+  const out: BankItem[] = [];
+
+  let courseDirs: string[];
+  try {
+    courseDirs = fs
+      .readdirSync(ROOT, { withFileTypes: true })
+      .filter((d) => d.isDirectory())
+      .map((d) => d.name);
+  } catch {
+    return out;
+  }
+
+  for (const courseId of courseDirs) {
+    const courseDir = path.join(ROOT, courseId);
+    let topicDirs: string[];
+    try {
+      topicDirs = fs
+        .readdirSync(courseDir, { withFileTypes: true })
+        .filter((d) => d.isDirectory())
+        .map((d) => d.name);
+    } catch {
+      continue;
+    }
+
+    for (const topicDir of topicDirs) {
+      const m = topicDir.match(/^(\d+)/);
+      if (!m) continue;
+      const topicIndex = parseInt(m[1], 10) - 1;
+      if (topicIndex < 0) continue;
+
+      const courseLabel = courseLabelOf(courseId);
+      const topicLabel = topicLabelOf(courseId, topicIndex);
+
+      // Rekurzivně projde téma; sleduje publikum (_ucitel → teacher) a skupinu.
+      const walk = (
+        absDir: string,
+        segs: string[],
+        audience: Audience,
+        group?: { cs: string; en: string },
+      ) => {
+        let ents: fs.Dirent[] = [];
+        try {
+          ents = fs.readdirSync(absDir, { withFileTypes: true }).filter((x) => !isHidden(x.name));
+        } catch {
+          return;
+        }
+        ents.sort((a, b) => byName(a.name, b.name));
+        for (const e of ents) {
+          if (e.isDirectory()) {
+            let aud = audience;
+            let grp = group;
+            if (isTeacherDir(e.name)) aud = "teacher";
+            else if (isStudentDir(e.name)) aud = "student";
+            else {
+              const gl = displayName(e.name);
+              grp = { cs: gl, en: enLabel(gl) };
+            }
+            walk(path.join(absDir, e.name), [...segs, e.name], aud, grp);
+          } else if (e.isFile()) {
+            const file = e.name;
+            const parts = [courseId, ...segs, file].map((s) => encodeURIComponent(s));
+            let sizeBytes = 0;
+            try {
+              sizeBytes = fs.statSync(path.join(absDir, file)).size;
+            } catch {
+              /* ignore */
+            }
+            const label = cleanLabel(file);
+            out.push({
+              href: "/materialy/" + parts.join("/"),
+              label: { cs: label, en: enLabel(label) },
+              ext: path.extname(file).slice(1).toLowerCase(),
+              kind: kindFromExt(path.extname(file)),
+              sizeBytes,
+              courseId,
+              courseLabel,
+              topicNo: topicIndex + 1,
+              topicLabel,
+              audience,
+              group,
+            });
+          }
+        }
+      };
+
+      walk(path.join(courseDir, topicDir), [topicDir], "student");
+    }
+  }
+
+  out.sort(
+    (a, b) =>
+      byName(a.courseId, b.courseId) ||
+      a.topicNo - b.topicNo ||
+      a.audience.localeCompare(b.audience) ||
+      byName(a.label.cs, b.label.cs),
+  );
   return out;
 }
