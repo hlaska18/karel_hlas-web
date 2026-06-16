@@ -171,18 +171,20 @@
     opacity: 0;
     transform: translateY(28px);
     will-change: opacity, transform;
+    /* transition musí být na výchozím stavu – Safari jinak neanimuje */
+    transition:
+      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
   .js-reveal .reveal-anim.is-in {
     opacity: 1;
     transform: none;
-    transition:
-      opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-      transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
   }
 
   /* postupné odhalení přímých potomků (stagger) */
   .js-reveal .reveal-stagger > * {
     opacity: 0;
+    transform: translateY(20px); /* nutné i zde – Safari jinak zabliká na přirozené pozici */
   }
   .js-reveal .reveal-stagger.is-in > * {
     animation: revealUp 0.6s cubic-bezier(0.22, 1, 0.36, 1) both;

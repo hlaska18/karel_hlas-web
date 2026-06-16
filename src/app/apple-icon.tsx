@@ -1,6 +1,6 @@
 import { ImageResponse } from "next/og";
 
-export const size = { width: 180, height: 180 };
+export const size = { width: 512, height: 512 };
 export const contentType = "image/png";
 
 export default function AppleIcon() {
@@ -15,9 +15,10 @@ export default function AppleIcon() {
           justifyContent: "center",
           background: "linear-gradient(135deg, #059669, #047857)",
           color: "#ffffff",
-          fontSize: 92,
+          fontSize: 260,
           fontWeight: 700,
           fontFamily: "sans-serif",
+          letterSpacing: "-4px",
         }}
       >
         KH
