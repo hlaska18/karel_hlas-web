@@ -1,7 +1,22 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { Search, Download, GraduationCap, Users, X, Eye, ExternalLink } from "lucide-react";
+import {
+  Search,
+  Download,
+  GraduationCap,
+  Users,
+  X,
+  Eye,
+  ExternalLink,
+  ArrowLeft,
+  FileSpreadsheet,
+  FileText,
+  FileCode2,
+  BarChart3,
+  ClipboardList,
+  Files,
+} from "lucide-react";
 import type { BankItem } from "@/lib/materials";
 
 /** Typy, které umíme spolehlivě zobrazit přímo (bez cizí služby). */
@@ -11,7 +26,7 @@ function canPreview(ext: string): boolean {
   return IMG.includes(ext) || FRAME.includes(ext);
 }
 
-/** Sloučí přípony do přátelské kategorie (filtr „Typ"). */
+/** Sloučí přípony do přátelské kategorie (odznak typu u řádku). */
 function fileType(ext: string): { key: string; label: string } {
   if (["docx", "doc", "odt", "rtf"].includes(ext)) return { key: "word", label: "Word" };
   if (["xlsx", "xls", "xlsm", "csv"].includes(ext)) return { key: "excel", label: "Excel" };
@@ -27,6 +42,23 @@ function fileType(ext: string): { key: string; label: string } {
   return { key: ext || "other", label: (ext || "soubor").toUpperCase() };
 }
 
+function toolIcon(tool: string) {
+  switch (tool) {
+    case "Excel":
+      return FileSpreadsheet;
+    case "Word":
+      return FileText;
+    case "Python":
+      return FileCode2;
+    case "Power BI":
+      return BarChart3;
+    case "Plány hodin":
+      return ClipboardList;
+    default:
+      return Files;
+  }
+}
+
 function fmtSize(bytes: number): string {
   if (!bytes) return "";
   if (bytes < 1024) return `${bytes} B`;
@@ -39,44 +71,41 @@ const stripDia = (s: string) =>
 
 export function BankBrowser({ items }: { items: BankItem[] }) {
   const [q, setQ] = useState("");
-  const [course, setCourse] = useState<string>("");
-  const [type, setType] = useState<string>("");
+  const [tool, setTool] = useState<string | null>(null);
   const [audience, setAudience] = useState<"" | "student" | "teacher">("");
   const [preview, setPreview] = useState<BankItem | null>(null);
 
-  // unikátní kurzy a typy z dat (žádné ručně udržované seznamy)
-  const courses = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const it of items) if (!map.has(it.courseId)) map.set(it.courseId, it.courseLabel.cs);
-    return [...map.entries()];
-  }, [items]);
+  // Filtr publika se aplikuje všude (dlaždice i seznam).
+  const byAudience = useMemo(
+    () => (audience ? items.filter((it) => it.audience === audience) : items),
+    [items, audience],
+  );
 
-  const types = useMemo(() => {
-    const map = new Map<string, string>();
-    for (const it of items) {
-      const t = fileType(it.ext);
-      if (!map.has(t.key)) map.set(t.key, t.label);
+  // Dlaždice nástrojů + počty. Položky chodí ze serveru seřazené dle TOOL_ORDER,
+  // takže pořadí prvního výskytu v Map = správné pořadí dlaždic.
+  const tiles = useMemo(() => {
+    const counts = new Map<string, number>();
+    for (const it of byAudience) counts.set(it.tool, (counts.get(it.tool) ?? 0) + 1);
+    return [...counts.entries()].map(([name, count]) => ({ name, count }));
+  }, [byAudience]);
+
+  // Výsledky podle režimu: hledání > vybraná dlaždice > nic.
+  const needle = stripDia(q.trim());
+  const results = useMemo(() => {
+    let base = byAudience;
+    if (needle) {
+      base = base.filter((it) =>
+        stripDia(
+          [it.label.cs, it.topicLabel.cs, it.group?.cs ?? "", it.tool, it.coursesLabel.cs, it.ext].join(" "),
+        ).includes(needle),
+      );
+    } else if (tool) {
+      base = base.filter((it) => it.tool === tool);
     }
-    return [...map.entries()].sort((a, b) => a[1].localeCompare(b[1], "cs"));
-  }, [items]);
+    return base;
+  }, [byAudience, needle, tool]);
 
-  const filtered = useMemo(() => {
-    const needle = stripDia(q.trim());
-    return items.filter((it) => {
-      if (course && it.courseId !== course) return false;
-      if (type && fileType(it.ext).key !== type) return false;
-      if (audience && it.audience !== audience) return false;
-      if (needle) {
-        const hay = stripDia(
-          [it.label.cs, it.topicLabel.cs, it.group?.cs ?? "", it.courseLabel.cs, it.ext].join(" "),
-        );
-        if (!hay.includes(needle)) return false;
-      }
-      return true;
-    });
-  }, [items, q, course, type, audience]);
-
-  const hasFilter = q || course || type || audience;
+  const showList = needle !== "" || tool !== null;
 
   return (
     <div>
@@ -87,15 +116,13 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Hledat materiál, téma, typ…"
+          placeholder="Hledat materiál, téma, nástroj…"
           className="glass-soft w-full rounded-2xl py-3.5 pl-12 pr-4 text-base text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-100"
         />
       </div>
 
-      {/* Filtry */}
+      {/* Filtr publika */}
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <FilterSelect value={course} onChange={setCourse} allLabel="Všechny ročníky" options={courses} />
-        <FilterSelect value={type} onChange={setType} allLabel="Všechny typy" options={types} />
         <div className="inline-flex overflow-hidden rounded-full glass-soft text-sm font-medium">
           <AudBtn active={audience === ""} onClick={() => setAudience("")}>
             Vše
@@ -107,99 +134,127 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
             <GraduationCap className="h-4 w-4" /> Pro učitele
           </AudBtn>
         </div>
-        {hasFilter && (
-          <button
-            type="button"
-            onClick={() => {
-              setQ("");
-              setCourse("");
-              setType("");
-              setAudience("");
-            }}
-            className="inline-flex items-center gap-1 rounded-full px-3 py-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400 dark:hover:text-accent-400"
-          >
-            <X className="h-4 w-4" /> Zrušit filtry
-          </button>
-        )}
       </div>
 
-      {/* Počet */}
-      <p className="mt-5 text-sm text-zinc-500 dark:text-zinc-400">
-        {filtered.length}{" "}
-        {filtered.length === 1 ? "materiál" : filtered.length >= 2 && filtered.length <= 4 ? "materiály" : "materiálů"}
-        {hasFilter ? ` z ${items.length}` : " celkem"}
-      </p>
-
-      {/* Seznam */}
-      <ul className="mt-4 space-y-2.5">
-        {filtered.map((it) => {
-          const t = fileType(it.ext);
-          const previewable = canPreview(it.ext);
-          return (
-            <li
-              key={it.href}
-              className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5"
-            >
-              <span className="flex w-16 shrink-0 justify-center">
-                <span className="rounded-lg bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-                  {t.label}
-                </span>
-              </span>
-              <span className="min-w-0 flex-1">
-                <span className="block truncate font-medium text-zinc-900 dark:text-white">
-                  {it.label.cs}
-                </span>
-                <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
-                  {it.courseLabel.cs} · {it.topicNo}. {it.topicLabel.cs}
-                  {it.group ? ` · ${it.group.cs}` : ""}
-                </span>
-              </span>
-              <span className="hidden shrink-0 items-center gap-1.5 sm:inline-flex">
-                {it.audience === "teacher" ? (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
-                    <GraduationCap className="h-3.5 w-3.5" /> učitelé
-                  </span>
-                ) : (
-                  <span className="inline-flex items-center gap-1 rounded-full bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
-                    <Users className="h-3.5 w-3.5" /> žáci
-                  </span>
-                )}
-              </span>
-              <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-400 md:block">
-                {fmtSize(it.sizeBytes)}
-              </span>
-              {previewable && (
+      {/* ── Galerie dlaždic (když se nehledá a není vybraná dlaždice) ── */}
+      {!showList && (
+        <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+          {tiles.map((t) => {
+            const Icon = toolIcon(t.name);
+            return (
+              <li key={t.name}>
                 <button
                   type="button"
-                  onClick={() => setPreview(it)}
-                  title="Náhled"
-                  aria-label={`Náhled: ${it.label.cs}`}
-                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+                  onClick={() => setTool(t.name)}
+                  className="glass group flex w-full flex-col items-start gap-3 rounded-2xl p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
                 >
-                  <Eye className="h-5 w-5" />
+                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-500/15 text-accent-600 transition group-hover:bg-accent-600 group-hover:text-white dark:text-accent-300">
+                    <Icon className="h-6 w-6" />
+                  </span>
+                  <span className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
+                    {t.name}
+                  </span>
+                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                    {t.count} {t.count === 1 ? "materiál" : t.count <= 4 ? "materiály" : "materiálů"}
+                  </span>
                 </button>
-              )}
-              <a
-                href={it.href}
-                download
-                title="Stáhnout"
-                aria-label={`Stáhnout: ${it.label.cs}`}
-                className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+              </li>
+            );
+          })}
+        </ul>
+      )}
+
+      {/* ── Seznam materiálů (hledání nebo vybraná dlaždice) ── */}
+      {showList && (
+        <>
+          <div className="mt-5 flex flex-wrap items-center gap-3">
+            {tool && !needle && (
+              <button
+                type="button"
+                onClick={() => setTool(null)}
+                className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
               >
-                <Download className="h-5 w-5" />
-              </a>
-            </li>
-          );
-        })}
-      </ul>
+                <ArrowLeft className="h-4 w-4" /> Zpět na témata
+              </button>
+            )}
+            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+              {needle ? "Výsledky hledání: " : tool ? `${tool}: ` : ""}
+              {results.length}{" "}
+              {results.length === 1 ? "materiál" : results.length >= 2 && results.length <= 4 ? "materiály" : "materiálů"}
+            </p>
+          </div>
+
+          <ul className="mt-4 space-y-2.5">
+            {results.map((it) => {
+              const t = fileType(it.ext);
+              const previewable = canPreview(it.ext);
+              return (
+                <li
+                  key={it.href}
+                  className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5"
+                >
+                  <span className="flex w-16 shrink-0 justify-center">
+                    <span className="rounded-lg bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                      {t.label}
+                    </span>
+                  </span>
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate font-medium text-zinc-900 dark:text-white">
+                      {it.label.cs}
+                    </span>
+                    <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
+                      {it.topicLabel.cs}
+                      {it.group ? ` · ${it.group.cs}` : ""}
+                    </span>
+                  </span>
+                  <span className="hidden shrink-0 items-center gap-1.5 sm:inline-flex">
+                    {it.audience === "teacher" ? (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+                        <GraduationCap className="h-3.5 w-3.5" /> učitelé
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-1 rounded-full bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
+                        <Users className="h-3.5 w-3.5" /> žáci
+                      </span>
+                    )}
+                  </span>
+                  <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-400 md:block">
+                    {fmtSize(it.sizeBytes)}
+                  </span>
+                  {previewable && (
+                    <button
+                      type="button"
+                      onClick={() => setPreview(it)}
+                      title="Náhled"
+                      aria-label={`Náhled: ${it.label.cs}`}
+                      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+                    >
+                      <Eye className="h-5 w-5" />
+                    </button>
+                  )}
+                  <a
+                    href={it.href}
+                    download
+                    title="Stáhnout"
+                    aria-label={`Stáhnout: ${it.label.cs}`}
+                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+                  >
+                    <Download className="h-5 w-5" />
+                  </a>
+                </li>
+              );
+            })}
+          </ul>
+
+          {results.length === 0 && (
+            <p className="mt-10 text-center text-zinc-500 dark:text-zinc-400">
+              Nic neodpovídá. Zkus jiné slovo nebo se vrať na témata.
+            </p>
+          )}
+        </>
+      )}
 
       {preview && <PreviewModal item={preview} onClose={() => setPreview(null)} />}
-
-      {filtered.length === 0 && (
-        <p className="mt-10 text-center text-zinc-500 dark:text-zinc-400">
-          Nic neodpovídá filtru. Zkus jiné slovo nebo zruš filtry.
-        </p>
-      )}
     </div>
   );
 }
@@ -232,7 +287,6 @@ function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }
         onClick={(e) => e.stopPropagation()}
         className="glass flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl"
       >
-        {/* hlavička */}
         <div className="flex items-center gap-3 border-b border-black/10 px-5 py-3.5 dark:border-white/10">
           <p className="min-w-0 flex-1 truncate font-medium text-zinc-900 dark:text-white">
             {item.label.cs}
@@ -264,7 +318,6 @@ function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }
           </button>
         </div>
 
-        {/* obsah náhledu */}
         <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto bg-white/40 p-3 dark:bg-black/20">
           {isImg ? (
             // eslint-disable-next-line @next/next/no-img-element
@@ -279,33 +332,6 @@ function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }
         </div>
       </div>
     </div>
-  );
-}
-
-function FilterSelect({
-  value,
-  onChange,
-  allLabel,
-  options,
-}: {
-  value: string;
-  onChange: (v: string) => void;
-  allLabel: string;
-  options: [string, string][];
-}) {
-  return (
-    <select
-      value={value}
-      onChange={(e) => onChange(e.target.value)}
-      className="glass-soft cursor-pointer rounded-full px-4 py-2 text-sm font-medium text-zinc-700 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-200"
-    >
-      <option value="">{allLabel}</option>
-      {options.map(([val, label]) => (
-        <option key={val} value={val}>
-          {label}
-        </option>
-      ))}
-    </select>
   );
 }
 

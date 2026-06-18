@@ -235,6 +235,9 @@ export function getFolderMaterials(): FolderMaterials {
  * typ, velikost, publikum). Slouží stránce /pro-ucitele (vyhledávání + filtry).
  * Běží při buildu na serveru (čte filesystem). */
 
+/** Pořadí „nástrojových" dlaždic v galerii. */
+export const TOOL_ORDER = ["Excel", "Word", "Python", "Power BI", "Plány hodin", "Ostatní"];
+
 export type BankItem = {
   href: string;
   label: { cs: string; en: string };
@@ -242,10 +245,9 @@ export type BankItem = {
   ext: string;
   kind: Material["kind"];
   sizeBytes: number;
-  courseId: string;
-  /** Lidsky čitelný kurz, např. „1. ročník · Technické lyceum". */
-  courseLabel: { cs: string; en: string };
-  /** Pořadové číslo tématu (1-based). */
+  /** Nástroj/dovednost = dlaždice galerie (Excel, Word, Python, Power BI…). */
+  tool: string;
+  /** Pořadové číslo tématu (1-based) reprezentativního výskytu. */
   topicNo: number;
   /** Název tématu z plánu (COURSES); fallback „Téma N". */
   topicLabel: { cs: string; en: string };
@@ -253,13 +255,11 @@ export type BankItem = {
   audience: Audience;
   /** Název podsložky, pokud soubor leží ve skupině. */
   group?: { cs: string; en: string };
+  /** Obory 1. ročníku, kde se materiál vyskytuje (po sloučení duplicit). */
+  courseIds: string[];
+  /** Lidsky čitelný rozsah oborů, např. „1. ročník · všechny obory". */
+  coursesLabel: { cs: string; en: string };
 };
-
-function courseLabelOf(courseId: string): { cs: string; en: string } {
-  const c = COURSES.find((x) => x.id === courseId);
-  if (!c) return { cs: courseId, en: courseId };
-  return { cs: `${c.year.cs} · ${c.field.cs}`, en: `${c.year.en} · ${c.field.en}` };
-}
 
 function topicLabelOf(courseId: string, topicIndex: number): { cs: string; en: string } {
   const item = COURSES.find((x) => x.id === courseId)?.items[topicIndex];
@@ -267,8 +267,31 @@ function topicLabelOf(courseId: string, topicIndex: number): { cs: string; en: s
   return { cs: `Téma ${topicIndex + 1}`, en: `Topic ${topicIndex + 1}` };
 }
 
+/** Odvodí nástroj/dovednost z názvu skupiny + tématu + souboru + přípony. */
+function toolOf(hay: string, ext: string): string {
+  const h = hay.toLowerCase();
+  if (/power\s?bi/.test(h) || ext === "pbix") return "Power BI";
+  if (/excel/.test(h) || ["xlsx", "xlsm", "xls", "csv"].includes(ext)) return "Excel";
+  if (/word/.test(h) || ["docx", "doc", "odt", "rtf"].includes(ext)) return "Word";
+  if (/python/.test(h) || ["py", "ipynb"].includes(ext)) return "Python";
+  if (/pl[áa]n/.test(h)) return "Plány hodin";
+  return "Ostatní";
+}
+
+function coursesLabelOf(courseIds: string[], total: number): { cs: string; en: string } {
+  if (total > 0 && courseIds.length >= total) {
+    return { cs: "1. ročník · všechny obory", en: "Year 1 · all fields" };
+  }
+  const cs = courseIds.map((id) => COURSES.find((c) => c.id === id)?.field.cs ?? id).join(", ");
+  const en = courseIds.map((id) => COURSES.find((c) => c.id === id)?.field.en ?? id).join(", ");
+  return { cs: `1. ročník · ${cs}`, en: `Year 1 · ${en}` };
+}
+
 export function getBankItems(): BankItem[] {
-  const out: BankItem[] = [];
+  // Sloučení duplicit napříč obory (1L/1S/1P): klíč = nástroj+skupina+název+typ,
+  // NE číslo tématu (Excel je v 1L téma 4, v 1S/1P téma 3). Soubory jsou
+  // ve sdílených složkách byte-shodné, takže reprezentant = první výskyt.
+  const seen = new Map<string, BankItem>();
 
   let courseDirs: string[];
   try {
@@ -277,8 +300,9 @@ export function getBankItems(): BankItem[] {
       .filter((d) => d.isDirectory())
       .map((d) => d.name);
   } catch {
-    return out;
+    return [];
   }
+  const totalCourses = courseDirs.length;
 
   for (const courseId of courseDirs) {
     const courseDir = path.join(ROOT, courseId);
@@ -298,7 +322,6 @@ export function getBankItems(): BankItem[] {
       const topicIndex = parseInt(m[1], 10) - 1;
       if (topicIndex < 0) continue;
 
-      const courseLabel = courseLabelOf(courseId);
       const topicLabel = topicLabelOf(courseId, topicIndex);
 
       // Rekurzivně projde téma; sleduje publikum (_ucitel → teacher) a skupinu.
@@ -328,6 +351,20 @@ export function getBankItems(): BankItem[] {
             walk(path.join(absDir, e.name), [...segs, e.name], aud, grp);
           } else if (e.isFile()) {
             const file = e.name;
+            const ext = path.extname(file).slice(1).toLowerCase();
+            const label = cleanLabel(file);
+            const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${label}`, ext);
+            const key = [tool, audience, group?.cs ?? "", label, ext]
+              .join("|")
+              .normalize("NFC")
+              .toLowerCase();
+
+            const existing = seen.get(key);
+            if (existing) {
+              if (!existing.courseIds.includes(courseId)) existing.courseIds.push(courseId);
+              continue;
+            }
+
             const parts = [courseId, ...segs, file].map((s) => encodeURIComponent(s));
             let sizeBytes = 0;
             try {
@@ -335,19 +372,19 @@ export function getBankItems(): BankItem[] {
             } catch {
               /* ignore */
             }
-            const label = cleanLabel(file);
-            out.push({
+            seen.set(key, {
               href: "/materialy/" + parts.join("/"),
               label: { cs: label, en: enLabel(label) },
-              ext: path.extname(file).slice(1).toLowerCase(),
+              ext,
               kind: kindFromExt(path.extname(file)),
               sizeBytes,
-              courseId,
-              courseLabel,
+              tool,
               topicNo: topicIndex + 1,
               topicLabel,
               audience,
               group,
+              courseIds: [courseId],
+              coursesLabel: { cs: "", en: "" },
             });
           }
         }
@@ -357,12 +394,19 @@ export function getBankItems(): BankItem[] {
     }
   }
 
-  out.sort(
+  const items = [...seen.values()];
+  for (const it of items) it.coursesLabel = coursesLabelOf(it.courseIds, totalCourses);
+
+  const order = (t: string) => {
+    const i = TOOL_ORDER.indexOf(t);
+    return i < 0 ? 99 : i;
+  };
+  items.sort(
     (a, b) =>
-      byName(a.courseId, b.courseId) ||
-      a.topicNo - b.topicNo ||
+      order(a.tool) - order(b.tool) ||
       a.audience.localeCompare(b.audience) ||
+      a.topicNo - b.topicNo ||
       byName(a.label.cs, b.label.cs),
   );
-  return out;
+  return items;
 }

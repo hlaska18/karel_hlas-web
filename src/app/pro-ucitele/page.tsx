@@ -11,7 +11,7 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
   title: "Banka materiálů pro učitele",
   description:
-    "Volně stažitelné materiály do hodin informatiky: pracovní listy, testy, metodika a plány hodin (Word, Excel, Python, Power BI). Filtruj podle ročníku, typu a publika. Bez přihlašování.",
+    "Volně stažitelné materiály do hodin informatiky: pracovní listy, testy, metodika a plány hodin. Procházej podle nástroje (Excel, Word, Python, Power BI) nebo hledej. Bez přihlašování.",
   alternates: { canonical: "/pro-ucitele" },
 };
 
