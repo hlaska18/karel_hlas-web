@@ -2,54 +2,19 @@
 
 import { useState, useEffect } from "react";
 import {
-  FileText,
-  Presentation,
-  Youtube,
-  Code2,
-  Link as LinkIcon,
-  ArrowUpRight,
   Target,
   GraduationCap,
   ChevronDown,
-  Folder,
   ClipboardList,
+  Library,
+  ArrowRight,
 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import {
-  COURSES,
-  type Material,
-  type MaterialGroup,
-  type MaterialEntry,
-  type Lang,
-  type CurriculumItem,
-  type Course,
-  type Audience,
-} from "@/lib/content";
-import type { FolderMaterials } from "@/lib/materials";
+import { COURSES, type Lang, type CurriculumItem, type Course } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
 
-function MaterialIcon({ kind }: { kind?: Material["kind"] }) {
-  const cls = "h-4 w-4 shrink-0";
-  switch (kind) {
-    case "doc":
-      return <FileText className={cls} />;
-    case "slides":
-      return <Presentation className={cls} />;
-    case "video":
-      return <Youtube className={cls} />;
-    case "code":
-      return <Code2 className={cls} />;
-    default:
-      return <LinkIcon className={cls} />;
-  }
-}
-
-export function Curriculum({
-  folderMaterials = {},
-}: {
-  folderMaterials?: FolderMaterials;
-}) {
+export function Curriculum() {
   const { lang, tr } = useLang();
   const l = tr.lessons;
   const [openId, setOpenId] = useState<string | null>(null);
@@ -135,40 +100,64 @@ export function Curriculum({
           </div>
         </Reveal>
 
+        {/* Odkaz na banku materiálů (materiály už nejsou vložené v plánu). */}
+        <Reveal delay={0.05}>
+          <a
+            href="/pro-ucitele"
+            className="glass-accent group mt-6 flex flex-col gap-4 rounded-3xl p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/20 sm:flex-row sm:items-center sm:p-6"
+          >
+            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-600 text-white shadow-lg shadow-accent-600/30">
+              <Library className="h-6 w-6" />
+            </span>
+            <span className="min-w-0 flex-1">
+              <span className="block font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
+                {l.bankTitle}
+              </span>
+              <span className="mt-1 block text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+                {l.bankDesc}
+              </span>
+            </span>
+            <span className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition group-hover:bg-accent-500 sm:self-auto">
+              {l.bankCta}
+              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+            </span>
+          </a>
+        </Reveal>
+
         {/* výběr ročníku */}
         <Reveal as="div" stagger className="mt-10 flex flex-wrap gap-4">
           {COURSES.map((course) => {
-              const open = openId === course.id;
-              return (
-                <button
-                  key={course.id}
-                  type="button"
-                  onClick={() => setOpenId(open ? null : course.id)}
-                  aria-expanded={open}
-                  aria-controls={`osa-${course.id}`}
-                  className={`group flex items-center gap-4 rounded-2xl px-5 py-4 text-left transition duration-300 hover:-translate-y-0.5 ${
-                    open ? "glass-accent" : "glass"
+            const open = openId === course.id;
+            return (
+              <button
+                key={course.id}
+                type="button"
+                onClick={() => setOpenId(open ? null : course.id)}
+                aria-expanded={open}
+                aria-controls={`osa-${course.id}`}
+                className={`group flex items-center gap-4 rounded-2xl px-5 py-4 text-left transition duration-300 hover:-translate-y-0.5 ${
+                  open ? "glass-accent" : "glass"
+                }`}
+              >
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-600 text-white shadow-lg shadow-accent-600/30">
+                  <GraduationCap className="h-5 w-5" />
+                </span>
+                <span className="min-w-0">
+                  <span className="block font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-white">
+                    {course.year[lang]} – {course.field[lang]}
+                  </span>
+                  <span className="block text-xs text-zinc-600 dark:text-zinc-300/80">
+                    {l.subject} · {course.schoolYear}
+                  </span>
+                </span>
+                <ChevronDown
+                  className={`h-5 w-5 shrink-0 transition-transform duration-300 ${
+                    open ? "rotate-180 text-accent-600 dark:text-accent-400" : "text-zinc-500"
                   }`}
-                >
-                  <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-600 text-white shadow-lg shadow-accent-600/30">
-                    <GraduationCap className="h-5 w-5" />
-                  </span>
-                  <span className="min-w-0">
-                    <span className="block font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-white">
-                      {course.year[lang]} – {course.field[lang]}
-                    </span>
-                    <span className="block text-xs text-zinc-600 dark:text-zinc-300/80">
-                      {l.subject} · {course.schoolYear}
-                    </span>
-                  </span>
-                  <ChevronDown
-                    className={`h-5 w-5 shrink-0 transition-transform duration-300 ${
-                      open ? "rotate-180 text-accent-600 dark:text-accent-400" : "text-zinc-500"
-                    }`}
-                  />
-                </button>
-              );
-            })}
+                />
+              </button>
+            );
+          })}
         </Reveal>
 
         {/* časové osy – obsah se renderuje až po otevření (menší HTML = rychlejší načtení) */}
@@ -180,7 +169,6 @@ export function Curriculum({
               open={openId === course.id}
               l={l}
               lang={lang}
-              courseMaterials={folderMaterials[course.id]}
               teacherView={teacherView}
             />
           ))}
@@ -197,14 +185,12 @@ function CourseTimeline({
   open,
   l,
   lang,
-  courseMaterials,
   teacherView,
 }: {
   course: Course;
   open: boolean;
   l: ReturnType<typeof useLang>["tr"]["lessons"];
   lang: Lang;
-  courseMaterials?: Record<number, MaterialEntry[]>;
   teacherView: boolean;
 }) {
   // Kontejner se ukáže ihned (bez výškové animace = žádný skok). Samotná témata
@@ -213,13 +199,7 @@ function CourseTimeline({
 
   return (
     <div id={`osa-${course.id}`}>
-      <Timeline
-        items={course.items}
-        l={l}
-        lang={lang}
-        courseMaterials={courseMaterials}
-        teacherView={teacherView}
-      />
+      <Timeline items={course.items} l={l} lang={lang} teacherView={teacherView} />
     </div>
   );
 }
@@ -228,22 +208,16 @@ function Timeline({
   items,
   l,
   lang,
-  courseMaterials,
   teacherView,
 }: {
   items: CurriculumItem[];
   l: ReturnType<typeof useLang>["tr"]["lessons"];
   lang: Lang;
-  courseMaterials?: Record<number, MaterialEntry[]>;
   teacherView: boolean;
 }) {
   return (
     <ol className="timeline-in relative mt-10 ml-1.5 border-l border-black/10 dark:border-white/10">
-      {items.map((item, i) => {
-        const mats = [...item.materials, ...(courseMaterials?.[i] ?? [])].filter(
-          (m) => teacherView || !m.teacherOnly,
-        );
-        return (
+      {items.map((item, i) => (
         <li key={i} className="relative pb-12 pl-8 last:pb-0 sm:pl-12">
           <span
             aria-hidden
@@ -284,194 +258,26 @@ function Timeline({
             </div>
           )}
 
-          <div className="glass mt-5 grid gap-6 rounded-3xl p-5 sm:p-6 lg:grid-cols-2">
-            {item.topics[lang].length > 0 && (
-              <div>
-                <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-                  {l.topicsLabel}
-                </p>
-                <ul className="mt-3 space-y-2">
-                  {item.topics[lang].map((topic, j) => (
-                    <li
-                      key={j}
-                      className="flex items-start gap-2.5 text-sm text-zinc-700 dark:text-zinc-300"
-                    >
-                      <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent-400" />
-                      {topic}
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            )}
-
-            <div className={item.topics[lang].length === 0 ? "lg:col-span-2" : ""}>
+          {item.topics[lang].length > 0 && (
+            <div className="glass mt-5 rounded-3xl p-5 sm:p-6">
               <p className="text-xs font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-                {l.materialsLabel}
+                {l.topicsLabel}
               </p>
-              {mats.length > 0 ? (
-                <ul className="mt-3 flex flex-col gap-2">
-                  {mats.map((entry, k) =>
-                    "items" in entry ? (
-                      <MaterialGroupItem key={k} group={entry} l={l} lang={lang} teacherView={teacherView} />
-                    ) : (
-                      <MaterialLink key={k} mat={entry} l={l} lang={lang} teacherView={teacherView} />
-                    ),
-                  )}
-                </ul>
-              ) : (
-                <p className="mt-3 rounded-xl border border-dashed border-black/10 px-3.5 py-3 text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
-                  {l.noMaterials}
-                </p>
-              )}
+              <ul className="mt-3 grid gap-2 sm:grid-cols-2">
+                {item.topics[lang].map((topic, j) => (
+                  <li
+                    key={j}
+                    className="flex items-start gap-2.5 text-sm text-zinc-700 dark:text-zinc-300"
+                  >
+                    <span className="mt-[7px] h-1.5 w-1.5 shrink-0 rounded-full bg-accent-400" />
+                    {topic}
+                  </li>
+                ))}
+              </ul>
             </div>
-          </div>
+          )}
         </li>
-        );
-      })}
+      ))}
     </ol>
-  );
-}
-
-type Lessons = ReturnType<typeof useLang>["tr"]["lessons"];
-
-/** Komu je materiál určený: vynucené `audience` → učitelské (_ucitel) → odhad z názvu → oba. */
-function audienceOf(entry: Material | MaterialGroup): Audience {
-  if (entry.audience) return entry.audience;
-  if (entry.teacherOnly) return "teacher";
-  // NFC kvůli macOS názvům souborů v rozloženém Unicode (NFD) – jinak „í/á" nesedí.
-  const name = `${entry.label.cs} ${entry.label.en}`.normalize("NFC").toLowerCase();
-  if (/(žák|zák|pracovn[íi] list|úloh|uloh|cvi[čc]en)/.test(name)) return "student";
-  return "both";
-}
-
-const AUDIENCE_STYLE: Record<Audience, string> = {
-  teacher: "bg-accent-600 text-white",
-  student: "bg-accent-100 text-accent-700 dark:bg-accent-400/15 dark:text-accent-300",
-  both: "bg-zinc-200/70 text-zinc-600 dark:bg-white/10 dark:text-zinc-400",
-};
-
-function AudienceBadge({ audience, l }: { audience: Audience; l: Lessons }) {
-  const text =
-    audience === "teacher"
-      ? l.audienceTeacher
-      : audience === "student"
-        ? l.audienceStudent
-        : l.audienceBoth;
-  return (
-    <span
-      className={`shrink-0 whitespace-nowrap rounded-full px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide ${AUDIENCE_STYLE[audience]}`}
-    >
-      {text}
-    </span>
-  );
-}
-
-function MaterialLink({
-  mat,
-  l,
-  lang,
-  teacherView,
-}: {
-  mat: Material;
-  l: Lessons;
-  lang: Lang;
-  teacherView: boolean;
-}) {
-  const ready = Boolean(mat.href) && mat.href !== "#";
-  if (!ready) {
-    return (
-      <li>
-        <span className="flex items-center gap-3 rounded-xl border border-dashed border-black/10 px-3.5 py-2.5 text-sm text-zinc-500 dark:border-white/10 dark:text-zinc-400">
-          <MaterialIcon kind={mat.kind} />
-          <span className="flex-1">{mat.label[lang]}</span>
-          <span className="rounded-full bg-zinc-200/70 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-zinc-500 dark:bg-white/10 dark:text-zinc-400">
-            {l.soon}
-          </span>
-          <span className="w-11 shrink-0" />
-        </span>
-      </li>
-    );
-  }
-  return (
-    <li>
-      <a
-        href={mat.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="glass-soft group flex items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
-      >
-        <span className="text-accent-500">
-          <MaterialIcon kind={mat.kind} />
-        </span>
-        <span className="flex-1">{mat.label[lang]}</span>
-        {teacherView && <AudienceBadge audience={audienceOf(mat)} l={l} />}
-        {/* pevný pravý slot – stejná šířka jako počet+šipka u složek, ať vše lícuje */}
-        <span className="flex w-11 shrink-0 items-center justify-end">
-          <ArrowUpRight className="h-4 w-4 opacity-0 transition group-hover:opacity-100" />
-        </span>
-      </a>
-    </li>
-  );
-}
-
-function MaterialGroupItem({
-  group,
-  l,
-  lang,
-  teacherView,
-}: {
-  group: MaterialGroup;
-  l: Lessons;
-  lang: Lang;
-  teacherView: boolean;
-}) {
-  const [open, setOpen] = useState(false);
-  return (
-    <li>
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="glass-soft flex w-full items-center gap-3 rounded-xl px-3.5 py-2.5 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
-      >
-        <span className="text-accent-500">
-          <Folder className="h-4 w-4 shrink-0" />
-        </span>
-        <span className="flex-1 text-left">{group.label[lang]}</span>
-        {teacherView && <AudienceBadge audience={audienceOf(group)} l={l} />}
-        {/* pevný pravý slot (počet + šipka) – zarovnaný se soubory */}
-        <span className="flex w-11 shrink-0 items-center justify-end gap-1">
-          <span className="text-xs font-normal text-zinc-500 dark:text-zinc-400">
-            {group.items.length}
-          </span>
-          <ChevronDown
-            className={`h-4 w-4 shrink-0 transition-transform duration-300 ${
-              open ? "rotate-180 text-accent-600 dark:text-accent-400" : ""
-            }`}
-          />
-        </span>
-      </button>
-
-      {open && (
-        <ul className="ml-3 mt-1.5 flex flex-col gap-1 border-l border-black/10 pl-3 dark:border-white/10">
-          {group.items.map((m, k) => (
-            <li key={k}>
-              <a
-                href={m.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-2.5 rounded-lg px-2.5 py-2 text-sm text-zinc-600 transition hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
-              >
-                <span className="text-accent-500">
-                  <MaterialIcon kind={m.kind} />
-                </span>
-                <span className="flex-1">{m.label[lang]}</span>
-                <ArrowUpRight className="h-3.5 w-3.5 opacity-0 transition group-hover:opacity-100" />
-              </a>
-            </li>
-          ))}
-        </ul>
-      )}
-    </li>
   );
 }

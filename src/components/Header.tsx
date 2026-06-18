@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, User, Mail, GraduationCap } from "lucide-react";
+import { Menu, X, User, Mail, GraduationCap, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -24,6 +24,7 @@ export function Header() {
     { href: "#about", label: tr.nav.about },
     { href: "#contact", label: tr.nav.contact },
     { href: "#vyuka", label: tr.nav.lessons },
+    { href: "/pro-ucitele", label: tr.nav.bank },
   ];
 
   return (
@@ -44,7 +45,7 @@ export function Header() {
         </a>
 
         {/* Desktop nav – stejná pilulková tlačítka jako v úvodu (InteractiveHoverButton) */}
-        <div className="hidden items-center gap-2.5 md:flex">
+        <div className="hidden items-center gap-2.5 lg:flex">
           <InteractiveHoverButton
             href="#about"
             text={tr.nav.about}
@@ -63,6 +64,12 @@ export function Header() {
             size="sm"
             icon={<GraduationCap className="h-4 w-4" />}
           />
+          <InteractiveHoverButton
+            href="/pro-ucitele"
+            text={tr.nav.bank}
+            size="sm"
+            icon={<Library className="h-4 w-4" />}
+          />
         </div>
 
         <div className="flex items-center gap-2">
@@ -73,7 +80,7 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={open}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 text-zinc-700 transition hover:text-accent-600 dark:border-white/15 dark:text-zinc-200 md:hidden"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 text-zinc-700 transition hover:text-accent-600 dark:border-white/15 dark:text-zinc-200 lg:hidden"
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -82,7 +89,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="border-t border-white/30 bg-white/70 backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:bg-[var(--bg)]/80 md:hidden">
+        <div className="border-t border-white/30 bg-white/70 backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:bg-[var(--bg)]/80 lg:hidden">
           <div className="container-page flex flex-col py-3">
             {links.map((l) => (
               <a

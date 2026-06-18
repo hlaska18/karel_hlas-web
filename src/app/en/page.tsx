@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Site } from "@/components/Site";
-import { getFolderMaterials } from "@/lib/materials";
 
 export const metadata: Metadata = {
   title: { absolute: "Karel Hlas — Computer Science & English Teacher" },
@@ -38,5 +37,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomeEn() {
-  return <Site lang="en" folderMaterials={getFolderMaterials()} />;
+  return <Site lang="en" />;
 }

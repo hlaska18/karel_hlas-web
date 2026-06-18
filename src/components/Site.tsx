@@ -6,16 +6,9 @@ import { Contact } from "@/components/Contact";
 import { Curriculum } from "@/components/Curriculum";
 import { Footer } from "@/components/Footer";
 import type { Lang } from "@/lib/content";
-import type { FolderMaterials } from "@/lib/materials";
 
 /** Celý web v daném jazyce. Jazyk přichází z adresy (/ nebo /en). */
-export function Site({
-  lang,
-  folderMaterials,
-}: {
-  lang: Lang;
-  folderMaterials: FolderMaterials;
-}) {
+export function Site({ lang }: { lang: Lang }) {
   return (
     <LanguageProvider lang={lang}>
       <Header />
@@ -23,7 +16,7 @@ export function Site({
         <Hero />
         <About />
         <Contact />
-        <Curriculum folderMaterials={folderMaterials} />
+        <Curriculum />
       </main>
       <Footer />
     </LanguageProvider>

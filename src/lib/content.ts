@@ -984,7 +984,7 @@ export const COURSES: Course[] = [
 type TimelineItem = { period: string; place: string; detail: string };
 
 type Dict = {
-  nav: { about: string; lessons: string; contact: string };
+  nav: { about: string; lessons: string; contact: string; bank: string };
   hero: {
     badge: string;
     role: string;
@@ -1022,6 +1022,9 @@ type Dict = {
     audienceTeacher: string;
     audienceStudent: string;
     audienceBoth: string;
+    bankTitle: string;
+    bankDesc: string;
+    bankCta: string;
   };
   contact: {
     kicker: string;
@@ -1043,7 +1046,7 @@ type Dict = {
 
 export const t: Record<Lang, Dict> = {
   cs: {
-    nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt" },
+    nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt", bank: "Pro učitele" },
     hero: {
       badge: "SPŠ Tábor · Informatika & Angličtina",
       role: "Učitel informatiky a angličtiny",
@@ -1099,7 +1102,7 @@ export const t: Record<Lang, Dict> = {
       kicker: "Pro žáky i učitele",
       heading: "Výuka informatiky",
       intro:
-        "Vyber si svůj ročník — rozbalí se časová osa témat, kterými během roku projdeme, a materiály ke studiu.",
+        "Vyber si svůj ročník — rozbalí se časová osa témat, kterými během roku projdeme. Materiály ke stažení najdeš v bance níže.",
       subject: "Informatika",
       pick: "Klikni pro zobrazení časové osy",
       goalLabel: "Cíl",
@@ -1113,6 +1116,10 @@ export const t: Record<Lang, Dict> = {
       audienceTeacher: "Pro učitele",
       audienceStudent: "Pro žáky",
       audienceBoth: "Pro učitele i žáky",
+      bankTitle: "Banka materiálů",
+      bankDesc:
+        "Všechny pracovní listy, testy, metodika a plány hodin ke stažení — procházej podle nástroje (Excel, Word, Python, Power BI) nebo hledej.",
+      bankCta: "Otevřít banku pro učitele",
     },
     contact: {
       kicker: "Kontakt",
@@ -1138,7 +1145,7 @@ export const t: Record<Lang, Dict> = {
   },
 
   en: {
-    nav: { about: "About", lessons: "Lessons", contact: "Contact" },
+    nav: { about: "About", lessons: "Lessons", contact: "Contact", bank: "For teachers" },
     hero: {
       badge: "SPŠ Tábor · CS & English",
       role: "Computer Science & English Language Teacher",
@@ -1189,7 +1196,7 @@ export const t: Record<Lang, Dict> = {
       kicker: "For students & teachers",
       heading: "Computer Science lessons",
       intro:
-        "Pick your year — a timeline of the topics we'll cover during the year and the study materials will unfold.",
+        "Pick your year — a timeline of the topics we'll cover during the year unfolds. Downloadable materials are in the bank below.",
       subject: "Computer Science",
       pick: "Click to reveal the timeline",
       goalLabel: "Goal",
@@ -1203,6 +1210,10 @@ export const t: Record<Lang, Dict> = {
       audienceTeacher: "For teachers",
       audienceStudent: "For students",
       audienceBoth: "Teachers & students",
+      bankTitle: "Material bank",
+      bankDesc:
+        "All worksheets, tests, teaching notes and lesson plans to download — browse by tool (Excel, Word, Python, Power BI) or search.",
+      bankCta: "Open the teacher bank",
     },
     contact: {
       kicker: "Contact",
