@@ -15,11 +15,11 @@ const display = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: "Karel Hlas — Učitel informatiky a angličtiny",
+    default: "Materiály pro výuku informatiky — Karel Hlas",
     template: "%s — Karel Hlas",
   },
   description:
-    "Osobní stránka Mgr. Karla Hlase, učitele informatiky a angličtiny na SPŠ Tábor. O mně, kontakt a časová osa výuky se studijními materiály.",
+    "Hotové materiály do hodin informatiky ke stažení a úpravě — pracovní listy, testy, plány hodin a metodika (Excel, Word, Python, Power BI). Připravuje Karel Hlas, učitel na SPŠ Tábor.",
   keywords: [
     "Karel Hlas",
     "učitel informatiky",
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     languages: { cs: "/", en: "/en", "x-default": "/" },
   },
   openGraph: {
-    title: "Karel Hlas — Učitel informatiky a angličtiny",
+    title: "Materiály pro výuku informatiky — Karel Hlas",
     description:
-      "Osobní stránka učitele informatiky a angličtiny na SPŠ Tábor — o mně, kontakt a časová osa výuky s materiály.",
+      "Hotové materiály do hodin informatiky ke stažení a úpravě — pracovní listy, testy, plány hodin a metodika (Excel, Word, Python, Power BI).",
     url: SITE.url,
     siteName: "Karel Hlas",
     locale: "cs_CZ",
@@ -51,15 +51,15 @@ export const metadata: Metadata = {
         width: 1200,
         height: 630,
         type: "image/jpeg",
-        alt: "Karel Hlas — Učitel informatiky a angličtiny",
+        alt: "Materiály pro výuku informatiky — Karel Hlas",
       },
     ],
   },
   twitter: {
     card: "summary_large_image",
-    title: "Karel Hlas — Učitel informatiky a angličtiny",
+    title: "Materiály pro výuku informatiky — Karel Hlas",
     description:
-      "Osobní stránka učitele informatiky a angličtiny na SPŠ Tábor.",
+      "Hotové materiály do hodin informatiky ke stažení a úpravě (Excel, Word, Python, Power BI).",
     images: ["/og.jpg"],
   },
   robots: {

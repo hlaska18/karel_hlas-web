@@ -14,9 +14,9 @@ export function Site({ lang }: { lang: Lang }) {
       <Header />
       <main id="main">
         <Hero />
+        <Curriculum />
         <About />
         <Contact />
-        <Curriculum />
       </main>
       <Footer />
     </LanguageProvider>

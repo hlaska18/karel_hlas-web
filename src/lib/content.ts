@@ -987,8 +987,10 @@ type Dict = {
   nav: { about: string; lessons: string; contact: string; bank: string };
   hero: {
     badge: string;
+    headline: string;
     role: string;
     tagline: string;
+    byline: string;
     ctaLessons: string;
     ctaContact: string;
     scroll: string;
@@ -1046,18 +1048,20 @@ type Dict = {
 
 export const t: Record<Lang, Dict> = {
   cs: {
-    nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt", bank: "Materiály do výuky" },
+    nav: { about: "O autorovi", lessons: "Výuka", contact: "Kontakt", bank: "Materiály do výuky" },
     hero: {
-      badge: "SPŠ Tábor · Informatika & Angličtina",
+      badge: "Materiály pro výuku informatiky · zdarma",
+      headline: "Hotové materiály do hodin informatiky. Stačí šáhnout.",
       role: "Učitel informatiky a angličtiny",
       tagline:
-        "Hledám praktické a srozumitelné cesty, jak žákům přiblížit moderní technologie a jazyky.",
-      ctaLessons: "Výuka a materiály",
-      ctaContact: "Kontaktujte mě",
-      scroll: "O mně",
+        "Pracovní listy, testy, plány hodin i metodika — Excel, Word, Python, Power BI a další. Ke stažení a úpravě, bez přihlašování.",
+      byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
+      ctaLessons: "Procházet banku materiálů",
+      ctaContact: "Tematický plán",
+      scroll: "Výuka",
     },
     about: {
-      kicker: "O mně",
+      kicker: "O autorovi",
       heading: "Učitel, kterého baví technologie",
       paragraphs: [
         "Jsem učitel informatiky a angličtiny na Střední průmyslové škole strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum se zaměřením na programování a robotiku a poté bakalářské i magisterské studium na Pedagogické fakultě Jihočeské univerzity.",
@@ -1147,16 +1151,18 @@ export const t: Record<Lang, Dict> = {
   en: {
     nav: { about: "About", lessons: "Lessons", contact: "Contact", bank: "Teaching materials" },
     hero: {
-      badge: "SPŠ Tábor · CS & English",
+      badge: "Materials for CS teaching · free",
+      headline: "Ready-made materials for CS lessons. Just grab them.",
       role: "Computer Science & English Language Teacher",
       tagline:
-        "Finding practical, easy-to-grasp ways to bring modern technology and languages closer to students.",
-      ctaLessons: "Lessons & materials",
-      ctaContact: "Get in touch",
-      scroll: "About",
+        "Worksheets, tests, lesson plans and teaching notes — Excel, Word, Python, Power BI and more. Free to download and edit.",
+      byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
+      ctaLessons: "Browse the material bank",
+      ctaContact: "Curriculum plan",
+      scroll: "Lessons",
     },
     about: {
-      kicker: "About me",
+      kicker: "About the author",
       heading: "A teacher who loves technology",
       paragraphs: [
         "I'm a teacher of Computer Science and English Language at the Secondary Technical School of Mechanical and Civil Engineering in Tábor, Czech Republic. I studied the Technical Lyceum here, specialising in programming and robotics, and then completed both my Bachelor's and Master's degrees at the Faculty of Education, University of South Bohemia.",
