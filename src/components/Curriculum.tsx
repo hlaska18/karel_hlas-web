@@ -1,51 +1,17 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import {
-  Target,
-  GraduationCap,
-  ChevronDown,
-  ClipboardList,
-  Library,
-  ArrowRight,
-} from "lucide-react";
+import { useState } from "react";
+import { Target, GraduationCap, ChevronDown, ClipboardList, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { COURSES, type Lang, type CurriculumItem, type Course } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
+import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Curriculum() {
   const { lang, tr } = useLang();
   const l = tr.lessons;
   const [openId, setOpenId] = useState<string | null>(null);
-  const [teacherView, setTeacherView] = useState(false);
-
-  // Učitelský pohled lze otevřít odkazem (?ucitel=1) i si ho zapamatovat.
-  useEffect(() => {
-    try {
-      const params = new URLSearchParams(window.location.search);
-      if (params.get("ucitel") === "1") {
-        setTeacherView(true);
-        return;
-      }
-      if (localStorage.getItem("kh-view") === "teacher") setTeacherView(true);
-    } catch {
-      /* localStorage nemusí být dostupné */
-    }
-  }, []);
-
-  const changeView = (teacher: boolean) => {
-    setTeacherView(teacher);
-    try {
-      localStorage.setItem("kh-view", teacher ? "teacher" : "student");
-      const url = new URL(window.location.href);
-      if (teacher) url.searchParams.set("ucitel", "1");
-      else url.searchParams.delete("ucitel");
-      window.history.replaceState(null, "", url.toString());
-    } catch {
-      /* ignore */
-    }
-  };
 
   return (
     <section id="vyuka" className="relative py-10 sm:py-14">
@@ -66,46 +32,11 @@ export function Curriculum() {
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
             {l.intro}
           </p>
-
-          {/* přepínač Žák / Učitel */}
-          <div
-            role="group"
-            aria-label={`${l.viewStudent} / ${l.viewTeacher}`}
-            className="glass-soft mt-6 inline-flex items-center gap-1 rounded-full p-1 text-sm"
-          >
-            <button
-              type="button"
-              onClick={() => changeView(false)}
-              aria-pressed={!teacherView}
-              className={`rounded-full px-4 py-1.5 font-medium transition ${
-                !teacherView
-                  ? "bg-accent-600 text-white shadow-md shadow-accent-600/30"
-                  : "text-zinc-600 hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
-              }`}
-            >
-              {l.viewStudent}
-            </button>
-            <button
-              type="button"
-              onClick={() => changeView(true)}
-              aria-pressed={teacherView}
-              className={`rounded-full px-4 py-1.5 font-medium transition ${
-                teacherView
-                  ? "bg-accent-600 text-white shadow-md shadow-accent-600/30"
-                  : "text-zinc-600 hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
-              }`}
-            >
-              {l.viewTeacher}
-            </button>
-          </div>
         </Reveal>
 
         {/* Odkaz na banku materiálů (materiály už nejsou vložené v plánu). */}
         <Reveal delay={0.05}>
-          <a
-            href="/pro-ucitele"
-            className="glass-accent group mt-6 flex flex-col gap-4 rounded-3xl p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/20 sm:flex-row sm:items-center sm:p-6"
-          >
+          <div className="glass-accent mt-6 flex flex-col gap-4 rounded-3xl p-5 sm:flex-row sm:items-center sm:p-6">
             <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-600 text-white shadow-lg shadow-accent-600/30">
               <Library className="h-6 w-6" />
             </span>
@@ -117,11 +48,12 @@ export function Curriculum() {
                 {l.bankDesc}
               </span>
             </span>
-            <span className="inline-flex shrink-0 items-center gap-1.5 self-start rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition group-hover:bg-accent-500 sm:self-auto">
-              {l.bankCta}
-              <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
-            </span>
-          </a>
+            <InteractiveHoverButton
+              href="/pro-ucitele"
+              text={l.bankCta}
+              className="shrink-0 self-start sm:self-auto"
+            />
+          </div>
         </Reveal>
 
         {/* výběr ročníku */}
@@ -169,7 +101,6 @@ export function Curriculum() {
               open={openId === course.id}
               l={l}
               lang={lang}
-              teacherView={teacherView}
             />
           ))}
         </div>
@@ -185,13 +116,11 @@ function CourseTimeline({
   open,
   l,
   lang,
-  teacherView,
 }: {
   course: Course;
   open: boolean;
   l: ReturnType<typeof useLang>["tr"]["lessons"];
   lang: Lang;
-  teacherView: boolean;
 }) {
   // Kontejner se ukáže ihned (bez výškové animace = žádný skok). Samotná témata
   // pak plynule „naběhnou" jedno po druhém (CSS .timeline-in na <ol>).
@@ -199,7 +128,7 @@ function CourseTimeline({
 
   return (
     <div id={`osa-${course.id}`}>
-      <Timeline items={course.items} l={l} lang={lang} teacherView={teacherView} />
+      <Timeline items={course.items} l={l} lang={lang} />
     </div>
   );
 }
@@ -208,12 +137,10 @@ function Timeline({
   items,
   l,
   lang,
-  teacherView,
 }: {
   items: CurriculumItem[];
   l: ReturnType<typeof useLang>["tr"]["lessons"];
   lang: Lang;
-  teacherView: boolean;
 }) {
   return (
     <ol className="timeline-in relative mt-10 ml-1.5 border-l border-black/10 dark:border-white/10">
@@ -244,7 +171,7 @@ function Timeline({
             </p>
           )}
 
-          {teacherView && item.teacherNote && (
+          {item.teacherNote && (
             <div className="mt-4 flex items-start gap-3 rounded-2xl border-l-4 border-accent-500 bg-accent-50/70 px-4 py-3 dark:bg-accent-400/10">
               <ClipboardList className="mt-0.5 h-4 w-4 shrink-0 text-accent-600 dark:text-accent-400" />
               <div>
