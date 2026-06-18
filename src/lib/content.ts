@@ -1046,7 +1046,7 @@ type Dict = {
 
 export const t: Record<Lang, Dict> = {
   cs: {
-    nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt", bank: "Pro učitele" },
+    nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt", bank: "Materiály do výuky" },
     hero: {
       badge: "SPŠ Tábor · Informatika & Angličtina",
       role: "Učitel informatiky a angličtiny",
@@ -1145,7 +1145,7 @@ export const t: Record<Lang, Dict> = {
   },
 
   en: {
-    nav: { about: "About", lessons: "Lessons", contact: "Contact", bank: "For teachers" },
+    nav: { about: "About", lessons: "Lessons", contact: "Contact", bank: "Teaching materials" },
     hero: {
       badge: "SPŠ Tábor · CS & English",
       role: "Computer Science & English Language Teacher",
