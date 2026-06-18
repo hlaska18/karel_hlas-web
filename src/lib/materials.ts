@@ -92,8 +92,16 @@ const byName = (a: string, b: string) => a.localeCompare(b, "cs", { numeric: tru
  * typ, velikost, publikum). Slouží stránce /pro-ucitele (vyhledávání + filtry).
  * Běží při buildu na serveru (čte filesystem). */
 
-/** Pořadí „nástrojových" dlaždic v galerii. */
-export const TOOL_ORDER = ["Excel", "Word", "Python", "Power BI", "Plány hodin", "Ostatní"];
+/** Pořadí dlaždic v galerii (dle pořadí témat ve výuce). */
+export const TOOL_ORDER = [
+  "Digitální gramotnost",
+  "Word",
+  "Excel",
+  "Python",
+  "Databáze",
+  "Power BI",
+  "Ostatní",
+];
 
 export type BankItem = {
   href: string;
@@ -118,20 +126,30 @@ export type BankItem = {
   coursesLabel: { cs: string; en: string };
 };
 
-function topicLabelOf(courseId: string, topicIndex: number): { cs: string; en: string } {
-  const item = COURSES.find((x) => x.id === courseId)?.items[topicIndex];
+// Obsah je napříč obory sdílený, ale jednotlivé obory mají v plánu různě
+// úplné názvy témat. Pro banku bereme názvy z NEJÚPLNĚJŠÍHO plánu (1L), ať je
+// kategorizace i popisek konzistentní u všech oborů (jinak se duplicity neslučí).
+const TOPIC_SOURCE = [...COURSES].sort((a, b) => b.items.length - a.items.length)[0];
+
+function topicLabelOf(topicIndex: number): { cs: string; en: string } {
+  const item = TOPIC_SOURCE?.items[topicIndex] ?? COURSES.map((c) => c.items[topicIndex]).find(Boolean);
   if (item) return { cs: item.title.cs, en: item.title.en };
   return { cs: `Téma ${topicIndex + 1}`, en: `Topic ${topicIndex + 1}` };
 }
 
-/** Odvodí nástroj/dovednost z názvu skupiny + tématu + souboru + přípony. */
+/**
+ * Dlaždice galerie podle OBSAHU (ne podle přípony): klíčová slova ve skupině,
+ * tématu a názvu souboru. Pořadí pravidel je důležité (Databáze před Excelem
+ * kvůli PowerQuery/Accessu).
+ */
 function toolOf(hay: string, ext: string): string {
   const h = hay.toLowerCase();
   if (/power\s?bi/.test(h) || ext === "pbix") return "Power BI";
-  if (/excel/.test(h) || ["xlsx", "xlsm", "xls", "csv"].includes(ext)) return "Excel";
-  if (/word/.test(h) || ["docx", "doc", "odt", "rtf"].includes(ext)) return "Word";
-  if (/python/.test(h) || ["py", "ipynb"].includes(ext)) return "Python";
-  if (/pl[áa]n/.test(h)) return "Plány hodin";
+  if (/databáz|databaz|powerquery|access/.test(h) || ext === "accdb") return "Databáze";
+  if (/excel|tabulkov/.test(h) || ["xlsx", "xlsm", "xls", "csv"].includes(ext)) return "Excel";
+  if (/word|textov[ýy] procesor/.test(h)) return "Word";
+  if (/python|programován|algoritm/.test(h) || ["py", "ipynb"].includes(ext)) return "Python";
+  if (/digit[áa]ln[íi] gramotnost|[úu]vod do informatiky/.test(h)) return "Digitální gramotnost";
   return "Ostatní";
 }
 
@@ -155,7 +173,8 @@ export function getBankItems(): BankItem[] {
     courseDirs = fs
       .readdirSync(ROOT, { withFileTypes: true })
       .filter((d) => d.isDirectory())
-      .map((d) => d.name);
+      .map((d) => d.name)
+      .sort(); // 1L první = reprezentant po sloučení (má kompletní plán)
   } catch {
     return [];
   }
@@ -179,7 +198,7 @@ export function getBankItems(): BankItem[] {
       const topicIndex = parseInt(m[1], 10) - 1;
       if (topicIndex < 0) continue;
 
-      const topicLabel = topicLabelOf(courseId, topicIndex);
+      const topicLabel = topicLabelOf(topicIndex);
 
       // Rekurzivně projde téma; sleduje publikum (_ucitel → teacher) a skupinu.
       const walk = (
