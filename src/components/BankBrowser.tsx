@@ -75,6 +75,16 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
   const [audience, setAudience] = useState<"" | "student" | "teacher">("");
   const [preview, setPreview] = useState<BankItem | null>(null);
 
+  // Proklik z homepage dlaždice: /pro-ucitele?tema=Excel rovnou otevře obor.
+  useEffect(() => {
+    try {
+      const t = new URLSearchParams(window.location.search).get("tema");
+      if (t && items.some((it) => it.tool === t)) setTool(t);
+    } catch {
+      /* ignore */
+    }
+  }, [items]);
+
   // Filtr publika se aplikuje všude (dlaždice i seznam).
   const byAudience = useMemo(
     () => (audience ? items.filter((it) => it.audience === audience) : items),

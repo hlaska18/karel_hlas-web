@@ -286,3 +286,10 @@ export function getBankItems(): BankItem[] {
   );
   return items;
 }
+
+/** Počty materiálů na obor (dlaždice), v pořadí TOOL_ORDER. Pro homepage. */
+export function getBankToolCounts(): { tool: string; count: number }[] {
+  const counts = new Map<string, number>();
+  for (const it of getBankItems()) counts.set(it.tool, (counts.get(it.tool) ?? 0) + 1);
+  return TOOL_ORDER.filter((t) => counts.has(t)).map((t) => ({ tool: t, count: counts.get(t)! }));
+}

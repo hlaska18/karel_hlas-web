@@ -1028,6 +1028,7 @@ type Dict = {
     bankDesc: string;
     bankCta: string;
   };
+  materials: { kicker: string; heading: string; sub: string; browseAll: string };
   contact: {
     kicker: string;
     heading: string;
@@ -1125,6 +1126,12 @@ export const t: Record<Lang, Dict> = {
         "Všechny pracovní listy, testy, metodika a plány hodin ke stažení — procházej podle nástroje (Excel, Word, Python, Power BI) nebo hledej.",
       bankCta: "Otevřít banku pro učitele",
     },
+    materials: {
+      kicker: "Banka materiálů",
+      heading: "Vyber si obor",
+      sub: "Hotové materiály ke stažení a úpravě — klikni na obor a procházej.",
+      browseAll: "Otevřít celou banku a hledat",
+    },
     contact: {
       kicker: "Kontakt",
       heading: "Ozvěte se mi",
@@ -1220,6 +1227,12 @@ export const t: Record<Lang, Dict> = {
       bankDesc:
         "All worksheets, tests, teaching notes and lesson plans to download — browse by tool (Excel, Word, Python, Power BI) or search.",
       bankCta: "Open the teacher bank",
+    },
+    materials: {
+      kicker: "Material bank",
+      heading: "Pick a subject",
+      sub: "Ready-made materials to download and edit — click a subject to browse.",
+      browseAll: "Open the full bank & search",
     },
     contact: {
       kicker: "Contact",
