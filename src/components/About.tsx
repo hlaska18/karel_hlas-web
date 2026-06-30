@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { GraduationCap, Briefcase } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { BADGES } from "@/lib/content";
+import { BADGES, SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
 
@@ -26,8 +26,17 @@ export function About() {
         <div className="mt-12 grid gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           {/* Text */}
           <div className="flex flex-col">
+            <Reveal delay={0.05}>
+              <Image
+                src={SITE.photo}
+                alt={SITE.fullName}
+                width={733}
+                height={1100}
+                className="mb-7 h-auto w-40 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-48"
+              />
+            </Reveal>
             <Reveal
-              delay={0.05}
+              delay={0.1}
               className="space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg"
             >
               {a.paragraphs.map((p, i) => (
