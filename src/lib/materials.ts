@@ -112,6 +112,8 @@ export type BankItem = {
   sizeBytes: number;
   /** Nástroj/dovednost = dlaždice galerie (Excel, Word, Python, Power BI…). */
   tool: string;
+  /** Číslo lekce z názvu (PracL01→1, MetodL07→7); pro párování do balíčků lekcí. */
+  lessonNo?: number;
   /** Pořadové číslo tématu (1-based) reprezentativního výskytu. */
   topicNo: number;
   /** Název tématu z plánu (COURSES); fallback „Téma N". */
@@ -151,6 +153,12 @@ function toolOf(hay: string, ext: string): string {
   if (/python|programován|algoritm/.test(h) || ["py", "ipynb"].includes(ext)) return "Python";
   if (/digit[áa]ln[íi] gramotnost|[úu]vod do informatiky/.test(h)) return "Digitální gramotnost";
   return "Ostatní";
+}
+
+/** Číslo lekce z názvu souboru: „PracL01…"→1, „MetodL00…"→0, „1. …"→1. */
+function lessonNoOf(file: string): number | undefined {
+  const m = file.match(/(?:^|[a-zA-Z])0*(\d+)/);
+  return m ? parseInt(m[1], 10) : undefined;
 }
 
 function coursesLabelOf(courseIds: string[], total: number): { cs: string; en: string } {
@@ -255,6 +263,7 @@ export function getBankItems(): BankItem[] {
               kind: kindFromExt(path.extname(file)),
               sizeBytes,
               tool,
+              lessonNo: lessonNoOf(file),
               topicNo: topicIndex + 1,
               topicLabel,
               audience,

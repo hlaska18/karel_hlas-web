@@ -16,6 +16,7 @@ import {
   BarChart3,
   ClipboardList,
   Files,
+  ChevronDown,
 } from "lucide-react";
 import type { BankItem } from "@/lib/materials";
 
@@ -194,67 +195,15 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
             </p>
           </div>
 
-          <ul className="mt-4 space-y-2.5">
-            {results.map((it) => {
-              const t = fileType(it.ext);
-              const previewable = canPreview(it.ext);
-              return (
-                <li
-                  key={it.href}
-                  className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5"
-                >
-                  <span className="flex w-16 shrink-0 justify-center">
-                    <span className="rounded-lg bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-                      {t.label}
-                    </span>
-                  </span>
-                  <span className="min-w-0 flex-1">
-                    <span className="block truncate font-medium text-zinc-900 dark:text-white">
-                      {it.label.cs}
-                    </span>
-                    <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
-                      {it.topicLabel.cs}
-                      {it.group ? ` · ${it.group.cs}` : ""}
-                    </span>
-                  </span>
-                  <span className="hidden shrink-0 items-center gap-1.5 sm:inline-flex">
-                    {it.audience === "teacher" ? (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
-                        <GraduationCap className="h-3.5 w-3.5" /> učitelé
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-1 rounded-full bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
-                        <Users className="h-3.5 w-3.5" /> žáci
-                      </span>
-                    )}
-                  </span>
-                  <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-400 md:block">
-                    {fmtSize(it.sizeBytes)}
-                  </span>
-                  {previewable && (
-                    <button
-                      type="button"
-                      onClick={() => setPreview(it)}
-                      title="Náhled"
-                      aria-label={`Náhled: ${it.label.cs}`}
-                      className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
-                    >
-                      <Eye className="h-5 w-5" />
-                    </button>
-                  )}
-                  <a
-                    href={it.href}
-                    download
-                    title="Stáhnout"
-                    aria-label={`Stáhnout: ${it.label.cs}`}
-                    className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
-                  >
-                    <Download className="h-5 w-5" />
-                  </a>
-                </li>
-              );
-            })}
-          </ul>
+          {tool === "Python" && !needle ? (
+            <PythonLessons items={results} onPreview={setPreview} />
+          ) : (
+            <ul className="mt-4 space-y-2.5">
+              {results.map((it) => (
+                <MaterialRow key={it.href} it={it} onPreview={setPreview} />
+              ))}
+            </ul>
+          )}
 
           {results.length === 0 && (
             <p className="mt-10 text-center text-zinc-500 dark:text-zinc-400">
@@ -265,6 +214,180 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
       )}
 
       {preview && <PreviewModal item={preview} onClose={() => setPreview(null)} />}
+    </div>
+  );
+}
+
+/** Jeden řádek materiálu (typ, název, publikum, velikost, náhled, stažení). */
+function MaterialRow({ it, onPreview }: { it: BankItem; onPreview: (it: BankItem) => void }) {
+  const t = fileType(it.ext);
+  const previewable = canPreview(it.ext);
+  return (
+    <li className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5">
+      <span className="flex w-16 shrink-0 justify-center">
+        <span className="rounded-lg bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+          {t.label}
+        </span>
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block truncate font-medium text-zinc-900 dark:text-white">{it.label.cs}</span>
+        <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
+          {it.topicLabel.cs}
+          {it.group ? ` · ${it.group.cs}` : ""}
+        </span>
+      </span>
+      <span className="hidden shrink-0 items-center gap-1.5 sm:inline-flex">
+        {it.audience === "teacher" ? (
+          <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+            <GraduationCap className="h-3.5 w-3.5" /> učitelé
+          </span>
+        ) : (
+          <span className="inline-flex items-center gap-1 rounded-full bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
+            <Users className="h-3.5 w-3.5" /> žáci
+          </span>
+        )}
+      </span>
+      <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-400 md:block">
+        {fmtSize(it.sizeBytes)}
+      </span>
+      {previewable && (
+        <button
+          type="button"
+          onClick={() => onPreview(it)}
+          title="Náhled"
+          aria-label={`Náhled: ${it.label.cs}`}
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+        >
+          <Eye className="h-5 w-5" />
+        </button>
+      )}
+      <a
+        href={it.href}
+        download
+        title="Stáhnout"
+        aria-label={`Stáhnout: ${it.label.cs}`}
+        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+      >
+        <Download className="h-5 w-5" />
+      </a>
+    </li>
+  );
+}
+
+const PY_WORKSHEET = "Python - pracovní listy";
+const PY_METHOD = "Python - metodické listy";
+// macOS ukládá názvy v NFD (rozložená diakritika); porovnáváme přes NFC.
+const norm = (s?: string) => (s ?? "").normalize("NFC");
+const isWorksheet = (it: BankItem) => norm(it.group?.cs) === norm(PY_WORKSHEET);
+const isMethod = (it: BankItem) => norm(it.group?.cs) === norm(PY_METHOD);
+
+function SlotTag({ kind, children }: { kind: "student" | "teacher"; children: React.ReactNode }) {
+  const cls =
+    kind === "teacher"
+      ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
+      : "bg-accent-500/10 text-accent-700 dark:text-accent-300";
+  return (
+    <span className={`inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[11px] font-medium ${cls}`}>
+      {children}
+    </span>
+  );
+}
+
+/** Pilot „balíčků": Python seskupený do karet lekcí (pracovní list + metodika). */
+function PythonLessons({ items, onPreview }: { items: BankItem[]; onPreview: (it: BankItem) => void }) {
+  const { lessons, extras } = useMemo(() => {
+    const map = new Map<number, BankItem[]>();
+    const rest: BankItem[] = [];
+    for (const it of items) {
+      if ((isWorksheet(it) || isMethod(it)) && it.lessonNo != null) {
+        const arr = map.get(it.lessonNo) ?? [];
+        arr.push(it);
+        map.set(it.lessonNo, arr);
+      } else {
+        rest.push(it);
+      }
+    }
+    const lessonsArr = [...map.entries()]
+      .sort((a, b) => a[0] - b[0])
+      .map(([no, its]) => ({ no, items: its }));
+    return { lessons: lessonsArr, extras: rest };
+  }, [items]);
+
+  return (
+    <div className="mt-4 space-y-2.5">
+      {lessons.map((l) => (
+        <LessonCard key={l.no} no={l.no} items={l.items} onPreview={onPreview} />
+      ))}
+      {extras.length > 0 && (
+        <ul className="space-y-2.5 pt-1">
+          {extras.map((it) => (
+            <MaterialRow key={it.href} it={it} onPreview={onPreview} />
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/** Z labelu „PracL01 - vyrazy" vytáhne název lekce („Vyrazy"). */
+function lessonTitle(items: BankItem[]): string {
+  for (const it of items) {
+    const parts = it.label.cs.split(/\s[-–]\s/);
+    if (parts.length > 1) {
+      const t = parts.slice(1).join(" - ").trim();
+      return t.charAt(0).toUpperCase() + t.slice(1);
+    }
+  }
+  return "";
+}
+
+function LessonCard({
+  no,
+  items,
+  onPreview,
+}: {
+  no: number;
+  items: BankItem[];
+  onPreview: (it: BankItem) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const hasWorksheet = items.some(isWorksheet);
+  const hasMethod = items.some(isMethod);
+  const title = lessonTitle(items);
+  const num = String(no).padStart(2, "0");
+
+  return (
+    <div className="glass rounded-2xl">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
+      >
+        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 font-display text-sm font-bold text-accent-700 dark:text-accent-300">
+          {num}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-medium text-zinc-900 dark:text-white">
+            Lekce {num}
+            {title ? ` · ${title}` : ""}
+          </span>
+          <span className="mt-1 flex flex-wrap gap-1.5">
+            {hasWorksheet && <SlotTag kind="student">Pracovní list</SlotTag>}
+            {hasMethod && <SlotTag kind="teacher">Metodika</SlotTag>}
+          </span>
+        </span>
+        <ChevronDown
+          className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <ul className="space-y-2 px-3 pb-3">
+          {items.map((it) => (
+            <MaterialRow key={it.href} it={it} onPreview={onPreview} />
+          ))}
+        </ul>
+      )}
     </div>
   );
 }
