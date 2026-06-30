@@ -41,7 +41,11 @@ function countWord(n: number, lang: string) {
 }
 
 /** Dlaždice oborů na homepage = „ochutnávka" banky; proklik rovnou na obor. */
-export function MaterialsTiles({ tiles }: { tiles: { tool: string; count: number }[] }) {
+export function MaterialsTiles({
+  tiles,
+}: {
+  tiles: { tool: string; count: number; hasTeacher: boolean }[];
+}) {
   const { lang, tr } = useLang();
   const m = tr.materials;
   if (!tiles.length) return null;
@@ -79,6 +83,11 @@ export function MaterialsTiles({ tiles }: { tiles: { tool: string; count: number
                   <span className="text-sm text-zinc-500 dark:text-zinc-400">
                     {t.count} {countWord(t.count, lang)}
                   </span>
+                  {!t.hasTeacher && (
+                    <span className="text-xs text-zinc-400 dark:text-zinc-500">
+                      {lang === "en" ? "worksheets only" : "zatím bez metodiky"}
+                    </span>
+                  )}
                 </Link>
               </li>
             );

@@ -296,9 +296,19 @@ export function getBankItems(): BankItem[] {
   return items;
 }
 
-/** Počty materiálů na obor (dlaždice), v pořadí TOOL_ORDER. Pro homepage. */
-export function getBankToolCounts(): { tool: string; count: number }[] {
+/** Počty materiálů na obor (dlaždice) + zda obor má i učitelskou část (metodika). */
+export function getBankToolCounts(): { tool: string; count: number; hasTeacher: boolean }[] {
   const counts = new Map<string, number>();
-  for (const it of getBankItems()) counts.set(it.tool, (counts.get(it.tool) ?? 0) + 1);
-  return TOOL_ORDER.filter((t) => counts.has(t)).map((t) => ({ tool: t, count: counts.get(t)! }));
+  const teacher = new Map<string, boolean>();
+  for (const it of getBankItems()) {
+    counts.set(it.tool, (counts.get(it.tool) ?? 0) + 1);
+    // „učitelská část" = metodika / plán / řešení (i když je řešení viditelné všem)
+    const g = (it.group?.cs ?? "").normalize("NFC").toLowerCase();
+    if (it.audience === "teacher" || /řešen|metod|pl[áa]n/.test(g)) teacher.set(it.tool, true);
+  }
+  return TOOL_ORDER.filter((t) => counts.has(t)).map((t) => ({
+    tool: t,
+    count: counts.get(t)!,
+    hasTeacher: teacher.get(t) ?? false,
+  }));
 }

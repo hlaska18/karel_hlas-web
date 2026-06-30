@@ -36,8 +36,6 @@ export type Social = {
 };
 
 export const SOCIALS: Social[] = [
-  { network: "instagram", handle: "@karelbowls", href: "https://instagram.com/karelbowls" },
-  { network: "instagram", handle: "@viewsbykarel", href: "https://instagram.com/viewsbykarel" },
   { network: "youtube", handle: "@karelhlas", href: "https://www.youtube.com/@karelhlas" },
 ];
 
@@ -1018,15 +1016,10 @@ type Dict = {
     materialsLabel: string;
     noMaterials: string;
     soon: string;
-    viewStudent: string;
-    viewTeacher: string;
     teacherNoteLabel: string;
     audienceTeacher: string;
     audienceStudent: string;
     audienceBoth: string;
-    bankTitle: string;
-    bankDesc: string;
-    bankCta: string;
   };
   materials: { kicker: string; heading: string; sub: string; browseAll: string };
   contact: {
@@ -1104,10 +1097,10 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     lessons: {
-      kicker: "Pro žáky i učitele",
+      kicker: "Plán výuky po ročnících",
       heading: "Výuka informatiky",
       intro:
-        "Vyber si svůj ročník — rozbalí se časová osa témat, kterými během roku projdeme. Materiály ke stažení najdeš v bance níže.",
+        "Vyber si svůj ročník — rozbalí se časová osa témat, kterými během roku projdeme. Materiály ke stažení najdeš v bance výše.",
       subject: "Informatika",
       pick: "Klikni pro zobrazení časové osy",
       goalLabel: "Cíl",
@@ -1115,16 +1108,10 @@ export const t: Record<Lang, Dict> = {
       materialsLabel: "Materiály",
       noMaterials: "Materiály budou postupně doplňovány.",
       soon: "brzy",
-      viewStudent: "Žák",
-      viewTeacher: "Učitel",
       teacherNoteLabel: "Pro učitele",
       audienceTeacher: "Pro učitele",
       audienceStudent: "Pro žáky",
       audienceBoth: "Pro učitele i žáky",
-      bankTitle: "Banka materiálů",
-      bankDesc:
-        "Všechny pracovní listy, testy, metodika a plány hodin ke stažení — procházej podle nástroje (Excel, Word, Python, Power BI) nebo hledej.",
-      bankCta: "Otevřít banku pro učitele",
     },
     materials: {
       kicker: "Banka materiálů",
@@ -1206,10 +1193,10 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     lessons: {
-      kicker: "For students & teachers",
+      kicker: "Curriculum by year",
       heading: "Computer Science lessons",
       intro:
-        "Pick your year — a timeline of the topics we'll cover during the year unfolds. Downloadable materials are in the bank below.",
+        "Pick your year — a timeline of the topics we'll cover during the year unfolds. Downloadable materials are in the bank above.",
       subject: "Computer Science",
       pick: "Click to reveal the timeline",
       goalLabel: "Goal",
@@ -1217,16 +1204,10 @@ export const t: Record<Lang, Dict> = {
       materialsLabel: "Materials",
       noMaterials: "Materials will be added gradually.",
       soon: "soon",
-      viewStudent: "Student",
-      viewTeacher: "Teacher",
       teacherNoteLabel: "For teachers",
       audienceTeacher: "For teachers",
       audienceStudent: "For students",
       audienceBoth: "Teachers & students",
-      bankTitle: "Material bank",
-      bankDesc:
-        "All worksheets, tests, teaching notes and lesson plans to download — browse by tool (Excel, Word, Python, Power BI) or search.",
-      bankCta: "Open the teacher bank",
     },
     materials: {
       kicker: "Material bank",

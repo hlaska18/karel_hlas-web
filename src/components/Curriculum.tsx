@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { Target, GraduationCap, ChevronDown, ClipboardList, Library } from "lucide-react";
+import { Target, GraduationCap, ChevronDown, ClipboardList } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { COURSES, type Lang, type CurriculumItem, type Course } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
-import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Curriculum() {
   const { lang, tr } = useLang();
@@ -32,28 +31,6 @@ export function Curriculum() {
           <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
             {l.intro}
           </p>
-        </Reveal>
-
-        {/* Odkaz na banku materiálů (materiály už nejsou vložené v plánu). */}
-        <Reveal delay={0.05}>
-          <div className="glass-accent mt-6 flex flex-col gap-4 rounded-3xl p-5 sm:flex-row sm:items-center sm:p-6">
-            <span className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-accent-600 text-white shadow-lg shadow-accent-600/30">
-              <Library className="h-6 w-6" />
-            </span>
-            <span className="min-w-0 flex-1">
-              <span className="block font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
-                {l.bankTitle}
-              </span>
-              <span className="mt-1 block text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-                {l.bankDesc}
-              </span>
-            </span>
-            <InteractiveHoverButton
-              href="/pro-ucitele"
-              text={l.bankCta}
-              className="shrink-0 self-start sm:self-auto"
-            />
-          </div>
         </Reveal>
 
         {/* výběr ročníku */}

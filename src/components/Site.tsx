@@ -14,7 +14,7 @@ export function Site({
   toolCounts = [],
 }: {
   lang: Lang;
-  toolCounts?: { tool: string; count: number }[];
+  toolCounts?: { tool: string; count: number; hasTeacher: boolean }[];
 }) {
   return (
     <LanguageProvider lang={lang}>
