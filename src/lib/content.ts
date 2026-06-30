@@ -1128,8 +1128,8 @@ export const t: Record<Lang, Dict> = {
     },
     materials: {
       kicker: "Banka materiálů",
-      heading: "Vyber si obor",
-      sub: "Hotové materiály ke stažení a úpravě — klikni na obor a procházej.",
+      heading: "Vyber si téma",
+      sub: "Hotové materiály ke stažení a úpravě — klikni na téma a procházej.",
       browseAll: "Otevřít celou banku a hledat",
     },
     contact: {
@@ -1230,8 +1230,8 @@ export const t: Record<Lang, Dict> = {
     },
     materials: {
       kicker: "Material bank",
-      heading: "Pick a subject",
-      sub: "Ready-made materials to download and edit — click a subject to browse.",
+      heading: "Pick a topic",
+      sub: "Ready-made materials to download and edit — click a topic to browse.",
       browseAll: "Open the full bank & search",
     },
     contact: {
