@@ -1,0 +1,93 @@
+/**
+ * Sdílená vizuální šablona pro OG/Twitter kartu (1200×630), generovaná přes
+ * next/og (Satori) – žádný headless prohlížeč, žádný statický obrázek k ruční
+ * aktualizaci. Používá jen flexbox + inline styly (limity Satori).
+ */
+export const OG_SIZE = { width: 1200, height: 630 };
+
+const TOOLS = ["Excel", "Word", "Python", "Power BI"];
+
+export function ogCard(opts: { headline: string; sub: string; byline: string; domain: string }) {
+  return (
+    <div
+      style={{
+        width: "100%",
+        height: "100%",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        padding: "64px 72px",
+        backgroundColor: "#070a09",
+        backgroundImage:
+          "radial-gradient(circle at 12% 10%, rgba(16,185,129,0.35), transparent 55%), " +
+          "radial-gradient(circle at 88% 85%, rgba(16,185,129,0.22), transparent 55%)",
+        fontFamily: "sans-serif",
+      }}
+    >
+      <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            width: 56,
+            height: 56,
+            borderRadius: 16,
+            backgroundImage: "linear-gradient(135deg, #10b981, #059669)",
+            color: "#ffffff",
+            fontSize: 22,
+            fontWeight: 700,
+          }}
+        >
+          KH
+        </div>
+        <div style={{ display: "flex", color: "#a7f3d0", fontSize: 28, fontWeight: 600 }}>
+          {opts.byline}
+        </div>
+      </div>
+
+      <div style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 990 }}>
+        <div
+          style={{
+            display: "flex",
+            color: "#ffffff",
+            fontSize: 62,
+            fontWeight: 700,
+            lineHeight: 1.15,
+            letterSpacing: "-1px",
+          }}
+        >
+          {opts.headline}
+        </div>
+        <div style={{ display: "flex", color: "#d4d4d8", fontSize: 30, fontWeight: 400 }}>
+          {opts.sub}
+        </div>
+      </div>
+
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", gap: 14 }}>
+          {TOOLS.map((t) => (
+            <div
+              key={t}
+              style={{
+                display: "flex",
+                padding: "10px 24px",
+                borderRadius: 9999,
+                backgroundColor: "rgba(16,185,129,0.15)",
+                borderWidth: 1,
+                borderStyle: "solid",
+                borderColor: "rgba(16,185,129,0.4)",
+                color: "#6ee7b7",
+                fontSize: 22,
+                fontWeight: 600,
+              }}
+            >
+              {t}
+            </div>
+          ))}
+        </div>
+        <div style={{ display: "flex", color: "#71717a", fontSize: 22 }}>{opts.domain}</div>
+      </div>
+    </div>
+  );
+}

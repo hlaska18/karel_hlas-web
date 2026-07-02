@@ -45,22 +45,14 @@ export const metadata: Metadata = {
     siteName: "Karel Hlas",
     locale: "cs_CZ",
     type: "website",
-    images: [
-      {
-        url: "/og.jpg",
-        width: 1200,
-        height: 630,
-        type: "image/jpeg",
-        alt: "Materiály pro výuku informatiky — Karel Hlas",
-      },
-    ],
+    // Obrázek generuje src/app/opengraph-image.tsx (next/og) – žádný statický soubor.
   },
   twitter: {
     card: "summary_large_image",
     title: "Materiály pro výuku informatiky — Karel Hlas",
     description:
       "Hotové materiály do hodin informatiky ke stažení a úpravě (Excel, Word, Python, Power BI).",
-    images: ["/og.jpg"],
+    // Obrázek generuje src/app/twitter-image.tsx (next/og).
   },
   robots: {
     index: true,

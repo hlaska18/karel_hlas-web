@@ -3,37 +3,29 @@ import { Site } from "@/components/Site";
 import { getBankToolCounts } from "@/lib/materials";
 
 export const metadata: Metadata = {
-  title: { absolute: "Karel Hlas — Computer Science & English Teacher" },
+  title: { absolute: "Ready-made materials for CS lessons — Karel Hlas" },
   description:
-    "Personal website of Mgr. Karel Hlas, teacher of Computer Science and English at SPŠ Tábor (Czechia). About me, contact, and a timeline of lessons with study materials.",
+    "Ready-made materials for Computer Science lessons, free to download and edit — worksheets, tests, lesson plans and teaching notes (Excel, Word, Python, Power BI). Curated by Karel Hlas, teacher at SPŠ Tábor.",
   alternates: {
     canonical: "/en",
     languages: { cs: "/", en: "/en", "x-default": "/" },
   },
   openGraph: {
-    title: "Karel Hlas — Computer Science & English Teacher",
+    title: "Ready-made materials for CS lessons — Karel Hlas",
     description:
-      "Personal website of a Computer Science & English teacher at SPŠ Tábor — about me, contact and a timeline of lessons with materials.",
+      "Ready-made materials for Computer Science lessons, free to download and edit — worksheets, tests, lesson plans and teaching notes (Excel, Word, Python, Power BI).",
     url: "/en",
     siteName: "Karel Hlas",
     locale: "en_US",
     type: "website",
-    images: [
-      {
-        url: "/og-en.jpg",
-        width: 1200,
-        height: 630,
-        type: "image/jpeg",
-        alt: "Karel Hlas — Computer Science & English Language Teacher",
-      },
-    ],
+    // Obrázek generuje src/app/en/opengraph-image.tsx (next/og).
   },
   twitter: {
     card: "summary_large_image",
-    title: "Karel Hlas — Computer Science & English Teacher",
+    title: "Ready-made materials for CS lessons — Karel Hlas",
     description:
-      "Personal website of a Computer Science & English teacher at SPŠ Tábor.",
-    images: ["/og-en.jpg"],
+      "Ready-made materials for Computer Science lessons (Excel, Word, Python, Power BI).",
+    // Obrázek generuje src/app/en/twitter-image.tsx (next/og).
   },
 };
 
