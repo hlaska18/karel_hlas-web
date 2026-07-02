@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Info } from "lucide-react";
 import { LanguageProvider } from "@/lib/i18n";
 import { SITE, type Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
@@ -7,13 +7,18 @@ import { BankBrowser } from "@/components/BankBrowser";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Footer } from "@/components/Footer";
 
-const STR: Record<Lang, { kicker: string; heading: string; intro: string; back: string }> = {
+const STR: Record<
+  Lang,
+  { kicker: string; heading: string; intro: string; back: string; license: string }
+> = {
   cs: {
     kicker: "Banka materiálů",
     heading: "Materiály do hodin informatiky — ke stažení a úpravě",
     intro:
       "Pracovní listy, testy, metodika i plány hodin. Většina v editovatelném Wordu a Excelu — stáhni, uprav podle sebe a použij v hodině. Bez přihlašování.",
     back: "Zpět na web",
+    license:
+      "Materiály zde volně použij i uprav pro svou výuku. Neručím ale za to, že všechny převzaté prvky (obrázky, testové úlohy) mají 100% vyřešená práva třetích stran — před šířením mimo výuku si je prosím ověř.",
   },
   en: {
     kicker: "Material bank",
@@ -21,6 +26,8 @@ const STR: Record<Lang, { kicker: string; heading: string; intro: string; back: 
     intro:
       "Worksheets, tests, teaching notes and lesson plans. Most in editable Word and Excel — download, adapt to your needs and use in class. No login required.",
     back: "Back to site",
+    license:
+      "Feel free to use and adapt these materials for your own teaching. I can't guarantee every third-party element (images, test items) is fully rights-cleared — please double-check before sharing them outside the classroom.",
   },
 };
 
@@ -68,6 +75,11 @@ export function BankPage({ lang, items }: { lang: Lang; items: BankItem[] }) {
         <div className="mt-8">
           <BankBrowser items={items} lang={lang} />
         </div>
+
+        <p className="mt-10 flex items-start gap-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+          <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+          {s.license}
+        </p>
       </main>
 
       <Footer />

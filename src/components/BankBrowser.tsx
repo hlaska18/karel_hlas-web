@@ -23,7 +23,7 @@ import {
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
-import { toolLabel, countMaterials } from "@/lib/bankLabels";
+import { toolLabel, countMaterials, materialTypeOf } from "@/lib/bankLabels";
 
 /** Rozhraní UI textů banky (CZ/EN). */
 const STR: Record<
@@ -326,6 +326,7 @@ function MaterialRow({
   const t = fileType(it.ext, lang);
   const previewable = canPreview(it.ext);
   const label = L(it.label, lang);
+  const materialType = materialTypeOf(it);
   return (
     <li className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5">
       <span className="flex w-16 shrink-0 justify-center">
@@ -336,6 +337,7 @@ function MaterialRow({
       <span className="min-w-0 flex-1">
         <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
         <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
+          {materialType && <span className="text-zinc-400 dark:text-zinc-500">{materialType[lang]} · </span>}
           {L(it.topicLabel, lang)}
           {it.group ? ` · ${L(it.group, lang)}` : ""}
         </span>
