@@ -13,6 +13,7 @@ import {
 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { Reveal } from "@/components/Reveal";
+import { toolLabel, countMaterials } from "@/lib/bankLabels";
 
 function toolIcon(tool: string) {
   switch (tool) {
@@ -33,13 +34,6 @@ function toolIcon(tool: string) {
   }
 }
 
-function countWord(n: number, lang: string) {
-  if (lang === "en") return n === 1 ? "material" : "materials";
-  if (n === 1) return "materiál";
-  if (n >= 2 && n <= 4) return "materiály";
-  return "materiálů";
-}
-
 /** Dlaždice oborů na homepage = „ochutnávka" banky; proklik rovnou na obor. */
 export function MaterialsTiles({
   tiles,
@@ -48,6 +42,7 @@ export function MaterialsTiles({
 }) {
   const { lang, tr } = useLang();
   const m = tr.materials;
+  const bankHref = lang === "en" ? "/en/pro-ucitele" : "/pro-ucitele";
   if (!tiles.length) return null;
 
   return (
@@ -71,17 +66,17 @@ export function MaterialsTiles({
             return (
               <li key={t.tool}>
                 <Link
-                  href={`/pro-ucitele?tema=${encodeURIComponent(t.tool)}`}
+                  href={`${bankHref}?tema=${encodeURIComponent(t.tool)}`}
                   className="glass group flex h-full flex-col items-start gap-3 rounded-2xl p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
                 >
                   <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-accent-500/15 text-accent-600 transition group-hover:bg-accent-600 group-hover:text-white dark:text-accent-300">
                     <Icon className="h-6 w-6" />
                   </span>
                   <span className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
-                    {t.tool}
+                    {toolLabel(t.tool, lang)}
                   </span>
                   <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {t.count} {countWord(t.count, lang)}
+                    {countMaterials(t.count, lang)}
                   </span>
                   {!t.hasTeacher && (
                     <span className="text-xs text-zinc-400 dark:text-zinc-500">
@@ -96,7 +91,7 @@ export function MaterialsTiles({
 
         <Reveal delay={0.1}>
           <Link
-            href="/pro-ucitele"
+            href={bankHref}
             className="group mt-6 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 transition hover:text-accent-600 dark:text-accent-300 dark:hover:text-accent-400"
           >
             {m.browseAll}

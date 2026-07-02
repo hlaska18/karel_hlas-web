@@ -9,9 +9,10 @@ import { LangToggle } from "@/components/LangToggle";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Header() {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const bankHref = lang === "en" ? "/en/pro-ucitele" : "/pro-ucitele";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -24,7 +25,7 @@ export function Header() {
     { href: "#about", label: tr.nav.about },
     { href: "#contact", label: tr.nav.contact },
     { href: "#vyuka", label: tr.nav.lessons },
-    { href: "/pro-ucitele", label: tr.nav.bank },
+    { href: bankHref, label: tr.nav.bank },
   ];
 
   return (
@@ -65,7 +66,7 @@ export function Header() {
             icon={<GraduationCap className="h-4 w-4" />}
           />
           <InteractiveHoverButton
-            href="/pro-ucitele"
+            href={bankHref}
             text={tr.nav.bank}
             size="sm"
             icon={<Library className="h-4 w-4" />}

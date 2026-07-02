@@ -21,7 +21,68 @@ import {
   Link2,
   Check,
 } from "lucide-react";
+import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
+import { toolLabel, countMaterials } from "@/lib/bankLabels";
+
+/** Rozhraní UI textů banky (CZ/EN). */
+const STR: Record<
+  Lang,
+  {
+    searchPlaceholder: string;
+    back: string;
+    searchResults: string;
+    empty: string;
+    teacherBadge: string;
+    studentBadge: string;
+    previewTitle: string;
+    downloadTitle: string;
+    openNewTab: string;
+    close: string;
+    lesson: string;
+    shareLesson: string;
+    expandLesson: string;
+    collapseLesson: string;
+  }
+> = {
+  cs: {
+    searchPlaceholder: "Hledat materiál, téma, nástroj…",
+    back: "Zpět na témata",
+    searchResults: "Výsledky hledání: ",
+    empty: "Nic neodpovídá. Zkus jiné slovo nebo se vrať na témata.",
+    teacherBadge: "učitelé",
+    studentBadge: "žáci",
+    previewTitle: "Náhled",
+    downloadTitle: "Stáhnout",
+    openNewTab: "Otevřít v nové záložce",
+    close: "Zavřít",
+    lesson: "Lekce",
+    shareLesson: "Sdílet odkaz na lekci",
+    expandLesson: "Rozbalit lekci",
+    collapseLesson: "Sbalit lekci",
+  },
+  en: {
+    searchPlaceholder: "Search material, topic, tool…",
+    back: "Back to topics",
+    searchResults: "Search results: ",
+    empty: "Nothing matches. Try another word or go back to topics.",
+    teacherBadge: "teachers",
+    studentBadge: "students",
+    previewTitle: "Preview",
+    downloadTitle: "Download",
+    openNewTab: "Open in new tab",
+    close: "Close",
+    lesson: "Lesson",
+    shareLesson: "Share lesson link",
+    expandLesson: "Expand lesson",
+    collapseLesson: "Collapse lesson",
+  },
+};
+
+/** Vezme lokalizované pole {cs,en} (nebo prázdný řetězec, když chybí). */
+function L(field: { cs: string; en: string } | undefined, lang: Lang): string {
+  return field ? field[lang] : "";
+}
 
 /** Typy, které umíme spolehlivě zobrazit přímo (bez cizí služby). */
 const IMG = ["png", "jpg", "jpeg", "gif", "svg", "webp"];
@@ -31,19 +92,45 @@ function canPreview(ext: string): boolean {
 }
 
 /** Sloučí přípony do přátelské kategorie (odznak typu u řádku). */
-function fileType(ext: string): { key: string; label: string } {
-  if (["docx", "doc", "odt", "rtf"].includes(ext)) return { key: "word", label: "Word" };
-  if (["xlsx", "xls", "xlsm", "csv"].includes(ext)) return { key: "excel", label: "Excel" };
-  if (ext === "pdf") return { key: "pdf", label: "PDF" };
-  if (["pptx", "ppt", "odp"].includes(ext)) return { key: "ppt", label: "Prezentace" };
-  if (ext === "pbix") return { key: "powerbi", label: "Power BI" };
-  if (["py", "ipynb", "js", "ts", "html", "css", "json", "sql", "java", "c", "cpp", "zip"].includes(ext))
-    return { key: "code", label: "Kód" };
-  if (["mp4", "mov", "webm", "m4v", "avi"].includes(ext)) return { key: "video", label: "Video" };
-  if (["png", "jpg", "jpeg", "gif", "svg"].includes(ext)) return { key: "image", label: "Obrázek" };
-  if (ext === "accdb") return { key: "access", label: "Access" };
-  if (ext === "txt") return { key: "text", label: "Text" };
-  return { key: ext || "other", label: (ext || "soubor").toUpperCase() };
+function fileType(ext: string, lang: Lang): { key: string; label: string } {
+  const cs: Record<string, string> = {
+    word: "Word",
+    excel: "Excel",
+    pdf: "PDF",
+    ppt: "Prezentace",
+    powerbi: "Power BI",
+    code: "Kód",
+    video: "Video",
+    image: "Obrázek",
+    access: "Access",
+    text: "Text",
+  };
+  const en: Record<string, string> = {
+    word: "Word",
+    excel: "Excel",
+    pdf: "PDF",
+    ppt: "Slides",
+    powerbi: "Power BI",
+    code: "Code",
+    video: "Video",
+    image: "Image",
+    access: "Access",
+    text: "Text",
+  };
+  let key = ext || "other";
+  if (["docx", "doc", "odt", "rtf"].includes(ext)) key = "word";
+  else if (["xlsx", "xls", "xlsm", "csv"].includes(ext)) key = "excel";
+  else if (ext === "pdf") key = "pdf";
+  else if (["pptx", "ppt", "odp"].includes(ext)) key = "ppt";
+  else if (ext === "pbix") key = "powerbi";
+  else if (["py", "ipynb", "js", "ts", "html", "css", "json", "sql", "java", "c", "cpp", "zip"].includes(ext))
+    key = "code";
+  else if (["mp4", "mov", "webm", "m4v", "avi"].includes(ext)) key = "video";
+  else if (["png", "jpg", "jpeg", "gif", "svg"].includes(ext)) key = "image";
+  else if (ext === "accdb") key = "access";
+  else if (ext === "txt") key = "text";
+  const table = lang === "en" ? en : cs;
+  return { key, label: table[key] ?? (ext || (lang === "en" ? "file" : "soubor")).toUpperCase() };
 }
 
 function toolIcon(tool: string) {
@@ -75,13 +162,14 @@ function fmtSize(bytes: number): string {
 const stripDia = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
-export function BankBrowser({ items }: { items: BankItem[] }) {
+export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) {
+  const s = STR[lang];
   const [q, setQ] = useState("");
   const [tool, setTool] = useState<string | null>(null);
   const [openLesson, setOpenLesson] = useState<number | null>(null);
   const [preview, setPreview] = useState<BankItem | null>(null);
 
-  // Proklik z homepage dlaždice: /pro-ucitele?tema=Excel rovnou otevře obor.
+  // Proklik z homepage dlaždice: ?tema=Excel rovnou otevře obor.
   // Sdílený odkaz na lekci: ...&lekce=5 navíc tu lekci rovnou rozbalí a odscrolluje k ní.
   useEffect(() => {
     try {
@@ -113,14 +201,26 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
     if (needle) {
       base = base.filter((it) =>
         stripDia(
-          [it.label.cs, it.topicLabel.cs, it.group?.cs ?? "", it.tool, it.coursesLabel.cs, it.ext].join(" "),
+          [
+            it.label.cs,
+            it.label.en,
+            it.topicLabel.cs,
+            it.topicLabel.en,
+            it.group?.cs ?? "",
+            it.group?.en ?? "",
+            it.tool,
+            toolLabel(it.tool, lang),
+            it.coursesLabel.cs,
+            it.coursesLabel.en,
+            it.ext,
+          ].join(" "),
         ).includes(needle),
       );
     } else if (tool) {
       base = base.filter((it) => it.tool === tool);
     }
     return base;
-  }, [items, needle, tool]);
+  }, [items, needle, tool, lang]);
 
   const showList = needle !== "" || tool !== null;
 
@@ -133,7 +233,7 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
-          placeholder="Hledat materiál, téma, nástroj…"
+          placeholder={s.searchPlaceholder}
           className="glass-soft w-full rounded-2xl py-3.5 pl-12 pr-4 text-base text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-100"
         />
       </div>
@@ -154,10 +254,10 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
                     <Icon className="h-6 w-6" />
                   </span>
                   <span className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
-                    {t.name}
+                    {toolLabel(t.name, lang)}
                   </span>
                   <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {t.count} {t.count === 1 ? "materiál" : t.count <= 4 ? "materiály" : "materiálů"}
+                    {countMaterials(t.count, lang)}
                   </span>
                 </button>
               </li>
@@ -176,43 +276,56 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
                 onClick={() => setTool(null)}
                 className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
               >
-                <ArrowLeft className="h-4 w-4" /> Zpět na témata
+                <ArrowLeft className="h-4 w-4" /> {s.back}
               </button>
             )}
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              {needle ? "Výsledky hledání: " : tool ? `${tool}: ` : ""}
-              {results.length}{" "}
-              {results.length === 1 ? "materiál" : results.length >= 2 && results.length <= 4 ? "materiály" : "materiálů"}
+              {needle ? s.searchResults : tool ? `${toolLabel(tool, lang)}: ` : ""}
+              {countMaterials(results.length, lang)}
             </p>
           </div>
 
           {tool && LESSON_CONFIG[tool] && !needle ? (
-            <ToolLessons tool={tool} items={results} openLesson={openLesson} onPreview={setPreview} />
+            <ToolLessons
+              tool={tool}
+              items={results}
+              lang={lang}
+              openLesson={openLesson}
+              onPreview={setPreview}
+            />
           ) : (
             <ul className="mt-4 space-y-2.5">
               {results.map((it) => (
-                <MaterialRow key={it.href} it={it} onPreview={setPreview} />
+                <MaterialRow key={it.href} it={it} lang={lang} onPreview={setPreview} />
               ))}
             </ul>
           )}
 
           {results.length === 0 && (
-            <p className="mt-10 text-center text-zinc-500 dark:text-zinc-400">
-              Nic neodpovídá. Zkus jiné slovo nebo se vrať na témata.
-            </p>
+            <p className="mt-10 text-center text-zinc-500 dark:text-zinc-400">{s.empty}</p>
           )}
         </>
       )}
 
-      {preview && <PreviewModal item={preview} onClose={() => setPreview(null)} />}
+      {preview && <PreviewModal item={preview} lang={lang} onClose={() => setPreview(null)} />}
     </div>
   );
 }
 
 /** Jeden řádek materiálu (typ, název, publikum, velikost, náhled, stažení). */
-function MaterialRow({ it, onPreview }: { it: BankItem; onPreview: (it: BankItem) => void }) {
-  const t = fileType(it.ext);
+function MaterialRow({
+  it,
+  lang,
+  onPreview,
+}: {
+  it: BankItem;
+  lang: Lang;
+  onPreview: (it: BankItem) => void;
+}) {
+  const s = STR[lang];
+  const t = fileType(it.ext, lang);
   const previewable = canPreview(it.ext);
+  const label = L(it.label, lang);
   return (
     <li className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5">
       <span className="flex w-16 shrink-0 justify-center">
@@ -221,20 +334,20 @@ function MaterialRow({ it, onPreview }: { it: BankItem; onPreview: (it: BankItem
         </span>
       </span>
       <span className="min-w-0 flex-1">
-        <span className="block truncate font-medium text-zinc-900 dark:text-white">{it.label.cs}</span>
+        <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
         <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
-          {it.topicLabel.cs}
-          {it.group ? ` · ${it.group.cs}` : ""}
+          {L(it.topicLabel, lang)}
+          {it.group ? ` · ${L(it.group, lang)}` : ""}
         </span>
       </span>
       <span className="hidden shrink-0 items-center gap-1.5 sm:inline-flex">
         {it.audience === "teacher" ? (
           <span className="inline-flex items-center gap-1 rounded-full bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
-            <GraduationCap className="h-3.5 w-3.5" /> učitelé
+            <GraduationCap className="h-3.5 w-3.5" /> {s.teacherBadge}
           </span>
         ) : (
           <span className="inline-flex items-center gap-1 rounded-full bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
-            <Users className="h-3.5 w-3.5" /> žáci
+            <Users className="h-3.5 w-3.5" /> {s.studentBadge}
           </span>
         )}
       </span>
@@ -245,8 +358,8 @@ function MaterialRow({ it, onPreview }: { it: BankItem; onPreview: (it: BankItem
         <button
           type="button"
           onClick={() => onPreview(it)}
-          title="Náhled"
-          aria-label={`Náhled: ${it.label.cs}`}
+          title={s.previewTitle}
+          aria-label={`${s.previewTitle}: ${label}`}
           className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
         >
           <Eye className="h-5 w-5" />
@@ -255,8 +368,8 @@ function MaterialRow({ it, onPreview }: { it: BankItem; onPreview: (it: BankItem
       <a
         href={it.href}
         download
-        title="Stáhnout"
-        aria-label={`Stáhnout: ${it.label.cs}`}
+        title={s.downloadTitle}
+        aria-label={`${s.downloadTitle}: ${label}`}
         className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
       >
         <Download className="h-5 w-5" />
@@ -274,28 +387,28 @@ type LessonConfig = {
   teacherGroups?: string[];
   /** Učitelské soubory bez podsložky (leží přímo v _ucitel), např. volné plány hodin. */
   teacherNoGroup?: boolean;
-  studentLabel: string;
-  teacherLabel: string;
+  studentLabel: { cs: string; en: string };
+  teacherLabel: { cs: string; en: string };
 };
 
 const LESSON_CONFIG: Record<string, LessonConfig> = {
   Python: {
     studentGroups: ["Python - pracovní listy"],
     teacherGroups: ["Python - metodické listy"],
-    studentLabel: "Pracovní list",
-    teacherLabel: "Metodika",
+    studentLabel: { cs: "Pracovní list", en: "Worksheet" },
+    teacherLabel: { cs: "Metodika", en: "Teaching notes" },
   },
   "Digitální gramotnost": {
     studentGroups: ["Pracovní listy"],
     teacherNoGroup: true,
-    studentLabel: "Pracovní list",
-    teacherLabel: "Plán hodiny",
+    studentLabel: { cs: "Pracovní list", en: "Worksheet" },
+    teacherLabel: { cs: "Plán hodiny", en: "Lesson plan" },
   },
   "Power BI": {
     studentGroups: ["Úlohy"],
     teacherGroups: ["Řešení"],
-    studentLabel: "Úloha",
-    teacherLabel: "Řešení",
+    studentLabel: { cs: "Úloha", en: "Exercise" },
+    teacherLabel: { cs: "Řešení", en: "Solution" },
   },
 };
 
@@ -328,11 +441,13 @@ function SlotTag({ kind, children }: { kind: "student" | "teacher"; children: Re
 function ToolLessons({
   tool,
   items,
+  lang,
   openLesson,
   onPreview,
 }: {
   tool: string;
   items: BankItem[];
+  lang: Lang;
   openLesson: number | null;
   onPreview: (it: BankItem) => void;
 }) {
@@ -364,6 +479,7 @@ function ToolLessons({
           items={l.items}
           cfg={cfg}
           tool={tool}
+          lang={lang}
           autoOpen={l.no === openLesson}
           onPreview={onPreview}
         />
@@ -371,7 +487,7 @@ function ToolLessons({
       {extras.length > 0 && (
         <ul className="space-y-2.5 pt-1">
           {extras.map((it) => (
-            <MaterialRow key={it.href} it={it} onPreview={onPreview} />
+            <MaterialRow key={it.href} it={it} lang={lang} onPreview={onPreview} />
           ))}
         </ul>
       )}
@@ -382,15 +498,15 @@ function ToolLessons({
 /** Odstraní kódové prefixy („PracL01 - ", „01_") a slovní přípony (plán hodiny, řešení…). */
 function cleanTitle(raw: string): string {
   let s = raw;
-  s = s.replace(/\s*[-–]?\s*(plán hodiny|metodika|řešení|reseni)\s*$/i, "");
+  s = s.replace(/\s*[-–]?\s*(plán hodiny|metodika|řešení|reseni|lesson plan|worksheet|solution)\s*$/i, "");
   s = s.replace(/^[A-Za-zÁ-Žá-ž]*\d+\s*[-–_]?\s*/, "");
   s = s.replace(/_/g, " ").replace(/\s{2,}/g, " ").trim();
   return s;
 }
 
 /** Vytáhne název lekce z názvů souborů v balíčku (bere nejdelší/nejpopisnější shodu). */
-function lessonTitle(items: BankItem[]): string {
-  const candidates = items.map((it) => cleanTitle(it.label.cs)).filter(Boolean);
+function lessonTitle(items: BankItem[], lang: Lang): string {
+  const candidates = items.map((it) => cleanTitle(L(it.label, lang))).filter(Boolean);
   if (!candidates.length) return "";
   candidates.sort((a, b) => b.length - a.length);
   const t = candidates[0];
@@ -402,6 +518,7 @@ function LessonCard({
   items,
   cfg,
   tool,
+  lang,
   autoOpen,
   onPreview,
 }: {
@@ -409,15 +526,17 @@ function LessonCard({
   items: BankItem[];
   cfg: LessonConfig;
   tool: string;
+  lang: Lang;
   autoOpen: boolean;
   onPreview: (it: BankItem) => void;
 }) {
+  const s = STR[lang];
   const [open, setOpen] = useState(autoOpen);
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const hasStudent = items.some((it) => isStudentSlot(it, cfg));
   const hasTeacher = items.some((it) => isTeacherSlot(it, cfg));
-  const title = lessonTitle(items);
+  const title = lessonTitle(items, lang);
   const num = String(no).padStart(2, "0");
 
   // Otevření ze sdíleného odkazu (?tema=...&lekce=N) — odscroluj k ní jednou po načtení.
@@ -454,20 +573,20 @@ function LessonCard({
           </span>
           <span className="min-w-0 flex-1">
             <span className="block truncate font-medium text-zinc-900 dark:text-white">
-              Lekce {num}
+              {s.lesson} {num}
               {title ? ` · ${title}` : ""}
             </span>
             <span className="mt-1 flex flex-wrap gap-1.5">
-              {hasStudent && <SlotTag kind="student">{cfg.studentLabel}</SlotTag>}
-              {hasTeacher && <SlotTag kind="teacher">{cfg.teacherLabel}</SlotTag>}
+              {hasStudent && <SlotTag kind="student">{L(cfg.studentLabel, lang)}</SlotTag>}
+              {hasTeacher && <SlotTag kind="teacher">{L(cfg.teacherLabel, lang)}</SlotTag>}
             </span>
           </span>
         </button>
         <button
           type="button"
           onClick={handleShare}
-          title="Sdílet odkaz na lekci"
-          aria-label={`Sdílet odkaz na lekci ${num}`}
+          title={s.shareLesson}
+          aria-label={`${s.shareLesson} ${num}`}
           className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
         >
           {copied ? <Check className="h-4 w-4 text-accent-600 dark:text-accent-400" /> : <Link2 className="h-4 w-4" />}
@@ -475,7 +594,7 @@ function LessonCard({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
-          aria-label={open ? "Sbalit lekci" : "Rozbalit lekci"}
+          aria-label={open ? s.collapseLesson : s.expandLesson}
           className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
         >
           <ChevronDown className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} />
@@ -484,7 +603,7 @@ function LessonCard({
       {open && (
         <ul className="space-y-2 px-3 pb-3">
           {items.map((it) => (
-            <MaterialRow key={it.href} it={it} onPreview={onPreview} />
+            <MaterialRow key={it.href} it={it} lang={lang} onPreview={onPreview} />
           ))}
         </ul>
       )}
@@ -492,8 +611,18 @@ function LessonCard({
   );
 }
 
-function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }) {
+function PreviewModal({
+  item,
+  lang,
+  onClose,
+}: {
+  item: BankItem;
+  lang: Lang;
+  onClose: () => void;
+}) {
+  const s = STR[lang];
   const isImg = IMG.includes(item.ext);
+  const label = L(item.label, lang);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -512,7 +641,7 @@ function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`Náhled: ${item.label.cs}`}
+      aria-label={`${s.previewTitle}: ${label}`}
       onClick={onClose}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-6"
     >
@@ -521,14 +650,12 @@ function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }
         className="glass flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl"
       >
         <div className="flex items-center gap-3 border-b border-black/10 px-5 py-3.5 dark:border-white/10">
-          <p className="min-w-0 flex-1 truncate font-medium text-zinc-900 dark:text-white">
-            {item.label.cs}
-          </p>
+          <p className="min-w-0 flex-1 truncate font-medium text-zinc-900 dark:text-white">{label}</p>
           <a
             href={item.href}
             target="_blank"
             rel="noopener noreferrer"
-            title="Otevřít v nové záložce"
+            title={s.openNewTab}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition hover:bg-accent-500/10 hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
           >
             <ExternalLink className="h-5 w-5" />
@@ -536,15 +663,15 @@ function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }
           <a
             href={item.href}
             download
-            title="Stáhnout"
+            title={s.downloadTitle}
             className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-accent-500"
           >
-            <Download className="h-4 w-4" /> Stáhnout
+            <Download className="h-4 w-4" /> {s.downloadTitle}
           </a>
           <button
             type="button"
             onClick={onClose}
-            aria-label="Zavřít"
+            aria-label={s.close}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white"
           >
             <X className="h-5 w-5" />
@@ -554,13 +681,9 @@ function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }
         <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto bg-white/40 p-3 dark:bg-black/20">
           {isImg ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={item.href} alt={item.label.cs} className="max-h-[78vh] max-w-full object-contain" />
+            <img src={item.href} alt={label} className="max-h-[78vh] max-w-full object-contain" />
           ) : (
-            <iframe
-              src={item.href}
-              title={item.label.cs}
-              className="h-[78vh] w-full rounded-xl border-0 bg-white"
-            />
+            <iframe src={item.href} title={label} className="h-[78vh] w-full rounded-xl border-0 bg-white" />
           )}
         </div>
       </div>

@@ -5,7 +5,8 @@ import { useLang } from "@/lib/i18n";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Hero() {
-  const { tr } = useLang();
+  const { lang, tr } = useLang();
+  const bankHref = lang === "en" ? "/en/pro-ucitele" : "/pro-ucitele";
 
   return (
     <section id="top" className="relative overflow-hidden pt-28 sm:pt-32">
@@ -33,7 +34,7 @@ export function Hero() {
 
           <div className="mt-8 flex flex-wrap items-center gap-3">
             <InteractiveHoverButton
-              href="/pro-ucitele"
+              href={bankHref}
               text={tr.hero.ctaLessons}
               icon={<Library className="h-4 w-4" />}
             />
