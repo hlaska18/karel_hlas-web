@@ -1042,7 +1042,7 @@ type Dict = {
 
 export const t: Record<Lang, Dict> = {
   cs: {
-    nav: { about: "O autorovi", lessons: "Výuka", contact: "Kontakt", bank: "Materiály do výuky" },
+    nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt", bank: "Materiály do výuky" },
     hero: {
       badge: "Materiály pro výuku informatiky · zdarma",
       headline: "Hotové materiály do hodin informatiky. Stačí šáhnout.",
@@ -1055,7 +1055,7 @@ export const t: Record<Lang, Dict> = {
       scroll: "Výuka",
     },
     about: {
-      kicker: "O autorovi",
+      kicker: "O mně",
       heading: "Učitel, kterého baví technologie",
       paragraphs: [
         "Jsem učitel informatiky a angličtiny na Střední průmyslové škole strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum se zaměřením na programování a robotiku a poté bakalářské i magisterské studium na Pedagogické fakultě Jihočeské univerzity.",
@@ -1156,7 +1156,7 @@ export const t: Record<Lang, Dict> = {
       scroll: "Lessons",
     },
     about: {
-      kicker: "About the author",
+      kicker: "About me",
       heading: "A teacher who loves technology",
       paragraphs: [
         "I'm a teacher of Computer Science and English Language at the Secondary Technical School of Mechanical and Civil Engineering in Tábor, Czech Republic. I studied the Technical Lyceum here, specialising in programming and robotics, and then completed both my Bachelor's and Master's degrees at the Faculty of Education, University of South Bohemia.",
