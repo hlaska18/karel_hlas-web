@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   Search,
   Download,
@@ -18,6 +18,8 @@ import {
   Laptop,
   Files,
   ChevronDown,
+  Link2,
+  Check,
 } from "lucide-react";
 import type { BankItem } from "@/lib/materials";
 
@@ -76,13 +78,18 @@ const stripDia = (s: string) =>
 export function BankBrowser({ items }: { items: BankItem[] }) {
   const [q, setQ] = useState("");
   const [tool, setTool] = useState<string | null>(null);
+  const [openLesson, setOpenLesson] = useState<number | null>(null);
   const [preview, setPreview] = useState<BankItem | null>(null);
 
   // Proklik z homepage dlaždice: /pro-ucitele?tema=Excel rovnou otevře obor.
+  // Sdílený odkaz na lekci: ...&lekce=5 navíc tu lekci rovnou rozbalí a odscrolluje k ní.
   useEffect(() => {
     try {
-      const t = new URLSearchParams(window.location.search).get("tema");
+      const params = new URLSearchParams(window.location.search);
+      const t = params.get("tema");
       if (t && items.some((it) => it.tool === t)) setTool(t);
+      const l = params.get("lekce");
+      if (l != null && /^\d+$/.test(l)) setOpenLesson(parseInt(l, 10));
     } catch {
       /* ignore */
     }
@@ -180,7 +187,7 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
           </div>
 
           {tool && LESSON_CONFIG[tool] && !needle ? (
-            <ToolLessons tool={tool} items={results} onPreview={setPreview} />
+            <ToolLessons tool={tool} items={results} openLesson={openLesson} onPreview={setPreview} />
           ) : (
             <ul className="mt-4 space-y-2.5">
               {results.map((it) => (
@@ -321,10 +328,12 @@ function SlotTag({ kind, children }: { kind: "student" | "teacher"; children: Re
 function ToolLessons({
   tool,
   items,
+  openLesson,
   onPreview,
 }: {
   tool: string;
   items: BankItem[];
+  openLesson: number | null;
   onPreview: (it: BankItem) => void;
 }) {
   const cfg = LESSON_CONFIG[tool];
@@ -349,7 +358,15 @@ function ToolLessons({
   return (
     <div className="mt-4 space-y-2.5">
       {lessons.map((l) => (
-        <LessonCard key={l.no} no={l.no} items={l.items} cfg={cfg} onPreview={onPreview} />
+        <LessonCard
+          key={l.no}
+          no={l.no}
+          items={l.items}
+          cfg={cfg}
+          tool={tool}
+          autoOpen={l.no === openLesson}
+          onPreview={onPreview}
+        />
       ))}
       {extras.length > 0 && (
         <ul className="space-y-2.5 pt-1">
@@ -384,44 +401,86 @@ function LessonCard({
   no,
   items,
   cfg,
+  tool,
+  autoOpen,
   onPreview,
 }: {
   no: number;
   items: BankItem[];
   cfg: LessonConfig;
+  tool: string;
+  autoOpen: boolean;
   onPreview: (it: BankItem) => void;
 }) {
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(autoOpen);
+  const [copied, setCopied] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
   const hasStudent = items.some((it) => isStudentSlot(it, cfg));
   const hasTeacher = items.some((it) => isTeacherSlot(it, cfg));
   const title = lessonTitle(items);
   const num = String(no).padStart(2, "0");
 
+  // Otevření ze sdíleného odkazu (?tema=...&lekce=N) — odscroluj k ní jednou po načtení.
+  useEffect(() => {
+    if (autoOpen) ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const handleShare = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.set("tema", tool);
+      url.searchParams.set("lekce", String(no));
+      await navigator.clipboard.writeText(url.toString());
+      setCopied(true);
+      setTimeout(() => setCopied(false), 1500);
+    } catch {
+      /* clipboard nemusí být dostupný (chybějící oprávnění) */
+    }
+  };
+
   return (
-    <div className="glass rounded-2xl">
-      <button
-        type="button"
-        onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        className="flex w-full items-center gap-3 px-4 py-3.5 text-left"
-      >
-        <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 font-display text-sm font-bold text-accent-700 dark:text-accent-300">
-          {num}
-        </span>
-        <span className="min-w-0 flex-1">
-          <span className="block truncate font-medium text-zinc-900 dark:text-white">
-            Lekce {num}
-            {title ? ` · ${title}` : ""}
+    <div ref={ref} className="glass rounded-2xl">
+      <div className="flex items-center gap-1 px-2.5 py-2 sm:px-3">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          className="flex min-w-0 flex-1 items-center gap-3 rounded-xl px-1.5 py-1.5 text-left"
+        >
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 font-display text-sm font-bold text-accent-700 dark:text-accent-300">
+            {num}
           </span>
-          <span className="mt-1 flex flex-wrap gap-1.5">
-            {hasStudent && <SlotTag kind="student">{cfg.studentLabel}</SlotTag>}
-            {hasTeacher && <SlotTag kind="teacher">{cfg.teacherLabel}</SlotTag>}
+          <span className="min-w-0 flex-1">
+            <span className="block truncate font-medium text-zinc-900 dark:text-white">
+              Lekce {num}
+              {title ? ` · ${title}` : ""}
+            </span>
+            <span className="mt-1 flex flex-wrap gap-1.5">
+              {hasStudent && <SlotTag kind="student">{cfg.studentLabel}</SlotTag>}
+              {hasTeacher && <SlotTag kind="teacher">{cfg.teacherLabel}</SlotTag>}
+            </span>
           </span>
-        </span>
-        <ChevronDown
-          className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
+        </button>
+        <button
+          type="button"
+          onClick={handleShare}
+          title="Sdílet odkaz na lekci"
+          aria-label={`Sdílet odkaz na lekci ${num}`}
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+        >
+          {copied ? <Check className="h-4 w-4 text-accent-600 dark:text-accent-400" /> : <Link2 className="h-4 w-4" />}
+        </button>
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-label={open ? "Sbalit lekci" : "Rozbalit lekci"}
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+        >
+          <ChevronDown className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} />
+        </button>
+      </div>
       {open && (
         <ul className="space-y-2 px-3 pb-3">
           {items.map((it) => (
