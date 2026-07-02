@@ -76,7 +76,6 @@ const stripDia = (s: string) =>
 export function BankBrowser({ items }: { items: BankItem[] }) {
   const [q, setQ] = useState("");
   const [tool, setTool] = useState<string | null>(null);
-  const [audience, setAudience] = useState<"" | "student" | "teacher">("");
   const [preview, setPreview] = useState<BankItem | null>(null);
 
   // Proklik z homepage dlaždice: /pro-ucitele?tema=Excel rovnou otevře obor.
@@ -89,24 +88,21 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
     }
   }, [items]);
 
-  // Filtr publika se aplikuje všude (dlaždice i seznam).
-  const byAudience = useMemo(
-    () => (audience ? items.filter((it) => it.audience === audience) : items),
-    [items, audience],
-  );
-
   // Dlaždice nástrojů + počty. Položky chodí ze serveru seřazené dle TOOL_ORDER,
   // takže pořadí prvního výskytu v Map = správné pořadí dlaždic.
   const tiles = useMemo(() => {
     const counts = new Map<string, number>();
-    for (const it of byAudience) counts.set(it.tool, (counts.get(it.tool) ?? 0) + 1);
+    for (const it of items) counts.set(it.tool, (counts.get(it.tool) ?? 0) + 1);
     return [...counts.entries()].map(([name, count]) => ({ name, count }));
-  }, [byAudience]);
+  }, [items]);
 
   // Výsledky podle režimu: hledání > vybraná dlaždice > nic.
+  // Pozn.: žádný filtr publika (žák/učitel) — u balíčků lekcí by odfiltroval
+  // polovinu páru (list + metodika) a rozbil kartu. Publikum je jen informační
+  // odznak u řádku (MaterialRow), učitel chce vidět obojí najednou.
   const needle = stripDia(q.trim());
   const results = useMemo(() => {
-    let base = byAudience;
+    let base = items;
     if (needle) {
       base = base.filter((it) =>
         stripDia(
@@ -117,7 +113,7 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
       base = base.filter((it) => it.tool === tool);
     }
     return base;
-  }, [byAudience, needle, tool]);
+  }, [items, needle, tool]);
 
   const showList = needle !== "" || tool !== null;
 
@@ -133,21 +129,6 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
           placeholder="Hledat materiál, téma, nástroj…"
           className="glass-soft w-full rounded-2xl py-3.5 pl-12 pr-4 text-base text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-100"
         />
-      </div>
-
-      {/* Filtr publika */}
-      <div className="mt-4 flex flex-wrap items-center gap-2">
-        <div className="inline-flex overflow-hidden rounded-full glass-soft text-sm font-medium">
-          <AudBtn active={audience === ""} onClick={() => setAudience("")}>
-            Vše
-          </AudBtn>
-          <AudBtn active={audience === "student"} onClick={() => setAudience("student")}>
-            <Users className="h-4 w-4" /> Pro žáky
-          </AudBtn>
-          <AudBtn active={audience === "teacher"} onClick={() => setAudience("teacher")}>
-            <GraduationCap className="h-4 w-4" /> Pro učitele
-          </AudBtn>
-        </div>
       </div>
 
       {/* ── Galerie dlaždic (když se nehledá a není vybraná dlaždice) ── */}
@@ -525,30 +506,5 @@ function PreviewModal({ item, onClose }: { item: BankItem; onClose: () => void }
         </div>
       </div>
     </div>
-  );
-}
-
-function AudBtn({
-  active,
-  onClick,
-  children,
-}: {
-  active: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={onClick}
-      aria-pressed={active}
-      className={`inline-flex items-center gap-1.5 px-3.5 py-2 transition ${
-        active
-          ? "bg-accent-600 text-white"
-          : "text-zinc-600 hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
-      }`}
-    >
-      {children}
-    </button>
   );
 }
