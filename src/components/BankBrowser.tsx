@@ -14,7 +14,8 @@ import {
   FileText,
   FileCode2,
   BarChart3,
-  ClipboardList,
+  Database,
+  Laptop,
   Files,
   ChevronDown,
 } from "lucide-react";
@@ -53,8 +54,10 @@ function toolIcon(tool: string) {
       return FileCode2;
     case "Power BI":
       return BarChart3;
-    case "Plány hodin":
-      return ClipboardList;
+    case "Databáze":
+      return Database;
+    case "Digitální gramotnost":
+      return Laptop;
     default:
       return Files;
   }
@@ -195,8 +198,8 @@ export function BankBrowser({ items }: { items: BankItem[] }) {
             </p>
           </div>
 
-          {tool === "Python" && !needle ? (
-            <PythonLessons items={results} onPreview={setPreview} />
+          {tool && LESSON_CONFIG[tool] && !needle ? (
+            <ToolLessons tool={tool} items={results} onPreview={setPreview} />
           ) : (
             <ul className="mt-4 space-y-2.5">
               {results.map((it) => (
@@ -274,12 +277,52 @@ function MaterialRow({ it, onPreview }: { it: BankItem; onPreview: (it: BankItem
   );
 }
 
-const PY_WORKSHEET = "Python - pracovní listy";
-const PY_METHOD = "Python - metodické listy";
 // macOS ukládá názvy v NFD (rozložená diakritika); porovnáváme přes NFC.
 const norm = (s?: string) => (s ?? "").normalize("NFC");
-const isWorksheet = (it: BankItem) => norm(it.group?.cs) === norm(PY_WORKSHEET);
-const isMethod = (it: BankItem) => norm(it.group?.cs) === norm(PY_METHOD);
+
+/** Konfigurace „balíčků lekcí" po oboru: které skupiny tvoří žákovský/učitelský slot. */
+type LessonConfig = {
+  studentGroups: string[];
+  teacherGroups?: string[];
+  /** Učitelské soubory bez podsložky (leží přímo v _ucitel), např. volné plány hodin. */
+  teacherNoGroup?: boolean;
+  studentLabel: string;
+  teacherLabel: string;
+};
+
+const LESSON_CONFIG: Record<string, LessonConfig> = {
+  Python: {
+    studentGroups: ["Python - pracovní listy"],
+    teacherGroups: ["Python - metodické listy"],
+    studentLabel: "Pracovní list",
+    teacherLabel: "Metodika",
+  },
+  "Digitální gramotnost": {
+    studentGroups: ["Pracovní listy"],
+    teacherNoGroup: true,
+    studentLabel: "Pracovní list",
+    teacherLabel: "Plán hodiny",
+  },
+  "Power BI": {
+    studentGroups: ["Úlohy"],
+    teacherGroups: ["Řešení"],
+    studentLabel: "Úloha",
+    teacherLabel: "Řešení",
+  },
+};
+
+function matchesGroup(it: BankItem, names: string[]): boolean {
+  const g = norm(it.group?.cs);
+  return names.some((n) => g === norm(n));
+}
+function isStudentSlot(it: BankItem, cfg: LessonConfig): boolean {
+  return matchesGroup(it, cfg.studentGroups);
+}
+function isTeacherSlot(it: BankItem, cfg: LessonConfig): boolean {
+  if (cfg.teacherGroups && matchesGroup(it, cfg.teacherGroups)) return true;
+  if (cfg.teacherNoGroup && it.audience === "teacher" && !it.group) return true;
+  return false;
+}
 
 function SlotTag({ kind, children }: { kind: "student" | "teacher"; children: React.ReactNode }) {
   const cls =
@@ -293,13 +336,22 @@ function SlotTag({ kind, children }: { kind: "student" | "teacher"; children: Re
   );
 }
 
-/** Pilot „balíčků": Python seskupený do karet lekcí (pracovní list + metodika). */
-function PythonLessons({ items, onPreview }: { items: BankItem[]; onPreview: (it: BankItem) => void }) {
+/** „Balíčky lekcí": materiály oboru seskupené do karet (žákovský list + učitelská část). */
+function ToolLessons({
+  tool,
+  items,
+  onPreview,
+}: {
+  tool: string;
+  items: BankItem[];
+  onPreview: (it: BankItem) => void;
+}) {
+  const cfg = LESSON_CONFIG[tool];
   const { lessons, extras } = useMemo(() => {
     const map = new Map<number, BankItem[]>();
     const rest: BankItem[] = [];
     for (const it of items) {
-      if ((isWorksheet(it) || isMethod(it)) && it.lessonNo != null) {
+      if ((isStudentSlot(it, cfg) || isTeacherSlot(it, cfg)) && it.lessonNo != null) {
         const arr = map.get(it.lessonNo) ?? [];
         arr.push(it);
         map.set(it.lessonNo, arr);
@@ -311,12 +363,12 @@ function PythonLessons({ items, onPreview }: { items: BankItem[]; onPreview: (it
       .sort((a, b) => a[0] - b[0])
       .map(([no, its]) => ({ no, items: its }));
     return { lessons: lessonsArr, extras: rest };
-  }, [items]);
+  }, [items, cfg]);
 
   return (
     <div className="mt-4 space-y-2.5">
       {lessons.map((l) => (
-        <LessonCard key={l.no} no={l.no} items={l.items} onPreview={onPreview} />
+        <LessonCard key={l.no} no={l.no} items={l.items} cfg={cfg} onPreview={onPreview} />
       ))}
       {extras.length > 0 && (
         <ul className="space-y-2.5 pt-1">
@@ -329,30 +381,38 @@ function PythonLessons({ items, onPreview }: { items: BankItem[]; onPreview: (it
   );
 }
 
-/** Z labelu „PracL01 - vyrazy" vytáhne název lekce („Vyrazy"). */
+/** Odstraní kódové prefixy („PracL01 - ", „01_") a slovní přípony (plán hodiny, řešení…). */
+function cleanTitle(raw: string): string {
+  let s = raw;
+  s = s.replace(/\s*[-–]?\s*(plán hodiny|metodika|řešení|reseni)\s*$/i, "");
+  s = s.replace(/^[A-Za-zÁ-Žá-ž]*\d+\s*[-–_]?\s*/, "");
+  s = s.replace(/_/g, " ").replace(/\s{2,}/g, " ").trim();
+  return s;
+}
+
+/** Vytáhne název lekce z názvů souborů v balíčku (bere nejdelší/nejpopisnější shodu). */
 function lessonTitle(items: BankItem[]): string {
-  for (const it of items) {
-    const parts = it.label.cs.split(/\s[-–]\s/);
-    if (parts.length > 1) {
-      const t = parts.slice(1).join(" - ").trim();
-      return t.charAt(0).toUpperCase() + t.slice(1);
-    }
-  }
-  return "";
+  const candidates = items.map((it) => cleanTitle(it.label.cs)).filter(Boolean);
+  if (!candidates.length) return "";
+  candidates.sort((a, b) => b.length - a.length);
+  const t = candidates[0];
+  return t.charAt(0).toUpperCase() + t.slice(1);
 }
 
 function LessonCard({
   no,
   items,
+  cfg,
   onPreview,
 }: {
   no: number;
   items: BankItem[];
+  cfg: LessonConfig;
   onPreview: (it: BankItem) => void;
 }) {
   const [open, setOpen] = useState(false);
-  const hasWorksheet = items.some(isWorksheet);
-  const hasMethod = items.some(isMethod);
+  const hasStudent = items.some((it) => isStudentSlot(it, cfg));
+  const hasTeacher = items.some((it) => isTeacherSlot(it, cfg));
   const title = lessonTitle(items);
   const num = String(no).padStart(2, "0");
 
@@ -373,8 +433,8 @@ function LessonCard({
             {title ? ` · ${title}` : ""}
           </span>
           <span className="mt-1 flex flex-wrap gap-1.5">
-            {hasWorksheet && <SlotTag kind="student">Pracovní list</SlotTag>}
-            {hasMethod && <SlotTag kind="teacher">Metodika</SlotTag>}
+            {hasStudent && <SlotTag kind="student">{cfg.studentLabel}</SlotTag>}
+            {hasTeacher && <SlotTag kind="teacher">{cfg.teacherLabel}</SlotTag>}
           </span>
         </span>
         <ChevronDown
