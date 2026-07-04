@@ -20,6 +20,16 @@ export function toolLabel(tool: string, lang: Lang): string {
   return TOOL_LABEL[tool]?.[lang] ?? tool;
 }
 
+/** 3D skleněné ikony témat (Higgsfield, jednotný frosted-emerald styl). */
+export const TOOL_ICON: Record<string, string> = {
+  "Digitální gramotnost": "/images/tools/digitalni-gramotnost.png",
+  Word: "/images/tools/word.png",
+  Excel: "/images/tools/excel.png",
+  Python: "/images/tools/python.png",
+  Databáze: "/images/tools/databaze.png",
+  "Power BI": "/images/tools/powerbi.png",
+};
+
 export function countMaterials(n: number, lang: Lang): string {
   if (lang === "en") return `${n} ${n === 1 ? "material" : "materials"}`;
   const word = n === 1 ? "materiál" : n >= 2 && n <= 4 ? "materiály" : "materiálů";
