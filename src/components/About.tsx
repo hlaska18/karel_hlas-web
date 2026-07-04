@@ -6,6 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { BADGES, SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
+import { CurriculumBody } from "@/components/Curriculum";
 
 export function About() {
   const { tr } = useLang();
@@ -13,6 +14,12 @@ export function About() {
 
   return (
     <section id="about" className="relative py-10 sm:py-14">
+      {/* dekorativní pozadí pro sklo (dřív u samostatné sekce Výuka) */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute left-[-6%] top-24 h-72 w-72 rounded-full bg-accent-400/15 blur-[120px] dark:bg-accent-600/20" />
+        <div className="absolute right-[-6%] bottom-24 h-80 w-80 rounded-full bg-accent-300/15 blur-[130px] dark:bg-accent-700/15" />
+      </div>
+
       <div className="container-page">
         <Reveal>
           <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
@@ -106,13 +113,6 @@ export function About() {
               </div>
             )}
 
-            {/* KONTAKT zarovnaný na spodek (desktop) – levý sloupec se roztáhne
-                na výšku pravého, takže spodní hrana = spodek boxu Praxe. */}
-            <SectionJump
-              href="#contact"
-              label={tr.nav.contact}
-              className="mt-auto hidden pt-12 lg:flex"
-            />
           </div>
 
           {/* Timeline */}
@@ -133,12 +133,14 @@ export function About() {
             </Reveal>
           </div>
         </div>
-        {/* mobil: KONTAKT až pod vším */}
-        <SectionJump
-          href="#contact"
-          label={tr.nav.contact}
-          className="mt-10 flex sm:mt-12 lg:hidden"
-        />
+
+        {/* Ověřeno ve výuce – dřív samostatná sekce, teď součást „O mně" (jeden
+            důvěryhodnostní blok: kdo jsem → co reálně učím), viz council. */}
+        <div className="mt-16 border-t border-black/10 pt-12 dark:border-white/10 sm:mt-20 sm:pt-14">
+          <CurriculumBody />
+        </div>
+
+        <SectionJump href="#contact" label={tr.nav.contact} className="mt-10 flex sm:mt-12" />
       </div>
     </section>
   );

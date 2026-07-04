@@ -4,7 +4,6 @@ import { Hero } from "@/components/Hero";
 import { MaterialsTiles } from "@/components/MaterialsTiles";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
-import { Curriculum } from "@/components/Curriculum";
 import { Footer } from "@/components/Footer";
 import type { Lang } from "@/lib/content";
 
@@ -22,7 +21,6 @@ export function Site({
       <main id="main">
         <Hero />
         <MaterialsTiles tiles={toolCounts} />
-        <Curriculum />
         <About />
         <Contact />
       </main>

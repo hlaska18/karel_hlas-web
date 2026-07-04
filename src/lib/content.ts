@@ -1051,8 +1051,8 @@ export const t: Record<Lang, Dict> = {
         "Pracovní listy, testy, plány hodin i metodika — Excel, Word, Python, Power BI a další. Ke stažení a úpravě, bez přihlašování.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       ctaLessons: "Procházet banku materiálů",
-      ctaContact: "Tematický plán",
-      scroll: "Výuka",
+      ctaContact: "O mně",
+      scroll: "Materiály",
     },
     about: {
       kicker: "O mně",
@@ -1097,10 +1097,10 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     lessons: {
-      kicker: "Plán výuky po ročnících",
+      kicker: "Ověřeno ve výuce",
       heading: "Výuka informatiky",
       intro:
-        "Vyber si svůj ročník — rozbalí se časová osa témat, kterými během roku projdeme. Materiály ke stažení najdeš v bance výše.",
+        "Takhle vypadá moje výuka v praxi — vyber si ročník a rozbalí se časová osa témat, kterými se svými třídami během roku projdeme.",
       subject: "Informatika",
       pick: "Klikni pro zobrazení časové osy",
       goalLabel: "Cíl",
@@ -1152,8 +1152,8 @@ export const t: Record<Lang, Dict> = {
         "Worksheets, tests, lesson plans and teaching notes — Excel, Word, Python, Power BI and more. Free to download and edit.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       ctaLessons: "Browse the material bank",
-      ctaContact: "Curriculum plan",
-      scroll: "Lessons",
+      ctaContact: "About me",
+      scroll: "Materials",
     },
     about: {
       kicker: "About me",
@@ -1193,10 +1193,10 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     lessons: {
-      kicker: "Curriculum by year",
+      kicker: "Proven in the classroom",
       heading: "Computer Science lessons",
       intro:
-        "Pick your year — a timeline of the topics we'll cover during the year unfolds. Downloadable materials are in the bank above.",
+        "This is what my teaching looks like in practice — pick a year and a timeline of the topics I actually cover with my classes unfolds.",
       subject: "Computer Science",
       pick: "Click to reveal the timeline",
       goalLabel: "Goal",

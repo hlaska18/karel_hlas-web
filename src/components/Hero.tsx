@@ -39,7 +39,7 @@ export function Hero() {
               icon={<Library className="h-4 w-4" />}
             />
             <InteractiveHoverButton
-              href="#vyuka"
+              href="#about"
               text={tr.hero.ctaContact}
               icon={<ArrowRight className="h-4 w-4" />}
             />
@@ -51,7 +51,7 @@ export function Hero() {
 
       {/* Scroll indikátor */}
       <a
-        href="#vyuka"
+        href="#banka"
         className="container-page hidden items-center gap-2 pb-10 text-xs font-medium uppercase tracking-widest text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400 dark:hover:text-accent-400 sm:flex"
       >
         <ArrowDown className="h-4 w-4 animate-bounce" />

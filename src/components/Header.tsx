@@ -23,8 +23,8 @@ export function Header() {
 
   const links = [
     { href: "#about", label: tr.nav.about },
-    { href: "#contact", label: tr.nav.contact },
     { href: "#vyuka", label: tr.nav.lessons },
+    { href: "#contact", label: tr.nav.contact },
     { href: bankHref, label: tr.nav.bank },
   ];
 
@@ -54,16 +54,16 @@ export function Header() {
             icon={<User className="h-4 w-4" />}
           />
           <InteractiveHoverButton
-            href="#contact"
-            text={tr.nav.contact}
-            size="sm"
-            icon={<Mail className="h-4 w-4" />}
-          />
-          <InteractiveHoverButton
             href="#vyuka"
             text={tr.nav.lessons}
             size="sm"
             icon={<GraduationCap className="h-4 w-4" />}
+          />
+          <InteractiveHoverButton
+            href="#contact"
+            text={tr.nav.contact}
+            size="sm"
+            icon={<Mail className="h-4 w-4" />}
           />
           <InteractiveHoverButton
             href={bankHref}
