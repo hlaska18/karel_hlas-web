@@ -5,6 +5,7 @@ import { SITE, type Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
 import { BankBrowser } from "@/components/BankBrowser";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { LangToggle } from "@/components/LangToggle";
 import { Footer } from "@/components/Footer";
 
 const STR: Record<
@@ -35,6 +36,7 @@ const STR: Record<
 export function BankPage({ lang, items }: { lang: Lang; items: BankItem[] }) {
   const s = STR[lang];
   const homeHref = lang === "en" ? "/en" : "/";
+  const counterpartPath = lang === "en" ? "/pro-ucitele" : "/en/pro-ucitele";
 
   return (
     <LanguageProvider lang={lang}>
@@ -56,6 +58,7 @@ export function BankPage({ lang, items }: { lang: Lang; items: BankItem[] }) {
             >
               <ArrowLeft className="h-4 w-4" /> {s.back}
             </Link>
+            <LangToggle counterpartPath={counterpartPath} />
             <ThemeToggle />
           </div>
         </div>
