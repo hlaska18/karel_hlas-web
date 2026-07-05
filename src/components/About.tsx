@@ -30,18 +30,18 @@ export function About() {
           </h2>
         </Reveal>
 
-        <div className="mt-12 grid gap-12 lg:grid-cols-[1.05fr_0.95fr]">
+        <div className="mt-12 grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
           {/* Text */}
           <div className="flex flex-col">
             {/* Fotka + text vedle sebe (na mobilu pod sebou) – žádné prázdné místo vedle fotky. */}
-            <div className="flex flex-col gap-7 sm:flex-row sm:items-start sm:gap-8">
+            <div className="flex flex-col gap-7 sm:flex-row sm:items-center sm:gap-10">
               <Reveal delay={0.05} className="shrink-0">
                 <Image
                   src={SITE.photo}
                   alt={SITE.fullName}
                   width={733}
                   height={1100}
-                  className="h-auto w-40 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-48"
+                  className="h-auto w-52 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-64"
                 />
               </Reveal>
               <Reveal

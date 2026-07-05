@@ -1058,8 +1058,8 @@ export const t: Record<Lang, Dict> = {
       kicker: "O mně",
       heading: "Učitel, kterého baví technologie",
       paragraphs: [
-        "Jsem učitel informatiky a angličtiny na Střední průmyslové škole strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum se zaměřením na programování a robotiku a poté bakalářské i magisterské studium na Pedagogické fakultě Jihočeské univerzity.",
-        "Začínal jsem jako asistent pedagoga a učitel informatiky na druhém stupni základní školy, dnes učím na střední škole. Zajímají mě moderní technologie, vzdělávání, tvorba webových stránek a programování. Ve výuce hledám praktické a srozumitelné způsoby, jak žákům přiblížit nové poznatky. Ve volném čase mě baví bowling, ve kterém se pořád snažím zlepšovat — a tato stránka je prostor, kde představuji své zájmy, projekty a práci.",
+        "Učím informatiku a angličtinu na SPŠ strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum a učitelství na Pedagogické fakultě Jihočeské univerzity.",
+        "Ve výuce hledám praktické a srozumitelné cesty, jak žákům přiblížit moderní technologie. Mimo školu mě baví tvorba webů, programování a bowling.",
       ],
       eduTitle: "Vzdělání",
       expTitle: "Praxe",
@@ -1159,8 +1159,8 @@ export const t: Record<Lang, Dict> = {
       kicker: "About me",
       heading: "A teacher who loves technology",
       paragraphs: [
-        "I'm a teacher of Computer Science and English Language at the Secondary Technical School of Mechanical and Civil Engineering in Tábor, Czech Republic. I studied the Technical Lyceum here, specialising in programming and robotics, and then completed both my Bachelor's and Master's degrees at the Faculty of Education, University of South Bohemia.",
-        "I started out as a teaching assistant and Computer Science teacher at primary and lower secondary school; today I teach at upper-secondary level. I'm passionate about modern technology, education, web development and programming. In my lessons I look for practical, clear ways to introduce new ideas. In my free time I enjoy bowling, always trying to improve — and this site is a space where I present my interests, projects and work.",
+        "I teach Computer Science and English at the Secondary Technical School of Mechanical and Civil Engineering in Tábor, Czech Republic. I studied the Technical Lyceum here and went on to a teaching degree at the Faculty of Education, University of South Bohemia.",
+        "In my lessons I look for practical, clear ways to bring modern technology closer to students. Outside school I enjoy web development, programming and bowling.",
       ],
       eduTitle: "Education",
       expTitle: "Experience",
