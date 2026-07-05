@@ -33,23 +33,26 @@ export function About() {
         <div className="mt-12 grid gap-12 lg:grid-cols-[1.05fr_0.95fr]">
           {/* Text */}
           <div className="flex flex-col">
-            <Reveal delay={0.05}>
-              <Image
-                src={SITE.photo}
-                alt={SITE.fullName}
-                width={733}
-                height={1100}
-                className="mb-7 h-auto w-40 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-48"
-              />
-            </Reveal>
-            <Reveal
-              delay={0.1}
-              className="space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg"
-            >
-              {a.paragraphs.map((p, i) => (
-                <p key={i}>{p}</p>
-              ))}
-            </Reveal>
+            {/* Fotka + text vedle sebe (na mobilu pod sebou) – žádné prázdné místo vedle fotky. */}
+            <div className="flex flex-col gap-7 sm:flex-row sm:items-start sm:gap-8">
+              <Reveal delay={0.05} className="shrink-0">
+                <Image
+                  src={SITE.photo}
+                  alt={SITE.fullName}
+                  width={733}
+                  height={1100}
+                  className="h-auto w-40 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-48"
+                />
+              </Reveal>
+              <Reveal
+                delay={0.1}
+                className="min-w-0 flex-1 space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg"
+              >
+                {a.paragraphs.map((p, i) => (
+                  <p key={i}>{p}</p>
+                ))}
+              </Reveal>
+            </div>
 
             <div className="mt-8">
               <Reveal delay={0.1}>
