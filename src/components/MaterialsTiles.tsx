@@ -1,11 +1,11 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
 import { Files, ArrowRight } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { Reveal } from "@/components/Reveal";
-import { toolLabel, countMaterials, TOOL_ICON } from "@/lib/bankLabels";
+import { toolLabel, countMaterials } from "@/lib/bankLabels";
+import { ToolGlassIcon, hasToolGlassIcon } from "@/components/ToolGlassIcon";
 
 /** Dlaždice oborů na homepage = „ochutnávka" banky; proklik rovnou na obor. */
 export function MaterialsTiles({
@@ -35,21 +35,14 @@ export function MaterialsTiles({
 
         <Reveal as="ul" stagger className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
           {tiles.map((t) => {
-            const iconSrc = TOOL_ICON[t.tool];
             return (
               <li key={t.tool}>
                 <Link
                   href={`${bankHref}?tema=${encodeURIComponent(t.tool)}`}
                   className="glass group flex h-full flex-col items-start gap-3 rounded-2xl p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
                 >
-                  {iconSrc ? (
-                    <Image
-                      src={iconSrc}
-                      alt=""
-                      width={112}
-                      height={112}
-                      className="h-14 w-14 rounded-xl object-cover ring-1 ring-black/20 transition duration-300 group-hover:scale-105 group-hover:ring-accent-500/40 dark:ring-white/10"
-                    />
+                  {hasToolGlassIcon(t.tool) ? (
+                    <ToolGlassIcon tool={t.tool} />
                   ) : (
                     <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-500/15 text-accent-600 transition group-hover:bg-accent-600 group-hover:text-white dark:text-accent-300">
                       <Files className="h-6 w-6" />
