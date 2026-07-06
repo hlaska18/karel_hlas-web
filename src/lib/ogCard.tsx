@@ -19,8 +19,8 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
         padding: "64px 72px",
         backgroundColor: "#070a09",
         backgroundImage:
-          "radial-gradient(circle at 12% 10%, rgba(16,185,129,0.35), transparent 55%), " +
-          "radial-gradient(circle at 88% 85%, rgba(16,185,129,0.22), transparent 55%)",
+          "radial-gradient(circle at 12% 10%, rgba(20,178,139,0.35), transparent 55%), " +
+          "radial-gradient(circle at 88% 85%, rgba(20,178,139,0.22), transparent 55%)",
         fontFamily: "sans-serif",
       }}
     >
@@ -33,7 +33,7 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
             width: 56,
             height: 56,
             borderRadius: 16,
-            backgroundImage: "linear-gradient(135deg, #10b981, #059669)",
+            backgroundImage: "linear-gradient(135deg, #14b28b, #0b9273)",
             color: "#ffffff",
             fontSize: 22,
             fontWeight: 700,
@@ -41,7 +41,7 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
         >
           KH
         </div>
-        <div style={{ display: "flex", color: "#a7f3d0", fontSize: 28, fontWeight: 600 }}>
+        <div style={{ display: "flex", color: "#a8f0da", fontSize: 28, fontWeight: 600 }}>
           {opts.byline}
         </div>
       </div>
@@ -73,11 +73,11 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
                 display: "flex",
                 padding: "10px 24px",
                 borderRadius: 9999,
-                backgroundColor: "rgba(16,185,129,0.15)",
+                backgroundColor: "rgba(20,178,139,0.15)",
                 borderWidth: 1,
                 borderStyle: "solid",
-                borderColor: "rgba(16,185,129,0.4)",
-                color: "#6ee7b7",
+                borderColor: "rgba(20,178,139,0.4)",
+                color: "#6fe3c2",
                 fontSize: 22,
                 fontWeight: 600,
               }}

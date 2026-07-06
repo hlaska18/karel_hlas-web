@@ -6,6 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { Reveal } from "@/components/Reveal";
 import { toolLabel, countMaterials } from "@/lib/bankLabels";
 import { ToolGlassIcon, hasToolGlassIcon } from "@/components/ToolGlassIcon";
+import { SectionKicker } from "@/components/SectionKicker";
 
 /** Dlaždice oborů na homepage = „ochutnávka" banky; proklik rovnou na obor. */
 export function MaterialsTiles({
@@ -22,9 +23,7 @@ export function MaterialsTiles({
     <section id="banka" className="relative py-10 sm:py-14">
       <div className="container-page">
         <Reveal>
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
-            {m.kicker}
-          </p>
+          <SectionKicker no="01">{m.kicker}</SectionKicker>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {m.heading}
           </h2>

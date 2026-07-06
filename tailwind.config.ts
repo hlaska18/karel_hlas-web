@@ -19,18 +19,20 @@ const config: Config = {
         display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
       colors: {
+        // Vlastní malachitová řada – vědomý posun od defaultní Tailwind
+        // `emerald` (kterou má každý AI web), o pár stupňů k modrozelené.
         accent: {
-          50: "#ecfdf5",
-          100: "#d1fae5",
-          200: "#a7f3d0",
-          300: "#6ee7b7",
-          400: "#34d399",
-          500: "#10b981",
-          600: "#059669",
-          700: "#047857",
-          800: "#065f46",
-          900: "#064e3b",
-          950: "#022c22",
+          50: "#edfdf7",
+          100: "#d3f8ec",
+          200: "#a8f0da",
+          300: "#6fe3c2",
+          400: "#35cba4",
+          500: "#14b28b",
+          600: "#0b9273",
+          700: "#0a745d",
+          800: "#0a5c4b",
+          900: "#094c3f",
+          950: "#032b23",
         },
       },
       keyframes: {

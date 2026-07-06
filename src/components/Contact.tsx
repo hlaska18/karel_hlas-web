@@ -15,6 +15,7 @@ import { useLang } from "@/lib/i18n";
 import { SITE, SOCIALS } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
+import { SectionKicker } from "@/components/SectionKicker";
 
 export function Contact() {
   const { tr } = useLang();
@@ -24,9 +25,7 @@ export function Contact() {
     <section id="contact" className="py-10 sm:py-14">
       <div className="container-page">
         <Reveal>
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
-            {c.kicker}
-          </p>
+          <SectionKicker no="03">{c.kicker}</SectionKicker>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {c.heading}
           </h2>
@@ -104,7 +103,7 @@ export function Contact() {
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass-soft group inline-flex items-center gap-2.5 rounded-full px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:-translate-y-0.5 hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
+                className="glass-soft group inline-flex items-center gap-2.5 rounded-lg px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:-translate-y-0.5 hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
               >
                 {s.network === "instagram" ? (
                   <Instagram className="h-4 w-4" />
@@ -116,7 +115,7 @@ export function Contact() {
             ))}
           </Reveal>
         </div>
-        <SectionJump href="#vyuka" label={tr.nav.lessons} />
+        <SectionJump href="#top" label={tr.footer.top} direction="up" />
       </div>
     </section>
   );

@@ -6,6 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { BADGES, SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
+import { SectionKicker } from "@/components/SectionKicker";
 import { CurriculumBody } from "@/components/Curriculum";
 
 export function About() {
@@ -22,9 +23,7 @@ export function About() {
 
       <div className="container-page">
         <Reveal>
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
-            {a.kicker}
-          </p>
+          <SectionKicker no="02">{a.kicker}</SectionKicker>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
             {a.heading}
           </h2>
@@ -111,7 +110,7 @@ export function About() {
                 {a.interests.map((tag) => (
                   <li
                     key={tag}
-                    className="glass-soft rounded-full px-4 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
+                    className="glass-soft rounded-lg px-4 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
                   >
                     {tag}
                   </li>
