@@ -33,7 +33,7 @@ export function About() {
         <div className="mt-12 grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
           {/* Text */}
           <div className="flex flex-col">
-            {/* Fotka + text vedle sebe (na mobilu pod sebou) – žádné prázdné místo vedle fotky. */}
+            {/* Fotka + (text a odznaky) vedle sebe (na mobilu pod sebou). */}
             <div className="flex flex-col gap-7 sm:flex-row sm:items-center sm:gap-10">
               <Reveal delay={0.05} className="shrink-0">
                 <Image
@@ -41,17 +41,64 @@ export function About() {
                   alt={SITE.fullName}
                   width={733}
                   height={1100}
-                  className="h-auto w-52 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-64"
+                  className="h-auto w-52 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-72"
                 />
               </Reveal>
-              <Reveal
-                delay={0.1}
-                className="min-w-0 flex-1 space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg"
-              >
-                {a.paragraphs.map((p, i) => (
-                  <p key={i}>{p}</p>
-                ))}
-              </Reveal>
+              <div className="min-w-0 flex-1">
+                <Reveal
+                  delay={0.1}
+                  className="space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg"
+                >
+                  {a.paragraphs.map((p, i) => (
+                    <p key={i}>{p}</p>
+                  ))}
+                </Reveal>
+
+                {/* Odznaky pod textem vedle fotky (menší, 2 řádky) – vyplní blok do výšky fotky. */}
+                {BADGES.length > 0 && (
+                  <div className="mt-7">
+                    <Reveal delay={0.1}>
+                      <p className="text-sm font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+                        {a.badgesTitle}
+                      </p>
+                    </Reveal>
+                    <Reveal as="ul" stagger className="mt-3 flex flex-wrap items-center gap-3">
+                      {BADGES.map((b) => {
+                        const img = (
+                          <Image
+                            src={b.src}
+                            alt={b.alt}
+                            width={72}
+                            height={72}
+                            className={`h-12 w-12 sm:h-14 sm:w-14 ${
+                              b.circle ? "rounded-full object-cover" : "object-contain"
+                            } drop-shadow-sm`}
+                          />
+                        );
+                        return (
+                          <li key={b.src} className="transition hover:-translate-y-1">
+                            {b.href ? (
+                              <a
+                                href={b.href}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                title={b.alt}
+                                className="block cursor-pointer"
+                              >
+                                {img}
+                              </a>
+                            ) : (
+                              <span title={b.alt} className="block">
+                                {img}
+                              </span>
+                            )}
+                          </li>
+                        );
+                      })}
+                    </Reveal>
+                  </div>
+                )}
+              </div>
             </div>
 
             <div className="mt-8">
@@ -71,51 +118,6 @@ export function About() {
                 ))}
               </Reveal>
             </div>
-
-            {BADGES.length > 0 && (
-              <div className="mt-8">
-                <Reveal delay={0.1}>
-                  <p className="text-sm font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
-                    {a.badgesTitle}
-                  </p>
-                </Reveal>
-                <Reveal as="ul" stagger className="mt-4 flex flex-wrap items-center gap-4">
-                  {BADGES.map((b) => {
-                    const img = (
-                      <Image
-                        src={b.src}
-                        alt={b.alt}
-                        width={72}
-                        height={72}
-                        className={`h-16 w-16 ${
-                          b.circle ? "rounded-full object-cover" : "object-contain"
-                        } drop-shadow-sm`}
-                      />
-                    );
-                    return (
-                      <li key={b.src} className="transition hover:-translate-y-1">
-                        {b.href ? (
-                          <a
-                            href={b.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            title={b.alt}
-                            className="block cursor-pointer"
-                          >
-                            {img}
-                          </a>
-                        ) : (
-                          <span title={b.alt} className="block">
-                            {img}
-                          </span>
-                        )}
-                      </li>
-                    );
-                  })}
-                </Reveal>
-              </div>
-            )}
-
           </div>
 
           {/* Timeline */}
