@@ -69,6 +69,12 @@ export function Contact() {
               href={`mailto:${SITE.email}`}
             />
             <ContactRow
+              icon={<Mail className="h-5 w-5" />}
+              label={c.emailPersonalLabel}
+              value={SITE.emailPersonal}
+              href={`mailto:${SITE.emailPersonal}`}
+            />
+            <ContactRow
               icon={<Phone className="h-5 w-5" />}
               label={c.phoneLabel}
               value={SITE.phoneDisplay}

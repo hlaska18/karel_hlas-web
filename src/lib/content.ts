@@ -16,6 +16,7 @@ export const SITE = {
   domain: "karelhlas.vercel.app",
   url: "https://karelhlas.vercel.app",
   email: "hlas@sps-tabor.cz",
+  emailPersonal: "hlaska18@gmail.com",
   phoneDisplay: "381 500 025",
   phoneHref: "+420381500025",
   cabinet: "A252",
@@ -1031,6 +1032,7 @@ type Dict = {
     school: string;
     addressLabel: string;
     emailLabel: string;
+    emailPersonalLabel: string;
     phoneLabel: string;
     cabinetLabel: string;
     consultLabel: string;
@@ -1128,7 +1130,8 @@ export const t: Record<Lang, Dict> = {
         "Nejraději vše domluvíme osobně nebo e-mailem. Konzultace si rezervujte přes EduPage.",
       school: "Střední průmyslová škola strojní a stavební, Tábor",
       addressLabel: "Adresa",
-      emailLabel: "E-mail",
+      emailLabel: "Školní e-mail",
+      emailPersonalLabel: "Osobní e-mail",
       phoneLabel: "Telefon",
       cabinetLabel: "Kabinet",
       consultLabel: "Konzultace",
@@ -1224,7 +1227,8 @@ export const t: Record<Lang, Dict> = {
         "I prefer to arrange things in person or by e-mail. Book a consultation via EduPage.",
       school: "Secondary Technical School of Engineering and Construction, Tábor",
       addressLabel: "Address",
-      emailLabel: "E-mail",
+      emailLabel: "School e-mail",
+      emailPersonalLabel: "Personal e-mail",
       phoneLabel: "Phone",
       cabinetLabel: "Office",
       consultLabel: "Consultations",
