@@ -37,6 +37,8 @@ export type Social = {
 
 export const SOCIALS: Social[] = [
   { network: "youtube", handle: "@karelhlas", href: "https://www.youtube.com/@karelhlas" },
+  { network: "instagram", handle: "@karelbowls", href: "https://instagram.com/karelbowls" },
+  { network: "instagram", handle: "@viewsbykarel", href: "https://instagram.com/viewsbykarel" },
 ];
 
 /**

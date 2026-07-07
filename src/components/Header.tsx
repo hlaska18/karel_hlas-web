@@ -23,9 +23,9 @@ export function Header() {
   // One-page: všechno jsou kotvy na téže stránce (pořadí sekcí 01–04).
   const links = [
     { href: "#banka", label: tr.nav.bank },
+    { href: "#vyuka", label: tr.nav.lessons },
     { href: "#about", label: tr.nav.about },
     { href: "#contact", label: tr.nav.contact },
-    { href: "#vyuka", label: tr.nav.lessons },
   ];
 
   return (
@@ -54,6 +54,12 @@ export function Header() {
             icon={<Library className="h-4 w-4" />}
           />
           <InteractiveHoverButton
+            href="#vyuka"
+            text={tr.nav.lessons}
+            size="sm"
+            icon={<GraduationCap className="h-4 w-4" />}
+          />
+          <InteractiveHoverButton
             href="#about"
             text={tr.nav.about}
             size="sm"
@@ -64,12 +70,6 @@ export function Header() {
             text={tr.nav.contact}
             size="sm"
             icon={<Mail className="h-4 w-4" />}
-          />
-          <InteractiveHoverButton
-            href="#vyuka"
-            text={tr.nav.lessons}
-            size="sm"
-            icon={<GraduationCap className="h-4 w-4" />}
           />
         </div>
 

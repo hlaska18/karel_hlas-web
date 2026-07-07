@@ -17,9 +17,9 @@ export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
       <main id="main">
         <Hero />
         <BankSection items={items} />
+        <Curriculum />
         <About />
         <Contact />
-        <Curriculum />
       </main>
       <Footer />
     </LanguageProvider>

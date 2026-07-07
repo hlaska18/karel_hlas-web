@@ -25,7 +25,7 @@ export function Contact() {
     <section id="contact" className="py-10 sm:py-14">
       <div className="container-page">
         <Reveal>
-          <SectionKicker no="03">{c.kicker}</SectionKicker>
+          <SectionKicker no="04">{c.kicker}</SectionKicker>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {c.heading}
           </h2>

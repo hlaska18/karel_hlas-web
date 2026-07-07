@@ -28,7 +28,7 @@ export function Curriculum() {
 
       <div className="container-page">
         <Reveal>
-          <SectionKicker no="04">{l.kicker}</SectionKicker>
+          <SectionKicker no="02">{l.kicker}</SectionKicker>
           <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
             {l.heading}
           </h2>
@@ -80,7 +80,7 @@ export function Curriculum() {
           ))}
         </div>
 
-        <SectionJump href="#top" label={tr.footer.top} direction="up" />
+        <SectionJump href="#about" label={tr.nav.about} />
       </div>
     </section>
   );

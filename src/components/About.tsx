@@ -22,7 +22,7 @@ export function About() {
 
       <div className="container-page">
         <Reveal>
-          <SectionKicker no="02">{a.kicker}</SectionKicker>
+          <SectionKicker no="03">{a.kicker}</SectionKicker>
           <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
             {a.heading}
           </h2>
