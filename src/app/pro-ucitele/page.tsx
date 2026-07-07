@@ -1,17 +1,19 @@
-import type { Metadata } from "next";
-import { getBankItems } from "@/lib/materials";
-import { BankPage } from "@/components/BankPage";
+import { permanentRedirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Banka materiálů pro učitele",
-  description:
-    "Volně stažitelné materiály do hodin informatiky: pracovní listy, testy, metodika a plány hodin. Procházej podle nástroje (Excel, Word, Python, Power BI) nebo hledej. Bez přihlašování.",
-  alternates: {
-    canonical: "/pro-ucitele",
-    languages: { cs: "/pro-ucitele", en: "/en/pro-ucitele", "x-default": "/pro-ucitele" },
-  },
-};
-
-export default function ProUcitelePage() {
-  return <BankPage lang="cs" items={getBankItems()} />;
+/**
+ * Banka je teď sekce homepage (one-page). Tahle stará adresa proto trvale
+ * přesměrovává na /#banka a zachovává sdílené parametry (?tema=&lekce=),
+ * aby dřív rozeslané odkazy na konkrétní lekce dál fungovaly.
+ */
+export default function ProUcitelePage({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
+  const qs = new URLSearchParams(
+    Object.entries(searchParams).flatMap(([k, v]) =>
+      v == null ? [] : Array.isArray(v) ? v.map((x) => [k, x] as [string, string]) : [[k, v] as [string, string]],
+    ),
+  ).toString();
+  permanentRedirect(`/${qs ? `?${qs}` : ""}#banka`);
 }

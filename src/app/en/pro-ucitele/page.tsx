@@ -1,17 +1,15 @@
-import type { Metadata } from "next";
-import { getBankItems } from "@/lib/materials";
-import { BankPage } from "@/components/BankPage";
+import { permanentRedirect } from "next/navigation";
 
-export const metadata: Metadata = {
-  title: "Material bank for CS teachers",
-  description:
-    "Free downloadable materials for Computer Science lessons: worksheets, tests, teaching notes and lesson plans. Browse by tool (Excel, Word, Python, Power BI) or search. No login required.",
-  alternates: {
-    canonical: "/en/pro-ucitele",
-    languages: { cs: "/pro-ucitele", en: "/en/pro-ucitele", "x-default": "/pro-ucitele" },
-  },
-};
-
-export default function ProUciteleEnPage() {
-  return <BankPage lang="en" items={getBankItems()} />;
+/** EN protějšek – banka je teď sekce /en (#banka). Viz /pro-ucitele. */
+export default function ProUciteleEnPage({
+  searchParams,
+}: {
+  searchParams: Record<string, string | string[] | undefined>;
+}) {
+  const qs = new URLSearchParams(
+    Object.entries(searchParams).flatMap(([k, v]) =>
+      v == null ? [] : Array.isArray(v) ? v.map((x) => [k, x] as [string, string]) : [[k, v] as [string, string]],
+    ),
+  ).toString();
+  permanentRedirect(`/en${qs ? `?${qs}` : ""}#banka`);
 }

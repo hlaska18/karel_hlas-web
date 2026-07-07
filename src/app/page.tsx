@@ -1,6 +1,6 @@
 import { Site } from "@/components/Site";
-import { getBankToolCounts } from "@/lib/materials";
+import { getBankItems } from "@/lib/materials";
 
 export default function Home() {
-  return <Site lang="cs" toolCounts={getBankToolCounts()} />;
+  return <Site lang="cs" items={getBankItems()} />;
 }

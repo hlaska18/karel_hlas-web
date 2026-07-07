@@ -5,32 +5,40 @@ import { Target, GraduationCap, ChevronDown, ClipboardList } from "lucide-react"
 import { useLang } from "@/lib/i18n";
 import { COURSES, type Lang, type CurriculumItem, type Course } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
+import { SectionJump } from "@/components/SectionJump";
+import { SectionKicker } from "@/components/SectionKicker";
 
 /**
- * Obsah „Ověřeno ve výuce" — bez vlastní <section>/pozadí/nadpisu sekce,
- * vkládá se dovnitř About (jedna sdílená sekce „O mně", ne dvě konkurenční).
+ * Sekce „Ověřeno ve výuce" (04) — Karlův reálný plán po ročnících jako důkaz
+ * praxe. Samostatná sekce až za Kontaktem (one-page pořadí: Banka → O mně →
+ * Kontakt → Výuka).
  */
-export function CurriculumBody() {
+export function Curriculum() {
   const { lang, tr } = useLang();
   const l = tr.lessons;
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <div id="vyuka">
-      <Reveal>
-        <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
-          {l.kicker}
-        </p>
-        <h3 className="mt-3 font-display text-2xl font-bold tracking-tight sm:text-3xl">
-          {l.heading}
-        </h3>
-        <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-          {l.intro}
-        </p>
-      </Reveal>
+    <section id="vyuka" className="relative py-10 sm:py-14">
+      {/* dekorativní pozadí pro sklo */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
+        <div className="absolute left-[-6%] top-24 h-72 w-72 rounded-full bg-accent-400/15 blur-[120px] dark:bg-accent-600/20" />
+        <div className="absolute right-[-6%] bottom-24 h-80 w-80 rounded-full bg-accent-300/15 blur-[130px] dark:bg-accent-700/15" />
+      </div>
 
-      {/* výběr ročníku */}
-      <Reveal as="div" stagger className="mt-10 flex flex-wrap gap-4">
+      <div className="container-page">
+        <Reveal>
+          <SectionKicker no="04">{l.kicker}</SectionKicker>
+          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
+            {l.heading}
+          </h2>
+          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
+            {l.intro}
+          </p>
+        </Reveal>
+
+        {/* výběr ročníku */}
+        <Reveal as="div" stagger className="mt-10 flex flex-wrap gap-4">
         {COURSES.map((course) => {
           const open = openId === course.id;
           return (
@@ -65,13 +73,16 @@ export function CurriculumBody() {
         })}
       </Reveal>
 
-      {/* časové osy – obsah se renderuje až po otevření (menší HTML = rychlejší načtení) */}
-      <div>
-        {COURSES.map((course) => (
-          <CourseTimeline key={course.id} course={course} open={openId === course.id} l={l} lang={lang} />
-        ))}
+        {/* časové osy – obsah se renderuje až po otevření (menší HTML = rychlejší načtení) */}
+        <div>
+          {COURSES.map((course) => (
+            <CourseTimeline key={course.id} course={course} open={openId === course.id} l={l} lang={lang} />
+          ))}
+        </div>
+
+        <SectionJump href="#top" label={tr.footer.top} direction="up" />
       </div>
-    </div>
+    </section>
   );
 }
 
@@ -119,9 +130,9 @@ function Timeline({
             {item.month[lang]}
           </span>
 
-          <h4 className="mt-3 font-display text-xl font-semibold tracking-tight text-zinc-900 dark:text-white sm:text-2xl">
+          <h3 className="mt-3 font-display text-xl font-semibold tracking-tight text-zinc-900 dark:text-white sm:text-2xl">
             {item.title[lang]}
-          </h4>
+          </h3>
 
           {item.goal[lang] && (
             <p className="mt-2 flex items-start gap-2 text-sm text-zinc-600 dark:text-zinc-400">

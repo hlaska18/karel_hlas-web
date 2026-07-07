@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Site } from "@/components/Site";
-import { getBankToolCounts } from "@/lib/materials";
+import { getBankItems } from "@/lib/materials";
 
 export const metadata: Metadata = {
   title: { absolute: "Ready-made materials for CS lessons — Karel Hlas" },
@@ -30,5 +30,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomeEn() {
-  return <Site lang="en" toolCounts={getBankToolCounts()} />;
+  return <Site lang="en" items={getBankItems()} />;
 }

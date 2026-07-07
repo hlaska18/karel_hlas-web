@@ -5,8 +5,8 @@ import { useLang } from "@/lib/i18n";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Hero() {
-  const { lang, tr } = useLang();
-  const bankHref = lang === "en" ? "/en/pro-ucitele" : "/pro-ucitele";
+  const { tr } = useLang();
+  const bankHref = "#banka";
 
   return (
     <section id="top" className="relative overflow-hidden pt-28 sm:pt-32">

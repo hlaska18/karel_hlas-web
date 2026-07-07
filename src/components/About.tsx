@@ -7,7 +7,6 @@ import { BADGES, SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
 import { SectionKicker } from "@/components/SectionKicker";
-import { CurriculumBody } from "@/components/Curriculum";
 
 export function About() {
   const { tr } = useLang();
@@ -40,7 +39,7 @@ export function About() {
                   alt={SITE.fullName}
                   width={733}
                   height={1100}
-                  className="h-auto w-52 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-72"
+                  className="h-auto w-56 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-80"
                 />
               </Reveal>
               <div className="min-w-0 flex-1">
@@ -136,12 +135,6 @@ export function About() {
               />
             </Reveal>
           </div>
-        </div>
-
-        {/* Ověřeno ve výuce – dřív samostatná sekce, teď součást „O mně" (jeden
-            důvěryhodnostní blok: kdo jsem → co reálně učím), viz council. */}
-        <div className="mt-16 border-t border-black/10 pt-12 dark:border-white/10 sm:mt-20 sm:pt-14">
-          <CurriculumBody />
         </div>
 
         <SectionJump href="#contact" label={tr.nav.contact} className="mt-10 flex sm:mt-12" />

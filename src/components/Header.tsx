@@ -9,10 +9,9 @@ import { LangToggle } from "@/components/LangToggle";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Header() {
-  const { lang, tr } = useLang();
+  const { tr } = useLang();
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  const bankHref = lang === "en" ? "/en/pro-ucitele" : "/pro-ucitele";
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -21,11 +20,12 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // One-page: všechno jsou kotvy na téže stránce (pořadí sekcí 01–04).
   const links = [
+    { href: "#banka", label: tr.nav.bank },
     { href: "#about", label: tr.nav.about },
-    { href: "#vyuka", label: tr.nav.lessons },
     { href: "#contact", label: tr.nav.contact },
-    { href: bankHref, label: tr.nav.bank },
+    { href: "#vyuka", label: tr.nav.lessons },
   ];
 
   return (
@@ -48,16 +48,16 @@ export function Header() {
         {/* Desktop nav – stejná pilulková tlačítka jako v úvodu (InteractiveHoverButton) */}
         <div className="hidden items-center gap-2.5 lg:flex">
           <InteractiveHoverButton
+            href="#banka"
+            text={tr.nav.bank}
+            size="sm"
+            icon={<Library className="h-4 w-4" />}
+          />
+          <InteractiveHoverButton
             href="#about"
             text={tr.nav.about}
             size="sm"
             icon={<User className="h-4 w-4" />}
-          />
-          <InteractiveHoverButton
-            href="#vyuka"
-            text={tr.nav.lessons}
-            size="sm"
-            icon={<GraduationCap className="h-4 w-4" />}
           />
           <InteractiveHoverButton
             href="#contact"
@@ -66,10 +66,10 @@ export function Header() {
             icon={<Mail className="h-4 w-4" />}
           />
           <InteractiveHoverButton
-            href={bankHref}
-            text={tr.nav.bank}
+            href="#vyuka"
+            text={tr.nav.lessons}
             size="sm"
-            icon={<Library className="h-4 w-4" />}
+            icon={<GraduationCap className="h-4 w-4" />}
           />
         </div>
 
