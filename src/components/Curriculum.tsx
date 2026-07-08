@@ -19,13 +19,7 @@ export function Curriculum() {
   const [openId, setOpenId] = useState<string | null>(null);
 
   return (
-    <section id="vyuka" className="relative py-10 sm:py-14">
-      {/* dekorativní pozadí pro sklo */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
-        <div className="absolute left-[-6%] top-24 h-72 w-72 rounded-full bg-accent-400/15 blur-[120px] dark:bg-accent-600/20" />
-        <div className="absolute right-[-6%] bottom-24 h-80 w-80 rounded-full bg-accent-300/15 blur-[130px] dark:bg-accent-700/15" />
-      </div>
-
+    <section id="vyuka" className="py-10 sm:py-14">
       <div className="container-page">
         <Reveal>
           <SectionKicker no="02">{l.kicker}</SectionKicker>

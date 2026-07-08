@@ -263,13 +263,16 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                   onClick={() => setTool(t.name)}
                   className="glass group flex w-full flex-col items-start gap-3 rounded-2xl p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
                 >
-                  {hasToolGlassIcon(t.name) ? (
-                    <ToolGlassIcon tool={t.name} />
-                  ) : (
-                    <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-500/15 text-accent-600 transition group-hover:bg-accent-600 group-hover:text-white dark:text-accent-300">
-                      <Icon className="h-6 w-6" />
-                    </span>
-                  )}
+                  {/* Ikona vpravo nahoře (dřív vlevo). */}
+                  <span className="flex w-full justify-end">
+                    {hasToolGlassIcon(t.name) ? (
+                      <ToolGlassIcon tool={t.name} />
+                    ) : (
+                      <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-500/15 text-accent-600 transition group-hover:bg-accent-600 group-hover:text-white dark:text-accent-300">
+                        <Icon className="h-6 w-6" />
+                      </span>
+                    )}
+                  </span>
                   <span className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
                     {toolLabel(t.name, lang)}
                   </span>

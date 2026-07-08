@@ -10,12 +10,12 @@ export function Hero() {
 
   return (
     <section id="top" className="relative overflow-hidden pt-28 sm:pt-32">
-      {/* Dekorativní pozadí (čistě CSS) */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-1/2 top-[-10%] h-[480px] w-[480px] -translate-x-1/2 rounded-full bg-accent-400/20 blur-[120px] dark:bg-accent-500/20" />
-        <div className="absolute right-[-5%] top-[30%] h-[320px] w-[320px] rounded-full bg-accent-300/20 blur-[110px] dark:bg-accent-700/20" />
-        <div className="absolute inset-0 text-black/[0.04] bg-dots dark:text-white/[0.05]" />
-      </div>
+      {/* Jemný dotovaný vzor přes celou plochu (uniformní – žádné lokální glow,
+          které dřív vytvářely dojem „černých pruhů" po krajích). */}
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 -z-10 text-black/[0.04] bg-dots dark:text-white/[0.05]"
+      />
 
       <div className="container-page pb-12 lg:pb-16">
         <div className="max-w-3xl">
