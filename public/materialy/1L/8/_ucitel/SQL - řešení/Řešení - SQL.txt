@@ -1,0 +1,60 @@
+===========================================================
+ ZÁKLADY DATABÁZÍ A SQL — řešení (pro učitele)
+===========================================================
+Databáze: knihovna.db  (tabulky knihy, ctenari, vypujcky)
+Všechny dotazy byly ověřeny spuštěním nad přiloženou databází;
+u každého je uveden i očekávaný výsledek.
+
+
+1) Vypiš všechny knihy
+   SELECT * FROM knihy;
+   → 10 řádků (celá tabulka knihy).
+
+2) Název a autor všech knih
+   SELECT nazev, autor FROM knihy;
+   → 10 řádků, 2 sloupce.
+
+3) Knihy vydané po roce 1900
+   SELECT nazev, rok FROM knihy WHERE rok > 1900;
+   → 6 řádků: R.U.R. (1920), Bílá nemoc (1937),
+     Osudy dobrého vojáka Švejka (1923), Krakatit (1924),
+     Temno (1915), Pole orná a válečná (1925).
+
+4) Dostupné knihy seřazené podle roku
+   SELECT nazev, rok FROM knihy WHERE dostupna = 1 ORDER BY rok;
+   → 7 řádků, od nejstarší: Máj (1836), Babička (1855),
+     Povídky malostranské (1878), R.U.R. (1920), Krakatit (1924),
+     Pole orná a válečná (1925), Bílá nemoc (1937).
+
+5) Kolik knih je celkem
+   SELECT COUNT(*) FROM knihy;
+   → 10.
+
+6) Průměrný počet stran
+   SELECT ROUND(AVG(pocet_stran), 1) FROM knihy;
+   → 256.0.
+
+7) Počet knih od každého žánru
+   SELECT zanr, COUNT(*) AS pocet FROM knihy GROUP BY zanr ORDER BY zanr;
+   → drama 2, poezie 2, povídky 1, román 5.
+
+8) Kdo si půjčil kterou knihu (propojení tří tabulek)
+   SELECT c.jmeno, k.nazev
+   FROM vypujcky v
+   JOIN ctenari c ON v.ctenar_id = c.id
+   JOIN knihy   k ON v.kniha_id  = k.id;
+   → 3 řádky: Adam Novák – Kytice,
+     Cyril Dvořák – Osudy dobrého vojáka Švejka,
+     Bára Svobodová – Temno.
+
+
+-----------------------------------------------------------
+Poznámky k výuce
+-----------------------------------------------------------
+• Úlohy 1–4 procvičují SELECT, výběr sloupců, WHERE a ORDER BY.
+• Úlohy 5–7 zavádějí agregace (COUNT, AVG) a GROUP BY.
+• Úloha 8 je první JOIN – ukazuje smysl cizích klíčů a propojení
+  tabulek. Slabším žákům stačí úlohy 1–7.
+• Sloupec dostupna = 0 mají právě ty 3 knihy, které jsou v tabulce
+  vypujcky – dobrá příležitost ukázat, že data spolu souvisí.
+===========================================================
