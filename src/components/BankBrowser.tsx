@@ -44,6 +44,10 @@ const STR: Record<
     shareLesson: string;
     expandLesson: string;
     collapseLesson: string;
+    sourceBadge: string;
+    sourceNote: string;
+    sourceNoteOffline: string;
+    openSource: string;
   }
 > = {
   cs: {
@@ -61,6 +65,10 @@ const STR: Record<
     shareLesson: "Sdílet odkaz na lekci",
     expandLesson: "Rozbalit lekci",
     collapseLesson: "Sbalit lekci",
+    sourceBadge: "zdroj",
+    sourceNote: "Převzatý materiál — otevři u původního zdroje",
+    sourceNoteOffline: "Materiál třetí strany — zde není ke stažení",
+    openSource: "Otevřít u zdroje",
   },
   en: {
     searchPlaceholder: "Search material, topic, tool…",
@@ -77,6 +85,10 @@ const STR: Record<
     shareLesson: "Share lesson link",
     expandLesson: "Expand lesson",
     collapseLesson: "Collapse lesson",
+    sourceBadge: "source",
+    sourceNote: "Third-party material — open at the original source",
+    sourceNoteOffline: "Third-party material — not available here",
+    openSource: "Open at source",
   },
 };
 
@@ -328,9 +340,52 @@ function MaterialRow({
   onPreview: (it: BankItem) => void;
 }) {
   const s = STR[lang];
+  const label = L(it.label, lang);
+
+  // Převzatý materiál se nehostuje. S URL → odkaz na originál; bez URL → jen
+  // informační atribuce (materiál třetí strany, nedostupný zde).
+  if (it.external) {
+    const hasLink = Boolean(it.href);
+    const inner = (
+      <>
+        <span className="flex w-16 shrink-0 justify-center">
+          <span className="rounded-lg bg-zinc-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-zinc-600 dark:text-zinc-300">
+            {s.sourceBadge}
+          </span>
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
+          <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
+            {hasLink ? s.sourceNote : s.sourceNoteOffline}
+            {it.group ? ` · ${L(it.group, lang)}` : ""}
+          </span>
+        </span>
+        {hasLink && (
+          <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-accent-700 transition group-hover:bg-accent-500/10 dark:text-accent-300">
+            {s.openSource}
+            <ExternalLink className="h-4 w-4" />
+          </span>
+        )}
+      </>
+    );
+    const cls =
+      "glass flex items-center gap-3 rounded-2xl px-4 py-3 sm:gap-4 sm:py-3.5" +
+      (hasLink ? " group transition hover:shadow-lg hover:shadow-accent-600/15" : "");
+    return (
+      <li>
+        {hasLink ? (
+          <a href={it.href} target="_blank" rel="noopener noreferrer" className={cls}>
+            {inner}
+          </a>
+        ) : (
+          <div className={cls}>{inner}</div>
+        )}
+      </li>
+    );
+  }
+
   const t = fileType(it.ext, lang);
   const previewable = canPreview(it.ext);
-  const label = L(it.label, lang);
   const materialType = materialTypeOf(it);
   return (
     <li className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5">

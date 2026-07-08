@@ -126,6 +126,12 @@ export type BankItem = {
   courseIds: string[];
   /** Lidsky čitelný rozsah oborů, např. „1. ročník · všechny obory". */
   coursesLabel: { cs: string; en: string };
+  /**
+   * Externí zdroj: převzatý materiál se NEhostuje, jen se odkazuje na originál
+   * (autorská práva). `href` je pak externí URL, `ext="link"`. Vzniká z
+   * `_zdroj.json` ve složce skupiny místo souborů.
+   */
+  external?: boolean;
 };
 
 // Obsah je napříč obory sdílený, ale jednotlivé obory mají v plánu různě
@@ -233,6 +239,42 @@ export function getBankItems(): BankItem[] {
               grp = { cs: gl, en: enLabel(gl) };
             }
             walk(path.join(absDir, e.name), [...segs, e.name], aud, grp);
+          } else if (e.isFile() && e.name === "_zdroj.json") {
+            // Převzatá skupina: místo souborů jen odkaz na originál (autorská práva).
+            let src: { cs?: string; en?: string; url?: string };
+            try {
+              src = JSON.parse(fs.readFileSync(path.join(absDir, e.name), "utf8"));
+            } catch {
+              continue;
+            }
+            // URL je volitelná: bez ní je to jen informační atribuce (materiál
+            // třetí strany, který tu nehostujeme ani neodkazujeme).
+            if (!src.cs) continue;
+            const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${src.cs}`, "");
+            const key = [tool, audience, group?.cs ?? "", "__zdroj__", "link"]
+              .join("|")
+              .normalize("NFC")
+              .toLowerCase();
+            const existing = seen.get(key);
+            if (existing) {
+              if (!existing.courseIds.includes(courseId)) existing.courseIds.push(courseId);
+              continue;
+            }
+            seen.set(key, {
+              href: src.url ?? "",
+              label: { cs: src.cs, en: src.en ?? src.cs },
+              ext: "link",
+              kind: "link",
+              sizeBytes: 0,
+              tool,
+              topicNo: topicIndex + 1,
+              topicLabel,
+              audience,
+              group,
+              external: true,
+              courseIds: [courseId],
+              coursesLabel: { cs: "", en: "" },
+            });
           } else if (e.isFile()) {
             const file = e.name;
             const ext = path.extname(file).slice(1).toLowerCase();
