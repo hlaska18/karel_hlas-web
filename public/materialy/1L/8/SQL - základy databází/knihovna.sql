@@ -1,5 +1,5 @@
--- Knihovna: ukazkova databaze k procviceni SQL
--- Tri propojene tabulky: knihy, ctenari, vypujcky (cizi klice)
+-- Knihovna: ukázková databáze k procvičení SQL
+-- Tři propojené tabulky: knihy, ctenari, vypujcky (cizí klíče)
 
 CREATE TABLE knihy (
     id           INTEGER PRIMARY KEY,
@@ -8,7 +8,7 @@ CREATE TABLE knihy (
     rok          INTEGER,
     zanr         TEXT,
     pocet_stran  INTEGER,
-    dostupna     INTEGER            -- 1 = k dispozici, 0 = pujcena
+    dostupna     INTEGER            -- 1 = k dispozici, 0 = půjčená
 );
 
 CREATE TABLE ctenari (
@@ -25,23 +25,23 @@ CREATE TABLE vypujcky (
 );
 
 INSERT INTO knihy (id, nazev, autor, rok, zanr, pocet_stran, dostupna) VALUES
- (1,  'Babicka',                     'Bozena Nemcova',       1855, 'roman',   240, 1),
- (2,  'Maj',                         'Karel Hynek Macha',    1836, 'poezie',   60, 1),
- (3,  'Kytice',                      'Karel Jaromir Erben',  1853, 'poezie',  140, 0),
- (4,  'R.U.R.',                      'Karel Capek',          1920, 'drama',    96, 1),
- (5,  'Bila nemoc',                  'Karel Capek',          1937, 'drama',   112, 1),
- (6,  'Osudy dobreho vojaka Svejka', 'Jaroslav Hasek',       1923, 'roman',   752, 0),
- (7,  'Povidky malostranske',        'Jan Neruda',           1878, 'povidky', 180, 1),
- (8,  'Krakatit',                    'Karel Capek',          1924, 'roman',   360, 1),
- (9,  'Temno',                       'Alois Jirasek',        1915, 'roman',   420, 0),
- (10, 'Pole orna a valecna',         'Vladislav Vancura',    1925, 'roman',   200, 1);
+ (1,  'Babička',                       'Božena Němcová',       1855, 'román',   240, 1),
+ (2,  'Máj',                           'Karel Hynek Mácha',    1836, 'poezie',   60, 1),
+ (3,  'Kytice',                        'Karel Jaromír Erben',  1853, 'poezie',  140, 0),
+ (4,  'R.U.R.',                        'Karel Čapek',          1920, 'drama',    96, 1),
+ (5,  'Bílá nemoc',                    'Karel Čapek',          1937, 'drama',   112, 1),
+ (6,  'Osudy dobrého vojáka Švejka',   'Jaroslav Hašek',       1923, 'román',   752, 0),
+ (7,  'Povídky malostranské',          'Jan Neruda',           1878, 'povídky', 180, 1),
+ (8,  'Krakatit',                      'Karel Čapek',          1924, 'román',   360, 1),
+ (9,  'Temno',                         'Alois Jirásek',        1915, 'román',   420, 0),
+ (10, 'Pole orná a válečná',           'Vladislav Vančura',    1925, 'román',   200, 1);
 
 INSERT INTO ctenari (id, jmeno, trida) VALUES
- (1, 'Adam Novak',     '1.A'),
- (2, 'Bara Svobodova', '1.A'),
- (3, 'Cyril Dvorak',   '1.B'),
- (4, 'Dita Horakova',  '1.B'),
- (5, 'Eva Markova',    '1.A');
+ (1, 'Adam Novák',     '1.A'),
+ (2, 'Bára Svobodová', '1.A'),
+ (3, 'Cyril Dvořák',   '1.B'),
+ (4, 'Dita Horáková',  '1.B'),
+ (5, 'Eva Marková',    '1.A');
 
 INSERT INTO vypujcky (id, kniha_id, ctenar_id, datum_vypujcky) VALUES
  (1, 3, 1, '2026-09-05'),
