@@ -10,12 +10,10 @@ import { SectionKicker } from "@/components/SectionKicker";
 
 const STR: Record<Lang, { license: string }> = {
   cs: {
-    license:
-      "Materiály zde volně použij i uprav pro svou výuku. Neručím ale za to, že všechny převzaté prvky (obrázky, testové úlohy) mají 100% vyřešená práva třetích stran — před šířením mimo výuku si je prosím ověř.",
+    license: "Materiály zde volně použij i uprav pro svou výuku.",
   },
   en: {
-    license:
-      "Feel free to use and adapt these materials for your own teaching. I can't guarantee every third-party element (images, test items) is fully rights-cleared — please double-check before sharing them outside the classroom.",
+    license: "Feel free to use and adapt these materials for your own teaching.",
   },
 };
 
