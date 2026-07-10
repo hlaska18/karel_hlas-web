@@ -272,17 +272,12 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                       {countMaterials(t.count, lang)}
                     </span>
                   </span>
-                  {/* Velká ikona vyplní pravou část dlaždice */}
-                  <span className="aspect-square w-[46%] max-w-[9.5rem] shrink-0">
+                  {/* Velká „plovoucí" ikona bez rámu vyplní pravou část dlaždice */}
+                  <span className="flex aspect-square w-[46%] max-w-[9.5rem] shrink-0 items-center justify-center">
                     {hasToolGlassIcon(t.name) ? (
-                      <ToolGlassIcon
-                        tool={t.name}
-                        className="h-full w-full rounded-2xl object-cover ring-1"
-                      />
+                      <ToolGlassIcon tool={t.name} className="h-full w-full object-contain" />
                     ) : (
-                      <span className="flex h-full w-full items-center justify-center rounded-2xl bg-accent-500/15 text-accent-600 transition group-hover:bg-accent-600 group-hover:text-white dark:text-accent-300">
-                        <Icon className="h-10 w-10" />
-                      </span>
+                      <Icon className="h-14 w-14 text-accent-500 transition group-hover:scale-105" />
                     )}
                   </span>
                 </button>
