@@ -261,23 +261,29 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                 <button
                   type="button"
                   onClick={() => setTool(t.name)}
-                  className="glass group flex w-full flex-col items-start gap-3 rounded-2xl p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
+                  className="glass group flex w-full items-center gap-3 overflow-hidden rounded-2xl p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
                 >
-                  {/* Ikona vpravo nahoře (dřív vlevo). */}
-                  <span className="flex w-full justify-end">
+                  {/* Text vlevo */}
+                  <span className="flex min-w-0 flex-1 flex-col gap-1">
+                    <span className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
+                      {toolLabel(t.name, lang)}
+                    </span>
+                    <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                      {countMaterials(t.count, lang)}
+                    </span>
+                  </span>
+                  {/* Velká ikona vyplní pravou část dlaždice */}
+                  <span className="aspect-square w-[46%] max-w-[9.5rem] shrink-0">
                     {hasToolGlassIcon(t.name) ? (
-                      <ToolGlassIcon tool={t.name} />
+                      <ToolGlassIcon
+                        tool={t.name}
+                        className="h-full w-full rounded-2xl object-cover ring-1"
+                      />
                     ) : (
-                      <span className="flex h-14 w-14 items-center justify-center rounded-xl bg-accent-500/15 text-accent-600 transition group-hover:bg-accent-600 group-hover:text-white dark:text-accent-300">
-                        <Icon className="h-6 w-6" />
+                      <span className="flex h-full w-full items-center justify-center rounded-2xl bg-accent-500/15 text-accent-600 transition group-hover:bg-accent-600 group-hover:text-white dark:text-accent-300">
+                        <Icon className="h-10 w-10" />
                       </span>
                     )}
-                  </span>
-                  <span className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
-                    {toolLabel(t.name, lang)}
-                  </span>
-                  <span className="text-sm text-zinc-500 dark:text-zinc-400">
-                    {countMaterials(t.count, lang)}
                   </span>
                 </button>
               </li>
