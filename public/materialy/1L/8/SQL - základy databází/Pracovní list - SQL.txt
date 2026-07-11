@@ -4,11 +4,18 @@
 Cíl: pochopit, jak funguje databáze, a umět napsat základní
 dotazy v jazyce SQL.
 
+TIP: Úlohy 1–8 si můžeš vyzkoušet INTERAKTIVNĚ v prohlížeči
+(nic se neinstaluje, hned vidíš výsledek i kontrolu):
+     karelhlas.vercel.app/sql
+
 Soubory k této úloze:
   • knihovna.db   – hotová databáze (otevři v programu
-                    "DB Browser for SQLite" – zdarma, bez instalace navíc)
+                    "DB Browser for SQLite" – viz Návod - DB Browser)
   • knihovna.sql  – stejná databáze jako textový zápis (můžeš si
                     prohlédnout, jak se tabulky vytvářejí a plní daty)
+  • Návod - DB Browser  a  Úlohy - DB Browser
+                  – pokračování v opravdovém programu (UPDATE,
+                    INSERT, vlastní tabulka)
 
 
 -----------------------------------------------------------

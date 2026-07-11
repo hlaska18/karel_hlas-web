@@ -1,0 +1,48 @@
+===========================================================
+ Z PROHLÍŽEČE DO PRAXE — návod na DB Browser for SQLite
+===========================================================
+V prohlížeči (karelhlas.vercel.app/sql) sis vyzkoušel(a) psát
+SQL dotazy. Teď TU SAMOU databázi otevřeš v opravdovém
+programu. Dobrá zpráva: je to pořád stejné SQLite — všechny
+dotazy, které umíš z prohlížeče, fungují beze změny.
+
+-----------------------------------------------------------
+1) INSTALACE (jednorázově, zdarma)
+-----------------------------------------------------------
+• Stáhni „DB Browser for SQLite" z oficiálního webu:
+  https://sqlitebrowser.org/dl/
+• Windows: stáhni .msi instalátor a projdi průvodce.
+  (Bez práv admina zvol „PortableApp" verzi – bez instalace.)
+• macOS: stáhni .dmg a přetáhni aplikaci do Applications.
+
+-----------------------------------------------------------
+2) OTEVŘI DATABÁZI (6 kroků)
+-----------------------------------------------------------
+1. Stáhni si soubor knihovna.db (je u tohoto návodu v bance,
+   nebo tlačítkem na stránce /sql).
+2. Spusť DB Browser for SQLite.
+3. Klikni „Otevřít databázi" (Open Database) a vyber
+   stažený soubor knihovna.db.
+4. Na kartě „Struktura databáze" (Database Structure) vidíš
+   tabulky knihy, ctenari, vypujcky — přesně ty z prohlížeče.
+5. Přepni na kartu „Spustit SQL" (Execute SQL).
+6. Napiš dotaz, který už znáš, a spusť ho (F5 nebo ▶):
+
+      SELECT nazev, autor FROM knihy;
+
+   Vyjde ti STEJNÁ tabulka jako v prohlížeči. To je celé
+   kouzlo — už umíš pracovat s opravdovou databází.
+
+-----------------------------------------------------------
+3) CO UMÍ DB BROWSER NAVÍC OPROTI PROHLÍŽEČI
+-----------------------------------------------------------
+• „Prohlížet data" (Browse Data) — listování tabulkou
+  a úprava hodnot klikáním, jako v Excelu.
+• Změny dat: UPDATE, INSERT, DELETE (v prohlížeči jen čteš).
+• Vytváření tabulek a celých databází.
+• Uložení změn: Soubor → Zapsat změny (Write Changes)!
+  Dokud změny nezapíšeš, nejsou v souboru.
+
+Pokračuj souborem „Úlohy - DB Browser" — 5 úloh, které
+v prohlížeči nejdou.
+===========================================================

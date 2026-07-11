@@ -20,6 +20,7 @@ import {
   ChevronDown,
   Link2,
   Check,
+  Play,
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
@@ -48,6 +49,8 @@ const STR: Record<
     sourceNote: string;
     sourceNoteOffline: string;
     openSource: string;
+    tryOnline: string;
+    tryOnlineCta: string;
   }
 > = {
   cs: {
@@ -69,6 +72,8 @@ const STR: Record<
     sourceNote: "Převzatý materiál — otevři u původního zdroje",
     sourceNoteOffline: "Materiál třetí strany — zde není ke stažení",
     openSource: "Otevřít u zdroje",
+    tryOnline: "Vyzkoušej si SQL rovnou v prohlížeči — nic se neinstaluje.",
+    tryOnlineCta: "Procvičit online",
   },
   en: {
     searchPlaceholder: "Search material, topic, tool…",
@@ -89,7 +94,14 @@ const STR: Record<
     sourceNote: "Third-party material — open at the original source",
     sourceNoteOffline: "Third-party material — not available here",
     openSource: "Open at source",
+    tryOnline: "Try SQL right in your browser — nothing to install.",
+    tryOnlineCta: "Practice online",
   },
+};
+
+/** Témata s interaktivním cvičením na webu (odkaz se ukáže po otevření dlaždice). */
+const TOOL_INTERACTIVE: Record<string, string> = {
+  Databáze: "/sql",
 };
 
 /** Vezme lokalizované pole {cs,en} (nebo prázdný řetězec, když chybí). */
@@ -305,6 +317,25 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
               {countMaterials(results.length, lang)}
             </p>
           </div>
+
+          {/* Interaktivní cvičení k tématu (např. Databáze → /sql) */}
+          {tool && !needle && TOOL_INTERACTIVE[tool] && (
+            <a
+              href={TOOL_INTERACTIVE[tool]}
+              className="glass-accent group mt-4 flex items-center justify-between gap-3 rounded-2xl px-5 py-4 transition hover:-translate-y-0.5"
+            >
+              <span className="flex items-center gap-3">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-600 text-white shadow-lg shadow-accent-600/30">
+                  <Play className="h-5 w-5" />
+                </span>
+                <span className="font-medium text-zinc-900 dark:text-white">{s.tryOnline}</span>
+              </span>
+              <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-accent-700 dark:text-accent-300">
+                {s.tryOnlineCta}
+                <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
+              </span>
+            </a>
+          )}
 
           {tool && LESSON_CONFIG[tool] && !needle ? (
             <ToolLessons

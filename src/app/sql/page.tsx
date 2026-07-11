@@ -1,10 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Download, FileText, MonitorDown } from "lucide-react";
 import { SITE } from "@/lib/content";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { SqlPlayground } from "@/components/SqlPlayground";
+
+/** Cesty na soubory v bance (téma 8 – Základy databází). */
+const MAT = encodeURI("/materialy/1L/8/SQL - základy databází");
 
 export const metadata: Metadata = {
   title: "Procvič si SQL v prohlížeči — Karel Hlas",
@@ -54,6 +57,55 @@ export default function SqlPage() {
         <div className="mt-8 max-w-3xl">
           <SqlPlayground />
         </div>
+
+        {/* Most do praxe: stejná databáze, opravdový program (DB Browser). */}
+        <section className="glass mt-14 max-w-3xl rounded-3xl p-6 sm:p-8">
+          <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
+            Pokračuj v praxi
+          </p>
+          <h2 className="mt-2 font-display text-2xl font-bold tracking-tight">
+            Stejná databáze, opravdový program
+          </h2>
+          <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
+            Zvládáš úlohy v prohlížeči? Stáhni si <b>tu samou databázi</b> a otevři ji v programu{" "}
+            <a
+              href="https://sqlitebrowser.org/dl/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-600 dark:text-accent-300"
+            >
+              DB Browser for SQLite
+            </a>{" "}
+            (zdarma). Všechny dotazy, které už umíš, fungují beze změny — a navíc můžeš data
+            upravovat, přidávat záznamy a tvořit vlastní tabulky. Přesně na to navazuje 5 úloh
+            v bance.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2.5">
+            <a
+              href={`${MAT}/knihovna.db`}
+              download
+              className="inline-flex items-center gap-2 rounded-full bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-500"
+            >
+              <Download className="h-4 w-4" /> Stáhnout knihovna.db
+            </a>
+            <a
+              href={`${MAT}/${encodeURIComponent("Návod - DB Browser.txt")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
+            >
+              <MonitorDown className="h-4 w-4" /> Návod na DB Browser
+            </a>
+            <a
+              href={`${MAT}/${encodeURIComponent("Úlohy - DB Browser.txt")}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
+            >
+              <FileText className="h-4 w-4" /> Úlohy 1–5 + bonus
+            </a>
+          </div>
+        </section>
       </main>
     </LanguageProvider>
   );
