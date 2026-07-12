@@ -88,16 +88,16 @@ export function Header() {
         </div>
       </nav>
 
-      {/* Mobile menu */}
+      {/* Mobile menu – plovoucí prosklená karta (stejné „liquid glass" jako dlaždice) */}
       {open && (
-        <div className="glass-bar border-t border-white/40 dark:border-white/10 lg:hidden">
-          <div className="container-page flex flex-col py-3">
+        <div className="container-page pointer-events-none absolute inset-x-0 top-full lg:hidden">
+          <div className="glass pointer-events-auto mt-2 flex flex-col gap-0.5 rounded-2xl p-2">
             {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="rounded-lg px-2 py-3 text-base font-medium text-zinc-700 transition hover:bg-accent-50 hover:text-accent-700 dark:text-zinc-200 dark:hover:bg-white/5 dark:hover:text-accent-400"
+                className="rounded-xl px-4 py-3 text-base font-medium text-zinc-700 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-zinc-100 dark:hover:bg-white/10 dark:hover:text-accent-300"
               >
                 {l.label}
               </a>
