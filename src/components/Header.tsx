@@ -90,7 +90,7 @@ export function Header() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="border-t border-white/30 bg-white/70 backdrop-blur-xl backdrop-saturate-150 dark:border-white/10 dark:bg-[var(--bg)]/80 lg:hidden">
+        <div className="glass-bar border-t border-white/40 dark:border-white/10 lg:hidden">
           <div className="container-page flex flex-col py-3">
             {links.map((l) => (
               <a
