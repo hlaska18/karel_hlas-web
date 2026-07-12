@@ -21,6 +21,7 @@ import {
   Link2,
   Check,
   Play,
+  Loader2,
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
@@ -51,6 +52,8 @@ const STR: Record<
     openSource: string;
     tryOnline: string;
     tryOnlineCta: string;
+    docxLoading: string;
+    docxError: string;
   }
 > = {
   cs: {
@@ -72,8 +75,10 @@ const STR: Record<
     sourceNote: "Převzatý materiál — otevři u původního zdroje",
     sourceNoteOffline: "Materiál třetí strany — zde není ke stažení",
     openSource: "Otevřít u zdroje",
-    tryOnline: "Vyzkoušej si SQL rovnou v prohlížeči — nic se neinstaluje.",
-    tryOnlineCta: "Procvičit online",
+    tryOnline: "Projdi si interaktivní kurz SQL přímo v prohlížeči — nic se neinstaluje.",
+    tryOnlineCta: "Spustit kurz",
+    docxLoading: "Načítám náhled dokumentu…",
+    docxError: "Náhled se nepodařilo vykreslit — stáhni si dokument tlačítkem výše.",
   },
   en: {
     searchPlaceholder: "Search material, topic, tool…",
@@ -94,8 +99,10 @@ const STR: Record<
     sourceNote: "Third-party material — open at the original source",
     sourceNoteOffline: "Third-party material — not available here",
     openSource: "Open at source",
-    tryOnline: "Try SQL right in your browser — nothing to install.",
-    tryOnlineCta: "Practice online",
+    tryOnline: "Take the interactive SQL course right in your browser — nothing to install.",
+    tryOnlineCta: "Start the course",
+    docxLoading: "Loading document preview…",
+    docxError: "Preview failed to render — use the download button above.",
   },
 };
 
@@ -112,8 +119,10 @@ function L(field: { cs: string; en: string } | undefined, lang: Lang): string {
 /** Typy, které umíme spolehlivě zobrazit přímo (bez cizí služby). */
 const IMG = ["png", "jpg", "jpeg", "gif", "svg", "webp"];
 const FRAME = ["pdf", "txt", "csv"];
+/** Word: vykreslujeme client-side přes docx-preview (jen moderní .docx, ne starý .doc). */
+const DOCX = ["docx"];
 function canPreview(ext: string): boolean {
-  return IMG.includes(ext) || FRAME.includes(ext);
+  return IMG.includes(ext) || FRAME.includes(ext) || DOCX.includes(ext);
 }
 
 /** Sloučí přípony do přátelské kategorie (odznak typu u řádku). */
@@ -708,6 +717,48 @@ function LessonCard({
   );
 }
 
+/** Náhled .docx: vykreslení client-side přes docx-preview (lazy z CDN). */
+function DocxView({
+  href,
+  loadingText,
+  errorText,
+}: {
+  href: string;
+  loadingText: string;
+  errorText: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    let alive = true;
+    setState("loading");
+    import("@/lib/docxPreview")
+      .then((m) => (ref.current ? m.renderDocx(href, ref.current) : Promise.reject()))
+      .then(() => alive && setState("ready"))
+      .catch(() => alive && setState("error"));
+    return () => {
+      alive = false;
+    };
+  }, [href]);
+
+  return (
+    <div className="relative h-[78vh] w-full overflow-auto rounded-xl bg-zinc-300 dark:bg-zinc-700">
+      {state === "loading" && (
+        <p className="absolute inset-0 flex items-center justify-center gap-2 text-sm text-zinc-600 dark:text-zinc-200">
+          <Loader2 className="h-4 w-4 animate-spin" /> {loadingText}
+        </p>
+      )}
+      {state === "error" && (
+        <p className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-zinc-600 dark:text-zinc-200">
+          {errorText}
+        </p>
+      )}
+      <div ref={ref} />
+    </div>
+  );
+}
+
 function PreviewModal({
   item,
   lang,
@@ -719,6 +770,7 @@ function PreviewModal({
 }) {
   const s = STR[lang];
   const isImg = IMG.includes(item.ext);
+  const isDocx = DOCX.includes(item.ext);
   const label = L(item.label, lang);
 
   useEffect(() => {
@@ -779,6 +831,8 @@ function PreviewModal({
           {isImg ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={item.href} alt={label} className="max-h-[78vh] max-w-full object-contain" />
+          ) : isDocx ? (
+            <DocxView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
           ) : (
             <iframe src={item.href} title={label} className="h-[78vh] w-full rounded-xl border-0 bg-white" />
           )}

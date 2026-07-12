@@ -10,9 +10,9 @@ import { SqlPlayground } from "@/components/SqlPlayground";
 const MAT = encodeURI("/materialy/1L/8/SQL - základy databází");
 
 export const metadata: Metadata = {
-  title: "Procvič si SQL v prohlížeči — Karel Hlas",
+  title: "Kurz SQL v prohlížeči — Karel Hlas",
   description:
-    "Interaktivní cvičení na základy databází a SQL. Napiš dotaz, klikni Spustit a hned vidíš výsledek — přímo v prohlížeči, nic se neinstaluje.",
+    "Interaktivní kurz základů databází a SQL: 8 lekcí s výkladem, úkolem a okamžitou kontrolou — přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
   alternates: { canonical: "/sql" },
 };
 
@@ -43,25 +43,27 @@ export default function SqlPage() {
 
       <main className="container-page py-10 sm:py-14">
         <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
-          Interaktivní cvičení
+          Interaktivní kurz
         </p>
         <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-          Procvič si SQL přímo v prohlížeči
+          Základy databází a SQL — kurz v prohlížeči
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Pracuješ s ukázkovou databází knihovny (knihy, čtenáři, výpůjčky). Napiš SQL dotaz,
-          klikni <b>Spustit</b> a hned vidíš výsledek. Tlačítkem <b>Zkontrolovat</b> zjistíš, jestli
-          řešíš zadání správně. Nic se neinstaluje — vše běží u tebe v prohlížeči.
+          Osm lekcí od úplného začátku po propojení tabulek. Každá lekce tě nejdřív krátce naučí
+          nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny — napiš dotaz, klikni{" "}
+          <b>Spustit</b> a hned vidíš výsledek, <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
+          Nic se neinstaluje a tvůj postup se pamatuje. Na závěr přejdeš do praxe v opravdovém
+          programu.
         </p>
 
         <div className="mt-8 max-w-3xl">
           <SqlPlayground />
         </div>
 
-        {/* Most do praxe: stejná databáze, opravdový program (DB Browser). */}
-        <section className="glass mt-14 max-w-3xl rounded-3xl p-6 sm:p-8">
+        {/* Závěrečná lekce kurzu: stejná databáze, opravdový program (DB Browser). */}
+        <section id="praxe" className="glass mt-14 max-w-3xl scroll-mt-24 rounded-3xl p-6 sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
-            Pokračuj v praxi
+            Závěrečná lekce — do praxe
           </p>
           <h2 className="mt-2 font-display text-2xl font-bold tracking-tight">
             Stejná databáze, opravdový program

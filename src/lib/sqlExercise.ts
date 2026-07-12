@@ -1,5 +1,6 @@
 /**
- * Data pro interaktivní SQL cvičení (běží client-side přes sql.js / SQLite WASM).
+ * Data pro interaktivní SQL KURZ (běží client-side přes sql.js / SQLite WASM).
+ * Každá lekce = krátký výklad (teach) + příklad + úkol s referenčním dotazem.
  * SCHEMA je shodné s public/materialy/1L/8/SQL - základy databází/knihovna.sql,
  * aby výsledky ve webové appce i ve staženém .db byly stejné.
  */
@@ -41,65 +42,102 @@ export const SCHEMA_INFO: { table: string; columns: string }[] = [
   { table: "vypujcky", columns: "id, kniha_id, ctenar_id, datum_vypujcky" },
 ];
 
-export type SqlTask = {
+export type SqlLesson = {
   id: number;
+  title: string;
+  /** Krátký výklad nového konceptu (2–4 věty, jazyk pro 1. ročník SŠ). */
+  teach: string;
+  /** Ukázkový dotaz k výkladu — schválně nad JINOU tabulkou, než chce úkol. */
+  example: string;
   zadani: string;
   /** Referenční dotaz – kontrola porovná výsledek žáka s výsledkem tohoto dotazu. */
   reference: string;
   hint: string;
 };
 
-export const TASKS: SqlTask[] = [
+export const LESSONS: SqlLesson[] = [
   {
     id: 1,
+    title: "Co je databáze a příkaz SELECT",
+    teach:
+      "Databáze ukládá data v tabulkách: řádek = jeden záznam (třeba jedna kniha), sloupec = jedna vlastnost (název, rok…). S databází se mluví jazykem SQL a nejdůležitější příkaz je SELECT — vybírá data. Hvězdička * znamená „všechny sloupce“.",
+    example: "SELECT * FROM ctenari;",
     zadani: "Vypiš všechny knihy (všechny sloupce).",
     reference: "SELECT * FROM knihy;",
-    hint: "Hvězdička * znamená „všechny sloupce“: SELECT * FROM knihy;",
+    hint: "Stejně jako v příkladu, jen z tabulky knihy: SELECT * FROM knihy;",
   },
   {
     id: 2,
+    title: "Výběr sloupců",
+    teach:
+      "Málokdy potřebuješ úplně všechno. Za SELECT vyjmenuj jen sloupce, které tě zajímají, oddělené čárkou — výsledek je přehlednější.",
+    example: "SELECT jmeno, trida FROM ctenari;",
     zadani: "Vypiš jen název a autora všech knih.",
     reference: "SELECT nazev, autor FROM knihy;",
-    hint: "Za SELECT vyjmenuj sloupce oddělené čárkou: SELECT nazev, autor FROM knihy;",
+    hint: "Sloupce se jmenují nazev a autor: SELECT nazev, autor FROM knihy;",
   },
   {
     id: 3,
+    title: "Podmínka WHERE",
+    teach:
+      "WHERE pustí do výsledku jen řádky, které splní podmínku. Čísla porovnáváš pomocí =, >, <, >=, <=. Texty piš do apostrofů, např. zanr = 'poezie'.",
+    example: "SELECT nazev FROM knihy WHERE zanr = 'poezie';",
     zadani: "Vypiš název a rok knih vydaných po roce 1900.",
     reference: "SELECT nazev, rok FROM knihy WHERE rok > 1900;",
-    hint: "Použij podmínku WHERE rok > 1900.",
+    hint: "„Po roce 1900“ znamená rok > 1900. Použij WHERE rok > 1900.",
   },
   {
     id: 4,
+    title: "Řazení ORDER BY",
+    teach:
+      "ORDER BY seřadí výsledek podle zadaného sloupce od nejmenšího; pro opačné pořadí přidej DESC. Krásně se kombinuje s WHERE — podmínka se píše vždy dřív než řazení.",
+    example: "SELECT nazev, pocet_stran FROM knihy ORDER BY pocet_stran DESC;",
     zadani: "Vypiš dostupné knihy (dostupna = 1) seřazené podle roku vydání od nejstarší.",
     reference: "SELECT nazev, rok FROM knihy WHERE dostupna = 1 ORDER BY rok;",
-    hint: "Spoj podmínku WHERE dostupna = 1 a seřazení ORDER BY rok.",
+    hint: "Spoj obojí: WHERE dostupna = 1 ORDER BY rok.",
   },
   {
     id: 5,
+    title: "Počítání COUNT",
+    teach:
+      "Agregační funkce udělají z mnoha řádků jedno číslo. COUNT(*) vrátí počet řádků výsledku — hodí se na otázky typu „kolik…“.",
+    example: "SELECT COUNT(*) FROM ctenari;",
     zadani: "Zjisti, kolik knih je celkem v databázi.",
     reference: "SELECT COUNT(*) FROM knihy;",
-    hint: "Funkce COUNT(*) spočítá řádky: SELECT COUNT(*) FROM knihy;",
+    hint: "SELECT COUNT(*) FROM knihy;",
   },
   {
     id: 6,
+    title: "Průměr AVG",
+    teach:
+      "AVG(sloupec) spočítá průměr hodnot ve sloupci. Ze stejné rodiny jsou SUM (součet), MIN (nejmenší) a MAX (největší).",
+    example: "SELECT MAX(rok) FROM knihy;",
     zadani: "Zjisti průměrný počet stran knih.",
     reference: "SELECT AVG(pocet_stran) FROM knihy;",
-    hint: "Použij funkci AVG(pocet_stran).",
+    hint: "Použij AVG(pocet_stran).",
   },
   {
     id: 7,
+    title: "Skupiny GROUP BY",
+    teach:
+      "GROUP BY seskupí řádky se stejnou hodnotou a agregace se spočítá pro každou skupinu zvlášť. Typicky: „kolik čeho“ — počty po kategoriích.",
+    example: "SELECT trida, COUNT(*) FROM ctenari GROUP BY trida;",
     zadani: "Zjisti, kolik knih je od každého žánru.",
     reference: "SELECT zanr, COUNT(*) FROM knihy GROUP BY zanr;",
-    hint: "Seskup řádky přes GROUP BY zanr a spočítej je COUNT(*).",
+    hint: "Seskup podle žánru: GROUP BY zanr, a spočítej COUNT(*).",
   },
   {
     id: 8,
+    title: "Propojení tabulek JOIN",
+    teach:
+      "Data bývají rozdělená do více tabulek propojených klíči — výpůjčka si pamatuje jen ID knihy a ID čtenáře. JOIN tabulky spojí dohromady: JOIN tabulka ON podmínka (obvykle rovnost klíčů).",
+    example: "SELECT * FROM vypujcky JOIN knihy ON vypujcky.kniha_id = knihy.id;",
     zadani:
-      "Vypiš, kdo si půjčil kterou knihu – jméno čtenáře a název knihy. (Propojíš tři tabulky.)",
+      "Vypiš, kdo si půjčil kterou knihu — jméno čtenáře a název knihy. (Propojíš tři tabulky.)",
     reference:
       "SELECT ctenari.jmeno, knihy.nazev FROM vypujcky " +
       "JOIN ctenari ON vypujcky.ctenar_id = ctenari.id " +
       "JOIN knihy ON vypujcky.kniha_id = knihy.id;",
-    hint: "Propoj vypujcky s ctenari a knihy přes JOIN ... ON ... (podle id).",
+    hint: "Dva JOINy za sebou: na ctenari (ctenar_id = ctenari.id) a na knihy (kniha_id = knihy.id).",
   },
 ];
