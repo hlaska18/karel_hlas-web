@@ -10,7 +10,7 @@ import { SqlPlayground } from "@/components/SqlPlayground";
 const MAT = encodeURI("/materialy/1L/8/SQL - základy databází");
 
 export const metadata: Metadata = {
-  title: "Kurz SQL v prohlížeči — Karel Hlas",
+  title: "Kurz SQL v prohlížeči",
   description:
     "Interaktivní kurz základů databází a SQL: 8 lekcí s výkladem, úkolem a okamžitou kontrolou — přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
   alternates: { canonical: "/sql" },
