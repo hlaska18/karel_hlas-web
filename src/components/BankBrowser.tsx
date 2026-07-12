@@ -118,11 +118,14 @@ function L(field: { cs: string; en: string } | undefined, lang: Lang): string {
 
 /** Typy, které umíme spolehlivě zobrazit přímo (bez cizí služby). */
 const IMG = ["png", "jpg", "jpeg", "gif", "svg", "webp"];
-const FRAME = ["pdf", "txt", "csv"];
+/** PDF ukážeme v <iframe> (prohlížeč má vestavěný prohlížeč PDF). */
+const PDF = ["pdf"];
+/** Prostý text: stáhneme a vypíšeme do <pre> (iframe s text/plain se na mobilu nevykreslí). */
+const TEXT = ["txt", "csv"];
 /** Word: vykreslujeme client-side přes docx-preview (jen moderní .docx, ne starý .doc). */
 const DOCX = ["docx"];
 function canPreview(ext: string): boolean {
-  return IMG.includes(ext) || FRAME.includes(ext) || DOCX.includes(ext);
+  return IMG.includes(ext) || PDF.includes(ext) || TEXT.includes(ext) || DOCX.includes(ext);
 }
 
 /** Sloučí přípony do přátelské kategorie (odznak typu u řádku). */
@@ -282,23 +285,23 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                 <button
                   type="button"
                   onClick={() => setTool(t.name)}
-                  className="glass group flex w-full items-center gap-3 overflow-hidden rounded-2xl p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
+                  className="glass group flex h-full w-full flex-col items-center gap-2 overflow-hidden rounded-2xl p-4 text-center transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 sm:flex-row sm:items-center sm:gap-3 sm:p-5 sm:text-left"
                 >
-                  {/* Text vlevo */}
-                  <span className="flex min-w-0 flex-1 flex-col gap-1">
-                    <span className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
+                  {/* Text: na mobilu pod ikonou (přes celou šířku), na desktopu vlevo */}
+                  <span className="order-2 flex min-w-0 flex-col gap-0.5 sm:order-1 sm:flex-1 sm:gap-1">
+                    <span className="font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-white sm:text-lg">
                       {toolLabel(t.name, lang)}
                     </span>
-                    <span className="text-sm text-zinc-500 dark:text-zinc-400">
+                    <span className="text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
                       {countMaterials(t.count, lang)}
                     </span>
                   </span>
-                  {/* Velká „plovoucí" ikona bez rámu vyplní pravou část dlaždice */}
-                  <span className="flex aspect-square w-[46%] max-w-[9.5rem] shrink-0 items-center justify-center">
+                  {/* Velká „plovoucí" ikona: na mobilu nahoře menší, na desktopu vyplní pravou část */}
+                  <span className="order-1 flex aspect-square w-20 shrink-0 items-center justify-center sm:order-2 sm:w-[46%] sm:max-w-[9.5rem]">
                     {hasToolGlassIcon(t.name) ? (
                       <ToolGlassIcon tool={t.name} className="h-full w-full object-contain" />
                     ) : (
-                      <Icon className="h-14 w-14 text-accent-500 transition group-hover:scale-105" />
+                      <Icon className="h-12 w-12 text-accent-500 transition group-hover:scale-105 sm:h-14 sm:w-14" />
                     )}
                   </span>
                 </button>
@@ -759,6 +762,58 @@ function DocxView({
   );
 }
 
+/**
+ * Náhled prostého textu (.txt, .csv). Soubor stáhneme a vypíšeme do <pre> —
+ * <iframe src=".txt"> se na mobilním Safari kvůli text/plain vůbec nevykreslí.
+ */
+function TextView({
+  href,
+  loadingText,
+  errorText,
+}: {
+  href: string;
+  loadingText: string;
+  errorText: string;
+}) {
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+  const [text, setText] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    setState("loading");
+    fetch(href)
+      .then((res) => (res.ok ? res.text() : Promise.reject()))
+      .then((t) => {
+        if (alive) {
+          setText(t);
+          setState("ready");
+        }
+      })
+      .catch(() => alive && setState("error"));
+    return () => {
+      alive = false;
+    };
+  }, [href]);
+
+  if (state === "loading")
+    return (
+      <p className="flex items-center justify-center gap-2 py-16 text-sm text-zinc-600 dark:text-zinc-300">
+        <Loader2 className="h-4 w-4 animate-spin" /> {loadingText}
+      </p>
+    );
+  if (state === "error")
+    return (
+      <p className="px-6 py-16 text-center text-sm text-zinc-600 dark:text-zinc-300">{errorText}</p>
+    );
+  return (
+    <div className="h-[78vh] w-full overflow-auto rounded-xl bg-white dark:bg-zinc-900">
+      <pre className="whitespace-pre-wrap break-words p-5 font-mono text-sm leading-relaxed text-zinc-800 dark:text-zinc-100">
+        {text}
+      </pre>
+    </div>
+  );
+}
+
 function PreviewModal({
   item,
   lang,
@@ -771,6 +826,7 @@ function PreviewModal({
   const s = STR[lang];
   const isImg = IMG.includes(item.ext);
   const isDocx = DOCX.includes(item.ext);
+  const isText = TEXT.includes(item.ext);
   const label = L(item.label, lang);
 
   useEffect(() => {
@@ -833,6 +889,8 @@ function PreviewModal({
             <img src={item.href} alt={label} className="max-h-[78vh] max-w-full object-contain" />
           ) : isDocx ? (
             <DocxView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
+          ) : isText ? (
+            <TextView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
           ) : (
             <iframe src={item.href} title={label} className="h-[78vh] w-full rounded-xl border-0 bg-white" />
           )}
