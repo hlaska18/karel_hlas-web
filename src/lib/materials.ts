@@ -81,6 +81,8 @@ const NAME_EN: Record<string, string> = {
   "Řešení 2B - vlajka Finska": "Solution 2B - flag of Finland",
   "SQL - základy databází": "SQL – database basics",
   "SQL - řešení": "SQL – solutions",
+  "Power Query - import z databází": "Power Query – importing from databases",
+  "Plán hodin - Kurz SQL": "Lesson plans – SQL course",
   "Pracovní list - SQL": "SQL worksheet",
   "Řešení - SQL": "SQL solution",
   "Návod - DB Browser": "DB Browser guide",
