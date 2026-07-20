@@ -13,7 +13,8 @@ const STR: Record<Lang, { license: string }> = {
     license: "Materiály zde volně použij i uprav pro svou výuku.",
   },
   en: {
-    license: "Feel free to use and adapt these materials for your own teaching.",
+    license:
+      "All materials are currently in Czech. Feel free to use, translate and adapt them for your own teaching.",
   },
 };
 
