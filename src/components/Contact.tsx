@@ -34,66 +34,58 @@ export function Contact() {
           </p>
         </Reveal>
 
-        <div className="mt-12 grid gap-6 lg:grid-cols-3">
-          {/* Škola + adresa */}
-          <Reveal className="lg:col-span-1">
-            <div className="glass flex h-full flex-col rounded-3xl p-6">
-              <div className="flex items-center gap-2.5 text-accent-600 dark:text-accent-400">
+        {/* Jednotná mřížka dlaždic — škola je stejná dlaždice jako ostatní */}
+        <Reveal as="div" stagger className="mt-12 grid gap-3 sm:grid-cols-2">
+          <ContactRow
+            icon={<Mail className="h-5 w-5" />}
+            label={c.emailLabel}
+            value={SITE.email}
+            href={`mailto:${SITE.email}`}
+          />
+          <ContactRow
+            icon={<Mail className="h-5 w-5" />}
+            label={c.emailPersonalLabel}
+            value={SITE.emailPersonal}
+            href={`mailto:${SITE.emailPersonal}`}
+          />
+          <ContactRow
+            icon={<Phone className="h-5 w-5" />}
+            label={c.phoneLabel}
+            value={SITE.phoneDisplay}
+            href={`tel:${SITE.phoneHref}`}
+          />
+          <ContactRow
+            icon={<DoorOpen className="h-5 w-5" />}
+            label={c.cabinetLabel}
+            value={SITE.cabinet}
+          />
+          <ContactRow
+            icon={<CalendarClock className="h-5 w-5" />}
+            label={c.consultLabel}
+            value={c.consultValue}
+            href={SITE.eduPageUrl}
+            external
+          />
+          {/* Škola + adresa (celá dlaždice odkazuje na mapu) */}
+          <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="group">
+            <div className="glass flex h-full items-center gap-4 rounded-2xl p-5 transition group-hover:-translate-y-0.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-600 dark:bg-accent-400/10 dark:text-accent-400">
                 <Building2 className="h-5 w-5" />
-                <h3 className="font-display text-base font-semibold text-zinc-900 dark:text-white">
+              </span>
+              <div className="min-w-0">
+                <p className="text-xs font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
                   {c.school.split(",")[0]}
-                </h3>
+                </p>
+                <p className="font-medium text-zinc-900 dark:text-white">{SITE.address}</p>
+                <p className="mt-0.5 inline-flex items-center gap-1 text-sm font-semibold text-accent-600 transition group-hover:text-accent-500 dark:text-accent-400">
+                  <MapPin className="h-3.5 w-3.5" />
+                  {c.mapLink}
+                  <ArrowUpRight className="h-3 w-3" />
+                </p>
               </div>
-              <p className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-                {SITE.address}
-              </p>
-              <a
-                href={SITE.mapsUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex w-fit items-center gap-1.5 text-sm font-semibold text-accent-600 transition hover:text-accent-500 dark:text-accent-400"
-              >
-                <MapPin className="h-4 w-4" />
-                {c.mapLink}
-                <ArrowUpRight className="h-3.5 w-3.5" />
-              </a>
             </div>
-          </Reveal>
-
-          {/* Kontaktní řádky */}
-          <Reveal as="div" stagger className="grid h-full gap-3 sm:grid-cols-2 lg:col-span-2">
-            <ContactRow
-              icon={<Mail className="h-5 w-5" />}
-              label={c.emailLabel}
-              value={SITE.email}
-              href={`mailto:${SITE.email}`}
-            />
-            <ContactRow
-              icon={<Mail className="h-5 w-5" />}
-              label={c.emailPersonalLabel}
-              value={SITE.emailPersonal}
-              href={`mailto:${SITE.emailPersonal}`}
-            />
-            <ContactRow
-              icon={<Phone className="h-5 w-5" />}
-              label={c.phoneLabel}
-              value={SITE.phoneDisplay}
-              href={`tel:${SITE.phoneHref}`}
-            />
-            <ContactRow
-              icon={<DoorOpen className="h-5 w-5" />}
-              label={c.cabinetLabel}
-              value={SITE.cabinet}
-            />
-            <ContactRow
-              icon={<CalendarClock className="h-5 w-5" />}
-              label={c.consultLabel}
-              value={c.consultValue}
-              href={SITE.eduPageUrl}
-              external
-            />
-          </Reveal>
-        </div>
+          </a>
+        </Reveal>
 
         {/* Sociální sítě */}
         <div className="mt-10">
