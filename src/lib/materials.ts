@@ -79,6 +79,7 @@ const NAME_EN: Record<string, string> = {
   "Řešení 1 - věk": "Solution 1 - age",
   "Řešení 2A - vlajka Lotyšska": "Solution 2A - flag of Latvia",
   "Řešení 2B - vlajka Finska": "Solution 2B - flag of Finland",
+  "Úvod do databází a SQL": "Introduction to databases and SQL",
   "SQL - základy databází": "SQL – database basics",
   "SQL - řešení": "SQL – solutions",
   "Power Query - import z databází": "Power Query – importing from databases",
@@ -347,6 +348,8 @@ export function getBankItems(): BankItem[] {
       order(a.tool) - order(b.tool) ||
       a.audience.localeCompare(b.audience) ||
       a.topicNo - b.topicNo ||
+      // soubory ze stejné složky (skupiny) drží u sebe, až pak podle názvu
+      byName(a.group?.cs ?? "", b.group?.cs ?? "") ||
       byName(a.label.cs, b.label.cs),
   );
   return items;
