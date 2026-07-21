@@ -1,7 +1,7 @@
 ===========================================================
  ŘEŠENÍ — úlohy v DB Browser for SQLite (pro učitele)
 ===========================================================
-Navazuje na „Úlohy - DB Browser". Všechny příkazy ověřeny
+Navazuje na „Úlohy - DB Browser“. Všechny příkazy ověřeny
 spuštěním nad knihovna.db; u každého je očekávaný výsledek.
 
 1) Rozehřátí — SELECT s podmínkou
@@ -45,7 +45,7 @@ Poznámky k výuce
   2. hodina: DB Browser — otevřít knihovna.db, úlohy 1–5
      (od známého SELECTu k UPDATE/INSERT/CREATE), bonus
      vlastní databáze pro rychlíky.
-• Žáci často zapomenou „Zapsat změny" (Write Changes) —
+• Žáci často zapomenou „Zapsat změny“ (Write Changes) —
   bez toho se UPDATE/INSERT neuloží do souboru.
 • Pokud nelze instalovat (práva), existuje portable verze
   DB Browseru; nouzově vše kromě úloh 3–5 jde v /sql.

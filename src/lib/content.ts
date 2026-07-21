@@ -123,7 +123,7 @@ export const BADGES: Badge[] = [
  * `materials` u jednotlivých témat:
  *   { label: { cs: "Název", en: "Title" }, href: "https://...", kind: "doc" }
  * kind: "doc" | "slides" | "video" | "code" | "link"
- * Materiál s href "#" se zobrazí jako „brzy" (nečekateľný odkaz doplníš později).
+ * Materiál s href "#" se zobrazí jako „brzy" (zástupný odkaz doplníš později).
  * Další ročník přidáš jako další objekt do pole COURSES.
  * ─────────────────────────────────────────────────────────────────────── */
 
@@ -1049,7 +1049,7 @@ export const t: Record<Lang, Dict> = {
     nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt", bank: "Materiály do výuky" },
     hero: {
       badge: "Materiály pro výuku informatiky · zdarma",
-      headline: "Hotové materiály do hodin informatiky. Stačí šáhnout.",
+      headline: "Hotové materiály do hodin informatiky. Stačí sáhnout.",
       role: "Učitel informatiky a angličtiny",
       tagline:
         "Pracovní listy, testy, plány hodin i metodika — Excel, Word, Python, Power BI a další. Ke stažení a úpravě, bez přihlašování.",
@@ -1180,8 +1180,8 @@ export const t: Record<Lang, Dict> = {
         },
         {
           period: "2019–2026",
-          place: "Faculty of Education, USB",
-          detail: "Bachelor's & Master's — teaching of English Language and CS",
+          place: "Faculty of Education, University of South Bohemia",
+          detail: "Bachelor's & Master's — teaching English and Computer Science",
         },
       ],
       experience: [
@@ -1212,7 +1212,7 @@ export const t: Record<Lang, Dict> = {
       teacherNoteLabel: "For teachers",
       audienceTeacher: "For teachers",
       audienceStudent: "For students",
-      audienceBoth: "Teachers & students",
+      audienceBoth: "For teachers & students",
     },
     materials: {
       kicker: "Material bank",
@@ -1225,7 +1225,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Get in touch",
       intro:
         "I prefer to arrange things in person or by e-mail. Book a consultation via EduPage.",
-      school: "Secondary Technical School of Engineering and Construction, Tábor",
+      school: "Secondary Technical School of Mechanical and Civil Engineering, Tábor",
       addressLabel: "Address",
       emailLabel: "School e-mail",
       emailPersonalLabel: "Personal e-mail",
@@ -1237,7 +1237,7 @@ export const t: Record<Lang, Dict> = {
       socialsTitle: "Follow me",
     },
     footer: {
-      role: "CS & English Teacher · SPŠ Tábor",
+      role: "Computer Science & English teacher · SPŠ Tábor",
       rights: "All rights reserved",
       top: "Top",
     },

@@ -359,7 +359,14 @@ function ResultTable({ result }: { result: SqlResult }) {
           ))}
         </tbody>
       </table>
-      <p className="px-4 py-2 text-xs text-zinc-400">{result.values.length} řádků</p>
+      <p className="px-4 py-2 text-xs text-zinc-400">
+        {result.values.length}{" "}
+        {result.values.length === 1
+          ? "řádek"
+          : result.values.length >= 2 && result.values.length <= 4
+            ? "řádky"
+            : "řádků"}
+      </p>
     </div>
   );
 }

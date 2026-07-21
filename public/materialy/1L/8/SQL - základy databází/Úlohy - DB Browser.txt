@@ -2,11 +2,11 @@
  ÚLOHY — DB Browser for SQLite (navazují na /sql)
 ===========================================================
 Pracuj s databází knihovna.db v programu DB Browser for
-SQLite (viz „Návod - DB Browser"). Úlohy 1–2 už znáš
+SQLite (viz „Návod - DB Browser“). Úlohy 1–2 už znáš
 z prohlížeče — ověř si, že ti vyjdou stejně. Úlohy 3–5
 v prohlížeči nejdou: měníš v nich data a strukturu.
 
-Dotazy piš na kartě „Spustit SQL" (Execute SQL).
+Dotazy piš na kartě „Spustit SQL“ (Execute SQL).
 Po úlohách 3–5 nezapomeň: Soubor → Zapsat změny!
 
 -----------------------------------------------------------
@@ -24,7 +24,7 @@ Ověř: román 5, poezie 2, drama 2, povídky 1.
 -----------------------------------------------------------
 3) UPRAV DATA (UPDATE)
 -----------------------------------------------------------
-Kniha „Temno" byla vrácena do knihovny. Nastav jí ve sloupci
+Kniha „Temno“ byla vrácena do knihovny. Nastav jí ve sloupci
 dostupna hodnotu 1.
 Ověř: SELECT nazev, dostupna FROM knihy WHERE nazev = 'Temno';
 → dostupna = 1.
@@ -33,7 +33,7 @@ Ověř: SELECT nazev, dostupna FROM knihy WHERE nazev = 'Temno';
 4) PŘIDEJ ZÁZNAM (INSERT)
 -----------------------------------------------------------
 Knihovna koupila novou knihu. Přidej do tabulky knihy záznam:
-id 11, „Saturnin", Zdeněk Jirotka, rok 1942, žánr román,
+id 11, „Saturnin“, Zdeněk Jirotka, rok 1942, žánr román,
 376 stran, dostupná (1).
 Ověř: SELECT COUNT(*) FROM knihy; → 11.
 
@@ -55,5 +55,5 @@ Soubor → Nová databáze. Vytvoř si vlastní mini-databázi na
 téma, které tě baví (hry, sport, hudba…): 1 tabulka, aspoň
 5 záznamů, a napiš nad ní 2 vlastní SELECT dotazy.
 
-Řešení má tvůj vyučující (soubor „Řešení - DB Browser").
+Řešení má tvůj vyučující (soubor „Řešení - DB Browser“).
 ===========================================================

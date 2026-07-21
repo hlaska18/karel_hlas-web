@@ -360,7 +360,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           ) : (
             <ul className="mt-4 space-y-2.5">
               {results.map((it) => (
-                <MaterialRow key={it.href} it={it} lang={lang} onPreview={setPreview} />
+                <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={setPreview} />
               ))}
             </ul>
           )}
@@ -596,7 +596,7 @@ function ToolLessons({
       {extras.length > 0 && (
         <ul className="space-y-2.5 pt-1">
           {extras.map((it) => (
-            <MaterialRow key={it.href} it={it} lang={lang} onPreview={onPreview} />
+            <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={onPreview} />
           ))}
         </ul>
       )}
@@ -712,7 +712,7 @@ function LessonCard({
       {open && (
         <ul className="space-y-2 px-3 pb-3">
           {items.map((it) => (
-            <MaterialRow key={it.href} it={it} lang={lang} onPreview={onPreview} />
+            <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={onPreview} />
           ))}
         </ul>
       )}

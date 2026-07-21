@@ -10,7 +10,7 @@ TIP: Úlohy 1–8 si můžeš vyzkoušet INTERAKTIVNĚ v prohlížeči
 
 Soubory k této úloze:
   • knihovna.db   – hotová databáze (otevři v programu
-                    "DB Browser for SQLite" – viz Návod - DB Browser)
+                    „DB Browser for SQLite“ – viz Návod - DB Browser)
   • knihovna.sql  – stejná databáze jako textový zápis (můžeš si
                     prohlédnout, jak se tabulky vytvářejí a plní daty)
   • Návod - DB Browser  a  Úlohy - DB Browser
@@ -26,11 +26,11 @@ Databáze je uspořádané úložiště dat. Data jsou v TABULKÁCH:
   • SLOUPEC = jedna vlastnost záznamu (např. název, rok vydání)
 
 Každý sloupec má svůj DATOVÝ TYP (text, číslo, datum). Každá
-tabulka má PRIMÁRNÍ KLÍČ (sloupec "id") – jednoznačně určuje řádek.
+tabulka má PRIMÁRNÍ KLÍČ (sloupec „id“) – jednoznačně určuje řádek.
 Tabulky se dají propojit CIZÍM KLÍČEM (např. výpůjčka odkazuje
 na knihu i na čtenáře).
 
-S databází se "domlouváme" jazykem SQL. Základ je příkaz SELECT:
+S databází se „domlouváme“ jazykem SQL. Základ je příkaz SELECT:
 
       SELECT  sloupce   FROM  tabulka   WHERE  podmínka ;
 
@@ -42,8 +42,8 @@ Tabulka  knihy     (id, nazev, autor, rok, zanr, pocet_stran, dostupna)
 Tabulka  ctenari   (id, jmeno, trida)
 Tabulka  vypujcky  (id, kniha_id, ctenar_id, datum_vypujcky)
 
-Sloupec "dostupna" v tabulce knihy: 1 = kniha je k dispozici,
-0 = kniha je právě půjčená. Tabulka "vypujcky" přes cizí klíče
+Sloupec „dostupna“ v tabulce knihy: 1 = kniha je k dispozici,
+0 = kniha je právě půjčená. Tabulka „vypujcky“ přes cizí klíče
 (kniha_id, ctenar_id) říká, kdo si kterou knihu půjčil.
 
 
@@ -72,5 +72,5 @@ Nápovědy k příkazům, které se hodí:
   GROUP BY ...               seskupení (např. po žánrech)
   JOIN ... ON ...            propojení tabulek
 
-Řešení má tvůj vyučující (soubor "Řešení - SQL").
+Řešení má tvůj vyučující (soubor „Řešení - SQL“).
 ===========================================================

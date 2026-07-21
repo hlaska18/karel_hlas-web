@@ -48,7 +48,8 @@ const TYPE_RULES: [RegExp, { cs: string; en: string }][] = [
   [/metod/, { cs: "Metodika", en: "Teaching notes" }],
   [/plán hodiny|plan hodiny/, { cs: "Plán hodiny", en: "Lesson plan" }],
   [/návod|navod/, { cs: "Návod", en: "Guide" }],
-  [/pracovní list|pracovni list|úloh|uloh/, { cs: "Pracovní list", en: "Worksheet" }],
+  [/pracovní list|pracovni list/, { cs: "Pracovní list", en: "Worksheet" }],
+  [/úloh|uloh/, { cs: "Úloha", en: "Exercise" }],
 ];
 
 /**
