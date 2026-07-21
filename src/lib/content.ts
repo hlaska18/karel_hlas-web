@@ -1052,7 +1052,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Hotové materiály do hodin informatiky. Stačí sáhnout.",
       role: "Učitel informatiky a angličtiny",
       tagline:
-        "Pracovní listy, testy, plány hodin i metodika – Excel, Word, Python, Power BI a další. Ke stažení a úpravě, bez přihlašování.",
+        "Pracovní listy, testy, plány hodin i metodika – Excel, Word, Python, Power BI a další. Ke stažení a úpravě, bez přihlašování.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       ctaLessons: "Procházet banku materiálů",
       ctaContact: "O mně",
@@ -1062,13 +1062,13 @@ export const t: Record<Lang, Dict> = {
       kicker: "O mně",
       heading: "Učitel, kterého baví technologie",
       paragraphs: [
-        "Učím informatiku a angličtinu na SPŠ strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum a učitelství na Pedagogické fakultě Jihočeské univerzity.",
-        "Ve výuce hledám praktické a srozumitelné cesty, jak žákům přiblížit moderní technologie. Mimo školu mě baví tvorba webů, programování a bowling.",
+        "Učím informatiku a angličtinu na SPŠ strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum a učitelství na Pedagogické fakultě Jihočeské univerzity.",
+        "Ve výuce hledám praktické a srozumitelné cesty, jak žákům přiblížit moderní technologie. Mimo školu mě baví tvorba webů, programování a bowling.",
       ],
       eduTitle: "Vzdělání",
       expTitle: "Praxe",
       interestsTitle: "Co mě baví",
-      badgesTitle: "Certifikáty a odznaky",
+      badgesTitle: "Certifikáty a odznaky",
       interests: ["Moderní technologie", "Vzdělávání", "Tvorba webů", "Programování", "Bowling"],
       education: [
         {
@@ -1104,7 +1104,7 @@ export const t: Record<Lang, Dict> = {
       kicker: "Ověřeno ve výuce",
       heading: "Výuka informatiky",
       intro:
-        "Takhle vypadá moje výuka v praxi – vyber si ročník a rozbalí se časová osa témat, kterými se svými třídami během roku projdeme.",
+        "Takhle vypadá moje výuka v praxi – vyber si ročník a rozbalí se časová osa témat, kterými se svými třídami během roku projdeme.",
       subject: "Informatika",
       pick: "Klikni pro zobrazení časové osy",
       goalLabel: "Cíl",
@@ -1120,7 +1120,7 @@ export const t: Record<Lang, Dict> = {
     materials: {
       kicker: "Banka materiálů",
       heading: "Vyber si téma",
-      sub: "Hotové materiály ke stažení a úpravě – klikni na téma a procházej.",
+      sub: "Hotové materiály ke stažení a úpravě – klikni na téma a procházej.",
       browseAll: "Otevřít celou banku a hledat",
     },
     contact: {
