@@ -51,6 +51,21 @@ export type Badge = { src: string; alt: string; circle?: boolean; href?: string 
 
 export const BADGES: Badge[] = [
   {
+    src: "/images/badges/anthropic-claude-code-101.png",
+    alt: "Anthropic: Claude Code 101",
+    href: "https://verify.skilljar.com/c/wi2fekyfwr83",
+  },
+  {
+    src: "/images/badges/anthropic-claude-platform-101.png",
+    alt: "Anthropic: Claude Platform 101",
+    href: "https://verify.skilljar.com/c/wsj95ri2n3ut",
+  },
+  {
+    src: "/images/badges/anthropic-teaching-ai-fluency.png",
+    alt: "Anthropic: Teaching AI Fluency",
+    href: "https://verify.skilljar.com/c/v7uvcqdjfgm9",
+  },
+  {
     src: "/images/badges/ai-skills-for-students.png",
     alt: "Canva: AI skills for students",
     href: "https://www.canva.com/design-school/courses/ai-skills-for-students-course",
