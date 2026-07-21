@@ -9,7 +9,7 @@ import { SectionJump } from "@/components/SectionJump";
 import { SectionKicker } from "@/components/SectionKicker";
 
 /**
- * Sekce „Ověřeno ve výuce" (04) — Karlův reálný plán po ročnících jako důkaz
+ * Sekce „Ověřeno ve výuce" (04) – Karlův reálný plán po ročnících jako důkaz
  * praxe. Samostatná sekce až za Kontaktem (one-page pořadí: Banka → O mně →
  * Kontakt → Výuka).
  */

@@ -1,9 +1,9 @@
 ===========================================================
- Z PROHLÍŽEČE DO PRAXE — návod na DB Browser for SQLite
+ Z PROHLÍŽEČE DO PRAXE – návod na DB Browser for SQLite
 ===========================================================
 V prohlížeči (karelhlas.vercel.app/sql) sis vyzkoušel(a) psát
 SQL dotazy. Teď TU SAMOU databázi otevřeš v opravdovém
-programu. Dobrá zpráva: je to pořád stejné SQLite — všechny
+programu. Dobrá zpráva: je to pořád stejné SQLite – všechny
 dotazy, které umíš z prohlížeče, fungují beze změny.
 
 -----------------------------------------------------------
@@ -24,25 +24,25 @@ dotazy, které umíš z prohlížeče, fungují beze změny.
 3. Klikni „Otevřít databázi“ (Open Database) a vyber
    stažený soubor knihovna.db.
 4. Na kartě „Struktura databáze“ (Database Structure) vidíš
-   tabulky knihy, ctenari, vypujcky — přesně ty z prohlížeče.
+   tabulky knihy, ctenari, vypujcky – přesně ty z prohlížeče.
 5. Přepni na kartu „Spustit SQL“ (Execute SQL).
 6. Napiš dotaz, který už znáš, a spusť ho (F5 nebo ▶):
 
       SELECT nazev, autor FROM knihy;
 
    Vyjde ti STEJNÁ tabulka jako v prohlížeči. To je celé
-   kouzlo — už umíš pracovat s opravdovou databází.
+   kouzlo – už umíš pracovat s opravdovou databází.
 
 -----------------------------------------------------------
 3) CO UMÍ DB BROWSER NAVÍC OPROTI PROHLÍŽEČI
 -----------------------------------------------------------
-• „Prohlížet data“ (Browse Data) — listování tabulkou
+• „Prohlížet data“ (Browse Data) – listování tabulkou
   a úprava hodnot klikáním, jako v Excelu.
 • Změny dat: UPDATE, INSERT, DELETE (v prohlížeči jen čteš).
 • Vytváření tabulek a celých databází.
 • Uložení změn: Soubor → Zapsat změny (Write Changes)!
   Dokud změny nezapíšeš, nejsou v souboru.
 
-Pokračuj souborem „Úlohy - DB Browser“ — 5 úloh: úlohy 1–2 znáš z prohlížeče,
+Pokračuj souborem „Úlohy - DB Browser“ – 5 úloh: úlohy 1–2 znáš z prohlížeče,
 úlohy 3–5 už jen tady (mění data a strukturu).
 ===========================================================

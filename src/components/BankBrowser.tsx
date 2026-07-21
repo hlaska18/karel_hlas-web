@@ -72,13 +72,13 @@ const STR: Record<
     expandLesson: "Rozbalit lekci",
     collapseLesson: "Sbalit lekci",
     sourceBadge: "zdroj",
-    sourceNote: "Převzatý materiál — otevři u původního zdroje",
-    sourceNoteOffline: "Materiál třetí strany — zde není ke stažení",
+    sourceNote: "Převzatý materiál – otevři u původního zdroje",
+    sourceNoteOffline: "Materiál třetí strany – zde není ke stažení",
     openSource: "Otevřít u zdroje",
-    tryOnline: "Projdi si interaktivní kurz SQL přímo v prohlížeči — nic se neinstaluje.",
+    tryOnline: "Projdi si interaktivní kurz SQL přímo v prohlížeči – nic se neinstaluje.",
     tryOnlineCta: "Spustit kurz",
     docxLoading: "Načítám náhled dokumentu…",
-    docxError: "Náhled se nepodařilo vykreslit — stáhni si dokument tlačítkem výše.",
+    docxError: "Náhled se nepodařilo vykreslit – stáhni si dokument tlačítkem výše.",
   },
   en: {
     searchPlaceholder: "Search material, topic, tool…",
@@ -96,13 +96,13 @@ const STR: Record<
     expandLesson: "Expand lesson",
     collapseLesson: "Collapse lesson",
     sourceBadge: "source",
-    sourceNote: "Third-party material — open at the original source",
-    sourceNoteOffline: "Third-party material — not available here",
+    sourceNote: "Third-party material – open at the original source",
+    sourceNoteOffline: "Third-party material – not available here",
     openSource: "Open at source",
-    tryOnline: "Take the interactive SQL course right in your browser — nothing to install.",
+    tryOnline: "Take the interactive SQL course right in your browser – nothing to install.",
     tryOnlineCta: "Start the course",
     docxLoading: "Loading document preview…",
-    docxError: "Preview failed to render — use the download button above.",
+    docxError: "Preview failed to render – use the download button above.",
   },
 };
 
@@ -229,7 +229,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
   }, [items]);
 
   // Výsledky podle režimu: hledání > vybraná dlaždice > nic.
-  // Pozn.: žádný filtr publika (žák/učitel) — u balíčků lekcí by odfiltroval
+  // Pozn.: žádný filtr publika (žák/učitel) – u balíčků lekcí by odfiltroval
   // polovinu páru (list + metodika) a rozbil kartu. Publikum je jen informační
   // odznak u řádku (MaterialRow), učitel chce vidět obojí najednou.
   const needle = stripDia(q.trim());
@@ -502,8 +502,8 @@ type LessonConfig = {
 
 const LESSON_CONFIG: Record<string, LessonConfig> = {
   Python: {
-    studentGroups: ["Python - pracovní listy"],
-    teacherGroups: ["Python - metodické listy"],
+    studentGroups: ["Python – pracovní listy"],
+    teacherGroups: ["Python – metodické listy"],
     studentLabel: { cs: "Pracovní list", en: "Worksheet" },
     teacherLabel: { cs: "Metodika", en: "Teaching notes" },
   },
@@ -648,7 +648,7 @@ function LessonCard({
   const title = lessonTitle(items, lang);
   const num = String(no).padStart(2, "0");
 
-  // Otevření ze sdíleného odkazu (?tema=...&lekce=N) — odscroluj k ní jednou po načtení.
+  // Otevření ze sdíleného odkazu (?tema=...&lekce=N) – odscroluj k ní jednou po načtení.
   useEffect(() => {
     if (autoOpen) ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -763,7 +763,7 @@ function DocxView({
 }
 
 /**
- * Náhled prostého textu (.txt, .csv). Soubor stáhneme a vypíšeme do <pre> —
+ * Náhled prostého textu (.txt, .csv). Soubor stáhneme a vypíšeme do <pre> –
  * <iframe src=".txt"> se na mobilním Safari kvůli text/plain vůbec nevykreslí.
  */
 function TextView({

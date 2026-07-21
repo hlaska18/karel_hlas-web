@@ -12,7 +12,7 @@ const MAT = encodeURI("/materialy/1L/8/SQL - základy databází");
 export const metadata: Metadata = {
   title: "Kurz SQL v prohlížeči",
   description:
-    "Interaktivní kurz základů databází a SQL: 8 lekcí s výkladem, úkolem a okamžitou kontrolou — přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
+    "Interaktivní kurz základů databází a SQL: 8 lekcí s výkladem, úkolem a okamžitou kontrolou – přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
   alternates: { canonical: "/sql" },
 };
 
@@ -46,11 +46,11 @@ export default function SqlPage() {
           Interaktivní kurz
         </p>
         <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-          Základy databází a SQL — kurz v prohlížeči
+          Základy databází a SQL – kurz v prohlížeči
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
           Osm lekcí od úplného začátku po propojení tabulek. Každá lekce tě nejdřív krátce naučí
-          nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny — napiš dotaz, klikni{" "}
+          nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny – napiš dotaz, klikni{" "}
           <b>Spustit</b> a hned vidíš výsledek, <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
           Nic se neinstaluje a tvůj postup se pamatuje. Na závěr přejdeš do praxe v opravdovém
           programu.
@@ -63,7 +63,7 @@ export default function SqlPage() {
         {/* Závěrečná lekce kurzu: stejná databáze, opravdový program (DB Browser). */}
         <section id="praxe" className="glass mt-14 max-w-3xl scroll-mt-24 rounded-3xl p-6 sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
-            Závěrečná lekce — do praxe
+            Závěrečná lekce – do praxe
           </p>
           <h2 className="mt-2 font-display text-2xl font-bold tracking-tight">
             Stejná databáze, opravdový program
@@ -78,7 +78,7 @@ export default function SqlPage() {
             >
               DB Browser for SQLite
             </a>{" "}
-            (zdarma). Všechny dotazy, které už umíš, fungují beze změny — a navíc můžeš data
+            (zdarma). Všechny dotazy, které už umíš, fungují beze změny – a navíc můžeš data
             upravovat, přidávat záznamy a tvořit vlastní tabulky. Přesně na to navazuje 5 úloh
             v bance.
           </p>

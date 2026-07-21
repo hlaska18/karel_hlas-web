@@ -1,5 +1,5 @@
 ===========================================================
- ZÁKLADY DATABÁZÍ A SQL — pracovní list
+ ZÁKLADY DATABÁZÍ A SQL – pracovní list
 ===========================================================
 Cíl: pochopit, jak funguje databáze, a umět napsat základní
 dotazy v jazyce SQL.

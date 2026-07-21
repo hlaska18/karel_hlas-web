@@ -1,6 +1,6 @@
 /**
  * Klientský náhled .docx souborů přes knihovnu docx-preview (render přímo
- * v prohlížeči — žádná externí služba nevidí soubor, na rozdíl od MS/Google
+ * v prohlížeči – žádná externí služba nevidí soubor, na rozdíl od MS/Google
  * vieweru, který rada dřív zamítla). Načítá se lazy z CDN až při prvním
  * otevření náhledu Wordu.
  */

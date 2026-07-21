@@ -1,30 +1,30 @@
 ===========================================================
- ŘEŠENÍ — úlohy v DB Browser for SQLite (pro učitele)
+ ŘEŠENÍ – úlohy v DB Browser for SQLite (pro učitele)
 ===========================================================
 Navazuje na „Úlohy - DB Browser“. Všechny příkazy ověřeny
 spuštěním nad knihovna.db; u každého je očekávaný výsledek.
 
-1) Rozehřátí — SELECT s podmínkou
+1) Rozehřátí – SELECT s podmínkou
    SELECT nazev, rok FROM knihy WHERE rok > 1900;
-   → 6 knih (shodné s prohlížečem — pointa: stejný engine).
+   → 6 knih (shodné s prohlížečem – pointa: stejný engine).
 
-2) Rozehřátí — agregace
+2) Rozehřátí – agregace
    SELECT zanr, COUNT(*) FROM knihy GROUP BY zanr;
    → román 5, poezie 2, drama 2, povídky 1.
 
-3) UPDATE — vrácení knihy
+3) UPDATE – vrácení knihy
    UPDATE knihy SET dostupna = 1 WHERE nazev = 'Temno';
    Kontrola: SELECT nazev, dostupna FROM knihy WHERE nazev='Temno';
    → dostupna = 1.
-   ⚠ Typická chyba: UPDATE bez WHERE přepíše VŠECHNY řádky —
+   ⚠ Typická chyba: UPDATE bez WHERE přepíše VŠECHNY řádky –
    dobrá příležitost to ukázat (a vrátit přes Revert Changes).
 
-4) INSERT — nová kniha
+4) INSERT – nová kniha
    INSERT INTO knihy (id, nazev, autor, rok, zanr, pocet_stran, dostupna)
    VALUES (11, 'Saturnin', 'Zdeněk Jirotka', 1942, 'román', 376, 1);
    Kontrola: SELECT COUNT(*) FROM knihy; → 11.
 
-5) CREATE TABLE + INSERT — hodnocení
+5) CREATE TABLE + INSERT – hodnocení
    CREATE TABLE hodnoceni (
      id       INTEGER PRIMARY KEY,
      kniha_id INTEGER REFERENCES knihy(id),
@@ -33,7 +33,7 @@ spuštěním nad knihovna.db; u každého je očekávaný výsledek.
    INSERT INTO hodnoceni (id, kniha_id, hvezdy) VALUES (1, 1, 5);
    Kontrola: SELECT * FROM hodnoceni; → (1, 1, 5).
 
-BONUS) Vlastní databáze — hodnotit: 1 tabulka s rozumnými
+BONUS) Vlastní databáze – hodnotit: 1 tabulka s rozumnými
    datovými typy, ≥5 záznamů, 2 funkční SELECT dotazy.
 
 -----------------------------------------------------------
@@ -42,10 +42,10 @@ Poznámky k výuce
 • Doporučený průchod tématem (2 × 45 min):
   1. hodina: pojmy DB/tabulka/klíče + interaktivní /sql
      v prohlížeči (úlohy 1–8, nic se neinstaluje).
-  2. hodina: DB Browser — otevřít knihovna.db, úlohy 1–5
+  2. hodina: DB Browser – otevřít knihovna.db, úlohy 1–5
      (od známého SELECTu k UPDATE/INSERT/CREATE), bonus
      vlastní databáze pro rychlíky.
-• Žáci často zapomenou „Zapsat změny“ (Write Changes) —
+• Žáci často zapomenou „Zapsat změny“ (Write Changes) –
   bez toho se UPDATE/INSERT neuloží do souboru.
 • Pokud nelze instalovat (práva), existuje portable verze
   DB Browseru; nouzově vše kromě úloh 3–5 jde v /sql.

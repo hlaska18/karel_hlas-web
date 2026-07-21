@@ -1,5 +1,5 @@
 ===========================================================
- ZÁKLADY DATABÁZÍ A SQL — řešení (pro učitele)
+ ZÁKLADY DATABÁZÍ A SQL – řešení (pro učitele)
 ===========================================================
 Databáze: knihovna.db  (tabulky knihy, ctenari, vypujcky)
 Všechny dotazy byly ověřeny spuštěním nad přiloženou databází;

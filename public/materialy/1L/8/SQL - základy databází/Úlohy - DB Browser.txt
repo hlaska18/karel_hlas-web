@@ -1,9 +1,9 @@
 ===========================================================
- ÚLOHY — DB Browser for SQLite (navazují na /sql)
+ ÚLOHY – DB Browser for SQLite (navazují na /sql)
 ===========================================================
 Pracuj s databází knihovna.db v programu DB Browser for
 SQLite (viz „Návod - DB Browser“). Úlohy 1–2 už znáš
-z prohlížeče — ověř si, že ti vyjdou stejně. Úlohy 3–5
+z prohlížeče – ověř si, že ti vyjdou stejně. Úlohy 3–5
 v prohlížeči nejdou: měníš v nich data a strukturu.
 
 Dotazy piš na kartě „Spustit SQL“ (Execute SQL).

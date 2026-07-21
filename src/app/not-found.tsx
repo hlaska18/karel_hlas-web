@@ -15,13 +15,13 @@ export default function NotFound() {
   const t = en
     ? {
         title: "Page not found",
-        desc: "This page doesn't exist — maybe a typo in the address, or it has moved.",
+        desc: "This page doesn't exist – maybe a typo in the address, or it has moved.",
         home: "Back to homepage",
         lessons: "Lessons & materials",
       }
     : {
         title: "Stránka nenalezena",
-        desc: "Tahle stránka neexistuje — možná překlep v adrese, nebo se přestěhovala.",
+        desc: "Tahle stránka neexistuje – možná překlep v adrese, nebo se přestěhovala.",
         home: "Zpět na úvod",
         lessons: "Výuka a materiály",
       };

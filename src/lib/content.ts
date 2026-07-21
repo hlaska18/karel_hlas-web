@@ -703,7 +703,7 @@ export const COURSES: Course[] = [
           ],
           en: [
             "Data transfer & processing between networked devices",
-            "Information flow in IoT — device, gateway, cloud",
+            "Information flow in IoT – device, gateway, cloud",
             "Data formats (e.g. JSON)",
             "Access rights & security",
           ],
@@ -943,7 +943,7 @@ export const COURSES: Course[] = [
           ],
           en: [
             "Data transfer & processing between networked devices",
-            "Information flow in IoT — device, gateway, cloud",
+            "Information flow in IoT – device, gateway, cloud",
             "Data formats (e.g. JSON)",
             "Access rights & security",
           ],
@@ -1052,7 +1052,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Hotové materiály do hodin informatiky. Stačí sáhnout.",
       role: "Učitel informatiky a angličtiny",
       tagline:
-        "Pracovní listy, testy, plány hodin i metodika — Excel, Word, Python, Power BI a další. Ke stažení a úpravě, bez přihlašování.",
+        "Pracovní listy, testy, plány hodin i metodika – Excel, Word, Python, Power BI a další. Ke stažení a úpravě, bez přihlašování.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       ctaLessons: "Procházet banku materiálů",
       ctaContact: "O mně",
@@ -1079,12 +1079,12 @@ export const t: Record<Lang, Dict> = {
         {
           period: "2015–2019",
           place: "SPŠ strojní a stavební, Tábor",
-          detail: "Technické lyceum — programování a robotika",
+          detail: "Technické lyceum – programování a robotika",
         },
         {
           period: "2019–2026",
           place: "Pedagogická fakulta JČU",
-          detail: "Bc. i Mgr. — učitelství pro 2. stupeň",
+          detail: "Bc. i Mgr. – učitelství pro 2. stupeň",
         },
       ],
       experience: [
@@ -1104,7 +1104,7 @@ export const t: Record<Lang, Dict> = {
       kicker: "Ověřeno ve výuce",
       heading: "Výuka informatiky",
       intro:
-        "Takhle vypadá moje výuka v praxi — vyber si ročník a rozbalí se časová osa témat, kterými se svými třídami během roku projdeme.",
+        "Takhle vypadá moje výuka v praxi – vyber si ročník a rozbalí se časová osa témat, kterými se svými třídami během roku projdeme.",
       subject: "Informatika",
       pick: "Klikni pro zobrazení časové osy",
       goalLabel: "Cíl",
@@ -1120,7 +1120,7 @@ export const t: Record<Lang, Dict> = {
     materials: {
       kicker: "Banka materiálů",
       heading: "Vyber si téma",
-      sub: "Hotové materiály ke stažení a úpravě — klikni na téma a procházej.",
+      sub: "Hotové materiály ke stažení a úpravě – klikni na téma a procházej.",
       browseAll: "Otevřít celou banku a hledat",
     },
     contact: {
@@ -1154,7 +1154,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Ready-made materials for CS lessons. Just grab them.",
       role: "Computer Science & English Language Teacher",
       tagline:
-        "Worksheets, tests, lesson plans and teaching notes — Excel, Word, Python, Power BI and more. Free to download and edit.",
+        "Worksheets, tests, lesson plans and teaching notes – Excel, Word, Python, Power BI and more. Free to download and edit.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       ctaLessons: "Browse the material bank",
       ctaContact: "About me",
@@ -1181,7 +1181,7 @@ export const t: Record<Lang, Dict> = {
         {
           period: "2019–2026",
           place: "Faculty of Education, University of South Bohemia",
-          detail: "Bachelor's & Master's — teaching English and Computer Science",
+          detail: "Bachelor's & Master's – teaching English and Computer Science",
         },
       ],
       experience: [
@@ -1201,7 +1201,7 @@ export const t: Record<Lang, Dict> = {
       kicker: "Proven in the classroom",
       heading: "Computer Science lessons",
       intro:
-        "This is what my teaching looks like in practice — pick a year and a timeline of the topics I actually cover with my classes unfolds.",
+        "This is what my teaching looks like in practice – pick a year and a timeline of the topics I actually cover with my classes unfolds.",
       subject: "Computer Science",
       pick: "Click to reveal the timeline",
       goalLabel: "Goal",
@@ -1217,7 +1217,7 @@ export const t: Record<Lang, Dict> = {
     materials: {
       kicker: "Material bank",
       heading: "Pick a topic",
-      sub: "Ready-made materials to download and edit — click a topic to browse.",
+      sub: "Ready-made materials to download and edit – click a topic to browse.",
       browseAll: "Open the full bank & search",
     },
     contact: {

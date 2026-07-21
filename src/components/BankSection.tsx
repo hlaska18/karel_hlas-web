@@ -19,7 +19,7 @@ const STR: Record<Lang, { license: string }> = {
 };
 
 /**
- * Plná banka materiálů přímo na homepage (one-page design) — dřív žila na
+ * Plná banka materiálů přímo na homepage (one-page design) – dřív žila na
  * samostatné stránce /pro-ucitele, ta teď jen přesměrovává sem (#banka).
  */
 export function BankSection({ items }: { items: BankItem[] }) {

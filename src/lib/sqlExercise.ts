@@ -47,7 +47,7 @@ export type SqlLesson = {
   title: string;
   /** Krátký výklad nového konceptu (2–4 věty, jazyk pro 1. ročník SŠ). */
   teach: string;
-  /** Ukázkový dotaz k výkladu — schválně nad JINOU tabulkou, než chce úkol. */
+  /** Ukázkový dotaz k výkladu – schválně nad JINOU tabulkou, než chce úkol. */
   example: string;
   zadani: string;
   /** Referenční dotaz – kontrola porovná výsledek žáka s výsledkem tohoto dotazu. */
@@ -60,7 +60,7 @@ export const LESSONS: SqlLesson[] = [
     id: 1,
     title: "Co je databáze a příkaz SELECT",
     teach:
-      "Databáze ukládá data v tabulkách: řádek = jeden záznam (třeba jedna kniha), sloupec = jedna vlastnost (název, rok…). S databází se mluví jazykem SQL a nejdůležitější příkaz je SELECT — vybírá data. Hvězdička * znamená „všechny sloupce“.",
+      "Databáze ukládá data v tabulkách: řádek = jeden záznam (třeba jedna kniha), sloupec = jedna vlastnost (název, rok…). S databází se mluví jazykem SQL a nejdůležitější příkaz je SELECT – vybírá data. Hvězdička * znamená „všechny sloupce“.",
     example: "SELECT * FROM ctenari;",
     zadani: "Vypiš všechny knihy (všechny sloupce).",
     reference: "SELECT * FROM knihy;",
@@ -70,7 +70,7 @@ export const LESSONS: SqlLesson[] = [
     id: 2,
     title: "Výběr sloupců",
     teach:
-      "Málokdy potřebuješ úplně všechno. Za SELECT vyjmenuj jen sloupce, které tě zajímají, oddělené čárkou — výsledek je přehlednější.",
+      "Málokdy potřebuješ úplně všechno. Za SELECT vyjmenuj jen sloupce, které tě zajímají, oddělené čárkou – výsledek je přehlednější.",
     example: "SELECT jmeno, trida FROM ctenari;",
     zadani: "Vypiš jen název a autora všech knih.",
     reference: "SELECT nazev, autor FROM knihy;",
@@ -90,7 +90,7 @@ export const LESSONS: SqlLesson[] = [
     id: 4,
     title: "Řazení ORDER BY",
     teach:
-      "ORDER BY seřadí výsledek podle zadaného sloupce od nejmenšího; pro opačné pořadí přidej DESC. Krásně se kombinuje s WHERE — podmínka se píše vždy dřív než řazení.",
+      "ORDER BY seřadí výsledek podle zadaného sloupce od nejmenšího; pro opačné pořadí přidej DESC. Krásně se kombinuje s WHERE – podmínka se píše vždy dřív než řazení.",
     example: "SELECT nazev, pocet_stran FROM knihy ORDER BY pocet_stran DESC;",
     zadani: "Vypiš dostupné knihy (dostupna = 1) seřazené podle roku vydání od nejstarší.",
     reference: "SELECT nazev, rok FROM knihy WHERE dostupna = 1 ORDER BY rok;",
@@ -100,7 +100,7 @@ export const LESSONS: SqlLesson[] = [
     id: 5,
     title: "Počítání COUNT",
     teach:
-      "Agregační funkce udělají z mnoha řádků jedno číslo. COUNT(*) vrátí počet řádků výsledku — hodí se na otázky typu „kolik…“.",
+      "Agregační funkce udělají z mnoha řádků jedno číslo. COUNT(*) vrátí počet řádků výsledku – hodí se na otázky typu „kolik…“.",
     example: "SELECT COUNT(*) FROM ctenari;",
     zadani: "Zjisti, kolik knih je celkem v databázi.",
     reference: "SELECT COUNT(*) FROM knihy;",
@@ -120,7 +120,7 @@ export const LESSONS: SqlLesson[] = [
     id: 7,
     title: "Skupiny GROUP BY",
     teach:
-      "GROUP BY seskupí řádky se stejnou hodnotou a agregace se spočítá pro každou skupinu zvlášť. Typicky: „kolik čeho“ — počty po kategoriích.",
+      "GROUP BY seskupí řádky se stejnou hodnotou a agregace se spočítá pro každou skupinu zvlášť. Typicky: „kolik čeho“ – počty po kategoriích.",
     example: "SELECT trida, COUNT(*) FROM ctenari GROUP BY trida;",
     zadani: "Zjisti, kolik knih je od každého žánru.",
     reference: "SELECT zanr, COUNT(*) FROM knihy GROUP BY zanr;",
@@ -130,10 +130,10 @@ export const LESSONS: SqlLesson[] = [
     id: 8,
     title: "Propojení tabulek JOIN",
     teach:
-      "Data bývají rozdělená do více tabulek propojených klíči — výpůjčka si pamatuje jen ID knihy a ID čtenáře. JOIN tabulky spojí dohromady: JOIN tabulka ON podmínka (obvykle rovnost klíčů).",
+      "Data bývají rozdělená do více tabulek propojených klíči – výpůjčka si pamatuje jen ID knihy a ID čtenáře. JOIN tabulky spojí dohromady: JOIN tabulka ON podmínka (obvykle rovnost klíčů).",
     example: "SELECT * FROM vypujcky JOIN knihy ON vypujcky.kniha_id = knihy.id;",
     zadani:
-      "Vypiš, kdo si půjčil kterou knihu — jméno čtenáře a název knihy. (Propojíš tři tabulky.)",
+      "Vypiš, kdo si půjčil kterou knihu – jméno čtenáře a název knihy. (Propojíš tři tabulky.)",
     reference:
       "SELECT ctenari.jmeno, knihy.nazev FROM vypujcky " +
       "JOIN ctenari ON vypujcky.ctenar_id = ctenari.id " +

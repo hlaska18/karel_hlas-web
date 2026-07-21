@@ -201,7 +201,7 @@ export function SqlPlayground() {
       {allDone && (
         <div className="glass-accent rounded-2xl p-5">
           <p className="flex items-center gap-2 font-display text-lg font-bold text-zinc-900 dark:text-white">
-            <PartyPopper className="h-5 w-5 text-accent-600 dark:text-accent-300" /> Kurz dokončen —
+            <PartyPopper className="h-5 w-5 text-accent-600 dark:text-accent-300" /> Kurz dokončen –
             všech {LESSONS.length} lekcí!
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">
@@ -352,7 +352,7 @@ function ResultTable({ result }: { result: SqlResult }) {
             <tr key={ri} className="border-b border-black/5 last:border-0 dark:border-white/5">
               {row.map((cell, ci) => (
                 <td key={ci} className="whitespace-nowrap px-4 py-2 text-zinc-600 dark:text-zinc-300">
-                  {cell === null ? "—" : String(cell)}
+                  {cell === null ? "–" : String(cell)}
                 </td>
               ))}
             </tr>

@@ -1,7 +1,7 @@
 import type { ReactNode } from "react";
 
 /**
- * Kicker sekce s pořadovým číslem a smaragdovou tečkou — podpisový motiv
+ * Kicker sekce s pořadovým číslem a smaragdovou tečkou – podpisový motiv
  * (tečka navazuje na tečku v tlačítkách). Rozbíjí uniformní rytmus sekcí.
  */
 export function SectionKicker({ no, children }: { no: string; children: ReactNode }) {

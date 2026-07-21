@@ -34,7 +34,7 @@ export function Contact() {
           </p>
         </Reveal>
 
-        {/* Jednotná mřížka dlaždic — škola je stejná dlaždice jako ostatní */}
+        {/* Jednotná mřížka dlaždic – škola je stejná dlaždice jako ostatní */}
         <Reveal as="div" stagger className="mt-12 grid gap-3 sm:grid-cols-2">
           <ContactRow
             icon={<Mail className="h-5 w-5" />}
