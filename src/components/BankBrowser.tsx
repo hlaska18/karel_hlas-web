@@ -501,12 +501,6 @@ type LessonConfig = {
 };
 
 const LESSON_CONFIG: Record<string, LessonConfig> = {
-  Python: {
-    studentGroups: ["Python – pracovní listy"],
-    teacherGroups: ["Python – metodické listy"],
-    studentLabel: { cs: "Pracovní list", en: "Worksheet" },
-    teacherLabel: { cs: "Metodika", en: "Teaching notes" },
-  },
   "Digitální gramotnost": {
     studentGroups: ["Pracovní listy"],
     teacherNoGroup: true,
