@@ -4,6 +4,7 @@ import { ArrowLeft, Download, FileText, MonitorDown } from "lucide-react";
 import { SITE } from "@/lib/content";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
+import { Monogram } from "@/components/Monogram";
 import { SqlPlayground } from "@/components/SqlPlayground";
 
 /** Cesty na soubory v bance (téma 8 – Základy databází). */
@@ -22,9 +23,7 @@ export default function SqlPage() {
       <header className="glass-bar sticky top-0 z-40">
         <nav className="container-page flex h-16 items-center justify-between gap-4">
           <Link href="/" className="group flex items-center gap-2.5" aria-label={SITE.name}>
-            <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-600 font-display text-sm font-bold text-white">
-              {SITE.initials}
-            </span>
+            <Monogram />
             <span className="hidden font-display text-sm font-semibold tracking-tight sm:block">
               {SITE.name}
             </span>

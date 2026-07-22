@@ -6,7 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { BADGES, SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
-import { SectionKicker } from "@/components/SectionKicker";
+import { SectionHeader } from "@/components/SectionHeader";
 
 export function About() {
   const { tr } = useLang();
@@ -15,12 +15,12 @@ export function About() {
   return (
     <section id="about" className="py-10 sm:py-14">
       <div className="container-page">
-        <Reveal>
-          <SectionKicker no="03">{a.kicker}</SectionKicker>
-          <h2 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-            {a.heading}
-          </h2>
-        </Reveal>
+        <SectionHeader
+          no="03"
+          kicker={a.kicker}
+          heading={a.heading}
+          headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl"
+        />
 
         <div className="mt-12 grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
           {/* Text */}

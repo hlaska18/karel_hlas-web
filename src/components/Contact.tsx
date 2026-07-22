@@ -15,7 +15,7 @@ import { useLang } from "@/lib/i18n";
 import { SITE, SOCIALS } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
-import { SectionKicker } from "@/components/SectionKicker";
+import { SectionHeader } from "@/components/SectionHeader";
 
 export function Contact() {
   const { tr } = useLang();
@@ -24,15 +24,13 @@ export function Contact() {
   return (
     <section id="contact" className="py-10 sm:py-14">
       <div className="container-page">
-        <Reveal>
-          <SectionKicker no="04">{c.kicker}</SectionKicker>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            {c.heading}
-          </h2>
-          <p className="mt-4 max-w-2xl text-base leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-lg">
-            {c.intro}
-          </p>
-        </Reveal>
+        <SectionHeader
+          no="04"
+          kicker={c.kicker}
+          heading={c.heading}
+          intro={c.intro}
+          introClassName="mt-4 max-w-2xl text-base leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-lg"
+        />
 
         {/* Jednotná mřížka dlaždic – škola je stejná dlaždice jako ostatní */}
         <Reveal as="div" stagger className="mt-12 grid gap-3 sm:grid-cols-2">

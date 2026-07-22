@@ -3,6 +3,7 @@
 import { ArrowUp } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
+import { Monogram } from "@/components/Monogram";
 
 export function Footer() {
   const { tr } = useLang();
@@ -12,9 +13,7 @@ export function Footer() {
     <footer className="border-t border-black/5 py-10 dark:border-white/10">
       <div className="container-page flex flex-col items-center justify-between gap-6 sm:flex-row">
         <div className="flex items-center gap-3">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-600 font-display text-sm font-bold text-white">
-            {SITE.initials}
-          </span>
+          <Monogram />
           <div>
             <p className="font-display text-sm font-semibold tracking-tight">{SITE.name}</p>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">{tr.footer.role}</p>

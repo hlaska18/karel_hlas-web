@@ -6,6 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LangToggle } from "@/components/LangToggle";
+import { Monogram } from "@/components/Monogram";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Header() {
@@ -37,9 +38,7 @@ export function Header() {
       <nav className="container-page flex h-16 items-center justify-between gap-4">
         {/* Logo / monogram */}
         <a href="#top" className="group flex items-center gap-2.5" aria-label={SITE.name}>
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-accent-600 font-display text-sm font-bold text-white shadow-sm transition group-hover:bg-accent-500">
-            {SITE.initials}
-          </span>
+          <Monogram className="shadow-sm transition group-hover:bg-accent-500" />
           <span className="hidden font-display text-sm font-semibold tracking-tight sm:block">
             {SITE.name}
           </span>
