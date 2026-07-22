@@ -54,6 +54,8 @@ const STR: Record<
     tryOnlineCta: string;
     docxLoading: string;
     docxError: string;
+    codeLoading: string;
+    codeError: string;
   }
 > = {
   cs: {
@@ -79,6 +81,8 @@ const STR: Record<
     tryOnlineCta: "Spustit kurz",
     docxLoading: "Načítám náhled dokumentu…",
     docxError: "Náhled se nepodařilo vykreslit – stáhni si dokument tlačítkem výše.",
+    codeLoading: "Načítám náhled kódu…",
+    codeError: "Náhled kódu se nepodařilo vykreslit – stáhni si soubor tlačítkem výše.",
   },
   en: {
     searchPlaceholder: "Search material, topic, tool…",
@@ -103,6 +107,8 @@ const STR: Record<
     tryOnlineCta: "Start the course",
     docxLoading: "Loading document preview…",
     docxError: "Preview failed to render – use the download button above.",
+    codeLoading: "Loading code preview…",
+    codeError: "Code preview failed to render – use the download button above.",
   },
 };
 
@@ -124,8 +130,16 @@ const PDF = ["pdf"];
 const TEXT = ["txt", "csv"];
 /** Word: vykreslujeme client-side přes docx-preview (jen moderní .docx, ne starý .doc). */
 const DOCX = ["docx"];
+/** Zdrojový kód: obarvíme přes highlight.js (lazy z CDN) a vypíšeme do <pre>. */
+const CODE = ["py", "sql", "js", "ts", "tsx", "jsx", "json", "html", "css", "java", "c", "cpp", "sh", "xml"];
 function canPreview(ext: string): boolean {
-  return IMG.includes(ext) || PDF.includes(ext) || TEXT.includes(ext) || DOCX.includes(ext);
+  return (
+    IMG.includes(ext) ||
+    PDF.includes(ext) ||
+    TEXT.includes(ext) ||
+    DOCX.includes(ext) ||
+    CODE.includes(ext)
+  );
 }
 
 /** Sloučí přípony do přátelské kategorie (odznak typu u řádku). */
@@ -822,6 +836,67 @@ function TextView({
   );
 }
 
+/**
+ * Náhled souborů s kódem (.py, .sql, .js…). Text stáhneme fetchem (jako TextView)
+ * a obarvíme přes highlight.js (lazy z CDN). Výsledek jde do scrollovatelného
+ * monospace <pre>; téma se přepíná světlá/tmavá dle třídy .dark na <html>.
+ */
+function CodeView({
+  href,
+  ext,
+  loadingText,
+  errorText,
+}: {
+  href: string;
+  ext: string;
+  loadingText: string;
+  errorText: string;
+}) {
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+  const [html, setHtml] = useState("");
+
+  useEffect(() => {
+    let alive = true;
+    setState("loading");
+    (async () => {
+      try {
+        const res = await fetch(href);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const text = await res.text();
+        const { highlightCode } = await import("@/lib/codePreview");
+        const out = await highlightCode(text, ext);
+        if (alive) {
+          setHtml(out);
+          setState("ready");
+        }
+      } catch {
+        if (alive) setState("error");
+      }
+    })();
+    return () => {
+      alive = false;
+    };
+  }, [href, ext]);
+
+  if (state === "loading")
+    return (
+      <p className="flex items-center justify-center gap-2 py-16 text-sm text-zinc-600 dark:text-zinc-300">
+        <Loader2 className="h-4 w-4 animate-spin" /> {loadingText}
+      </p>
+    );
+  if (state === "error")
+    return (
+      <p className="px-6 py-16 text-center text-sm text-zinc-600 dark:text-zinc-300">{errorText}</p>
+    );
+  return (
+    <div className="h-[78vh] w-full overflow-auto rounded-xl bg-white dark:bg-zinc-900">
+      <pre className="p-5 font-mono text-xs leading-relaxed text-zinc-800 dark:text-zinc-100 sm:text-sm">
+        <code className="hljs bg-transparent" dangerouslySetInnerHTML={{ __html: html }} />
+      </pre>
+    </div>
+  );
+}
+
 function PreviewModal({
   item,
   lang,
@@ -835,6 +910,7 @@ function PreviewModal({
   const isImg = IMG.includes(item.ext);
   const isDocx = DOCX.includes(item.ext);
   const isText = TEXT.includes(item.ext);
+  const isCode = CODE.includes(item.ext);
   const label = L(item.label, lang);
 
   useEffect(() => {
@@ -899,6 +975,13 @@ function PreviewModal({
             <DocxView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
           ) : isText ? (
             <TextView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
+          ) : isCode ? (
+            <CodeView
+              href={item.href}
+              ext={item.ext}
+              loadingText={s.codeLoading}
+              errorText={s.codeError}
+            />
           ) : (
             <iframe src={item.href} title={label} className="h-[78vh] w-full rounded-xl border-0 bg-white" />
           )}
