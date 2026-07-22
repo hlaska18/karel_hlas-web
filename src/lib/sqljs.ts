@@ -30,6 +30,11 @@ function loadScript(): Promise<InitSqlJs> {
     s.onerror = () => reject(new Error("Nepodařilo se stáhnout SQL engine"));
     document.head.appendChild(s);
   });
+  // Neúspěch nekešujeme: jinak by každý další pokus (i po obnovení sítě) dostal
+  // tu samou starou chybu a engine by se už nikdy nenačetl.
+  scriptPromise.catch(() => {
+    scriptPromise = null;
+  });
   return scriptPromise;
 }
 

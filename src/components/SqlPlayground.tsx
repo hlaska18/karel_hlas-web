@@ -71,7 +71,11 @@ export function SqlPlayground() {
         dbRef.current = db;
         setDbState("ready");
       })
-      .catch(() => alive && setDbState("error"));
+      .catch((err) => {
+        if (!alive) return;
+        console.error("SQL engine se nepodařilo načíst:", err);
+        setDbState("error");
+      });
     return () => {
       alive = false;
     };
