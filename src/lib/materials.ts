@@ -82,7 +82,6 @@ const NAME_EN: Record<string, string> = {
   "Úvod do databází a SQL": "Introduction to databases and SQL",
   "SQL – základy databází": "SQL – database basics",
   "SQL – řešení": "SQL – solutions",
-  "Power Query – import z databází": "Power Query – importing from databases",
   "Plán hodin – Kurz SQL": "Lesson plans – SQL course",
   "Pracovní list – SQL": "SQL worksheet",
   "Řešení – SQL": "SQL solutions",
