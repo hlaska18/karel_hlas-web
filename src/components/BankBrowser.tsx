@@ -731,9 +731,16 @@ function DocxView({
     let alive = true;
     setState("loading");
     import("@/lib/docxPreview")
-      .then((m) => (ref.current ? m.renderDocx(href, ref.current) : Promise.reject()))
+      .then((m) => {
+        if (!ref.current) throw new Error("Náhled byl zavřen před dokončením načítání");
+        return m.renderDocx(href, ref.current);
+      })
       .then(() => alive && setState("ready"))
-      .catch(() => alive && setState("error"));
+      .catch((err) => {
+        if (!alive) return;
+        console.error(`Náhled dokumentu se nepodařilo vykreslit (${href}):`, err);
+        setState("error");
+      });
     return () => {
       alive = false;
     };
@@ -776,14 +783,21 @@ function TextView({
     let alive = true;
     setState("loading");
     fetch(href)
-      .then((res) => (res.ok ? res.text() : Promise.reject()))
+      .then((res) => {
+        if (!res.ok) throw new Error(`Soubor se nepodařilo stáhnout (${res.status})`);
+        return res.text();
+      })
       .then((t) => {
         if (alive) {
           setText(t);
           setState("ready");
         }
       })
-      .catch(() => alive && setState("error"));
+      .catch((err) => {
+        if (!alive) return;
+        console.error(`Náhled textu se nepodařilo načíst (${href}):`, err);
+        setState("error");
+      });
     return () => {
       alive = false;
     };

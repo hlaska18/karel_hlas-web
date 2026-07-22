@@ -204,7 +204,12 @@ export function getBankItems(): BankItem[] {
       .filter((d) => d.isDirectory())
       .map((d) => d.name)
       .sort(); // 1L první = reprezentant po sloučení (má kompletní plán)
-  } catch {
+  } catch (err) {
+    // Chybějící složka je legitimní stav (zatím nejsou materiály); cokoli jiného
+    // (práva, poškozený FS) je ale chyba, kterou chceme vidět v build logu.
+    if ((err as NodeJS.ErrnoException).code !== "ENOENT") {
+      console.warn(`[materials] Nepodařilo se přečíst složku materiálů (${ROOT}):`, err);
+    }
     return [];
   }
   const totalCourses = courseDirs.length;
@@ -217,7 +222,8 @@ export function getBankItems(): BankItem[] {
         .readdirSync(courseDir, { withFileTypes: true })
         .filter((d) => d.isDirectory())
         .map((d) => d.name);
-    } catch {
+    } catch (err) {
+      console.warn(`[materials] Nepodařilo se přečíst složku kurzu ${courseDir}:`, err);
       continue;
     }
 
@@ -239,7 +245,8 @@ export function getBankItems(): BankItem[] {
         let ents: fs.Dirent[] = [];
         try {
           ents = fs.readdirSync(absDir, { withFileTypes: true }).filter((x) => !isHidden(x.name));
-        } catch {
+        } catch (err) {
+          console.warn(`[materials] Nepodařilo se přečíst složku ${absDir}:`, err);
           return;
         }
         ents.sort((a, b) => byName(a.name, b.name));
@@ -259,7 +266,9 @@ export function getBankItems(): BankItem[] {
             let src: { cs?: string; en?: string; url?: string };
             try {
               src = JSON.parse(fs.readFileSync(path.join(absDir, e.name), "utf8"));
-            } catch {
+            } catch (err) {
+              // Poškozený _zdroj.json by jinak tiše zahodil odkaz na materiál.
+              console.warn(`[materials] Neplatný _zdroj.json v ${absDir}:`, err);
               continue;
             }
             // URL je volitelná: bez ní je to jen informační atribuce (materiál
@@ -310,8 +319,8 @@ export function getBankItems(): BankItem[] {
             let sizeBytes = 0;
             try {
               sizeBytes = fs.statSync(path.join(absDir, file)).size;
-            } catch {
-              /* ignore */
+            } catch (err) {
+              console.warn(`[materials] Nepodařilo se zjistit velikost souboru ${file}:`, err);
             }
             seen.set(key, {
               href: "/materialy/" + parts.join("/"),
