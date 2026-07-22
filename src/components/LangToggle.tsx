@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useLang } from "@/lib/i18n";
+import { ICON_BUTTON } from "@/lib/styles";
 
 /**
  * Přepínač jazyka – kolečko (stejná velikost jako přepínač motivu).
@@ -34,7 +35,7 @@ export function LangToggle({ counterpartPath }: { counterpartPath?: string }) {
           /* bez JS pojede prostý odkaz */
         }
       }}
-      className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 bg-white/70 text-xs font-bold tracking-wide text-zinc-700 transition hover:border-accent-400 hover:text-accent-600 dark:border-white/15 dark:bg-white/5 dark:text-zinc-200 dark:hover:text-accent-400"
+      className={`${ICON_BUTTON} text-xs font-bold tracking-wide`}
     >
       {current}
     </Link>

@@ -1,9 +1,41 @@
+import { ImageResponse } from "next/og";
+import { SITE, type Lang } from "@/lib/content";
+
 /**
  * Sdílená vizuální šablona pro OG/Twitter kartu (1200×630), generovaná přes
  * next/og (Satori) – žádný headless prohlížeč, žádný statický obrázek k ruční
  * aktualizaci. Používá jen flexbox + inline styly (limity Satori).
  */
 export const OG_SIZE = { width: 1200, height: 630 };
+
+/** MIME typ generovaného obrázku – sdílený všemi OG/Twitter routami. */
+export const OG_CONTENT_TYPE = "image/png";
+
+/**
+ * Texty OG/Twitter karty pro oba jazyky. Sdílené mezi opengraph-image
+ * a twitter-image (dřív byly čtyři byte-shodné soubory).
+ */
+export const OG_CONTENT: Record<Lang, { alt: string; headline: string; sub: string }> = {
+  cs: {
+    alt: "Materiály pro výuku informatiky – Karel Hlas",
+    headline: "Hotové materiály do hodin informatiky",
+    sub: "Pracovní listy, testy, metodika a plány hodin – zdarma ke stažení",
+  },
+  en: {
+    alt: "Ready-made materials for CS lessons – Karel Hlas",
+    headline: "Ready-made materials for CS lessons",
+    sub: "Worksheets, tests, teaching notes and lesson plans – free to download",
+  },
+};
+
+/** Vygeneruje ImageResponse pro OG/Twitter kartu v daném jazyce. */
+export function ogImageResponse(lang: Lang) {
+  const c = OG_CONTENT[lang];
+  return new ImageResponse(
+    ogCard({ headline: c.headline, sub: c.sub, byline: SITE.name, domain: SITE.domain }),
+    { ...OG_SIZE },
+  );
+}
 
 const TOOLS = ["Excel", "Word", "Python", "Power BI"];
 

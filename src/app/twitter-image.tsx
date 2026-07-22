@@ -1,19 +1,9 @@
-import { ImageResponse } from "next/og";
-import { ogCard, OG_SIZE } from "@/lib/ogCard";
-import { SITE } from "@/lib/content";
+import { OG_SIZE, OG_CONTENT_TYPE, OG_CONTENT, ogImageResponse } from "@/lib/ogCard";
 
 export const size = OG_SIZE;
-export const contentType = "image/png";
-export const alt = "Materiály pro výuku informatiky – Karel Hlas";
+export const contentType = OG_CONTENT_TYPE;
+export const alt = OG_CONTENT.cs.alt;
 
 export default function Image() {
-  return new ImageResponse(
-    ogCard({
-      headline: "Hotové materiály do hodin informatiky",
-      sub: "Pracovní listy, testy, metodika a plány hodin – zdarma ke stažení",
-      byline: "Karel Hlas",
-      domain: SITE.domain,
-    }),
-    { ...size },
-  );
+  return ogImageResponse("cs");
 }

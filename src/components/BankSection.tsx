@@ -5,8 +5,7 @@ import { useLang } from "@/lib/i18n";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
 import { BankBrowser } from "@/components/BankBrowser";
-import { Reveal } from "@/components/Reveal";
-import { SectionKicker } from "@/components/SectionKicker";
+import { SectionHeader } from "@/components/SectionHeader";
 
 const STR: Record<Lang, { license: string }> = {
   cs: {
@@ -29,15 +28,7 @@ export function BankSection({ items }: { items: BankItem[] }) {
   return (
     <section id="banka" className="relative py-10 sm:py-14">
       <div className="container-page">
-        <Reveal>
-          <SectionKicker no="01">{m.kicker}</SectionKicker>
-          <h2 className="mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl">
-            {m.heading}
-          </h2>
-          <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-            {m.sub}
-          </p>
-        </Reveal>
+        <SectionHeader no="01" kicker={m.kicker} heading={m.heading} intro={m.sub} />
 
         <div className="mt-8">
           <BankBrowser items={items} lang={lang} />
