@@ -5,6 +5,7 @@
 
 const SQLJS_VERSION = "1.10.3";
 const CDN = `https://cdn.jsdelivr.net/npm/sql.js@${SQLJS_VERSION}/dist/`;
+const SQLJS_SRI = "sha384-8D3Rsfo535FqoC1pHCCQMrNf75UgzyoG/HQm9zOzITRrz3QKzecc2E7JXKGCXoWu";
 
 export type SqlResult = { columns: string[]; values: unknown[][] };
 export type SqlDb = { exec(sql: string): SqlResult[] };
@@ -22,6 +23,8 @@ function loadScript(): Promise<InitSqlJs> {
     const s = document.createElement("script");
     s.src = `${CDN}sql-wasm.js`;
     s.async = true;
+    s.integrity = SQLJS_SRI;
+    s.crossOrigin = "anonymous";
     s.onload = () =>
       w.initSqlJs ? resolve(w.initSqlJs) : reject(new Error("sql.js se nenačetlo"));
     s.onerror = () => reject(new Error("Nepodařilo se stáhnout SQL engine"));
