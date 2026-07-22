@@ -10,13 +10,6 @@ export function Hero() {
 
   return (
     <section id="top" className="relative overflow-hidden pt-28 sm:pt-32">
-      {/* Jemný dotovaný vzor přes celou plochu (uniformní – žádné lokální glow,
-          které dřív vytvářely dojem „černých pruhů" po krajích). */}
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 -z-10 text-black/[0.04] bg-dots dark:text-white/[0.05]"
-      />
-
       <div className="container-page pb-12 lg:pb-16">
         <div className="max-w-3xl">
           <span className="glass-soft inline-flex items-center gap-2 rounded-full px-3.5 py-1.5 text-xs font-semibold text-accent-700 dark:text-accent-300">
