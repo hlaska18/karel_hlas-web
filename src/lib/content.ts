@@ -1045,7 +1045,14 @@ type Dict = {
     audienceStudent: string;
     audienceBoth: string;
   };
-  materials: { kicker: string; heading: string; sub: string; browseAll: string };
+  materials: {
+    kicker: string;
+    heading: string;
+    sub: string;
+    /** Důkaz, že materiály nejsou teorie – zůstalo po zrušené sekci „Ověřeno ve výuce". */
+    proof: string;
+    browseAll: string;
+  };
   contact: {
     kicker: string;
     heading: string;
@@ -1144,6 +1151,7 @@ export const t: Record<Lang, Dict> = {
       kicker: "Banka materiálů",
       heading: "Vyber si téma",
       sub: "Hotové materiály ke stažení a úpravě – klikni na téma a procházej.",
+      proof: "Všechno odučené v hodinách na SPŠ Tábor.",
       browseAll: "Otevřít celou banku a hledat",
     },
     contact: {
@@ -1243,6 +1251,7 @@ export const t: Record<Lang, Dict> = {
       kicker: "Material bank",
       heading: "Pick a topic",
       sub: "Ready-made materials to download and edit – click a topic to browse.",
+      proof: "All of it taught in real lessons at SPŠ Tábor.",
       browseAll: "Open the full bank & search",
     },
     contact: {
