@@ -16,7 +16,7 @@ export function About() {
     <section id="about" className="py-10 sm:py-14">
       <div className="container-page">
         <SectionHeader
-          no="03"
+          no="02"
           kicker={a.kicker}
           heading={a.heading}
           headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl"

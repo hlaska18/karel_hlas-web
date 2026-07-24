@@ -1026,6 +1026,9 @@ type Dict = {
     education: TimelineItem[];
     experience: TimelineItem[];
   };
+  /** Pozn.: sekce „Výuka" byla z homepage odstraněna (duplicitní plány 1S/1P,
+      pro cizího učitele bez užitku). Texty i COURSES zůstávají – COURSES
+      dodává bance názvy témat a oborů, takže se NESMÍ smazat. */
   lessons: {
     kicker: string;
     heading: string;

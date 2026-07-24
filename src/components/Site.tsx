@@ -4,7 +4,6 @@ import { Hero } from "@/components/Hero";
 import { BankSection } from "@/components/BankSection";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
-import { Curriculum } from "@/components/Curriculum";
 import { Footer } from "@/components/Footer";
 import type { Lang } from "@/lib/content";
 import { getBankStats, getHeroHighlights, type BankItem } from "@/lib/materials";
@@ -23,7 +22,6 @@ export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
       <main id="main">
         <Hero highlights={getHeroHighlights(items)} stats={getBankStats(items)} />
         <BankSection items={items} />
-        <Curriculum />
         <About />
         <Contact />
       </main>

@@ -1,7 +1,7 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ArrowLeft, GraduationCap } from "lucide-react";
+import { ArrowLeft, Library } from "lucide-react";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 /**
@@ -17,13 +17,13 @@ export default function NotFound() {
         title: "Page not found",
         desc: "This page doesn't exist – maybe a typo in the address, or it has moved.",
         home: "Back to homepage",
-        lessons: "Lessons & materials",
+        lessons: "Teaching materials",
       }
     : {
         title: "Stránka nenalezena",
         desc: "Tahle stránka neexistuje – možná překlep v adrese, nebo se přestěhovala.",
         home: "Zpět na úvod",
-        lessons: "Výuka a materiály",
+        lessons: "Materiály do výuky",
       };
   const home = en ? "/en" : "/";
 
@@ -48,9 +48,9 @@ export default function NotFound() {
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <InteractiveHoverButton href={home} text={t.home} icon={<ArrowLeft className="h-4 w-4" />} />
           <InteractiveHoverButton
-            href={`${home}#vyuka`}
+            href={`${home}#banka`}
             text={t.lessons}
-            icon={<GraduationCap className="h-4 w-4" />}
+            icon={<Library className="h-4 w-4" />}
           />
         </div>
       </div>

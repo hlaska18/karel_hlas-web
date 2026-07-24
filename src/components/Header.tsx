@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, User, Mail, GraduationCap, Library } from "lucide-react";
+import { Menu, X, User, Mail, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -21,10 +21,9 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // One-page: všechno jsou kotvy na téže stránce (pořadí sekcí 01–04).
+  // One-page: všechno jsou kotvy na téže stránce (pořadí sekcí 01–03).
   const links = [
     { href: "#banka", label: tr.nav.bank },
-    { href: "#vyuka", label: tr.nav.lessons },
     { href: "#about", label: tr.nav.about },
     { href: "#contact", label: tr.nav.contact },
   ];
@@ -51,12 +50,6 @@ export function Header() {
             text={tr.nav.bank}
             size="sm"
             icon={<Library className="h-4 w-4" />}
-          />
-          <InteractiveHoverButton
-            href="#vyuka"
-            text={tr.nav.lessons}
-            size="sm"
-            icon={<GraduationCap className="h-4 w-4" />}
           />
           <InteractiveHoverButton
             href="#about"
