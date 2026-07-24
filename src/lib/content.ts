@@ -1007,6 +1007,9 @@ type Dict = {
     role: string;
     tagline: string;
     byline: string;
+    /** Důkazní řádek. `{files}` a `{topics}` se nahradí reálnými čísly z banky. */
+    stats: string;
+    sample: string;
     ctaLessons: string;
     ctaContact: string;
     scroll: string;
@@ -1064,11 +1067,13 @@ export const t: Record<Lang, Dict> = {
     nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt", bank: "Materiály do výuky" },
     hero: {
       badge: "Materiály pro výuku informatiky · zdarma",
-      headline: "Hotové materiály do hodin informatiky. Stačí sáhnout.",
+      headline: "Hotové materiály do informatiky",
       role: "Učitel informatiky a angličtiny",
       tagline:
-        "Pracovní listy, testy, plány hodin i metodika – Excel, Word, Python, Power BI a další. Ke stažení a úpravě, bez přihlašování.",
+        "Pro střední školy. Zdarma, ke stažení i úpravě, bez přihlašování.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
+      stats: "{files} souborů · {topics} témat · Word, PDF, Python",
+      sample: "Ukázka z banky",
       ctaLessons: "Procházet banku materiálů",
       ctaContact: "O mně",
       scroll: "Materiály",
@@ -1166,11 +1171,13 @@ export const t: Record<Lang, Dict> = {
     nav: { about: "About", lessons: "Lessons", contact: "Contact", bank: "Teaching materials" },
     hero: {
       badge: "Materials for CS teaching · free",
-      headline: "Ready-made materials for CS lessons. Just grab them.",
+      headline: "Ready-made CS teaching materials",
       role: "Computer Science & English Language Teacher",
       tagline:
-        "Worksheets, tests, lesson plans and teaching notes – Excel, Word, Python, Power BI and more. Free to download and edit.",
+        "For secondary schools. Free to download and edit, no sign-up.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
+      stats: "{files} files · {topics} topics · Word, PDF, Python",
+      sample: "From the bank",
       ctaLessons: "Browse the material bank",
       ctaContact: "About me",
       scroll: "Materials",
