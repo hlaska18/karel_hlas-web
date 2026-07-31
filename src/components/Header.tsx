@@ -5,7 +5,7 @@ import { Menu, X, User, Mail, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LangToggle } from "@/components/LangToggle";
-import { Monogram } from "@/components/Monogram";
+import { Mark } from "@/components/Mark";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 
 export function Header() {
@@ -36,7 +36,7 @@ export function Header() {
       <nav className="container-page flex h-16 items-center justify-between gap-4">
         {/* Logo / monogram */}
         <a href="#top" className="group flex items-center gap-2.5" aria-label={tr.nav.brand}>
-          <Monogram className="shadow-sm transition group-hover:bg-accent-500" />
+          <Mark className="shadow-sm transition group-hover:border-accent-500/70" />
           {/* Web je banka materiálů, ne osobní portfolio – logo proto pojmenuje
               téma a jméno je až podtitulek (stejná logika jako v úvodní sekci). */}
           <span className="hidden leading-tight sm:block">

@@ -1,5 +1,6 @@
 import { ImageResponse } from "next/og";
 import { SITE, type Lang } from "@/lib/content";
+import { markDataUri } from "@/lib/mark";
 
 /**
  * Sdílená vizuální šablona pro OG/Twitter kartu (1200×630), generovaná přes
@@ -66,12 +67,16 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
             height: 56,
             borderRadius: 16,
             backgroundImage: "linear-gradient(135deg, #14b28b, #0b9273)",
-            color: "#ffffff",
-            fontSize: 22,
-            fontWeight: 700,
           }}
         >
-          KH
+          {/* Značka jako <img> s data URI – Satori vlastní <svg> tahy nevykreslí. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={markDataUri({ size: 56, background: null, color: "#ffffff", glyphRatio: 0.58 })}
+            alt=""
+            width={56}
+            height={56}
+          />
         </div>
         <div style={{ display: "flex", color: "#a8f0da", fontSize: 28, fontWeight: 600 }}>
           {opts.byline}
