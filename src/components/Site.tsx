@@ -6,7 +6,8 @@ import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import type { Lang } from "@/lib/content";
-import { getBankStats, getHeroHighlights, type BankItem } from "@/lib/materials";
+import type { BankItem } from "@/lib/materials";
+import { getBankStats, getHeroPool } from "@/lib/heroPick";
 
 /** Celý web na jedné stránce (one-page). Jazyk přichází z adresy (/ nebo /en). */
 export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
@@ -20,7 +21,7 @@ export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
       />
       <Header />
       <main id="main">
-        <Hero highlights={getHeroHighlights(items)} stats={getBankStats(items)} />
+        <Hero pool={getHeroPool(items)} stats={getBankStats(items)} />
         <BankSection items={items} />
         <About />
         <Contact />

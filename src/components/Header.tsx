@@ -3,7 +3,6 @@
 import { useEffect, useState } from "react";
 import { Menu, X, User, Mail, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
-import { SITE } from "@/lib/content";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LangToggle } from "@/components/LangToggle";
 import { Monogram } from "@/components/Monogram";
@@ -36,10 +35,17 @@ export function Header() {
     >
       <nav className="container-page flex h-16 items-center justify-between gap-4">
         {/* Logo / monogram */}
-        <a href="#top" className="group flex items-center gap-2.5" aria-label={SITE.name}>
+        <a href="#top" className="group flex items-center gap-2.5" aria-label={tr.nav.brand}>
           <Monogram className="shadow-sm transition group-hover:bg-accent-500" />
-          <span className="hidden font-display text-sm font-semibold tracking-tight sm:block">
-            {SITE.name}
+          {/* Web je banka materiálů, ne osobní portfolio – logo proto pojmenuje
+              téma a jméno je až podtitulek (stejná logika jako v úvodní sekci). */}
+          <span className="hidden leading-tight sm:block">
+            <span className="block font-display text-sm font-semibold tracking-tight">
+              {tr.nav.brand}
+            </span>
+            <span className="block text-[0.7rem] text-zinc-500 dark:text-zinc-400">
+              {tr.nav.brandSub}
+            </span>
           </span>
         </a>
 

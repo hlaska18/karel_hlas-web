@@ -6,6 +6,7 @@ import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
 import { BankBrowser } from "@/components/BankBrowser";
 import { SectionHeader } from "@/components/SectionHeader";
+import { SectionJump } from "@/components/SectionJump";
 
 const STR: Record<Lang, { license: string }> = {
   cs: {
@@ -45,6 +46,8 @@ export function BankSection({ items }: { items: BankItem[] }) {
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           {STR[lang].license}
         </p>
+
+        <SectionJump href="#about" label={tr.nav.about} />
       </div>
     </section>
   );

@@ -1,8 +1,10 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { BarChart3, Database, Files, FileCode2, FileSpreadsheet, FileText, Laptop } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { toolLabel } from "@/lib/bankLabels";
+import { pickHeroHighlights } from "@/lib/heroPick";
 import type { BankItem } from "@/lib/materials";
 
 /**
@@ -11,6 +13,9 @@ import type { BankItem } from "@/lib/materials";
  * Záměrně to není dekorativní obrázek: karty nesou reálné názvy souborů,
  * takže je to zároveň ukázka i důkaz („tohle si fakt odnesu"). Drží skleněný
  * jazyk webu, ale nesoupeří s ikonami témat níž – ukazuje soubory, ne témata.
+ *
+ * Při každém načtení se losuje jiná trojice, takže banka působí živě
+ * (a stálý návštěvník uvidí i materiály, na které by jinak nenarazil).
  *
  * Na mobilu se neukazuje: tam se počítá každý pixel nad ohybem a tlačítko
  * musí zůstat vidět bez scrollování.
@@ -42,8 +47,16 @@ const LAYOUT = [
   "-rotate-[1.5deg] translate-x-3",
 ];
 
-export function HeroPreview({ items }: { items: BankItem[] }) {
+export function HeroPreview({ pool }: { pool: BankItem[] }) {
   const { lang, tr } = useLang();
+
+  // Server i první vykreslení musí dát stejnou trojici (jinak neshoda při
+  // hydrataci); teprve po připojení se losuje doopravdy.
+  const [items, setItems] = useState(() => pickHeroHighlights(pool));
+  useEffect(() => {
+    setItems(pickHeroHighlights(pool, 3, Math.random));
+  }, [pool]);
+
   if (items.length === 0) return null;
 
   return (

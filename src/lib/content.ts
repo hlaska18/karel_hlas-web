@@ -1000,7 +1000,15 @@ export const COURSES: Course[] = [
 type TimelineItem = { period: string; place: string; detail: string };
 
 type Dict = {
-  nav: { about: string; lessons: string; contact: string; bank: string };
+  nav: {
+    about: string;
+    lessons: string;
+    contact: string;
+    bank: string;
+    /** Logo v hlavičce: čím web JE (nahoře) a kdo za ním stojí (pod tím). */
+    brand: string;
+    brandSub: string;
+  };
   hero: {
     badge: string;
     headline: string;
@@ -1074,7 +1082,14 @@ type Dict = {
 
 export const t: Record<Lang, Dict> = {
   cs: {
-    nav: { about: "O mně", lessons: "Výuka", contact: "Kontakt", bank: "Materiály do výuky" },
+    nav: {
+      about: "O mně",
+      lessons: "Výuka",
+      contact: "Kontakt",
+      bank: "Materiály do výuky",
+      brand: "Informatika na střední",
+      brandSub: "Karel Hlas · SPŠ Tábor",
+    },
     hero: {
       badge: "Materiály pro výuku informatiky · zdarma",
       headline: "Hotové materiály do informatiky",
@@ -1179,7 +1194,14 @@ export const t: Record<Lang, Dict> = {
   },
 
   en: {
-    nav: { about: "About", lessons: "Lessons", contact: "Contact", bank: "Teaching materials" },
+    nav: {
+      about: "About",
+      lessons: "Lessons",
+      contact: "Contact",
+      bank: "Teaching materials",
+      brand: "Computer science at school",
+      brandSub: "Karel Hlas · SPŠ Tábor",
+    },
     hero: {
       badge: "Materials for CS teaching · free",
       headline: "Ready-made CS teaching materials",

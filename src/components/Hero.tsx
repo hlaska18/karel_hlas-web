@@ -8,11 +8,11 @@ import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 import type { BankItem } from "@/lib/materials";
 
 export function Hero({
-  highlights = [],
+  pool = [],
   stats,
 }: {
-  /** Pár skutečných materiálů do stohu karet vedle nadpisu. */
-  highlights?: BankItem[];
+  /** Kandidáti do stohu karet vedle nadpisu (losuje se z nich v prohlížeči). */
+  pool?: BankItem[];
   /** Reálná čísla z banky pro důkazní řádek. */
   stats?: { files: number; topics: number };
 }) {
@@ -72,7 +72,7 @@ export function Hero({
             <p className="mt-7 text-sm text-zinc-500 dark:text-zinc-400">{tr.hero.byline}</p>
           </div>
 
-          <HeroPreview items={highlights} />
+          <HeroPreview pool={pool} />
         </div>
       </div>
 
