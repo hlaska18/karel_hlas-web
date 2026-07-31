@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { Menu, X, User, Mail, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { ICON_BUTTON } from "@/lib/styles";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { LangToggle } from "@/components/LangToggle";
 import { Mark } from "@/components/Mark";
@@ -79,7 +80,7 @@ export function Header() {
             onClick={() => setOpen((v) => !v)}
             aria-label="Menu"
             aria-expanded={open}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-black/10 text-zinc-700 transition hover:text-accent-600 dark:border-white/15 dark:text-zinc-200 lg:hidden"
+            className={`${ICON_BUTTON} lg:hidden`}
           >
             {open ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>

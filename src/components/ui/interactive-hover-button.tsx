@@ -41,7 +41,9 @@ const baseCls =
   "overflow-hidden rounded-full border border-black/10 bg-white/60 " +
   "font-semibold text-zinc-800 backdrop-blur-md " +
   "transition-all duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 " +
-  "dark:border-white/15 dark:bg-white/10 dark:text-zinc-100";
+  "dark:border-white/15 dark:bg-white/10 dark:text-zinc-100 " +
+  // viz ICON_BUTTON: bez `dark:hover:` prebije `dark:border-*` hover stav
+  "dark:hover:border-accent-500/40";
 
 function Inner({ text, icon, dot }: { text: string; icon?: ReactNode; dot: string }) {
   return (
