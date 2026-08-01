@@ -18,6 +18,8 @@ import {
   ImageIcon,
   ShieldCheck,
   Sparkles,
+  Folder,
+  FolderOpen,
   BarChart3,
   Database,
   Laptop,
@@ -51,6 +53,9 @@ const STR: Record<
     shareLesson: string;
     expandLesson: string;
     collapseLesson: string;
+    teacherFolder: string;
+    expandFolder: string;
+    collapseFolder: string;
     sourceBadge: string;
     sourceNote: string;
     sourceNoteOffline: string;
@@ -78,6 +83,9 @@ const STR: Record<
     shareLesson: "Sdílet odkaz na lekci",
     expandLesson: "Rozbalit lekci",
     collapseLesson: "Sbalit lekci",
+    teacherFolder: "Pro učitele",
+    expandFolder: "Otevřít složku",
+    collapseFolder: "Zavřít složku",
     sourceBadge: "zdroj",
     sourceNote: "Převzatý materiál – otevři u původního zdroje",
     sourceNoteOffline: "Materiál třetí strany – zde není ke stažení",
@@ -104,6 +112,9 @@ const STR: Record<
     shareLesson: "Share lesson link",
     expandLesson: "Expand lesson",
     collapseLesson: "Collapse lesson",
+    teacherFolder: "For teachers",
+    expandFolder: "Open folder",
+    collapseFolder: "Close folder",
     sourceBadge: "source",
     sourceNote: "Third-party material – open at the original source",
     sourceNoteOffline: "Third-party material – not available here",
@@ -309,6 +320,18 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
 
   const showList = needle !== "" || tool !== null;
 
+  // Složkový pohled má smysl až od pár souborů a od dvou složek výš; u dvou
+  // materiálů ve dvou složkách by přidal jen dvě kliknutí navíc. Při hledání
+  // se negrupuje – tam chce člověk vidět všechny shody naráz.
+  const showFolders = useMemo(() => {
+    if (needle !== "" || tool === null) return false;
+    const names = new Set(
+      results.map((it) => it.group?.cs ?? (it.audience === "teacher" ? "\u0000ucitel" : "")),
+    );
+    names.delete("");
+    return results.length >= 6 && names.size >= 2;
+  }, [needle, tool, results]);
+
   return (
     <div>
       {/* Vyhledávání */}
@@ -405,6 +428,8 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
               openLesson={openLesson}
               onPreview={setPreview}
             />
+          ) : showFolders ? (
+            <ToolFolders items={results} lang={lang} onPreview={setPreview} />
           ) : (
             <ul className="mt-4 space-y-2.5">
               {results.map((it) => (
@@ -645,6 +670,124 @@ function ToolLessons({
         <ul className="space-y-2.5 pt-1">
           {extras.map((it) => (
             <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={onPreview} />
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Složkový pohled: materiály se v seznamu seskupí podle PODSLOŽEK, ve kterých
+ * leží na disku – tedy tak, jak je autor balíčku rozdělil (metodika,
+ * prezentace, podklady…). Bez toho je z desítek souborů plochá hromada.
+ *
+ * Učitelské soubory bez podsložky dostanou virtuální složku „Pro učitele":
+ * na disku v takové složce opravdu leží, jen z ní `materials.ts` dělá
+ * publikum (odznak), ne skupinu – v seznamu by se jinak válely volně.
+ *
+ * Volné žákovské soubory (např. „Začněte zde") zůstávají nahoře nad složkami,
+ * stejně jako leží v kořeni balíčku.
+ */
+function ToolFolders({
+  items,
+  lang,
+  onPreview,
+}: {
+  items: BankItem[];
+  lang: Lang;
+  onPreview: (it: BankItem) => void;
+}) {
+  const s = STR[lang];
+  const { loose, folders } = useMemo(() => {
+    const map = new Map<string, BankItem[]>();
+    const rest: BankItem[] = [];
+    for (const it of items) {
+      const name = it.group ? L(it.group, lang) : it.audience === "teacher" ? s.teacherFolder : null;
+      if (name === null) {
+        rest.push(it);
+        continue;
+      }
+      const arr = map.get(name) ?? [];
+      arr.push(it);
+      map.set(name, arr);
+    }
+    return { loose: rest, folders: [...map.entries()].map(([name, its]) => ({ name, items: its })) };
+  }, [items, lang, s.teacherFolder]);
+
+  return (
+    <div className="mt-4 space-y-2.5">
+      {loose.length > 0 && (
+        <ul className="space-y-2.5">
+          {loose.map((it) => (
+            <MaterialRow
+              key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`}
+              it={it}
+              lang={lang}
+              onPreview={onPreview}
+            />
+          ))}
+        </ul>
+      )}
+      {folders.map((f) => (
+        <FolderCard key={f.name} name={f.name} items={f.items} lang={lang} onPreview={onPreview} />
+      ))}
+    </div>
+  );
+}
+
+function FolderCard({
+  name,
+  items,
+  lang,
+  onPreview,
+}: {
+  name: string;
+  items: BankItem[];
+  lang: Lang;
+  onPreview: (it: BankItem) => void;
+}) {
+  const s = STR[lang];
+  const [open, setOpen] = useState(false);
+  const onlyTeacher = items.every((it) => it.audience === "teacher");
+
+  return (
+    <div className="glass rounded-2xl">
+      <button
+        type="button"
+        onClick={() => setOpen((o) => !o)}
+        aria-expanded={open}
+        aria-label={`${open ? s.collapseFolder : s.expandFolder}: ${name}`}
+        className="flex w-full items-center gap-3 px-4 py-3 text-left"
+      >
+        <span
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+            onlyTeacher
+              ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
+              : "bg-accent-500/15 text-accent-700 dark:text-accent-300"
+          }`}
+        >
+          {open ? <FolderOpen className="h-5 w-5" /> : <Folder className="h-5 w-5" />}
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate font-medium text-zinc-900 dark:text-white">{name}</span>
+          <span className="mt-0.5 block text-sm text-zinc-500 dark:text-zinc-400">
+            {countMaterials(items.length, lang)}
+          </span>
+        </span>
+        <ChevronDown
+          className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+      {open && (
+        <ul className="space-y-2 px-3 pb-3">
+          {items.map((it) => (
+            <MaterialRow
+              key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`}
+              it={it}
+              lang={lang}
+              onPreview={onPreview}
+            />
           ))}
         </ul>
       )}
