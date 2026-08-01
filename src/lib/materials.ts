@@ -17,7 +17,7 @@ function kindFromExt(ext: string): Material["kind"] {
   if ([".ppt", ".pptx", ".odp", ".key"].includes(e)) return "slides";
   if ([".mp4", ".mov", ".webm", ".m4v", ".avi"].includes(e)) return "video";
   if (
-    [".py", ".js", ".ts", ".tsx", ".ipynb", ".html", ".css", ".json", ".zip", ".java", ".c", ".cpp", ".sql"].includes(e)
+    [".py", ".js", ".ts", ".tsx", ".ipynb", ".html", ".css", ".json", ".java", ".c", ".cpp", ".sql"].includes(e)
   )
     return "code";
   if (
@@ -92,6 +92,30 @@ const NAME_EN: Record<string, string> = {
   "Žákovský list": "Student worksheet",
   Metodika: "Teaching notes",
   "Plán hodiny": "Lesson plan",
+  // Internet, bezpečnost a práce s informacemi (10 hodin)
+  "Prezentace k hodinám": "Lesson presentations",
+  "Podklady k aktivitám": "Activity materials",
+  "Digitální pracovní sešit": "Digital workbook",
+  "Plány hodin a metodika": "Lesson plans & teaching notes",
+  "Testy A a B": "Tests A and B",
+  "Protokol souladu": "Consistency check",
+  "Bezpečné chování na internetu": "Safe behaviour online",
+  "Hesla a dvoufaktorové ověření": "Passwords and two-factor authentication",
+  "Kybernetické hrozby a phishing": "Cyber threats and phishing",
+  "Šifrování, HTTPS, hash a zálohy": "Encryption, HTTPS, hashing and backups",
+  "Efektivní vyhledávání": "Effective searching",
+  "Ověřování zdrojů metodou 5P": "Verifying sources with the 5P method",
+  "Fake news a obsah od AI": "Fake news and AI-generated content",
+  "Sociální sítě a digitální stopa": "Social networks and digital footprint",
+  "Soukromí, GDPR a autorská práva": "Privacy, GDPR and copyright",
+  "Závěrečná bezpečnostní výzva": "Final security challenge",
+  "Rizikové situace": "Risky situations",
+  "Účty a faktory ověření": "Accounts and authentication factors",
+  "Webové ukázky – HTML": "Web samples – HTML",
+  "Kontrola integrity – projekt A": "Integrity check – project A",
+  "Kontrola integrity – projekt B": "Integrity check – project B",
+  "Vyhledávací výzva": "Search challenge",
+  "Díla a licence": "Works and licences",
 };
 
 /** Anglický popisek z tabulky (NFC kvůli macOS NFD názvům); fallback = čeština. */
@@ -112,6 +136,7 @@ export const TOOL_ORDER = [
   "Word",
   "Excel",
   "Python",
+  "Internet a bezpečnost",
   "Databáze",
   "Power BI",
   "Ostatní",
@@ -166,6 +191,7 @@ function topicLabelOf(topicIndex: number): { cs: string; en: string } {
  */
 function toolOf(hay: string, ext: string): string {
   const h = hay.toLowerCase();
+  if (/internet, bezpečnost|internet a bezpe/.test(h)) return "Internet a bezpečnost";
   if (/power\s?bi/.test(h) || ext === "pbix") return "Power BI";
   if (/databáz|databaz|powerquery|access/.test(h) || ext === "accdb") return "Databáze";
   if (/excel|tabulkov/.test(h) || ["xlsx", "xlsm", "xls", "csv"].includes(ext)) return "Excel";

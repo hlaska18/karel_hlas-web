@@ -1,0 +1,10 @@
+VYHLEDÁVACÍ VÝZVA
+
+U každého úkolu zapiš použitý dotaz, vybranou URL, autora/instituci a důvod výběru.
+
+1. Najdi oficiální materiál NÚKIB v PDF o kybernetické bezpečnosti.
+2. Najdi na oficiálním webu své školy její přesnou adresu (ulici a IČO).
+3. Najdi stránku ÚOOÚ s otázkami a odpověďmi pro školství.
+4. Dohledáš odborné vysvětlení dvoufaktorové autentizace a autora zdroje.
+5. Najdi stejnou informaci ve dvou nezávislých zdrojích.
+6. Přeformuluj dotaz „bezpečnost internet“ pomocí konkrétních klíčových slov a operátoru.

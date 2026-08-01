@@ -1097,7 +1097,7 @@ export const t: Record<Lang, Dict> = {
       tagline:
         "Pro střední školy. Zdarma, ke stažení i úpravě, bez přihlašování.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
-      stats: "{files} souborů · {topics} témat · Word, PDF, Python",
+      stats: "{files} souborů · {topics} témat · Word, PowerPoint, Python",
       sample: "Ukázka z banky",
       ctaLessons: "Procházet banku materiálů",
       ctaContact: "O mně",
@@ -1209,7 +1209,7 @@ export const t: Record<Lang, Dict> = {
       tagline:
         "For secondary schools. Free to download and edit, no sign-up.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
-      stats: "{files} files · {topics} topics · Word, PDF, Python",
+      stats: "{files} files · {topics} topics · Word, PowerPoint, Python",
       sample: "From the bank",
       ctaLessons: "Browse the material bank",
       ctaContact: "About me",

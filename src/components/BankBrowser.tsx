@@ -13,6 +13,7 @@ import {
   FileSpreadsheet,
   FileText,
   FileCode2,
+  ShieldCheck,
   BarChart3,
   Database,
   Laptop,
@@ -151,6 +152,7 @@ function fileType(ext: string, lang: Lang): { key: string; label: string } {
     ppt: "Prezentace",
     powerbi: "Power BI",
     code: "Kód",
+    zip: "Archiv",
     video: "Video",
     image: "Obrázek",
     access: "Access",
@@ -163,6 +165,7 @@ function fileType(ext: string, lang: Lang): { key: string; label: string } {
     ppt: "Slides",
     powerbi: "Power BI",
     code: "Code",
+    zip: "Archive",
     video: "Video",
     image: "Image",
     access: "Access",
@@ -174,7 +177,8 @@ function fileType(ext: string, lang: Lang): { key: string; label: string } {
   else if (ext === "pdf") key = "pdf";
   else if (["pptx", "ppt", "odp"].includes(ext)) key = "ppt";
   else if (ext === "pbix") key = "powerbi";
-  else if (["py", "ipynb", "js", "ts", "html", "css", "json", "sql", "java", "c", "cpp", "zip"].includes(ext))
+  else if (ext === "zip") key = "zip";
+  else if (["py", "ipynb", "js", "ts", "html", "css", "json", "sql", "java", "c", "cpp"].includes(ext))
     key = "code";
   else if (["mp4", "mov", "webm", "m4v", "avi"].includes(ext)) key = "video";
   else if (["png", "jpg", "jpeg", "gif", "svg"].includes(ext)) key = "image";
@@ -198,6 +202,8 @@ function toolIcon(tool: string) {
       return Database;
     case "Digitální gramotnost":
       return Laptop;
+    case "Internet a bezpečnost":
+      return ShieldCheck;
     default:
       return Files;
   }
