@@ -13,6 +13,9 @@ import {
   FileSpreadsheet,
   FileText,
   FileCode2,
+  FileArchive,
+  Presentation,
+  ImageIcon,
   ShieldCheck,
   BarChart3,
   Database,
@@ -186,6 +189,28 @@ function fileType(ext: string, lang: Lang): { key: string; label: string } {
   else if (ext === "txt") key = "text";
   const table = lang === "en" ? en : cs;
   return { key, label: table[key] ?? (ext || (lang === "en" ? "file" : "soubor")).toUpperCase() };
+}
+
+/** Ikona ke štítku typu souboru (klíč z `fileType`). */
+function typeIcon(key: string) {
+  switch (key) {
+    case "excel":
+      return FileSpreadsheet;
+    case "ppt":
+      return Presentation;
+    case "zip":
+      return FileArchive;
+    case "code":
+      return FileCode2;
+    case "image":
+      return ImageIcon;
+    case "powerbi":
+      return BarChart3;
+    case "access":
+      return Database;
+    default:
+      return FileText;
+  }
 }
 
 function toolIcon(tool: string) {
@@ -415,8 +440,9 @@ function MaterialRow({
     const hasLink = Boolean(it.href);
     const inner = (
       <>
-        <span className="flex w-16 shrink-0 justify-center">
-          <span className="rounded-lg bg-zinc-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-zinc-600 dark:text-zinc-300">
+        <span className="flex w-[5.25rem] shrink-0">
+          <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-zinc-600 dark:text-zinc-300">
+            <ExternalLink className="h-4 w-4 shrink-0" />
             {s.sourceBadge}
           </span>
         </span>
@@ -454,11 +480,16 @@ function MaterialRow({
   const t = fileType(it.ext, lang);
   const previewable = canPreview(it.ext);
   const materialType = materialTypeOf(it);
+  const TypeIcon = typeIcon(t.key);
   return (
     <li className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5">
-      <span className="flex w-16 shrink-0 justify-center">
-        <span className="rounded-lg bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-          {t.label}
+      <span className="flex w-[5.25rem] shrink-0">
+        <span
+          title={t.label}
+          className="inline-flex items-center gap-1.5 rounded-lg bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300"
+        >
+          <TypeIcon className="h-4 w-4 shrink-0" />
+          {it.ext}
         </span>
       </span>
       <span className="min-w-0 flex-1">
