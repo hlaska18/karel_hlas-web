@@ -17,6 +17,7 @@ import {
   Presentation,
   ImageIcon,
   ShieldCheck,
+  Sparkles,
   BarChart3,
   Database,
   Laptop,
@@ -229,6 +230,8 @@ function toolIcon(tool: string) {
       return Laptop;
     case "Internet a bezpečnost":
       return ShieldCheck;
+    case "Umělá inteligence":
+      return Sparkles;
     default:
       return Files;
   }

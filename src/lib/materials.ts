@@ -118,6 +118,30 @@ const NAME_EN: Record<string, string> = {
   "Kontrola integrity – projekt B": "Integrity check – project B",
   "Vyhledávací výzva": "Search challenge",
   "Díla a licence": "Works and licences",
+  // Umělá inteligence a odpovědné používání (6 hodin, rámec AI Fluency)
+  "Zdroje AI Fluency": "AI Fluency resources",
+  "Licence a zdroj": "Licence and source",
+  "Hodnocení, testy a řešení": "Assessment, tests and solutions",
+  "Offline záloha hodin 4-6": "Offline backup for lessons 4–6",
+  "Přenesení hodin na jiný AI nástroj": "Moving the lessons to another AI tool",
+  "Kontrola úplnosti balíčku": "Package completeness check",
+  "Laboratoř fungování AI": "How AI works – lab",
+  "Trénovací data": "Training data",
+  "Tokeny a predikce": "Tokens and prediction",
+  "Odpovědi k ověření": "Answers to verify",
+  "Delegační situace": "Delegation situations",
+  "Promptová dílna": "Prompt workshop",
+  "Výstup k opravě": "Output to correct",
+  "Výstupy k posouzení": "Outputs to assess",
+  "Zdrojový balíček – rekuperace": "Source pack – heat recovery",
+  "Etické a právní situace": "Ethical and legal situations",
+  "Závěrečná výzva": "Final challenge",
+  "Základy AI a učení z dat": "AI basics and learning from data",
+  "Jak jazykový model tvoří odpověď": "How a language model builds an answer",
+  "Proč AI chybuje a jak ověřovat": "Why AI makes mistakes and how to verify",
+  "Delegation a Description": "Delegation and Description",
+  "Spolupráce s Copilotem a Discernment": "Working with Copilot and Discernment",
+  "Diligence a závěrečná výzva": "Diligence and the final challenge",
 };
 
 /** Anglický popisek z tabulky (NFC kvůli macOS NFD názvům); fallback = čeština. */
@@ -139,6 +163,7 @@ export const TOOL_ORDER = [
   "Excel",
   "Python",
   "Internet a bezpečnost",
+  "Umělá inteligence",
   "Databáze",
   "Power BI",
   "Ostatní",
@@ -180,10 +205,24 @@ export type BankItem = {
 // kategorizace i popisek konzistentní u všech oborů (jinak se duplicity neslučí).
 const TOPIC_SOURCE = [...COURSES].sort((a, b) => b.items.length - a.items.length)[0];
 
+/**
+ * Názvy témat, která nejsou v žádném plánu ročníku (`COURSES`). Slouží pro
+ * ucelené balíčky, které se do plánu nevejdou nebo se učí napříč obory –
+ * bez nich by se v bance zobrazilo jen „Téma 10". Klíč = číslo složky.
+ */
+const TOPIC_EXTRA: Record<number, { cs: string; en: string }> = {
+  10: {
+    cs: "Umělá inteligence a odpovědné používání",
+    en: "Artificial intelligence and responsible use",
+  },
+};
+
 function topicLabelOf(topicIndex: number): { cs: string; en: string } {
   const item = TOPIC_SOURCE?.items[topicIndex] ?? COURSES.map((c) => c.items[topicIndex]).find(Boolean);
   if (item) return { cs: item.title.cs, en: item.title.en };
-  return { cs: `Téma ${topicIndex + 1}`, en: `Topic ${topicIndex + 1}` };
+  return (
+    TOPIC_EXTRA[topicIndex + 1] ?? { cs: `Téma ${topicIndex + 1}`, en: `Topic ${topicIndex + 1}` }
+  );
 }
 
 /**
@@ -194,6 +233,7 @@ function topicLabelOf(topicIndex: number): { cs: string; en: string } {
 function toolOf(hay: string, ext: string): string {
   const h = hay.toLowerCase();
   if (/internet, bezpečnost|internet a bezpe/.test(h)) return "Internet a bezpečnost";
+  if (/umělá inteligence|ai fluency|práce s ai/.test(h)) return "Umělá inteligence";
   if (/power\s?bi/.test(h) || ext === "pbix") return "Power BI";
   if (/databáz|databaz|powerquery|access/.test(h) || ext === "accdb") return "Databáze";
   if (/excel|tabulkov/.test(h) || ["xlsx", "xlsm", "xls", "csv"].includes(ext)) return "Excel";

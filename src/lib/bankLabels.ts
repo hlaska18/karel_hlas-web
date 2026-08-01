@@ -12,6 +12,7 @@ export const TOOL_LABEL: Record<string, { cs: string; en: string }> = {
   Excel: { cs: "Excel", en: "Excel" },
   Python: { cs: "Python", en: "Python" },
   "Internet a bezpečnost": { cs: "Internet a bezpečnost", en: "Internet & online safety" },
+  "Umělá inteligence": { cs: "Umělá inteligence", en: "Artificial intelligence" },
   Databáze: { cs: "Databáze", en: "Database" },
   "Power BI": { cs: "Power BI", en: "Power BI" },
   Ostatní: { cs: "Ostatní", en: "Other" },
@@ -31,6 +32,7 @@ export const TOOL_ICON: Record<string, string> = {
   Excel: "/images/tools/glass/excel.png",
   Python: "/images/tools/glass/python.png",
   "Internet a bezpečnost": "/images/tools/glass/internet-bezpecnost.png",
+  "Umělá inteligence": "/images/tools/glass/umela-inteligence.png",
   Databáze: "/images/tools/glass/databaze.png",
   "Power BI": "/images/tools/glass/powerbi.png",
 };

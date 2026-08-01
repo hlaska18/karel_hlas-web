@@ -1,0 +1,34 @@
+KONTROLA ÚPLNOSTI A SOULADU
+
+Rozsah kurzu
+- 6 vyučovacích hodin po 45 minutách
+- hodiny 1–3: principy fungování AI bez volného používání Copilotu
+- diagnostická brána po 3. hodině
+- hodiny 4–6: řízená práce s Microsoft Copilotem podle rámce 4D
+
+Obsah
+- 6 plánů hodin v metodice
+- 6 pracovních listů v digitálním pracovním sešitu
+- 6 prezentací po 7 snímcích
+- celkem 42 snímků a 42 sad poznámek pro vyučujícího
+- 5 interaktivních modulů v offline laboratoři pro první 3 hodiny
+- digitální podklad ke každé aktivitě
+- diagnostická brána, testy A/B, řešení a rubrika miniportfolia
+- 7 původních zdrojových PDF k AI Fluency
+- příloha pro přenesení hodin 4–6 na jiný AI nástroj
+- tištěná offline záloha hodin 4–6
+
+Kontrolované vazby
+- názvy podkladů v metodice, pracovním sešitu a prezentacích odpovídají souborům ve složce 03
+- cíle, aktivity, výstupy a časování se shodují ve všech řídicích dokumentech
+- Copilot se poprvé používá až ve 4. hodině
+- všechny scénáře pro Copilot používají fiktivní nebo syntetická data
+- laboratoř funguje offline a nenačítá externí zdroje
+- v názvech ani v obsahu nejsou číselná označení verzí
+- hodiny 4–6 odlišují přenositelnou dovednost 4D od ukázkového nástroje
+- převodní tabulka a kontrola ochrany údajů jsou v samostatné příloze
+- hodiny 4–6 mají tištěnou offline variantu pro výpadek služby
+- rozlišení dovednost vs. nástroj zaznívá i na studentských snímcích 4–6
+
+Stav
+Balíček je připravený k výuce.

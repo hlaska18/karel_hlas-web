@@ -1,0 +1,25 @@
+FIKTIVNÍ ZDROJOVÝ BALÍČEK: REKUPERACE V UČEBNĚ B-214
+
+Původ dokumentu: technický tým fiktivní školy Nová Cesta
+Datum interního měření: 12.–16. února 2026
+Účel: vytvořit informační kartu pro studenty 1. ročníku
+
+Základní údaje:
+- Učebna B-214 má objem 182 m³ a běžně v ní pracuje 24 studentů a jeden učitel.
+- Jednotka zpětného získávání tepla byla během měření nastavena na průtok 520 m³/h.
+- Čidla zaznamenávala koncentraci CO₂ každých pět minut.
+- Před spuštěním jednotky dosahoval medián během 2. a 3. vyučovací hodiny 1 780 ppm.
+- Při zapnuté jednotce dosahoval medián ve stejných časech 930 ppm.
+- Venkovní teplota se během týdne pohybovala od −2 °C do 7 °C.
+- Materiál neposuzuje zdravotní účinky a neporovnává systém s otevíráním oken.
+- Jde o jedno místo a jeden týden; výsledek nelze automaticky zobecnit na jiné budovy.
+- Elektrická spotřeba jednotky ani pořizovací cena nebyly v tomto měření sledovány.
+
+Požadovaná informační karta:
+1. nadpis do 8 slov,
+2. tři ověřitelná zjištění,
+3. sekce „Co z měření nevíme“,
+4. maximálně 130 slov,
+5. žádné doplněné údaje mimo tento zdroj.
+
+Všechny údaje a instituce jsou pro výuku smyšlené.

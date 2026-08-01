@@ -1,0 +1,9 @@
+﻿ID;Tvar;Barva;Velikost;Stitek;Je_v_treninku
+1;kruh;modrá;malý;bezpečné;ano
+2;kruh;modrá;velký;bezpečné;ano
+3;čtverec;červená;malý;rizikové;ano
+4;čtverec;červená;velký;rizikové;ano
+5;kruh;červená;malý;bezpečné;ne
+6;čtverec;modrá;velký;rizikové;ne
+7;trojúhelník;zelená;malý;bezpečné;ne
+8;trojúhelník;červená;velký;rizikové;ne

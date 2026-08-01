@@ -1,0 +1,18 @@
+TOKENOVÁ VÝZVA
+
+1. Navrhni alespoň dvě možná rozdělení textu na menší části:
+   a) nepravděpodobný
+   b) kyberbezpečnost
+   c) V pátek jedeme vlakem do Brna.
+
+2. Doplň pokračování a odhadni tři pravděpodobné další části:
+   „Na zastávce čekám na…“
+
+3. Přidej kontext:
+   „Jsem v kuchyni a voda už vaří. Na zastávce čekám na…“
+   Je věta významově zvláštní? Co může model udělat, když je kontext rozporný?
+
+4. Nakresli smyčku:
+   kontext → pravděpodobnosti → výběr tokenu → nový kontext → …
+
+Poznámka: skutečné modely používají vlastní tokenizér. Ruční dělení je pouze názorná aktivita.

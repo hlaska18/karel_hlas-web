@@ -1,0 +1,241 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Laboratoř fungování AI</title>
+  <style>
+    :root{
+      --ink:#17211e;--muted:#60706a;--soft:#eef3f1;--panel:#fff;--line:#d8e1dd;
+      --teal:#0c8a83;--teal-dark:#075b59;--teal-pale:#e3f6f3;--purple:#6848b8;
+      --purple-pale:#f0ebfb;--orange:#bb641e;--orange-pale:#fff0e2;--red:#b83a33;
+      --red-pale:#fdecea;--green:#2c7a5b;--shadow:0 14px 42px rgba(25,50,42,.1);
+      --radius:22px;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:#edf2f0;color:var(--ink);font:15px/1.55 Inter,Segoe UI,Arial,sans-serif}
+    button,input,textarea{font:inherit}
+    button{cursor:pointer}
+    .app{min-height:100vh;display:grid;grid-template-columns:270px minmax(0,1fr)}
+    .side{position:sticky;top:0;height:100vh;background:#10231f;color:#e7f3ef;padding:24px 18px;overflow:auto}
+    .brand{display:flex;gap:12px;align-items:center;padding:0 8px 24px}
+    .mark{width:42px;height:42px;border-radius:13px;background:linear-gradient(145deg,#16b7aa,#7de1cf);display:grid;place-items:center;color:#062d29;font-weight:900;box-shadow:inset 0 0 0 1px rgba(255,255,255,.25)}
+    .brand strong{display:block;font-size:16px;line-height:1.2}.brand small{color:#91aaa2}
+    .nav-label{padding:0 10px;margin:8px 0 9px;color:#79938b;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase}
+    .nav{display:grid;gap:5px}
+    .nav button{width:100%;border:0;background:transparent;color:#b9cdc6;border-radius:12px;padding:10px 11px;text-align:left;display:grid;grid-template-columns:28px 1fr 20px;gap:7px;align-items:center}
+    .nav button:hover,.nav button.active{background:#1d3933;color:#fff}
+    .nav .n{width:26px;height:26px;border-radius:8px;background:#29463f;display:grid;place-items:center;font-size:12px;font-weight:800}
+    .nav button.active .n{background:#7ce0cf;color:#06332e}
+    .nav .tick{color:#7ce0cf;opacity:0}.nav button.done .tick{opacity:1}
+    .side-note{margin-top:24px;border:1px solid #315047;background:#19352f;border-radius:14px;padding:13px;color:#b9cdc6;font-size:12px}
+    .side-note strong{display:block;color:#fff;margin-bottom:4px}
+    .main{min-width:0}
+    .top{position:sticky;top:0;z-index:20;height:72px;background:rgba(255,255,255,.91);backdrop-filter:blur(15px);border-bottom:1px solid var(--line);display:flex;align-items:center;padding:0 34px;gap:22px}
+    .top-title{font-weight:800}.top-title small{display:block;color:var(--muted);font-size:12px;font-weight:500}
+    .progress-wrap{margin-left:auto;display:flex;align-items:center;gap:10px;color:var(--muted);font-size:12px}
+    .progress{width:170px;height:8px;border-radius:9px;background:#dde7e3;overflow:hidden}.progress span{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--teal),#66d0bf);transition:.35s}
+    .content{max-width:1180px;margin:auto;padding:34px 34px 90px}
+    .screen{display:none;animation:rise .28s ease}.screen.active{display:block}
+    @keyframes rise{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+    .hero{background:linear-gradient(135deg,#0b5f59 0%,#0d837b 55%,#45b7a7 100%);border-radius:30px;padding:48px;color:#fff;box-shadow:var(--shadow);position:relative;overflow:hidden}
+    .hero:after{content:"";position:absolute;width:380px;height:380px;right:-130px;top:-175px;border-radius:50%;border:70px solid rgba(255,255,255,.08)}
+    .eyebrow{font-size:12px;font-weight:850;letter-spacing:.13em;text-transform:uppercase;color:#c4f3ea}
+    .hero h1{font-size:clamp(38px,5vw,66px);line-height:1.03;max-width:780px;margin:18px 0}
+    .hero p{font-size:18px;max-width:690px;color:#def8f3}
+    .hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}
+    .btn{border:0;border-radius:12px;padding:11px 16px;font-weight:750;transition:.2s}
+    .btn.primary{background:var(--teal);color:#fff}.btn.primary:hover{background:var(--teal-dark)}
+    .hero .btn.primary{background:#fff;color:var(--teal-dark)}
+    .btn.secondary{background:var(--soft);color:var(--ink);border:1px solid var(--line)}
+    .btn.ghost{background:transparent;color:var(--teal-dark);border:1px solid #a9d8d1}
+    .notice{display:flex;gap:12px;align-items:flex-start;border-radius:15px;padding:14px 16px;margin:20px 0;background:var(--orange-pale);border:1px solid #efc59e;color:#6b3a13}
+    .notice .icon{font-weight:900;border-radius:50%;width:24px;height:24px;background:#f5cfab;display:grid;place-items:center;flex:0 0 auto}
+    .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:22px}
+    .module-card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:22px;box-shadow:0 5px 20px rgba(25,50,42,.05)}
+    .module-card .tag{font-size:11px;font-weight:850;color:var(--teal);letter-spacing:.1em}
+    .module-card h3{font-size:19px;margin:10px 0 8px}.module-card p{color:var(--muted);font-size:14px;margin:0}
+    .module-card .foot{display:flex;justify-content:space-between;align-items:center;margin-top:18px;padding-top:14px;border-top:1px solid var(--line);font-size:12px;color:var(--muted)}
+    .page-head{display:flex;justify-content:space-between;gap:25px;align-items:flex-end;margin-bottom:24px}
+    .page-head h1{font-size:38px;line-height:1.08;margin:6px 0}.page-head p{color:var(--muted);max-width:710px;margin:0}
+    .phase{background:var(--teal-pale);color:var(--teal-dark);border-radius:99px;padding:7px 11px;font-size:11px;font-weight:850;white-space:nowrap}
+    .panel{background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:24px;box-shadow:0 5px 20px rgba(25,50,42,.045);margin-bottom:18px}
+    .panel h2{font-size:20px;margin:0 0 6px}.panel>.lead{color:var(--muted);margin:0 0 18px}
+    .classify{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+    .case{border:1px solid var(--line);border-radius:16px;padding:17px;background:#fbfdfc}
+    .case-top{display:flex;gap:12px;align-items:center}.case-icon{width:42px;height:42px;border-radius:12px;background:var(--soft);display:grid;place-items:center;font-size:20px}
+    .case h3{font-size:15px;margin:0}.case p{font-size:12px;color:var(--muted);margin:3px 0 13px}
+    .choice-row{display:flex;gap:6px;flex-wrap:wrap}.choice{border:1px solid var(--line);background:#fff;border-radius:9px;padding:7px 9px;font-size:11px;color:#41504b}
+    .choice:hover{border-color:var(--teal)}.choice.selected{background:var(--teal-pale);border-color:var(--teal);color:var(--teal-dark);font-weight:750}
+    .choice.correct{background:#e8f6ee;border-color:#69ae8b;color:#1f6749}.choice.wrong{background:var(--red-pale);border-color:#dc8c86;color:#8d2722}
+    .feedback{display:none;margin-top:11px;font-size:12px}.feedback.show{display:block}
+    .lab-grid{display:grid;grid-template-columns:1.03fr .97fr;gap:18px}
+    .data-board{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+    .datum{min-height:76px;border:1px solid var(--line);border-radius:12px;background:#fff;padding:8px;text-align:center;position:relative}
+    .datum input{position:absolute;right:6px;top:6px}.shape{width:27px;height:27px;margin:5px auto 3px}.circle{border-radius:50%}.square{border-radius:4px}.triangle{width:0;height:0;border-left:15px solid transparent;border-right:15px solid transparent;background:none!important}
+    .triangle.red{border-bottom:27px solid #df5b53}.triangle.blue{border-bottom:27px solid #4c82d3}.triangle.green{border-bottom:27px solid #54a56f}
+    .red:not(.triangle){background:#df5b53}.blue:not(.triangle){background:#4c82d3}.green:not(.triangle){background:#54a56f}
+    .datum small{display:block;color:var(--muted);font-size:10px}.datum .label{font-size:10px;font-weight:750}
+    .model-box{border-radius:18px;background:#10231f;color:#e8f3ef;padding:21px;min-height:100%}.model-box .eyebrow{color:#7edbca}
+    .rule{font-size:22px;font-weight:800;margin:14px 0}.metric{display:grid;grid-template-columns:1fr auto;gap:8px;border-top:1px solid #2d4942;padding:11px 0}.metric span{color:#9db4ad}.metric strong{color:#fff}
+    .pipeline{display:flex;align-items:center;gap:7px;margin-top:18px}.pipe{background:#1f3c35;border-radius:10px;padding:9px 11px;font-size:11px;text-align:center}.arrow{color:#62cbb9}
+    .token-demo{display:grid;grid-template-columns:1fr 1fr;gap:18px}.sentence{background:#10231f;color:#fff;border-radius:18px;padding:22px;min-height:220px}
+    .tokens{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.token{border:1px solid #3c5b53;background:#1d3933;border-radius:7px;padding:5px 8px;color:#cbede6}
+    .controls label{display:block;font-size:12px;font-weight:750;margin:14px 0 5px}.controls textarea,.controls select{width:100%;border:1px solid var(--line);border-radius:11px;padding:10px;background:#fff;color:var(--ink)}.controls textarea{min-height:77px;resize:vertical}
+    input[type=range]{width:100%;accent-color:var(--teal)}
+    .prob-list{display:grid;gap:10px;margin-top:17px}.prob{display:grid;grid-template-columns:85px 1fr 43px;gap:8px;align-items:center;font-size:12px}.bar{height:10px;background:#e3ebe8;border-radius:8px;overflow:hidden}.bar span{display:block;height:100%;background:linear-gradient(90deg,var(--teal),#60cbbb);border-radius:8px}
+    .picked{margin-top:15px;background:var(--teal-pale);color:var(--teal-dark);border:1px solid #aedfd7;border-radius:12px;padding:12px}
+    .audit-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px}.audit-card{border:1px solid var(--line);border-radius:16px;padding:18px;background:#fff}.audit-card .letter{width:34px;height:34px;border-radius:10px;background:var(--purple-pale);color:var(--purple);font-weight:850;display:grid;place-items:center}.audit-card blockquote{font-size:13px;color:#40504a;margin:13px 0;padding-left:12px;border-left:3px solid #cfbee9}.audit-select{width:100%;border:1px solid var(--line);border-radius:10px;padding:8px;background:#fff}.audit-answer{display:none;margin-top:10px;background:var(--soft);border-radius:10px;padding:10px;font-size:12px}.audit-card.checked .audit-answer{display:block}
+    .quiz{display:grid;gap:14px}.question{border:1px solid var(--line);border-radius:16px;padding:18px;background:#fff}.question h3{font-size:15px;margin:0 0 12px}.answers{display:grid;gap:7px}.answer{border:1px solid var(--line);background:#fff;border-radius:10px;padding:9px 11px;text-align:left;color:var(--ink)}.answer:hover{border-color:var(--teal)}.answer.selected{border-color:var(--teal);background:var(--teal-pale)}.answer.correct{border-color:#5ea982;background:#e8f6ee}.answer.wrong{border-color:#d47a74;background:var(--red-pale)}
+    .result{display:none;border-radius:20px;padding:24px;margin-top:20px}.result.show{display:block}.result.pass{background:#e7f6ed;border:1px solid #82bc9c;color:#1f6548}.result.retry{background:var(--orange-pale);border:1px solid #e6b282;color:#754115}.score{font-size:32px;font-weight:900}
+    .action-row{display:flex;justify-content:space-between;gap:12px;align-items:center;margin-top:18px}.status{font-size:12px;color:var(--muted)}
+    .mini-flow{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:22px 0}.mini-flow div{border:1px solid var(--line);border-radius:14px;padding:14px;background:#fff;text-align:center;font-size:12px}.mini-flow strong{display:block;color:var(--teal-dark);margin-bottom:4px}
+    @media(max-width:950px){.app{grid-template-columns:1fr}.side{position:relative;height:auto}.nav{grid-template-columns:repeat(3,1fr)}.side-note{display:none}.top{top:0}.grid{grid-template-columns:repeat(2,1fr)}.lab-grid,.token-demo{grid-template-columns:1fr}}
+    @media(max-width:650px){.side{padding:16px 10px}.brand{padding-bottom:12px}.nav button{grid-template-columns:25px 1fr}.nav .tick{display:none}.nav{grid-template-columns:1fr 1fr}.top{padding:0 16px}.progress{width:90px}.content{padding:24px 14px 70px}.hero{padding:30px 23px}.grid,.classify,.audit-grid{grid-template-columns:1fr}.page-head{align-items:flex-start;flex-direction:column}.data-board{grid-template-columns:repeat(2,1fr)}.mini-flow{grid-template-columns:1fr 1fr}}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="side">
+    <div class="brand"><div class="mark">AI</div><div><strong>Laboratoř AI</strong><small>principy bez magie</small></div></div>
+    <div class="nav-label">Moduly</div>
+    <nav class="nav" id="nav">
+      <button data-target="home" class="active"><span class="n">00</span><span>Start</span><span class="tick">✓</span></button>
+      <button data-target="classify"><span class="n">01</span><span>Co je AI</span><span class="tick">✓</span></button>
+      <button data-target="training"><span class="n">02</span><span>Učení z dat</span><span class="tick">✓</span></button>
+      <button data-target="tokens"><span class="n">03</span><span>Další token</span><span class="tick">✓</span></button>
+      <button data-target="errors"><span class="n">04</span><span>Chyby modelu</span><span class="tick">✓</span></button>
+      <button data-target="gateway"><span class="n">05</span><span>Brána znalostí</span><span class="tick">✓</span></button>
+    </nav>
+    <div class="side-note"><strong>Názorná simulace</strong>Rozhraní zjednodušuje skutečné modely. Nic neposílá na internet a neukládá osobní údaje.</div>
+  </aside>
+  <main class="main">
+    <header class="top">
+      <div class="top-title">Jak AI funguje <small>Výuková laboratoř · 1. ročník SŠ</small></div>
+      <div class="progress-wrap"><span id="progressText">0 / 5</span><div class="progress"><span id="progressBar"></span></div></div>
+    </header>
+    <div class="content">
+      <section id="home" class="screen active">
+        <div class="hero">
+          <div class="eyebrow">3 hodiny · 5 interaktivních modulů</div>
+          <h1>Než AI použiješ, podívej se pod kapotu.</h1>
+          <p>Projdeš cestu od rozlišení systémů přes trénovací data a tokenovou predikci až k chybám a lidskému ověření.</p>
+          <div class="hero-actions"><button class="btn primary" data-go="classify">Spustit první modul</button><button class="btn ghost" style="color:#fff;border-color:#93d9ce" onclick="resetLab()">Vynulovat postup</button></div>
+        </div>
+        <div class="notice"><div class="icon">i</div><div><strong>Toto není skutečný jazykový model.</strong> Laboratoř používá malé připravené příklady, aby byly principy viditelné. Skutečné modely mají mnohem více parametrů, složitější tokenizaci a mechanismus pozornosti.</div></div>
+        <div class="grid">
+          <article class="module-card"><div class="tag">HODINA 1</div><h3>Co je a není AI</h3><p>Rozliš pevná pravidla, naučený model a generování nového obsahu.</p><div class="foot"><span>6 rozhodnutí</span><button class="btn secondary" data-go="classify">Otevřít</button></div></article>
+          <article class="module-card"><div class="tag">HODINA 1</div><h3>Jak se model učí</h3><p>Změň trénovací data a sleduj, jak se promění jednoduché pravidlo.</p><div class="foot"><span>8 datových bodů</span><button class="btn secondary" data-go="training">Otevřít</button></div></article>
+          <article class="module-card"><div class="tag">HODINA 2</div><h3>Predikce tokenu</h3><p>Uprav kontext a teplotu a pozoruj rozdělení pravděpodobností.</p><div class="foot"><span>3 experimenty</span><button class="btn secondary" data-go="tokens">Otevřít</button></div></article>
+          <article class="module-card"><div class="tag">HODINA 3</div><h3>Proč AI chybuje</h3><p>Odděl halucinaci, zkreslení, mezeru v kontextu a zastaralost.</p><div class="foot"><span>4 audity</span><button class="btn secondary" data-go="errors">Otevřít</button></div></article>
+          <article class="module-card"><div class="tag">PO 3. HODINĚ</div><h3>Brána znalostí</h3><p>Osm otázek ověří, zda jsi připraven/a na řízenou práci s Copilotem.</p><div class="foot"><span>práh 6 / 8</span><button class="btn secondary" data-go="gateway">Otevřít</button></div></article>
+        </div>
+      </section>
+
+      <section id="classify" class="screen">
+        <div class="page-head"><div><div class="eyebrow" style="color:var(--teal)">MODUL 01</div><h1>Co je a není AI</h1><p>Rozhoduj podle způsobu fungování, ne podle toho, zda funkce působí moderně nebo „chytře“.</p></div><span class="phase">HODINA 1</span></div>
+        <div class="panel"><h2>Zařaď šest systémů</h2><p class="lead">Vyber kategorii. Po kontrole si přečti rozhodující znak a oprav vlastní omyl.</p><div class="classify" id="classifyCases"></div><div class="action-row"><span class="status" id="classifyStatus">Rozhodnuto 0 z 6</span><button class="btn primary" onclick="checkClassify()">Zkontrolovat</button></div></div>
+        <div class="mini-flow"><div><strong>Bez AI</strong>nástroj bez rozhodování</div><div><strong>Algoritmus</strong>pevná pravidla</div><div><strong>Klasická AI</strong>naučená predikce</div><div><strong>Generativní AI</strong>nový obsah</div></div>
+        <button class="btn secondary" data-go="training">Pokračovat: učení z dat →</button>
+      </section>
+
+      <section id="training" class="screen">
+        <div class="page-head"><div><div class="eyebrow" style="color:var(--teal)">MODUL 02</div><h1>Jak se model učí ze vzorů</h1><p>Zaškrtni příklady pro trénování. Simulovaný model hledá nejjednodušší pravidlo, které se k nim hodí.</p></div><span class="phase">HODINA 1</span></div>
+        <div class="notice"><div class="icon">i</div><div>Skutečný model neučíme osmi kartami a jedním pravidlem. Tento mini-model jen ukazuje, že výběr a vyváženost dat ovlivňují naučené chování.</div></div>
+        <div class="lab-grid">
+          <div class="panel"><h2>Trénovací sada</h2><p class="lead">Měň zaškrtnuté body a sleduj pravidlo vpravo.</p><div class="data-board" id="dataBoard"></div><div class="action-row"><button class="btn secondary" onclick="setDataPreset('balanced')">Vyvážená sada</button><button class="btn secondary" onclick="setDataPreset('biased')">Zkreslená sada</button></div></div>
+          <div class="model-box"><div class="eyebrow">SIMULOVANÝ MODEL</div><div class="rule" id="learnedRule">Vyber alespoň 3 příklady</div><div class="metric"><span>Trénovací příklady</span><strong id="trainCount">0</strong></div><div class="metric"><span>Shoda na tréninku</span><strong id="trainAccuracy">—</strong></div><div class="metric"><span>Chyby na nových případech</span><strong id="testErrors">—</strong></div><div class="pipeline"><div class="pipe">data</div><div class="arrow">→</div><div class="pipe">trénování</div><div class="arrow">→</div><div class="pipe">model</div><div class="arrow">→</div><div class="pipe">inference</div></div></div>
+        </div>
+        <div class="panel"><h2>Vysvětli pozorování</h2><p class="lead">Která změna dat způsobila největší změnu pravidla? Proč není vysoká shoda na tréninku sama o sobě důkazem kvalitního modelu?</p><textarea style="width:100%;min-height:90px;border:1px solid var(--line);border-radius:12px;padding:12px" aria-label="Záznam pozorování"></textarea><div class="action-row"><span class="status">Po vyzkoušení obou sad označ modul jako hotový.</span><button class="btn primary" onclick="complete('training')">Mám vysvětlení</button></div></div>
+        <button class="btn secondary" data-go="tokens">Pokračovat: další token →</button>
+      </section>
+
+      <section id="tokens" class="screen">
+        <div class="page-head"><div><div class="eyebrow" style="color:var(--teal)">MODUL 03</div><h1>Jak vzniká další token</h1><p>Model opakuje malý krok: z kontextu vytvoří pravděpodobnosti, vybere pokračování a přidá je do nového kontextu.</p></div><span class="phase">HODINA 2</span></div>
+        <div class="token-demo">
+          <div class="sentence"><div class="eyebrow">AKTUÁLNÍ KONTEXT</div><div class="tokens" id="tokenStream"><span class="token">Na</span><span class="token">zastávce</span><span class="token">čekám</span><span class="token">na</span></div><div class="picked" id="pickedToken">Další token ještě nebyl vybrán.</div></div>
+          <div class="panel controls" style="margin:0"><h2>Nastav experiment</h2><label for="contextSelect">Situace</label><select id="contextSelect" onchange="updatePrediction()"><option value="bus">Cesta městem</option><option value="food">Vaření</option><option value="school">Školní exkurze</option><option value="conflict">Rozporný kontext</option></select><label for="customContext">Doplňující kontext</label><textarea id="customContext" placeholder="Např. Spoj má pět minut zpoždění." oninput="updatePrediction()"></textarea><label for="temp">Teplota: <span id="tempValue">0,3</span></label><input id="temp" type="range" min="0" max="100" value="30" oninput="updatePrediction()"><div class="prob-list" id="probList"></div><div class="action-row"><button class="btn secondary" onclick="resetTokens()">Obnovit</button><button class="btn primary" onclick="pickToken()">Vybrat další token</button></div></div>
+        </div>
+        <div class="notice"><div class="icon">i</div><div><strong>Co teplota neznamená:</strong> vyšší hodnota nepřidává nové znalosti ani neověřuje fakta. V této simulaci jen zplošťuje rozdělení a dává větší šanci méně pravděpodobným pokračováním.</div></div>
+        <div class="panel"><h2>Proveď tři běhy</h2><p class="lead">Porovnej krátký a přesný kontext, nízkou a vysokou teplotu a jeden rozporný kontext. Zapiš, co se mění.</p><div class="action-row"><span class="status" id="tokenRuns">Dokončené běhy: 0 / 3</span><button class="btn primary" onclick="completeTokenModule()">Mám tři běhy</button></div></div>
+        <button class="btn secondary" data-go="errors">Pokračovat: chyby modelu →</button>
+      </section>
+
+      <section id="errors" class="screen">
+        <div class="page-head"><div><div class="eyebrow" style="color:var(--teal)">MODUL 04</div><h1>Proč AI chybuje</h1><p>Plynulost je vlastnost textu. Pravdivost a vhodnost musí posoudit člověk pomocí důkazů a kontextu.</p></div><span class="phase">HODINA 3</span></div>
+        <div class="audit-grid" id="auditGrid"></div>
+        <div class="action-row"><span class="status" id="auditStatus">Vyhodnoceno 0 ze 4</span><button class="btn primary" onclick="checkAudits()">Zkontrolovat audity</button></div>
+        <div class="notice"><div class="icon">!</div><div><strong>Nestačí zeptat se stejné AI, jestli si je jistá.</strong> Kritické tvrzení ověř v primárním nebo jiném vhodném nezávislém zdroji a zkontroluj, zda jej zdroj skutečně podporuje.</div></div>
+        <button class="btn secondary" data-go="gateway">Pokračovat: brána znalostí →</button>
+      </section>
+
+      <section id="gateway" class="screen">
+        <div class="page-head"><div><div class="eyebrow" style="color:var(--teal)">DIAGNOSTICKÁ BRÁNA</div><h1>Jsi připraven/a používat AI?</h1><p>Pro postup doporučujeme alespoň 6 z 8 bodů. Chybná odpověď není konec: vrátí tě k modulu, který stojí za zopakování.</p></div><span class="phase">PO 3. HODINĚ</span></div>
+        <div class="quiz" id="quiz"></div>
+        <div class="action-row"><span class="status" id="quizStatus">Odpovězeno 0 z 8</span><button class="btn primary" onclick="gradeQuiz()">Vyhodnotit bránu</button></div>
+        <div class="result" id="quizResult"></div>
+      </section>
+    </div>
+  </main>
+</div>
+<script>
+  const state={done:new Set(JSON.parse(localStorage.getItem("aiLabDone")||"[]")),classify:{},tokenRuns:0,quiz:{}};
+  const classifyCases=[
+    {id:"timer",icon:"⏱",title:"Pevně nastavený časovač",desc:"Po 10 minutách zazvoní.",answer:"Algoritmus",why:"Provádí předem napsané pravidlo a neučí se z příkladů."},
+    {id:"calc",icon:"∑",title:"Běžná kalkulačka",desc:"Vypočítá zadaný výraz.",answer:"Algoritmus",why:"Používá přesné matematické postupy, nikoli naučený model."},
+    {id:"spam",icon:"✉",title:"Filtr nevyžádané pošty",desc:"Odhaduje, zda je zpráva spam.",answer:"Klasická AI",why:"Klasifikační model rozpoznává naučené vzory."},
+    {id:"photo",icon:"◎",title:"Rozpoznání objektu",desc:"Označí, že na fotografii je pes.",answer:"Klasická AI",why:"Model předpovídá kategorii; nevytváří nový obsah."},
+    {id:"image",icon:"◇",title:"Obrázek ze zadání",desc:"Vytvoří novou ilustraci.",answer:"Generativní AI",why:"Podle zadání generuje nový obsah."},
+    {id:"chat",icon:"▰",title:"Textový asistent",desc:"Sepíše nový návrh vysvětlení.",answer:"Generativní AI",why:"Tvoří nový text token po tokenu."}
+  ];
+  const categories=["Algoritmus","Klasická AI","Generativní AI","Bez AI"];
+  const data=[
+    {shape:"circle",color:"blue",label:"bezpečné"},{shape:"circle",color:"blue",label:"bezpečné"},
+    {shape:"square",color:"red",label:"rizikové"},{shape:"square",color:"red",label:"rizikové"},
+    {shape:"circle",color:"red",label:"bezpečné"},{shape:"square",color:"blue",label:"rizikové"},
+    {shape:"triangle",color:"green",label:"bezpečné"},{shape:"triangle",color:"red",label:"rizikové"}
+  ];
+  const audits=[
+    {letter:"A",text:"Jan Vrbata získal roku 2019 Nobelovu cenu za modrý laser.",answer:"Halucinace",why:"Konkrétní jméno, cena a datum vyžadují kontrolu v oficiálním seznamu laureátů."},
+    {letter:"B",text:"Ano, 15 je nadprůměrný výsledek a znamená velmi dobrý výkon.",answer:"Chybějící kontext",why:"Nevíme, co se měří, z jakého maxima ani vůči jaké skupině."},
+    {letter:"C",text:"Vedoucí týmu má být průbojný a zůstávat dlouho do noci.",answer:"Zkreslení",why:"Skrytá kritéria nesouvisejí přímo s výkonem a mohou znevýhodnit skupiny lidí."},
+    {letter:"D",text:"Aktuálním ředitelem je Petr Novák a platí pravidlo z roku 2021.",answer:"Zastaralost",why:"Slovo aktuální vyžaduje datum a ověření na oficiální současné stránce."}
+  ];
+  const quizData=[
+    ["Model při běžné odpovědi…",["znovu celý trénuje parametry","používá naučené parametry na nový vstup","vyhledá hotovou větu"],1,"training"],
+    ["Token je…",["vždy celé slovo","část textu zpracovávaná modelem","ověřený zdroj"],1,"tokens"],
+    ["Relevantní kontext obvykle…",["mění pravděpodobnosti pokračování","zaručí pravdu","vypne halucinace"],0,"tokens"],
+    ["Vyšší teplota v simulaci znamená…",["větší pestrost výběru","vyšší přesnost faktů","novější data"],0,"tokens"],
+    ["Halucinace je…",["pouze pravopisná chyba","přesvědčivý, ale nepodložený obsah","pomalá odpověď"],1,"errors"],
+    ["Nejlepší ověření tvrzení je…",["zeptat se AI znovu","najít vhodný nezávislý nebo primární zdroj","sledovat sebejistotu tónu"],1,"errors"],
+    ["Nevyvážená data mohou vést k…",["systematickému zkreslení","automatické anonymizaci","nulové nejistotě"],0,"training"],
+    ["Za finální použití výstupu odpovídá…",["model","člověk nebo organizace, která jej použije","nejdelší zdroj"],1,"errors"]
+  ];
+  function save(){localStorage.setItem("aiLabDone",JSON.stringify([...state.done]));updateProgress()}
+  function complete(id){state.done.add(id);document.querySelector(`[data-target="${id}"]`)?.classList.add("done");save()}
+  function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.target===id));scrollTo(0,0)}
+  document.addEventListener("click",e=>{const target=e.target.closest("[data-go],[data-target]");if(target)show(target.dataset.go||target.dataset.target)});
+  function updateProgress(){const n=["classify","training","tokens","errors","gateway"].filter(x=>state.done.has(x)).length;document.getElementById("progressText").textContent=`${n} / 5`;document.getElementById("progressBar").style.width=`${n*20}%`;document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("done",state.done.has(x.dataset.target)))}
+  function resetLab(){if(confirm("Vynulovat uložený postup v této laboratoři?")){localStorage.removeItem("aiLabDone");location.reload()}}
+  function renderClassify(){const box=document.getElementById("classifyCases");box.innerHTML=classifyCases.map(c=>`<article class="case" id="case-${c.id}"><div class="case-top"><div class="case-icon">${c.icon}</div><div><h3>${c.title}</h3><p>${c.desc}</p></div></div><div class="choice-row">${categories.map(x=>`<button class="choice" onclick="chooseClass('${c.id}','${x}',this)">${x}</button>`).join("")}</div><div class="feedback"></div></article>`).join("")}
+  function chooseClass(id,value,button){state.classify[id]=value;button.parentElement.querySelectorAll(".choice").forEach(x=>x.classList.remove("selected","correct","wrong"));button.classList.add("selected");document.getElementById("classifyStatus").textContent=`Rozhodnuto ${Object.keys(state.classify).length} z 6`}
+  function checkClassify(){let score=0;classifyCases.forEach(c=>{const card=document.getElementById(`case-${c.id}`),selected=state.classify[c.id],buttons=[...card.querySelectorAll(".choice")];buttons.forEach(b=>{b.classList.remove("correct","wrong");if(b.textContent===c.answer)b.classList.add("correct");if(b.textContent===selected&&selected!==c.answer)b.classList.add("wrong")});const fb=card.querySelector(".feedback");fb.classList.add("show");fb.innerHTML=`<strong>${selected===c.answer?"Správně":"Oprava"}:</strong> ${c.why}`;if(selected===c.answer)score++});document.getElementById("classifyStatus").textContent=`Výsledek ${score} z 6 · oprav a vysvětli alespoň jeden omyl`;if(score>=5)complete("classify")}
+  function renderData(){const board=document.getElementById("dataBoard");board.innerHTML=data.map((d,i)=>`<label class="datum"><input type="checkbox" data-index="${i}" onchange="learn()"><div class="shape ${d.shape} ${d.color}"></div><small>${d.shape==="circle"?"kruh":d.shape==="square"?"čtverec":"trojúhelník"} · ${d.color==="blue"?"modrý":d.color==="red"?"červený":"zelený"}</small><span class="label">${d.label}</span></label>`).join("")}
+  function setDataPreset(kind){document.querySelectorAll("#dataBoard input").forEach((x,i)=>x.checked=kind==="balanced"?[0,2,4,5,6,7].includes(i):[0,1,2,3].includes(i));learn()}
+  function learn(){const selected=[...document.querySelectorAll("#dataBoard input:checked")].map(x=>data[+x.dataset.index]);document.getElementById("trainCount").textContent=selected.length;if(selected.length<3){document.getElementById("learnedRule").textContent="Vyber alespoň 3 příklady";document.getElementById("trainAccuracy").textContent="—";document.getElementById("testErrors").textContent="—";return}const rules=[{name:"čtverec → rizikové",fn:d=>d.shape==="square"?"rizikové":"bezpečné"},{name:"červená → rizikové",fn:d=>d.color==="red"?"rizikové":"bezpečné"},{name:"trojúhelník → bezpečné",fn:d=>d.shape==="triangle"?"bezpečné":"rizikové"}];rules.forEach(r=>r.hits=selected.filter(d=>r.fn(d)===d.label).length);rules.sort((a,b)=>b.hits-a.hits);const best=rules[0];document.getElementById("learnedRule").textContent=best.name;document.getElementById("trainAccuracy").textContent=Math.round(best.hits/selected.length*100)+" %";document.getElementById("testErrors").textContent=data.filter(d=>!selected.includes(d)&&best.fn(d)!==d.label).length}
+  const distributions={bus:[["autobus",54],["tramvaj",24],["spoj",14],["kamaráda",8]],food:[["vodu",38],["čaj",31],["polévku",19],["autobus",12]],school:[["vlak",43],["autobus",32],["učitele",16],["pokyn",9]],conflict:[["autobus",29],["vodu",27],["vysvětlení",24],["signál",20]]};
+  function adjusted(){const key=document.getElementById("contextSelect").value,temp=+document.getElementById("temp").value/100,custom=document.getElementById("customContext").value.toLowerCase();let arr=distributions[key].map(x=>[x[0],x[1]]);if(custom.includes("vlak"))arr=arr.map(x=>[x[0],x[0]==="vlak"?x[1]+30:x[1]]);if(custom.includes("autobus"))arr=arr.map(x=>[x[0],x[0]==="autobus"?x[1]+30:x[1]]);const mean=arr.reduce((s,x)=>s+x[1],0)/arr.length;arr=arr.map(x=>[x[0],x[1]*(1-temp)+mean*temp]);const sum=arr.reduce((s,x)=>s+x[1],0);return arr.map(x=>[x[0],Math.round(x[1]/sum*100)])}
+  function updatePrediction(){document.getElementById("tempValue").textContent=(+document.getElementById("temp").value/100).toFixed(1).replace(".",",");document.getElementById("probList").innerHTML=adjusted().map(x=>`<div class="prob"><span>${x[0]}</span><div class="bar"><span style="width:${x[1]}%"></span></div><strong>${x[1]} %</strong></div>`).join("")}
+  function pickToken(){const arr=adjusted();let r=Math.random()*arr.reduce((s,x)=>s+x[1],0),pick=arr[0][0];for(const [word,p] of arr){r-=p;if(r<=0){pick=word;break}}document.getElementById("pickedToken").innerHTML=`Vybrán další token: <strong>${pick}</strong>`;document.getElementById("tokenStream").insertAdjacentHTML("beforeend",`<span class="token">${pick}</span>`);state.tokenRuns++;document.getElementById("tokenRuns").textContent=`Dokončené běhy: ${Math.min(state.tokenRuns,3)} / 3`}
+  function resetTokens(){document.getElementById("tokenStream").innerHTML='<span class="token">Na</span><span class="token">zastávce</span><span class="token">čekám</span><span class="token">na</span>';document.getElementById("pickedToken").textContent="Další token ještě nebyl vybrán.";document.getElementById("customContext").value="";updatePrediction()}
+  function completeTokenModule(){if(state.tokenRuns>=3)complete("tokens");else alert("Nejdříve proveď alespoň tři běhy s různým kontextem nebo teplotou.")}
+  function renderAudits(){document.getElementById("auditGrid").innerHTML=audits.map((a,i)=>`<article class="audit-card" id="audit-${i}"><div class="letter">${a.letter}</div><blockquote>${a.text}</blockquote><select class="audit-select"><option value="">Vyber hlavní riziko</option><option>Halucinace</option><option>Chybějící kontext</option><option>Zkreslení</option><option>Zastaralost</option></select><div class="audit-answer"><strong>${a.answer}.</strong> ${a.why}</div></article>`).join("")}
+  function checkAudits(){let score=0;audits.forEach((a,i)=>{const card=document.getElementById(`audit-${i}`),select=card.querySelector("select");card.classList.add("checked");select.style.borderColor=select.value===a.answer?"#5ea982":"#d47a74";if(select.value===a.answer)score++});document.getElementById("auditStatus").textContent=`Výsledek ${score} ze 4`;if(score>=3)complete("errors")}
+  function renderQuiz(){document.getElementById("quiz").innerHTML=quizData.map((q,i)=>`<article class="question" id="q-${i}"><h3>${i+1}. ${q[0]}</h3><div class="answers">${q[1].map((a,j)=>`<button class="answer" onclick="chooseQuiz(${i},${j},this)">${"ABC"[j]}) ${a}</button>`).join("")}</div></article>`).join("")}
+  function chooseQuiz(i,j,b){state.quiz[i]=j;b.parentElement.querySelectorAll(".answer").forEach(x=>x.classList.remove("selected"));b.classList.add("selected");document.getElementById("quizStatus").textContent=`Odpovězeno ${Object.keys(state.quiz).length} z 8`}
+  function gradeQuiz(){let score=0,review=[];quizData.forEach((q,i)=>{const card=document.getElementById(`q-${i}`),buttons=[...card.querySelectorAll(".answer")];buttons.forEach((b,j)=>{b.classList.remove("correct","wrong");if(j===q[2])b.classList.add("correct");if(j===state.quiz[i]&&j!==q[2])b.classList.add("wrong")});if(state.quiz[i]===q[2])score++;else review.push(q[3])});const result=document.getElementById("quizResult");result.className=`result show ${score>=6?"pass":"retry"}`;result.innerHTML=`<div class="score">${score} / 8</div><strong>${score>=6?"Brána splněna.":"Ještě jedno krátké opakování."}</strong><p>${score>=6?"Máš základ pro řízenou práci s Copilotem. Výstupy přesto vždy ověřuj a zachovej lidskou odpovědnost.":"Vrať se k modulům: "+[...new Set(review)].map(x=>document.querySelector(`[data-target="${x}"] span:nth-child(2)`).textContent).join(", ")+"."}</p>`;if(score>=6)complete("gateway")}
+  renderClassify();renderData();renderAudits();renderQuiz();updatePrediction();updateProgress();
+</script>
+</body>
+</html>

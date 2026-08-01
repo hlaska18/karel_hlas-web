@@ -1,0 +1,22 @@
+ZDROJOVÉ MATERIÁLY AI FLUENCY
+
+Tyto soubory dodal uživatel jako ověřený zdroj.
+
+Copyright 2025 Rick Dakan, Joseph Feller a Anthropic.
+Licence přiložených materiálů: Creative Commons Attribution–NonCommercial–ShareAlike 4.0
+(CC BY-NC-SA 4.0).
+
+Vytvořená česká výuková sada používá a adaptuje zejména:
+- čtyři dovednosti Delegation, Description, Discernment a Diligence,
+- režimy Automation, Augmentation a Agency,
+- návrhy hodnocení výsledku, procesu a reflexe,
+- terminologii generativní AI a jazykových modelů.
+
+Originály ponecháváme v balíčku kvůli dohledatelnosti, správné atribuci a dalšímu
+nekomerčnímu použití za podmínek stejné licence.
+
+Originální kurz (zdarma, registrace u Anthropicu):
+https://anthropic.skilljar.com/ai-fluency-framework-foundations
+
+Plné znění licence CC BY-NC-SA 4.0:
+https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs
