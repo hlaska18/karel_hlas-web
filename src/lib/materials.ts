@@ -36,9 +36,9 @@ function isTeacherDir(name: string): boolean {
   return /^_?(u[čc]itel|pro[ _]u[čc]itel)/i.test(name);
 }
 
-/** Žákovská podsložka – odznak „Pro žáky" (vidí všichni). Konvence: „_zaci". */
+/** Žákovská podsložka – odznak „žáci". Konvence: „_zaci" nebo „Pro žáky". */
 function isStudentDir(name: string): boolean {
-  return /^_(zaci|zaky|žáci|žáky|zak|student)/i.test(name);
+  return /^_(zaci|zaky|žáci|žáky|zak|student)|^pro[ _](žák|zak|student)/i.test(name);
 }
 
 /**
@@ -184,7 +184,11 @@ export type BankItem = {
   topicNo: number;
   /** Název tématu z plánu (COURSES); fallback „Téma N". */
   topicLabel: { cs: string; en: string };
-  /** „teacher" = metodika/plány (složka _ucitel); „student" = pro žáky. */
+  /**
+   * „teacher" = metodika/plány (složka „Pro učitele"), „student" = složka
+   * „Pro žáky", „both" = neurčeno (většina materiálů). Odznak v bance se
+   * ukazuje jen u prvních dvou – označuje výjimku, ne výchozí stav.
+   */
   audience: Audience;
   /** Název podsložky, pokud soubor leží ve skupině. */
   group?: { cs: string; en: string };
@@ -408,7 +412,7 @@ export function getBankItems(): BankItem[] {
         }
       };
 
-      walk(path.join(courseDir, topicDir), [topicDir], "student");
+      walk(path.join(courseDir, topicDir), [topicDir], "both");
     }
   }
 

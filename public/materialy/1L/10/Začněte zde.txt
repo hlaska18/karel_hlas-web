@@ -2,31 +2,31 @@ UMĚLÁ INTELIGENCE: OD PRINCIPŮ K ODPOVĚDNÉMU POUŽITÍ
 Ucelený výukový balíček pro 1. ročník SŠ · 6 × 45 minut
 
 DOPORUČENÝ START
-1. Otevřete 01_PRO_UCITELE/AI_plany_hodin_a_metodika.docx.
-2. Před výukou vyzkoušejte 03_DIGITALNI_PODKLADY_K_AKTIVITAM/01_laborator_fungovani_AI.html.
+1. Otevřete Pro učitele/Plány hodin a metodika.docx.
+2. Před výukou vyzkoušejte Podklady k aktivitám/1. Laboratoř fungování AI.html.
 3. Ověřte školní přístup k Microsoft Copilotu a pravidla organizace.
    Jednorázově pořiďte tištěnou offline zálohu hodin 4–6.
-4. Studentům zpřístupněte digitální pracovní sešit a složku 03.
+4. Studentům zpřístupněte digitální pracovní sešit a složku Podklady k aktivitám.
 
 STRUKTURA
-01_PRO_UCITELE
+Pro učitele
 - plány hodin a metodika,
 - hodnocení, diagnostická brána, testy A/B a řešení,
 - protokol souladu,
 - příloha Přenesení hodin 4–6 na jiný AI nástroj,
 - tištěná offline záloha hodin 4–6 pro případ výpadku.
 
-02_PRO_STUDENTY
+Pro žáky
 - digitální pracovní sešit pro všech 6 hodin.
 
-03_DIGITALNI_PODKLADY_K_AKTIVITAM
+Podklady k aktivitám
 - offline interaktivní laboratoř pro hodiny 1–3,
 - fiktivní a syntetické soubory pro všechny praktické aktivity.
 
-04_PREZENTACE_K_HODINAM
+Prezentace k hodinám
 - 6 prezentací, každá má 7 snímků a poznámky pro vyučujícího.
 
-05_ZDROJE_AI_FLUENCY
+Zdroje AI Fluency
 - původní ověřené materiály s licencí a atribucí.
 
 DIDAKTICKÁ POSLOUPNOST

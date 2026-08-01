@@ -1,7 +1,5 @@
 ZDROJOVÉ MATERIÁLY AI FLUENCY
 
-Tyto soubory dodal uživatel jako ověřený zdroj.
-
 Copyright 2025 Rick Dakan, Joseph Feller a Anthropic.
 Licence přiložených materiálů: Creative Commons Attribution–NonCommercial–ShareAlike 4.0
 (CC BY-NC-SA 4.0).

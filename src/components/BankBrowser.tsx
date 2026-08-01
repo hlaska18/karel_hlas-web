@@ -54,6 +54,7 @@ const STR: Record<
     expandLesson: string;
     collapseLesson: string;
     teacherFolder: string;
+    studentFolder: string;
     expandFolder: string;
     collapseFolder: string;
     sourceBadge: string;
@@ -84,6 +85,7 @@ const STR: Record<
     expandLesson: "Rozbalit lekci",
     collapseLesson: "Sbalit lekci",
     teacherFolder: "Pro učitele",
+    studentFolder: "Pro žáky",
     expandFolder: "Otevřít složku",
     collapseFolder: "Zavřít složku",
     sourceBadge: "zdroj",
@@ -113,6 +115,7 @@ const STR: Record<
     expandLesson: "Expand lesson",
     collapseLesson: "Collapse lesson",
     teacherFolder: "For teachers",
+    studentFolder: "For students",
     expandFolder: "Open folder",
     collapseFolder: "Close folder",
     sourceBadge: "source",
@@ -326,7 +329,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
   const showFolders = useMemo(() => {
     if (needle !== "" || tool === null) return false;
     const names = new Set(
-      results.map((it) => it.group?.cs ?? (it.audience === "teacher" ? "\u0000ucitel" : "")),
+      results.map((it) => it.group?.cs ?? (it.audience === "both" ? "" : `\u0000${it.audience}`)),
     );
     names.delete("");
     return results.length >= 6 && names.size >= 2;
@@ -528,17 +531,21 @@ function MaterialRow({
           {it.group ? ` · ${L(it.group, lang)}` : ""}
         </span>
       </span>
-      <span className="hidden shrink-0 items-center gap-1.5 sm:inline-flex">
-        {it.audience === "teacher" ? (
-          <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
-            <GraduationCap className="h-3.5 w-3.5" /> {s.teacherBadge}
-          </span>
-        ) : (
-          <span className="inline-flex items-center gap-1 rounded-md bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
-            <Users className="h-3.5 w-3.5" /> {s.studentBadge}
-          </span>
-        )}
-      </span>
+      {/* Odznak jen u vyhraněných materiálů. „both" (většina) ho nemá – tvrdit
+          u průvodce pro učitele „žáci" nedávalo smysl. */}
+      {it.audience !== "both" && (
+        <span className="hidden shrink-0 items-center gap-1.5 sm:inline-flex">
+          {it.audience === "teacher" ? (
+            <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+              <GraduationCap className="h-3.5 w-3.5" /> {s.teacherBadge}
+            </span>
+          ) : (
+            <span className="inline-flex items-center gap-1 rounded-md bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
+              <Users className="h-3.5 w-3.5" /> {s.studentBadge}
+            </span>
+          )}
+        </span>
+      )}
       <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-400 md:block">
         {fmtSize(it.sizeBytes)}
       </span>
@@ -703,7 +710,13 @@ function ToolFolders({
     const map = new Map<string, BankItem[]>();
     const rest: BankItem[] = [];
     for (const it of items) {
-      const name = it.group ? L(it.group, lang) : it.audience === "teacher" ? s.teacherFolder : null;
+      const name = it.group
+        ? L(it.group, lang)
+        : it.audience === "teacher"
+          ? s.teacherFolder
+          : it.audience === "student"
+            ? s.studentFolder
+            : null;
       if (name === null) {
         rest.push(it);
         continue;

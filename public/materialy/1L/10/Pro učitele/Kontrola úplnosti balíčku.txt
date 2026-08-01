@@ -19,7 +19,7 @@ Obsah
 - tištěná offline záloha hodin 4–6
 
 Kontrolované vazby
-- názvy podkladů v metodice, pracovním sešitu a prezentacích odpovídají souborům ve složce 03
+- názvy podkladů v metodice, pracovním sešitu a prezentacích odpovídají souborům ve složce Podklady k aktivitám
 - cíle, aktivity, výstupy a časování se shodují ve všech řídicích dokumentech
 - Copilot se poprvé používá až ve 4. hodině
 - všechny scénáře pro Copilot používají fiktivní nebo syntetická data
