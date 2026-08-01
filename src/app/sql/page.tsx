@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Download, FileText, MonitorDown } from "lucide-react";
+import { ArrowLeft, Download, ExternalLink, FileText, MonitorDown } from "lucide-react";
 import { SITE } from "@/lib/content";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -106,6 +106,29 @@ export default function SqlPage() {
               <FileText className="h-4 w-4" /> Úlohy 1–5 + bonus
             </a>
           </div>
+        </section>
+
+        {/* Volitelné pokračování. Schválně AŽ ZA závěrečnou lekcí a decentně:
+            je to cizí kurz a je anglicky, takže patří na konec cesty, ne na
+            začátek – tenhle kurz zůstává hlavní. */}
+        <section className="glass-soft mt-8 max-w-3xl rounded-2xl p-5 sm:p-6">
+          <h2 className="font-display text-lg font-semibold tracking-tight">
+            Chceš toho ještě víc?
+          </h2>
+          <p className="mt-2 leading-relaxed text-zinc-600 dark:text-zinc-400">
+            <b>SQLBolt</b> je bezplatný kurz, který funguje na stejném principu jako tenhle –
+            krátký výklad a hned cvičení v prohlížeči. Jde ale dál: vnořené dotazy, sjednocení
+            tabulek, úpravy dat i tvorba vlastních tabulek – 18 lekcí, bez registrace. Je celý{" "}
+            <b>anglicky</b>, takže se do něj pouštěj až potom, co máš základ z tohohle kurzu.
+          </p>
+          <a
+            href="https://sqlbolt.com"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="mt-4 inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold text-accent-700 transition hover:bg-accent-500/10 dark:text-accent-300"
+          >
+            Otevřít SQLBolt <ExternalLink className="h-4 w-4" />
+          </a>
         </section>
       </main>
     </LanguageProvider>
