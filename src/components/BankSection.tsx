@@ -1,6 +1,6 @@
 "use client";
 
-import { BadgeCheck, Info } from "lucide-react";
+import { Info } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
@@ -30,13 +30,6 @@ export function BankSection({ items }: { items: BankItem[] }) {
     <section id="banka" className="relative py-10 sm:py-14">
       <div className="container-page">
         <SectionHeader no="01" kicker={m.kicker} heading={m.heading} intro={m.sub} />
-
-        {/* Důkaz, ne slogan: materiály jsou reálně odučené. Zbylo po zrušené
-            sekci „Ověřeno ve výuce" – tady je to blíž k rozhodování o stažení. */}
-        <p className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-accent-700 dark:text-accent-300">
-          <BadgeCheck className="h-4 w-4 shrink-0" />
-          {m.proof}
-        </p>
 
         <div className="mt-8">
           <BankBrowser items={items} lang={lang} />
