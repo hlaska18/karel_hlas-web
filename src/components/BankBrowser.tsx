@@ -326,14 +326,10 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
   // Složkový pohled má smysl až od pár souborů a od dvou složek výš; u dvou
   // materiálů ve dvou složkách by přidal jen dvě kliknutí navíc. Při hledání
   // se negrupuje – tam chce člověk vidět všechny shody naráz.
-  const showFolders = useMemo(() => {
-    if (needle !== "" || tool === null) return false;
-    const names = new Set(
-      results.map((it) => it.group?.cs ?? (it.audience === "both" ? "" : `\u0000${it.audience}`)),
-    );
-    names.delete("");
-    return results.length >= 6 && names.size >= 2;
-  }, [needle, tool, results]);
+  const showFolders = useMemo(
+    () => needle === "" && tool !== null && foldersWorthIt(results),
+    [needle, tool, results],
+  );
 
   return (
     <div>
@@ -580,6 +576,12 @@ const norm = (s?: string) => (s ?? "").normalize("NFC");
 type LessonConfig = {
   studentGroups: string[];
   teacherGroups?: string[];
+  /**
+   * Odstín druhého štítku. „teacher" (výchozí) = jantarový, tedy „metodika,
+   * nedávej žákům". U balíčků, kde je druhý slot prezentace do hodiny, se
+   * hodí neutrální zelená – prezentace není tajná.
+   */
+  teacherTone?: "teacher" | "neutral";
   /** Učitelské soubory bez podsložky (leží přímo v _ucitel), např. volné plány hodin. */
   teacherNoGroup?: boolean;
   studentLabel: { cs: string; en: string };
@@ -592,6 +594,20 @@ const LESSON_CONFIG: Record<string, LessonConfig> = {
     teacherNoGroup: true,
     studentLabel: { cs: "Pracovní list", en: "Worksheet" },
     teacherLabel: { cs: "Plán hodiny", en: "Lesson plan" },
+  },
+  "Internet a bezpečnost": {
+    studentGroups: ["Podklady k aktivitám"],
+    teacherGroups: ["Prezentace k hodinám"],
+    teacherTone: "neutral",
+    studentLabel: { cs: "Podklad", en: "Activity file" },
+    teacherLabel: { cs: "Prezentace", en: "Slides" },
+  },
+  "Umělá inteligence": {
+    studentGroups: ["Podklady k aktivitám"],
+    teacherGroups: ["Prezentace k hodinám"],
+    teacherTone: "neutral",
+    studentLabel: { cs: "Podklad", en: "Activity file" },
+    teacherLabel: { cs: "Prezentace", en: "Slides" },
   },
   "Power BI": {
     studentGroups: ["Úlohy"],
@@ -614,7 +630,13 @@ function isTeacherSlot(it: BankItem, cfg: LessonConfig): boolean {
   return false;
 }
 
-function SlotTag({ kind, children }: { kind: "student" | "teacher"; children: React.ReactNode }) {
+function SlotTag({
+  kind,
+  children,
+}: {
+  kind: "student" | "teacher" | "neutral";
+  children: React.ReactNode;
+}) {
   const cls =
     kind === "teacher"
       ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
@@ -673,13 +695,16 @@ function ToolLessons({
           onPreview={onPreview}
         />
       ))}
-      {extras.length > 0 && (
-        <ul className="space-y-2.5 pt-1">
-          {extras.map((it) => (
-            <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={onPreview} />
-          ))}
-        </ul>
-      )}
+      {extras.length > 0 &&
+        (foldersWorthIt(extras) ? (
+          <ToolFolders items={extras} lang={lang} onPreview={onPreview} />
+        ) : (
+          <ul className="space-y-2.5 pt-1">
+            {extras.map((it) => (
+              <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={onPreview} />
+            ))}
+          </ul>
+        ))}
     </div>
   );
 }
@@ -696,6 +721,15 @@ function ToolLessons({
  * Volné žákovské soubory (např. „Začněte zde") zůstávají nahoře nad složkami,
  * stejně jako leží v kořeni balíčku.
  */
+/** Grupovat do složek se vyplatí až od čtyř souborů a od dvou složek výš. */
+function foldersWorthIt(items: BankItem[]): boolean {
+  const names = new Set(
+    items.map((it) => it.group?.cs ?? (it.audience === "both" ? "" : `\u0000${it.audience}`)),
+  );
+  names.delete("");
+  return items.length >= 4 && names.size >= 2;
+}
+
 function ToolFolders({
   items,
   lang,
@@ -891,7 +925,11 @@ function LessonCard({
             </span>
             <span className="mt-1 flex flex-wrap gap-1.5">
               {hasStudent && <SlotTag kind="student">{L(cfg.studentLabel, lang)}</SlotTag>}
-              {hasTeacher && <SlotTag kind="teacher">{L(cfg.teacherLabel, lang)}</SlotTag>}
+              {hasTeacher && (
+                <SlotTag kind={cfg.teacherTone === "neutral" ? "neutral" : "teacher"}>
+                  {L(cfg.teacherLabel, lang)}
+                </SlotTag>
+              )}
             </span>
           </span>
         </button>

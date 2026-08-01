@@ -35,9 +35,9 @@ Prezentace k hodinám
 Podklady k aktivitám
 - Soubory pro samostatnou práci žáků na počítači.
 - CSV otevřete v Excelu, TXT v textovém editoru.
-- Webové ukázky jsou v jednom ZIP archivu, protože stránky používají
-  obrázky ze složky images. Archiv rozbalte do jedné složky a složku
-  images nechte na místě, jinak se obrázky nezobrazí.
+- Ke každé hodině je jeden podklad. Stránky, které používají obrázek,
+  jsou v malém ZIP archivu – rozbalte ho do jedné složky a složku images
+  nechte na místě, jinak se obrázky nezobrazí.
 - Stránky otevírejte v běžném prohlížeči; fungují i bez internetu.
 
 
@@ -53,7 +53,7 @@ MAPA MATERIÁLŮ K JEDNOTLIVÝM HODINÁM
 
 3. Kybernetické hrozby a phishing
    Prezentace: 3. Kybernetické hrozby a phishing
-   Podklad: Podezřelá schránka (ve webových ukázkách)
+   Podklad: 3. Podezřelá schránka (HTML)
 
 4. Šifrování, HTTPS, hash a zálohy
    Prezentace: 4. Šifrování, HTTPS, hash a zálohy
@@ -65,15 +65,15 @@ MAPA MATERIÁLŮ K JEDNOTLIVÝM HODINÁM
 
 6. Ověřování zdrojů metodou 5P
    Prezentace: 6. Ověřování zdrojů metodou 5P
-   Podklady: Zdroj A, Zdroj B a Zdroj C (ve webových ukázkách)
+   Podklad: 6. Zdroje k metodě 5P (ZIP)
 
 7. Fake news a obsah vytvořený umělou inteligencí
    Prezentace: 7. Fake news a obsah od AI
-   Podklad: Neověřený příspěvek (ve webových ukázkách)
+   Podklad: 7. Neověřený příspěvek (ZIP)
 
 8. Sociální sítě a digitální stopa
    Prezentace: 8. Sociální sítě a digitální stopa
-   Podklad: Profil Alex (ve webových ukázkách)
+   Podklad: 8. Profil Alex (ZIP)
 
 9. Soukromí, GDPR a autorská práva
    Prezentace: 9. Soukromí, GDPR a autorská práva
@@ -81,7 +81,7 @@ MAPA MATERIÁLŮ K JEDNOTLIVÝM HODINÁM
 
 10. Závěrečná bezpečnostní výzva
     Prezentace: 10. Závěrečná bezpečnostní výzva
-    Podklad: Incident mediálního klubu (ve webových ukázkách)
+    Podklad: 10. Incident mediálního klubu (ZIP)
     Ověření znalostí: Testy A a B
 
 
