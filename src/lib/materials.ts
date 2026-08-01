@@ -94,6 +94,8 @@ const NAME_EN: Record<string, string> = {
   "Plán hodiny": "Lesson plan",
   // Internet, bezpečnost a práce s informacemi (10 hodin)
   "Prezentace k hodinám": "Lesson presentations",
+  "Pro žáky": "For students",
+  "Začněte zde": "Start here",
   "Podklady k aktivitám": "Activity materials",
   "Digitální pracovní sešit": "Digital workbook",
   "Plány hodin a metodika": "Lesson plans & teaching notes",

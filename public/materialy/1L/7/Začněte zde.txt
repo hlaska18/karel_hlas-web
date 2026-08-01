@@ -1,0 +1,106 @@
+INTERNET, BEZPEČNOST A PRÁCE S INFORMACEMI
+UCELENÝ VÝUKOVÝ BALÍČEK PRO 10 VYUČOVACÍCH HODIN
+
+Balíček je určen pro 1. ročník střední školy a obsahuje vše potřebné
+pro deset vyučovacích hodin po 45 minutách.
+
+
+OBSAH BALÍČKU
+
+Pro učitele
+- Plány hodin a metodika
+  Podrobný plán všech 10 hodin, časový scénář, postup učitele,
+  organizace práce, reflexe, hodnocení a řešení aktivit.
+- Testy A a B
+  Dvě varianty závěrečného testu a podklady k vyhodnocení.
+- Protokol souladu
+  Kontrola návaznosti metodiky, pracovního sešitu, prezentací
+  a digitálních podkladů.
+
+Pro žáky
+- Digitální pracovní sešit
+  Pracovní prostor pro odpovědi, poznámky, reflexe a výstupy
+  z jednotlivých hodin.
+
+Prezentace k hodinám
+- Deset prezentací, vždy jedna k jedné vyučovací hodině.
+- Každá má 7 snímků: cíl hodiny, úvodní rozhodnutí, nezbytné minimum,
+  hlavní počítačová aktivita, průběžná kontrola, společný rozbor,
+  exit ticket.
+- V poznámkách přednášejícího je metodické vedení, časování, očekávané
+  závěry, podpora, rozšíření a technická záloha.
+- Prezentace obsahují zadání úloh; podrobný postup a řešení jsou
+  v metodice pro učitele.
+
+Podklady k aktivitám
+- Soubory pro samostatnou práci žáků na počítači.
+- CSV otevřete v Excelu, TXT v textovém editoru.
+- Webové ukázky jsou v jednom ZIP archivu, protože stránky používají
+  obrázky ze složky images. Archiv rozbalte do jedné složky a složku
+  images nechte na místě, jinak se obrázky nezobrazí.
+- Stránky otevírejte v běžném prohlížeči; fungují i bez internetu.
+
+
+MAPA MATERIÁLŮ K JEDNOTLIVÝM HODINÁM
+
+1. Bezpečné chování na internetu
+   Prezentace: 1. Bezpečné chování na internetu
+   Podklad: 1. Rizikové situace (CSV)
+
+2. Hesla a dvoufaktorové ověření
+   Prezentace: 2. Hesla a dvoufaktorové ověření
+   Podklad: 2. Účty a faktory ověření (CSV)
+
+3. Kybernetické hrozby a phishing
+   Prezentace: 3. Kybernetické hrozby a phishing
+   Podklad: Podezřelá schránka (ve webových ukázkách)
+
+4. Šifrování, HTTPS, hash a zálohy
+   Prezentace: 4. Šifrování, HTTPS, hash a zálohy
+   Podklady: 4. Kontrola integrity – projekt A a projekt B (TXT)
+
+5. Efektivní vyhledávání informací
+   Prezentace: 5. Efektivní vyhledávání
+   Podklad: 5. Vyhledávací výzva (TXT)
+
+6. Ověřování zdrojů metodou 5P
+   Prezentace: 6. Ověřování zdrojů metodou 5P
+   Podklady: Zdroj A, Zdroj B a Zdroj C (ve webových ukázkách)
+
+7. Fake news a obsah vytvořený umělou inteligencí
+   Prezentace: 7. Fake news a obsah od AI
+   Podklad: Neověřený příspěvek (ve webových ukázkách)
+
+8. Sociální sítě a digitální stopa
+   Prezentace: 8. Sociální sítě a digitální stopa
+   Podklad: Profil Alex (ve webových ukázkách)
+
+9. Soukromí, GDPR a autorská práva
+   Prezentace: 9. Soukromí, GDPR a autorská práva
+   Podklad: 9. Díla a licence (CSV)
+
+10. Závěrečná bezpečnostní výzva
+    Prezentace: 10. Závěrečná bezpečnostní výzva
+    Podklad: Incident mediálního klubu (ve webových ukázkách)
+    Ověření znalostí: Testy A a B
+
+
+BEZPEČNOST VÝUKOVÝCH UKÁZEK
+
+Všechny webové stránky a profily v podkladech jsou fiktivní a určené
+výhradně pro výuku. Domény s koncovkou .example nevedou na skutečné
+služby. Podklady nic neodesílají a lze je používat offline. Značky
+STUDYMAX, Univerzita Severní, Journal of Learning Research, Spoj,
+Moment a ClubDesk jsou vymyšlené.
+
+
+DOPORUČENÝ POSTUP PŘED PRVNÍ HODINOU
+
+1. Stáhněte si plány hodin a metodiku a projděte část k dané hodině.
+2. Vyzkoušejte odpovídající prezentaci a digitální podklad.
+3. Rozdejte nebo nasdílejte žákům digitální pracovní sešit.
+4. Materiály si můžete libovolně upravit pro svou třídu.
+
+
+Materiály jsou zdarma. Připravil Karel Hlas, SPŠ strojní a stavební Tábor.
+karelhlas.vercel.app
