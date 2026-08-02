@@ -2,6 +2,7 @@ import { LanguageProvider } from "@/lib/i18n";
 import { Header } from "@/components/Header";
 import { Hero } from "@/components/Hero";
 import { BankSection } from "@/components/BankSection";
+import { CrossSubject } from "@/components/CrossSubject";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
@@ -23,6 +24,7 @@ export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
       <main id="main">
         <Hero pool={getHeroPool(items)} stats={getBankStats(items)} />
         <BankSection items={items} />
+        <CrossSubject />
         <About />
         <Contact />
       </main>

@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, User, Mail, Library } from "lucide-react";
+import { Menu, X, User, Mail, Library, Layers } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { ICON_BUTTON } from "@/lib/styles";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -24,6 +24,7 @@ export function Header() {
   // One-page: všechno jsou kotvy na téže stránce (pořadí sekcí 01–03).
   const links = [
     { href: "#banka", label: tr.nav.bank },
+    { href: "#jinam", label: tr.cross.kicker },
     { href: "#about", label: tr.nav.about },
     { href: "#contact", label: tr.nav.contact },
   ];
@@ -57,6 +58,12 @@ export function Header() {
             text={tr.nav.bank}
             size="sm"
             icon={<Library className="h-4 w-4" />}
+          />
+          <InteractiveHoverButton
+            href="#jinam"
+            text={tr.cross.kicker}
+            size="sm"
+            icon={<Layers className="h-4 w-4" />}
           />
           <InteractiveHoverButton
             href="#about"

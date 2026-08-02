@@ -25,7 +25,7 @@ export function Contact() {
     <section id="contact" className="py-10 sm:py-14">
       <div className="container-page">
         <SectionHeader
-          no="03"
+          no="04"
           kicker={c.kicker}
           heading={c.heading}
           intro={c.intro}

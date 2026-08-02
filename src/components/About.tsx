@@ -22,7 +22,7 @@ export function About() {
           {/* Text */}
           <div className="flex flex-col">
             <SectionHeader
-              no="02"
+              no="03"
               kicker={a.kicker}
               heading={a.heading}
               headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl"

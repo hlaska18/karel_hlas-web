@@ -40,7 +40,7 @@ export function BankSection({ items }: { items: BankItem[] }) {
           {STR[lang].license}
         </p>
 
-        <SectionJump href="#about" label={tr.nav.about} />
+        <SectionJump href="#jinam" label={tr.cross.kicker} />
       </div>
     </section>
   );

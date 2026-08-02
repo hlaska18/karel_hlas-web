@@ -1053,6 +1053,16 @@ type Dict = {
     audienceStudent: string;
     audienceBoth: string;
   };
+  /** Sekce „Nejen do informatiky" – hodiny z banky použitelné i v jiných předmětech. */
+  cross: {
+    kicker: string;
+    heading: string;
+    intro: string;
+    subjectsLabel: string;
+    cta: string;
+    note: string;
+    items: { title: string; what: string; subjects: string[]; tool: string; lesson?: number }[];
+  };
   materials: {
     kicker: string;
     heading: string;
@@ -1160,6 +1170,49 @@ export const t: Record<Lang, Dict> = {
       audienceStudent: "Pro žáky",
       audienceBoth: "Pro učitele i žáky",
     },
+    cross: {
+      kicker: "Pro ostatní předměty",
+      heading: "Nejen do informatiky",
+      intro:
+        "Digitální kompetence se dnes učí napříč předměty. Tyhle hodiny nejsou o programování – postup zůstane stejný, jen vyměníte téma za své. Všechny jsou i s prezentací, podklady a metodikou.",
+      subjectsLabel: "Kam se hodí",
+      cta: "Otevřít hodinu",
+      note:
+        "Zatím jde o hodiny z informatiky, které fungují i jinde. Učíte jiný předmět a máte vlastní materiál s technologiemi? Napište mi, rád ho sem doplním a uvedu vás jako autora.",
+      items: [
+        {
+          title: "Ověřování zdrojů metodou 5P",
+          what:
+            "Žáci dostanou tři zdroje k jedné události a rozhodují, kterému věřit. Fiktivní weby jsou připravené, stačí je otevřít v prohlížeči.",
+          subjects: ["Dějepis", "Český jazyk", "Základy společenských věd"],
+          tool: "Internet a bezpečnost",
+          lesson: 6,
+        },
+        {
+          title: "Fake news a obsah od AI",
+          what:
+            "Rozbor příspěvku s manipulačními prvky – co je fakt, co dojem a podle čeho poznat obsah vytvořený umělou inteligencí.",
+          subjects: ["Český jazyk", "Mediální výchova", "Základy společenských věd"],
+          tool: "Internet a bezpečnost",
+          lesson: 7,
+        },
+        {
+          title: "Efektivní vyhledávání informací",
+          what:
+            "Jak hledat, aby to dávalo výsledky – hodí se před každou seminární prací nebo referátem, v jakémkoli předmětu.",
+          subjects: ["Všechny předměty"],
+          tool: "Internet a bezpečnost",
+          lesson: 5,
+        },
+        {
+          title: "Práce s AI podle rámce 4D",
+          what:
+            "Kdy AI pomůže a kdy uškodí, jak zadat práci, aby ji žák nenechal napsat celou, a jak výstup ověřit. Rámec je nezávislý na předmětu.",
+          subjects: ["Odborné předměty", "Jazyky", "Všechny předměty"],
+          tool: "Umělá inteligence",
+        },
+      ],
+    },
     materials: {
       kicker: "Banka materiálů",
       heading: "Vyber si téma",
@@ -1265,6 +1318,49 @@ export const t: Record<Lang, Dict> = {
       audienceTeacher: "For teachers",
       audienceStudent: "For students",
       audienceBoth: "For teachers & students",
+    },
+    cross: {
+      kicker: "For other subjects",
+      heading: "Not just for CS lessons",
+      intro:
+        "Digital skills are taught across subjects now. These lessons are not about programming – the structure stays, you only swap the topic. Each comes with slides, activity files and teaching notes.",
+      subjectsLabel: "Fits into",
+      cta: "Open the lesson",
+      note:
+        "For now these are CS lessons that work elsewhere too. Do you teach another subject and have your own material? Write to me – I will add it here and credit you as the author.",
+      items: [
+        {
+          title: "Verifying sources with the 5P method",
+          what:
+            "Students get three sources on one event and decide which to trust. The fictional websites are ready to open in a browser.",
+          subjects: ["History", "Czech language", "Social sciences"],
+          tool: "Internet a bezpečnost",
+          lesson: 6,
+        },
+        {
+          title: "Fake news and AI-generated content",
+          what:
+            "Taking apart a post full of manipulation – what is fact, what is impression, and how to spot content made by AI.",
+          subjects: ["Czech language", "Media studies", "Social sciences"],
+          tool: "Internet a bezpečnost",
+          lesson: 7,
+        },
+        {
+          title: "Effective searching",
+          what:
+            "How to search so it actually works – useful before any essay or presentation, in any subject.",
+          subjects: ["All subjects"],
+          tool: "Internet a bezpečnost",
+          lesson: 5,
+        },
+        {
+          title: "Working with AI using the 4D framework",
+          what:
+            "When AI helps and when it hurts, how to set an assignment students cannot just generate, and how to check the output. The framework is subject-agnostic.",
+          subjects: ["Vocational subjects", "Languages", "All subjects"],
+          tool: "Umělá inteligence",
+        },
+      ],
     },
     materials: {
       kicker: "Material bank",
