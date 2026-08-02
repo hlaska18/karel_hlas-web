@@ -65,6 +65,11 @@ const STR: Record<
     tryOnlineCta: string;
     docxLoading: string;
     docxError: string;
+    pptxLoading: string;
+    pptxError: string;
+    pptxNote: string;
+    pptxSlide: string;
+    pptxNotes: string;
     codeLoading: string;
     codeError: string;
   }
@@ -96,6 +101,11 @@ const STR: Record<
     tryOnlineCta: "Spustit kurz",
     docxLoading: "Načítám náhled dokumentu…",
     docxError: "Náhled se nepodařilo vykreslit – stáhni si dokument tlačítkem výše.",
+    pptxLoading: "Načítám prezentaci…",
+    pptxError: "Prezentaci se nepodařilo přečíst – stáhni si ji tlačítkem výše.",
+    pptxNote: "Textový přehled snímků. Obrázky a rozvržení uvidíš po stažení.",
+    pptxSlide: "Snímek",
+    pptxNotes: "Poznámky pro vyučujícího",
     codeLoading: "Načítám náhled kódu…",
     codeError: "Náhled kódu se nepodařilo vykreslit – stáhni si soubor tlačítkem výše.",
   },
@@ -126,6 +136,11 @@ const STR: Record<
     tryOnlineCta: "Start the course",
     docxLoading: "Loading document preview…",
     docxError: "Preview failed to render – use the download button above.",
+    pptxLoading: "Loading presentation…",
+    pptxError: "Could not read the presentation – use the download button above.",
+    pptxNote: "Text overview of the slides. Images and layout appear after download.",
+    pptxSlide: "Slide",
+    pptxNotes: "Speaker notes",
     codeLoading: "Loading code preview…",
     codeError: "Code preview failed to render – use the download button above.",
   },
@@ -151,12 +166,15 @@ const TEXT = ["txt", "csv"];
 const DOCX = ["docx"];
 /** Zdrojový kód: obarvíme přes highlight.js (lazy z CDN) a vypíšeme do <pre>. */
 const CODE = ["py", "sql", "js", "ts", "tsx", "jsx", "json", "html", "css", "java", "c", "cpp", "sh", "xml"];
+/** PowerPoint: vypíšeme text snímků a poznámky (viz `pptxPreview`). */
+const PPTX = ["pptx"];
 function canPreview(ext: string): boolean {
   return (
     IMG.includes(ext) ||
     PDF.includes(ext) ||
     TEXT.includes(ext) ||
     DOCX.includes(ext) ||
+    PPTX.includes(ext) ||
     CODE.includes(ext)
   );
 }
@@ -663,7 +681,7 @@ function ToolLessons({
   onPreview: (it: BankItem) => void;
 }) {
   const cfg = LESSON_CONFIG[tool];
-  const { lessons, extras } = useMemo(() => {
+  const { lessons, intro, extras } = useMemo(() => {
     const map = new Map<number, BankItem[]>();
     const rest: BankItem[] = [];
     for (const it of items) {
@@ -678,11 +696,29 @@ function ToolLessons({
     const lessonsArr = [...map.entries()]
       .sort((a, b) => a[0] - b[0])
       .map(([no, its]) => ({ no, items: its }));
-    return { lessons: lessonsArr, extras: rest };
+    // Volné soubory v kořeni tématu (typicky „Začněte zde") patří NAD lekce –
+    // je to rozcestník, kterým má člověk začít, ne dodatek na konci.
+    return {
+      lessons: lessonsArr,
+      intro: rest.filter((it) => !it.group && it.audience === "both"),
+      extras: rest.filter((it) => it.group || it.audience !== "both"),
+    };
   }, [items, cfg]);
 
   return (
     <div className="mt-4 space-y-2.5">
+      {intro.length > 0 && (
+        <ul className="space-y-2.5">
+          {intro.map((it) => (
+            <MaterialRow
+              key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`}
+              it={it}
+              lang={lang}
+              onPreview={onPreview}
+            />
+          ))}
+        </ul>
+      )}
       {lessons.map((l) => (
         <LessonCard
           key={l.no}
@@ -977,13 +1013,21 @@ function DocxView({
 
   useEffect(() => {
     let alive = true;
+    let dispose: (() => void) | undefined;
     setState("loading");
     import("@/lib/docxPreview")
       .then((m) => {
         if (!ref.current) throw new Error("Náhled byl zavřen před dokončením načítání");
         return m.renderDocx(href, ref.current);
       })
-      .then(() => alive && setState("ready"))
+      .then((cleanup) => {
+        // Náhled se mohl mezitím zavřít – sledování velikosti hned odpojíme.
+        if (!alive) cleanup();
+        else {
+          dispose = cleanup;
+          setState("ready");
+        }
+      })
       .catch((err) => {
         if (!alive) return;
         console.error(`Náhled dokumentu se nepodařilo vykreslit (${href}):`, err);
@@ -991,6 +1035,7 @@ function DocxView({
       });
     return () => {
       alive = false;
+      dispose?.();
     };
   }, [href]);
 
@@ -1007,6 +1052,97 @@ function DocxView({
         </p>
       )}
       <div ref={ref} />
+    </div>
+  );
+}
+
+/**
+ * Náhled .pptx – textový přepis snímků. Nevykresluje grafiku (to by znamenalo
+ * těžkou knihovnu nebo cizí službu); ukazuje, CO na snímcích je, aby se učitel
+ * mohl rozhodnout, jestli si prezentaci stáhne.
+ */
+function PptxView({
+  href,
+  lang,
+  loadingText,
+  errorText,
+}: {
+  href: string;
+  lang: Lang;
+  loadingText: string;
+  errorText: string;
+}) {
+  const s = STR[lang];
+  const [slides, setSlides] = useState<import("@/lib/pptxPreview").Slide[] | null>(null);
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    let alive = true;
+    setState("loading");
+    import("@/lib/pptxPreview")
+      .then((m) => m.readPptx(href))
+      .then((data) => {
+        if (!alive) return;
+        setSlides(data);
+        setState("ready");
+      })
+      .catch((err) => {
+        if (!alive) return;
+        console.error(`Prezentaci se nepodařilo přečíst (${href}):`, err);
+        setState("error");
+      });
+    return () => {
+      alive = false;
+    };
+  }, [href]);
+
+  if (state === "loading") {
+    return (
+      <p className="flex items-center gap-2 py-10 text-sm text-zinc-600 dark:text-zinc-300">
+        <Loader2 className="h-4 w-4 animate-spin" /> {loadingText}
+      </p>
+    );
+  }
+  if (state === "error" || !slides) {
+    return <p className="px-6 py-10 text-center text-sm text-zinc-600 dark:text-zinc-300">{errorText}</p>;
+  }
+
+  return (
+    <div className="h-[78vh] w-full overflow-auto">
+      <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">{s.pptxNote}</p>
+      <ol className="space-y-3">
+        {slides.map((sl) => (
+          <li key={sl.no} className="glass rounded-2xl p-4">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
+              {s.pptxSlide} {sl.no}
+            </p>
+            {sl.title && (
+              <p className="mt-1 font-display font-semibold tracking-tight text-zinc-900 dark:text-white">
+                {sl.title}
+              </p>
+            )}
+            {sl.body.length > 0 && (
+              <ul className="mt-2 space-y-1 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+                {sl.body.map((line, i) => (
+                  <li key={i}>{line}</li>
+                ))}
+              </ul>
+            )}
+            {sl.notes.length > 0 && (
+              <details className="mt-3">
+                <summary className="cursor-pointer text-xs font-medium text-zinc-500 hover:text-accent-600 dark:text-zinc-400 dark:hover:text-accent-400">
+                  {s.pptxNotes}
+                </summary>
+                <div className="mt-2 space-y-1 border-l border-black/10 pl-3 text-sm leading-relaxed text-zinc-600 dark:border-white/10 dark:text-zinc-400">
+                  {sl.notes.map((line, i) => (
+                    <p key={i}>{line}</p>
+                  ))}
+                </div>
+              </details>
+            )}
+          </li>
+        ))}
+      </ol>
     </div>
   );
 }
@@ -1145,6 +1281,7 @@ function PreviewModal({
   const isDocx = DOCX.includes(item.ext);
   const isText = TEXT.includes(item.ext);
   const isCode = CODE.includes(item.ext);
+  const isPptx = PPTX.includes(item.ext);
   const label = L(item.label, lang);
 
   useEffect(() => {
@@ -1209,6 +1346,13 @@ function PreviewModal({
             <DocxView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
           ) : isText ? (
             <TextView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
+          ) : isPptx ? (
+            <PptxView
+              href={item.href}
+              lang={lang}
+              loadingText={s.pptxLoading}
+              errorText={s.pptxError}
+            />
           ) : isCode ? (
             <CodeView
               href={item.href}

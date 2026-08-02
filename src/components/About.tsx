@@ -15,18 +15,21 @@ export function About() {
   return (
     <section id="about" className="py-10 sm:py-14">
       <div className="container-page">
-        <SectionHeader
-          no="02"
-          kicker={a.kicker}
-          heading={a.heading}
-          headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl"
-        />
-
-        <div className="mt-12 grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
+        {/* Nadpis je uvnitř levého sloupce, aby pravý sloupec mohl začít nahoře
+            u nadpisu a skončit dole u odznaků. Kdyby byl nad mřížkou, časová
+            osa by začínala až pod ním a na široké obrazovce by „ujížděla". */}
+        <div className="grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
           {/* Text */}
           <div className="flex flex-col">
+            <SectionHeader
+              no="02"
+              kicker={a.kicker}
+              heading={a.heading}
+              headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl"
+            />
+
             {/* Fotka + bio vedle sebe (na mobilu pod sebou). */}
-            <div className="flex flex-col gap-7 sm:flex-row sm:items-center sm:gap-10">
+            <div className="mt-12 flex flex-col gap-7 sm:flex-row sm:items-center sm:gap-10">
               <Reveal delay={0.05} className="shrink-0">
                 <Image
                   src={SITE.photo}
@@ -92,8 +95,11 @@ export function About() {
             )}
           </div>
 
-          {/* Timeline */}
-          <div className="space-y-8">
+          {/* Časová osa lícuje nahoře s nadpisem. Dole ji NEROZTAHUJEME:
+              obsah obou sloupců je různě vysoký, takže vynucené zarovnání
+              spodků jen přesune prázdno jinam – buď do mezery mezi karty,
+              nebo dovnitř karty. Sloupec prostě skončí, kde skončí. */}
+          <div className="flex flex-col gap-6 lg:mt-9">
             <Reveal delay={0.1}>
               <TimelineGroup
                 icon={<GraduationCap className="h-5 w-5" />}
@@ -108,6 +114,7 @@ export function About() {
                 items={a.experience}
               />
             </Reveal>
+
           </div>
         </div>
 
