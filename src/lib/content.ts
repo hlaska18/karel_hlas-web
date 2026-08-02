@@ -1174,42 +1174,25 @@ export const t: Record<Lang, Dict> = {
       kicker: "Pro ostatní předměty",
       heading: "Nejen do informatiky",
       intro:
-        "Digitální kompetence se dnes učí napříč předměty. Tyhle hodiny nejsou o programování – postup zůstane stejný, jen vyměníte téma za své. Všechny jsou i s prezentací, podklady a metodikou.",
+        "Podle nových osnov se práce s textem přesouvá do češtiny a práce s daty do matematiky. Tyhle sady úloh jsou hotové – stačí je zadat, na informatiku navazovat nemusíte.",
       subjectsLabel: "Kam se hodí",
-      cta: "Otevřít hodinu",
+      cta: "Otevřít materiály",
       note:
-        "Zatím jde o hodiny z informatiky, které fungují i jinde. Učíte jiný předmět a máte vlastní materiál s technologiemi? Napište mi, rád ho sem doplním a uvedu vás jako autora.",
+        "Sekce teprve začíná. Učíte jiný předmět a používáte v hodinách nějaký nástroj nebo máte vlastní materiál? Napište mi – rád ho sem doplním a uvedu vás jako autora.",
       items: [
         {
-          title: "Ověřování zdrojů metodou 5P",
+          title: "Word – práce s textem",
           what:
-            "Žáci dostanou tři zdroje k jedné události a rozhodují, kterému věřit. Fiktivní weby jsou připravené, stačí je otevřít v prohlížeči.",
-          subjects: ["Dějepis", "Český jazyk", "Základy společenských věd"],
-          tool: "Internet a bezpečnost",
-          lesson: 6,
+            "Sada úloh na formátování, styly, tabulky a dlouhý dokument. Přesně to, co žák potřebuje u seminární a ročníkové práce. Cvičné soubory i řešení jsou u autora cvičebnice.",
+          subjects: ["Český jazyk", "Seminární práce"],
+          tool: "Word",
         },
         {
-          title: "Fake news a obsah od AI",
+          title: "Excel – tabulky a data",
           what:
-            "Rozbor příspěvku s manipulačními prvky – co je fakt, co dojem a podle čeho poznat obsah vytvořený umělou inteligencí.",
-          subjects: ["Český jazyk", "Mediální výchova", "Základy společenských věd"],
-          tool: "Internet a bezpečnost",
-          lesson: 7,
-        },
-        {
-          title: "Efektivní vyhledávání informací",
-          what:
-            "Jak hledat, aby to dávalo výsledky – hodí se před každou seminární prací nebo referátem, v jakémkoli předmětu.",
-          subjects: ["Všechny předměty"],
-          tool: "Internet a bezpečnost",
-          lesson: 5,
-        },
-        {
-          title: "Práce s AI podle rámce 4D",
-          what:
-            "Kdy AI pomůže a kdy uškodí, jak zadat práci, aby ji žák nenechal napsat celou, a jak výstup ověřit. Rámec je nezávislý na předmětu.",
-          subjects: ["Odborné předměty", "Jazyky", "Všechny předměty"],
-          tool: "Umělá inteligence",
+            "Úlohy s tabulkami, vzorci a grafy. Procenta, funkce a závislosti na datech, která něco znamenají – výsledek nespočítá kalkulačka, ale vzorec, který žák sestaví sám.",
+          subjects: ["Matematika", "Odborné předměty"],
+          tool: "Excel",
         },
       ],
     },
@@ -1323,42 +1306,25 @@ export const t: Record<Lang, Dict> = {
       kicker: "For other subjects",
       heading: "Not just for CS lessons",
       intro:
-        "Digital skills are taught across subjects now. These lessons are not about programming – the structure stays, you only swap the topic. Each comes with slides, activity files and teaching notes.",
+        "Under the revised Czech curriculum, working with text moves to language lessons and working with data to maths. These exercise sets are ready to hand out – no computer science needed.",
       subjectsLabel: "Fits into",
-      cta: "Open the lesson",
+      cta: "Open the materials",
       note:
-        "For now these are CS lessons that work elsewhere too. Do you teach another subject and have your own material? Write to me – I will add it here and credit you as the author.",
+        "This section is just starting. Do you teach another subject and use a tool in your lessons, or have your own material? Write to me – I will add it here and credit you as the author.",
       items: [
         {
-          title: "Verifying sources with the 5P method",
+          title: "Word – working with text",
           what:
-            "Students get three sources on one event and decide which to trust. The fictional websites are ready to open in a browser.",
-          subjects: ["History", "Czech language", "Social sciences"],
-          tool: "Internet a bezpečnost",
-          lesson: 6,
+            "Exercises on formatting, styles, tables and long documents – exactly what students need for a term paper. Practice files and solutions are hosted by the workbook author.",
+          subjects: ["Czech language", "Term papers"],
+          tool: "Word",
         },
         {
-          title: "Fake news and AI-generated content",
+          title: "Excel – tables and data",
           what:
-            "Taking apart a post full of manipulation – what is fact, what is impression, and how to spot content made by AI.",
-          subjects: ["Czech language", "Media studies", "Social sciences"],
-          tool: "Internet a bezpečnost",
-          lesson: 7,
-        },
-        {
-          title: "Effective searching",
-          what:
-            "How to search so it actually works – useful before any essay or presentation, in any subject.",
-          subjects: ["All subjects"],
-          tool: "Internet a bezpečnost",
-          lesson: 5,
-        },
-        {
-          title: "Working with AI using the 4D framework",
-          what:
-            "When AI helps and when it hurts, how to set an assignment students cannot just generate, and how to check the output. The framework is subject-agnostic.",
-          subjects: ["Vocational subjects", "Languages", "All subjects"],
-          tool: "Umělá inteligence",
+            "Exercises with tables, formulas and charts. Percentages, functions and dependencies on data that mean something – the answer comes from a formula the student builds, not from a calculator.",
+          subjects: ["Maths", "Vocational subjects"],
+          tool: "Excel",
         },
       ],
     },
