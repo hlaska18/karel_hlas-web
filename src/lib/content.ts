@@ -1060,10 +1060,13 @@ type Dict = {
     /** Odznak u nadpisu – přizná, že sekce teprve vzniká. */
     badge: string;
     intro: string;
-    subjectsLabel: string;
     cta: string;
     note: string;
-    items: { title: string; what: string; subjects: string[]; tool: string; lesson?: number }[];
+    /** Výzva v poslední (šedé) dlaždici – sběr od kolegů přímo ve vizuálu. */
+    inviteTitle: string;
+    inviteText: string;
+    /** Dlaždice = PŘEDMĚT. `what` je jeden řádek „co v tom je", ne počet souborů. */
+    items: { subject: string; what: string; tool: string; icon: string }[];
   };
   materials: {
     kicker: string;
@@ -1178,24 +1181,23 @@ export const t: Record<Lang, Dict> = {
       badge: "Nová sekce",
       intro:
         "Podle nových osnov se práce s textem přesouvá do češtiny a práce s daty do matematiky. Tyhle sady úloh jsou hotové – stačí je zadat, na informatiku navazovat nemusíte. Zatím jsou tu dvě, další budou přibývat.",
-      subjectsLabel: "Kam se hodí",
       cta: "Otevřít materiály",
       note:
         "Učíte jiný předmět a používáte v hodinách nějaký nástroj nebo máte vlastní materiál? Napište mi – rád ho sem doplním a uvedu vás jako autora.",
+      inviteTitle: "Chybí tu váš předmět?",
+      inviteText: "Napište mi, co ve svých hodinách používáte.",
       items: [
         {
-          title: "Word – práce s textem",
-          what:
-            "Sada úloh na formátování, styly, tabulky a dlouhý dokument. Přesně to, co žák potřebuje u seminární a ročníkové práce. Cvičné soubory i řešení jsou u autora cvičebnice.",
-          subjects: ["Český jazyk", "Seminární práce"],
+          subject: "Český jazyk",
+          what: "Formátování, styly a dlouhý dokument – k seminární a ročníkové práci.",
           tool: "Word",
+          icon: "cesky-jazyk",
         },
         {
-          title: "Excel – tabulky a data",
-          what:
-            "Úlohy s tabulkami, vzorci a grafy. Procenta, funkce a závislosti na datech, která něco znamenají – výsledek nespočítá kalkulačka, ale vzorec, který žák sestaví sám.",
-          subjects: ["Matematika", "Odborné předměty"],
+          subject: "Matematika",
+          what: "Tabulky, vzorce a grafy – procenta, funkce a závislosti na reálných datech.",
           tool: "Excel",
+          icon: "matematika",
         },
       ],
     },
@@ -1311,24 +1313,23 @@ export const t: Record<Lang, Dict> = {
       badge: "New section",
       intro:
         "Under the revised Czech curriculum, working with text moves to language lessons and working with data to maths. These exercise sets are ready to hand out – no computer science needed. Two for now, more are coming.",
-      subjectsLabel: "Fits into",
       cta: "Open the materials",
       note:
         "Do you teach another subject and use a tool in your lessons, or have your own material? Write to me – I will add it here and credit you as the author.",
+      inviteTitle: "Missing your subject?",
+      inviteText: "Tell me what you use in your lessons.",
       items: [
         {
-          title: "Word – working with text",
-          what:
-            "Exercises on formatting, styles, tables and long documents – exactly what students need for a term paper. Practice files and solutions are hosted by the workbook author.",
-          subjects: ["Czech language", "Term papers"],
+          subject: "Czech language",
+          what: "Formatting, styles and long documents – for term papers and essays.",
           tool: "Word",
+          icon: "cesky-jazyk",
         },
         {
-          title: "Excel – tables and data",
-          what:
-            "Exercises with tables, formulas and charts. Percentages, functions and dependencies on data that mean something – the answer comes from a formula the student builds, not from a calculator.",
-          subjects: ["Maths", "Vocational subjects"],
+          subject: "Maths",
+          what: "Tables, formulas and charts – percentages, functions and real data.",
           tool: "Excel",
+          icon: "matematika",
         },
       ],
     },
