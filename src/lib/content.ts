@@ -1057,6 +1057,8 @@ type Dict = {
   cross: {
     kicker: string;
     heading: string;
+    /** Odznak u nadpisu – přizná, že sekce teprve vzniká. */
+    badge: string;
     intro: string;
     subjectsLabel: string;
     cta: string;
@@ -1173,12 +1175,13 @@ export const t: Record<Lang, Dict> = {
     cross: {
       kicker: "Pro ostatní předměty",
       heading: "Nejen do informatiky",
+      badge: "Nová sekce",
       intro:
-        "Podle nových osnov se práce s textem přesouvá do češtiny a práce s daty do matematiky. Tyhle sady úloh jsou hotové – stačí je zadat, na informatiku navazovat nemusíte.",
+        "Podle nových osnov se práce s textem přesouvá do češtiny a práce s daty do matematiky. Tyhle sady úloh jsou hotové – stačí je zadat, na informatiku navazovat nemusíte. Zatím jsou tu dvě, další budou přibývat.",
       subjectsLabel: "Kam se hodí",
       cta: "Otevřít materiály",
       note:
-        "Sekce teprve začíná. Učíte jiný předmět a používáte v hodinách nějaký nástroj nebo máte vlastní materiál? Napište mi – rád ho sem doplním a uvedu vás jako autora.",
+        "Učíte jiný předmět a používáte v hodinách nějaký nástroj nebo máte vlastní materiál? Napište mi – rád ho sem doplním a uvedu vás jako autora.",
       items: [
         {
           title: "Word – práce s textem",
@@ -1305,12 +1308,13 @@ export const t: Record<Lang, Dict> = {
     cross: {
       kicker: "For other subjects",
       heading: "Not just for CS lessons",
+      badge: "New section",
       intro:
-        "Under the revised Czech curriculum, working with text moves to language lessons and working with data to maths. These exercise sets are ready to hand out – no computer science needed.",
+        "Under the revised Czech curriculum, working with text moves to language lessons and working with data to maths. These exercise sets are ready to hand out – no computer science needed. Two for now, more are coming.",
       subjectsLabel: "Fits into",
       cta: "Open the materials",
       note:
-        "This section is just starting. Do you teach another subject and use a tool in your lessons, or have your own material? Write to me – I will add it here and credit you as the author.",
+        "Do you teach another subject and use a tool in your lessons, or have your own material? Write to me – I will add it here and credit you as the author.",
       items: [
         {
           title: "Word – working with text",

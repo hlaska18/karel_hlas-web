@@ -26,7 +26,21 @@ export function CrossSubject() {
   return (
     <section id="jinam" className="py-10 sm:py-14">
       <div className="container-page">
-        <SectionHeader no="02" kicker={c.kicker} heading={c.heading} intro={c.intro} />
+        <SectionHeader
+          no="02"
+          kicker={c.kicker}
+          intro={c.intro}
+          heading={
+            <>
+              {c.heading}
+              {/* Přiznaný stav rovnou u nadpisu, ne poznámkou pod čarou –
+                  „nová sekce" se čte jako živá, mlčení jako zanedbaná. */}
+              <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                {c.badge}
+              </span>
+            </>
+          }
+        />
 
         <ul className="mt-8 grid gap-4 sm:grid-cols-2">
           {c.items.map((it, i) => (
