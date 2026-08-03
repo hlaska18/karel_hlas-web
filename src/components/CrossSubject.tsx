@@ -1,12 +1,15 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
-import { ArrowRight, Info, Plus } from "lucide-react";
+import { ArrowRight, ChevronDown, ExternalLink, Info, Plus } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionJump } from "@/components/SectionJump";
+
+type Subject = ReturnType<typeof useLang>["tr"]["cross"]["items"][number];
 
 /**
  * „Nejen do informatiky" – dlaždice PŘEDMĚTŮ, ne témat informatiky.
@@ -15,15 +18,16 @@ import { SectionJump } from "@/components/SectionJump";
  * řekli, že nadpis „Word – práce s textem" čtou jako název programu, kdežto
  * „ČEŠTINA" na dlaždici je věta „někdo myslel na mě".
  *
- * Vědomé odchylky od dlaždic v bance (aby to nečetli jako její pokračování):
- *  - menší ikona a užší dlaždice,
- *  - MÍSTO počtu materiálů jeden řádek „co v tom je" – nad touhle sekcí svítí
- *    „33 materiálů", takže „2 materiály" by fungovaly jako rozsudek,
- *  - poslední dlaždice je výzva ke sdílení, takže mřížka nezeje prázdnotou.
+ * Dlaždice se rozbalí na místě (one-page), uvnitř jsou dvě různé věci:
+ *  - MATERIÁLY – Karlovy vlastní soubory, vedou do banky,
+ *  - NÁSTROJE – cizí služby, vedou ven. U každé je poznámka s tím, co
+ *    učitele zaskočí (účet, jazyk, expirace odkazu, limity) – to je ta část,
+ *    kterou běžné katalogy odkazů neuvádějí.
  */
 export function CrossSubject() {
   const { tr } = useLang();
   const c = tr.cross;
+  const [open, setOpen] = useState<string | null>(null);
 
   return (
     <section id="jinam" className="py-10 sm:py-14">
@@ -44,36 +48,14 @@ export function CrossSubject() {
           }
         />
 
-        <ul className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul className="mt-8 grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {c.items.map((it, i) => (
             <Reveal as="li" key={it.subject} delay={0.05 * i} className="flex">
-              <a
-                href={`?tema=${encodeURIComponent(it.tool)}#banka`}
-                className="glass group flex w-full flex-col rounded-2xl p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
-              >
-                <span className="flex items-center gap-3">
-                  <span className="flex h-14 w-14 shrink-0 items-center justify-center">
-                    <Image
-                      src={`/images/subjects/${it.icon}.png`}
-                      alt=""
-                      width={224}
-                      height={224}
-                      className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
-                    />
-                  </span>
-                  <span className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
-                    {it.subject}
-                  </span>
-                </span>
-
-                <span className="mt-3 flex-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-                  {it.what}
-                </span>
-
-                <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 transition group-hover:gap-2.5 dark:text-accent-300">
-                  {c.cta} <ArrowRight className="h-4 w-4" />
-                </span>
-              </a>
+              <SubjectTile
+                item={it}
+                open={open === it.subject}
+                onToggle={() => setOpen((cur) => (cur === it.subject ? null : it.subject))}
+              />
             </Reveal>
           ))}
 
@@ -110,5 +92,97 @@ export function CrossSubject() {
         <SectionJump href="#about" label={tr.nav.about} />
       </div>
     </section>
+  );
+}
+
+function SubjectTile({
+  item,
+  open,
+  onToggle,
+}: {
+  item: Subject;
+  open: boolean;
+  onToggle: () => void;
+}) {
+  const { tr } = useLang();
+  const c = tr.cross;
+
+  return (
+    <div className="glass flex w-full flex-col rounded-2xl">
+      <button
+        type="button"
+        onClick={onToggle}
+        aria-expanded={open}
+        className="group flex w-full items-start gap-3 p-5 text-left"
+      >
+        <span className="flex h-14 w-14 shrink-0 items-center justify-center">
+          <Image
+            src={`/images/subjects/${item.icon}.png`}
+            alt=""
+            width={224}
+            height={224}
+            className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
+          />
+        </span>
+        <span className="min-w-0 flex-1">
+          <span className="block font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
+            {item.subject}
+          </span>
+          <span className="mt-1 block text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            {item.what}
+          </span>
+        </span>
+        <ChevronDown
+          className={`mt-1 h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <div className="space-y-4 border-t border-black/10 px-5 py-4 dark:border-white/10">
+          {item.tool && (
+            <div>
+              <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                {c.materialsLabel}
+              </p>
+              <a
+                href={`?tema=${encodeURIComponent(item.tool)}#banka`}
+                className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 transition hover:gap-2.5 dark:text-accent-300"
+              >
+                {c.cta} <ArrowRight className="h-4 w-4" />
+              </a>
+            </div>
+          )}
+
+          {item.tools && item.tools.length > 0 && (
+            <div>
+              <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                {c.toolsLabel}
+              </p>
+              <ul className="mt-2 space-y-3">
+                {item.tools.map((t) => (
+                  <li key={t.name}>
+                    <a
+                      href={t.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-900 transition hover:text-accent-700 dark:text-white dark:hover:text-accent-300"
+                    >
+                      {t.name} <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                    </a>
+                    <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+                      {t.why}
+                    </p>
+                    {/* Co učitele zaskočí – účty, jazyk, expirace, limity. */}
+                    <p className="mt-0.5 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                      {t.note}
+                    </p>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
+        </div>
+      )}
+    </div>
   );
 }

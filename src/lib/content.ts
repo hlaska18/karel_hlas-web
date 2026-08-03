@@ -1065,8 +1065,20 @@ type Dict = {
     /** Výzva v poslední (šedé) dlaždici – sběr od kolegů přímo ve vizuálu. */
     inviteTitle: string;
     inviteText: string;
-    /** Dlaždice = PŘEDMĚT. `what` je jeden řádek „co v tom je", ne počet souborů. */
-    items: { subject: string; what: string; tool: string; icon: string }[];
+    materialsLabel: string;
+    toolsLabel: string;
+    /**
+     * Dlaždice = PŘEDMĚT. `tool` odkazuje na téma v bance (vlastní materiály),
+     * `tools` jsou ověřené externí nástroje – u každého je `note` s tím, co
+     * učitele může zaskočit (účty, jazyk, expirace odkazu, limity).
+     */
+    items: {
+      subject: string;
+      what: string;
+      icon: string;
+      tool?: string;
+      tools?: { name: string; url: string; why: string; note: string }[];
+    }[];
   };
   materials: {
     kicker: string;
@@ -1179,24 +1191,159 @@ export const t: Record<Lang, Dict> = {
       heading: "Nejen do informatiky",
       badge: "Nová sekce",
       intro:
-        "Podle nových osnov se práce s textem přesouvá do češtiny a práce s daty do matematiky. Tyhle sady úloh jsou hotové – stačí je zadat, na informatiku navazovat nemusíte. Zatím jsou tu dvě, další budou přibývat.",
+        "Podle nových osnov se práce s textem přesouvá do češtiny a práce s daty do matematiky. Kliknutím na předmět uvidíte hotové materiály ke stažení a nástroje, které jde v hodině použít – u každého je napsané, co potřebuje za účet a co vás může zaskočit.",
       cta: "Otevřít materiály",
       note:
-        "Učíte jiný předmět a používáte v hodinách nějaký nástroj nebo máte vlastní materiál? Napište mi – rád ho sem doplním a uvedu vás jako autora.",
+        "Nástroje jsou ověřené k srpnu 2026 – u cloudových služeb se podmínky mění, před hodinou si je proklikněte. Učíte jiný předmět a něco ve výuce používáte? Napište mi, rád to sem doplním a uvedu vás jako autora.",
       inviteTitle: "Chybí tu váš předmět?",
       inviteText: "Napište mi, co ve svých hodinách používáte.",
+      materialsLabel: "Materiály ke stažení",
+      toolsLabel: "Nástroje do hodin",
       items: [
         {
           subject: "Český jazyk",
+          icon: "cesky-jazyk",
           what: "Formátování, styly a dlouhý dokument – k seminární a ročníkové práci.",
           tool: "Word",
-          icon: "cesky-jazyk",
         },
         {
           subject: "Matematika",
-          what: "Tabulky, vzorce a grafy – procenta, funkce a závislosti na reálných datech.",
-          tool: "Excel",
           icon: "matematika",
+          what: "Tabulky, vzorce a grafy. Data, na kterých je vidět, k čemu funkce a procenta jsou.",
+          tool: "Excel",
+          tools: [
+            {
+              name: "GeoGebra",
+              url: "https://www.geogebra.org/calculator",
+              why: "Grafy funkcí, geometrie a dynamické konstrukce.",
+              note: "Zdarma, bez účtu, celé česky. Web ukazuje souhlas s reklamou – u nezletilých zvažte.",
+            },
+            {
+              name: "Desmos",
+              url: "https://www.desmos.com/calculator",
+              why: "Rychlá grafická kalkulačka a regrese z naměřených dat.",
+              note: "Zdarma, bez účtu. Rozhraní je česky jen zčásti, přihlašování zůstává anglicky.",
+            },
+          ],
+        },
+        {
+          subject: "Fyzika",
+          icon: "fyzika",
+          what: "Simulace, na kterých žák mění jednu veličinu a sleduje, co to udělá.",
+          tools: [
+            {
+              name: "PhET",
+              url: "https://phet.colorado.edu/cs/",
+              why: "Mechanika, elektřina, optika, termika – simulace k měření a hypotézám.",
+              note: "Zdarma, bez účtu, od University of Colorado. Všech 119 simulací je česky.",
+            },
+            {
+              name: "Falstad Circuit Simulator",
+              url: "https://www.falstad.com/circuit/",
+              why: "Elektrické obvody s okamžitým průběhem napětí a proudu.",
+              note: "Zdarma, bez účtu. Výchozí je angličtina, češtinu přepnete v Možnosti → Change Language (není úplná).",
+            },
+            {
+              name: "GeoGebra",
+              url: "https://www.geogebra.org/calculator",
+              why: "Zpracování naměřených dat, graf a regrese.",
+              note: "Zdarma, bez účtu, česky. Web ukazuje souhlas s reklamou.",
+            },
+          ],
+        },
+        {
+          subject: "Chemie",
+          icon: "chemie",
+          what: "Virtuální laboratoř a odborná databáze látek – příprava před reálným pokusem.",
+          tools: [
+            {
+              name: "PubChem",
+              url: "https://pubchem.ncbi.nlm.nih.gov/",
+              why: "Databáze látek: vzorce, vlastnosti, bezpečnostní údaje, 3D modely molekul.",
+              note: "Zdarma, bez účtu, provozuje americké NCBI. Jen anglicky.",
+            },
+            {
+              name: "ChemCollective",
+              url: "https://chemcollective.org/vlabs",
+              why: "Virtuální laboratoř: roztoky, titrace, pH, stechiometrie.",
+              note: "Zdarma, bez účtu, běží v prohlížeči (žádná Java). Anglicky; licence nedovoluje úpravy ani překlad.",
+            },
+            {
+              name: "MolView",
+              url: "https://molview.org/",
+              why: "Nakreslený vzorec převede rovnou do 3D modelu molekuly.",
+              note: "Zdarma, bez účtu. Načítá Google Analytics – při práci s nezletilými zvažte.",
+            },
+          ],
+        },
+        {
+          subject: "Deskriptivní geometrie",
+          icon: "deskriptivni-geometrie",
+          what: "Řezy a průniky, které si žák může otočit a ověřit proti rysu.",
+          tools: [
+            {
+              name: "GeoGebra 3D",
+              url: "https://www.geogebra.org/3d",
+              why: "Průniky rovin s tělesy, řezy, sítě těles, transformace.",
+              note: "Zdarma, bez účtu, česky. Ukládání konstrukcí chce přihlášení.",
+            },
+            {
+              name: "SketchUp for Schools",
+              url: "https://edu.sketchup.com/",
+              why: "Model tělesa a kontrola řezu proti ručně vytvořenému nárysu.",
+              note: "Zdarma pro školy, ale musí ho povolit správce školní domény – učitel si to sám nezapne.",
+            },
+          ],
+        },
+        {
+          subject: "Strojírenství",
+          icon: "strojirenstvi",
+          what: "Cloudový CAD, čtení cizího modelu a simulace elektroniky.",
+          tools: [
+            {
+              name: "Onshape",
+              url: "https://www.onshape.com/en/education/",
+              why: "Parametrický CAD v prohlížeči, sestavy a týmová práce nad jedním modelem.",
+              note: "Pro školy zdarma, ale každý žák potřebuje vlastní účet. Přihlášení školním Microsoftem je až v placené verzi.",
+            },
+            {
+              name: "Autodesk Viewer",
+              url: "https://viewer.autodesk.com/",
+              why: "Prohlížení a měření cizího CAD modelu – role technologa nebo zákazníka.",
+              note: "Model nahraje učitel s účtem, žák si ho otevře odkazem bez přihlášení. Pozor: odkaz platí 30 dnů.",
+            },
+            {
+              name: "Wokwi",
+              url: "https://wokwi.com/",
+              why: "Simulace Arduina a ESP32 – zapojení i program bez fyzického hardwaru.",
+              note: "Spustí se bez přihlášení. Bez účtu je projekt vázaný na jedno zařízení a je veřejný.",
+            },
+          ],
+        },
+        {
+          subject: "Stavebnictví",
+          icon: "stavebnictvi",
+          what: "3D model stavby, kontrola cizí dokumentace a rychlý výpočet nosníku.",
+          tools: [
+            {
+              name: "SketchUp for Schools",
+              url: "https://edu.sketchup.com/",
+              why: "3D modelování staveb a konstrukčních detailů v prohlížeči.",
+              note: "Zdarma pro školy, ale musí ho povolit správce školní domény.",
+            },
+            {
+              name: "Autodesk Viewer",
+              url: "https://viewer.autodesk.com/",
+              why: "Prohlížení modelů a výkresů včetně IFC a Revitu, měření a připomínky.",
+              note: "Nahrání vyžaduje účet, prohlížení odkazem ne. Odkaz platí 30 dnů.",
+            },
+            {
+              name: "SkyCiv Beam",
+              url: "https://skyciv.com/free-tools/",
+              why: "Kontrola ručního výpočtu nosníku – reakce, momenty, průhyb.",
+              note: "Základní výpočet bez registrace, ale s limitem, bez uložení a s rozmazanými výsledky napětí.",
+            },
+          ],
         },
       ],
     },
@@ -1310,24 +1457,159 @@ export const t: Record<Lang, Dict> = {
       heading: "Not just for CS lessons",
       badge: "New section",
       intro:
-        "Under the revised Czech curriculum, working with text moves to language lessons and working with data to maths. These exercise sets are ready to hand out – no computer science needed. Two for now, more are coming.",
+        "Under the revised Czech curriculum, working with text moves to language lessons and working with data to maths. Open a subject to see ready-made materials and tools you can use in class – each one says what account it needs and what might catch you out.",
       cta: "Open the materials",
       note:
-        "Do you teach another subject and use a tool in your lessons, or have your own material? Write to me – I will add it here and credit you as the author.",
+        "Tools verified as of August 2026 – cloud services change their terms, so click through before the lesson. Do you teach another subject and use something in class? Write to me and I will add it here with your name.",
       inviteTitle: "Missing your subject?",
       inviteText: "Tell me what you use in your lessons.",
+      materialsLabel: "Materials to download",
+      toolsLabel: "Tools for lessons",
       items: [
         {
           subject: "Czech language",
+          icon: "cesky-jazyk",
           what: "Formatting, styles and long documents – for term papers and essays.",
           tool: "Word",
-          icon: "cesky-jazyk",
         },
         {
           subject: "Maths",
-          what: "Tables, formulas and charts – percentages, functions and real data.",
-          tool: "Excel",
           icon: "matematika",
+          what: "Tables, formulas and charts on data that actually means something.",
+          tool: "Excel",
+          tools: [
+            {
+              name: "GeoGebra",
+              url: "https://www.geogebra.org/calculator",
+              why: "Function graphs, geometry and dynamic constructions.",
+              note: "Free, no account, fully in Czech. The site shows an advertising consent dialog.",
+            },
+            {
+              name: "Desmos",
+              url: "https://www.desmos.com/calculator",
+              why: "Fast graphing calculator and regression from measured data.",
+              note: "Free, no account. Czech localisation is only partial.",
+            },
+          ],
+        },
+        {
+          subject: "Physics",
+          icon: "fyzika",
+          what: "Simulations where students change one variable and watch what happens.",
+          tools: [
+            {
+              name: "PhET",
+              url: "https://phet.colorado.edu/cs/",
+              why: "Mechanics, electricity, optics, thermodynamics – built for measuring and hypotheses.",
+              note: "Free, no account, by the University of Colorado. All 119 simulations exist in Czech.",
+            },
+            {
+              name: "Falstad Circuit Simulator",
+              url: "https://www.falstad.com/circuit/",
+              why: "Electric circuits with live voltage and current traces.",
+              note: "Free, no account. English by default; Czech can be switched on but is incomplete.",
+            },
+            {
+              name: "GeoGebra",
+              url: "https://www.geogebra.org/calculator",
+              why: "Processing measured data, graphs and regression.",
+              note: "Free, no account, in Czech. The site shows an advertising consent dialog.",
+            },
+          ],
+        },
+        {
+          subject: "Chemistry",
+          icon: "chemie",
+          what: "A virtual lab and a real chemical database – preparation before the real experiment.",
+          tools: [
+            {
+              name: "PubChem",
+              url: "https://pubchem.ncbi.nlm.nih.gov/",
+              why: "Database of substances: formulas, properties, safety data, 3D models.",
+              note: "Free, no account, run by the US NCBI. English only.",
+            },
+            {
+              name: "ChemCollective",
+              url: "https://chemcollective.org/vlabs",
+              why: "Virtual lab: solutions, titration, pH, stoichiometry.",
+              note: "Free, no account, runs in the browser (no Java). English; the licence forbids edits and translation.",
+            },
+            {
+              name: "MolView",
+              url: "https://molview.org/",
+              why: "Turns a drawn formula straight into a 3D model of the molecule.",
+              note: "Free, no account. Loads Google Analytics.",
+            },
+          ],
+        },
+        {
+          subject: "Descriptive geometry",
+          icon: "deskriptivni-geometrie",
+          what: "Sections and intersections students can rotate and check against their drawing.",
+          tools: [
+            {
+              name: "GeoGebra 3D",
+              url: "https://www.geogebra.org/3d",
+              why: "Plane–solid intersections, sections, nets, transformations.",
+              note: "Free, no account, in Czech. Saving constructions requires sign-in.",
+            },
+            {
+              name: "SketchUp for Schools",
+              url: "https://edu.sketchup.com/",
+              why: "Model a solid and check the section against a hand-drawn view.",
+              note: "Free for schools, but the domain administrator must enable it.",
+            },
+          ],
+        },
+        {
+          subject: "Mechanical engineering",
+          icon: "strojirenstvi",
+          what: "Cloud CAD, reading someone else's model and simulating electronics.",
+          tools: [
+            {
+              name: "Onshape",
+              url: "https://www.onshape.com/en/education/",
+              why: "Parametric CAD in the browser, assemblies and teamwork on one model.",
+              note: "Free for education, but every student needs a personal account. School Microsoft sign-in is paid-only.",
+            },
+            {
+              name: "Autodesk Viewer",
+              url: "https://viewer.autodesk.com/",
+              why: "Viewing and measuring someone else's CAD model.",
+              note: "Uploading needs an account, viewing via link does not. The link expires after 30 days.",
+            },
+            {
+              name: "Wokwi",
+              url: "https://wokwi.com/",
+              why: "Arduino and ESP32 simulation – wiring and code without hardware.",
+              note: "Runs without sign-in. Without an account a project stays on one device and is public.",
+            },
+          ],
+        },
+        {
+          subject: "Civil engineering",
+          icon: "stavebnictvi",
+          what: "3D building models, checking documentation and quick beam calculations.",
+          tools: [
+            {
+              name: "SketchUp for Schools",
+              url: "https://edu.sketchup.com/",
+              why: "3D modelling of buildings and construction details in the browser.",
+              note: "Free for schools, but the domain administrator must enable it.",
+            },
+            {
+              name: "Autodesk Viewer",
+              url: "https://viewer.autodesk.com/",
+              why: "Viewing models and drawings including IFC and Revit, measuring and commenting.",
+              note: "Uploading needs an account, viewing via link does not. The link expires after 30 days.",
+            },
+            {
+              name: "SkyCiv Beam",
+              url: "https://skyciv.com/free-tools/",
+              why: "Checking a hand-calculated beam – reactions, moments, deflection.",
+              note: "Basic calculation without registration, but limited, nothing saved and stress results blurred.",
+            },
+          ],
         },
       ],
     },
