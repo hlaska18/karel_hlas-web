@@ -36,3 +36,6 @@ next-env.d.ts
 
 # Claude Code – lokalni skilly (neverzovat)
 .claude/skills/
+
+# Claude Code – lokalni skilly (neverzovat)
+.agents/skills/

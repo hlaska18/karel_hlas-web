@@ -168,6 +168,15 @@ const DOCX = ["docx"];
 const CODE = ["py", "sql", "js", "ts", "tsx", "jsx", "json", "html", "css", "java", "c", "cpp", "sh", "xml"];
 /** PowerPoint: vypíšeme text snímků a poznámky (viz `pptxPreview`). */
 const PPTX = ["pptx"];
+/**
+ * Otevře prohlížeč tenhle typ přímo v záložce? U .docx, .pptx nebo .zip ne –
+ * jen se stáhnou, takže tlačítko „Otevřít v nové záložce" by dělalo totéž
+ * co „Stáhnout" a v hlavičce náhledu by byla dvě tlačítka s jedním účinkem.
+ */
+function opensInBrowser(ext: string): boolean {
+  return PDF.includes(ext) || IMG.includes(ext) || ["txt", "csv", "html"].includes(ext);
+}
+
 function canPreview(ext: string): boolean {
   return (
     IMG.includes(ext) ||
@@ -757,13 +766,13 @@ function ToolLessons({
  * Volné žákovské soubory (např. „Začněte zde") zůstávají nahoře nad složkami,
  * stejně jako leží v kořeni balíčku.
  */
-/** Grupovat do složek se vyplatí až od čtyř souborů a od dvou složek výš. */
+/** Grupovat do složek má smysl, jakmile je co grupovat (aspoň jedna složka). */
 function foldersWorthIt(items: BankItem[]): boolean {
   const names = new Set(
     items.map((it) => it.group?.cs ?? (it.audience === "both" ? "" : `\u0000${it.audience}`)),
   );
   names.delete("");
-  return items.length >= 4 && names.size >= 2;
+  return items.length >= 2 && names.size >= 1;
 }
 
 function ToolFolders({
@@ -795,7 +804,14 @@ function ToolFolders({
       arr.push(it);
       map.set(name, arr);
     }
-    return { loose: rest, folders: [...map.entries()].map(([name, its]) => ({ name, items: its })) };
+    return {
+      loose: rest,
+      folders: [...map.entries()].map(([name, its]) => ({
+        name,
+        items: its,
+        author: its.find((i) => i.groupAuthor)?.groupAuthor,
+      })),
+    };
   }, [items, lang, s.teacherFolder]);
 
   return (
@@ -813,7 +829,14 @@ function ToolFolders({
         </ul>
       )}
       {folders.map((f) => (
-        <FolderCard key={f.name} name={f.name} items={f.items} lang={lang} onPreview={onPreview} />
+        <FolderCard
+          key={f.name}
+          name={f.name}
+          author={f.author}
+          items={f.items}
+          lang={lang}
+          onPreview={onPreview}
+        />
       ))}
     </div>
   );
@@ -821,11 +844,14 @@ function ToolFolders({
 
 function FolderCard({
   name,
+  author,
   items,
   lang,
   onPreview,
 }: {
   name: string;
+  /** Autor celé složky (převzaté materiály) – ukáže se vedle šipky. */
+  author?: string;
   items: BankItem[];
   lang: Lang;
   onPreview: (it: BankItem) => void;
@@ -858,6 +884,11 @@ function FolderCard({
             {countMaterials(items.length, lang)}
           </span>
         </span>
+        {author && (
+          <span className="hidden shrink-0 text-sm text-zinc-500 dark:text-zinc-400 sm:block">
+            {author}
+          </span>
+        )}
         <ChevronDown
           className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
         />
@@ -1311,15 +1342,17 @@ function PreviewModal({
       >
         <div className="flex items-center gap-3 border-b border-black/10 px-5 py-3.5 dark:border-white/10">
           <p className="min-w-0 flex-1 truncate font-medium text-zinc-900 dark:text-white">{label}</p>
-          <a
-            href={item.href}
-            target="_blank"
-            rel="noopener noreferrer"
-            title={s.openNewTab}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition hover:bg-accent-500/10 hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
-          >
-            <ExternalLink className="h-5 w-5" />
-          </a>
+          {opensInBrowser(item.ext) && (
+            <a
+              href={item.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              title={s.openNewTab}
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition hover:bg-accent-500/10 hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
+            >
+              <ExternalLink className="h-5 w-5" />
+            </a>
+          )}
           <a
             href={item.href}
             download

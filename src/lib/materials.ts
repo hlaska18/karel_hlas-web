@@ -28,7 +28,7 @@ function kindFromExt(ext: string): Material["kind"] {
 }
 
 function isHidden(name: string): boolean {
-  return name.startsWith(".") || /^_tema|^readme/i.test(name);
+  return name.startsWith(".") || /^_tema|^_autor|^readme/i.test(name);
 }
 
 /** Učitelská podsložka – její obsah se ukáže jen v učitelském pohledu. Konvence: „_ucitel". */
@@ -124,6 +124,9 @@ const NAME_EN: Record<string, string> = {
   "Díla a licence": "Works and licences",
   // Umělá inteligence a odpovědné používání (6 hodin, rámec AI Fluency)
   "Zdroje AI Fluency": "AI Fluency resources",
+  "Doporučené čtení": "Recommended reading",
+  "101 tipů, jak využít AI ve výuce": "101 tips for using AI in teaching (in Czech)",
+  "Cvičné soubory i řešení úloh": "Practice files & solutions",
   "Licence a zdroj": "Licence and source",
   "Hodnocení, testy a řešení": "Assessment, tests and solutions",
   "Offline záloha hodin 4-6": "Offline backup for lessons 4–6",
@@ -196,6 +199,8 @@ export type BankItem = {
   audience: Audience;
   /** Název podsložky, pokud soubor leží ve skupině. */
   group?: { cs: string; en: string };
+  /** Autor celé skupiny ze souboru `_autor.txt` (např. převzatá cvičebnice). */
+  groupAuthor?: string;
   /** Obory 1. ročníku, kde se materiál vyskytuje (po sloučení duplicit). */
   courseIds: string[];
   /** Lidsky čitelný rozsah oborů, např. „1. ročník · všechny obory". */
@@ -316,6 +321,7 @@ export function getBankItems(): BankItem[] {
         segs: string[],
         audience: Audience,
         group?: { cs: string; en: string },
+        groupAuthor?: string,
       ) => {
         let ents: fs.Dirent[] = [];
         try {
@@ -335,7 +341,15 @@ export function getBankItems(): BankItem[] {
               const gl = displayName(e.name);
               grp = { cs: gl, en: enLabel(gl) };
             }
-            walk(path.join(absDir, e.name), [...segs, e.name], aud, grp);
+            // `_autor.txt` ve složce = autor celé skupiny (dědí se dovnitř)
+            let author = groupAuthor;
+            try {
+              const a = fs.readFileSync(path.join(absDir, e.name, "_autor.txt"), "utf8").trim();
+              if (a) author = a;
+            } catch {
+              /* složka autora nemá – dědíme z nadřazené */
+            }
+            walk(path.join(absDir, e.name), [...segs, e.name], aud, grp, author);
           } else if (e.isFile() && e.name === "_zdroj.json") {
             // Převzatá skupina: místo souborů jen odkaz na originál (autorská práva).
             let src: { cs?: string; en?: string; url?: string };
@@ -370,6 +384,7 @@ export function getBankItems(): BankItem[] {
               topicLabel,
               audience,
               group,
+              groupAuthor,
               external: true,
               courseIds: [courseId],
               coursesLabel: { cs: "", en: "" },
@@ -409,6 +424,7 @@ export function getBankItems(): BankItem[] {
               topicLabel,
               audience,
               group,
+              groupAuthor,
               courseIds: [courseId],
               coursesLabel: { cs: "", en: "" },
             });
