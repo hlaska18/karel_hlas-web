@@ -1015,7 +1015,7 @@ type Dict = {
     role: string;
     tagline: string;
     byline: string;
-    /** Důkazní řádek. `{files}` a `{topics}` se nahradí reálnými čísly z banky. */
+    /** Důkazní řádek. `{files}` a `{topics}` se nahradí reálnými čísly. */
     stats: string;
     sample: string;
     ctaLessons: string;
@@ -1072,7 +1072,6 @@ type Dict = {
     kicker: string;
     heading: string;
     sub: string;
-    browseAll: string;
   };
   contact: {
     kicker: string;
@@ -1111,8 +1110,8 @@ export const t: Record<Lang, Dict> = {
         "Pro střední školy. Zdarma, ke stažení i úpravě, bez přihlašování.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · Word, PowerPoint, Python",
-      sample: "Ukázka z banky",
-      ctaLessons: "Procházet banku materiálů",
+      sample: "Ukázka materiálů",
+      ctaLessons: "Procházet materiály",
       ctaContact: "O mně",
       scroll: "Materiály",
     },
@@ -1205,7 +1204,6 @@ export const t: Record<Lang, Dict> = {
       kicker: "Materiály do informatiky",
       heading: "Vyber si téma",
       sub: "Hotové materiály ke stažení a úpravě – klikni na téma a procházej.",
-      browseAll: "Otevřít celou banku a hledat",
     },
     contact: {
       kicker: "Kontakt",
@@ -1248,8 +1246,8 @@ export const t: Record<Lang, Dict> = {
         "For secondary schools. Free to download and edit, no sign-up.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · Word, PowerPoint, Python",
-      sample: "From the bank",
-      ctaLessons: "Browse the material bank",
+      sample: "Sample materials",
+      ctaLessons: "Browse the materials",
       ctaContact: "About me",
       scroll: "Materials",
     },
@@ -1337,7 +1335,6 @@ export const t: Record<Lang, Dict> = {
       kicker: "Materials for CS",
       heading: "Pick a topic",
       sub: "Ready-made materials to download and edit – click a topic to browse.",
-      browseAll: "Open the full bank & search",
     },
     contact: {
       kicker: "Contact",
