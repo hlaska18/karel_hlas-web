@@ -13,9 +13,13 @@ import {
   BookOpen,
   PartyPopper,
   KeyRound,
+  RotateCcw,
 } from "lucide-react";
 import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky } from "@/lib/sqlExercise";
-import { createDb, type SqlDb, type SqlResult } from "@/lib/sqljs";
+import { createDb, forkDb, type SqlDb, type SqlResult } from "@/lib/sqljs";
+
+/** Příkaz, který data mění – nic nevrací a živou databázi po sobě přepíše. */
+const isMutation = (q: string) => /^\s*(insert|update|delete)\b/i.test(q);
 
 const STORAGE_KEY = "sql-kurz-hotovo";
 /** Rozepsané dotazy podle lekce – ať se práce neztratí přepnutím lekce ani reloadem. */
@@ -66,6 +70,7 @@ export function SqlPlayground() {
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "correct" | "wrong">("idle");
   const [why, setWhy] = useState("");
+  const [changed, setChanged] = useState("");
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
 
@@ -129,6 +134,7 @@ export function SqlPlayground() {
     setError(null);
     setStatus("idle");
     setWhy("");
+    setChanged("");
     setShowHint(false);
     setShowSolution(false);
   }
@@ -141,25 +147,69 @@ export function SqlPlayground() {
     return res.length ? res[res.length - 1] : { columns: [], values: [] };
   }
 
+  /** Vrátí knihovnu do výchozího stavu – po INSERT/UPDATE/DELETE od žáka. */
+  function resetDb() {
+    try {
+      dbRef.current?.close();
+      dbRef.current = forkDb(SCHEMA);
+      setResult(null);
+      setError(null);
+      setStatus("idle");
+      setChanged("Databáze je zpátky ve výchozím stavu.");
+    } catch (e) {
+      setError(e instanceof Error ? e.message : String(e));
+    }
+  }
+
   function onRun() {
     setStatus("idle");
     if (!sql.trim()) return;
     try {
-      setResult(run(sql));
+      const res = run(sql);
       setError(null);
+      // INSERT/UPDATE/DELETE nevrací řádky – místo prázdna ukaž, kolik se jich
+      // změnilo, a rovnou stav tabulky, aby byl efekt příkazu vidět.
+      if (isMutation(sql) && dbRef.current) {
+        const n = dbRef.current.getRowsModified();
+        setChanged(`Změněno ${n} ${radky(n)}. Takhle tabulka vypadá teď:`);
+        setResult(lesson.check ? run(lesson.check) : res);
+      } else {
+        setChanged("");
+        setResult(res);
+      }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
       setResult(null);
+      setChanged("");
+    }
+  }
+
+  /**
+   * U lekcí, které data mění, se porovnává stav tabulky po příkazu – a to
+   * stranou, na dvou odložených kopiích. Kdyby referenční příkaz běžel na
+   * živé databázi, samotná kontrola by data měnila.
+   */
+  function checkMutation(): [SqlResult | null, SqlResult | null] {
+    const mineDb = forkDb(SCHEMA);
+    const refDb = forkDb(SCHEMA);
+    try {
+      const last = (r: SqlResult[]) => (r.length ? r[r.length - 1] : { columns: [], values: [] });
+      mineDb.exec(sql);
+      refDb.exec(lesson.reference);
+      return [last(mineDb.exec(lesson.check!)), last(refDb.exec(lesson.check!))];
+    } finally {
+      mineDb.close();
+      refDb.close();
     }
   }
 
   function onCheck() {
     if (!sql.trim()) return;
     try {
-      const mine = run(sql);
-      const ref = run(lesson.reference);
+      const [mine, ref] = lesson.check ? checkMutation() : [run(sql), run(lesson.reference)];
       setResult(mine);
       setError(null);
+      setChanged(lesson.check ? "Stav tabulky po tvém příkazu:" : "");
       const ordered = /order\s+by/i.test(lesson.reference);
       if (sameResult(mine, ref, ordered)) {
         setStatus("correct");
@@ -167,12 +217,13 @@ export function SqlPlayground() {
         markDone(lesson.id);
       } else {
         setStatus("wrong");
-        setWhy(diffMessage(mine, ref, ordered));
+        setWhy(diffMessage(mine, ref, ordered, Boolean(lesson.check)));
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
       setResult(null);
       setStatus("idle");
+      setChanged("");
     }
   }
 
@@ -241,8 +292,8 @@ export function SqlPlayground() {
             všech {LESSONS.length} lekcí!
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">
-            Umíš základní SQL dotazy. Teď pokračuj do praxe: ta samá databáze v opravdovém
-            programu.
+            Umíš data z databáze vybrat i změnit. Teď pokračuj do praxe: ta samá databáze v
+            opravdovém programu.
           </p>
           <a
             href="#praxe"
@@ -352,6 +403,15 @@ export function SqlPlayground() {
           >
             <CheckCircle2 className="h-4 w-4" /> Zkontrolovat
           </button>
+          {/* Od lekce s INSERTem si žák databázi mění pod rukama – musí mít
+              jak ji vrátit, jinak si po jednom DELETE rozbije zbytek kurzu. */}
+          <button
+            type="button"
+            onClick={resetDb}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
+          >
+            <RotateCcw className="h-4 w-4" /> Obnovit databázi
+          </button>
           <span className="hidden text-xs text-zinc-400 sm:inline dark:text-zinc-500">
             Ctrl+Enter spustí dotaz
           </span>
@@ -397,6 +457,9 @@ export function SqlPlayground() {
       )}
 
       {/* Výsledná tabulka */}
+      {changed && !error && (
+        <p className="text-sm text-zinc-600 dark:text-zinc-300">{changed}</p>
+      )}
       {result && !error && <ResultTable result={result} />}
     </div>
   );

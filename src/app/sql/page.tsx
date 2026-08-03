@@ -13,7 +13,7 @@ const MAT = encodeURI("/materialy/1L/8/SQL - základy databází");
 export const metadata: Metadata = {
   title: "Kurz SQL v prohlížeči",
   description:
-    "Interaktivní kurz základů databází a SQL: 8 lekcí s výkladem, úkolem a okamžitou kontrolou – přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
+    "Interaktivní kurz základů databází a SQL: 11 lekcí od SELECTu po zápis dat, s výkladem, úkolem a okamžitou kontrolou – přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
   alternates: { canonical: "/sql" },
 };
 
@@ -48,7 +48,8 @@ export default function SqlPage() {
           Základy databází a SQL – kurz v prohlížeči
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Osm lekcí od úplného začátku po propojení tabulek. Každá lekce tě nejdřív krátce naučí
+          Jedenáct lekcí od úplného začátku po zápis vlastních dat. Každá lekce tě nejdřív krátce
+          naučí
           nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny – napiš dotaz, klikni{" "}
           <b>Spustit</b> a hned vidíš výsledek, <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
           Nic se neinstaluje a tvůj postup se pamatuje. Na závěr přejdeš do praxe v opravdovém

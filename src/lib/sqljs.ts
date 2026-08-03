@@ -8,7 +8,13 @@ const CDN = `https://cdn.jsdelivr.net/npm/sql.js@${SQLJS_VERSION}/dist/`;
 const SQLJS_SRI = "sha384-8D3Rsfo535FqoC1pHCCQMrNf75UgzyoG/HQm9zOzITRrz3QKzecc2E7JXKGCXoWu";
 
 export type SqlResult = { columns: string[]; values: unknown[][] };
-export type SqlDb = { exec(sql: string): SqlResult[] };
+export type SqlDb = {
+  exec(sql: string): SqlResult[];
+  /** Počet řádků, které změnil poslední INSERT / UPDATE / DELETE. */
+  getRowsModified(): number;
+  /** Uvolní paměť – u odložených kopií databáze při kontrole. */
+  close(): void;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 type InitSqlJs = (cfg: { locateFile: (f: string) => string }) => Promise<any>;
@@ -38,11 +44,31 @@ function loadScript(): Promise<InitSqlJs> {
   return scriptPromise;
 }
 
+/** Hotový engine – držíme ho, aby další databáze šly vyrobit i synchronně. */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+let engine: any = null;
+
 /** Načte engine, vytvoří DB v paměti a naplní ji zadaným schématem. */
 export async function createDb(schema: string): Promise<SqlDb> {
   const initSqlJs = await loadScript();
   const SQL = await initSqlJs({ locateFile: (f: string) => `${CDN}${f}` });
+  engine = SQL;
   const db = new SQL.Database();
+  db.run(schema);
+  return db as SqlDb;
+}
+
+/**
+ * Další čistá databáze ze stejného schématu, bez čekání na síť.
+ *
+ * Kontrola lekcí s INSERT/UPDATE/DELETE musí běžet stranou: kdyby se
+ * referenční příkaz pustil na živé databázi žáka, samotné „Zkontrolovat“ by
+ * data měnilo (a druhé kliknutí by spadlo na duplicitním klíči).
+ * Volat až potom, co createDb jednou doběhlo.
+ */
+export function forkDb(schema: string): SqlDb {
+  if (!engine) throw new Error("SQL engine ještě není načtený");
+  const db = new engine.Database();
   db.run(schema);
   return db as SqlDb;
 }

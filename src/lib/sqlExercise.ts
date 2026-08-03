@@ -53,6 +53,12 @@ export type SqlLesson = {
   /** Referenční dotaz – kontrola porovná výsledek žáka s výsledkem tohoto dotazu. */
   reference: string;
   /**
+   * Jen u lekcí, které data mění. INSERT/UPDATE/DELETE nic nevrací, takže se
+   * neporovnává výstup příkazu, ale stav tabulky po něm – tímhle dotazem.
+   * Schválně nevybírá id: záleží na tom, co v tabulce je, ne pod jakým číslem.
+   */
+  check?: string;
+  /**
    * Postrčení, ne řešení. Řešení si žák může zobrazit zvlášť tlačítkem –
    * když je v nápovědě rovnou celý dotaz, nemá první krok žádnou hodnotu.
    */
@@ -85,14 +91,26 @@ const asKeys = (rows: unknown[][]) =>
  * umíme říct rozdíl: počet řádků, počet sloupců, pořadí. Nikdy neprozradí
  * hodnoty – od toho je tlačítko s řešením.
  */
-export function diffMessage(mine: Rows | null, ref: Rows | null, ordered: boolean): string {
+export function diffMessage(
+  mine: Rows | null,
+  ref: Rows | null,
+  ordered: boolean,
+  /** Lekce s INSERT/UPDATE/DELETE – porovnává se stav tabulky, ne výstup dotazu. */
+  mutating = false,
+): string {
   const mv = mine?.values ?? [];
   const rv = ref?.values ?? [];
 
   if (mv.length === 0 && rv.length > 0) {
-    return `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.`;
+    return mutating
+      ? `Po tvém příkazu je tabulka prázdná, ale zůstat v ní mělo ${rv.length} ${radky(rv.length)}. Nejspíš ti chybí WHERE – bez něj příkaz zasáhne úplně všechny řádky.`
+      : `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.`;
   }
   if (mv.length !== rv.length) {
+    if (mutating) {
+      // Směr chyby se u INSERTu a DELETu obrací, tak ho neuhodneme – jen počty.
+      return `Po tvém příkazu má tabulka ${mv.length} ${radky(mv.length)}, správně jich má být ${rv.length}. Zkontroluj podmínku, příkaz zasáhl jiné řádky, než měl.`;
+    }
     const konec =
       mv.length > rv.length
         ? " Nejspíš ti chybí podmínka, která výběr zúží."
@@ -114,7 +132,9 @@ export function diffMessage(mine: Rows | null, ref: Rows | null, ordered: boolea
     }
   }
 
-  return "Počet řádků i sloupců sedí, ale hodnoty ne. Porovnej svůj výsledek s tím, co po tobě úkol chce – nejčastěji je chyba v podmínce nebo ve sloupci, podle kterého vybíráš.";
+  return mutating
+    ? "Počet řádků sedí, ale hodnoty ne. Zkontroluj, jestli měníš správný řádek a jestli do správného sloupce zapisuješ správnou hodnotu."
+    : "Počet řádků i sloupců sedí, ale hodnoty ne. Porovnej svůj výsledek s tím, co po tobě úkol chce – nejčastěji je chyba v podmínce nebo ve sloupci, podle kterého vybíráš.";
 }
 
 export const LESSONS: SqlLesson[] = [
@@ -201,5 +221,41 @@ export const LESSONS: SqlLesson[] = [
       "JOIN ctenari ON vypujcky.ctenar_id = ctenari.id " +
       "JOIN knihy ON vypujcky.kniha_id = knihy.id;",
     hint: "Začni od tabulky vypujcky – ta jediná drží obě ID. Pak k ní připoj postupně dvě tabulky, pokaždé přes rovnost ID. Ve výsledku chceš jen jméno a název.",
+  },
+  {
+    id: 9,
+    title: "Přidání řádku INSERT",
+    teach:
+      "Dosud jsi data jen četl. INSERT INTO přidá do tabulky nový řádek: řekneš do které tabulky, do kterých sloupců a jaké hodnoty. Texty patří do apostrofů, čísla se píšou bez nich. Pořadí hodnot musí sedět na pořadí sloupců.",
+    example: "INSERT INTO ctenari (id, jmeno, trida) VALUES (6, 'Filip Král', '1.B');",
+    zadani:
+      "Zapiš do knihovny nový přírůstek: „Bylo nás pět“ od Karla Poláčka z roku 1946, žánr román, 280 stran, dostupná (1). Dej jí id 11.",
+    reference:
+      "INSERT INTO knihy (id, nazev, autor, rok, zanr, pocet_stran, dostupna) " +
+      "VALUES (11, 'Bylo nás pět', 'Karel Poláček', 1946, 'román', 280, 1);",
+    check: "SELECT nazev, autor, rok, zanr, pocet_stran, dostupna FROM knihy ORDER BY nazev;",
+    hint: "Postav to jako v příkladu, jen sloupců je sedm místo tří. Který je který, najdeš v přehledu tabulek – a dostupnost se ukládá jako číslo, ne jako text.",
+  },
+  {
+    id: 10,
+    title: "Změna údaje UPDATE",
+    teach:
+      "UPDATE přepíše hodnoty v řádcích, které už v tabulce jsou. Za SET napíšeš, co se má změnit, a za WHERE, kterých řádků se to týká. Když WHERE vynecháš, změní se celá tabulka – to je nejčastější a nejdražší chyba v SQL.",
+    example: "UPDATE ctenari SET trida = '2.A' WHERE id = 1;",
+    zadani: "Kytice se vrátila do knihovny – nastav u ní dostupnost na 1.",
+    reference: "UPDATE knihy SET dostupna = 1 WHERE nazev = 'Kytice';",
+    check: "SELECT nazev, dostupna FROM knihy ORDER BY nazev;",
+    hint: "Měníš jediný sloupec u jediné knihy. Řádek najdeš podmínkou stejně jako u SELECTu – podle názvu. Bez WHERE bys zpřístupnil úplně všechno.",
+  },
+  {
+    id: 11,
+    title: "Smazání řádku DELETE",
+    teach:
+      "DELETE FROM smaže řádky, které vyhoví podmínce. Platí tu stejné pravidlo jako u UPDATE, jen tvrdší: bez WHERE zmizí obsah celé tabulky a zpátky ho nevrátíš. Proto se v praxi před mazáním dělá záloha – a proto má tenhle kurz tlačítko, kterým se databáze vrátí do původního stavu.",
+    example: "DELETE FROM ctenari WHERE trida = '1.B';",
+    zadani: "Máj se rozpadl a knihovna ho vyřadila – smaž ho ze seznamu knih.",
+    reference: "DELETE FROM knihy WHERE nazev = 'Máj';",
+    check: "SELECT nazev FROM knihy ORDER BY nazev;",
+    hint: "Podmínku napiš stejně jako v předchozí lekci, podle názvu knihy. A znovu si ohlídej, že tam WHERE opravdu je.",
   },
 ];

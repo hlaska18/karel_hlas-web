@@ -53,10 +53,34 @@ describe("LESSONS", () => {
     }
   });
 
-  it("uses SELECT statements for the example and reference queries", () => {
+  it("keeps the example and the reference in the same statement family", () => {
     for (const lesson of LESSONS) {
-      expect(lesson.example.trim().toUpperCase()).toMatch(/^SELECT\b/);
-      expect(lesson.reference.trim().toUpperCase()).toMatch(/^SELECT\b/);
+      const kind = (q: string) => q.trim().toUpperCase().split(/\s+/)[0];
+      expect(kind(lesson.example)).toBe(kind(lesson.reference));
+      expect(["SELECT", "INSERT", "UPDATE", "DELETE"]).toContain(kind(lesson.reference));
+    }
+  });
+
+  it("gives every data-changing lesson a check query and no other one", () => {
+    // INSERT/UPDATE/DELETE nic nevrací, takže se musí ověřovat stav tabulky.
+    for (const lesson of LESSONS) {
+      const changes = /^\s*(INSERT|UPDATE|DELETE)\b/i.test(lesson.reference);
+      expect(Boolean(lesson.check)).toBe(changes);
+      if (lesson.check) {
+        expect(lesson.check.trim().toUpperCase()).toMatch(/^SELECT\b/);
+        // Bez ORDER BY by porovnání záviselo na náhodném pořadí řádků.
+        expect(lesson.check.toUpperCase()).toContain("ORDER BY");
+        // id se u kontroly nevybírá – záleží na obsahu, ne na číslování.
+        expect(lesson.check).not.toMatch(/\bid\b/);
+      }
+    }
+  });
+
+  it("guards UPDATE and DELETE with a WHERE clause", () => {
+    for (const lesson of LESSONS) {
+      if (/^\s*(UPDATE|DELETE)\b/i.test(lesson.reference)) {
+        expect(lesson.reference.toUpperCase()).toContain("WHERE");
+      }
     }
   });
 
@@ -119,6 +143,24 @@ describe("diffMessage", () => {
     const msg = diffMessage(rows([["b"], ["a"]]), rows([["a"], ["b"]]), false);
     expect(msg).not.toContain("ORDER BY");
     expect(msg).toContain("hodnoty ne");
+  });
+
+  it("blames the missing WHERE when a mutation emptied the table", () => {
+    const msg = diffMessage(rows([]), rows([[1], [2]]), false, true);
+    expect(msg).toContain("tabulka prázdná");
+    expect(msg).toContain("chybí WHERE");
+    // Opačná diagnóza než u SELECTu – tady podmínka nechybí kvůli přísnosti.
+    expect(msg).not.toContain("moc přísná");
+  });
+
+  it("does not guess the direction of a mutation mistake", () => {
+    // U INSERTu znamená „míň řádků" nepřidal, u DELETu smazal moc – neuhodneme.
+    const chybi = diffMessage(rows([[1]]), rows([[1], [2]]), false, true);
+    const prebyva = diffMessage(rows([[1], [2], [3]]), rows([[1], [2]]), false, true);
+    for (const msg of [chybi, prebyva]) {
+      expect(msg).toContain("zasáhl jiné řádky");
+      expect(msg).not.toMatch(/chybí ti podmínka|odfiltrovala/);
+    }
   });
 
   it("never leaks the expected values", () => {
