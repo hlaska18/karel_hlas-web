@@ -12,11 +12,14 @@ import {
   ArrowRight,
   BookOpen,
   PartyPopper,
+  KeyRound,
 } from "lucide-react";
-import { SCHEMA, SCHEMA_INFO, LESSONS } from "@/lib/sqlExercise";
+import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky } from "@/lib/sqlExercise";
 import { createDb, type SqlDb, type SqlResult } from "@/lib/sqljs";
 
 const STORAGE_KEY = "sql-kurz-hotovo";
+/** Rozepsané dotazy podle lekce – ať se práce neztratí přepnutím lekce ani reloadem. */
+const DRAFT_KEY = "sql-kurz-dotazy";
 
 /** Porovná dva výsledky. Když má reference ORDER BY, záleží i na pořadí. */
 function sameResult(a: SqlResult | null, b: SqlResult | null, ordered: boolean): boolean {
@@ -43,24 +46,38 @@ function loadDone(): Set<number> {
   return new Set();
 }
 
+function loadDrafts(): Record<number, string> {
+  try {
+    const raw = localStorage.getItem(DRAFT_KEY);
+    if (raw) return JSON.parse(raw) as Record<number, string>;
+  } catch {
+    /* ignore */
+  }
+  return {};
+}
+
 export function SqlPlayground() {
   const dbRef = useRef<SqlDb | null>(null);
   const [dbState, setDbState] = useState<"loading" | "ready" | "error">("loading");
   const [lessonId, setLessonId] = useState(1);
   const [done, setDone] = useState<Set<number>>(new Set());
-  const [sql, setSql] = useState("");
+  const [drafts, setDrafts] = useState<Record<number, string>>({});
   const [result, setResult] = useState<SqlResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "correct" | "wrong">("idle");
+  const [why, setWhy] = useState("");
   const [showHint, setShowHint] = useState(false);
+  const [showSolution, setShowSolution] = useState(false);
 
   const lesson = LESSONS.find((l) => l.id === lessonId)!;
   const allDone = done.size === LESSONS.length;
+  const sql = drafts[lessonId] ?? "";
 
   useEffect(() => {
-    // progres kurzu přežije reload (localStorage); začni první nehotovou lekcí
+    // progres kurzu i rozepsané dotazy přežijí reload; začni první nehotovou lekcí
     const d = loadDone();
     setDone(d);
+    setDrafts(loadDrafts());
     const firstOpen = LESSONS.find((l) => !d.has(l.id));
     if (firstOpen) setLessonId(firstOpen.id);
 
@@ -94,13 +111,26 @@ export function SqlPlayground() {
     });
   }
 
+  function setSql(value: string) {
+    setDrafts((prev) => {
+      const next = { ...prev, [lessonId]: value };
+      try {
+        localStorage.setItem(DRAFT_KEY, JSON.stringify(next));
+      } catch {
+        /* ignore */
+      }
+      return next;
+    });
+  }
+
   function selectLesson(id: number) {
     setLessonId(id);
-    setSql("");
     setResult(null);
     setError(null);
     setStatus("idle");
+    setWhy("");
     setShowHint(false);
+    setShowSolution(false);
   }
 
   /** Spustí dotaz; vrátí výsledek nebo vyhodí chybu. */
@@ -133,9 +163,11 @@ export function SqlPlayground() {
       const ordered = /order\s+by/i.test(lesson.reference);
       if (sameResult(mine, ref, ordered)) {
         setStatus("correct");
+        setWhy("");
         markDone(lesson.id);
       } else {
         setStatus("wrong");
+        setWhy(diffMessage(mine, ref, ordered));
       }
     } catch (e) {
       setError(e instanceof Error ? e.message : String(e));
@@ -238,14 +270,42 @@ export function SqlPlayground() {
           Tvůj úkol
         </p>
         <p className="mt-2 text-lg text-zinc-900 dark:text-white">{lesson.zadani}</p>
-        <button
-          type="button"
-          onClick={() => setShowHint((v) => !v)}
-          className="mt-3 inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
-        >
-          <Lightbulb className="h-4 w-4" /> {showHint ? "Skrýt nápovědu" : "Nápověda"}
-        </button>
+        {/* Dva stupně: nejdřív postrčení, řešení až když ani to nestačí.
+            Dřív byl v nápovědě rovnou celý dotaz, takže se nedalo „jen trochu“
+            poradit – a kdo se zasekl, neměl se jak odblokovat jinak než opsáním. */}
+        <div className="mt-3 flex flex-wrap gap-x-5 gap-y-2">
+          <button
+            type="button"
+            onClick={() => setShowHint((v) => !v)}
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
+          >
+            <Lightbulb className="h-4 w-4" /> {showHint ? "Skrýt nápovědu" : "Nápověda"}
+          </button>
+          {showHint && (
+            <button
+              type="button"
+              onClick={() => setShowSolution((v) => !v)}
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
+            >
+              <KeyRound className="h-4 w-4" /> {showSolution ? "Skrýt řešení" : "Ukázat řešení"}
+            </button>
+          )}
+        </div>
         {showHint && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{lesson.hint}</p>}
+        {showSolution && (
+          <div className="mt-3">
+            <pre className="overflow-x-auto rounded-xl bg-black/5 px-4 py-3 font-mono text-sm text-zinc-800 dark:bg-white/5 dark:text-zinc-100">
+              {lesson.reference}
+            </pre>
+            <button
+              type="button"
+              onClick={() => setSql(lesson.reference)}
+              className="mt-2 text-sm font-medium text-accent-700 transition hover:underline dark:text-accent-300"
+            >
+              Vložit do editoru
+            </button>
+          </div>
+        )}
       </div>
 
       {/* Struktura tabulek */}
@@ -265,12 +325,19 @@ export function SqlPlayground() {
         <textarea
           value={sql}
           onChange={(e) => setSql(e.target.value)}
+          onKeyDown={(e) => {
+            // Ctrl/Cmd+Enter spustí dotaz – jinak se musí pokaždé sáhnout po myši.
+            if ((e.ctrlKey || e.metaKey) && e.key === "Enter") {
+              e.preventDefault();
+              onRun();
+            }
+          }}
           spellCheck={false}
           rows={4}
           placeholder="Sem napiš svůj SQL dotaz…"
           className="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-3 font-mono text-sm text-zinc-900 shadow-inner outline-none transition focus:border-accent-400 dark:border-white/15 dark:bg-black/30 dark:text-zinc-100"
         />
-        <div className="mt-3 flex flex-wrap gap-2.5">
+        <div className="mt-3 flex flex-wrap items-center gap-2.5">
           <button
             type="button"
             onClick={onRun}
@@ -285,6 +352,9 @@ export function SqlPlayground() {
           >
             <CheckCircle2 className="h-4 w-4" /> Zkontrolovat
           </button>
+          <span className="hidden text-xs text-zinc-400 sm:inline dark:text-zinc-500">
+            Ctrl+Enter spustí dotaz
+          </span>
         </div>
       </div>
 
@@ -313,9 +383,9 @@ export function SqlPlayground() {
         </div>
       )}
       {status === "wrong" && (
-        <div className="flex items-center gap-2 rounded-2xl bg-amber-500/15 px-4 py-3 text-amber-700 dark:text-amber-300">
-          <XCircle className="h-5 w-5" /> Zatím to nesedí. Mrkni na výklad a nápovědu výš a porovnej
-          svůj výsledek.
+        <div className="flex items-start gap-2 rounded-2xl bg-amber-500/15 px-4 py-3 text-amber-700 dark:text-amber-300">
+          <XCircle className="mt-0.5 h-5 w-5 shrink-0" />
+          <span className="leading-relaxed">{why}</span>
         </div>
       )}
 
@@ -364,12 +434,7 @@ function ResultTable({ result }: { result: SqlResult }) {
         </tbody>
       </table>
       <p className="px-4 py-2 text-xs text-zinc-400">
-        {result.values.length}{" "}
-        {result.values.length === 1
-          ? "řádek"
-          : result.values.length >= 2 && result.values.length <= 4
-            ? "řádky"
-            : "řádků"}
+        {result.values.length} {radky(result.values.length)}
       </p>
     </div>
   );

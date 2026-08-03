@@ -52,8 +52,70 @@ export type SqlLesson = {
   zadani: string;
   /** Referenční dotaz – kontrola porovná výsledek žáka s výsledkem tohoto dotazu. */
   reference: string;
+  /**
+   * Postrčení, ne řešení. Řešení si žák může zobrazit zvlášť tlačítkem –
+   * když je v nápovědě rovnou celý dotaz, nemá první krok žádnou hodnotu.
+   */
   hint: string;
 };
+
+/** 1 řádek / 2–4 řádky / 5+ řádků – české skloňování na jednom místě. */
+export function radky(n: number): string {
+  if (n === 1) return "řádek";
+  if (n >= 2 && n <= 4) return "řádky";
+  return "řádků";
+}
+
+function sloupce(n: number): string {
+  if (n === 1) return "sloupec";
+  if (n >= 2 && n <= 4) return "sloupce";
+  return "sloupců";
+}
+
+type Rows = { columns: string[]; values: unknown[][] };
+
+const asKeys = (rows: unknown[][]) =>
+  rows.map((r) => JSON.stringify(r.map((c) => String(c))));
+
+/**
+ * Proč dotaz nesedí – konkrétně, ne „zkus to znovu“.
+ *
+ * Žák u kurzu sedí sám (doma, nebo když učitel obchází třídu), takže hláška je
+ * jediná zpětná vazba, kterou dostane. Máme jeho i referenční výsledek, tak
+ * umíme říct rozdíl: počet řádků, počet sloupců, pořadí. Nikdy neprozradí
+ * hodnoty – od toho je tlačítko s řešením.
+ */
+export function diffMessage(mine: Rows | null, ref: Rows | null, ordered: boolean): string {
+  const mv = mine?.values ?? [];
+  const rv = ref?.values ?? [];
+
+  if (mv.length === 0 && rv.length > 0) {
+    return `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.`;
+  }
+  if (mv.length !== rv.length) {
+    const konec =
+      mv.length > rv.length
+        ? " Nejspíš ti chybí podmínka, která výběr zúží."
+        : " Podmínka nejspíš odfiltrovala i řádky, které tam patří.";
+    return `Vrátil jsi ${mv.length} ${radky(mv.length)}, správně jich je ${rv.length}.${konec}`;
+  }
+
+  const mc = mv[0]?.length ?? 0;
+  const rc = rv[0]?.length ?? 0;
+  if (mc !== rc) {
+    return `Řádků máš správně ${mv.length}, ale vypisuješ ${mc} ${sloupce(mc)} místo ${rc}. Zkontroluj, co máš za SELECT.`;
+  }
+
+  if (ordered) {
+    const a = [...asKeys(mv)].sort();
+    const b = [...asKeys(rv)].sort();
+    if (a.every((x, i) => x === b[i])) {
+      return "Řádky máš správné, ale v jiném pořadí. Zkontroluj ORDER BY – a jestli tam nemá (nebo naopak nemá být) DESC.";
+    }
+  }
+
+  return "Počet řádků i sloupců sedí, ale hodnoty ne. Porovnej svůj výsledek s tím, co po tobě úkol chce – nejčastěji je chyba v podmínce nebo ve sloupci, podle kterého vybíráš.";
+}
 
 export const LESSONS: SqlLesson[] = [
   {
@@ -64,7 +126,7 @@ export const LESSONS: SqlLesson[] = [
     example: "SELECT * FROM ctenari;",
     zadani: "Vypiš všechny knihy (všechny sloupce).",
     reference: "SELECT * FROM knihy;",
-    hint: "Stejně jako v příkladu, jen z tabulky knihy: SELECT * FROM knihy;",
+    hint: "Vezmi dotaz z příkladu a vyměň v něm jedinou věc – název tabulky.",
   },
   {
     id: 2,
@@ -74,7 +136,7 @@ export const LESSONS: SqlLesson[] = [
     example: "SELECT jmeno, trida FROM ctenari;",
     zadani: "Vypiš jen název a autora všech knih.",
     reference: "SELECT nazev, autor FROM knihy;",
-    hint: "Sloupce se jmenují nazev a autor: SELECT nazev, autor FROM knihy;",
+    hint: "Za SELECT patří místo hvězdičky dva sloupce oddělené čárkou. Jak se přesně jmenují, najdeš v přehledu tabulek pod úkolem.",
   },
   {
     id: 3,
@@ -84,7 +146,7 @@ export const LESSONS: SqlLesson[] = [
     example: "SELECT nazev FROM knihy WHERE zanr = 'poezie';",
     zadani: "Vypiš název a rok knih vydaných po roce 1900.",
     reference: "SELECT nazev, rok FROM knihy WHERE rok > 1900;",
-    hint: "„Po roce 1900“ znamená rok > 1900. Použij WHERE rok > 1900.",
+    hint: "„Po roce 1900“ znamená, že rok musí být větší. A všimni si, že vypsat máš dva sloupce, ne jeden.",
   },
   {
     id: 4,
@@ -94,7 +156,7 @@ export const LESSONS: SqlLesson[] = [
     example: "SELECT nazev, pocet_stran FROM knihy ORDER BY pocet_stran DESC;",
     zadani: "Vypiš dostupné knihy (dostupna = 1) seřazené podle roku vydání od nejstarší.",
     reference: "SELECT nazev, rok FROM knihy WHERE dostupna = 1 ORDER BY rok;",
-    hint: "Spoj obojí: WHERE dostupna = 1 ORDER BY rok.",
+    hint: "V jednom dotazu potřebuješ podmínku i řazení. Podmínka se píše dřív. „Od nejstarší“ je běžné pořadí od nejmenšího, takže DESC nepotřebuješ.",
   },
   {
     id: 5,
@@ -104,7 +166,7 @@ export const LESSONS: SqlLesson[] = [
     example: "SELECT COUNT(*) FROM ctenari;",
     zadani: "Zjisti, kolik knih je celkem v databázi.",
     reference: "SELECT COUNT(*) FROM knihy;",
-    hint: "SELECT COUNT(*) FROM knihy;",
+    hint: "Je to přesně dotaz z příkladu, jen nad jinou tabulkou.",
   },
   {
     id: 6,
@@ -114,7 +176,7 @@ export const LESSONS: SqlLesson[] = [
     example: "SELECT MAX(rok) FROM knihy;",
     zadani: "Zjisti průměrný počet stran knih.",
     reference: "SELECT AVG(pocet_stran) FROM knihy;",
-    hint: "Použij AVG(pocet_stran).",
+    hint: "Funkci napiš stejně jako MAX v příkladu – jen se jmenuje jinak a počítá z jiného sloupce.",
   },
   {
     id: 7,
@@ -124,7 +186,7 @@ export const LESSONS: SqlLesson[] = [
     example: "SELECT trida, COUNT(*) FROM ctenari GROUP BY trida;",
     zadani: "Zjisti, kolik knih je od každého žánru.",
     reference: "SELECT zanr, COUNT(*) FROM knihy GROUP BY zanr;",
-    hint: "Seskup podle žánru: GROUP BY zanr, a spočítej COUNT(*).",
+    hint: "Příklad počítá čtenáře po třídách, ty potřebuješ knihy po žánrech. Za SELECT patří dvě věci: podle čeho seskupuješ a kolik jich je.",
   },
   {
     id: 8,
@@ -138,6 +200,6 @@ export const LESSONS: SqlLesson[] = [
       "SELECT ctenari.jmeno, knihy.nazev FROM vypujcky " +
       "JOIN ctenari ON vypujcky.ctenar_id = ctenari.id " +
       "JOIN knihy ON vypujcky.kniha_id = knihy.id;",
-    hint: "Dva JOINy za sebou: na ctenari (ctenar_id = ctenari.id) a na knihy (kniha_id = knihy.id).",
+    hint: "Začni od tabulky vypujcky – ta jediná drží obě ID. Pak k ní připoj postupně dvě tabulky, pokaždé přes rovnost ID. Ve výsledku chceš jen jméno a název.",
   },
 ];
