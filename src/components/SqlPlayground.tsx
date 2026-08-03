@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type Dispatch, type SetStateAction } from "react";
 import {
   Play,
   CheckCircle2,
@@ -14,16 +14,25 @@ import {
   PartyPopper,
   KeyRound,
   RotateCcw,
+  Sparkles,
 } from "lucide-react";
-import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky } from "@/lib/sqlExercise";
+import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky, sqlErrorCs } from "@/lib/sqlExercise";
 import { createDb, forkDb, type SqlDb, type SqlResult } from "@/lib/sqljs";
 
 /** Příkaz, který data mění – nic nevrací a živou databázi po sobě přepíše. */
 const isMutation = (q: string) => /^\s*(insert|update|delete)\b/i.test(q);
 
 const STORAGE_KEY = "sql-kurz-hotovo";
-/** Rozepsané dotazy podle lekce – ať se práce neztratí přepnutím lekce ani reloadem. */
+/** Rozepsané dotazy podle úkolu – ať se práce neztratí přepnutím lekce ani reloadem. */
 const DRAFT_KEY = "sql-kurz-dotazy";
+/** Splněné úlohy navíc – vedou se zvlášť, do postupu kurzu se nepočítají. */
+const BONUS_KEY = "sql-kurz-navic";
+/**
+ * Lekce došlápnuté vloženým řešením. Nic to nezakazuje – kdo se zasekne doma
+ * v devět večer, ať se odblokuje – ale postup pak neříká „umím to“ ani žákovi,
+ * ani učiteli, který obchází třídu.
+ */
+const COPIED_KEY = "sql-kurz-opsano";
 
 /** Porovná dva výsledky. Když má reference ORDER BY, záleží i na pořadí. */
 function sameResult(a: SqlResult | null, b: SqlResult | null, ordered: boolean): boolean {
@@ -40,9 +49,9 @@ function sameResult(a: SqlResult | null, b: SqlResult | null, ordered: boolean):
   return ka.every((x, i) => x === kb[i]);
 }
 
-function loadDone(): Set<number> {
+function loadSet(key: string): Set<number> {
   try {
-    const raw = localStorage.getItem(STORAGE_KEY);
+    const raw = localStorage.getItem(key);
     if (raw) return new Set(JSON.parse(raw) as number[]);
   } catch {
     /* ignore */
@@ -50,10 +59,18 @@ function loadDone(): Set<number> {
   return new Set();
 }
 
-function loadDrafts(): Record<number, string> {
+function saveSet(key: string, value: Set<number>) {
+  try {
+    localStorage.setItem(key, JSON.stringify([...value]));
+  } catch {
+    /* ignore */
+  }
+}
+
+function loadDrafts(): Record<string, string> {
   try {
     const raw = localStorage.getItem(DRAFT_KEY);
-    if (raw) return JSON.parse(raw) as Record<number, string>;
+    if (raw) return JSON.parse(raw) as Record<string, string>;
   } catch {
     /* ignore */
   }
@@ -64,8 +81,11 @@ export function SqlPlayground() {
   const dbRef = useRef<SqlDb | null>(null);
   const [dbState, setDbState] = useState<"loading" | "ready" | "error">("loading");
   const [lessonId, setLessonId] = useState(1);
+  const [mode, setMode] = useState<"main" | "bonus">("main");
   const [done, setDone] = useState<Set<number>>(new Set());
-  const [drafts, setDrafts] = useState<Record<number, string>>({});
+  const [doneBonus, setDoneBonus] = useState<Set<number>>(new Set());
+  const [copied, setCopied] = useState<Set<number>>(new Set());
+  const [drafts, setDrafts] = useState<Record<string, string>>({});
   const [result, setResult] = useState<SqlResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [status, setStatus] = useState<"idle" | "correct" | "wrong">("idle");
@@ -73,15 +93,23 @@ export function SqlPlayground() {
   const [changed, setChanged] = useState("");
   const [showHint, setShowHint] = useState(false);
   const [showSolution, setShowSolution] = useState(false);
+  /** Řešení se nabídne až po prvním pokusu o kontrolu, ne rovnou u zadání. */
+  const [checked, setChecked] = useState(false);
+  const [inserted, setInserted] = useState(false);
 
   const lesson = LESSONS.find((l) => l.id === lessonId)!;
+  const bonus = mode === "bonus" ? lesson.bonus : undefined;
+  const task = bonus ?? lesson;
   const allDone = done.size === LESSONS.length;
-  const sql = drafts[lessonId] ?? "";
+  const draftKey = bonus ? `${lessonId}b` : String(lessonId);
+  const sql = drafts[draftKey] ?? "";
 
   useEffect(() => {
     // progres kurzu i rozepsané dotazy přežijí reload; začni první nehotovou lekcí
-    const d = loadDone();
+    const d = loadSet(STORAGE_KEY);
     setDone(d);
+    setDoneBonus(loadSet(BONUS_KEY));
+    setCopied(loadSet(COPIED_KEY));
     setDrafts(loadDrafts());
     const firstOpen = LESSONS.find((l) => !d.has(l.id));
     if (firstOpen) setLessonId(firstOpen.id);
@@ -103,22 +131,18 @@ export function SqlPlayground() {
     };
   }, []);
 
-  function markDone(id: number) {
-    setDone((prev) => {
+  function addTo(key: string, setter: Dispatch<SetStateAction<Set<number>>>, id: number) {
+    setter((prev) => {
       const next = new Set(prev);
       next.add(id);
-      try {
-        localStorage.setItem(STORAGE_KEY, JSON.stringify([...next]));
-      } catch {
-        /* ignore */
-      }
+      saveSet(key, next);
       return next;
     });
   }
 
   function setSql(value: string) {
     setDrafts((prev) => {
-      const next = { ...prev, [lessonId]: value };
+      const next = { ...prev, [draftKey]: value };
       try {
         localStorage.setItem(DRAFT_KEY, JSON.stringify(next));
       } catch {
@@ -128,8 +152,10 @@ export function SqlPlayground() {
     });
   }
 
-  function selectLesson(id: number) {
+  /** Přepne úkol (jiná lekce, nebo úloha navíc v té stejné) a zahodí stav pokusu. */
+  function selectTask(id: number, next: "main" | "bonus" = "main") {
     setLessonId(id);
+    setMode(next);
     setResult(null);
     setError(null);
     setStatus("idle");
@@ -137,6 +163,8 @@ export function SqlPlayground() {
     setChanged("");
     setShowHint(false);
     setShowSolution(false);
+    setChecked(false);
+    setInserted(false);
   }
 
   /** Spustí dotaz; vrátí výsledek nebo vyhodí chybu. */
@@ -157,7 +185,7 @@ export function SqlPlayground() {
       setStatus("idle");
       setChanged("Databáze je zpátky ve výchozím stavu.");
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      setError(sqlErrorCs(e instanceof Error ? e.message : String(e)));
     }
   }
 
@@ -172,13 +200,13 @@ export function SqlPlayground() {
       if (isMutation(sql) && dbRef.current) {
         const n = dbRef.current.getRowsModified();
         setChanged(`Změněno ${n} ${radky(n)}. Takhle tabulka vypadá teď:`);
-        setResult(lesson.check ? run(lesson.check) : res);
+        setResult(task.check ? run(task.check) : res);
       } else {
         setChanged("");
         setResult(res);
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      setError(sqlErrorCs(e instanceof Error ? e.message : String(e)));
       setResult(null);
       setChanged("");
     }
@@ -195,8 +223,8 @@ export function SqlPlayground() {
     try {
       const last = (r: SqlResult[]) => (r.length ? r[r.length - 1] : { columns: [], values: [] });
       mineDb.exec(sql);
-      refDb.exec(lesson.reference);
-      return [last(mineDb.exec(lesson.check!)), last(refDb.exec(lesson.check!))];
+      refDb.exec(task.reference);
+      return [last(mineDb.exec(task.check!)), last(refDb.exec(task.check!))];
     } finally {
       mineDb.close();
       refDb.close();
@@ -206,24 +234,29 @@ export function SqlPlayground() {
   function onCheck() {
     if (!sql.trim()) return;
     try {
-      const [mine, ref] = lesson.check ? checkMutation() : [run(sql), run(lesson.reference)];
+      const [mine, ref] = task.check ? checkMutation() : [run(sql), run(task.reference)];
       setResult(mine);
       setError(null);
-      setChanged(lesson.check ? "Stav tabulky po tvém příkazu:" : "");
-      const ordered = /order\s+by/i.test(lesson.reference);
+      setChecked(true);
+      // Kontrola měnících úkolů běží nad čistou kopií, „Spustit" nad živou
+      // databází – bez téhle věty se tabulka mezi dvěma kliknutími záhadně mění.
+      setChanged(task.check ? "Stav tabulky po tvém příkazu (kontrola běží nad čistou databází):" : "");
+      const ordered = /order\s+by/i.test(task.reference);
       if (sameResult(mine, ref, ordered)) {
         setStatus("correct");
         setWhy("");
-        markDone(lesson.id);
+        addTo(bonus ? BONUS_KEY : STORAGE_KEY, bonus ? setDoneBonus : setDone, lesson.id);
+        if (inserted && !bonus) addTo(COPIED_KEY, setCopied, lesson.id);
       } else {
         setStatus("wrong");
-        setWhy(diffMessage(mine, ref, ordered, Boolean(lesson.check)));
+        setWhy(diffMessage(mine, ref, ordered, Boolean(task.check)));
       }
     } catch (e) {
-      setError(e instanceof Error ? e.message : String(e));
+      setError(sqlErrorCs(e instanceof Error ? e.message : String(e)));
       setResult(null);
       setStatus("idle");
       setChanged("");
+      setChecked(true);
     }
   }
 
@@ -268,17 +301,22 @@ export function SqlPlayground() {
             <button
               key={l.id}
               type="button"
-              onClick={() => selectLesson(l.id)}
-              title={l.title}
-              className={`flex h-9 w-9 items-center justify-center rounded-lg text-sm font-semibold transition ${
+              onClick={() => selectTask(l.id)}
+              title={copied.has(l.id) ? `${l.title} (splněno s pomocí řešení)` : l.title}
+              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-sm font-semibold transition ${
                 l.id === lessonId
                   ? "bg-accent-600 text-white"
-                  : done.has(l.id)
-                    ? "bg-accent-500/15 text-accent-700 dark:text-accent-300"
-                    : "glass-soft text-zinc-700 hover:text-accent-600 dark:text-zinc-200"
+                  : copied.has(l.id)
+                    ? "bg-black/[0.06] text-zinc-500 dark:bg-white/10 dark:text-zinc-400"
+                    : done.has(l.id)
+                      ? "bg-accent-500/15 text-accent-700 dark:text-accent-300"
+                      : "glass-soft text-zinc-700 hover:text-accent-600 dark:text-zinc-200"
               }`}
             >
               {done.has(l.id) && l.id !== lessonId ? <Check className="h-4 w-4" /> : l.id}
+              {doneBonus.has(l.id) && (
+                <span className="absolute -right-0.5 -top-0.5 h-1.5 w-1.5 rounded-full bg-accent-500" />
+              )}
             </button>
           ))}
         </div>
@@ -317,10 +355,19 @@ export function SqlPlayground() {
 
       {/* Úkol */}
       <div className="glass rounded-2xl p-5">
-        <p className="text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
-          Tvůj úkol
+        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+          {bonus ? "Úloha navíc" : "Tvůj úkol"}
+          {bonus && (
+            <button
+              type="button"
+              onClick={() => selectTask(lessonId)}
+              className="rounded-full px-2 py-0.5 text-xs font-semibold normal-case tracking-normal text-accent-700 transition hover:underline dark:text-accent-300"
+            >
+              zpět na hlavní úkol
+            </button>
+          )}
         </p>
-        <p className="mt-2 text-lg text-zinc-900 dark:text-white">{lesson.zadani}</p>
+        <p className="mt-2 text-lg text-zinc-900 dark:text-white">{task.zadani}</p>
         {/* Dva stupně: nejdřív postrčení, řešení až když ani to nestačí.
             Dřív byl v nápovědě rovnou celý dotaz, takže se nedalo „jen trochu“
             poradit – a kdo se zasekl, neměl se jak odblokovat jinak než opsáním. */}
@@ -332,7 +379,7 @@ export function SqlPlayground() {
           >
             <Lightbulb className="h-4 w-4" /> {showHint ? "Skrýt nápovědu" : "Nápověda"}
           </button>
-          {showHint && (
+          {showHint && checked && (
             <button
               type="button"
               onClick={() => setShowSolution((v) => !v)}
@@ -342,15 +389,23 @@ export function SqlPlayground() {
             </button>
           )}
         </div>
-        {showHint && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{lesson.hint}</p>}
+        {showHint && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{task.hint}</p>}
+        {showHint && !checked && (
+          <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+            Řešení se nabídne, až jednou zkusíš Zkontrolovat.
+          </p>
+        )}
         {showSolution && (
           <div className="mt-3">
             <pre className="overflow-x-auto rounded-xl bg-black/5 px-4 py-3 font-mono text-sm text-zinc-800 dark:bg-white/5 dark:text-zinc-100">
-              {lesson.reference}
+              {task.reference}
             </pre>
             <button
               type="button"
-              onClick={() => setSql(lesson.reference)}
+              onClick={() => {
+                setSql(task.reference);
+                setInserted(true);
+              }}
               className="mt-2 text-sm font-medium text-accent-700 transition hover:underline dark:text-accent-300"
             >
               Vložit do editoru
@@ -424,10 +479,20 @@ export function SqlPlayground() {
           <span className="inline-flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5" /> Správně!
           </span>
+          {/* Úloha navíc se nabízí až po vyřešení hlavní – kdo spěchá, jde dál. */}
+          {!bonus && lesson.bonus && !doneBonus.has(lesson.id) && (
+            <button
+              type="button"
+              onClick={() => selectTask(lesson.id, "bonus")}
+              className="glass-soft inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
+            >
+              <Sparkles className="h-4 w-4" /> Úloha navíc
+            </button>
+          )}
           {nextLesson ? (
             <button
               type="button"
-              onClick={() => selectLesson(nextLesson.id)}
+              onClick={() => selectTask(nextLesson.id)}
               className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-500"
             >
               Další lekce: {nextLesson.title} <ArrowRight className="h-4 w-4" />
