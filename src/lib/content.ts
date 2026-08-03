@@ -1191,7 +1191,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Nejen do informatiky",
       badge: "Nová sekce",
       intro:
-        "Podle nových osnov se práce s textem přesouvá do češtiny a práce s daty do matematiky. Kliknutím na předmět uvidíte hotové materiály ke stažení a nástroje, které jde v hodině použít – u každého je napsané, co potřebuje za účet a co vás může zaskočit.",
+        "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikněte na svůj předmět – najdete hotové materiály ke stažení i nástroje do hodiny. U každého nástroje je napsané, jestli potřebuje účet, jestli je česky a co vás při první hodině zaskočí.",
       cta: "Otevřít materiály",
       note:
         "Nástroje jsou ověřené k srpnu 2026 – u cloudových služeb se podmínky mění, před hodinou si je proklikněte. Učíte jiný předmět a něco ve výuce používáte? Napište mi, rád to sem doplním a uvedu vás jako autora.",
@@ -1457,7 +1457,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Not just for CS lessons",
       badge: "New section",
       intro:
-        "Under the revised Czech curriculum, working with text moves to language lessons and working with data to maths. Open a subject to see ready-made materials and tools you can use in class – each one says what account it needs and what might catch you out.",
+        "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject to find ready-made materials and tools for the lesson. Each tool says whether it needs an account, whether it is in Czech, and what will catch you out the first time.",
       cta: "Open the materials",
       note:
         "Tools verified as of August 2026 – cloud services change their terms, so click through before the lesson. Do you teach another subject and use something in class? Write to me and I will add it here with your name.",
