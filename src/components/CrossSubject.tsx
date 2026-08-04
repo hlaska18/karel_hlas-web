@@ -162,22 +162,16 @@ function SubjectTile({
 
       {open && (
         <div className="space-y-4 border-t border-black/10 px-5 py-4 dark:border-white/10">
-          {item.tool && (
+          {item.tool && files.length > 0 && (
             <div>
               <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                 {c.materialsLabel}
               </p>
               {/* Dřív tu byl jen odkaz „Otevřít materiály“ – učitel netušil, co za
-                  ním je. Teď jsou soubory vidět rovnou, i s autorem. */}
-              {files.length > 0 ? (
-                <MaterialFolder name={item.tool} items={files} lang={lang} c={c} />
-              ) : null}
-              <a
-                href={`?tema=${encodeURIComponent(item.tool)}#banka`}
-                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 transition hover:gap-2.5 dark:text-accent-300"
-              >
-                {files.length > 0 ? c.inBank : c.cta} <ArrowRight className="h-4 w-4" />
-              </a>
+                  ním je. Teď jsou soubory vidět rovnou, i s autorem, a odkaz do
+                  banky tu není: složka ukazuje celé téma, takže by vedl na tu
+                  samou dvojici souborů o sekci výš. */}
+              <MaterialFolder name={item.tool} items={files} lang={lang} c={c} />
             </div>
           )}
 

@@ -1060,15 +1060,12 @@ type Dict = {
     /** Odznak u nadpisu – přizná, že sekce teprve vzniká. */
     badge: string;
     intro: string;
-    cta: string;
     note: string;
     /** Výzva v poslední (šedé) dlaždici – sběr od kolegů přímo ve vizuálu. */
     inviteTitle: string;
     inviteText: string;
     materialsLabel: string;
     toolsLabel: string;
-    /** Odkaz pod rozbalenou složkou – zbytek tématu je v bance. */
-    inBank: string;
     download: string;
     /**
      * Dlaždice = PŘEDMĚT. `tool` odkazuje na téma v bance (vlastní materiály),
@@ -1195,14 +1192,12 @@ export const t: Record<Lang, Dict> = {
       badge: "Nová sekce",
       intro:
         "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikněte na svůj předmět – najdete hotové materiály ke stažení i nástroje do hodiny. U každého nástroje je napsané, jestli potřebuje účet, jestli je česky a co vás při první hodině zaskočí.",
-      cta: "Otevřít materiály",
       note:
         "Nástroje jsou ověřené k srpnu 2026 – u cloudových služeb se podmínky mění, před hodinou si je proklikněte. Učíte jiný předmět a něco ve výuce používáte? Napište mi, rád to sem doplním a uvedu vás jako autora.",
       inviteTitle: "Chybí tu váš předmět?",
       inviteText: "Napište mi, co ve svých hodinách používáte.",
       materialsLabel: "Materiály ke stažení",
       toolsLabel: "Nástroje do hodin",
-      inBank: "Celé téma v bance",
       download: "Stáhnout",
       items: [
         {
@@ -1463,14 +1458,12 @@ export const t: Record<Lang, Dict> = {
       badge: "New section",
       intro:
         "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject to find ready-made materials and tools for the lesson. Each tool says whether it needs an account, whether it is in Czech, and what will catch you out the first time.",
-      cta: "Open the materials",
       note:
         "Tools verified as of August 2026 – cloud services change their terms, so click through before the lesson. Do you teach another subject and use something in class? Write to me and I will add it here with your name.",
       inviteTitle: "Missing your subject?",
       inviteText: "Tell me what you use in your lessons.",
       materialsLabel: "Materials to download",
       toolsLabel: "Tools for lessons",
-      inBank: "The whole topic in the bank",
       download: "Download",
       items: [
         {
