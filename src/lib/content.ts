@@ -1153,7 +1153,7 @@ export const t: Record<Lang, Dict> = {
         {
           period: "2019–2026",
           place: "Pedagogická fakulta JČU",
-          detail: "Bc. i Mgr. – učitelství pro 2. stupeň",
+          detail: "Bc. i Mgr. – učitelství informatiky a angličtiny pro 2. stupeň",
         },
       ],
       experience: [
@@ -1424,14 +1424,14 @@ export const t: Record<Lang, Dict> = {
         {
           period: "2019–2026",
           place: "Faculty of Education, University of South Bohemia",
-          detail: "Bachelor's & Master's – teaching English and Computer Science",
+          detail: "Bachelor's & Master's – teaching Computer Science & English, lower secondary",
         },
       ],
       experience: [
         {
           period: "Early on",
           place: "Primary & Nursery School Malšice",
-          detail: "Teaching assistant, then Computer Science teacher",
+          detail: "Teaching assistant, then Computer Science teacher (lower secondary)",
         },
         {
           period: "Now",
