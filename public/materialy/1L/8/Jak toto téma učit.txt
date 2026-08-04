@@ -1,0 +1,86 @@
+===========================================================
+ DATABÁZE A SQL – jak toto téma uchopit
+===========================================================
+Přehled pro vyučujícího: co je ve kterých složkách, v jakém
+pořadí to jde za sebou a kolik času to zabere.
+
+Celé téma = 3 vyučovací hodiny. Klidně jich odučte míň –
+každá část dává smysl i samostatně.
+
+
+-----------------------------------------------------------
+SLOŽKA 1 – ÚVOD DO DATABÁZÍ            (45 min, bez počítače)
+-----------------------------------------------------------
+Pojmy: tabulka, řádek, sloupec, datový typ, primární klíč,
+cizí klíč. Proč se data nedrží v jednom velkém seznamu.
+
+Pro žáky:   Žákovský list
+Pro učitele: Metodika, Plán hodiny
+
+Když máte na téma jen dvě hodiny, tuhle část zkraťte na
+úvodních 10 minut druhé hodiny – kurz si pojmy zavádí sám.
+
+
+-----------------------------------------------------------
+SLOŽKA 2 – KURZ SQL V PROHLÍŽEČI            (45 min, počítače)
+-----------------------------------------------------------
+Interaktivní kurz na karelhlas.vercel.app/sql: 13 lekcí od
+prvního SELECTu po mazání dat. Žák píše dotazy, hned vidí
+výsledek a appka mu řekne, co má špatně. Nic se neinstaluje,
+postup se ukládá v prohlížeči, takže se dá dokončit doma.
+
+Potřebujete: počítače s internetem. Nic víc.
+
+Pro žáky:   Pracovní list – SQL (tištěná verze týchž úloh)
+Pro učitele: Plán hodin – Kurz SQL, Řešení – pracovní list
+
+Průměrná třída 1. ročníku dojde za 45 minut do lekce 8 až 10.
+Zbytek je dobrý domácí úkol.
+
+
+-----------------------------------------------------------
+SLOŽKA 3 – VLASTNÍ DATABÁZE V DB BROWSERU   (45 min, počítače)
+-----------------------------------------------------------
+Druhá hodina u počítačů. Pozor, tady NEJDE o to naučit další
+SQL příkazy – ty už žák umí z kurzu. Nové je:
+  • že se pracuje se skutečným souborem na disku
+    (a že se změny musí zapsat, jinak se ztratí),
+  • že si žák postaví vlastní tabulku, ne jen píše dotazy
+    do hotové.
+
+Potřebujete: program DB Browser for SQLite. Zdarma, ale
+INSTALUJE SE. Když na školních počítačích instalovat nelze,
+existuje portable verze – a když ani ta ne, dá se tahle
+hodina vynechat, aniž by tématu něco zásadního chybělo.
+
+Pro žáky:   Návod – DB Browser, Úlohy – DB Browser
+Pro učitele: Řešení – úlohy
+
+
+-----------------------------------------------------------
+SLOŽKA 4 – DATABÁZE KNIHOVNY                (sdílený soubor)
+-----------------------------------------------------------
+knihovna.db  – hotová databáze pro DB Browser
+knihovna.sql – ta samá jako textový zápis, když si chcete
+               ukázat, jak se tabulky vytvářejí a plní
+
+Je to přesně ta databáze, se kterou pracuje kurz v prohlížeči.
+Dotaz napsaný v kurzu vyjde v DB Browseru stejně – na tom
+stojí celá pointa druhé hodiny u počítačů.
+
+
+-----------------------------------------------------------
+NA CO SE ŽÁCI PTAJÍ NEJČASTĚJI
+-----------------------------------------------------------
+„Proč to nejde napsat česky?“ – SQL je jazyk s pevnou slovní
+zásobou, stejně jako každý programovací jazyk. Názvy tabulek
+a sloupců jsou schválně bez háčků, aby se nemusely řešit
+kódování.
+
+„Proč mi to hlásí, že sloupec neexistuje, když ho vidím?“ –
+skoro vždycky chybí apostrofy kolem textu: zanr = poezie
+hledá SLOUPEC toho jména, zanr = 'poezie' hledá HODNOTU.
+
+„Smazal jsem si to.“ – v kurzu je tlačítko Obnovit databázi,
+v DB Browseru Soubor → Vrátit změny (Revert Changes).
+===========================================================

@@ -1,6 +1,13 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { ArrowLeft, Download, ExternalLink, FileText, MonitorDown } from "lucide-react";
+import {
+  ArrowLeft,
+  Download,
+  ExternalLink,
+  FileText,
+  GraduationCap,
+  MonitorDown,
+} from "lucide-react";
 import { SITE } from "@/lib/content";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -8,12 +15,14 @@ import { Mark } from "@/components/Mark";
 import { SqlPlayground } from "@/components/SqlPlayground";
 
 /** Cesty na soubory v bance (téma 8 – Základy databází). */
-const MAT = encodeURI("/materialy/1L/8/SQL - základy databází");
+const TEMA = "/materialy/1L/8";
+const DB = encodeURI(`${TEMA}/4. Databáze knihovny`);
+const BROWSER = encodeURI(`${TEMA}/3. Vlastní databáze v DB Browseru`);
 
 export const metadata: Metadata = {
   title: "Kurz SQL v prohlížeči",
   description:
-    "Interaktivní kurz základů databází a SQL: 11 lekcí od SELECTu po zápis dat, s výkladem, úkolem a okamžitou kontrolou – přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
+    "Interaktivní kurz základů databází a SQL: 13 lekcí od SELECTu po zápis dat, s výkladem, úkolem a okamžitou kontrolou – přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
   alternates: { canonical: "/sql" },
 };
 
@@ -48,13 +57,58 @@ export default function SqlPage() {
           Základy databází a SQL – kurz v prohlížeči
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Jedenáct lekcí od úplného začátku po zápis vlastních dat. Každá lekce tě nejdřív krátce
-          naučí
-          nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny – napiš dotaz, klikni{" "}
+          Třináct lekcí od úplného začátku po zápis vlastních dat. Každá lekce tě nejdřív krátce
+          naučí nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny – napiš dotaz, klikni{" "}
           <b>Spustit</b> a hned vidíš výsledek, <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
           Nic se neinstaluje a tvůj postup se pamatuje. Na závěr přejdeš do praxe v opravdovém
           programu.
         </p>
+
+        {/* Kurz je psaný pro žáka – jediná stránka na webu, která není pro
+            učitele. Tenhle blok je proto NAD kurzem: kdo sem přijde vybírat
+            materiál do hodiny, potřebuje čísla dřív, než začne scrollovat. */}
+        <details className="glass-soft mt-8 max-w-3xl rounded-2xl px-5 py-4">
+          <summary className="cursor-pointer list-none text-sm font-semibold text-zinc-700 marker:content-none dark:text-zinc-200">
+            <span className="inline-flex items-center gap-2">
+              <GraduationCap className="h-4 w-4 text-accent-600 dark:text-accent-400" />
+              Učíte podle toho? Rozklikněte, než to zadáte
+            </span>
+          </summary>
+          <div className="mt-3 space-y-2.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+            <p>
+              <b>Kolik hodin.</b> Jedna vyučovací hodina u počítačů. Průměrná třída 1. ročníku dojde
+              za 45 minut do lekce 8 až 10. Lekce 11–13 (zápis, změna a mazání dat) jsou dobrý
+              domácí úkol. Na druhou hodinu navazuje DB Browser – tam už nejde o nové příkazy, ale
+              o práci se souborem a o vlastní tabulku.
+            </p>
+            <p>
+              <b>Když nestihnou.</b> Nic se neztratí, postup i rozepsané dotazy se ukládají
+              v prohlížeči a žák pokračuje doma tam, kde skončil. Na počítači, kde se maže profil,
+              projde hotové lekce znovu za pár minut.
+            </p>
+            <p>
+              <b>Jak poznáte, že to umí.</b> Nad kurzem svítí „Hotovo X/13“, stačí obejít třídu. Na
+              známku to samo o sobě není: lekce jde splnit i tlačítkem <i>Ukázat řešení</i> – takové
+              se v postupu odliší šedou, ale spolehlivější je jedna otázka. „Přečti nahlas, co ten
+              tvůj dotaz dělá.“
+            </p>
+            <p>
+              <b>Když se zeptají na něco mimo.</b> Klidně řekněte „nevím, zkusíme to“. Databáze
+              běží v prohlížeči, nejde rozbít a tlačítko <i>Obnovit databázi</i> ji vrátí do
+              výchozího stavu – odpověď uvidíte oba za pět vteřin.
+            </p>
+            <p>
+              Plán hodin, pracovní list, řešení i databáze ke stažení jsou v bance u tématu{" "}
+              <Link
+                href="/?tema=Datab%C3%A1ze#banka"
+                className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-600 dark:text-accent-300"
+              >
+                Databáze
+              </Link>
+              . Začněte souborem „Jak toto téma učit“.
+            </p>
+          </div>
+        </details>
 
         <div className="mt-8 max-w-3xl">
           <SqlPlayground />
@@ -78,20 +132,20 @@ export default function SqlPage() {
             >
               DB Browser for SQLite
             </a>{" "}
-            (zdarma). Všechny dotazy, které už umíš, fungují beze změny – a navíc můžeš data
-            upravovat, přidávat záznamy a tvořit vlastní tabulky. Přesně na to navazuje 5 úloh
-            v bance.
+            (zdarma). Všechny dotazy, které už umíš, fungují beze změny. Nové tam nejsou příkazy –
+            ty máš z kurzu – ale to, že pracuješ se skutečným souborem na disku a že si postavíš
+            vlastní tabulku. Navazuje na to šest úloh v bance.
           </p>
           <div className="mt-5 flex flex-wrap gap-2.5">
             <a
-              href={`${MAT}/knihovna.db`}
+              href={`${DB}/knihovna.db`}
               download
               className="inline-flex items-center gap-2 rounded-full bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-500"
             >
               <Download className="h-4 w-4" /> Stáhnout knihovna.db
             </a>
             <a
-              href={`${MAT}/${encodeURIComponent("Návod - DB Browser.txt")}`}
+              href={`${BROWSER}/${encodeURIComponent("Návod - DB Browser.txt")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
@@ -99,12 +153,12 @@ export default function SqlPage() {
               <MonitorDown className="h-4 w-4" /> Návod na DB Browser
             </a>
             <a
-              href={`${MAT}/${encodeURIComponent("Úlohy - DB Browser.txt")}`}
+              href={`${BROWSER}/${encodeURIComponent("Úlohy - DB Browser.txt")}`}
               target="_blank"
               rel="noopener noreferrer"
               className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
             >
-              <FileText className="h-4 w-4" /> Úlohy 1–5 + bonus
+              <FileText className="h-4 w-4" /> Úlohy do DB Browseru
             </a>
           </div>
         </section>

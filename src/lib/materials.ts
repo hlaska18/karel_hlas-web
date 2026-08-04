@@ -79,15 +79,18 @@ const NAME_EN: Record<string, string> = {
   "Řešení 1 – věk": "Solution 1 – age",
   "Řešení 2A – vlajka Lotyšska": "Solution 2A – flag of Latvia",
   "Řešení 2B – vlajka Finska": "Solution 2B – flag of Finland",
-  "Úvod do databází a SQL": "Introduction to databases and SQL",
-  "SQL – základy databází": "SQL – database basics",
-  "SQL – řešení": "SQL – solutions",
+  // Téma 8 je rozdělené na složky v pořadí výuky (číslo v cestě, ne v popisku).
+  "Úvod do databází": "Introduction to databases",
+  "Kurz SQL v prohlížeči": "SQL course in the browser",
+  "Vlastní databáze v DB Browseru": "Your own database in DB Browser",
+  "Databáze knihovny": "The library database",
+  "Jak toto téma učit": "How to teach this topic",
   "Plán hodin – Kurz SQL": "Lesson plans – SQL course",
   "Pracovní list – SQL": "SQL worksheet",
-  "Řešení – SQL": "SQL solutions",
+  "Řešení – pracovní list": "Worksheet solutions",
   "Návod – DB Browser": "DB Browser guide",
   "Úlohy – DB Browser": "DB Browser exercises",
-  "Řešení – DB Browser": "DB Browser solutions",
+  "Řešení – úlohy": "Exercise solutions",
   knihovna: "Library",
   "Žákovský list": "Student worksheet",
   Metodika: "Teaching notes",
@@ -199,6 +202,12 @@ export type BankItem = {
   audience: Audience;
   /** Název podsložky, pokud soubor leží ve skupině. */
   group?: { cs: string; en: string };
+  /**
+   * Název složky tak, jak je na disku – včetně číselné předpony („3. Práce…“).
+   * Popisek ji zahazuje (v UI by rušila), ale řazení ji potřebuje: bez ní by
+   * složky jedné lekce vyšly abecedně, ne v pořadí, ve kterém se učí.
+   */
+  groupSort?: string;
   /** Autor celé skupiny ze souboru `_autor.txt` (např. převzatá cvičebnice). */
   groupAuthor?: string;
   /** Obory 1. ročníku, kde se materiál vyskytuje (po sloučení duplicit). */
@@ -322,6 +331,7 @@ export function getBankItems(): BankItem[] {
         audience: Audience,
         group?: { cs: string; en: string },
         groupAuthor?: string,
+        groupSort?: string,
       ) => {
         let ents: fs.Dirent[] = [];
         try {
@@ -335,11 +345,13 @@ export function getBankItems(): BankItem[] {
           if (e.isDirectory()) {
             let aud = audience;
             let grp = group;
+            let grpSort = groupSort;
             if (isTeacherDir(e.name)) aud = "teacher";
             else if (isStudentDir(e.name)) aud = "student";
             else {
               const gl = displayName(e.name);
               grp = { cs: gl, en: enLabel(gl) };
+              grpSort = e.name;
             }
             // `_autor.txt` ve složce = autor celé skupiny (dědí se dovnitř)
             let author = groupAuthor;
@@ -349,7 +361,7 @@ export function getBankItems(): BankItem[] {
             } catch {
               /* složka autora nemá – dědíme z nadřazené */
             }
-            walk(path.join(absDir, e.name), [...segs, e.name], aud, grp, author);
+            walk(path.join(absDir, e.name), [...segs, e.name], aud, grp, author, grpSort);
           } else if (e.isFile() && e.name === "_zdroj.json") {
             // Převzatá skupina: místo souborů jen odkaz na originál (autorská práva).
             let src: { cs?: string; en?: string; url?: string };
@@ -385,6 +397,7 @@ export function getBankItems(): BankItem[] {
               audience,
               group,
               groupAuthor,
+              groupSort,
               external: true,
               courseIds: [courseId],
               coursesLabel: { cs: "", en: "" },
@@ -425,6 +438,7 @@ export function getBankItems(): BankItem[] {
               audience,
               group,
               groupAuthor,
+              groupSort,
               courseIds: [courseId],
               coursesLabel: { cs: "", en: "" },
             });
@@ -449,7 +463,7 @@ export function getBankItems(): BankItem[] {
       a.audience.localeCompare(b.audience) ||
       a.topicNo - b.topicNo ||
       // soubory ze stejné složky (skupiny) drží u sebe, až pak podle názvu
-      byName(a.group?.cs ?? "", b.group?.cs ?? "") ||
+      byName(a.groupSort ?? a.group?.cs ?? "", b.groupSort ?? b.group?.cs ?? "") ||
       byName(a.label.cs, b.label.cs),
   );
   return items;

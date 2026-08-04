@@ -6,6 +6,10 @@ SQL dotazy. Teď TU SAMOU databázi otevřeš v opravdovém
 programu. Dobrá zpráva: je to pořád stejné SQLite – všechny
 dotazy, které umíš z prohlížeče, fungují beze změny.
 
+Nové tu nejsou příkazy, ale dvě věci: pracuješ se souborem
+na disku (a změny se do něj musí zapsat) a můžeš si postavit
+vlastní tabulku, ne jen psát dotazy do hotové.
+
 -----------------------------------------------------------
 1) INSTALACE (jednorázově, zdarma)
 -----------------------------------------------------------
@@ -38,11 +42,18 @@ dotazy, které umíš z prohlížeče, fungují beze změny.
 -----------------------------------------------------------
 • „Prohlížet data“ (Browse Data) – listování tabulkou
   a úprava hodnot klikáním, jako v Excelu.
-• Změny dat: UPDATE, INSERT, DELETE (v prohlížeči jen čteš).
-• Vytváření tabulek a celých databází.
-• Uložení změn: Soubor → Zapsat změny (Write Changes)!
-  Dokud změny nezapíšeš, nejsou v souboru.
+• Práci se souborem: změny se ukládají na disk příkazem
+  Soubor → Zapsat změny (Write Changes). Dokud je nezapíšeš,
+  v souboru nejsou a po zavření programu zmizí. Zpátky se
+  dostaneš přes Soubor → Vrátit změny (Revert Changes).
+• Vytváření vlastních tabulek a celých databází (CREATE TABLE).
+• „Prohlížet data“ (Browse Data) – listování tabulkou a úprava
+  hodnot klikáním, jako v Excelu.
 
-Pokračuj souborem „Úlohy - DB Browser“ – 5 úloh: úlohy 1–2 znáš z prohlížeče,
-úlohy 3–5 už jen tady (mění data a strukturu).
+INSERT, UPDATE i DELETE fungují stejně jako v kurzu – ty už
+umíš. Rozdíl je jen v tom, že tady se zapisují do souboru.
+
+Pokračuj souborem „Úlohy - DB Browser“ – 6 úloh: první dvě si
+ověříš, že dotaz z prohlížeče funguje i tady, zbytek už je
+o vlastní tabulce a o práci se souborem.
 ===========================================================

@@ -1,0 +1,103 @@
+===========================================================
+ ZÁKLADY DATABÁZÍ A SQL – pracovní list
+===========================================================
+Cíl: pochopit, jak funguje databáze, a umět napsat základní
+dotazy v jazyce SQL – od výběru dat po jejich změnu.
+
+Úlohy odpovídají 1:1 lekcím interaktivního kurzu:
+     karelhlas.vercel.app/sql
+Tam si je můžeš rovnou vyzkoušet, hned uvidíš výsledek a
+kontrola ti řekne, co máš špatně. Nic se neinstaluje.
+
+Soubory k tomuto tématu:
+  • knihovna.db   – hotová databáze (složka „Databáze knihovny“;
+                    otevírá se v programu DB Browser for SQLite)
+  • knihovna.sql  – ta samá databáze jako textový zápis
+  • Návod – DB Browser a Úlohy – DB Browser
+                  – pokračování v opravdovém programu
+
+
+-----------------------------------------------------------
+1) CO JE DATABÁZE
+-----------------------------------------------------------
+Databáze je uspořádané úložiště dat. Data jsou v TABULKÁCH:
+  • ŘÁDEK   = jeden záznam (např. jedna kniha)
+  • SLOUPEC = jedna vlastnost záznamu (např. název, rok vydání)
+
+Každý sloupec má svůj DATOVÝ TYP (text, číslo, datum). Každá
+tabulka má PRIMÁRNÍ KLÍČ (sloupec „id“) – jednoznačně určuje
+řádek. Tabulky se propojují CIZÍM KLÍČEM (výpůjčka odkazuje
+na knihu i na čtenáře).
+
+S databází se „domlouváme“ jazykem SQL:
+
+      SELECT  sloupce   FROM  tabulka   WHERE  podmínka ;
+
+
+-----------------------------------------------------------
+2) STRUKTURA NAŠÍ DATABÁZE (knihovna)
+-----------------------------------------------------------
+Tabulka  knihy     (id, nazev, autor, rok, zanr, pocet_stran, dostupna)
+Tabulka  ctenari   (id, jmeno, trida)
+Tabulka  vypujcky  (id, kniha_id, ctenar_id, datum_vypujcky)
+
+Sloupec „dostupna“ v tabulce knihy: 1 = kniha je k dispozici,
+0 = kniha je právě půjčená.
+
+Tabulka „vypujcky“ je záznamník všech výpůjček, co kdy byly –
+proto jich je víc než knih, které jsou zrovna půjčené. Přes
+cizí klíče (kniha_id, ctenar_id) říká, kdo si co kdy půjčil.
+
+
+-----------------------------------------------------------
+3) ÚLOHY  (čísla odpovídají lekcím kurzu)
+-----------------------------------------------------------
+VÝBĚR DAT
+  1.  Vypiš VŠECHNY knihy (všechny sloupce).
+  2.  Vypiš jen NÁZEV a AUTORA všech knih.
+  3.  Vypiš název a rok knih vydaných PO ROCE 1900.
+  4.  Vypiš název a autora knih, které napsal někdo
+      s příjmením ČAPEK.
+  5.  Vypiš název a rok DOSTUPNÝCH knih (dostupna = 1)
+      SEŘAZENÉ podle roku vydání od nejstarší.
+
+POČÍTÁNÍ
+  6.  Zjisti, KOLIK knih je celkem v databázi.
+  7.  Zjisti PRŮMĚRNÝ počet stran knih.
+  8.  U každého ŽÁNRU vypiš jeho název a POČET knih,
+      které do něj patří.
+
+PROPOJENÍ TABULEK
+  9.  Vypiš datum výpůjčky a JMÉNO ČTENÁŘE, který si knihu
+      půjčil. (Propojíš dvě tabulky.)
+ 10.  Vypiš, KDO si půjčil KTEROU knihu – jméno čtenáře
+      a název knihy. (Propojíš tři tabulky.)
+
+ZMĚNA DAT
+ 11.  Zapiš do knihovny nový přírůstek: „Bylo nás pět“ od
+      Karla Poláčka, rok 1946, žánr román, 280 stran,
+      dostupná (1), id 11.
+ 12.  Kytice se vrátila do knihovny – nastav u ní
+      dostupnost na 1.
+ 13.  Máj se rozpadl a knihovna ho vyřadila – smaž ho
+      ze seznamu knih.
+
+Příkazy, které se hodí:
+  SELECT ... FROM ...        výběr sloupců z tabulky
+  WHERE ...                  podmínka (>, <, =), spojuje se AND / OR
+  LIKE '%text%'              hledání podle části textu
+  ORDER BY ...               seřazení výsledku (DESC = pozpátku)
+  COUNT(*) , AVG(...)        počet / průměr
+  GROUP BY ...               seskupení (např. po žánrech)
+  AS                         pojmenování sloupce ve výsledku
+  JOIN ... ON ...            propojení tabulek
+  INSERT INTO ... VALUES     přidání řádku
+  UPDATE ... SET ... WHERE   změna údaje
+  DELETE FROM ... WHERE      smazání řádku
+
+POZOR u úloh 12 a 13: bez WHERE zasáhne příkaz CELOU tabulku.
+V kurzu to nevadí (je tam tlačítko Obnovit databázi), v praxi
+je to nejdražší chyba v SQL.
+
+Řešení má tvůj vyučující (soubor „Řešení - pracovní list“).
+===========================================================

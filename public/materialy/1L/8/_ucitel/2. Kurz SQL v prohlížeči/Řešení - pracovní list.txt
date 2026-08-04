@@ -1,0 +1,119 @@
+===========================================================
+ ZÁKLADY DATABÁZÍ A SQL – řešení (pro učitele)
+===========================================================
+Databáze: knihovna.db  (tabulky knihy, ctenari, vypujcky)
+Čísla úloh odpovídají lekcím kurzu na karelhlas.vercel.app/sql.
+Všechny dotazy ověřeny spuštěním nad přiloženou databází;
+u každého je uveden i očekávaný výsledek.
+
+Zápis je schválně stejný jako v kurzu: plné názvy tabulek,
+žádné aliasy. Kurz aliasy neučí, takže dotaz s „v“, „c“, „k“
+by žák na plátně nepřečetl.
+
+
+-----------------------------------------------------------
+VÝBĚR DAT
+-----------------------------------------------------------
+1) Všechny knihy
+   SELECT * FROM knihy;
+   → 10 řádků (celá tabulka).
+
+2) Název a autor všech knih
+   SELECT nazev, autor FROM knihy;
+   → 10 řádků, 2 sloupce.
+
+3) Knihy vydané po roce 1900
+   SELECT nazev, rok FROM knihy WHERE rok > 1900;
+   → 6 řádků: R.U.R. (1920), Bílá nemoc (1937),
+     Osudy dobrého vojáka Švejka (1923), Krakatit (1924),
+     Temno (1915), Pole orná a válečná (1925).
+
+4) Knihy od Čapka (hledání podle části textu)
+   SELECT nazev, autor FROM knihy WHERE autor LIKE '%Čapek%';
+   → 3 řádky: R.U.R., Bílá nemoc, Krakatit.
+   Řešení bez procenta zprava ('%Čapek') vyjde stejně –
+   uznávejte ho, jen ukažte, proč je oboustranné bezpečnější.
+
+5) Dostupné knihy seřazené podle roku
+   SELECT nazev, rok FROM knihy WHERE dostupna = 1 ORDER BY rok;
+   → 7 řádků, od nejstarší: Máj (1836), Babička (1855),
+     Povídky malostranské (1878), R.U.R. (1920),
+     Krakatit (1924), Pole orná a válečná (1925),
+     Bílá nemoc (1937).
+
+-----------------------------------------------------------
+POČÍTÁNÍ
+-----------------------------------------------------------
+6) Kolik knih je celkem
+   SELECT COUNT(*) FROM knihy;
+   → 10.
+
+7) Průměrný počet stran
+   SELECT AVG(pocet_stran) FROM knihy;
+   → 256. (Se zaokrouhlením: ROUND(AVG(pocet_stran), 1) → 256.0)
+
+8) Počet knih od každého žánru
+   SELECT zanr, COUNT(*) AS pocet FROM knihy GROUP BY zanr;
+   → drama 2, poezie 2, povídky 1, román 5.
+   Bez AS se sloupec ve výsledku jmenuje doslova COUNT(*) –
+   žáci se na to ptají, proto to kurz zavádí právě tady.
+
+-----------------------------------------------------------
+PROPOJENÍ TABULEK
+-----------------------------------------------------------
+9) Datum výpůjčky a jméno čtenáře (dvě tabulky)
+   SELECT vypujcky.datum_vypujcky, ctenari.jmeno
+   FROM vypujcky
+   JOIN ctenari ON vypujcky.ctenar_id = ctenari.id;
+   → 12 řádků (tolik je záznamů o výpůjčkách).
+
+10) Kdo si půjčil kterou knihu (tři tabulky)
+   SELECT ctenari.jmeno, knihy.nazev
+   FROM vypujcky
+   JOIN ctenari ON vypujcky.ctenar_id = ctenari.id
+   JOIN knihy   ON vypujcky.kniha_id  = knihy.id;
+   → 12 řádků. Adam Novák 3 výpůjčky, Cyril Dvořák 3,
+     Bára Svobodová 2, Dita Horáková 2, Eva Marková 2.
+     Babička je v tabulce třikrát – dobrý příklad na to, že
+     jedna kniha může mít víc záznamů o výpůjčce.
+
+-----------------------------------------------------------
+ZMĚNA DAT
+-----------------------------------------------------------
+11) Nová kniha
+   INSERT INTO knihy (id, nazev, autor, rok, zanr, pocet_stran, dostupna)
+   VALUES (11, 'Bylo nás pět', 'Karel Poláček', 1946, 'román', 280, 1);
+   Kontrola: SELECT COUNT(*) FROM knihy; → 11.
+
+12) Vrácení knihy
+   UPDATE knihy SET dostupna = 1 WHERE nazev = 'Kytice';
+   Kontrola: SELECT nazev, dostupna FROM knihy WHERE nazev='Kytice';
+   → dostupna = 1.
+
+13) Vyřazení knihy
+   DELETE FROM knihy WHERE nazev = 'Máj';
+   Kontrola: SELECT COUNT(*) FROM knihy; → 9.
+
+
+-----------------------------------------------------------
+Poznámky k výuce
+-----------------------------------------------------------
+• Úlohy 1–5 procvičují SELECT, výběr sloupců, WHERE, LIKE
+  a ORDER BY. Úlohy 6–8 zavádějí agregace a GROUP BY.
+  Úlohy 9–10 jsou JOIN, úlohy 11–13 změna dat.
+• Slabším žákům stačí úlohy 1–8. JOIN je první místo, kde se
+  třída rozpadne – proto kurz odděluje dvě tabulky (lekce 9)
+  od tří (lekce 10). Nespojujte to zpátky do jedné hodiny.
+• Sloupec dostupna = 0 mají právě tři knihy: Kytice, Švejk
+  a Temno. Tabulka vypujcky má ale 12 řádků – je to záznamník
+  všech výpůjček, ne seznam těch aktuálních. Žáci se na ten
+  rozdíl ptají a je to dobrá příležitost mluvit o tom, co
+  která tabulka vlastně znamená.
+• Chyby, které přijdou skoro vždycky:
+  – zapomenuté apostrofy: zanr = poezie hlásí „no such column“
+    (kurz tuhle hlášku překládá a rovnou radí, co s tím);
+  – malé/velké písmeno: WHERE nazev = 'máj' nenajde nic;
+  – dvojité uvozovky: WHERE zanr = "poezie" v SQLite PROJDE,
+    i když je to nesprávný zápis. Neopravujte to jako chybu
+    syntaxe, ale vysvětlete rozdíl – jinde (MySQL) to spadne.
+===========================================================

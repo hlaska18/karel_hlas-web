@@ -1,0 +1,68 @@
+===========================================================
+ ŘEŠENÍ – úlohy v DB Browser for SQLite (pro učitele)
+===========================================================
+Navazuje na „Úlohy - DB Browser“. Všechny příkazy ověřeny
+spuštěním nad knihovna.db; u každého je očekávaný výsledek.
+
+POZOR NA ZMĚNU OPROTI STARŠÍ VERZI: kurz v prohlížeči dnes
+učí i INSERT, UPDATE a DELETE (lekce 11–13). Tahle hodina
+proto NENÍ o nových příkazech – ty žák umí. Je o práci se
+souborem (zápis změn) a o stavbě vlastní tabulky.
+
+1) Stejný dotaz, jiný program
+   SELECT nazev, rok FROM knihy WHERE rok > 1900;
+   → 6 knih. Shodné s prohlížečem – to je pointa úlohy.
+
+2) Stejný dotaz, jiný program (agregace)
+   SELECT zanr, COUNT(*) FROM knihy GROUP BY zanr;
+   → román 5, poezie 2, drama 2, povídky 1.
+
+3) Změna, která zůstane v souboru
+   UPDATE knihy SET dostupna = 1 WHERE nazev = 'Temno';
+   Kontrola: SELECT nazev, dostupna FROM knihy WHERE nazev='Temno';
+   → dostupna = 1.
+
+   Jádro úlohy je to zavření bez uložení. Nechte je to opravdu
+   udělat – věta „změny se musí zapsat“ jim nic neřekne, dokud
+   o tu změnu jednou nepřijdou.
+   ⚠ Typická chyba: UPDATE bez WHERE přepíše VŠECHNY řádky.
+   Kurz na to upozorňuje, ale tady to jde ukázat naostro
+   a vrátit přes Soubor → Vrátit změny (Revert Changes).
+
+4) Vlastní tabulka
+   CREATE TABLE hodnoceni (
+     id       INTEGER PRIMARY KEY,
+     kniha_id INTEGER REFERENCES knihy(id),
+     hvezdy   INTEGER
+   );
+   INSERT INTO hodnoceni (id, kniha_id, hvezdy)
+   VALUES (1, 1, 5), (2, 4, 4), (3, 8, 3);
+   Kontrola: SELECT * FROM hodnoceni; → 3 řádky.
+
+   Tři záznamy místo jednoho schválně – nad jedním řádkem
+   nemá úloha 5 co ukazovat.
+
+5) Propojení vlastní tabulky s hotovou
+   SELECT knihy.nazev, hodnoceni.hvezdy
+   FROM hodnoceni JOIN knihy ON hodnoceni.kniha_id = knihy.id;
+   → Babička 5, R.U.R. 4, Krakatit 3.
+
+   Zápis je schválně stejný jako v kurzu (plné názvy tabulek,
+   žádné aliasy) – žák ho má porovnat s tím, co psal v lekci 9.
+
+6) Vlastní databáze – hodnotit: rozumné datové typy, ≥5
+   záznamů, 2 funkční SELECT dotazy. Druhá tabulka s cizím
+   klíčem je nad rámec, ale rychlíky zabaví na zbytek hodiny.
+
+-----------------------------------------------------------
+Poznámky k výuce
+-----------------------------------------------------------
+• Když na školních počítačích nejde nic instalovat, zkuste
+  portable verzi DB Browseru. Pokud ani to ne, dá se tahle
+  hodina vynechat: příkazy z úloh 1–3 žák procvičí v kurzu,
+  přijde jen o CREATE TABLE a o práci se souborem.
+• Úlohy 1–2 vypadají jako ztráta času a nejsou. Žák musí
+  vidět na vlastní oči, že jeho dotaz z prohlížeče funguje
+  i v opravdovém programu – jinak si kurz zařadí jako hru.
+• Rychlíci: úloha 6 s druhou tabulkou vydá na celou hodinu.
+===========================================================

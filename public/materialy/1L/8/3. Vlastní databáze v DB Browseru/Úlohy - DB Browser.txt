@@ -1,0 +1,74 @@
+===========================================================
+ ÚLOHY – DB Browser for SQLite (navazují na /sql)
+===========================================================
+Pracuj s databází knihovna.db v programu DB Browser for
+SQLite (viz „Návod - DB Browser“).
+
+Samotné SQL příkazy už znáš z kurzu v prohlížeči. Nové je
+tady něco jiného: pracuješ se skutečným souborem na disku,
+změny se musí zapsat – a nakonec si postavíš vlastní tabulku.
+
+Dotazy piš na kartě „Spustit SQL“ (Execute SQL).
+
+-----------------------------------------------------------
+1) STEJNÝ DOTAZ, JINÝ PROGRAM
+-----------------------------------------------------------
+Vypiš název a rok knih vydaných po roce 1900.
+Ověř: má vyjít 6 knih – přesně jako v prohlížeči.
+To je celá pointa: je to pořád stejné SQLite.
+
+-----------------------------------------------------------
+2) STEJNÝ DOTAZ, JINÝ PROGRAM (agregace)
+-----------------------------------------------------------
+Zjisti, kolik knih je od každého žánru.
+Ověř: román 5, poezie 2, drama 2, povídky 1.
+
+-----------------------------------------------------------
+3) ZMĚNA, KTERÁ ZŮSTANE V SOUBORU
+-----------------------------------------------------------
+Kniha „Temno“ byla vrácena. Nastav jí ve sloupci dostupna
+hodnotu 1. Příkaz UPDATE už umíš z kurzu.
+
+Teď to nové: zavři program BEZ uložení a otevři knihovna.db
+znovu. Změna je pryč. Udělej ji znovu a použij
+Soubor → Zapsat změny (Write Changes). Teď zůstane.
+
+Tohle je rozdíl mezi cvičením a opravdovou databází.
+Ověř: SELECT nazev, dostupna FROM knihy WHERE nazev = 'Temno';
+→ dostupna = 1, a to i po zavření a otevření programu.
+
+-----------------------------------------------------------
+4) VLASTNÍ TABULKA (CREATE TABLE)
+-----------------------------------------------------------
+Knihovna chce sbírat hodnocení knih. Vytvoř tabulku
+hodnoceni se sloupci:
+  id        INTEGER PRIMARY KEY
+  kniha_id  INTEGER (odkaz na knihy.id – cizí klíč)
+  hvezdy    INTEGER (1–5)
+
+Pak do ní vlož tři hodnocení: kniha 1 (Babička) 5 hvězd,
+kniha 4 (R.U.R.) 4 hvězdy, kniha 8 (Krakatit) 3 hvězdy.
+Nezapomeň Zapsat změny.
+Ověř: SELECT * FROM hodnoceni; → 3 řádky.
+
+-----------------------------------------------------------
+5) PROPOJ SVOJI TABULKU S HOTOVOU
+-----------------------------------------------------------
+Vypiš název knihy a počet hvězd – tedy propoj tabulku, kterou
+jsi právě vytvořil(a), s tabulkou knihy. JOIN znáš z kurzu,
+tady ho ale poprvé píšeš přes klíč, který jsi navrhl(a) sám.
+Ověř: 3 řádky, u každého název knihy a číslo 3 až 5.
+
+-----------------------------------------------------------
+6) VLASTNÍ DATABÁZE
+-----------------------------------------------------------
+Soubor → Nová databáze. Vytvoř si vlastní mini-databázi na
+téma, které tě baví (hry, sport, hudba, auta…):
+  • aspoň 1 tabulka s rozumnými datovými typy,
+  • aspoň 5 záznamů,
+  • 2 vlastní SELECT dotazy, které nad ní dávají smysl.
+
+Kdo chce víc: přidej druhou tabulku a propoj ji cizím klíčem.
+
+Řešení má tvůj vyučující (soubor „Řešení - úlohy“).
+===========================================================
