@@ -24,7 +24,7 @@ export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
       <main id="main">
         <Hero pool={getHeroPool(items)} stats={getBankStats(items)} />
         <BankSection items={items} />
-        <CrossSubject />
+        <CrossSubject items={items} />
         <About />
         <Contact />
       </main>

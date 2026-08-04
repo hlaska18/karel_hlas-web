@@ -5,6 +5,7 @@ import {
   toolLabel,
   countMaterials,
   materialTypeOf,
+  fmtSize,
 } from "@/lib/bankLabels";
 import type { BankItem } from "@/lib/materials";
 
@@ -135,5 +136,18 @@ describe("materialTypeOf", () => {
     expect(
       materialTypeOf(makeItem({ group: undefined, label: { cs: "Metodika", en: "" } })),
     ).toEqual({ cs: "Metodika", en: "Teaching notes" });
+  });
+});
+
+describe("fmtSize", () => {
+  it("uses a Czech decimal comma and an English dot", () => {
+    expect(fmtSize(3_355_443, "cs")).toBe("3,2 MB");
+    expect(fmtSize(3_355_443, "en")).toBe("3.2 MB");
+  });
+
+  it("keeps small sizes whole and hides zero", () => {
+    expect(fmtSize(512)).toBe("512 B");
+    expect(fmtSize(4096)).toBe("4 kB");
+    expect(fmtSize(0)).toBe("");
   });
 });

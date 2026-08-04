@@ -70,3 +70,15 @@ export function materialTypeOf(it: BankItem): { cs: string; en: string } | null 
   }
   return null;
 }
+
+/**
+ * Velikost souboru pro popisek. Česky s desetinnou čárkou („3,2 MB"),
+ * anglicky s tečkou. Prázdný řetězec u nulové velikosti.
+ */
+export function fmtSize(bytes: number, lang: Lang = "cs"): string {
+  if (!bytes) return "";
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} kB`;
+  const mb = (bytes / (1024 * 1024)).toFixed(1);
+  return `${lang === "cs" ? mb.replace(".", ",") : mb} MB`;
+}

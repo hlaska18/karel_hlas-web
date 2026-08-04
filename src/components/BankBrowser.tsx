@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
-import { toolLabel, countMaterials, materialTypeOf } from "@/lib/bankLabels";
+import { toolLabel, countMaterials, materialTypeOf, fmtSize } from "@/lib/bankLabels";
 import { ToolGlassIcon, hasToolGlassIcon } from "@/components/ToolGlassIcon";
 
 /** Rozhraní UI textů banky (CZ/EN). */
@@ -276,13 +276,6 @@ function toolIcon(tool: string) {
     default:
       return Files;
   }
-}
-
-function fmtSize(bytes: number): string {
-  if (!bytes) return "";
-  if (bytes < 1024) return `${bytes} B`;
-  if (bytes < 1024 * 1024) return `${Math.round(bytes / 1024)} kB`;
-  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
 }
 
 const stripDia = (s: string) =>
@@ -570,7 +563,7 @@ function MaterialRow({
         </span>
       )}
       <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-400 md:block">
-        {fmtSize(it.sizeBytes)}
+        {fmtSize(it.sizeBytes, lang)}
       </span>
       {previewable && (
         <button

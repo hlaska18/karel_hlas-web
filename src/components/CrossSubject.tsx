@@ -2,8 +2,20 @@
 
 import { useState } from "react";
 import Image from "next/image";
-import { ArrowRight, ChevronDown, ExternalLink, Info, Plus } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronDown,
+  Download,
+  ExternalLink,
+  FileText,
+  Folder,
+  Info,
+  Plus,
+} from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import type { Lang } from "@/lib/content";
+import type { BankItem } from "@/lib/materials";
+import { fmtSize, countMaterials } from "@/lib/bankLabels";
 import { SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
@@ -24,7 +36,7 @@ type Subject = ReturnType<typeof useLang>["tr"]["cross"]["items"][number];
  *    učitele zaskočí (účet, jazyk, expirace odkazu, limity) – to je ta část,
  *    kterou běžné katalogy odkazů neuvádějí.
  */
-export function CrossSubject() {
+export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
   const { tr } = useLang();
   const c = tr.cross;
   const [open, setOpen] = useState<string | null>(null);
@@ -53,6 +65,7 @@ export function CrossSubject() {
             <Reveal as="li" key={it.subject} delay={0.05 * i} className="flex">
               <SubjectTile
                 item={it}
+                items={items}
                 open={open === it.subject}
                 onToggle={() => setOpen((cur) => (cur === it.subject ? null : it.subject))}
               />
@@ -97,15 +110,25 @@ export function CrossSubject() {
 
 function SubjectTile({
   item,
+  items,
   open,
   onToggle,
 }: {
   item: Subject;
+  items: BankItem[];
   open: boolean;
   onToggle: () => void;
 }) {
-  const { tr } = useLang();
+  const { tr, lang } = useLang();
   const c = tr.cross;
+  // Materiály toho tématu z banky – dedup přes obory už udělal getBankItems.
+  // Vlastní soubory napřed, odkaz na cizí zdroj až za nimi: hlavní věc je to,
+  // co si učitel stáhne, ne rozcestník.
+  const files = item.tool
+    ? items
+        .filter((i) => i.tool === item.tool)
+        .sort((a, b) => Number(a.external ?? false) - Number(b.external ?? false))
+    : [];
 
   return (
     <div className="glass flex w-full flex-col rounded-2xl">
@@ -144,11 +167,16 @@ function SubjectTile({
               <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
                 {c.materialsLabel}
               </p>
+              {/* Dřív tu byl jen odkaz „Otevřít materiály“ – učitel netušil, co za
+                  ním je. Teď jsou soubory vidět rovnou, i s autorem. */}
+              {files.length > 0 ? (
+                <MaterialFolder name={item.tool} items={files} lang={lang} c={c} />
+              ) : null}
               <a
                 href={`?tema=${encodeURIComponent(item.tool)}#banka`}
-                className="mt-2 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 transition hover:gap-2.5 dark:text-accent-300"
+                className="mt-3 inline-flex items-center gap-1.5 text-sm font-semibold text-accent-700 transition hover:gap-2.5 dark:text-accent-300"
               >
-                {c.cta} <ArrowRight className="h-4 w-4" />
+                {files.length > 0 ? c.inBank : c.cta} <ArrowRight className="h-4 w-4" />
               </a>
             </div>
           )}
@@ -182,6 +210,95 @@ function SubjectTile({
             </div>
           )}
         </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Rolovací složka s materiály přímo v dlaždici předmětu.
+ *
+ * Vědomě jednodušší než složka v bance: žádný náhled v modálu, jen co to je,
+ * od koho a stáhnout. Učitel, který sem přijde z „Český jazyk", potřebuje
+ * vidět obsah, ne prohlížeč – ten je o sekci výš v bance.
+ */
+function MaterialFolder({
+  name,
+  items,
+  lang,
+  c,
+}: {
+  name: string;
+  items: BankItem[];
+  lang: Lang;
+  c: ReturnType<typeof useLang>["tr"]["cross"];
+}) {
+  const [open, setOpen] = useState(false);
+  // Autor celé skupiny (_autor.txt) – u převzatých cvičebnic je to podstatné.
+  const author = items.find((i) => i.groupAuthor)?.groupAuthor;
+
+  return (
+    <div className="glass-soft mt-2 overflow-hidden rounded-xl">
+      <button
+        type="button"
+        onClick={() => setOpen((v) => !v)}
+        aria-expanded={open}
+        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left"
+      >
+        <Folder className="h-4 w-4 shrink-0 text-accent-600 dark:text-accent-400" />
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-sm font-semibold text-zinc-900 dark:text-white">
+            {name}
+          </span>
+          <span className="block text-xs text-zinc-500 dark:text-zinc-400">
+            {countMaterials(items.length, lang)}
+          </span>
+        </span>
+        {author && (
+          <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">{author}</span>
+        )}
+        <ChevronDown
+          className={`h-4 w-4 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+        />
+      </button>
+
+      {open && (
+        <ul className="space-y-1.5 border-t border-black/10 px-3 py-2.5 dark:border-white/10">
+          {items.map((it) => {
+            const label = it.label[lang];
+            // Převzatý materiál se nehostuje – vede na originál, ne ke stažení.
+            if (it.external) {
+              return (
+                <li key={`${it.href}|${label}`}>
+                  <a
+                    href={it.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group flex items-center gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-zinc-200 dark:hover:text-accent-300"
+                  >
+                    <ExternalLink className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                    <span className="min-w-0 flex-1 truncate">{label}</span>
+                  </a>
+                </li>
+              );
+            }
+            return (
+              <li key={`${it.href}|${label}`}>
+                <a
+                  href={it.href}
+                  download
+                  className="group flex items-center gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-zinc-200 dark:hover:text-accent-300"
+                  title={c.download}
+                >
+                  <FileText className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                  <span className="min-w-0 flex-1 truncate">{label}</span>
+                  <span className="shrink-0 text-xs text-zinc-400">{fmtSize(it.sizeBytes, lang)}</span>
+                  <Download className="h-3.5 w-3.5 shrink-0 text-zinc-400 transition group-hover:text-accent-600 dark:group-hover:text-accent-400" />
+                </a>
+              </li>
+            );
+          })}
+        </ul>
       )}
     </div>
   );

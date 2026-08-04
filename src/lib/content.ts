@@ -1067,6 +1067,9 @@ type Dict = {
     inviteText: string;
     materialsLabel: string;
     toolsLabel: string;
+    /** Odkaz pod rozbalenou složkou – zbytek tématu je v bance. */
+    inBank: string;
+    download: string;
     /**
      * Dlaždice = PŘEDMĚT. `tool` odkazuje na téma v bance (vlastní materiály),
      * `tools` jsou ověřené externí nástroje – u každého je `note` s tím, co
@@ -1199,6 +1202,8 @@ export const t: Record<Lang, Dict> = {
       inviteText: "Napište mi, co ve svých hodinách používáte.",
       materialsLabel: "Materiály ke stažení",
       toolsLabel: "Nástroje do hodin",
+      inBank: "Celé téma v bance",
+      download: "Stáhnout",
       items: [
         {
           subject: "Český jazyk",
@@ -1270,7 +1275,7 @@ export const t: Record<Lang, Dict> = {
             },
             {
               name: "MolView",
-              url: "https://molview.org/",
+              url: "https://app.molview.com/",
               why: "Nakreslený vzorec převede rovnou do 3D modelu molekuly.",
               note: "Zdarma, bez účtu. Načítá Google Analytics – při práci s nezletilými zvažte.",
             },
@@ -1465,6 +1470,8 @@ export const t: Record<Lang, Dict> = {
       inviteText: "Tell me what you use in your lessons.",
       materialsLabel: "Materials to download",
       toolsLabel: "Tools for lessons",
+      inBank: "The whole topic in the bank",
+      download: "Download",
       items: [
         {
           subject: "Czech language",
@@ -1536,7 +1543,7 @@ export const t: Record<Lang, Dict> = {
             },
             {
               name: "MolView",
-              url: "https://molview.org/",
+              url: "https://app.molview.com/",
               why: "Turns a drawn formula straight into a 3D model of the molecule.",
               note: "Free, no account. Loads Google Analytics.",
             },
