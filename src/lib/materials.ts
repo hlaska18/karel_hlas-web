@@ -95,6 +95,16 @@ const NAME_EN: Record<string, string> = {
   "Žákovský list": "Student worksheet",
   Metodika: "Teaching notes",
   "Plán hodiny": "Lesson plan",
+  // Digitální gramotnost – jednotlivé hodiny a jejich plány
+  "Kybernetická bezpečnost": "Cybersecurity",
+  "Kybernetická bezpečnost – plán hodiny": "Cybersecurity – lesson plan",
+  "Operační systém": "Operating system",
+  "Operační systém – plán hodiny": "Operating system – lesson plan",
+  "Počítačové sítě": "Computer networks",
+  "Počítačové sítě – plán hodiny": "Computer networks – lesson plan",
+  "Příkazový řádek": "Command line",
+  "Příkazový řádek – plán hodiny": "Command line – lesson plan",
+  "Řešení – Digitální gramotnost": "Solutions – Digital literacy",
   // Internet, bezpečnost a práce s informacemi (10 hodin)
   "Prezentace k hodinám": "Lesson presentations",
   "Pro žáky": "For students",

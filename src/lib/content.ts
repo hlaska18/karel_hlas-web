@@ -1412,9 +1412,14 @@ export const t: Record<Lang, Dict> = {
       interests: ["Modern technology", "Education", "Web development", "Programming", "Bowling"],
       education: [
         {
+          period: "2006–2015",
+          place: "Primary & Nursery School Sezimovo Ústí",
+          detail: "9. května 489, Tábor district",
+        },
+        {
           period: "2015–2019",
           place: "Secondary Technical School of Mechanical and Civil Engineering",
-          detail: "programming & robotics",
+          detail: "Technical Lyceum – programming & robotics",
         },
         {
           period: "2019–2026",

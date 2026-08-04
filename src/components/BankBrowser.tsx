@@ -132,7 +132,9 @@ const STR: Record<
     sourceNote: "Third-party material – open at the original source",
     sourceNoteOffline: "Third-party material – not available here",
     openSource: "Open at source",
-    tryOnline: "Take the interactive SQL course right in your browser – nothing to install.",
+    // Kurz je zatím jen česky – ať to anglický návštěvník ví předem, ne až po kliknutí.
+    tryOnline:
+      "Take the interactive SQL course right in your browser – nothing to install. The course itself is in Czech.",
     tryOnlineCta: "Start the course",
     docxLoading: "Loading document preview…",
     docxError: "Preview failed to render – use the download button above.",
