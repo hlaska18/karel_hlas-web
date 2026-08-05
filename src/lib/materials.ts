@@ -220,6 +220,14 @@ export type BankItem = {
   groupSort?: string;
   /** Autor celé skupiny ze souboru `_autor.txt` (např. převzatá cvičebnice). */
   groupAuthor?: string;
+  /**
+   * Vlastní vysvětlivka u převzatého odkazu (z `note` v `_zdroj.json`).
+   * Nahradí obecné „Převzatý materiál – otevři u zdroje“ tam, kde je potřeba
+   * říct něco konkrétnějšího – třeba že učebnice bez cvičných souborů nefunguje.
+   */
+  sourceNote?: { cs: string; en: string };
+  /** Pořadí odkazu uvnitř `_zdroj.json` – učebnice má stát před cvičnými soubory. */
+  sourceOrder?: number;
   /** Obory 1. ročníku, kde se materiál vyskytuje (po sloučení duplicit). */
   courseIds: string[];
   /** Lidsky čitelný rozsah oborů, např. „1. ročník · všechny obory". */
@@ -374,44 +382,52 @@ export function getBankItems(): BankItem[] {
             walk(path.join(absDir, e.name), [...segs, e.name], aud, grp, author, grpSort);
           } else if (e.isFile() && e.name === "_zdroj.json") {
             // Převzatá skupina: místo souborů jen odkaz na originál (autorská práva).
-            let src: { cs?: string; en?: string; url?: string };
+            // Smí být jeden odkaz, nebo pole – učebnice a cvičné soubory k ní
+            // patří k sobě a mají být vidět jako dvě položky v jedné složce.
+            type Zdroj = { cs?: string; en?: string; url?: string; note?: { cs: string; en: string } };
+            let parsed: Zdroj | Zdroj[];
             try {
-              src = JSON.parse(fs.readFileSync(path.join(absDir, e.name), "utf8"));
+              parsed = JSON.parse(fs.readFileSync(path.join(absDir, e.name), "utf8"));
             } catch (err) {
               // Poškozený _zdroj.json by jinak tiše zahodil odkaz na materiál.
               console.warn(`[materials] Neplatný _zdroj.json v ${absDir}:`, err);
               continue;
             }
-            // URL je volitelná: bez ní je to jen informační atribuce (materiál
-            // třetí strany, který tu nehostujeme ani neodkazujeme).
-            if (!src.cs) continue;
-            const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${src.cs}`, "");
-            const key = [tool, audience, group?.cs ?? "", "__zdroj__", "link"]
-              .join("|")
-              .normalize("NFC")
-              .toLowerCase();
-            const existing = seen.get(key);
-            if (existing) {
-              if (!existing.courseIds.includes(courseId)) existing.courseIds.push(courseId);
-              continue;
+            const zdroje = Array.isArray(parsed) ? parsed : [parsed];
+            for (const [poradi, src] of zdroje.entries()) {
+              // URL je volitelná: bez ní je to jen informační atribuce (materiál
+              // třetí strany, který tu nehostujeme ani neodkazujeme).
+              if (!src.cs) continue;
+              const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${src.cs}`, "");
+              const key = [tool, audience, group?.cs ?? "", "__zdroj__", src.cs, "link"]
+                .join("|")
+                .normalize("NFC")
+                .toLowerCase();
+              const existing = seen.get(key);
+              if (existing) {
+                if (!existing.courseIds.includes(courseId)) existing.courseIds.push(courseId);
+                continue;
+              }
+              seen.set(key, {
+                href: src.url ?? "",
+                label: { cs: src.cs, en: src.en ?? src.cs },
+                ext: "link",
+                kind: "link",
+                sizeBytes: 0,
+                tool,
+                topicNo: topicIndex + 1,
+                topicLabel,
+                audience,
+                group,
+                groupAuthor,
+                groupSort,
+                external: true,
+                sourceNote: src.note,
+                sourceOrder: poradi,
+                courseIds: [courseId],
+                coursesLabel: { cs: "", en: "" },
+              });
             }
-            seen.set(key, {
-              href: src.url ?? "",
-              label: { cs: src.cs, en: src.en ?? src.cs },
-              ext: "link",
-              kind: "link",
-              sizeBytes: 0,
-              tool,
-              topicNo: topicIndex + 1,
-              topicLabel,
-              audience,
-              group,
-              groupAuthor,
-              groupSort,
-              external: true,
-              courseIds: [courseId],
-              coursesLabel: { cs: "", en: "" },
-            });
           } else if (e.isFile()) {
             const file = e.name;
             const ext = path.extname(file).slice(1).toLowerCase();
@@ -474,6 +490,7 @@ export function getBankItems(): BankItem[] {
       a.topicNo - b.topicNo ||
       // soubory ze stejné složky (skupiny) drží u sebe, až pak podle názvu
       byName(a.groupSort ?? a.group?.cs ?? "", b.groupSort ?? b.group?.cs ?? "") ||
+      (a.sourceOrder ?? 0) - (b.sourceOrder ?? 0) ||
       byName(a.label.cs, b.label.cs),
   );
   return items;

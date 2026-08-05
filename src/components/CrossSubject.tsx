@@ -268,10 +268,19 @@ function MaterialFolder({
                     href={it.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-center gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-zinc-200 dark:hover:text-accent-300"
+                    className="group flex items-start gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-zinc-200 dark:hover:text-accent-300"
                   >
-                    <ExternalLink className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
-                    <span className="min-w-0 flex-1 truncate">{label}</span>
+                    <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                    <span className="min-w-0 flex-1">
+                      <span className="block">{label}</span>
+                      {/* Bez téhle věty učitel stáhne učebnici a nepochopí,
+                          proč úlohy odkazují na soubory, které nemá. */}
+                      {it.sourceNote && (
+                        <span className="mt-0.5 block text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                          {it.sourceNote[lang]}
+                        </span>
+                      )}
+                    </span>
                   </a>
                 </li>
               );

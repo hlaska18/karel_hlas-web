@@ -497,9 +497,12 @@ function MaterialRow({
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
-          <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
-            {hasLink ? s.sourceNote : s.sourceNoteOffline}
-            {it.group ? ` · ${L(it.group, lang)}` : ""}
+          {/* Vlastní vysvětlivka ze `_zdroj.json` má přednost před obecnou větou –
+              u dvojice učebnice + cvičné soubory je potřeba říct, že patří k sobě. */}
+          <span className="mt-0.5 block text-sm text-zinc-500 dark:text-zinc-400">
+            {it.sourceNote
+              ? L(it.sourceNote, lang)
+              : `${hasLink ? s.sourceNote : s.sourceNoteOffline}${it.group ? ` · ${L(it.group, lang)}` : ""}`}
           </span>
         </span>
         {hasLink && (
