@@ -91,7 +91,8 @@ Všechny webové stránky a profily v podkladech jsou fiktivní a určené
 výhradně pro výuku. Domény s koncovkou .example nevedou na skutečné
 služby. Podklady nic neodesílají a lze je používat offline. Značky
 STUDYMAX, Univerzita Severní, Journal of Learning Research, Spoj,
-Moment a ClubDesk jsou vymyšlené.
+Moment, ClubDesk i Školní portál jsou vymyšlené. Žádná ukázka
+nepoužívá jméno skutečné služby ani skutečné telefonní číslo.
 
 
 DOPORUČENÝ POSTUP PŘED PRVNÍ HODINOU
