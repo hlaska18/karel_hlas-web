@@ -1,4 +1,4 @@
-Projekt: Bezpečná škola
+﻿Projekt: Bezpečná škola
 Rozpočet: 125900 Kč
 Termín: 30. 11. 2026
 Verze: schválená

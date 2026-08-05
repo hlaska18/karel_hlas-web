@@ -18,6 +18,9 @@ vlastní tabulku, ne jen psát dotazy do hotové.
 • Windows: stáhni .msi instalátor a projdi průvodce.
   (Bez práv admina zvol „PortableApp“ verzi – bez instalace.)
 • macOS: stáhni .dmg a přetáhni aplikaci do Applications.
+• Linux: většinou stačí nainstalovat z repozitáře distribuce –
+  na Ubuntu/Debianu „sudo apt install sqlitebrowser“, jinak je
+  na webu balíček AppImage, který funguje bez instalace.
 
 -----------------------------------------------------------
 2) OTEVŘI DATABÁZI (6 kroků)
