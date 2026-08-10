@@ -9,9 +9,14 @@ import { Footer } from "@/components/Footer";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
 import { getBankStats, getHeroPool } from "@/lib/heroPick";
+import { t } from "@/lib/content";
 
 /** Celý web na jedné stránce (one-page). Jazyk přichází z adresy (/ nebo /en). */
 export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
+  // Dlaždice předmětů potřebují jen pár položek (Word, Excel). Filtrujeme tady,
+  // v serverové komponentě – jinak by celá banka šla do klienta dvakrát.
+  const crossTools = new Set(t[lang].cross.items.map((i) => i.tool).filter(Boolean));
+
   return (
     <LanguageProvider lang={lang}>
       {/* Jemný tečkovaný vzor za CELÝM webem (fixed = konzistentní při scrollu,
@@ -24,7 +29,7 @@ export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
       <main id="main">
         <Hero pool={getHeroPool(items)} stats={getBankStats(items)} />
         <BankSection items={items} />
-        <CrossSubject items={items} />
+        <CrossSubject items={items.filter((i) => crossTools.has(i.tool))} />
         <About />
         <Contact />
       </main>
