@@ -82,8 +82,11 @@ describe("pickHeroHighlights", () => {
 });
 
 describe("getBankStats", () => {
-  it("počítá jen hostované soubory a unikátní témata", () => {
-    const stats = getBankStats([...POOL, item({ href: "x", tool: "Word", ext: "link", external: true })]);
-    expect(stats).toEqual({ files: 6, topics: 5 });
+  it("počítá jen hostované soubory, ale všechna témata z galerie", () => {
+    // Téma, které má jen odkaz na cizí zdroj (dnes Word, Excel, Power BI),
+    // v galerii dlaždici má – hero ho tedy musí započítat, jinak slíbí míň
+    // témat, než kolik jich je na obrazovce vidět.
+    const stats = getBankStats([...POOL, item({ href: "x", tool: "Ostatní", ext: "link", external: true })]);
+    expect(stats).toEqual({ files: 6, topics: 6 });
   });
 });

@@ -9,8 +9,11 @@ import type { BankItem } from "@/lib/materials";
 
 /** Kolik souborů a v kolika tématech – čísla do hera. Externí odkazy se nepočítají. */
 export function getBankStats(items: BankItem[]): { files: number; topics: number } {
+  // Soubory počítáme jen vlastní (odkaz na cizí zdroj není soubor ke stažení),
+  // ale témat je tolik, kolik jich je v galerii – jinak by hero hlásil 5 témat
+  // nad mřížkou s osmi dlaždicemi. Word, Excel a Power BI jsou dnes jen odkazy.
   const own = items.filter((i) => !i.external);
-  return { files: own.length, topics: new Set(own.map((i) => i.tool)).size };
+  return { files: own.length, topics: new Set(items.map((i) => i.tool)).size };
 }
 
 /** Typy souborů, které se hodí do ukázky (binárky jako `.db` ne). */

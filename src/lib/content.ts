@@ -1111,7 +1111,7 @@ export const t: Record<Lang, Dict> = {
       lessons: "Výuka",
       contact: "Kontakt",
       bank: "Materiály do informatiky",
-      brand: "Informatika na střední",
+      brand: "Do výuky na střední",
       brandSub: "Karel Hlas · SPŠ Tábor",
     },
     hero: {
@@ -1121,7 +1121,7 @@ export const t: Record<Lang, Dict> = {
       tagline:
         "Pro střední školy. Zdarma, ke stažení i úpravě, bez přihlašování.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
-      stats: "{files} souborů · {topics} témat · Word, PowerPoint, Python",
+      stats: "{files} souborů · {topics} témat · 1. ročník SŠ",
       sample: "Ukázka materiálů",
       ctaLessons: "Procházet materiály",
       ctaContact: "O mně",
@@ -1382,7 +1382,7 @@ export const t: Record<Lang, Dict> = {
       lessons: "Lessons",
       contact: "Contact",
       bank: "Materials for CS",
-      brand: "Computer science at school",
+      brand: "For secondary school lessons",
       brandSub: "Karel Hlas · SPŠ Tábor",
     },
     hero: {
@@ -1392,7 +1392,7 @@ export const t: Record<Lang, Dict> = {
       tagline:
         "For secondary schools. Free to download and edit, no sign-up.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
-      stats: "{files} files · {topics} topics · Word, PowerPoint, Python",
+      stats: "{files} files · {topics} topics · Year 1 secondary",
       sample: "Sample materials",
       ctaLessons: "Browse the materials",
       ctaContact: "About me",

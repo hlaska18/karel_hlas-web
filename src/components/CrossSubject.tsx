@@ -136,7 +136,7 @@ function SubjectTile({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="group flex w-full items-start gap-3 p-5 text-left"
+        className="group flex w-full items-center gap-3 p-5 text-left"
       >
         <span className="flex h-14 w-14 shrink-0 items-center justify-center">
           <Image
@@ -156,7 +156,7 @@ function SubjectTile({
           </span>
         </span>
         <ChevronDown
-          className={`mt-1 h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
 
