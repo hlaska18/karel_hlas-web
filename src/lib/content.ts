@@ -1104,7 +1104,7 @@ export const t: Record<Lang, Dict> = {
       lessons: "Výuka",
       contact: "Kontakt",
       bank: "Materiály do informatiky",
-      brand: "Do výuky na střední",
+      brand: "Materiály do výuky",
       brandSub: "Karel Hlas · SPŠ Tábor",
     },
     hero: {
@@ -1375,7 +1375,7 @@ export const t: Record<Lang, Dict> = {
       lessons: "Lessons",
       contact: "Contact",
       bank: "Materials for CS",
-      brand: "For secondary school lessons",
+      brand: "Teaching materials",
       brandSub: "Karel Hlas · SPŠ Tábor",
     },
     hero: {
