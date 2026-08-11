@@ -490,7 +490,9 @@ function MaterialRow({
     const hasLink = Boolean(it.href);
     const inner = (
       <>
-        <span className="flex w-[5.25rem] shrink-0">
+        {/* Odznak má pevnou šířku až od sm – na mobilu by spolu s textem
+            tlačítka nechal na název pár pixelů („P..“). */}
+        <span className="flex shrink-0 sm:w-[5.25rem]">
           <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-zinc-600 dark:text-zinc-300">
             <ExternalLink className="h-4 w-4 shrink-0" />
             {s.sourceBadge}
@@ -507,15 +509,16 @@ function MaterialRow({
           </span>
         </span>
         {hasLink && (
-          <span className="inline-flex h-9 shrink-0 items-center gap-1.5 rounded-full px-3 text-sm font-medium text-accent-700 transition group-hover:bg-accent-500/10 dark:text-accent-300">
-            {s.openSource}
-            <ExternalLink className="h-4 w-4" />
+          <span className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-2 sm:h-9 text-sm font-medium text-accent-700 transition group-hover:bg-accent-500/10 sm:px-3 dark:text-accent-300">
+            {/* Na mobilu jen ikona – celý popisek by ukrojil půlku řádku. */}
+            <span className="hidden sm:inline">{s.openSource}</span>
+            <ExternalLink className="h-4 w-4 shrink-0" />
           </span>
         )}
       </>
     );
     const cls =
-      "glass flex items-center gap-3 rounded-2xl px-4 py-3 sm:gap-4 sm:py-3.5" +
+      "glass flex items-start gap-3 rounded-2xl px-4 py-3 sm:items-center sm:gap-4 sm:py-3.5" +
       (hasLink ? " group transition hover:shadow-lg hover:shadow-accent-600/15" : "");
     return (
       <li>
@@ -536,7 +539,7 @@ function MaterialRow({
   const TypeIcon = typeIcon(t.key);
   return (
     <li className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5">
-      <span className="flex w-[5.25rem] shrink-0">
+      <span className="flex shrink-0 sm:w-[5.25rem]">
         <span
           title={t.label}
           className="inline-flex items-center gap-1.5 rounded-lg bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300"
@@ -577,7 +580,7 @@ function MaterialRow({
           onClick={() => onPreview(it)}
           title={s.previewTitle}
           aria-label={`${s.previewTitle}: ${label}`}
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
         >
           <Eye className="h-5 w-5" />
         </button>
@@ -587,7 +590,7 @@ function MaterialRow({
         download
         title={s.downloadTitle}
         aria-label={`${s.downloadTitle}: ${label}`}
-        className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
       >
         <Download className="h-5 w-5" />
       </a>
@@ -1012,7 +1015,7 @@ function LessonCard({
           onClick={handleShare}
           title={s.shareLesson}
           aria-label={`${s.shareLesson} ${num}`}
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
         >
           {copied ? <Check className="h-4 w-4 text-accent-600 dark:text-accent-400" /> : <Link2 className="h-4 w-4" />}
         </button>
@@ -1020,7 +1023,7 @@ function LessonCard({
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? s.collapseLesson : s.expandLesson}
-          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
         >
           <ChevronDown className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
