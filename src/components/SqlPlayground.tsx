@@ -249,7 +249,7 @@ export function SqlPlayground() {
         if (inserted && !bonus) addTo(COPIED_KEY, setCopied, lesson.id);
       } else {
         setStatus("wrong");
-        setWhy(diffMessage(mine, ref, ordered, Boolean(task.check)));
+        setWhy(diffMessage(mine, ref, ordered, Boolean(task.check), { zak: sql, ref: task.reference }));
       }
     } catch (e) {
       setError(sqlErrorCs(e instanceof Error ? e.message : String(e)));
@@ -391,7 +391,7 @@ export function SqlPlayground() {
         </div>
         {showHint && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{task.hint}</p>}
         {showHint && !checked && (
-          <p className="mt-2 text-xs text-zinc-400 dark:text-zinc-500">
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
             Řešení se nabídne, až jednou zkusíš Zkontrolovat.
           </p>
         )}

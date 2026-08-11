@@ -865,7 +865,7 @@ function FolderCard({
         onClick={() => setOpen((o) => !o)}
         aria-expanded={open}
         aria-label={`${open ? s.collapseFolder : s.expandFolder}: ${name}`}
-        className="flex w-full items-center gap-3 px-4 py-3 text-left"
+        className="transition active:scale-[0.99] active:duration-100 flex w-full items-center gap-3 px-4 py-3 text-left"
       >
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${

@@ -8,7 +8,10 @@ import { useEffect, useRef, useState, type CSSProperties, type ElementType, type
  *    IntersectionObserver → žádné měření pozice v JS (spolehlivé i v Safari),
  *    žádné blikání (skryto už před prvním vykreslením).
  *  - Bez JS / bez IO → obsah zůstává viditelný.
- *  - Reduced-motion (omezit pohyb v OS) animace NEvypíná – běží vždy.
+ *  - Pojistka: když observer do 1,2 s nespustí (pomalá síť, chunk se
+ *    nenačte, sekce mimo viewport), odhalí se obsah sám. Bez ní zůstávala
+ *    stránka do hydratace prázdná – na školní Wi-Fi klidně vteřiny.
+ *  - Reduced-motion řeší CSS: pohyb zmizí, prolnutí zůstane.
  *  - `stagger` = postupně odhalí přímé potomky.
  */
 export function Reveal({
@@ -53,7 +56,16 @@ export function Reveal({
       { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
     );
     io.observe(el);
-    return () => io.disconnect();
+    // Pojistka proti prázdné stránce, když observer z jakéhokoli důvodu
+    // nespustí – radši obsah bez animace než obsah žádný.
+    const pojistka = window.setTimeout(() => {
+      setShown(true);
+      io.disconnect();
+    }, 1200);
+    return () => {
+      window.clearTimeout(pojistka);
+      io.disconnect();
+    };
   }, []);
 
   const base = stagger ? "reveal-stagger" : "reveal-anim";

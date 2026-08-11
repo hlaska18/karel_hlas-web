@@ -186,12 +186,12 @@
   }
 }
 
-/* ───────────── Odhalení při scrollu (fade + zdola, stagger) ─────────────
-   Pozn.: animace běží VŽDY (i při vypnutém pohybu v OS) – vědomé rozhodnutí. */
+/* ───────────── Odhalení při scrollu (fade + zdola, stagger) ───────────── */
 @media all {
   /* Skrýváme jen když je JS + IntersectionObserver (třída .js-reveal na <html>).
      Bez JS / bez IO → nic se neskryje, obsah je vidět.
-     Pozn.: nastavení "omezit pohyb" v OS (reduced-motion) animace NEvypíná. */
+     Kdo má v systému omezený pohyb, dostane jen prolnutí bez posunu –
+     viz blok na konci souboru. */
 
   /* jednoduchý reveal celého bloku */
   .js-reveal .reveal-anim {
@@ -284,5 +284,32 @@
   }
   .timeline-in > li:nth-child(n + 9) {
     animation-delay: 0.51s;
+  }
+}
+
+/* ───────────── Omezený pohyb (nastavení v OS) ─────────────
+   Posun a poskakování pryč, prolnutí zůstává – obsah se pořád „objeví",
+   jen se nikam neposouvá. Důležité: nikdy nesmí zůstat opacity: 0. */
+@media (prefers-reduced-motion: reduce) {
+  .js-reveal .reveal-anim {
+    transform: none;
+    transition: opacity 0.2s ease;
+  }
+  .js-reveal .reveal-stagger > * {
+    opacity: 1;
+    transform: none;
+    animation: none;
+  }
+  .js-reveal .reveal-stagger.is-in > * {
+    animation: none;
+  }
+  .timeline-in > li {
+    animation: none;
+  }
+  .animate-bounce {
+    animation: none;
+  }
+  html {
+    scroll-behavior: auto;
   }
 }

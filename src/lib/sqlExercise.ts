@@ -145,30 +145,57 @@ export function sqlErrorCs(raw: string): string {
  * umíme říct rozdíl: počet řádků, počet sloupců, pořadí. Nikdy neprozradí
  * hodnoty – od toho je tlačítko s řešením.
  */
+/** Má dotaz podmínku WHERE? (na radu „oprav podmínku" musí nějaká existovat) */
+const maWhere = (q: string) => /\bwhere\b/i.test(q);
+/** Je v dotazu textová hodnota v apostrofech? */
+const maText = (q: string) => /'[^']*'/.test(q);
+
 export function diffMessage(
   mine: Rows | null,
   ref: Rows | null,
   ordered: boolean,
   /** Úkol s INSERT/UPDATE/DELETE – porovnává se stav tabulky, ne výstup dotazu. */
   mutating = false,
+  /** Dotazy žáka a reference – bez nich se rada o podmínce jen hádá. */
+  dotazy?: { zak: string; ref: string },
 ): string {
   const mv = mine?.values ?? [];
   const rv = ref?.values ?? [];
+  const zakMaWhere = dotazy ? maWhere(dotazy.zak) : true;
+  const refMaWhere = dotazy ? maWhere(dotazy.ref) : true;
 
   if (mv.length === 0 && rv.length > 0) {
-    return mutating
-      ? `Po tvém příkazu je tabulka prázdná, ale zůstat v ní mělo ${rv.length} ${radky(rv.length)}. Nejspíš ti chybí WHERE – bez něj příkaz zasáhne úplně všechny řádky.`
-      : `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.`;
+    if (mutating) {
+      return `Po tvém příkazu je tabulka prázdná, ale zůstat v ní mělo ${rv.length} ${radky(rv.length)}. Nejspíš ti chybí WHERE – bez něj příkaz zasáhne úplně všechny řádky.`;
+    }
+    if (!zakMaWhere) {
+      return `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínku v něm nemáš, takže se podívej, jestli vybíráš ze správné tabulky.`;
+    }
+    // Nejčastější tichá past: SQLite u českých znaků rozlišuje velikost písmen,
+    // takže 'čapek' nenajde nic a hláška o „přísné podmínce" by mátla.
+    const velikost = dotazy && maText(dotazy.zak)
+      ? " Pozor i na velká písmena – 'Čapek' a 'čapek' jsou pro databázi dvě různé hodnoty."
+      : "";
+    return `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.${velikost}`;
   }
   if (mv.length !== rv.length) {
     if (mutating) {
       // Směr chyby se u INSERTu a DELETu obrací, tak ho neuhodneme – jen počty.
       return `Po tvém příkazu má tabulka ${mv.length} ${radky(mv.length)}, správně jich má být ${rv.length}. Zkontroluj podmínku, příkaz zasáhl jiné řádky, než měl.`;
     }
-    const konec =
-      mv.length > rv.length
-        ? " Nejspíš ti chybí podmínka, která výběr zúží."
-        : " Podmínka nejspíš odfiltrovala i řádky, které tam patří.";
+    // Radit „oprav podmínku" tomu, kdo žádnou nenapsal, je matoucí – takový
+    // žák si nejspíš spletl tabulku (klasika: opíše ukázku z výkladu).
+    let konec: string;
+    if (!zakMaWhere && !refMaWhere) {
+      konec = " Zkontroluj, jestli vybíráš ze správné tabulky.";
+    } else if (!zakMaWhere) {
+      konec = " Zatím nemáš žádnou podmínku – bez WHERE dostaneš celou tabulku.";
+    } else {
+      konec =
+        mv.length > rv.length
+          ? " Podmínku máš, ale pouští dál moc řádků."
+          : " Podmínka nejspíš odfiltrovala i řádky, které tam patří.";
+    }
     return `Vrátil jsi ${mv.length} ${radky(mv.length)}, správně jich je ${rv.length}.${konec}`;
   }
 

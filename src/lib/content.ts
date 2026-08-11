@@ -1,12 +1,5 @@
 export type Lang = "cs" | "en";
 
-/**
- * Odkaz na sdílenou složku „Odevzdávárna" (školní SharePoint).
- * Necháváme pro případ, že bys ho chtěl znovu někam přidat.
- */
-export const SUBMIT_URL =
-  "https://spstabor-my.sharepoint.com/:f:/g/personal/hlas_sps-tabor_cz/IgBFhy4xgmXCRodNGHmGXstxAQ-g55Ax54MF6g1gE4AT0GA?e=cYZCrQ";
-
 export const SITE = {
   name: "Karel Hlas",
   fullName: "Mgr. Karel Hlas",

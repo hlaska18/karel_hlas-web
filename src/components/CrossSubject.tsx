@@ -136,7 +136,7 @@ function SubjectTile({
         type="button"
         onClick={onToggle}
         aria-expanded={open}
-        className="group flex w-full items-center gap-3 p-5 text-left"
+        className="group flex w-full items-center gap-3 p-5 text-left transition active:scale-[0.99] active:duration-100"
       >
         <span className="flex h-14 w-14 shrink-0 items-center justify-center">
           <Image
@@ -237,7 +237,7 @@ function MaterialFolder({
         type="button"
         onClick={() => setOpen((v) => !v)}
         aria-expanded={open}
-        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left"
+        className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition active:scale-[0.99] active:duration-100"
       >
         <Folder className="h-4 w-4 shrink-0 text-accent-600 dark:text-accent-400" />
         <span className="min-w-0 flex-1">

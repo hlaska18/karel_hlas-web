@@ -250,7 +250,16 @@ const TOPIC_SOURCE = [...COURSES].sort((a, b) => b.items.length - a.items.length
  * ucelené balíčky, které se do plánu nevejdou nebo se učí napříč obory –
  * bez nich by se v bance zobrazilo jen „Téma 10". Klíč = číslo složky.
  */
+/**
+ * Ruční názvy témat. Mají PŘEDNOST před plánem: číslo složky je jen pořadí
+ * v plánu 1L, takže téma 9 (Power BI) by se jinak jmenovalo „Časová rezerva
+ * a opakování" – což je název devátého bodu plánu, ne toho, co ve složce je.
+ */
 const TOPIC_EXTRA: Record<number, { cs: string; en: string }> = {
+  9: {
+    cs: "Data a jejich vizualizace",
+    en: "Data and its visualisation",
+  },
   10: {
     cs: "Umělá inteligence a odpovědné používání",
     en: "Artificial intelligence and responsible use",
@@ -258,11 +267,11 @@ const TOPIC_EXTRA: Record<number, { cs: string; en: string }> = {
 };
 
 function topicLabelOf(topicIndex: number): { cs: string; en: string } {
+  const rucni = TOPIC_EXTRA[topicIndex + 1];
+  if (rucni) return rucni;
   const item = TOPIC_SOURCE?.items[topicIndex] ?? COURSES.map((c) => c.items[topicIndex]).find(Boolean);
   if (item) return { cs: item.title.cs, en: item.title.en };
-  return (
-    TOPIC_EXTRA[topicIndex + 1] ?? { cs: `Téma ${topicIndex + 1}`, en: `Topic ${topicIndex + 1}` }
-  );
+  return { cs: `Téma ${topicIndex + 1}`, en: `Topic ${topicIndex + 1}` };
 }
 
 /**

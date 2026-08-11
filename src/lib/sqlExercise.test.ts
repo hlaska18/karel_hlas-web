@@ -151,7 +151,7 @@ describe("diffMessage", () => {
     const msg = diffMessage(rows([[1], [2], [3]]), rows([[1]]), false);
     expect(msg).toContain("3 řádky");
     expect(msg).toContain("je 1");
-    expect(msg).toContain("zúží");
+    expect(msg).toContain("pouští dál moc řádků");
   });
 
   it("points at an over-strict condition when nothing came back", () => {
@@ -241,5 +241,39 @@ describe("sqlErrorCs", () => {
 
   it("passes through anything it does not recognise", () => {
     expect(sqlErrorCs("something entirely new")).toBe("something entirely new");
+  });
+});
+
+describe("diffMessage – rada podle toho, co žák napsal", () => {
+  it("neradí opravovat podmínku, když ji žák nemá", () => {
+    // Klasika: žák opíše ukázku z výkladu a vybírá ze špatné tabulky.
+    const msg = diffMessage(rows([[1], [2]]), rows([[1]]), false, false, {
+      zak: "SELECT * FROM ctenari;",
+      ref: "SELECT * FROM knihy;",
+    });
+    expect(msg).toContain("správné tabulky");
+    expect(msg).not.toMatch(/podmínk[au] (nejspíš )?odfiltrovala|chybí ti podmínka/);
+  });
+
+  it("upozorní na chybějící WHERE, když ho reference má", () => {
+    const msg = diffMessage(rows([[1], [2], [3]]), rows([[1]]), false, false, {
+      zak: "SELECT nazev FROM knihy;",
+      ref: "SELECT nazev FROM knihy WHERE rok > 1900;",
+    });
+    expect(msg).toContain("nemáš žádnou podmínku");
+  });
+
+  it("u prázdného výsledku s textem v apostrofech zmíní velikost písmen", () => {
+    // SQLite u českých znaků rozlišuje 'Čapek' a 'čapek' – tichá past lekce 4.
+    const msg = diffMessage(rows([]), rows([[1], [2]]), false, false, {
+      zak: "SELECT nazev FROM knihy WHERE autor LIKE '%čapek%';",
+      ref: "SELECT nazev FROM knihy WHERE autor LIKE '%Čapek%';",
+    });
+    expect(msg).toContain("velká písmena");
+  });
+
+  it("bez kontextu dotazů se chová jako dřív", () => {
+    const msg = diffMessage(rows([[1], [2], [3]]), rows([[1]]), false);
+    expect(msg).toContain("3 řádky");
   });
 });
