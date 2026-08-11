@@ -538,7 +538,7 @@ function MaterialRow({
   const materialType = materialTypeOf(it);
   const TypeIcon = typeIcon(t.key);
   return (
-    <li className="glass flex items-center gap-3 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:gap-4 sm:py-3.5">
+    <li className="glass flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5">
       <span className="flex shrink-0 sm:w-[5.25rem]">
         <span
           title={t.label}
@@ -548,7 +548,9 @@ function MaterialRow({
           {it.ext}
         </span>
       </span>
-      <span className="min-w-0 flex-1">
+      {/* Na mobilu si text vezme skoro celý řádek, takže tlačítka spadnou pod něj.
+          Jinak by dva dotykové cíle po 44 px ukrojily z názvu skoro všechno. */}
+      <span className="min-w-0 flex-1 basis-[calc(100%-5rem)] sm:basis-auto">
         <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
         <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
           {materialType && <span className="text-zinc-400 dark:text-zinc-500">{materialType[lang]} · </span>}
@@ -574,6 +576,7 @@ function MaterialRow({
       <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-400 md:block">
         {fmtSize(it.sizeBytes, lang)}
       </span>
+      <span className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0 sm:gap-0">
       {previewable && (
         <button
           type="button"
@@ -594,6 +597,7 @@ function MaterialRow({
       >
         <Download className="h-5 w-5" />
       </a>
+      </span>
     </li>
   );
 }

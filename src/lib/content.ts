@@ -1109,7 +1109,7 @@ export const t: Record<Lang, Dict> = {
     },
     hero: {
       badge: "Materiály pro výuku informatiky · zdarma",
-      headline: "Hotové materiály do informatiky",
+      headline: "Hotové materiály nejen do informatiky",
       role: "Učitel informatiky a angličtiny",
       tagline:
         "Pro střední školy. Zdarma, ke stažení i úpravě, bez přihlašování.",
@@ -1380,7 +1380,7 @@ export const t: Record<Lang, Dict> = {
     },
     hero: {
       badge: "Materials for CS teaching · free",
-      headline: "Ready-made CS teaching materials",
+      headline: "Ready-made materials, not just for CS",
       role: "Computer Science & English Language Teacher",
       tagline:
         "For secondary schools. Free to download and edit, no sign-up.",
