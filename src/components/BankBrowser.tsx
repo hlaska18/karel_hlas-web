@@ -362,6 +362,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
+          aria-label={s.searchPlaceholder}
           placeholder={s.searchPlaceholder}
           className="glass-soft w-full rounded-2xl py-3.5 pl-12 pr-4 text-base text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-100"
         />
@@ -891,18 +892,26 @@ function FolderCard({
           className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
-      {open && (
-        <ul className="space-y-2 px-3 pb-3">
-          {items.map((it) => (
-            <MaterialRow
-              key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`}
-              it={it}
-              lang={lang}
-              onPreview={onPreview}
-            />
-          ))}
-        </ul>
-      )}
+      {/* Výška se animuje přes grid-template-rows, obsah zůstává v DOM –
+          jde to zavřít v půlce otevírání, na rozdíl od {open && …}. */}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <ul className="space-y-2 px-3 pb-3">
+            {items.map((it) => (
+              <MaterialRow
+                key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}|${it.label.cs}`}
+                it={it}
+                lang={lang}
+                onPreview={onPreview}
+              />
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1016,13 +1025,24 @@ function LessonCard({
           <ChevronDown className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
       </div>
-      {open && (
-        <ul className="space-y-2 px-3 pb-3">
-          {items.map((it) => (
-            <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={onPreview} />
-          ))}
-        </ul>
-      )}
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <ul className="space-y-2 px-3 pb-3">
+            {items.map((it) => (
+              <MaterialRow
+                key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}|${it.label.cs}`}
+                it={it}
+                lang={lang}
+                onPreview={onPreview}
+              />
+            ))}
+          </ul>
+        </div>
+      </div>
     </div>
   );
 }
@@ -1313,16 +1333,53 @@ function PreviewModal({
   const isPptx = PPTX.includes(item.ext);
   const label = L(item.label, lang);
 
+  const panelRef = useRef<HTMLDivElement | null>(null);
+
   useEffect(() => {
+    // Fokus musí zůstat uvnitř náhledu. Bez toho se Tabem propadne do
+    // seznamu POD překryvem a po zavření začíná procházení od hlavičky.
+    const vratitNa = document.activeElement as HTMLElement | null;
+    const ohnisko = () =>
+      Array.from(
+        panelRef.current?.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+        ) ?? [],
+      ).filter((el) => el.offsetParent !== null);
+
+    panelRef.current?.focus();
+
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") {
+        onClose();
+        return;
+      }
+      if (e.key !== "Tab") return;
+      const prvky = ohnisko();
+      if (!prvky.length) {
+        e.preventDefault();
+        panelRef.current?.focus();
+        return;
+      }
+      const prvni = prvky[0];
+      const posledni = prvky[prvky.length - 1];
+      const kde = document.activeElement;
+      if (e.shiftKey && (kde === prvni || kde === panelRef.current)) {
+        e.preventDefault();
+        posledni.focus();
+      } else if (!e.shiftKey && kde === posledni) {
+        e.preventDefault();
+        prvni.focus();
+      }
     };
+
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     return () => {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
+      // Fokus zpátky na tlačítko, ze kterého se náhled otevřel.
+      vratitNa?.focus?.();
     };
   }, [onClose]);
 
@@ -1335,8 +1392,10 @@ function PreviewModal({
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-6"
     >
       <div
+        ref={panelRef}
+        tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="glass flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl"
+        className="glass flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl outline-none"
       >
         <div className="flex items-center gap-3 border-b border-black/10 px-5 py-3.5 dark:border-white/10">
           <p className="min-w-0 flex-1 truncate font-medium text-zinc-900 dark:text-white">{label}</p>

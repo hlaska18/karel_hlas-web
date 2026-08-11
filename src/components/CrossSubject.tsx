@@ -160,8 +160,13 @@ function SubjectTile({
         />
       </button>
 
-      {open && (
-        <div className="space-y-4 border-t border-black/10 px-5 py-4 dark:border-white/10">
+      <div
+        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
+          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+        }`}
+      >
+        <div className="overflow-hidden">
+          <div className="space-y-4 border-t border-black/10 px-5 py-4 dark:border-white/10">
           {item.tool && files.length > 0 && (
             <div>
               <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
@@ -202,9 +207,10 @@ function SubjectTile({
                 ))}
               </ul>
             </div>
-          )}
+            )}
+          </div>
         </div>
-      )}
+      </div>
     </div>
   );
 }

@@ -302,6 +302,7 @@ export function SqlPlayground() {
               key={l.id}
               type="button"
               onClick={() => selectTask(l.id)}
+              aria-current={l.id === lessonId ? "step" : undefined}
               title={copied.has(l.id) ? `${l.title} (splněno s pomocí řešení)` : l.title}
               className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-sm font-semibold transition ${
                 l.id === lessonId
@@ -375,6 +376,7 @@ export function SqlPlayground() {
           <button
             type="button"
             onClick={() => setShowHint((v) => !v)}
+            aria-expanded={showHint}
             className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
           >
             <Lightbulb className="h-4 w-4" /> {showHint ? "Skrýt nápovědu" : "Nápověda"}
@@ -383,6 +385,7 @@ export function SqlPlayground() {
             <button
               type="button"
               onClick={() => setShowSolution((v) => !v)}
+              aria-expanded={showSolution}
               className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
             >
               <KeyRound className="h-4 w-4" /> {showSolution ? "Skrýt řešení" : "Ukázat řešení"}
@@ -440,6 +443,7 @@ export function SqlPlayground() {
           }}
           spellCheck={false}
           rows={4}
+          aria-label="Tvůj SQL dotaz"
           placeholder="Sem napiš svůj SQL dotaz…"
           className="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-3 font-mono text-sm text-zinc-900 shadow-inner outline-none transition focus:border-accent-400 dark:border-white/15 dark:bg-black/30 dark:text-zinc-100"
         />
@@ -475,7 +479,10 @@ export function SqlPlayground() {
 
       {/* Vyhodnocení */}
       {status === "correct" && (
-        <div className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-accent-500/15 px-4 py-3 text-accent-700 dark:text-accent-300">
+        <div
+          role="status"
+          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-accent-500/15 px-4 py-3 text-accent-700 dark:text-accent-300"
+        >
           <span className="inline-flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5" /> Správně!
           </span>
@@ -508,7 +515,10 @@ export function SqlPlayground() {
         </div>
       )}
       {status === "wrong" && (
-        <div className="flex items-start gap-2 rounded-2xl bg-amber-500/15 px-4 py-3 text-amber-700 dark:text-amber-300">
+        <div
+          role="status"
+          className="flex items-start gap-2 rounded-2xl bg-amber-500/15 px-4 py-3 text-amber-700 dark:text-amber-300"
+        >
           <XCircle className="mt-0.5 h-5 w-5 shrink-0" />
           <span className="leading-relaxed">{why}</span>
         </div>
@@ -516,7 +526,10 @@ export function SqlPlayground() {
 
       {/* Chyba z SQLite */}
       {error && (
-        <div className="rounded-2xl bg-red-500/10 px-4 py-3 font-mono text-sm text-red-600 dark:text-red-400">
+        <div
+          role="alert"
+          className="rounded-2xl bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400"
+        >
           {error}
         </div>
       )}
