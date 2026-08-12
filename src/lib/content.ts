@@ -1108,7 +1108,7 @@ export const t: Record<Lang, Dict> = {
       brandSub: "Karel Hlas · SPŠ Tábor",
     },
     hero: {
-      badge: "Materiály pro výuku informatiky · zdarma",
+      badge: "Materiály do výuky · zdarma",
       headline: "Hotové materiály nejen do informatiky",
       role: "Učitel informatiky a angličtiny",
       tagline:
@@ -1379,7 +1379,7 @@ export const t: Record<Lang, Dict> = {
       brandSub: "Karel Hlas · SPŠ Tábor",
     },
     hero: {
-      badge: "Materials for CS teaching · free",
+      badge: "Teaching materials · free",
       headline: "Ready-made materials, not just for CS",
       role: "Computer Science & English Language Teacher",
       tagline:

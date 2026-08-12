@@ -15,11 +15,11 @@ const display = Space_Grotesk({
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
   title: {
-    default: "Materiály pro výuku informatiky – Karel Hlas",
+    default: "Materiály do výuky – Karel Hlas",
     template: "%s – Karel Hlas",
   },
   description:
-    "Hotové materiály do hodin informatiky ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika (Excel, Word, Python, Power BI). Připravuje Karel Hlas, učitel na SPŠ Tábor.",
+    "Hotové materiály do hodin ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika (Excel, Word, Python, Power BI). Vznikly v informatice, použitelné i v dalších předmětech. Připravuje Karel Hlas, učitel na SPŠ Tábor.",
   keywords: [
     "Karel Hlas",
     "učitel informatiky",
@@ -38,9 +38,9 @@ export const metadata: Metadata = {
     languages: { cs: "/", en: "/en", "x-default": "/" },
   },
   openGraph: {
-    title: "Materiály pro výuku informatiky – Karel Hlas",
+    title: "Materiály do výuky – Karel Hlas",
     description:
-      "Hotové materiály do hodin informatiky ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika (Excel, Word, Python, Power BI).",
+      "Hotové materiály do hodin ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika (Excel, Word, Python, Power BI).",
     url: SITE.url,
     siteName: "Karel Hlas",
     locale: "cs_CZ",
@@ -49,9 +49,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "Materiály pro výuku informatiky – Karel Hlas",
+    title: "Materiály do výuky – Karel Hlas",
     description:
-      "Hotové materiály do hodin informatiky ke stažení a úpravě (Excel, Word, Python, Power BI).",
+      "Hotové materiály do hodin ke stažení a úpravě (Excel, Word, Python, Power BI).",
     // Obrázek generuje src/app/twitter-image.tsx (next/og).
   },
   robots: {
