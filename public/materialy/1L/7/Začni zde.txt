@@ -12,10 +12,10 @@ Pro učitele
   Podrobný plán všech 10 hodin, časový scénář, postup učitele,
   organizace práce, reflexe, hodnocení a řešení aktivit.
 - Testy A a B
-  Dvě varianty závěrečného testu a podklady k vyhodnocení.
-- Protokol souladu
-  Kontrola návaznosti metodiky, pracovního sešitu, prezentací
-  a digitálních podkladů.
+  Dvě varianty závěrečného testu, obě po 20 bodech.
+- Klíč k testům A a B
+  Očekávané odpovědi ke všem otázkám, rozdělení bodů, hranice
+  úspěchu a návod, jak hodnotit otevřené odpovědi.
 
 Pro žáky
 - Digitální pracovní sešit
@@ -34,11 +34,11 @@ Prezentace k hodinám
 
 Podklady k aktivitám
 - Soubory pro samostatnou práci žáků na počítači.
-- CSV otevřete v Excelu, TXT v textovém editoru.
+- CSV otevři v Excelu, TXT v textovém editoru.
 - Ke každé hodině je jeden podklad. Stránky, které používají obrázek,
-  jsou v malém ZIP archivu – rozbalte ho do jedné složky a složku images
-  nechte na místě, jinak se obrázky nezobrazí.
-- Stránky otevírejte v běžném prohlížeči; fungují i bez internetu.
+  jsou v malém ZIP archivu – rozbal ho do jedné složky a složku images
+  nech na místě, jinak se obrázky nezobrazí.
+- Stránky otevírej v běžném prohlížeči; fungují i bez internetu.
 
 
 MAPA MATERIÁLŮ K JEDNOTLIVÝM HODINÁM
@@ -82,7 +82,7 @@ MAPA MATERIÁLŮ K JEDNOTLIVÝM HODINÁM
 10. Závěrečná bezpečnostní výzva
     Prezentace: 10. Závěrečná bezpečnostní výzva
     Podklad: 10. Incident mediálního klubu (ZIP)
-    Ověření znalostí: Testy A a B
+    Ověření znalostí: Testy A a B, k nim Klíč k testům A a B
 
 
 BEZPEČNOST VÝUKOVÝCH UKÁZEK
@@ -105,10 +105,10 @@ nejde dohledat, je přesně ta věc, kterou má žák poznat.
 
 DOPORUČENÝ POSTUP PŘED PRVNÍ HODINOU
 
-1. Stáhněte si plány hodin a metodiku a projděte část k dané hodině.
-2. Vyzkoušejte odpovídající prezentaci a digitální podklad.
-3. Rozdejte nebo nasdílejte žákům digitální pracovní sešit.
-4. Materiály si můžete libovolně upravit pro svou třídu.
+1. Stáhni si plány hodin a metodiku a projdi část k dané hodině.
+2. Vyzkoušej odpovídající prezentaci a digitální podklad.
+3. Rozdej nebo nasdílej žákům digitální pracovní sešit.
+4. Materiály si můžeš libovolně upravit pro svou třídu.
 
 
 Materiály jsou zdarma. Připravil Karel Hlas, SPŠ strojní a stavební Tábor.

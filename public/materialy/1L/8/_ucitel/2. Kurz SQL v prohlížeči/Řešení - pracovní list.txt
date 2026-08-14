@@ -32,7 +32,7 @@ VÝBĚR DAT
    SELECT nazev, autor FROM knihy WHERE autor LIKE '%Čapek%';
    → 3 řádky: R.U.R., Bílá nemoc, Krakatit.
    Řešení bez procenta zprava ('%Čapek') vyjde stejně –
-   uznávejte ho, jen ukažte, proč je oboustranné bezpečnější.
+   uznávej ho, jen ukaž, proč je oboustranné bezpečnější.
 
 5) Dostupné knihy seřazené podle roku
    SELECT nazev, rok FROM knihy WHERE dostupna = 1 ORDER BY rok;
@@ -103,7 +103,7 @@ Poznámky k výuce
   Úlohy 9–10 jsou JOIN, úlohy 11–13 změna dat.
 • Slabším žákům stačí úlohy 1–8. JOIN je první místo, kde se
   třída rozpadne – proto kurz odděluje dvě tabulky (lekce 9)
-  od tří (lekce 10). Nespojujte to zpátky do jedné hodiny.
+  od tří (lekce 10). Nespojuj to zpátky do jedné hodiny.
 • Sloupec dostupna = 0 mají právě tři knihy: Kytice, Švejk
   a Temno. Tabulka vypujcky má ale 12 řádků – je to záznamník
   všech výpůjček, ne seznam těch aktuálních. Žáci se na ten
@@ -114,6 +114,6 @@ Poznámky k výuce
     (kurz tuhle hlášku překládá a rovnou radí, co s tím);
   – malé/velké písmeno: WHERE nazev = 'máj' nenajde nic;
   – dvojité uvozovky: WHERE zanr = "poezie" v SQLite PROJDE,
-    i když je to nesprávný zápis. Neopravujte to jako chybu
-    syntaxe, ale vysvětlete rozdíl – jinde (MySQL) to spadne.
+    i když je to nesprávný zápis. Neopravuj to jako chybu
+    syntaxe, ale vysvětli rozdíl – jinde (MySQL) to spadne.
 ===========================================================

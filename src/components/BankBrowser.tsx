@@ -711,7 +711,7 @@ function ToolLessons({
     const lessonsArr = [...map.entries()]
       .sort((a, b) => a[0] - b[0])
       .map(([no, its]) => ({ no, items: its }));
-    // Volné soubory v kořeni tématu (typicky „Začněte zde") patří NAD lekce –
+    // Volné soubory v kořeni tématu (typicky „Začni zde") patří NAD lekce –
     // je to rozcestník, kterým má člověk začít, ne dodatek na konci.
     return {
       lessons: lessonsArr,
@@ -769,7 +769,7 @@ function ToolLessons({
  * na disku v takové složce opravdu leží, jen z ní `materials.ts` dělá
  * publikum (odznak), ne skupinu – v seznamu by se jinak válely volně.
  *
- * Volné žákovské soubory (např. „Začněte zde") zůstávají nahoře nad složkami,
+ * Volné žákovské soubory (např. „Začni zde") zůstávají nahoře nad složkami,
  * stejně jako leží v kořeni balíčku.
  */
 /** Grupovat do složek má smysl, jakmile je co grupovat (aspoň jedna složka). */

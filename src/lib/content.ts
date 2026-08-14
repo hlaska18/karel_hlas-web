@@ -1112,7 +1112,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Hotové materiály nejen do informatiky",
       role: "Učitel informatiky a angličtiny",
       tagline:
-        "Pro střední školy. Zdarma, ke stažení i úpravě, bez přihlašování.",
+        "Pro střední školy. Moje soubory zdarma, ke stažení i úpravě a bez přihlašování. Převzaté cvičebnice vedou k jejich autorovi.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · 1. ročník SŠ",
       sample: "Ukázka materiálů",
@@ -1184,12 +1184,13 @@ export const t: Record<Lang, Dict> = {
       heading: "Nejen do informatiky",
       badge: "Nová sekce",
       intro:
-        "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikněte na svůj předmět – najdete hotové materiály ke stažení i nástroje do hodiny. U každého nástroje je napsané, jestli potřebuje účet, jestli je česky a co vás při první hodině zaskočí.",
+        "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikni na svůj předmět – u většiny najdeš nástroje do hodiny, u češtiny a matematiky navíc cvičebnice Karla Klatovského u něj na OneDrivu. U každého nástroje je napsané, jestli potřebuje účet, jestli je česky a co tě při první hodině zaskočí.",
       note:
-        "Nástroje jsou ověřené k srpnu 2026 – u cloudových služeb se podmínky mění, před hodinou si je proklikněte. Učíte jiný předmět a něco ve výuce používáte? Napište mi, rád to sem doplním a uvedu vás jako autora.",
-      inviteTitle: "Chybí tu váš předmět?",
-      inviteText: "Napište mi, co ve svých hodinách používáte.",
-      materialsLabel: "Materiály ke stažení",
+        "Nástroje jsou ověřené k srpnu 2026 – u cloudových služeb se podmínky mění, před hodinou si je proklikni. Učíš jiný předmět a něco ve výuce používáš? Napiš mi, rád to sem doplním a uvedu tě jako autora.",
+      inviteTitle: "Chybí tu tvůj předmět?",
+      inviteText: "Napiš mi, co ve svých hodinách používáš.",
+      // Ne „ke stažení“: v téhle sekci jsou zatím jen odkazy k autorovi.
+      materialsLabel: "Materiály k předmětu",
       toolsLabel: "Nástroje do hodin",
       download: "Stáhnout",
       items: [
@@ -1209,7 +1210,7 @@ export const t: Record<Lang, Dict> = {
               name: "GeoGebra",
               url: "https://www.geogebra.org/calculator",
               why: "Grafy funkcí, geometrie a dynamické konstrukce.",
-              note: "Zdarma, bez účtu, celé česky. Web ukazuje souhlas s reklamou – u nezletilých zvažte.",
+              note: "Zdarma, bez účtu, celé česky. Web ukazuje souhlas s reklamou – u nezletilých zvaž.",
             },
             {
               name: "Desmos",
@@ -1234,7 +1235,7 @@ export const t: Record<Lang, Dict> = {
               name: "Falstad Circuit Simulator",
               url: "https://www.falstad.com/circuit/",
               why: "Elektrické obvody s okamžitým průběhem napětí a proudu.",
-              note: "Zdarma, bez účtu. Výchozí je angličtina, češtinu přepnete v Možnosti → Change Language (není úplná).",
+              note: "Zdarma, bez účtu. Výchozí je angličtina, češtinu přepneš v Možnosti → Change Language (není úplná).",
             },
             {
               name: "GeoGebra",
@@ -1265,7 +1266,7 @@ export const t: Record<Lang, Dict> = {
               name: "MolView",
               url: "https://app.molview.com/",
               why: "Nakreslený vzorec převede rovnou do 3D modelu molekuly.",
-              note: "Zdarma, bez účtu. Načítá Google Analytics – při práci s nezletilými zvažte.",
+              note: "Zdarma, bez účtu. Načítá Google Analytics – při práci s nezletilými zvaž.",
             },
           ],
         },
@@ -1347,9 +1348,9 @@ export const t: Record<Lang, Dict> = {
     },
     contact: {
       kicker: "Kontakt",
-      heading: "Ozvěte se mi",
+      heading: "Ozvi se mi",
       intro:
-        "Nejraději vše domluvíme osobně nebo e-mailem. Konzultace si rezervujte přes EduPage.",
+        "Nejraději vše domluvíme osobně nebo e-mailem. Konzultace si rezervuj přes EduPage.",
       school: "Střední průmyslová škola strojní a stavební, Tábor",
       addressLabel: "Adresa",
       emailLabel: "Školní e-mail",
@@ -1383,7 +1384,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Ready-made materials, not just for CS",
       role: "Computer Science & English Language Teacher",
       tagline:
-        "For secondary schools. Free to download and edit, no sign-up.",
+        "For secondary schools. My own files are free to download and edit, no sign-up. Borrowed workbooks link to their author.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · Year 1 secondary",
       sample: "Sample materials",
@@ -1455,12 +1456,13 @@ export const t: Record<Lang, Dict> = {
       heading: "Not just for CS lessons",
       badge: "New section",
       intro:
-        "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject to find ready-made materials and tools for the lesson. Each tool says whether it needs an account, whether it is in Czech, and what will catch you out the first time.",
+        "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject: most have tools for the lesson, and Czech and Maths also link to Karel Klatovský's workbooks on his own OneDrive. Each tool says whether it needs an account, whether it is in Czech, and what will catch you out the first time.",
       note:
         "Tools verified as of August 2026 – cloud services change their terms, so click through before the lesson. Do you teach another subject and use something in class? Write to me and I will add it here with your name.",
       inviteTitle: "Missing your subject?",
       inviteText: "Tell me what you use in your lessons.",
-      materialsLabel: "Materials to download",
+      // Not „to download": this section only links to the author so far.
+      materialsLabel: "Materials for this subject",
       toolsLabel: "Tools for lessons",
       download: "Download",
       items: [

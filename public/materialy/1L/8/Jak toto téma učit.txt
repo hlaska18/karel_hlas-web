@@ -4,7 +4,7 @@
 Přehled pro vyučujícího: co je ve kterých složkách, v jakém
 pořadí to jde za sebou a kolik času to zabere.
 
-Celé téma = 3 vyučovací hodiny. Klidně jich odučte míň –
+Celé téma = 3 vyučovací hodiny. Klidně jich oduč míň –
 každá část dává smysl i samostatně.
 
 
@@ -17,7 +17,7 @@ cizí klíč. Proč se data nedrží v jednom velkém seznamu.
 Pro žáky:   Žákovský list
 Pro učitele: Metodika, Plán hodiny
 
-Když máte na téma jen dvě hodiny, tuhle část zkraťte na
+Když máš na téma jen dvě hodiny, tuhle část zkrať na
 úvodních 10 minut druhé hodiny – kurz si pojmy zavádí sám.
 
 
@@ -29,7 +29,7 @@ prvního SELECTu po mazání dat. Žák píše dotazy, hned vidí
 výsledek a appka mu řekne, co má špatně. Nic se neinstaluje,
 postup se ukládá v prohlížeči, takže se dá dokončit doma.
 
-Potřebujete: počítače s internetem. Nic víc.
+Potřebuješ: počítače s internetem. Nic víc.
 
 Pro žáky:   Pracovní list – SQL (tištěná verze týchž úloh)
 Pro učitele: Plán hodin – Kurz SQL, Řešení – pracovní list
@@ -48,7 +48,7 @@ SQL příkazy – ty už žák umí z kurzu. Nové je:
   • že si žák postaví vlastní tabulku, ne jen píše dotazy
     do hotové.
 
-Potřebujete: program DB Browser for SQLite. Zdarma, ale
+Potřebuješ: program DB Browser for SQLite. Zdarma, ale
 INSTALUJE SE. Když na školních počítačích instalovat nelze,
 existuje portable verze – a když ani ta ne, dá se tahle
 hodina vynechat, aniž by tématu něco zásadního chybělo.
@@ -61,7 +61,7 @@ Pro učitele: Řešení – úlohy
 SLOŽKA 4 – DATABÁZE KNIHOVNY                (sdílený soubor)
 -----------------------------------------------------------
 knihovna.db  – hotová databáze pro DB Browser
-knihovna.sql – ta samá jako textový zápis, když si chcete
+knihovna.sql – ta samá jako textový zápis, když si chceš
                ukázat, jak se tabulky vytvářejí a plní
 
 Je to přesně ta databáze, se kterou pracuje kurz v prohlížeči.

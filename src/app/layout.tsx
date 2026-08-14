@@ -3,6 +3,7 @@ import { Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
+import { SkipLink } from "@/components/SkipLink";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { SITE, SOCIALS } from "@/lib/content";
 
@@ -102,24 +103,27 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
+    // lang="cs" je výchozí: na /en ho níž přepíše skript ještě před vykreslením.
+    // Nastavit ho rovnou správně by šlo jen dvěma kořenovými layouty (route
+    // groups) – to jsem zkusil a Next 14 při nich neumí vlastní 404 pro neznámé
+    // adresy, takže by web přišel o vlastní chybovou stránku. Zůstává tedy
+    // skript + `useEffect` v LanguageProvider; v surovém HTML ze serveru je
+    // pořád "cs", což je pro čtečky i vyhledávače v pořádku až od chvíle, kdy
+    // běží JS. Až projekt přejde na Next 15, dá se to udělat pořádně.
     <html lang="cs" suppressHydrationWarning>
       <body
         className={`${display.variable} font-sans antialiased selection:bg-accent-500 selection:text-white`}
       >
-        {/* Před vykreslením označíme html.js-reveal (jen když je IntersectionObserver),
-            aby se odhalovací sekce skryly hned a odhalily až při scrollu (bez blikání). */}
+        {/* Dvě věci ještě před vykreslením: jazyk podle adresy (aby čtečka
+            nečetla anglickou stránku česky) a html.js-reveal pro odhalovací
+            sekce (jen když je IntersectionObserver), aby se neblikalo. */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{if('IntersectionObserver' in window)document.documentElement.classList.add('js-reveal')}catch(e){}",
+              "try{var p=location.pathname;document.documentElement.lang=(p==='/en'||p.indexOf('/en/')===0)?'en':'cs';if('IntersectionObserver' in window)document.documentElement.classList.add('js-reveal')}catch(e){}",
           }}
         />
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-lg focus:bg-accent-600 focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
-        >
-          Přeskočit na obsah
-        </a>
+        <SkipLink />
         <Providers>{children}</Providers>
         <script
           type="application/ld+json"

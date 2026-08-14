@@ -22,7 +22,7 @@ souborem (zápis změn) a o stavbě vlastní tabulky.
    Kontrola: SELECT nazev, dostupna FROM knihy WHERE nazev='Temno';
    → dostupna = 1.
 
-   Jádro úlohy je to zavření bez uložení. Nechte je to opravdu
+   Jádro úlohy je to zavření bez uložení. Nech je to opravdu
    udělat – věta „změny se musí zapsat“ jim nic neřekne, dokud
    o tu změnu jednou nepřijdou.
    ⚠ Typická chyba: UPDATE bez WHERE přepíše VŠECHNY řádky.
@@ -57,7 +57,7 @@ souborem (zápis změn) a o stavbě vlastní tabulky.
 -----------------------------------------------------------
 Poznámky k výuce
 -----------------------------------------------------------
-• Když na školních počítačích nejde nic instalovat, zkuste
+• Když na školních počítačích nejde nic instalovat, zkus
   portable verzi DB Browseru. Pokud ani to ne, dá se tahle
   hodina vynechat: příkazy z úloh 1–3 žák procvičí v kurzu,
   přijde jen o CREATE TABLE a o práci se souborem.
