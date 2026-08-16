@@ -8,7 +8,7 @@ Rozsah kurzu
 - hodiny 7-8: infografika a závěrečný výstup s obhajobou
 
 Obsah
-- 8 plánů hodin v metodice
+- 8 plánů hodin v metodice + nepovinný bonus (RGB a CMYK, ztrátová komprese zvuku, metadata fotografie)
 - 8 pracovních listů v digitálním pracovním sešitu
 - 8 prezentací po 7 snímcích, celkem 56 snímků s poznámkami
 - 5 interaktivních modulů v offline laboratoři

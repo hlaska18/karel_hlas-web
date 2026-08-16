@@ -41,6 +41,9 @@ MAPA HODIN
 6. Základy práce se zvukem a videem          laboratoř, modul 05 + media
 7. Infografika a prezentace                  Canva
 8. Závěrečný výstup a obhajoba               dle volby studenta
+BONUS (nepovinná)                            10. Bonus – co se do osmi
+   RGB a CMYK, ztrátová komprese zvuku,          hodin nevešlo.txt
+   metadata fotografie
 
 POTŘEBNÝ SOFTWARE
 Hodiny 1, 2, 3 a 6 vystačí s běžným prohlížečem a přehrávačem — nic se neinstaluje.

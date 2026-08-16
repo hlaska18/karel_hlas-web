@@ -147,6 +147,7 @@ const NAME_EN: Record<string, string> = {
   "Zvuk a video": "Audio and video",
   "Infografika v Canvě": "Infographics in Canva",
   "Závěrečný výstup": "Final piece",
+  "Bonus – co se do osmi hodin nevešlo": "Bonus – what did not fit into eight lessons",
   "Rastrová a vektorová grafika": "Raster and vector graphics",
   "Rozlišení, barvy a barevná hloubka": "Resolution, colour and colour depth",
   "Formáty obrázků a komprese": "Image formats and compression",

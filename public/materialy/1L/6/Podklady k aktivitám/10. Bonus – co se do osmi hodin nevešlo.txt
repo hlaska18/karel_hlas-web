@@ -1,0 +1,80 @@
+BONUS — CO SE DO OSMI HODIN NEVEŠLO
+
+Tahle lekce je NEPOVINNÁ. Osm hodin bloku funguje i bez ní.
+Jsou tu tři věci, které se do nabité minutáže nevešly, ale potkáš je
+prakticky každý den. Dají se projít najednou za 45 minut, nebo po částech
+jako patnáctiminutové vsuvky do hodin 2, 6 a 8.
+
+
+ČÁST A — PROČ TISK NEVYPADÁ JAKO DISPLEJ
+
+Otevři obrazky/michani_barev_rgb_cmy.png.
+
+Vlevo se míchá SVĚTLO: obrazovka svítí červeně, zeleně a modře a barvy
+se SČÍTAJÍ. Když svítí všechny tři naplno, vidíš bílou.
+Vpravo se míchá BARVIVO: papír je bílý a inkoust z něj barvy ODČÍTÁ.
+Když nasypeš všechny tři, dostaneš tmavou, ne bílou.
+
+1. Co udělá displej, aby ukázal černou? A co udělá tiskárna?
+2. Proč má tiskárna kromě azurové, purpurové a žluté i černou náplň,
+   když by ji teoreticky mohla namíchat?
+3. Vezmi nejsytější zelenou, jakou najdeš na obrazovce, a zkus si
+   představit, že ji máš vytisknout. Proč to nedopadne úplně stejně?
+
+Zapamatuj si pravidlo: co svítí, míchá se sčítáním (RGB); co leží na
+papíře, míchá se odčítáním (CMYK). Proto se sytě zelená nebo výrazně
+oranžová po vytištění „zklidní" — tiskárna na ně prostě nedosáhne.
+
+
+ČÁST B — ZTRÁTOVÁ KOMPRESE ZVUKU
+
+V hodině 6 jsi porovnával/a nekomprimované WAV soubory. Hudba, kterou
+posloucháš, ale nekomprimovaná není.
+
+Poslechni si dvojici (media/):
+  zvuk_44100Hz_16bit.wav     258,4 kB
+  zvuk_44100Hz_AAC.m4a        16,3 kB
+
+Je to týž zvuk, jen druhý prošel ztrátovou kompresí AAC. Je to sourozenec
+známějšího MP3 — princip je stejný, jen novější a účinnější. Používá ho
+YouTube i telefony.
+
+1. Kolikrát je soubor menší? Spočítej.
+2. Slyšíš rozdíl? Zkus to nejdřív bez sluchátek a pak se sluchátkami.
+3. Ztrátová komprese zahazuje to, co člověk pravděpodobně nezaslechne —
+   třeba tišší tón hned vedle hlasitého. Proč to funguje líp u hudby
+   než u obrázku loga s ostrými hranami?
+4. Kdy má smysl nechat si WAV a kdy stačí AAC nebo MP3?
+
+
+ČÁST C — CO O SOBĚ PROZRADÍ FOTKA
+
+Otevři obrazky/foto_s_exif.jpg a podívej se na vlastnosti souboru
+(ve Windows pravým tlačítkem → Vlastnosti → Podrobnosti, na macOS
+Cmd+I nebo v Náhledu Nástroje → Zobrazit inspektor).
+
+1. Jaký přístroj snímek pořídil a kdy?
+2. Najdi položku GPS. Kde snímek vznikl? Zkus souřadnice zadat do mapy.
+3. Otevři vedle toho obrazky/foto_original.png. Co o něm zjistíš?
+   Čím to je?
+
+Těmhle údajům se říká metadata (EXIF). Fotoaparát i telefon je zapisují
+do souboru automaticky — datum, přístroj, nastavení, a pokud to nevypneš,
+i polohu. Fotka odeslaná ve zprávě je tedy může nést s sebou.
+
+4. Vyfoť něco telefonem a zjisti, jestli tvůj telefon ukládá polohu.
+5. Napiš dvě situace, kdy je to užitečné, a dvě, kdy to nechceš.
+6. Zjisti, jak se poloha u fotek ve tvém telefonu vypíná.
+
+POZOR: údaje v foto_s_exif.jpg jsou vymyšlené a zapsali jsme je do souboru
+schválně, aby bylo co zkoumat. Fotografie je kreslená, není na ní nikdo
+skutečný a souřadnice neukazují na ničí bydliště.
+
+
+CO SI Z BONUSU ODNÉST
+• Obrazovka barvy sčítá, papír je odčítá — proto se tisk a displej nikdy
+  neshodnou úplně.
+• Ztrátová komprese zvuku zahazuje to, co pravděpodobně neuslyšíš;
+  šestnáctkrát menší soubor je za to slušná cena.
+• Fotka není jen obrázek. Nese i datum, přístroj a někdy polohu — a to
+  jde zjistit i o fotce, kterou jsi poslal/a dál.
