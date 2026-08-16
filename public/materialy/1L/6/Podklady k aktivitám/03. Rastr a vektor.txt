@@ -1,0 +1,25 @@
+RASTR NEBO VEKTOR — ROZHODNI A ZDŮVODNI
+
+ČÁST A — POZOROVÁNÍ
+Otevři v laboratoři modul „Rastr vs. vektor" a poté tyto soubory:
+  obrazky/rastr_64px.png                 malý rastrový obrázek
+  obrazky/rastr_64px_zvetseno_8x.png     tentýž obrázek zvětšený 8×
+  obrazky/logo_vektor.svg                stejný motiv jako vektor
+Zvětši SVG v prohlížeči na 400 % (Ctrl a kolečko myši).
+
+1. Co se stane s okraji rastrového obrázku při zvětšení?
+2. Co se stane s okraji vektorového obrázku při zvětšení? Proč?
+3. Porovnej velikosti souborů logo_png.png a logo_vektor.svg. Který je menší a čím to je?
+
+ČÁST B — ROZHODNI, CO POUŽIJEŠ
+U každého zadání napiš RASTR nebo VEKTOR a jednu větu proč.
+  1. Logo školy, které půjde na vizitku i na plachtu 3 × 2 m.
+  2. Fotografie třídy do školního časopisu.
+  3. Ikona v mobilní aplikaci.
+  4. Sken vysvědčení.
+  5. Schéma zapojení do učebnice.
+  6. Náhledový obrázek k článku na webu.
+
+ČÁST C — HRANIČNÍ PŘÍPAD
+Fotografie se dá „převést na vektor" automatickou funkcí (trasování).
+Napiš, co se při tom se snímkem stane a kdy to má a nemá smysl.

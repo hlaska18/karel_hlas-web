@@ -1,0 +1,34 @@
+ZAČNI TADY — PRO STUDENTA
+Počítačová grafika a práce s multimédii · 8 hodin
+
+Tenhle soubor je pro tebe, ne pro učitele. Použij ho, když jsi byl/a nemocný/á,
+když dobíráš zameškanou hodinu nebo když se připravuješ na test.
+
+CO POTŘEBUJEŠ
+Počítač s prohlížečem. Pro hodiny 4 a 5 navíc GIMP a Inkscape
+(oba jsou zdarma ke stažení). Pro hodinu 7 přístup do Canvy.
+Všechny ostatní materiály jsou ve složce 03 a fungují bez internetu.
+
+JAK NA TO
+1. Otevři pracovní sešit: Pro žáky/Digitální pracovní sešit.docx
+2. Najdi v něm pracovní list s číslem hodiny, kterou jsi zameškal/a.
+3. Přečti si odstavec „Proč se to dnes učíš?" — vysvětlí, k čemu ti hodina je.
+4. Projdi „Tři opěrné body" a udělej počítačovou aktivitu podle popisu.
+5. Na konci si přečti „Co sis z této hodiny měl/a odnést" a zkus si to říct
+   vlastními slovy, aniž by ses díval/a zpět.
+
+CO MŮŽEŠ UDĚLAT SÁM/SAMA A CO NE
+Sám/sama zvládneš: hodiny 1, 2, 3 a 6 — laboratoř
+Podklady k aktivitám/01. Laboratoř grafiky.html
+otevřeš dvojklikem a proklikáš celou. Zvládneš i hodinu 7, pokud máš Canvu.
+Potřebuješ pomoc s: hodinami 4 a 5, pokud nemáš doma GIMP nebo Inkscape.
+Zapiš si, co jsi nemohl/a udělat, a dodělej to ve škole.
+
+KDYŽ SI NEVÍŠ RADY
+Nezůstávej u toho déle než 15 minut. Napiš si konkrétní otázku
+(ne „nerozumím tomu", ale „nechápu, proč je u loga PNG menší než JPEG")
+a zeptej se učitele nebo spolužáka. Přesná otázka je půlka odpovědi.
+
+PŘED TESTEM
+Projdi jen bloky „Co sis z této hodiny měl/a odnést" ze všech hodin.
+Je to nejrychlejší způsob, jak si ověřit, co ti chybí.

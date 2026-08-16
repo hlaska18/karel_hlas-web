@@ -1,0 +1,55 @@
+POČÍTAČOVÁ GRAFIKA A PRÁCE S MULTIMÉDII
+Ucelený výukový balíček pro 1. ročník SŠ · 8 × 45 minut
+
+CÍL BLOKU
+Student zná principy počítačové grafiky a multimediálních formátů
+a umí tvořit grafiku a pracovat s multimédii.
+
+DOPORUČENÝ START
+1. Otevři Pro učitele/Plány hodin a metodika.docx.
+2. Vyzkoušej Podklady k aktivitám/01. Laboratoř grafiky.html.
+3. Ověř GIMP (hodina 4), Inkscape (hodina 5) a přístup do Canvy (hodina 7).
+   K hodině 6 sežeň sluchátka — bez nich rozdíl mezi vzorkovacími
+   frekvencemi ve třídě neuslyší nikdo.
+4. Projdi Pro učitele/Kontrola úplnosti.txt — jsou v ní tři věci,
+   které je potřeba vyzkoušet na školním počítači, včetně časování.
+4. Studentům zpřístupni pracovní sešit a celou složku 03.
+   Spolu se sešitem jim dej i Začni tady.txt —
+   je psaný přímo studentovi a slouží při absenci i k opakování.
+
+STRUKTURA
+Pro učitele
+   - plány 8 hodin a metodika,
+   - hodnocení, testy A/B a řešení,
+   - protokol souladu.
+Pro žáky
+   - digitální pracovní sešit pro všech 8 hodin.
+Podklady k aktivitám
+   - offline laboratoř s pěti moduly,
+   - vzorové obrázky, zvuky a videa,
+   - zadání ke každé hodině,
+   - ukázky k posouzení.
+Prezentace k hodinám
+   - 8 prezentací po 7 snímcích s poznámkami pro vyučujícího.
+
+MAPA HODIN
+1. Rastrová a vektorová grafika              laboratoř, modul 01
+2. Rozlišení, barvy a barevná hloubka        laboratoř, modul 04
+3. Formáty obrázků a komprese dat            laboratoř, moduly 02 a 03
+4. Úprava fotografie v GIMPu                 GIMP
+5. Vektorová značka v Inkscapu               Inkscape
+6. Základy práce se zvukem a videem          laboratoř, modul 05 + media
+7. Infografika a prezentace                  Canva
+8. Závěrečný výstup a obhajoba               dle volby studenta
+
+POTŘEBNÝ SOFTWARE
+Hodiny 1, 2, 3 a 6 vystačí s běžným prohlížečem a přehrávačem — nic se neinstaluje.
+Hodina 4 vyžaduje GIMP, hodina 5 Inkscape, hodina 7 přístup do Canvy.
+Ke každé z nich je v metodice uvedena náhradní varianta pro případ,
+že nástroj není k dispozici.
+
+PŮVOD MATERIÁLŮ A BEZPEČNOST
+Všechny obrázky, zvuky i videa v balíčku byly vytvořeny programově přímo pro tuto sadu.
+Neobsahují žádné osoby ani cizí dílo. Laboratoř funguje offline a nic neodesílá.
+Do studentských výstupů nevkládej cizí obrázky bez ověřené licence
+ani fotografie spolužáků bez jejich souhlasu.

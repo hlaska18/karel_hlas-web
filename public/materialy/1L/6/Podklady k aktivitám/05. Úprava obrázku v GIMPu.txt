@@ -1,0 +1,23 @@
+ÚPRAVA RASTROVÉHO OBRÁZKU — GIMP
+
+Pracuj se souborem obrazky/foto_original.png. Původní soubor nepřepisuj.
+
+ÚKOLY
+1. Ořez na poměr 16:9 tak, aby slunce nebylo přesně uprostřed.
+2. Uprav jas a kontrast (Barvy → Jas a kontrast). Zapiš hodnoty, které jsi použil/a.
+3. Přidej novou vrstvu s textovým popiskem „Ukázka — vlastní úprava".
+4. Ulož pracovní verzi jako uprava.xcf (zachová vrstvy).
+5. Vyexportuj tři výstupy:
+     export_web.jpg     šířka 1200 px, JPEG kvalita 75
+     export_tisk.png    plná velikost, PNG
+     export_maly.jpg    šířka 600 px, JPEG kvalita 50
+
+ZÁZNAM
+U každého exportu zapiš rozměry v pixelech, velikost souboru v kB
+a k čemu se výstup hodí.
+
+OTÁZKY
+1. Proč se ukládá pracovní soubor .xcf, když už máme .jpg?
+2. Co se stane s vrstvami při exportu do JPEG?
+3. Který z tvých tří exportů bys poslal/a do školního časopisu a proč?
+4. Vysvětli, proč nelze ztrátovou kompresi vzít zpět.

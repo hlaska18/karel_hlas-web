@@ -1,0 +1,10 @@
+﻿Soubor;Typ;Rozliseni;Snimku_za_s;Format;Poznamka;Velikost_kB;Co_slysim_nebo_vidim;Kdy_to_staci
+video_1280x720_30fps.mp4;video;1280x720;30;H.264 / MP4;porovnávací základ;256.9;;
+video_640x360_30fps.mp4;video;640x360;30;H.264 / MP4;poloviční rozměry;48.6;;
+video_1280x720_10fps.mp4;video;1280x720;10;H.264 / MP4;méně snímků za sekundu;273.3;;
+video_1280x720_silna_komprese.mp4;video;1280x720;30;H.264 / MP4;silná komprese;16.5;;
+ukazka_animace.gif;animace;480x270;10;GIF;bez zvuku, omezené barvy;71.1;;
+zvuk_44100Hz_16bit.wav;zvuk;–;–;WAV 44 100 Hz / 16 bit;plná kvalita;258.4;;
+zvuk_22050Hz_16bit.wav;zvuk;–;–;WAV 22 050 Hz / 16 bit;poloviční vzorkování;129.2;;
+zvuk_8000Hz_16bit.wav;zvuk;–;–;WAV 8 000 Hz / 16 bit;telefonní kvalita;46.9;;
+zvuk_44100Hz_8bit.wav;zvuk;–;–;WAV 44 100 Hz / 8 bit;nižší bitová hloubka;129.2;;

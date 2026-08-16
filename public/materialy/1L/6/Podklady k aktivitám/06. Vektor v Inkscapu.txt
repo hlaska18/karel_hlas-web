@@ -1,0 +1,21 @@
+VEKTOROVÁ TVORBA — INKSCAPE
+
+CÍL
+Vytvoř jednoduchou piktogramovou značku pro fiktivní školní klub.
+Musí být čitelná ve velikosti 16 px i 2 m.
+
+POSTUP
+1. Nastav plátno 800 × 800 px.
+2. Značku sestav pouze ze základních tvarů: kruh, obdélník, mnohoúhelník, cesta.
+3. Použij nejvýše tři barvy. Zapiš jejich HEX kódy.
+4. Text převeď na cesty (Cesta → Objekt na cestu) a napiš, proč se to dělá.
+5. Ulož jako znacka.svg.
+6. Vyexportuj znacka_512.png a znacka_16.png.
+
+KONTROLA ČITELNOSTI
+Zmenši náhled na 16 px. Pokud značku nepoznáš, zjednoduš ji a uveď, co jsi odebral/a.
+
+OTÁZKY
+1. Kolik kB má tvůj svg a kolik png? Čím je rozdíl způsoben?
+2. Co se stane s SVG, když ho otevřeš v textovém editoru?
+3. Proč se text ve vektorové grafice převádí na cesty před předáním do tiskárny?

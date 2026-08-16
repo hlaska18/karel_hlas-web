@@ -1,0 +1,36 @@
+ZÁVĚREČNÝ VÝSTUP — VYBER JEDNU VARIANTU
+
+A) PLAKÁT NA ŠKOLNÍ AKCI
+   Fiktivní akce podle vlastní volby. Musí obsahovat upravenou fotografii
+   a alespoň jeden vektorový prvek. Formát A3 na výšku.
+
+B) ZNAČKA A INFORMAČNÍ KARTA KLUBU
+   Vektorová značka fiktivního klubu plus karta A5 s programem.
+   Značka musí být čitelná i ve velikosti 16 px.
+
+C) INFOGRAFIKA Z VLASTNÍCH DAT
+   Malý průzkum ve třídě (nejméně 15 odpovědí) zpracovaný podle pravidel
+   z hodiny 7. Nepoužívej jména ani jiné osobní údaje respondentů.
+
+POVINNÉ PRVKY U VŠECH VARIANT
+1. Správně zvolený typ grafiky pro každý prvek.
+2. Export ve formátu a rozlišení, které odpovídá zamýšlenému použití.
+3. Vyplněný technický list.
+4. Tři věty obhajoby.
+
+TECHNICKÝ LIST
+   Rozměry výstupu v pixelech nebo mm:
+   Použité formáty a proč právě ty:
+   Velikosti odevzdaných souborů:
+   Použité nástroje:
+   Původ použitých obrázků a jejich licence:
+
+TŘI VĚTY OBHAJOBY
+   1. Co jsem zvolil/a.
+   2. Proč právě to.
+   3. Co bych udělal/a jinak.
+
+PRAVIDLA PŮVODU
+Použij vlastní tvorbu nebo obrázky z balíčku. Cizí obrázek smíš použít jen tehdy,
+pokud ověříš licenci a uvedeš autora podle jejích podmínek.
+Fotografie spolužáků jen s jejich souhlasem.

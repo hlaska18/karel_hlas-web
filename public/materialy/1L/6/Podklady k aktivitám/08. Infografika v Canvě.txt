@@ -1,0 +1,28 @@
+INFOGRAFIKA — ZADÁNÍ A PRAVIDLA
+
+DATA (fiktivní školní průzkum, 120 respondentů)
+  Jak se dostáváš do školy?
+     pěšky 34, na kole 12, MHD 51, autem 18, jinak 5
+  Kolik času denně trávíš na mobilu?
+     do 1 h: 9   1–2 h: 27   2–4 h: 55   více než 4 h: 29
+  Zdroj: vlastní třídní průzkum, květen 2026, nereprezentativní vzorek jedné školy.
+
+ÚKOL
+Vytvoř jednu infografiku formátu A4 na výšku, která poctivě zobrazí obojí.
+
+POVINNÉ PRVKY
+1. Nadpis, který říká zjištění, ne jen téma.
+2. Oba grafy se správně přiřazenými hodnotami.
+3. Uvedený zdroj, velikost vzorku a datum.
+4. Nejvýše dva druhy písma a nejvýše čtyři barvy.
+5. Poznámka o omezení dat (jedna škola, malý vzorek).
+
+ZAKÁZANÉ POSTUPY
+  useknutá osa, která zveličí rozdíl
+  3D efekt u koláčového grafu
+  procenta, která nedávají 100 %, bez vysvětlení
+  dekorace, která nenese informaci
+
+EXPORT
+Ulož jako infografika.pdf a infografika.png (šířka alespoň 1500 px).
+Zapiš, který formát bys poslal/a na nástěnku a který do e-mailu, a proč.

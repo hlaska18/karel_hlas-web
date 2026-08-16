@@ -1,0 +1,28 @@
+ZVUK A VIDEO — POROVNÁNÍ PARAMETRŮ
+
+ČÁST A — ZVUK
+Nasaď si sluchátka. Přes reproduktor ve třídě rozdíl neuslyšíš.
+Poslechni si postupně (media/):
+  zvuk_44100Hz_16bit.wav    zvuk_22050Hz_16bit.wav
+  zvuk_8000Hz_16bit.wav     zvuk_44100Hz_8bit.wav
+1. Seřaď je podle kvality a zapiš, čeho sis všiml/a.
+2. Který parametr se změnil mezi 1. a 3. souborem? A mezi 1. a 4.?
+3. Vzorkovací frekvence 44 100 Hz zaznamená tóny přibližně do 22 kHz.
+   Kam až sahá 8 000 Hz? Co to udělá s vysokými tóny?
+4. Doplň do 04. Parametry médií.csv velikosti a svá pozorování.
+
+ČÁST B — VIDEO
+Přehraj (media/):
+  video_1280x720_30fps.mp4            video_640x360_30fps.mp4
+  video_1280x720_10fps.mp4            video_1280x720_silna_komprese.mp4
+1. Porovnej 30fps a 10fps verzi. Co se změnilo na plynulosti pohybu?
+2. Porovnej velikosti obou souborů. Odpovídá to tvému očekávání?
+   Pozor: při stejném nastavení kvality dostane každý snímek při nižší frekvenci
+   více dat, takže soubor nemusí být menší. Vysvětli vlastními slovy proč.
+3. Porovnej 1280×720 a 640×360. O kolik se zmenšil soubor? A o kolik pixelů?
+4. U silně komprimované verze najdi místo, kde je poškození nejvíc vidět. Popiš ho.
+
+ČÁST C — KONTEJNER A KODEK
+Soubor .mp4 je kontejner, H.264 je kodek.
+Vysvětli rozdíl přirovnáním a napiš, proč se soubor někdy nepřehraje,
+i když má správnou příponu.
