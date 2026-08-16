@@ -11,6 +11,6 @@ Logo;logo_jpeg_q40.jpg;JPEG (ztrátová);18682;18.2;kvalita 40 – všimni si ok
 Logo;logo_png.png;PNG (bezztrátová);5227;5.1;ostré hrany;;
 Logo;logo_gif16.gif;GIF (16 barev);4446;4.3;stačí málo barev;;
 Barevná hloubka;hloubka_24bit.png;24 bit;297185;290.2;16777216 barev;;
-Barevná hloubka;hloubka_8bit.png;8 bit;259280;253.2;256 barev;;
-Barevná hloubka;hloubka_4bit.png;4 bit;108167;105.6;16 barev;;
-Barevná hloubka;hloubka_1bit.png;1 bit;8163;8.0;2 barev;;
+Barevná hloubka;hloubka_8bit.png;8 bit;126323;123.4;256 barev;;
+Barevná hloubka;hloubka_4bit.png;4 bit;73521;71.8;16 barev;;
+Barevná hloubka;hloubka_1bit.png;1 bit;1808;1.8;2 barev;;

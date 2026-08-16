@@ -201,6 +201,7 @@ export const TOOL_ORDER = [
   "Word",
   "Excel",
   "Python",
+  "Grafika a multimédia",
   "Internet a bezpečnost",
   "Umělá inteligence",
   "Databáze",
@@ -304,6 +305,9 @@ function toolOf(hay: string, ext: string): string {
   if (/umělá inteligence|ai fluency|práce s ai/.test(h)) return "Umělá inteligence";
   if (/power\s?bi/.test(h) || ext === "pbix") return "Power BI";
   if (/databáz|databaz|powerquery|access/.test(h) || ext === "accdb") return "Databáze";
+  // Nad Excelem schválně: obě tabulky grafiky jsou .csv, takže by je jinak
+  // pohltilo pravidlo pro Excel (ověřeno – přesně to se dělo).
+  if (/grafik|multimédi|multimedi|rastr|vektor/.test(h)) return "Grafika a multimédia";
   if (/excel|tabulkov/.test(h) || ["xlsx", "xlsm", "xls", "csv"].includes(ext)) return "Excel";
   if (/word|textov[ýy] procesor/.test(h)) return "Word";
   if (/python|programován|algoritm/.test(h) || ["py", "ipynb"].includes(ext)) return "Python";

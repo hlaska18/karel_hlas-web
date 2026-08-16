@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { BarChart3, Database, Files, FileCode2, FileSpreadsheet, FileText, Laptop } from "lucide-react";
+import { BarChart3, Database, Files, FileCode2, FileSpreadsheet, FileText, Image as ImageIcon, Laptop } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { toolLabel } from "@/lib/bankLabels";
 import { pickHeroHighlights } from "@/lib/heroPick";
@@ -35,6 +35,8 @@ function toolIcon(tool: string) {
       return Database;
     case "Digitální gramotnost":
       return Laptop;
+    case "Grafika a multimédia":
+      return ImageIcon;
     default:
       return Files;
   }
