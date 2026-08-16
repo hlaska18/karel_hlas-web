@@ -1,6 +1,5 @@
 "use client";
 
-import { ExternalLink } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { CLANKY } from "@/lib/content";
 
@@ -31,6 +30,9 @@ import { CLANKY } from "@/lib/content";
  * Odkazy vedou ven, proto `target="_blank"`: návštěvník o rozečtenou stránku
  * s materiály nepřijde.
  */
+
+/** Šířka značky zdroje ve čtverci 44 px. Výška se dopočítá z poměru stran. */
+const SIRKA_LOGA = 28;
 
 /** Natočení karet – volnější obdoba stohu výš, ať nevznikne pravidelný vzor. */
 const NATOCENI = [
@@ -76,7 +78,26 @@ export function Ctenie() {
                 className={`glass group/karta flex items-center gap-3 rounded-2xl p-2.5 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${NATOCENI[i % NATOCENI.length]}`}
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
-                  <ExternalLink className="h-5 w-5 text-zinc-500 transition duration-300 group-hover/karta:text-accent-700 dark:text-zinc-400 dark:group-hover/karta:text-accent-300" />
+                  {/* Značka zdroje jako maska, ne obrázek: barvu tak řídí styl
+                      (šedá → zelená po najetí) a stačí jeden soubor. Šířka je
+                      pevná, výška dopočtená z poměru – jinak by se široký nápis
+                      InfoQ vtěsnal do čtverce a scvrkl se na šmouhu. */}
+                  <span
+                    aria-hidden
+                    className="block bg-zinc-500 transition duration-300 group-hover/karta:bg-accent-700 dark:bg-zinc-400 dark:group-hover/karta:bg-accent-300"
+                    style={{
+                      width: SIRKA_LOGA,
+                      height: Math.round(SIRKA_LOGA / c.logo.pomer),
+                      WebkitMaskImage: `url(${c.logo.src})`,
+                      maskImage: `url(${c.logo.src})`,
+                      WebkitMaskSize: "contain",
+                      maskSize: "contain",
+                      WebkitMaskRepeat: "no-repeat",
+                      maskRepeat: "no-repeat",
+                      WebkitMaskPosition: "center",
+                      maskPosition: "center",
+                    }}
+                  />
                 </span>
                 <span className="min-w-0 flex-1">
                   {/* Bez `block`: line-clamp potřebuje display:-webkit-box a `block` by ho přebil. */}

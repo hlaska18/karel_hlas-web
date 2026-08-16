@@ -55,6 +55,14 @@ export type Clanek = {
    *  u ukázkových karet. Čtenář tak na první pohled pozná, do čeho jde. */
   jazyk: Lang;
   pozor?: { cs: string; en: string };
+  /**
+   * Značka zdroje jako jednobarevná silueta v `public/images/clanky/`.
+   * Používá se jako CSS maska, ne jako obrázek – barvu tak určuje styl
+   * (šedá, po najetí zelená) a stačí jeden soubor místo dvou.
+   * `pomer` je šířka/výška ořezané značky; bez něj by se široký nápis
+   * (InfoQ 3,23) vtěsnal do čtverce a scvrkl se na nečitelnou šmouhu.
+   */
+  logo: { src: string; pomer: number };
 };
 
 export const CLANKY: Clanek[] = [
@@ -62,6 +70,7 @@ export const CLANKY: Clanek[] = [
     title: "AI a děti: Co dělat jako rodič a jak AI používat ve škole",
     source: "Wired.cz",
     url: "https://www.wired.cz/clanky/ai-a-deti-co-delat-jako-rodic-a-jak-ai-pouzivat-ve-skole",
+    logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
     jazyk: "cs",
     pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
   },
@@ -69,6 +78,7 @@ export const CLANKY: Clanek[] = [
     title: "AI ve výuce není podvádění. Školy potřebují jasná pravidla",
     source: "Hospodářské noviny",
     url: "https://archiv.hn.cz/c1-67915550-ai-ve-vyuce-neni-podvadeni-rikaji-odbornici-skoly-vsak-potrebuji-jasna-pravidla",
+    logo: { src: "/images/clanky/hn.png", pomer: 1.83 },
     jazyk: "cs",
     pozor: { cs: "placený archiv HN", en: "paid HN archive" },
   },
@@ -76,12 +86,14 @@ export const CLANKY: Clanek[] = [
     title: "AI coding assistance reduces developer skill mastery by 17 %",
     source: "InfoQ",
     url: "https://www.infoq.com/news/2026/02/ai-coding-skill-formation/",
+    logo: { src: "/images/clanky/infoq.png", pomer: 3.23 },
     jazyk: "en",
   },
   {
     title: "Promptujte jako profík aneb Desatero správného promptování AI",
     source: "Wired.cz",
     url: "https://www.wired.cz/clanky/promptujte-jako-profik-aneb-desatero-spravneho-promptovani-ai",
+    logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
     jazyk: "cs",
     pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
   },
