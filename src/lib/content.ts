@@ -36,13 +36,60 @@ export type Social = {
  * u které je vidět, že poslední přírůstek je z května. Když je pole prázdné,
  * sekce se vůbec nevykreslí – nikdy tedy nesvítí prázdná.
  *
- * Nový odkaz = jeden řádek sem. Drž se tří až čtyř položek; delší seznam
- * v úvodu přebíjí tlačítko k materiálům. Když přibude pátý, vyhoď nejstarší.
- * `cesky: true` u českých textů – na /en se u nich ukáže „in Czech".
+ * Nový odkaz = jeden řádek sem. Drž se čtyř až pěti položek; delší seznam
+ * v úvodu přebíjí tlačítko k materiálům. Když přibude šestý, vyhoď nejstarší.
+ *
+ * `jazyk` se ukazuje jen tomu, komu je cizí – Čech vidí u anglických textů
+ * „anglicky", Angličan u českých „in Czech".
+ *
+ * `pozor` říká, co člověka po kliknutí čeká (přihlášení, předplatné, limit).
+ * Stejná konvence jako u nástrojů v sekci „Nejen do informatiky": web slibuje
+ * materiály bez přihlašování, takže odkaz vedoucí na zeď musí být přiznaný
+ * dřív, než na něj někdo klikne.
  */
-export type Clanek = { title: string; source: string; url: string; cesky?: boolean };
+export type Clanek = {
+  title: string;
+  source: string;
+  url: string;
+  jazyk?: Lang;
+  pozor?: { cs: string; en: string };
+};
 
-export const CLANKY: Clanek[] = [];
+export const CLANKY: Clanek[] = [
+  {
+    title: "AI a děti: Co dělat jako rodič a jak AI používat ve škole",
+    source: "Wired.cz",
+    url: "https://www.wired.cz/clanky/ai-a-deti-co-delat-jako-rodic-a-jak-ai-pouzivat-ve-skole",
+    jazyk: "cs",
+    pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
+  },
+  {
+    title: "AI ve výuce není podvádění. Školy potřebují jasná pravidla",
+    source: "Hospodářské noviny",
+    url: "https://archiv.hn.cz/c1-67915550-ai-ve-vyuce-neni-podvadeni-rikaji-odbornici-skoly-vsak-potrebuji-jasna-pravidla",
+    jazyk: "cs",
+    pozor: { cs: "placený archiv HN", en: "paid HN archive" },
+  },
+  {
+    title: "AI coding assistance reduces developer skill mastery by 17 %",
+    source: "InfoQ",
+    url: "https://www.infoq.com/news/2026/02/ai-coding-skill-formation/",
+    jazyk: "en",
+  },
+  {
+    title: "KnowledgeMarkers: An AI-agnostic concept for the design of programming courses",
+    source: "arXiv · Hochschule München",
+    url: "https://arxiv.org/pdf/2604.06331",
+    jazyk: "en",
+  },
+  {
+    title: "Promptujte jako profík aneb Desatero správného promptování AI",
+    source: "Wired.cz",
+    url: "https://www.wired.cz/clanky/promptujte-jako-profik-aneb-desatero-spravneho-promptovani-ai",
+    jazyk: "cs",
+    pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
+  },
+];
 
 export const SOCIALS: Social[] = [
   { network: "youtube", handle: "@karelhlas", href: "https://www.youtube.com/@karelhlas" },

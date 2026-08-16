@@ -28,29 +28,34 @@ export function Ctenie() {
     <section aria-labelledby="ctenie-nadpis">
       <p
         id="ctenie-nadpis"
-        className="mb-3 pl-1 text-xs font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500"
+        className="mb-2 pl-1 text-xs font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500"
       >
         {tr.hero.reading}
       </p>
 
-      <ul className="space-y-2">
+      <ul className="space-y-1.5">
         {CLANKY.map((c) => (
           <li key={c.url}>
             <a
               href={c.url}
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-soft group flex items-start gap-2.5 rounded-xl px-3 py-2.5 transition hover:-translate-y-0.5"
+              className="glass-soft group flex items-start gap-2.5 rounded-xl px-3 py-2 transition hover:-translate-y-0.5"
             >
               <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-400 transition group-hover:text-accent-600 dark:group-hover:text-accent-400" />
               <span className="min-w-0 flex-1">
-                <span className="block text-sm font-semibold leading-snug text-zinc-800 dark:text-zinc-100">
+                <span className="line-clamp-2 block text-[0.8125rem] font-semibold leading-snug text-zinc-800 dark:text-zinc-100">
                   {c.title}
                 </span>
+                {/* Zdroj · jazyk (jen když je čtenáři cizí) · co po kliknutí čeká */}
                 <span className="mt-0.5 block text-xs text-zinc-500 dark:text-zinc-400">
-                  {c.source}
-                  {/* Angličana upozorníme, že text je česky, ať neklikne naslepo. */}
-                  {lang === "en" && c.cesky ? " · in Czech" : ""}
+                  {[
+                    c.source,
+                    c.jazyk && c.jazyk !== lang ? (lang === "cs" ? "anglicky" : "in Czech") : null,
+                    c.pozor?.[lang],
+                  ]
+                    .filter(Boolean)
+                    .join(" · ")}
                 </span>
               </span>
             </a>
