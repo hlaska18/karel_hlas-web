@@ -32,8 +32,15 @@ export function Hero({
 
   return (
     <section id="top" className="relative overflow-hidden pt-28 sm:pt-32">
-      <div className="container-page pb-12 lg:pb-16">
-        <div className="flex items-start justify-between gap-14">
+      {/* Menší mezera pod sloupci = šipka „Materiály" sedí blíž obsahu.
+          S vyšším pravým sloupcem se odsunula moc nízko. */}
+      <div className="container-page pb-6 lg:pb-8">
+        {/* Svisle na střed, ne k hornímu okraji: pravý sloupec s kartami
+            a články je o víc než 200 px vyšší než text vlevo, takže při
+            zarovnání nahoru zůstávala pod bylinou díra. Takhle se prázdno
+            rozdělí nad a pod text a čte se jako vzduch, ne jako chybějící
+            obsah. Na mobilu je pravý sloupec skrytý, tam se nic nemění. */}
+        <div className="flex items-center justify-between gap-14">
           <div className="max-w-3xl">
             {/* Nadpis se vypisuje jako na psacím stroji; `aria-label` nese
                 celou větu, takže čtečka ji přečte naráz (animace je aria-hidden). */}
