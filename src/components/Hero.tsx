@@ -31,7 +31,18 @@ export function Hero({
     : [];
 
   return (
-    <section id="top" className="relative overflow-hidden pt-28 sm:pt-32">
+    <section id="top" className="relative isolate overflow-hidden pt-28 sm:pt-32">
+      {/* Malachitový nádech za úvodem. Bez něj byla první obrazovka plochá –
+          v tmavém tématu skoro černá – a barva webu se objevila až u tlačítka.
+          Stránka 404 tenhle prvek má a odkazuje se na „hlavní stránku“, takže
+          se tím zároveň srovnává rozpor.
+          `isolate` na sekci je nutné: bez vlastního stohovacího kontextu by
+          `-z-10` propadlo pod pozadí stránky a záře by nebyla vidět. */}
+      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
+        <div className="absolute left-[-10%] top-[-22%] h-[460px] w-[460px] rounded-full bg-accent-300/20 blur-[120px] dark:bg-accent-500/[0.10]" />
+        <div className="absolute right-[-8%] top-[6%] h-[380px] w-[380px] rounded-full bg-accent-200/25 blur-[110px] dark:bg-accent-600/[0.09]" />
+      </div>
+
       {/* Menší mezera pod sloupci = šipka „Materiály" sedí blíž obsahu.
           S vyšším pravým sloupcem se odsunula moc nízko. */}
       <div className="container-page pb-6 lg:pb-8">
@@ -51,7 +62,10 @@ export function Hero({
               <Typewriter text={tr.hero.headline} />
             </h1>
 
-            <p className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400 text-balance">
+            {/* Hlavní věta úvodu snese víc než popisková šeď: v tmavém tématu
+                zinc-300 místo zinc-400 (kontrast 7,6 → 12 : 1). Menší řádky
+                pod ní zůstávají tlumené, ať hierarchie drží. */}
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-300 text-balance">
               {tr.hero.tagline}
             </p>
 

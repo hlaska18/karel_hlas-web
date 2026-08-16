@@ -23,7 +23,7 @@ export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
           dřív byl jen v Hero sekci a dál končil). */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10 text-black/[0.04] bg-dots dark:text-white/[0.05]"
+        className="pointer-events-none fixed inset-0 -z-10 text-black/[0.05] bg-dots dark:text-white/[0.07]"
       />
       <Header />
       <main id="main">

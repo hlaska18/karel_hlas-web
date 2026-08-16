@@ -9,7 +9,9 @@
 }
 
 .dark {
-  --bg: #070a09;
+  /* Ne úplná čerň: o stupeň světlejší se zeleným nádechem. Na #070a09
+     splývaly skleněné karty s pozadím a stránka působila zhasle. */
+  --bg: #080d0b;
   --bg-soft: #0d1311;
   --fg: #e9efec;
 }

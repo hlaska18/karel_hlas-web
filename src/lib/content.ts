@@ -1165,7 +1165,17 @@ type Dict = {
     mapLink: string;
     socialsTitle: string;
   };
-  footer: { role: string; rights: string; top: string; sqlCourse: string };
+  footer: {
+    role: string;
+    /** Uvozuje odkaz na licenci, proto končí bez tečky. */
+    rights: string;
+    licenseName: string;
+    /** Odkaz na text licence – česká i anglická verze mají vlastní „deed“. */
+    licenseHref: string;
+    analytics: string;
+    top: string;
+    sqlCourse: string;
+  };
   ui: { theme: string };
 };
 
@@ -1437,7 +1447,14 @@ export const t: Record<Lang, Dict> = {
     },
     footer: {
       role: "Učitel informatiky a angličtiny · SPŠ Tábor",
-      rights: "Všechna práva vyhrazena",
+      // „Všechna práva vyhrazena“ tu stálo proti slibu pod bankou, že se
+      // materiály smí volně používat i upravovat. Navíc téma AI vychází
+      // z materiálů pod CC BY-NC-SA, jejíž podmínka „zachovej licenci“
+      // se s vyhrazenými právy vylučuje.
+      rights: "Materiály sdílím pod licencí",
+      licenseName: "CC BY-NC-SA 4.0",
+      licenseHref: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs",
+      analytics: "Návštěvnost měřím anonymně, bez cookies.",
       top: "Nahoru",
       // Kurz je vlastní stránka mimo jednostránkový web – bez tohohle odkazu
       // se k němu dá dojít jen přes dlaždici Databáze v bance.
@@ -1713,7 +1730,10 @@ export const t: Record<Lang, Dict> = {
     },
     footer: {
       role: "Computer Science & English teacher · SPŠ Tábor",
-      rights: "All rights reserved",
+      rights: "Materials shared under",
+      licenseName: "CC BY-NC-SA 4.0",
+      licenseHref: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en",
+      analytics: "Traffic is measured anonymously, without cookies.",
       top: "Top",
       // Kurz je jen česky – ať to Angličan pozná dřív, než klikne.
       sqlCourse: "SQL course in the browser (in Czech)",

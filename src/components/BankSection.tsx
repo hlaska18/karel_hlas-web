@@ -8,13 +8,20 @@ import { BankBrowser } from "@/components/BankBrowser";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionJump } from "@/components/SectionJump";
 
+// Slib musí sedět na licenci v patičce (CC BY-NC-SA 4.0), jinak si web
+// protiřečí: dřív tu stálo „volně použij“ a dole „všechna práva vyhrazena“.
 const STR: Record<Lang, { license: string }> = {
   cs: {
-    license: "Materiály zde volně použij i uprav pro svou výuku.",
+    license:
+      "Materiály zde volně použij i uprav pro svou výuku. Platí licence CC BY-NC-SA 4.0: " +
+      "uveď autora, nepoužívej komerčně a co z nich vytvoříš, sdílej dál za stejných podmínek. " +
+      "U převzatých cvičebnic platí licence jejich autorů – najdeš ji u zdroje.",
   },
   en: {
     license:
-      "All materials are currently in Czech. Feel free to use, translate and adapt them for your own teaching.",
+      "All materials are currently in Czech. Feel free to use, translate and adapt them for your own " +
+      "teaching under CC BY-NC-SA 4.0: credit the author, no commercial use, and share whatever you " +
+      "build on the same terms. Borrowed workbooks keep their own authors' licence – see the source.",
   },
 };
 

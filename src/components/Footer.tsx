@@ -33,8 +33,19 @@ export function Footer() {
 
         <div className="flex flex-col items-center gap-1 text-center sm:items-end sm:text-right">
           <p className="text-xs text-zinc-500 dark:text-zinc-400">
-            © {year} {SITE.name} · {tr.footer.rights}
+            © {year} {SITE.name} · {tr.footer.rights}{" "}
+            <a
+              href={tr.footer.licenseHref}
+              target="_blank"
+              rel="license noopener noreferrer"
+              className="font-semibold underline decoration-dotted underline-offset-2 transition hover:text-accent-600 dark:hover:text-accent-400"
+            >
+              {tr.footer.licenseName}
+            </a>
           </p>
+          {/* Vercel Analytics neukládá cookies ani neidentifikuje návštěvníka,
+              takže souhlas nepotřebuje – ale mlčet se o měření nemá. */}
+          <p className="text-xs text-zinc-500 dark:text-zinc-400">{tr.footer.analytics}</p>
           <a
             href="#top"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-600 transition hover:text-accent-500 dark:text-accent-400"
