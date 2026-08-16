@@ -2,9 +2,9 @@ RASTR NEBO VEKTOR — ROZHODNI A ZDŮVODNI
 
 ČÁST A — POZOROVÁNÍ
 Otevři v laboratoři modul „Rastr vs. vektor" a poté tyto soubory:
-  obrazky/rastr_64px.png                 malý rastrový obrázek
-  obrazky/rastr_64px_zvetseno_8x.png     tentýž obrázek zvětšený 8×
-  obrazky/logo_vektor.svg                stejný motiv jako vektor
+  Obrázky/rastr_64px.png                 malý rastrový obrázek
+  Obrázky/rastr_64px_zvetseno_8x.png     tentýž obrázek zvětšený 8×
+  Obrázky/logo_vektor.svg                stejný motiv jako vektor
 Zvětši SVG v prohlížeči na 400 % (Ctrl a kolečko myši).
 
 1. Co se stane s okraji rastrového obrázku při zvětšení?

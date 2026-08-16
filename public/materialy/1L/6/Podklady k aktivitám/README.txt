@@ -1,7 +1,7 @@
 DIGITÁLNÍ PODKLADY K AKTIVITÁM
 
 Začni souborem 01. Laboratoř grafiky.html. Otevírá se dvojklikem v běžném prohlížeči,
-běží offline a nic neodesílá. Složky obrazky a media musí zůstat vedle něj,
+běží offline a nic neodesílá. Složky Obrázky a Média musí zůstat vedle něj,
 jinak se ukázky nezobrazí.
 
 PŘEHLED
@@ -15,9 +15,9 @@ PŘEHLED
 08. Infografika v Canvě.txt       zadání a data – hodina 7
 09. Závěrečný výstup.txt        zadání – hodina 8
 
-obrazky/                       vzorové obrázky ve formátech a kompresích
-media/                         čtyři zvuky, čtyři videa a jedna animace
-vystupy_k_posouzeni/           ukázky k hodnocení: dobrá a špatná infografika,
+Obrázky/                       vzorové obrázky ve formátech a kompresích
+Média/                         čtyři zvuky, čtyři videa a jedna animace
+Výstupy k posouzení/           ukázky k hodnocení: dobrá a špatná infografika,
                                tři vadné exporty
 
 MODULY LABORATOŘE

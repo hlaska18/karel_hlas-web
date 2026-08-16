@@ -71,11 +71,11 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
     <div class="two">
       <div class="pane"><h4>Rastr — rastr_64px.png (64 × 64 px)</h4>
         <div class="in" style="height:290px;display:flex;align-items:center;justify-content:center;overflow:hidden">
-          <img id="rastrImg" class="pixelated" src="obrazky/rastr_64px.png" style="width:120px">
+          <img id="rastrImg" class="pixelated" src="Obrázky/rastr_64px.png" style="width:120px">
         </div></div>
       <div class="pane"><h4>Vektor — logo_vektor.svg</h4>
         <div class="in" style="height:290px;display:flex;align-items:center;justify-content:center;overflow:hidden">
-          <img id="vektorImg" src="obrazky/logo_vektor.svg" style="width:120px">
+          <img id="vektorImg" src="Obrázky/logo_vektor.svg" style="width:120px">
         </div></div>
     </div>
     <table>
@@ -110,8 +110,8 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
       <span class="badge" id="jqSize">255,6 kB</span>
     </div>
     <div class="two">
-      <div class="pane"><h4>Celý snímek</h4><div class="in"><img id="jpgFull" src="obrazky/foto_jpeg_q95.jpg"></div></div>
-      <div class="pane"><h4>Výřez kolem slunce (zvětšeno)</h4><div class="in"><img id="jpgCrop" class="pixelated" src="obrazky/vyrez_q95.png"></div></div>
+      <div class="pane"><h4>Celý snímek</h4><div class="in"><img id="jpgFull" src="Obrázky/foto_jpeg_q95.jpg"></div></div>
+      <div class="pane"><h4>Výřez kolem slunce (zvětšeno)</h4><div class="in"><img id="jpgCrop" class="pixelated" src="Obrázky/vyrez_q95.png"></div></div>
     </div>
     <p class="note">Výřez je k dispozici pro kvalitu 95 a 15 — právě na nich je rozdíl nejlépe vidět.</p>
     <table>
@@ -142,7 +142,7 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
     </div>
     <div class="pane" style="max-width:430px;margin:0 auto">
       <h4 id="lgTitle">logo_png.png</h4>
-      <div class="in"><img id="lgImg" src="obrazky/logo_png.png" style="width:100%"></div>
+      <div class="in"><img id="lgImg" src="Obrázky/logo_png.png" style="width:100%"></div>
     </div>
     <table>
       <tr><th>Motiv</th><th>PNG</th><th>JPEG 95</th><th>GIF</th><th>Vítěz</th></tr>
@@ -173,7 +173,7 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
       <span class="badge" id="bdInfo">16 777 216 barev · 290,2 kB</span>
     </div>
     <div class="pane"><h4 id="bdTitle">hloubka_24bit.png</h4>
-      <div class="in"><img id="bdImg" src="obrazky/hloubka_24bit.png" style="width:100%;max-width:780px"></div></div>
+      <div class="in"><img id="bdImg" src="Obrázky/hloubka_24bit.png" style="width:100%;max-width:780px"></div></div>
     <div class="q"><b>Zapiš:</b> U kolika bitů se poprvé objeví pásy v obloze? Který motiv by 4 bity ještě snesl a který ne?</div>
   </div>
 </section>
@@ -192,7 +192,7 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
     <div class="pane"><h4>Původní vlna (šedá) a záznam po vzorkování (tyrkysová)</h4>
       <div class="in"><canvas id="wave" width="1000" height="300" style="width:100%"></canvas></div></div>
     <p class="note">Skutečné CD používá 44 100 vzorků za sekundu a 16 bitů, tedy 65 536 úrovní hlasitosti.
-      Soubory <b>media/zvuk_*.wav</b> ukazují stejný princip skutečným zvukem — poslechni si je a porovnej.</p>
+      Soubory <b>Média/zvuk_*.wav</b> ukazují stejný princip skutečným zvukem — poslechni si je a porovnej.</p>
     <div class="q"><b>Zapiš:</b> Co se s vlnou stane, když je vzorků málo? A co se změní, když ubereš úrovně hlasitosti? Který z obou parametrů má na tvůj poslech větší vliv?</div>
   </div>
 </section>
@@ -206,10 +206,10 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
 <script>
 (function(){
   var S={foto:{95:'255,6 kB',75:'53,5 kB',40:'33,0 kB',15:'28,0 kB'},
-         logo:{png:['5,1 kB','logo_png.png','obrazky/logo_png.png'],
-               q95:['39,6 kB','logo_jpeg_q95.jpg','obrazky/logo_jpeg_q95.jpg'],
-               q40:['18,2 kB','logo_jpeg_q40.jpg','obrazky/logo_jpeg_q40.jpg'],
-               gif:['4,3 kB','logo_gif16.gif','obrazky/logo_gif16.gif']},
+         logo:{png:['5,1 kB','logo_png.png','Obrázky/logo_png.png'],
+               q95:['39,6 kB','logo_jpeg_q95.jpg','Obrázky/logo_jpeg_q95.jpg'],
+               q40:['18,2 kB','logo_jpeg_q40.jpg','Obrázky/logo_jpeg_q40.jpg'],
+               gif:['4,3 kB','logo_gif16.gif','Obrázky/logo_gif16.gif']},
          hl:{24:['16 777 216 barev · 290,2 kB','hloubka_24bit.png'],
              8:['256 barev · 123,4 kB','hloubka_8bit.png'],
              4:['16 barev · 71,8 kB','hloubka_4bit.png'],
@@ -227,9 +227,9 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
 
   // M2 jpeg
   group('.jq',function(b){var q=b.dataset.q;
-    $('jpgFull').src='obrazky/foto_jpeg_q'+(q.length<2?'0'+q:q)+'.jpg';
+    $('jpgFull').src='Obrázky/foto_jpeg_q'+(q.length<2?'0'+q:q)+'.jpg';
     $('jqSize').textContent=S.foto[q];
-    $('jpgCrop').src=(q==='95'||q==='15')?'obrazky/vyrez_q'+q+'.png':'obrazky/vyrez_q95.png';});
+    $('jpgCrop').src=(q==='95'||q==='15')?'Obrázky/vyrez_q'+q+'.png':'Obrázky/vyrez_q95.png';});
 
   // M3 logo
   group('.lg',function(b){var d=S.logo[b.dataset.k];
@@ -237,7 +237,7 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
 
   // M4 hloubka
   group('.bd',function(b){var d=S.hl[b.dataset.b];
-    $('bdInfo').textContent=d[0];$('bdTitle').textContent=d[1];$('bdImg').src='obrazky/'+d[1];});
+    $('bdInfo').textContent=d[0];$('bdTitle').textContent=d[1];$('bdImg').src='Obrázky/'+d[1];});
 
   // kontroly
   function check(sel,out,ok,bad){group(sel,function(b){

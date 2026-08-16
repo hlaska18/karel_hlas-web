@@ -173,6 +173,8 @@ const NAME_EN: Record<string, string> = {
   "Promptová dílna": "Prompt workshop",
   "Výstup k opravě": "Output to correct",
   "Výstupy k posouzení": "Outputs to assess",
+  Obrázky: "Images",
+  Média: "Media",
   "Zdrojový balíček – rekuperace": "Source pack – heat recovery",
   "Etické a právní situace": "Ethical and legal situations",
   "Závěrečná výzva": "Final challenge",

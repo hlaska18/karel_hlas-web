@@ -8,7 +8,7 @@ jako patnáctiminutové vsuvky do hodin 2, 6 a 8.
 
 ČÁST A — PROČ TISK NEVYPADÁ JAKO DISPLEJ
 
-Otevři obrazky/michani_barev_rgb_cmy.png.
+Otevři Obrázky/michani_barev_rgb_cmy.png.
 
 Vlevo se míchá SVĚTLO: obrazovka svítí červeně, zeleně a modře a barvy
 se SČÍTAJÍ. Když svítí všechny tři naplno, vidíš bílou.
@@ -31,7 +31,7 @@ oranžová po vytištění „zklidní" — tiskárna na ně prostě nedosáhne.
 V hodině 6 jsi porovnával/a nekomprimované WAV soubory. Hudba, kterou
 posloucháš, ale nekomprimovaná není.
 
-Poslechni si dvojici (media/):
+Poslechni si dvojici (Média/):
   zvuk_44100Hz_16bit.wav     258,4 kB
   zvuk_44100Hz_AAC.m4a        16,3 kB
 
@@ -49,13 +49,13 @@ YouTube i telefony.
 
 ČÁST C — CO O SOBĚ PROZRADÍ FOTKA
 
-Otevři obrazky/foto_s_exif.jpg a podívej se na vlastnosti souboru
+Otevři Obrázky/foto_s_exif.jpg a podívej se na vlastnosti souboru
 (ve Windows pravým tlačítkem → Vlastnosti → Podrobnosti, na macOS
 Cmd+I nebo v Náhledu Nástroje → Zobrazit inspektor).
 
 1. Jaký přístroj snímek pořídil a kdy?
 2. Najdi položku GPS. Kde snímek vznikl? Zkus souřadnice zadat do mapy.
-3. Otevři vedle toho obrazky/foto_original.png. Co o něm zjistíš?
+3. Otevři vedle toho Obrázky/foto_original.png. Co o něm zjistíš?
    Čím to je?
 
 Těmhle údajům se říká metadata (EXIF). Fotoaparát i telefon je zapisují

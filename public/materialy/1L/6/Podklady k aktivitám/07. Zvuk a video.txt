@@ -2,7 +2,7 @@ ZVUK A VIDEO — POROVNÁNÍ PARAMETRŮ
 
 ČÁST A — ZVUK
 Nasaď si sluchátka. Přes reproduktor ve třídě rozdíl neuslyšíš.
-Poslechni si postupně (media/):
+Poslechni si postupně (Média/):
   zvuk_44100Hz_16bit.wav    zvuk_22050Hz_16bit.wav
   zvuk_8000Hz_16bit.wav     zvuk_44100Hz_8bit.wav
 1. Seřaď je podle kvality a zapiš, čeho sis všiml/a.
@@ -12,7 +12,7 @@ Poslechni si postupně (media/):
 4. Doplň do 04. Parametry médií.csv velikosti a svá pozorování.
 
 ČÁST B — VIDEO
-Přehraj (media/):
+Přehraj (Média/):
   video_1280x720_30fps.mp4            video_640x360_30fps.mp4
   video_1280x720_10fps.mp4            video_1280x720_silna_komprese.mp4
 1. Porovnej 30fps a 10fps verzi. Co se změnilo na plynulosti pohybu?

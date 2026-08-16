@@ -1,6 +1,6 @@
 ÚPRAVA RASTROVÉHO OBRÁZKU — GIMP
 
-Pracuj se souborem obrazky/foto_original.png. Původní soubor nepřepisuj.
+Pracuj se souborem Obrázky/foto_original.png. Původní soubor nepřepisuj.
 
 ÚKOLY
 1. Ořez na poměr 16:9 tak, aby slunce nebylo přesně uprostřed.

@@ -38,7 +38,7 @@ MAPA HODIN
 3. Formáty obrázků a komprese dat            laboratoř, moduly 02 a 03
 4. Úprava fotografie v GIMPu                 GIMP
 5. Vektorová značka v Inkscapu               Inkscape
-6. Základy práce se zvukem a videem          laboratoř, modul 05 + media
+6. Základy práce se zvukem a videem          laboratoř, modul 05 + Média
 7. Infografika a prezentace                  Canva
 8. Závěrečný výstup a obhajoba               dle volby studenta
 BONUS (nepovinná)                            10. Bonus – co se do osmi
