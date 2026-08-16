@@ -1093,7 +1093,7 @@ type Dict = {
     mapLink: string;
     socialsTitle: string;
   };
-  footer: { role: string; rights: string; top: string };
+  footer: { role: string; rights: string; top: string; sqlCourse: string };
   ui: { theme: string };
 };
 
@@ -1366,6 +1366,9 @@ export const t: Record<Lang, Dict> = {
       role: "Učitel informatiky a angličtiny · SPŠ Tábor",
       rights: "Všechna práva vyhrazena",
       top: "Nahoru",
+      // Kurz je vlastní stránka mimo jednostránkový web – bez tohohle odkazu
+      // se k němu dá dojít jen přes dlaždici Databáze v bance.
+      sqlCourse: "Kurz SQL v prohlížeči",
     },
     ui: { theme: "Přepnout světlý / tmavý režim" },
   },
@@ -1638,6 +1641,8 @@ export const t: Record<Lang, Dict> = {
       role: "Computer Science & English teacher · SPŠ Tábor",
       rights: "All rights reserved",
       top: "Top",
+      // Kurz je jen česky – ať to Angličan pozná dřív, než klikne.
+      sqlCourse: "SQL course in the browser (in Czech)",
     },
     ui: { theme: "Toggle light / dark mode" },
   },

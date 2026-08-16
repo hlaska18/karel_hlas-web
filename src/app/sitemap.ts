@@ -18,5 +18,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
       alternates: { languages: { cs: SITE.url, en: `${SITE.url}/en` } },
     },
+    {
+      // Kurz SQL je vlastní stránka, ne kotva na jednostránkovém webu –
+      // v sitemapě dosud chyběl, takže o něm vyhledávače nevěděly.
+      url: `${SITE.url}/sql`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 }
