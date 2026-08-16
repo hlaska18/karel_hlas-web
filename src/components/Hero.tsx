@@ -76,7 +76,7 @@ export function Hero({
           {/* Pravý sloupec: ukázkové karty a pod nimi odkazy na čtení.
               Na mobilu se celý skrývá – tam se počítá každý pixel nad ohybem
               a tlačítko k materiálům musí zůstat vidět bez scrollování. */}
-          <div className="hidden w-[22rem] shrink-0 flex-col gap-6 lg:flex">
+          <div className="hidden w-[22rem] shrink-0 flex-col gap-5 lg:flex">
             <HeroPreview pool={pool} />
             <Ctenie />
           </div>

@@ -53,12 +53,15 @@ export type Clanek = {
   url: string;
   jazyk?: Lang;
   pozor?: { cs: string; en: string };
+  /** Krátký štítek vpravo na kartě – protějšek přípony u ukázkových karet. */
+  znacka: string;
 };
 
 export const CLANKY: Clanek[] = [
   {
     title: "AI a děti: Co dělat jako rodič a jak AI používat ve škole",
     source: "Wired.cz",
+    znacka: "wired",
     url: "https://www.wired.cz/clanky/ai-a-deti-co-delat-jako-rodic-a-jak-ai-pouzivat-ve-skole",
     jazyk: "cs",
     pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
@@ -66,6 +69,7 @@ export const CLANKY: Clanek[] = [
   {
     title: "AI ve výuce není podvádění. Školy potřebují jasná pravidla",
     source: "Hospodářské noviny",
+    znacka: "hn",
     url: "https://archiv.hn.cz/c1-67915550-ai-ve-vyuce-neni-podvadeni-rikaji-odbornici-skoly-vsak-potrebuji-jasna-pravidla",
     jazyk: "cs",
     pozor: { cs: "placený archiv HN", en: "paid HN archive" },
@@ -73,18 +77,21 @@ export const CLANKY: Clanek[] = [
   {
     title: "AI coding assistance reduces developer skill mastery by 17 %",
     source: "InfoQ",
+    znacka: "infoq",
     url: "https://www.infoq.com/news/2026/02/ai-coding-skill-formation/",
     jazyk: "en",
   },
   {
     title: "KnowledgeMarkers: An AI-agnostic concept for the design of programming courses",
     source: "arXiv · Hochschule München",
+    znacka: "arxiv",
     url: "https://arxiv.org/pdf/2604.06331",
     jazyk: "en",
   },
   {
     title: "Promptujte jako profík aneb Desatero správného promptování AI",
     source: "Wired.cz",
+    znacka: "wired",
     url: "https://www.wired.cz/clanky/promptujte-jako-profik-aneb-desatero-spravneho-promptovani-ai",
     jazyk: "cs",
     pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
@@ -1180,7 +1187,7 @@ export const t: Record<Lang, Dict> = {
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · 1. ročník SŠ",
       sample: "Ukázka materiálů",
-      reading: "Za přečtení",
+      reading: "Zajímavé články",
       ctaLessons: "Procházet materiály",
       ctaContact: "O mně",
       scroll: "Materiály",
@@ -1456,7 +1463,7 @@ export const t: Record<Lang, Dict> = {
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · Year 1 secondary",
       sample: "Sample materials",
-      reading: "Worth reading",
+      reading: "Interesting articles",
       ctaLessons: "Browse the materials",
       ctaContact: "About me",
       scroll: "Materials",
