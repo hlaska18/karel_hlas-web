@@ -368,9 +368,13 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
         />
       </div>
 
-      {/* ── Galerie dlaždic (když se nehledá a není vybraná dlaždice) ── */}
+      {/* ── Galerie dlaždic (když se nehledá a není vybraná dlaždice) ──
+          Tři sloupce až od `lg`. Dřív naskakovaly už od `sm`, kde má dlaždice
+          212 px: ikona si vezme 78, mezera 12 a na název zbude 80 px – proto
+          se „Grafika a multimédia“ lámalo na tři řádky a lepilo se na ikonu.
+          Dva sloupce dají textu ~150 px a název se vejde na dva řádky. */}
       {!showList && (
-        <ul className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4">
+        <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {tiles.map((t) => {
             const Icon = toolIcon(t.name);
             return (

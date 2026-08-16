@@ -15,13 +15,14 @@ const STR: Record<Lang, { license: string }> = {
     license:
       "Materiály zde volně použij i uprav pro svou výuku. Platí licence CC BY-NC-SA 4.0: " +
       "uveď autora, nepoužívej komerčně a co z nich vytvoříš, sdílej dál za stejných podmínek. " +
-      "U převzatých cvičebnic platí licence jejich autorů – najdeš ji u zdroje.",
+      "Cvičebnice jiných autorů tu nehostuju – vede k nim jen odkaz na původní zdroj.",
   },
   en: {
     license:
       "All materials are currently in Czech. Feel free to use, translate and adapt them for your own " +
       "teaching under CC BY-NC-SA 4.0: credit the author, no commercial use, and share whatever you " +
-      "build on the same terms. Borrowed workbooks keep their own authors' licence – see the source.",
+      "build on the same terms. Workbooks by other authors aren't hosted here – you'll only find " +
+      "a link to the original.",
   },
 };
 
