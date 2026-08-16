@@ -8,6 +8,11 @@ JAK PŘIDAT MATERIÁL (bez cloudu, bez editace kódu):
 
 3) V GitHub Desktopu klikni Push. Za ~1–2 min se materiál objeví u tématu.
 
+POJMENOVÁNÍ: název složky i souboru je zároveň popisek na webu, takže se píše
+česky, s diakritikou a velkým počátečním písmenem ("Výstupy k posouzení", ne
+"vystupy_k_posouzeni"). Výjimka jsou soubory, jejichž název nese parametry ke
+zkoumání (video_1280x720_30fps.mp4) – ty zůstávají technické schválně.
+
 PODSLOŽKY:
  - Obyčejná podsložka (např. "Pracovní listy/") = rozbalovací skupina materiálů.
  - Podsložka "_ucitel/" = UČITELSKÉ materiály. Ukážou se POUZE v učitelském
