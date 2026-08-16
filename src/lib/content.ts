@@ -51,17 +51,16 @@ export type Clanek = {
   title: string;
   source: string;
   url: string;
-  jazyk?: Lang;
+  /** Jazyk článku. Ukazuje se jako štítek vpravo – protějšek přípony
+   *  u ukázkových karet. Čtenář tak na první pohled pozná, do čeho jde. */
+  jazyk: Lang;
   pozor?: { cs: string; en: string };
-  /** Krátký štítek vpravo na kartě – protějšek přípony u ukázkových karet. */
-  znacka: string;
 };
 
 export const CLANKY: Clanek[] = [
   {
     title: "AI a děti: Co dělat jako rodič a jak AI používat ve škole",
     source: "Wired.cz",
-    znacka: "wired",
     url: "https://www.wired.cz/clanky/ai-a-deti-co-delat-jako-rodic-a-jak-ai-pouzivat-ve-skole",
     jazyk: "cs",
     pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
@@ -69,7 +68,6 @@ export const CLANKY: Clanek[] = [
   {
     title: "AI ve výuce není podvádění. Školy potřebují jasná pravidla",
     source: "Hospodářské noviny",
-    znacka: "hn",
     url: "https://archiv.hn.cz/c1-67915550-ai-ve-vyuce-neni-podvadeni-rikaji-odbornici-skoly-vsak-potrebuji-jasna-pravidla",
     jazyk: "cs",
     pozor: { cs: "placený archiv HN", en: "paid HN archive" },
@@ -77,14 +75,12 @@ export const CLANKY: Clanek[] = [
   {
     title: "AI coding assistance reduces developer skill mastery by 17 %",
     source: "InfoQ",
-    znacka: "infoq",
     url: "https://www.infoq.com/news/2026/02/ai-coding-skill-formation/",
     jazyk: "en",
   },
   {
     title: "Promptujte jako profík aneb Desatero správného promptování AI",
     source: "Wired.cz",
-    znacka: "wired",
     url: "https://www.wired.cz/clanky/promptujte-jako-profik-aneb-desatero-spravneho-promptovani-ai",
     jazyk: "cs",
     pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },

@@ -79,7 +79,12 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
           return (
             <div
               key={it.href}
-              className={`glass flex items-center gap-3 rounded-2xl p-4 transition duration-300 group-hover:rotate-0 group-hover:translate-x-0 ${LAYOUT[i % LAYOUT.length]}`}
+              /* Dvě úrovně jako u článků níž: najetí kamkoli do stohu srovná
+                 všechny karty, karta pod kurzorem se navíc rozsvítí smaragdovým
+                 okrajem a září – stejné gesto jako tlačítko „Procházet materiály".
+                 Funguje i uvnitř jednoho odkazu: `:hover` na kartě je vlastní.
+                 `dark:hover:` je nutné, jinak `dark:border-*` hover přebije. */
+              className={`glass flex items-center gap-3 rounded-2xl p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${LAYOUT[i % LAYOUT.length]}`}
             >
               <span className="glass-accent flex h-11 w-11 shrink-0 items-center justify-center rounded-xl">
                 <Icon className="h-5 w-5 text-accent-700 dark:text-accent-300" />
