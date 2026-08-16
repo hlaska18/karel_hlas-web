@@ -82,13 +82,6 @@ export const CLANKY: Clanek[] = [
     jazyk: "en",
   },
   {
-    title: "KnowledgeMarkers: An AI-agnostic concept for the design of programming courses",
-    source: "arXiv · Hochschule München",
-    znacka: "arxiv",
-    url: "https://arxiv.org/pdf/2604.06331",
-    jazyk: "en",
-  },
-  {
     title: "Promptujte jako profík aneb Desatero správného promptování AI",
     source: "Wired.cz",
     znacka: "wired",
