@@ -84,10 +84,12 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
                  okrajem a září – stejné gesto jako tlačítko „Procházet materiály".
                  Funguje i uvnitř jednoho odkazu: `:hover` na kartě je vlastní.
                  `dark:hover:` je nutné, jinak `dark:border-*` hover přebije. */
-              className={`glass flex items-center gap-3 rounded-2xl p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${LAYOUT[i % LAYOUT.length]}`}
+              className={`glass group/karta flex items-center gap-3 rounded-2xl p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${LAYOUT[i % LAYOUT.length]}`}
             >
-              <span className="glass-accent flex h-11 w-11 shrink-0 items-center justify-center rounded-xl">
-                <Icon className="h-5 w-5 text-accent-700 dark:text-accent-300" />
+              {/* V klidu šedý, po najetí na kartu se rozsvítí – stejně jako
+                  značky zdrojů u článků níž. Ikona zůstává táž, mění se barva. */}
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
+                <Icon className="h-5 w-5 text-zinc-500 transition duration-300 group-hover/karta:text-accent-700 dark:text-zinc-400 dark:group-hover/karta:text-accent-300" />
               </span>
 
               <span className="min-w-0 flex-1">
@@ -99,7 +101,7 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
                 </span>
               </span>
 
-              <span className="shrink-0 rounded-lg bg-accent-500/15 px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+              <span className="shrink-0 rounded-lg bg-black/[0.05] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-zinc-500 transition duration-300 group-hover/karta:bg-accent-500/15 group-hover/karta:text-accent-700 dark:bg-white/10 dark:text-zinc-400 dark:group-hover/karta:text-accent-300">
                 {it.ext}
               </span>
             </div>
