@@ -4,6 +4,7 @@ import { ArrowDown, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { Typewriter } from "@/components/Typewriter";
 import { HeroPreview } from "@/components/HeroPreview";
+import { Ctenie } from "@/components/Ctenie";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
 import type { BankItem } from "@/lib/materials";
 
@@ -72,7 +73,13 @@ export function Hero({
             <p className="mt-7 text-sm text-zinc-500 dark:text-zinc-400">{tr.hero.byline}</p>
           </div>
 
-          <HeroPreview pool={pool} />
+          {/* Pravý sloupec: ukázkové karty a pod nimi odkazy na čtení.
+              Na mobilu se celý skrývá – tam se počítá každý pixel nad ohybem
+              a tlačítko k materiálům musí zůstat vidět bez scrollování. */}
+          <div className="hidden w-[22rem] shrink-0 flex-col gap-7 lg:flex">
+            <HeroPreview pool={pool} />
+            <Ctenie />
+          </div>
         </div>
       </div>
 

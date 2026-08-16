@@ -29,6 +29,21 @@ export type Social = {
   href: string;
 };
 
+/**
+ * Čtení k digitálním technologiím – odkazy v úvodní sekci (komponenta `Ctenie`).
+ *
+ * Schválně BEZ DATA: seznam odkazů bez data zestárne pomaleji než rubrika,
+ * u které je vidět, že poslední přírůstek je z května. Když je pole prázdné,
+ * sekce se vůbec nevykreslí – nikdy tedy nesvítí prázdná.
+ *
+ * Nový odkaz = jeden řádek sem. Drž se tří až čtyř položek; delší seznam
+ * v úvodu přebíjí tlačítko k materiálům. Když přibude pátý, vyhoď nejstarší.
+ * `cesky: true` u českých textů – na /en se u nich ukáže „in Czech".
+ */
+export type Clanek = { title: string; source: string; url: string; cesky?: boolean };
+
+export const CLANKY: Clanek[] = [];
+
 export const SOCIALS: Social[] = [
   { network: "youtube", handle: "@karelhlas", href: "https://www.youtube.com/@karelhlas" },
   { network: "instagram", handle: "@karelbowls", href: "https://instagram.com/karelbowls" },
@@ -1011,6 +1026,8 @@ type Dict = {
     /** Důkazní řádek. `{files}` a `{topics}` se nahradí reálnými čísly. */
     stats: string;
     sample: string;
+    /** Popisek nad odkazy na čtení (komponenta `Ctenie`). */
+    reading: string;
     ctaLessons: string;
     ctaContact: string;
     scroll: string;
@@ -1116,6 +1133,7 @@ export const t: Record<Lang, Dict> = {
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · 1. ročník SŠ",
       sample: "Ukázka materiálů",
+      reading: "Za přečtení",
       ctaLessons: "Procházet materiály",
       ctaContact: "O mně",
       scroll: "Materiály",
@@ -1391,6 +1409,7 @@ export const t: Record<Lang, Dict> = {
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · Year 1 secondary",
       sample: "Sample materials",
+      reading: "Worth reading",
       ctaLessons: "Browse the materials",
       ctaContact: "About me",
       scroll: "Materials",

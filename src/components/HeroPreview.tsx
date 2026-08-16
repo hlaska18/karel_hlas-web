@@ -65,7 +65,9 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
       /* Vlastní popisek: bez něj by čtečka předčítala všechny karty a duplikovala
          tak seznam z banky níž; zároveň se neplete s hlavním tlačítkem. */
       aria-label={tr.hero.sample}
-      className="group hidden w-[22rem] shrink-0 lg:block"
+      /* Skrytí na mobilu a šířku sloupce řeší obal v Hero.tsx – vedle karet
+         v něm stojí ještě odkazy na čtení. */
+      className="group block"
     >
       <p className="mb-4 pl-1 text-xs font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
         {tr.hero.sample}
