@@ -41,10 +41,10 @@ Pro žáky
 MAPA HODIN
 1. Rastrová a vektorová grafika        Laboratoř – rastr a vektor
 2. Rozlišení, barvy a barevná hloubka  Laboratoř – barevná hloubka
-3. Formáty obrázků a komprese dat      Laboratoř – komprese a formáty
+3. Formáty obrázků a komprese          Laboratoř – komprese a formáty
 4. Úprava fotografie v GIMPu           GIMP
 5. Vektorová značka v Inkscapu         Inkscape
-6. Základy práce se zvukem a videem    Laboratoř – vzorkování zvuku + Média
+6. Zvuk a video                        Laboratoř – vzorkování zvuku + Média
 7. Infografika a prezentace            Canva
 8. Závěrečný výstup a obhajoba         dle volby studenta
 
@@ -56,6 +56,7 @@ Ke každé z nich je v metodice uvedena náhradní varianta pro případ,
 
 PŮVOD MATERIÁLŮ A BEZPEČNOST
 Všechny obrázky, zvuky i videa v balíčku byly vytvořeny programově přímo pro tuto sadu.
-Neobsahují žádné osoby ani cizí dílo. Laboratoř funguje offline a nic neodesílá.
+Neobsahují žádné osoby ani cizí dílo. Laboratoře fungují offline a nic neodesílají;
+obrázky mají vepsané v sobě, takže fungují i po stažení samotného souboru.
 Do studentských výstupů nevkládej cizí obrázky bez ověřené licence
 ani fotografie spolužáků bez jejich souhlasu.

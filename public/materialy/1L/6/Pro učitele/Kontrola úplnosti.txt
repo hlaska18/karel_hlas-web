@@ -11,15 +11,16 @@ Obsah
 - 8 plánů hodin v metodice + nepovinný bonus (RGB a CMYK, ztrátová komprese zvuku, metadata fotografie)
 - 8 pracovních listů v digitálním pracovním sešitu
 - 8 prezentací po 7 snímcích, celkem 56 snímků s poznámkami
-- 5 interaktivních modulů v offline laboratoři
-- digitální podklad ke každé hodině
+- 5 interaktivních modulů ve čtyřech offline laboratořích (hodiny 1, 2, 3 a 6)
+- digitální podklad k sedmi hodinám z osmi; hodina 2 vystačí s prezentací a laboratoří
 - testy A/B, řešení a rubrika závěrečného výstupu
 
 Kontrolované vazby
-- názvy podkladů v metodice, sešitu a prezentacích odpovídají souborům ve složce 03
+- názvy podkladů v metodice, sešitu a prezentacích odpovídají souborům ve složkách hodin
 - cíle, aktivity, výstupy a časování se shodují ve všech řídicích dokumentech
 - uváděné velikosti souborů odpovídají skutečným souborům
-- laboratoř funguje offline a nenačítá externí zdroje
+- laboratoře fungují offline, nenačítají externí zdroje a mají obrázky vepsané
+  přímo v sobě, takže fungují i po stažení samotného souboru
 - hodiny závislé na instalovaném software mají uvedenou náhradní variantu
 - v názvech ani v obsahu nejsou číselná označení verzí
 

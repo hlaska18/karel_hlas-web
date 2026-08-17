@@ -27,21 +27,17 @@ input[type=range]{width:230px;accent-color:var(--teal)}
 button{font:inherit;font-size:14px;padding:7px 14px;border:1px solid var(--teal);background:#fff;
   color:var(--teal-d);border-radius:6px;cursor:pointer}
 button.on,button:hover{background:var(--teal);color:#fff}
-.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-@media(max-width:760px){.two{grid-template-columns:1fr}}
+
 .pane{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .pane h4{margin:0;padding:8px 12px;font-size:13px;background:#fbfbf9;border-bottom:1px solid var(--line);color:var(--grey);
   text-transform:uppercase;letter-spacing:.05em}
 .pane .in{padding:12px;text-align:center}
 .pane img,.pane canvas{max-width:100%;display:block;margin:0 auto;image-rendering:auto}
-.pixelated{image-rendering:pixelated;image-rendering:crisp-edges}
 table{border-collapse:collapse;width:100%;font-size:14px;margin-top:12px}
 th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
 th{background:#f4f7f6;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
 td.num{text-align:right;font-variant-numeric:tabular-nums}
-.mark{background:#e7f3f1;font-weight:700}
-.badge{font-size:12px;padding:2px 8px;border-radius:20px;background:#eef2f1;color:var(--grey)}
-.badge.good{background:#e2f2ea;color:#1e6b45}.badge.bad{background:#fbe9e4;color:#a33c1e}
+
 .note{font-size:13px;color:var(--grey);margin-top:10px}
 .chk{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
 .chk button{margin:4px 6px 4px 0}
@@ -74,6 +70,13 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
     <p class="note">Skutečné CD používá 44 100 vzorků za sekundu a 16 bitů, tedy 65 536 úrovní hlasitosti.
       Soubory <b>Média/zvuk_*.wav</b> ukazují stejný princip skutečným zvukem — poslechni si je a porovnej.</p>
     <div class="q"><b>Zapiš:</b> Co se s vlnou stane, když je vzorků málo? A co se změní, když ubereš úrovně hlasitosti? Který z obou parametrů má na tvůj poslech větší vliv?</div>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">co se stane, když vzorků ubude ještě víc?</span><br>
+      <button class="a4" data-ok="0">Nahrávka bude tišší</button>
+      <button class="a4" data-ok="1">Ztratí se nejvyšší tóny</button>
+      <button class="a4" data-ok="0">Nahrávka bude kratší</button>
+      <div class="res" id="r4"></div>
+    </div>
   </div>
 </section>
 
@@ -109,6 +112,16 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
     pts.forEach(function(p){x.beginPath();x.arc(p[0],p[1],3.5,0,7);x.fill();});
   }
   sr.addEventListener('input',draw);sb.addEventListener('input',draw);draw();
+
+  function group(sel,fn){var b=document.querySelectorAll(sel);
+    b.forEach(function(x){x.addEventListener('click',function(){
+      b.forEach(function(y){y.classList.remove('on')});x.classList.add('on');fn(x);});});}
+  function check(sel,out,ok,bad){group(sel,function(b){
+    var r=$(out);
+    if(b.dataset.ok==='1'){r.style.color='#1e6b45';r.textContent='Správně. '+ok;}
+    else{r.style.color='#a33c1e';r.textContent='Ne. '+bad;}});}
+  check('.a4','r4','Čím řidší vzorky, tím hrubší schodovitý záznam. Nejvyšší tóny odejdou první, protože se mění nejrychleji.',
+        'Vzorkování nemění hlasitost ani délku nahrávky — mění jen to, jak jemně se vlna změří.');
 })();
 </script>
 </body>
