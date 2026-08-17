@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
-import { OG_SIZE, ogCard } from "@/lib/ogCard";
+import { OG_SIZE, ogCard, ogTemata } from "@/lib/ogCard";
 
 describe("OG_SIZE", () => {
   it("matches the standard Open Graph card dimensions", () => {
@@ -12,9 +12,10 @@ describe("OG_SIZE", () => {
 describe("ogCard", () => {
   const opts = {
     headline: "Hotové materiály do hodin",
-    sub: "Excel, Word, Python a Power BI",
+    sub: "Pracovní listy, testy a plány hodin",
     byline: "Karel Hlas",
     domain: "karelhlas.xyz",
+    temata: ["Grafika", "Umělá inteligence"],
   };
 
   it("renders the provided text content", () => {
@@ -25,10 +26,24 @@ describe("ogCard", () => {
     expect(screen.getByText(opts.domain)).toBeTruthy();
   });
 
-  it("renders the four tool chips", () => {
+  it("renders a chip for every topic it is given", () => {
     render(ogCard(opts));
-    for (const tool of ["Excel", "Word", "Python", "Power BI"]) {
-      expect(screen.getByText(tool)).toBeTruthy();
+    for (const t of opts.temata) expect(screen.getByText(t)).toBeTruthy();
+  });
+});
+
+describe("ogTemata", () => {
+  // Štítky se berou z TOOL_LABEL, aby se karta nemohla rozejít s bankou.
+  // Test proto hlídá vazbu na skutečné popisky, ne konkrétní slova na kartě.
+  it("translates the topic names", () => {
+    expect(ogTemata("cs")).toContain("Grafika a multimédia");
+    expect(ogTemata("en")).toContain("Graphics & multimedia");
+  });
+
+  it("names four topics that have their own files", () => {
+    expect(ogTemata("cs")).toHaveLength(4);
+    for (const prazdne of ["Excel", "Word", "Power BI"]) {
+      expect(ogTemata("cs")).not.toContain(prazdne);
     }
   });
 });

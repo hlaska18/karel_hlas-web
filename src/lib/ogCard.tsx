@@ -1,6 +1,7 @@
 import { ImageResponse } from "next/og";
 import { SITE, type Lang } from "@/lib/content";
 import { markDataUri } from "@/lib/mark";
+import { toolLabel } from "@/lib/bankLabels";
 
 /**
  * Sdílená vizuální šablona pro OG/Twitter kartu (1200×630), generovaná přes
@@ -18,29 +19,58 @@ export const OG_CONTENT_TYPE = "image/png";
  */
 export const OG_CONTENT: Record<Lang, { alt: string; headline: string; sub: string }> = {
   cs: {
-    alt: "Materiály pro výuku informatiky – Karel Hlas",
-    headline: "Hotové materiály do hodin informatiky",
+    alt: "Hotové přípravy a materiály do výuky – Karel Hlas",
+    headline: "Hotové přípravy a materiály nejen do informatiky",
     sub: "Pracovní listy, testy, metodika a plány hodin – zdarma ke stažení",
   },
   en: {
-    alt: "Ready-made materials for CS lessons – Karel Hlas",
-    headline: "Ready-made materials for CS lessons",
+    alt: "Ready-made lesson plans and materials – Karel Hlas",
+    headline: "Ready-made lesson plans and materials, not just for CS",
     sub: "Worksheets, tests, teaching notes and lesson plans – free to download",
   },
 };
+
+/**
+ * Témata na štítcích karty: čtyři největší, která mají vlastní soubory ke
+ * stažení (136 ze 152). Dřív tu stály Excel, Word, Python a Power BI – jenže
+ * první tři mají nula vlastních souborů, takže karta inzerovala prázdno.
+ *
+ * Názvy se berou z `TOOL_LABEL`, ne opisují: kdyby se téma v bance
+ * přejmenovalo, přejmenuje se i karta.
+ */
+const KARTA_TEMATA = [
+  "Grafika a multimédia",
+  "Umělá inteligence",
+  "Internet a bezpečnost",
+  "Digitální gramotnost",
+];
+
+export function ogTemata(lang: Lang): string[] {
+  return KARTA_TEMATA.map((t) => toolLabel(t, lang));
+}
 
 /** Vygeneruje ImageResponse pro OG/Twitter kartu v daném jazyce. */
 export function ogImageResponse(lang: Lang) {
   const c = OG_CONTENT[lang];
   return new ImageResponse(
-    ogCard({ headline: c.headline, sub: c.sub, byline: SITE.name, domain: SITE.domain }),
+    ogCard({
+      headline: c.headline,
+      sub: c.sub,
+      byline: SITE.name,
+      domain: SITE.domain,
+      temata: ogTemata(lang),
+    }),
     { ...OG_SIZE },
   );
 }
 
-const TOOLS = ["Excel", "Word", "Python", "Power BI"];
-
-export function ogCard(opts: { headline: string; sub: string; byline: string; domain: string }) {
+export function ogCard(opts: {
+  headline: string;
+  sub: string;
+  byline: string;
+  domain: string;
+  temata: string[];
+}) {
   return (
     <div
       style={{
@@ -57,7 +87,11 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
         fontFamily: "sans-serif",
       }}
     >
-      <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
+      {/* Doména je nahoře u podpisu, ne dole u štítků: čtyři názvy témat zaberou
+          přes 950 px a na doménu by na spodním řádku nezbylo místo – přetékala
+          přes poslední štítek. */}
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 18 }}>
         <div
           style={{
             display: "flex",
@@ -81,6 +115,8 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
         <div style={{ display: "flex", color: "#a8f0da", fontSize: 28, fontWeight: 600 }}>
           {opts.byline}
         </div>
+        </div>
+        <div style={{ display: "flex", color: "#71717a", fontSize: 24 }}>{opts.domain}</div>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 990 }}>
@@ -101,21 +137,23 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
         </div>
       </div>
 
-      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
-        <div style={{ display: "flex", gap: 14 }}>
-          {TOOLS.map((t) => (
+      {/* Štítky mají spodní řádek celý pro sebe – názvy témat jsou o dost delší
+          než dřívější „Excel“ a „Word“ a se sousedem se na 1056 px nevejdou. */}
+      <div style={{ display: "flex", alignItems: "center" }}>
+        <div style={{ display: "flex", gap: 12 }}>
+          {opts.temata.map((t) => (
             <div
               key={t}
               style={{
                 display: "flex",
-                padding: "10px 24px",
+                padding: "8px 18px",
                 borderRadius: 9999,
                 backgroundColor: "rgba(20,178,139,0.15)",
                 borderWidth: 1,
                 borderStyle: "solid",
                 borderColor: "rgba(20,178,139,0.4)",
                 color: "#6fe3c2",
-                fontSize: 22,
+                fontSize: 20,
                 fontWeight: 600,
               }}
             >
@@ -123,7 +161,6 @@ export function ogCard(opts: { headline: string; sub: string; byline: string; do
             </div>
           ))}
         </div>
-        <div style={{ display: "flex", color: "#71717a", fontSize: 22 }}>{opts.domain}</div>
       </div>
     </div>
   );

@@ -32,7 +32,7 @@ import {
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
-import { toolLabel, countMaterials, materialTypeOf, fmtSize } from "@/lib/bankLabels";
+import { toolLabel, countMaterials, countLinks, materialTypeOf, fmtSize } from "@/lib/bankLabels";
 import { ToolGlassIcon, hasToolGlassIcon } from "@/components/ToolGlassIcon";
 
 /** Rozhraní UI textů banky (CZ/EN). */
@@ -306,10 +306,18 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
 
   // Dlaždice nástrojů + počty. Položky chodí ze serveru seřazené dle TOOL_ORDER,
   // takže pořadí prvního výskytu v Map = správné pořadí dlaždic.
+  // Vlastní soubory a externí odkazy se počítají zvlášť. Hero hlásí jen vlastní
+  // soubory, takže dokud dlaždice počítaly obojí dohromady, součet dlaždic
+  // nesouhlasil s číslem nad nimi (161 proti 152).
   const tiles = useMemo(() => {
-    const counts = new Map<string, number>();
-    for (const it of items) counts.set(it.tool, (counts.get(it.tool) ?? 0) + 1);
-    return [...counts.entries()].map(([name, count]) => ({ name, count }));
+    const counts = new Map<string, { vlastni: number; odkazy: number }>();
+    for (const it of items) {
+      const c = counts.get(it.tool) ?? { vlastni: 0, odkazy: 0 };
+      if (it.external) c.odkazy += 1;
+      else c.vlastni += 1;
+      counts.set(it.tool, c);
+    }
+    return [...counts.entries()].map(([name, c]) => ({ name, ...c }));
   }, [items]);
 
   // Výsledky podle režimu: hledání > vybraná dlaždice > nic.
@@ -389,8 +397,12 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                     <span className="font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-white sm:text-lg">
                       {toolLabel(t.name, lang)}
                     </span>
+                    {/* Kde nic vlastního není (Word, Excel, Power BI), řekne to
+                        dlaždice rovnou – ať učitel nekliká pro nic. */}
                     <span className="text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
-                      {countMaterials(t.count, lang)}
+                      {t.vlastni > 0
+                        ? countMaterials(t.vlastni, lang)
+                        : countLinks(t.odkazy, lang)}
                     </span>
                   </span>
                   {/* Velká „plovoucí" ikona: na mobilu nahoře menší, na desktopu vyplní pravou část */}

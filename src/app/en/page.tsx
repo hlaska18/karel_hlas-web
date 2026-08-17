@@ -4,8 +4,11 @@ import { getBankItems } from "@/lib/materials";
 
 export const metadata: Metadata = {
   title: { absolute: "Ready-made materials for CS lessons – Karel Hlas" },
+  // The list names the topics that actually have files to download. It used to
+  // read "(Excel, Word, Python, Power BI)" – but the first three only link to
+  // someone else's workbook, so the description promised an empty shelf.
   description:
-    "Ready-made materials for Computer Science lessons, free to download and edit – worksheets, tests, lesson plans and teaching notes (Excel, Word, Python, Power BI). Curated by Karel Hlas, teacher at SPŠ Tábor.",
+    "Ready-made materials for Computer Science lessons, free to download and edit – worksheets, tests, lesson plans and teaching notes. Graphics & multimedia, artificial intelligence, internet & online safety, digital literacy, databases. Curated by Karel Hlas, teacher at SPŠ Tábor.",
   alternates: {
     canonical: "/en",
     languages: { cs: "/", en: "/en", "x-default": "/" },
@@ -13,7 +16,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Ready-made materials for CS lessons – Karel Hlas",
     description:
-      "Ready-made materials for Computer Science lessons, free to download and edit – worksheets, tests, lesson plans and teaching notes (Excel, Word, Python, Power BI).",
+      "Ready-made materials for Computer Science lessons, free to download and edit – worksheets, tests, lesson plans and teaching notes. Graphics & multimedia, artificial intelligence, internet & online safety, digital literacy, databases.",
     url: "/en",
     siteName: "Karel Hlas",
     locale: "en_US",
@@ -24,7 +27,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Ready-made materials for CS lessons – Karel Hlas",
     description:
-      "Ready-made materials for Computer Science lessons (Excel, Word, Python, Power BI).",
+      "Ready-made materials for Computer Science lessons – graphics & multimedia, artificial intelligence, internet & online safety, digital literacy, databases.",
     // Obrázek generuje src/app/en/twitter-image.tsx (next/og).
   },
 };

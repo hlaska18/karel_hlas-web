@@ -19,8 +19,11 @@ export const metadata: Metadata = {
     default: "Materiály do výuky – Karel Hlas",
     template: "%s – Karel Hlas",
   },
+  // Výčet témat jmenuje to, co má vlastní soubory ke stažení. Dřív tu stálo
+  // „(Excel, Word, Python, Power BI)“ – jenže u prvních tří vede jen odkaz na
+  // cizí cvičebnici, takže popisek sliboval prázdno.
   description:
-    "Hotové materiály do hodin ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika (Excel, Word, Python, Power BI). Vznikly v informatice, použitelné i v dalších předmětech. Připravuje Karel Hlas, učitel na SPŠ Tábor.",
+    "Hotové materiály do hodin ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika. Grafika a multimédia, umělá inteligence, internet a bezpečnost, digitální gramotnost, databáze. Vznikly v informatice, použitelné i v dalších předmětech. Připravuje Karel Hlas, učitel na SPŠ Tábor.",
   keywords: [
     "Karel Hlas",
     "učitel informatiky",
@@ -41,7 +44,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Materiály do výuky – Karel Hlas",
     description:
-      "Hotové materiály do hodin ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika (Excel, Word, Python, Power BI).",
+      "Hotové materiály do hodin ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika. Grafika a multimédia, umělá inteligence, internet a bezpečnost, digitální gramotnost, databáze.",
     url: SITE.url,
     siteName: "Karel Hlas",
     locale: "cs_CZ",
@@ -52,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Materiály do výuky – Karel Hlas",
     description:
-      "Hotové materiály do hodin ke stažení a úpravě (Excel, Word, Python, Power BI).",
+      "Hotové materiály do hodin ke stažení a úpravě – grafika a multimédia, umělá inteligence, internet a bezpečnost, digitální gramotnost, databáze.",
     // Obrázek generuje src/app/twitter-image.tsx (next/og).
   },
   robots: {

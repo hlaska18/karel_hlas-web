@@ -45,6 +45,18 @@ export function countMaterials(n: number, lang: Lang): string {
   return `${n} ${word}`;
 }
 
+/**
+ * Popisek dlaždice, kde nic vlastního není a vede odsud jen odkaz na cizí
+ * cvičebnici (Word, Excel, Power BI). Dřív i tyhle dlaždice hlásily
+ * „2 materiály“, takže učitel klikl a nenašel nic ke stažení – a součet
+ * dlaždic navíc nesouhlasil s číslem v hero, které odkazy nepočítá.
+ */
+export function countLinks(n: number, lang: Lang): string {
+  if (lang === "en") return `${n} ${n === 1 ? "link" : "links"}`;
+  const word = n === 1 ? "odkaz" : n >= 2 && n <= 4 ? "odkazy" : "odkazů";
+  return `${n} ${word}`;
+}
+
 const norm = (s?: string) => (s ?? "").normalize("NFC").toLowerCase();
 
 /** Pravidla v pořadí priority: [regex na obsah, dvojjazyčný štítek]. */

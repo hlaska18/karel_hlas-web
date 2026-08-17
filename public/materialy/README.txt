@@ -15,8 +15,10 @@ zkoumání (video_1280x720_30fps.mp4) – ty zůstávají technické schválně.
 
 PODSLOŽKY:
  - Obyčejná podsložka (např. "Pracovní listy/") = rozbalovací skupina materiálů.
- - Podsložka "_ucitel/" = UČITELSKÉ materiály. Ukážou se POUZE v učitelském
-   pohledu (přepínač Žák/Učitel) a mají odznak "Pro učitele". Žáci je nevidí.
+ - Podsložka "_ucitel/" = UČITELSKÉ materiály. Dostanou odznak "Pro učitele"
+   a vypadnou z indexu vyhledávačů (robots.txt).
+   POZOR: v bance je vidí a stáhne KAŽDÝ. Přepínač Žák/Učitel na webu není,
+   odznak je jen popisek. Když chceš něco schovat před žáky, nedávej to sem.
    Příklad: public/materialy/1L/8/_ucitel/Metodika.pdf
    Uvnitř "_ucitel/" může být i podsložka = rozbalovací učitelská skupina, např.
    public/materialy/1L/5/_ucitel/Python - metodické listy/MetodL00.pdf
