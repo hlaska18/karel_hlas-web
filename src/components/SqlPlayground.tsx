@@ -264,7 +264,7 @@ export function SqlPlayground() {
   if (dbState === "loading") {
     return (
       <div className="glass flex items-center gap-3 rounded-2xl p-6 text-zinc-600 dark:text-zinc-300">
-        <Loader2 className="h-5 w-5 animate-spin text-accent-600" />
+        <Loader2 className="h-5 w-5 animate-spin text-accent-700 dark:text-accent-400" />
         Spouštím SQL engine v prohlížeči… (pár sekund, nic se nestahuje do počítače)
       </div>
     );
@@ -287,7 +287,7 @@ export function SqlPlayground() {
           <p className="font-semibold text-zinc-700 dark:text-zinc-200">
             Lekce {lesson.id} z {LESSONS.length}
           </p>
-          <p className="text-zinc-500 dark:text-zinc-400">
+          <p className="text-zinc-600 dark:text-zinc-400">
             Hotovo {done.size}/{LESSONS.length}
           </p>
         </div>
@@ -309,10 +309,10 @@ export function SqlPlayground() {
                 l.id === lessonId
                   ? "bg-accent-600 text-white"
                   : copied.has(l.id)
-                    ? "bg-black/[0.06] text-zinc-500 dark:bg-white/10 dark:text-zinc-400"
+                    ? "bg-black/[0.06] text-zinc-600 dark:bg-white/10 dark:text-zinc-400"
                     : done.has(l.id)
                       ? "bg-accent-500/15 text-accent-700 dark:text-accent-300"
-                      : "glass-soft text-zinc-700 hover:text-accent-600 dark:text-zinc-200"
+                      : "glass-soft text-zinc-700 hover:text-accent-700 dark:text-zinc-200"
               }`}
             >
               {done.has(l.id) && l.id !== lessonId ? <Check className="h-4 w-4" /> : l.id}
@@ -328,7 +328,7 @@ export function SqlPlayground() {
       {allDone && (
         <div className="glass-accent rounded-2xl p-5">
           <p className="flex items-center gap-2 font-display text-lg font-bold text-zinc-900 dark:text-white">
-            <PartyPopper className="h-5 w-5 text-accent-600 dark:text-accent-300" /> Kurz dokončen –
+            <PartyPopper className="h-5 w-5 text-accent-700 dark:text-accent-300" /> Kurz dokončen –
             všech {LESSONS.length} lekcí!
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">
@@ -357,7 +357,7 @@ export function SqlPlayground() {
 
       {/* Úkol */}
       <div className="glass rounded-2xl p-5">
-        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-wide text-zinc-500 dark:text-zinc-400">
+        <p className="flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
           {bonus ? "Úloha navíc" : "Tvůj úkol"}
           {bonus && (
             <button
@@ -378,7 +378,7 @@ export function SqlPlayground() {
             type="button"
             onClick={() => setShowHint((v) => !v)}
             aria-expanded={showHint}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-400"
           >
             <Lightbulb className="h-4 w-4" /> {showHint ? "Skrýt nápovědu" : "Nápověda"}
           </button>
@@ -387,7 +387,7 @@ export function SqlPlayground() {
               type="button"
               onClick={() => setShowSolution((v) => !v)}
               aria-expanded={showSolution}
-              className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
+              className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-400"
             >
               <KeyRound className="h-4 w-4" /> {showSolution ? "Skrýt řešení" : "Ukázat řešení"}
             </button>
@@ -395,7 +395,7 @@ export function SqlPlayground() {
         </div>
         {showHint && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{sazba(task.hint, "cs")}</p>}
         {showHint && !checked && (
-          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
+          <p className="mt-2 text-xs text-zinc-600 dark:text-zinc-400">
             Řešení se nabídne, až jednou zkusíš Zkontrolovat.
           </p>
         )}
@@ -420,7 +420,7 @@ export function SqlPlayground() {
 
       {/* Struktura tabulek */}
       <div className="glass-soft flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl px-4 py-3 text-xs text-zinc-600 dark:text-zinc-300">
-        <span className="inline-flex items-center gap-1.5 font-semibold text-zinc-500 dark:text-zinc-400">
+        <span className="inline-flex items-center gap-1.5 font-semibold text-zinc-600 dark:text-zinc-400">
           <Database className="h-3.5 w-3.5" /> Tabulky:
         </span>
         {SCHEMA_INFO.map((s) => (
@@ -459,7 +459,7 @@ export function SqlPlayground() {
           <button
             type="button"
             onClick={onCheck}
-            className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
+            className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200"
           >
             <CheckCircle2 className="h-4 w-4" /> Zkontrolovat
           </button>
@@ -468,11 +468,11 @@ export function SqlPlayground() {
           <button
             type="button"
             onClick={resetDb}
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-zinc-600 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-400"
           >
             <RotateCcw className="h-4 w-4" /> Obnovit databázi
           </button>
-          <span className="hidden text-xs text-zinc-400 sm:inline dark:text-zinc-500">
+          <span className="hidden text-xs text-zinc-600 sm:inline dark:text-zinc-400">
             Ctrl+Enter spustí dotaz
           </span>
         </div>
@@ -492,7 +492,7 @@ export function SqlPlayground() {
             <button
               type="button"
               onClick={() => selectTask(lesson.id, "bonus")}
-              className="glass-soft inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
+              className="glass-soft inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200"
             >
               <Sparkles className="h-4 w-4" /> Úloha navíc
             </button>
@@ -546,7 +546,7 @@ export function SqlPlayground() {
 
 function ResultTable({ result }: { result: SqlResult }) {
   if (result.values.length === 0) {
-    return <p className="text-sm text-zinc-500 dark:text-zinc-400">Dotaz nevrátil žádné řádky.</p>;
+    return <p className="text-sm text-zinc-600 dark:text-zinc-400">Dotaz nevrátil žádné řádky.</p>;
   }
   return (
     <div className="glass overflow-x-auto rounded-2xl">
@@ -575,7 +575,7 @@ function ResultTable({ result }: { result: SqlResult }) {
           ))}
         </tbody>
       </table>
-      <p className="px-4 py-2 text-xs text-zinc-400">
+      <p className="px-4 py-2 text-xs text-zinc-600">
         {result.values.length} {radky(result.values.length)}
       </p>
     </div>

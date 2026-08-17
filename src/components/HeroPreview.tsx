@@ -71,7 +71,7 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
          v něm stojí ještě odkazy na čtení. */
       className="group block"
     >
-      <p className="mb-4 pl-1 text-xs font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+      <p className="mb-4 pl-1 text-xs font-medium uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
         {tr.hero.sample}
       </p>
 
@@ -91,19 +91,19 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
               {/* V klidu šedý, po najetí na kartu se rozsvítí – stejně jako
                   značky zdrojů u článků níž. Ikona zůstává táž, mění se barva. */}
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
-                <Icon className="h-5 w-5 text-zinc-500 transition duration-300 group-hover/karta:text-accent-700 dark:text-zinc-400 dark:group-hover/karta:text-accent-300" />
+                <Icon className="h-5 w-5 text-zinc-600 transition duration-300 group-hover/karta:text-accent-700 dark:text-accent-400 dark:text-zinc-400 dark:group-hover/karta:text-accent-300" />
               </span>
 
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-semibold">
                   {lang === "en" ? it.label.en : it.label.cs}
                 </span>
-                <span className="mt-0.5 block truncate text-xs text-zinc-500 dark:text-zinc-400">
+                <span className="mt-0.5 block truncate text-xs text-zinc-600 dark:text-zinc-400">
                   {toolLabel(it.tool, lang)}
                 </span>
               </span>
 
-              <span className="shrink-0 rounded-lg bg-black/[0.05] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-zinc-500 transition duration-300 group-hover/karta:bg-accent-500/15 group-hover/karta:text-accent-700 dark:bg-white/10 dark:text-zinc-400 dark:group-hover/karta:text-accent-300">
+              <span className="shrink-0 rounded-lg bg-black/[0.05] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-zinc-600 transition duration-300 group-hover/karta:bg-accent-500/15 group-hover/karta:text-accent-700 dark:text-accent-400 dark:bg-white/10 dark:text-zinc-400 dark:group-hover/karta:text-accent-300">
                 {it.ext}
               </span>
             </div>

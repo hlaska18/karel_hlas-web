@@ -54,7 +54,7 @@ export function About() {
             {BADGES.length > 0 && (
               <div className="mt-10">
                 <Reveal delay={0.1}>
-                  <p className="text-sm font-semibold uppercase tracking-widest text-zinc-500 dark:text-zinc-400">
+                  <p className="text-sm font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
                     {a.badgesTitle}
                   </p>
                 </Reveal>
@@ -66,6 +66,7 @@ export function About() {
                         alt={b.alt}
                         width={72}
                         height={72}
+              sizes="72px"
                         className={`h-14 w-14 sm:h-16 sm:w-16 ${
                           b.circle ? "rounded-full object-cover" : "object-contain"
                         } drop-shadow-sm`}
@@ -136,7 +137,7 @@ function TimelineGroup({
 }) {
   return (
     <div className="glass rounded-3xl p-6 sm:p-7">
-      <div className="flex items-center gap-2.5 text-accent-600 dark:text-accent-400">
+      <div className="flex items-center gap-2.5 text-accent-700 dark:text-accent-400">
         {icon}
         <h3 className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
           {title}
@@ -146,7 +147,7 @@ function TimelineGroup({
         {items.map((it, i) => (
           <li key={i} className="relative">
             <span className="absolute -left-[1.6rem] top-1.5 h-2.5 w-2.5 rounded-full bg-accent-500 ring-4 ring-[var(--bg-soft)]" />
-            <p className="text-xs font-semibold uppercase tracking-wide text-accent-600 dark:text-accent-400">
+            <p className="text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-400">
               {it.period}
             </p>
             <p className="mt-0.5 font-medium text-zinc-900 dark:text-white">{it.place}</p>

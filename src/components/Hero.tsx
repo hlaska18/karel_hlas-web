@@ -72,7 +72,7 @@ export function Hero({
 
             {/* Důkaz místo přídavných jmen: kolik toho tu opravdu je. */}
             {statsParts.length > 0 && (
-              <ul className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <ul className="mt-5 flex flex-wrap items-center gap-x-3 gap-y-2 text-sm font-medium text-zinc-600 dark:text-zinc-400">
                 {statsParts.map((part, i) => (
                   <li key={part} className="flex items-center gap-3">
                     {i > 0 && (
@@ -92,7 +92,7 @@ export function Hero({
               />
             </div>
 
-            <p className="mt-7 text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="mt-7 text-sm text-zinc-600 dark:text-zinc-400">
               {sazba(tr.hero.byline, lang)}
             </p>
           </div>
@@ -110,7 +110,7 @@ export function Hero({
       {/* Scroll indikátor */}
       <a
         href="#banka"
-        className="container-page hidden items-center gap-2 pb-10 text-xs font-medium uppercase tracking-widest text-zinc-500 transition hover:text-accent-600 dark:text-zinc-400 dark:hover:text-accent-400 sm:flex"
+        className="container-page hidden items-center gap-2 pb-10 text-xs font-medium uppercase tracking-widest text-zinc-600 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-400 dark:hover:text-accent-400 sm:flex"
       >
         <ArrowDown className="h-4 w-4 animate-bounce" />
         {tr.hero.scroll}

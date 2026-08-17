@@ -23,6 +23,8 @@ export function ToolGlassIcon({
       alt=""
       width={320}
       height={320}
+      // Kreslí se na 78–152 px, ale bez `sizes` sáhne Next na retině po w=640.
+      sizes="(min-width: 1024px) 152px, 96px"
       className={`${className} transition duration-300 group-hover:scale-105`}
     />
   );

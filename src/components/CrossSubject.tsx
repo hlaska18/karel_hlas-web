@@ -81,24 +81,24 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
               className="glass-soft group flex w-full flex-col rounded-2xl border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 dark:border-white/15"
             >
               <span className="flex items-center gap-3">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-black/[0.04] text-zinc-400 dark:bg-white/5 dark:text-zinc-500">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
                   <Plus className="h-6 w-6" />
                 </span>
                 <span className="font-display text-lg font-semibold tracking-tight text-zinc-700 dark:text-zinc-200">
                   {c.inviteTitle}
                 </span>
               </span>
-              <span className="mt-3 flex-1 text-sm leading-relaxed text-zinc-500 dark:text-zinc-400">
+              <span className="mt-3 flex-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                 {c.inviteText}
               </span>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-600 transition group-hover:gap-2.5 group-hover:text-accent-700 dark:text-zinc-300 dark:group-hover:text-accent-300">
+              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-600 transition group-hover:gap-2.5 group-hover:text-accent-700 dark:text-accent-400 dark:text-zinc-300 dark:group-hover:text-accent-300">
                 {SITE.email} <ArrowRight className="h-4 w-4" />
               </span>
             </a>
           </Reveal>
         </ul>
 
-        <p className="mt-8 flex items-start gap-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+        <p className="mt-8 flex items-start gap-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           {sazba(c.note, lang)}
         </p>
@@ -145,6 +145,7 @@ function SubjectTile({
             alt=""
             width={224}
             height={224}
+          sizes="(min-width: 640px) 112px, 96px"
             className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
           />
         </span>
@@ -157,7 +158,7 @@ function SubjectTile({
           </span>
         </span>
         <ChevronDown
-          className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-5 w-5 shrink-0 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -170,7 +171,7 @@ function SubjectTile({
           <div className="space-y-4 border-t border-black/10 px-5 py-4 dark:border-white/10">
           {item.tool && files.length > 0 && (
             <div>
-              <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
                 {c.materialsLabel}
               </p>
               {/* Dřív tu byl jen odkaz „Otevřít materiály“ – učitel netušil, co za
@@ -183,7 +184,7 @@ function SubjectTile({
 
           {item.tools && item.tools.length > 0 && (
             <div>
-              <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+              <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
                 {c.toolsLabel}
               </p>
               <ul className="mt-2 space-y-3">
@@ -193,7 +194,7 @@ function SubjectTile({
                       href={t.url}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-900 transition hover:text-accent-700 dark:text-white dark:hover:text-accent-300"
+                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-900 transition hover:text-accent-700 dark:text-accent-400 dark:text-white dark:hover:text-accent-300"
                     >
                       {t.name} <ExternalLink className="h-3.5 w-3.5 shrink-0" />
                     </a>
@@ -201,7 +202,7 @@ function SubjectTile({
                       {t.why}
                     </p>
                     {/* Co učitele zaskočí – účty, jazyk, expirace, limity. */}
-                    <p className="mt-0.5 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                    <p className="mt-0.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                       {sazba(t.note, lang)}
                     </p>
                   </li>
@@ -246,20 +247,20 @@ function MaterialFolder({
         aria-expanded={open}
         className="flex w-full items-center gap-2.5 px-3 py-2.5 text-left transition active:scale-[0.99] active:duration-100"
       >
-        <Folder className="h-4 w-4 shrink-0 text-accent-600 dark:text-accent-400" />
+        <Folder className="h-4 w-4 shrink-0 text-accent-700 dark:text-accent-400" />
         <span className="min-w-0 flex-1">
           <span className="block truncate text-sm font-semibold text-zinc-900 dark:text-white">
             {name}
           </span>
-          <span className="block text-xs text-zinc-500 dark:text-zinc-400">
+          <span className="block text-xs text-zinc-600 dark:text-zinc-400">
             {countMaterials(items.length, lang)}
           </span>
         </span>
         {author && (
-          <span className="shrink-0 text-xs text-zinc-500 dark:text-zinc-400">{author}</span>
+          <span className="shrink-0 text-xs text-zinc-600 dark:text-zinc-400">{author}</span>
         )}
         <ChevronDown
-          className={`h-4 w-4 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-4 w-4 shrink-0 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
 
@@ -275,15 +276,15 @@ function MaterialFolder({
                     href={it.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-start gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-zinc-200 dark:hover:text-accent-300"
+                    className="group flex items-start gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-300"
                   >
-                    <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                    <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-600" />
                     <span className="min-w-0 flex-1">
                       <span className="block">{label}</span>
                       {/* Bez téhle věty učitel stáhne učebnici a nepochopí,
                           proč úlohy odkazují na soubory, které nemá. */}
                       {it.sourceNote && (
-                        <span className="mt-0.5 block text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+                        <span className="mt-0.5 block text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
                           {it.sourceNote[lang]}
                         </span>
                       )}
@@ -297,13 +298,13 @@ function MaterialFolder({
                 <a
                   href={it.href}
                   download
-                  className="group flex items-center gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-zinc-200 dark:hover:text-accent-300"
+                  className="group flex items-center gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-300"
                   title={c.download}
                 >
-                  <FileText className="h-3.5 w-3.5 shrink-0 text-zinc-400" />
+                  <FileText className="h-3.5 w-3.5 shrink-0 text-zinc-600" />
                   <span className="min-w-0 flex-1 truncate">{label}</span>
-                  <span className="shrink-0 text-xs text-zinc-400">{fmtSize(it.sizeBytes, lang)}</span>
-                  <Download className="h-3.5 w-3.5 shrink-0 text-zinc-400 transition group-hover:text-accent-600 dark:group-hover:text-accent-400" />
+                  <span className="shrink-0 text-xs text-zinc-600">{fmtSize(it.sizeBytes, lang)}</span>
+                  <Download className="h-3.5 w-3.5 shrink-0 text-zinc-600 transition group-hover:text-accent-700 dark:text-accent-400 dark:group-hover:text-accent-400" />
                 </a>
               </li>
             );

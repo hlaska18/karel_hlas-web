@@ -69,7 +69,7 @@ export function Typewriter({
       <span className="col-start-1 row-start-1">
         {shown}
         <span
-          className={`tw-caret text-accent-500 ${done ? "" : "tw-caret--typing"}`}
+          className={`tw-caret text-accent-700 dark:text-accent-400 ${done ? "" : "tw-caret--typing"}`}
         >
           _
         </span>

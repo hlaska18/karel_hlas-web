@@ -52,7 +52,7 @@ export function Ctenie() {
     <section aria-labelledby="ctenie-nadpis" className="group">
       <p
         id="ctenie-nadpis"
-        className="mb-3 pl-1 text-xs font-medium uppercase tracking-widest text-zinc-400 dark:text-zinc-500"
+        className="mb-3 pl-1 text-xs font-medium uppercase tracking-widest text-zinc-600 dark:text-zinc-400"
       >
         {tr.hero.reading}
       </p>
@@ -104,13 +104,13 @@ export function Ctenie() {
                   <span className="line-clamp-2 text-sm font-semibold leading-snug">
                     {c.title}
                   </span>
-                  <span className="mt-0.5 block truncate text-xs text-zinc-500 dark:text-zinc-400">
+                  <span className="mt-0.5 block truncate text-xs text-zinc-600 dark:text-zinc-400">
                     {podtitulek}
                   </span>
                 </span>
                 <span
                   title={c.jazyk === "cs" ? "Článek je česky" : "Článek je anglicky"}
-                  className="shrink-0 rounded-lg bg-black/[0.05] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-zinc-500 transition duration-300 group-hover/karta:bg-accent-500/15 group-hover/karta:text-accent-700 dark:bg-white/10 dark:text-zinc-400 dark:group-hover/karta:text-accent-300">
+                  className="shrink-0 rounded-lg bg-black/[0.05] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-zinc-600 transition duration-300 group-hover/karta:bg-accent-500/15 group-hover/karta:text-accent-700 dark:text-accent-400 dark:bg-white/10 dark:text-zinc-400 dark:group-hover/karta:text-accent-300">
                   {c.jazyk === "cs" ? "cz" : "en"}
                 </span>
               </a>

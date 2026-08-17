@@ -41,7 +41,7 @@ export default function SqlPage() {
           <div className="flex items-center gap-2">
             <Link
               href="/#banka"
-              className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
+              className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200"
             >
               <ArrowLeft className="h-4 w-4" /> Zpět na web
             </Link>
@@ -51,7 +51,7 @@ export default function SqlPage() {
       </header>
 
       <main id="main" className="container-page py-10 sm:py-14">
-        <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
+        <p className="text-sm font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
           Interaktivní kurz
         </p>
         <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
@@ -73,7 +73,7 @@ export default function SqlPage() {
         <details className="glass-soft mt-8 max-w-3xl rounded-2xl px-5 py-4">
           <summary className="cursor-pointer list-none text-sm font-semibold text-zinc-700 marker:content-none dark:text-zinc-200">
             <span className="inline-flex items-center gap-2">
-              <GraduationCap className="h-4 w-4 text-accent-600 dark:text-accent-400" />
+              <GraduationCap className="h-4 w-4 text-accent-700 dark:text-accent-400" />
               Učíš podle toho? Rozklikni, než to zadáš
             </span>
           </summary>
@@ -113,7 +113,7 @@ export default function SqlPage() {
                 Plán hodin, pracovní list, řešení i databáze ke stažení jsou v bance u tématu{" "}
                 <Link
                   href="/?tema=Datab%C3%A1ze#banka"
-                  className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-600 dark:text-accent-300"
+                  className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-700 dark:text-accent-300"
                 >
                   Databáze
                 </Link>
@@ -129,7 +129,7 @@ export default function SqlPage() {
 
         {/* Závěrečná lekce kurzu: stejná databáze, opravdový program (DB Browser). */}
         <section id="praxe" className="glass mt-14 max-w-3xl scroll-mt-24 rounded-3xl p-6 sm:p-8">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
+          <p className="text-sm font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
             Závěrečná lekce – do praxe
           </p>
           <h2 className="mt-2 font-display text-2xl font-bold tracking-tight">
@@ -142,7 +142,7 @@ export default function SqlPage() {
                 href="https://sqlitebrowser.org/dl/"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-600 dark:text-accent-300"
+                className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-700 dark:text-accent-300"
               >
                 DB Browser for SQLite
               </a>{" "}
@@ -164,7 +164,7 @@ export default function SqlPage() {
               href={`${BROWSER}/${encodeURIComponent("Návod - DB Browser.txt")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
+              className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200"
             >
               <MonitorDown className="h-4 w-4" /> Návod na DB Browser
             </a>
@@ -172,7 +172,7 @@ export default function SqlPage() {
               href={`${BROWSER}/${encodeURIComponent("Úlohy - DB Browser.txt")}`}
               target="_blank"
               rel="noopener noreferrer"
-              className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200"
+              className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200"
             >
               <FileText className="h-4 w-4" /> Úlohy do DB Browseru
             </a>

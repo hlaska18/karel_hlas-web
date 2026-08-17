@@ -51,7 +51,7 @@ export function BankSection({ items }: { items: BankItem[] }) {
           <BankBrowser items={items} lang={lang} />
         </div>
 
-        <p className="mt-10 flex items-start gap-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
+        <p className="mt-10 flex items-start gap-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
           {sazba(STR[lang].license, lang)}
         </p>

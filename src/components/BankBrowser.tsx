@@ -365,14 +365,14 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
     <div>
       {/* Vyhledávání */}
       <div className="relative">
-        <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-400" />
+        <Search className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-zinc-600" />
         <input
           type="search"
           value={q}
           onChange={(e) => setQ(e.target.value)}
           aria-label={s.searchPlaceholder}
           placeholder={s.searchPlaceholder}
-          className="glass-soft w-full rounded-2xl py-3.5 pl-12 pr-4 text-base text-zinc-800 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-100"
+          className="glass-soft w-full rounded-2xl py-3.5 pl-12 pr-4 text-base text-zinc-800 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-100"
         />
       </div>
 
@@ -399,7 +399,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                     </span>
                     {/* Kde nic vlastního není (Word, Excel, Power BI), řekne to
                         dlaždice rovnou – ať učitel nekliká pro nic. */}
-                    <span className="text-xs text-zinc-500 dark:text-zinc-400 sm:text-sm">
+                    <span className="text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
                       {t.vlastni > 0
                         ? countMaterials(t.vlastni, lang)
                         : countLinks(t.odkazy, lang)}
@@ -410,7 +410,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                     {hasToolGlassIcon(t.name) ? (
                       <ToolGlassIcon tool={t.name} className="h-full w-full object-contain" />
                     ) : (
-                      <Icon className="h-12 w-12 text-accent-500 transition group-hover:scale-105 sm:h-14 sm:w-14" />
+                      <Icon className="h-12 w-12 text-accent-700 dark:text-accent-400 transition group-hover:scale-105 sm:h-14 sm:w-14" />
                     )}
                   </span>
                 </button>
@@ -428,12 +428,12 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
               <button
                 type="button"
                 onClick={() => setTool(null)}
-                className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-600 dark:text-zinc-200 dark:hover:text-accent-400"
+                className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-400"
               >
                 <ArrowLeft className="h-4 w-4" /> {s.back}
               </button>
             )}
-            <p className="text-sm text-zinc-500 dark:text-zinc-400">
+            <p className="text-sm text-zinc-600 dark:text-zinc-400">
               {needle ? s.searchResults : tool ? `${toolLabel(tool, lang)}: ` : ""}
               {countMaterials(results.length, lang)}
             </p>
@@ -477,7 +477,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           )}
 
           {results.length === 0 && (
-            <p className="mt-10 text-center text-zinc-500 dark:text-zinc-400">{s.empty}</p>
+            <p className="mt-10 text-center text-zinc-600 dark:text-zinc-400">{s.empty}</p>
           )}
         </>
       )}
@@ -518,7 +518,7 @@ function MaterialRow({
           <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
           {/* Vlastní vysvětlivka ze `_zdroj.json` má přednost před obecnou větou –
               u dvojice učebnice + cvičné soubory je potřeba říct, že patří k sobě. */}
-          <span className="mt-0.5 block text-sm text-zinc-500 dark:text-zinc-400">
+          <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
             {it.sourceNote
               ? L(it.sourceNote, lang)
               : `${hasLink ? s.sourceNote : s.sourceNoteOffline}${it.group ? ` · ${L(it.group, lang)}` : ""}`}
@@ -568,8 +568,8 @@ function MaterialRow({
           Jinak by dva dotykové cíle po 44 px ukrojily z názvu skoro všechno. */}
       <span className="min-w-0 flex-1 basis-[calc(100%-5rem)] sm:basis-auto">
         <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
-        <span className="mt-0.5 block truncate text-sm text-zinc-500 dark:text-zinc-400">
-          {materialType && <span className="text-zinc-400 dark:text-zinc-500">{materialType[lang]} · </span>}
+        <span className="mt-0.5 block truncate text-sm text-zinc-600 dark:text-zinc-400">
+          {materialType && <span className="text-zinc-600 dark:text-zinc-400">{materialType[lang]} · </span>}
           {L(it.topicLabel, lang)}
           {it.group ? ` · ${L(it.group, lang)}` : ""}
         </span>
@@ -592,7 +592,7 @@ function MaterialRow({
           )}
         </span>
       )}
-      <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-400 md:block">
+      <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-600 md:block">
         {fmtSize(it.sizeBytes, lang)}
       </span>
       <span className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0 sm:gap-0">
@@ -602,7 +602,7 @@ function MaterialRow({
           onClick={() => onPreview(it)}
           title={s.previewTitle}
           aria-label={`${s.previewTitle}: ${label}`}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
         >
           <Eye className="h-5 w-5" />
         </button>
@@ -612,7 +612,7 @@ function MaterialRow({
         download
         title={s.downloadTitle}
         aria-label={`${s.downloadTitle}: ${label}`}
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
       >
         <Download className="h-5 w-5" />
       </a>
@@ -922,17 +922,17 @@ function FolderCard({
         </span>
         <span className="min-w-0 flex-1">
           <span className="block truncate font-medium text-zinc-900 dark:text-white">{name}</span>
-          <span className="mt-0.5 block text-sm text-zinc-500 dark:text-zinc-400">
+          <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
             {countMaterials(items.length, lang)}
           </span>
         </span>
         {author && (
-          <span className="hidden shrink-0 text-sm text-zinc-500 dark:text-zinc-400 sm:block">
+          <span className="hidden shrink-0 text-sm text-zinc-600 dark:text-zinc-400 sm:block">
             {author}
           </span>
         )}
         <ChevronDown
-          className={`h-5 w-5 shrink-0 text-zinc-400 transition-transform ${open ? "rotate-180" : ""}`}
+          className={`h-5 w-5 shrink-0 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`}
         />
       </button>
       {/* Výška se animuje přes grid-template-rows, obsah zůstává v DOM –
@@ -1055,15 +1055,15 @@ function LessonCard({
           onClick={handleShare}
           title={s.shareLesson}
           aria-label={`${s.shareLesson} ${num}`}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
         >
-          {copied ? <Check className="h-4 w-4 text-accent-600 dark:text-accent-400" /> : <Link2 className="h-4 w-4" />}
+          {copied ? <Check className="h-4 w-4 text-accent-700 dark:text-accent-400" /> : <Link2 className="h-4 w-4" />}
         </button>
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-label={open ? s.collapseLesson : s.expandLesson}
-          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-400 transition hover:bg-accent-500/10 hover:text-accent-600 dark:hover:text-accent-400"
+          className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
         >
           <ChevronDown className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} />
         </button>
@@ -1201,11 +1201,11 @@ function PptxView({
 
   return (
     <div className="h-[78vh] w-full overflow-auto">
-      <p className="mb-3 text-xs text-zinc-500 dark:text-zinc-400">{s.pptxNote}</p>
+      <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400">{s.pptxNote}</p>
       <ol className="space-y-3">
         {slides.map((sl) => (
           <li key={sl.no} className="glass rounded-2xl p-4">
-            <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
+            <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
               {s.pptxSlide} {sl.no}
             </p>
             {sl.title && (
@@ -1222,7 +1222,7 @@ function PptxView({
             )}
             {sl.notes.length > 0 && (
               <details className="mt-3">
-                <summary className="cursor-pointer text-xs font-medium text-zinc-500 hover:text-accent-600 dark:text-zinc-400 dark:hover:text-accent-400">
+                <summary className="cursor-pointer text-xs font-medium text-zinc-600 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-400 dark:hover:text-accent-400">
                   {s.pptxNotes}
                 </summary>
                 <div className="mt-2 space-y-1 border-l border-black/10 pl-3 text-sm leading-relaxed text-zinc-600 dark:border-white/10 dark:text-zinc-400">
@@ -1448,7 +1448,7 @@ function PreviewModal({
               target="_blank"
               rel="noopener noreferrer"
               title={s.openNewTab}
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition hover:bg-accent-500/10 hover:text-accent-600 dark:text-zinc-300 dark:hover:text-accent-400"
+              className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-300 dark:hover:text-accent-400"
             >
               <ExternalLink className="h-5 w-5" />
             </a>
@@ -1465,7 +1465,7 @@ function PreviewModal({
             type="button"
             onClick={onClose}
             aria-label={s.close}
-            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-500 transition hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 transition hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white"
           >
             <X className="h-5 w-5" />
           </button>

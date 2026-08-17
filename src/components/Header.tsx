@@ -45,7 +45,7 @@ export function Header() {
             <span className="block font-display text-sm font-semibold tracking-tight">
               {tr.nav.brand}
             </span>
-            <span className="block text-[0.7rem] text-zinc-500 dark:text-zinc-400">
+            <span className="block text-[0.7rem] text-zinc-600 dark:text-zinc-400">
               {tr.nav.brandSub}
             </span>
           </span>
@@ -103,7 +103,7 @@ export function Header() {
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="rounded-xl px-4 py-3 text-base font-medium text-zinc-700 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-zinc-100 dark:hover:bg-white/10 dark:hover:text-accent-300"
+                className="rounded-xl px-4 py-3 text-base font-medium text-zinc-700 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-100 dark:hover:bg-white/10 dark:hover:text-accent-300"
               >
                 {l.label}
               </a>
