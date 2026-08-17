@@ -58,7 +58,7 @@ export function Hero({
                 celou větu, takže čtečka ji přečte naráz (animace je aria-hidden). */}
             <h1
               aria-label={tr.hero.headline}
-              className="font-display text-5xl font-bold leading-[1.07] tracking-tight sm:text-7xl"
+              className="font-display text-5xl font-bold leading-[1.05] tracking-hero sm:text-7xl"
             >
               <Typewriter text={tr.hero.headline} />
             </h1>

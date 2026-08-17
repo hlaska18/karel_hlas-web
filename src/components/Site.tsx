@@ -20,10 +20,13 @@ export function Site({ lang, items = [] }: { lang: Lang; items?: BankItem[] }) {
   return (
     <LanguageProvider lang={lang}>
       {/* Jemný tečkovaný vzor za CELÝM webem (fixed = konzistentní při scrollu,
-          dřív byl jen v Hero sekci a dál končil). */}
+          dřív byl jen v Hero sekci a dál končil).
+          Po odstranění filmového zrna zůstal jedinou texturou, tak je ztlumený
+          na náznak – z 0,05 na 0,03. Úplně vypnout ho jde smazáním tohohle
+          bloku; nic jiného na něm nevisí. */}
       <div
         aria-hidden
-        className="pointer-events-none fixed inset-0 -z-10 text-black/[0.05] bg-dots dark:text-white/[0.07]"
+        className="pointer-events-none fixed inset-0 -z-10 bg-dots text-black/[0.03] dark:text-white/[0.045]"
       />
       <Header />
       <main id="main">

@@ -46,7 +46,7 @@ export default function SqlPage({
         <nav className="container-page flex h-16 items-center justify-between gap-4">
           <Link href={domu} className="group flex items-center gap-2.5" aria-label={SITE.name}>
             <Mark />
-            <span className="hidden font-display text-sm font-semibold tracking-tight sm:block">
+            <span className="hidden font-display text-sm font-semibold tracking-podnadpis sm:block">
               {SITE.name}
             </span>
           </Link>
@@ -66,7 +66,7 @@ export default function SqlPage({
         <p className="text-sm font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
           Interaktivní kurz
         </p>
-        <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+        <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-nadpis text-balance sm:text-4xl">
           Základy databází a SQL – kurz v prohlížeči
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
@@ -82,7 +82,7 @@ export default function SqlPage({
         {/* Kurz je psaný pro žáka – jediná stránka na webu, která není pro
             učitele. Tenhle blok je proto NAD kurzem: kdo sem přijde vybírat
             materiál do hodiny, potřebuje čísla dřív, než začne scrollovat. */}
-        <details className="glass-soft mt-8 max-w-3xl rounded-2xl px-5 py-4">
+        <details className="povrch mt-8 max-w-3xl rounded-karta px-5 py-4">
           <summary className="cursor-pointer list-none text-sm font-semibold text-zinc-700 marker:content-none dark:text-zinc-200">
             <span className="inline-flex items-center gap-2">
               <GraduationCap className="h-4 w-4 text-accent-700 dark:text-accent-400" />
@@ -140,11 +140,11 @@ export default function SqlPage({
         </div>
 
         {/* Závěrečná lekce kurzu: stejná databáze, opravdový program (DB Browser). */}
-        <section id="praxe" className="glass mt-14 max-w-3xl scroll-mt-24 rounded-3xl p-6 sm:p-8">
+        <section id="praxe" className="povrch mt-14 max-w-3xl scroll-mt-24 rounded-panel p-6 sm:p-8">
           <p className="text-sm font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
             Závěrečná lekce – do praxe
           </p>
-          <h2 className="mt-2 font-display text-2xl font-bold tracking-tight">
+          <h2 className="mt-2 font-display text-2xl font-bold tracking-nadpis">
             Stejná databáze, opravdový program
           </h2>
           <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
@@ -168,7 +168,7 @@ export default function SqlPage({
             <a
               href={`${DB}/knihovna.db`}
               download
-              className="inline-flex items-center gap-2 rounded-full bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-500"
+              className="inline-flex items-center gap-2 rounded-full bg-accent-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-800"
             >
               <Download className="h-4 w-4" /> Stáhnout knihovna.db
             </a>
@@ -194,8 +194,8 @@ export default function SqlPage({
         {/* Volitelné pokračování. Schválně AŽ ZA závěrečnou lekcí a decentně:
             je to cizí kurz a je anglicky, takže patří na konec cesty, ne na
             začátek – tenhle kurz zůstává hlavní. */}
-        <section className="glass-soft mt-8 max-w-3xl rounded-2xl p-5 sm:p-6">
-          <h2 className="font-display text-lg font-semibold tracking-tight">
+        <section className="povrch mt-8 max-w-3xl rounded-karta p-5 sm:p-6">
+          <h2 className="font-display text-lg font-semibold tracking-podnadpis">
             Chceš toho ještě víc?
           </h2>
           <p className="mt-2 leading-relaxed text-zinc-600 dark:text-zinc-400">

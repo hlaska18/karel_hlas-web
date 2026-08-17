@@ -43,7 +43,7 @@ export function BankSection({ items }: { items: BankItem[] }) {
   const m = tr.materials;
 
   return (
-    <section id="banka" className="relative py-10 sm:py-14">
+    <section id="banka" className="sekce relative">
       <div className="container-page">
         <SectionHeader no="01" kicker={m.kicker} heading={m.heading} intro={sazba(m.sub, lang)} />
 

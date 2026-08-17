@@ -16,7 +16,39 @@ const config: Config = {
           "Arial",
           "sans-serif",
         ],
-        display: ["var(--font-display)", "ui-sans-serif", "system-ui", "sans-serif"],
+        // Nadpisy: systémová řada. `-apple-system` dá na Macu a iPhonu přímo
+        // SF Pro, `Segoe UI Variable Display` na Windows 11 jeho nadpisový řez.
+        // Nic se nestahuje a diakritika je jistá – u stažených písem bývá
+        // háček nad „ě" první, co se odbude.
+        display: [
+          "-apple-system",
+          "BlinkMacSystemFont",
+          "SF Pro Display",
+          "Segoe UI Variable Display",
+          "Segoe UI",
+          "system-ui",
+          "Roboto",
+          "Helvetica Neue",
+          "sans-serif",
+        ],
+      },
+      // Prostrkání se s velikostí utahuje – velký text potřebuje míň mezer
+      // než drobný. Jedno `tracking-tight` na všechno je proto kompromis,
+      // který nesedí ani nahoře, ani dole.
+      letterSpacing: {
+        hero: "-0.032em",
+        nadpis: "-0.022em",
+        podnadpis: "-0.014em",
+      },
+      // Tři úrovně zaoblení místo šesti. Na webu bylo `rounded-lg` 9×,
+      // `xl` 18×, `2xl` 29× a `3xl` 3× – nahodile podle toho, co se zrovna
+      // hodilo. Poloměry jsou schválně větší, než je na webu zvykem; drobné
+      // zaoblení působí kancelářsky.
+      borderRadius: {
+        stitek: "0.5rem", // drobné odznaky a štítky – 8 px
+        ovladac: "0.75rem", // tlačítka a vstupy – 12 px
+        karta: "1.25rem", // dlaždice a karty – 20 px
+        panel: "1.75rem", // velké plochy a modaly – 28 px
       },
       colors: {
         // Vlastní malachitová řada – vědomý posun od defaultní Tailwind

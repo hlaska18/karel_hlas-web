@@ -16,7 +16,7 @@ export function Footer() {
         <div className="flex items-center gap-3">
           <Mark />
           <div>
-            <p className="font-display text-sm font-semibold tracking-tight">{SITE.name}</p>
+            <p className="font-display text-sm font-semibold tracking-podnadpis">{SITE.name}</p>
             <p className="text-xs text-zinc-600 dark:text-zinc-400">{tr.footer.role}</p>
           </div>
         </div>

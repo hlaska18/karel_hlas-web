@@ -42,7 +42,7 @@ export function Header() {
           {/* Web je banka materiálů, ne osobní portfolio – logo proto pojmenuje
               téma a jméno je až podtitulek (stejná logika jako v úvodní sekci). */}
           <span className="hidden leading-tight sm:block">
-            <span className="block font-display text-sm font-semibold tracking-tight">
+            <span className="block font-display text-sm font-semibold tracking-podnadpis">
               {tr.nav.brand}
             </span>
             <span className="block text-[0.7rem] text-zinc-600 dark:text-zinc-400">
@@ -97,13 +97,13 @@ export function Header() {
       {/* Mobile menu – plovoucí prosklená karta (stejné „liquid glass" jako dlaždice) */}
       {open && (
         <div className="container-page pointer-events-none absolute inset-x-0 top-full lg:hidden">
-          <div className="glass pointer-events-auto mt-2 flex flex-col gap-0.5 rounded-2xl p-2">
+          <div className="glass pointer-events-auto mt-2 flex flex-col gap-0.5 rounded-karta p-2">
             {links.map((l) => (
               <a
                 key={l.href}
                 href={l.href}
                 onClick={() => setOpen(false)}
-                className="rounded-xl px-4 py-3 text-base font-medium text-zinc-700 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-100 dark:hover:bg-white/10 dark:hover:text-accent-300"
+                className="rounded-ovladac px-4 py-3 text-base font-medium text-zinc-700 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-100 dark:hover:bg-white/10 dark:hover:text-accent-300"
               >
                 {l.label}
               </a>

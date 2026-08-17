@@ -75,9 +75,9 @@ export function Ctenie() {
                    „Procházet materiály" a pilulky v hlavičce. Vlastní jméno
                    skupiny `karta`, aby si obě úrovně nelezly do zelí.
                    `dark:hover:` je nutné, jinak `dark:border-*` hover přebije. */
-                className={`glass group/karta flex items-center gap-3 rounded-2xl p-2.5 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${NATOCENI[i % NATOCENI.length]}`}
+                className={`glass group/karta flex items-center gap-3 rounded-karta p-2.5 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${NATOCENI[i % NATOCENI.length]}`}
               >
-                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
                   {/* Značka zdroje jako maska, ne obrázek: barvu tak řídí styl
                       (šedá → zelená po najetí) a stačí jeden soubor. Šířka je
                       pevná, výška dopočtená z poměru – jinak by se široký nápis
@@ -116,7 +116,7 @@ export function Ctenie() {
                         ? c.jazyk === "cs" ? "Článek je česky" : "Článek je anglicky"
                         : c.jazyk === "cs" ? "The article is in Czech" : "The article is in English"
                     }
-                  className="shrink-0 rounded-lg bg-black/[0.05] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-zinc-600 transition duration-300 group-hover/karta:bg-accent-500/15 group-hover/karta:text-accent-700 dark:text-accent-400 dark:bg-white/10 dark:text-zinc-400 dark:group-hover/karta:text-accent-300">
+                  className="shrink-0 rounded-stitek bg-black/[0.05] px-2 py-1 text-[0.65rem] font-bold uppercase tracking-wide text-zinc-600 transition duration-300 group-hover/karta:bg-accent-500/15 group-hover/karta:text-accent-700 dark:text-accent-400 dark:bg-white/10 dark:text-zinc-400 dark:group-hover/karta:text-accent-300">
                   {c.jazyk === "cs" ? "cz" : "en"}
                 </span>
               </a>

@@ -43,7 +43,7 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
   const [open, setOpen] = useState<string | null>(null);
 
   return (
-    <section id="jinam" className="py-10 sm:py-14">
+    <section id="jinam" className="sekce">
       <div className="container-page">
         <SectionHeader
           no="02"
@@ -78,13 +78,13 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           <Reveal as="li" delay={0.05 * c.items.length} className="flex">
             <a
               href={`mailto:${SITE.email}`}
-              className="glass-soft group flex w-full flex-col rounded-2xl border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 dark:border-white/15"
+              className="povrch group flex w-full flex-col rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 dark:border-white/15"
             >
               <span className="flex items-center gap-3">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
+                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-karta bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
                   <Plus className="h-6 w-6" />
                 </span>
-                <span className="font-display text-lg font-semibold tracking-tight text-zinc-700 dark:text-zinc-200">
+                <span className="font-display text-lg font-semibold tracking-podnadpis text-zinc-700 dark:text-zinc-200">
                   {c.inviteTitle}
                 </span>
               </span>
@@ -132,7 +132,7 @@ function SubjectTile({
     : [];
 
   return (
-    <div className="glass flex w-full flex-col rounded-2xl">
+    <div className="povrch flex w-full flex-col rounded-karta">
       <button
         type="button"
         onClick={onToggle}
@@ -150,7 +150,7 @@ function SubjectTile({
           />
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
+          <span className="block font-display text-lg font-semibold tracking-podnadpis text-zinc-900 dark:text-white">
             {item.subject}
           </span>
           <span className="mt-1 block text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
@@ -240,7 +240,7 @@ function MaterialFolder({
   const author = items.find((i) => i.groupAuthor)?.groupAuthor;
 
   return (
-    <div className="glass-soft mt-2 overflow-hidden rounded-xl">
+    <div className="povrch mt-2 overflow-hidden rounded-ovladac">
       <button
         type="button"
         onClick={() => setOpen((v) => !v)}
@@ -276,7 +276,7 @@ function MaterialFolder({
                     href={it.href}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group flex items-start gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-300"
+                    className="group flex items-start gap-2 rounded-stitek px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-300"
                   >
                     <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-600" />
                     <span className="min-w-0 flex-1">
@@ -298,7 +298,7 @@ function MaterialFolder({
                 <a
                   href={it.href}
                   download
-                  className="group flex items-center gap-2 rounded-lg px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-300"
+                  className="group flex items-center gap-2 rounded-stitek px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-300"
                   title={c.download}
                 >
                   <FileText className="h-3.5 w-3.5 shrink-0 text-zinc-600" />

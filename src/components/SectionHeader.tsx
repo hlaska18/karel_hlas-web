@@ -3,7 +3,7 @@ import { Reveal } from "@/components/Reveal";
 import { SectionKicker } from "@/components/SectionKicker";
 
 /** Výchozí styl nadpisu sekce (h2). */
-const HEADING = "mt-3 font-display text-3xl font-bold tracking-tight sm:text-4xl";
+const HEADING = "mt-3 font-display text-3xl font-bold tracking-nadpis sm:text-4xl";
 /** Výchozí styl úvodního odstavce pod nadpisem. */
 const INTRO = "mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400";
 

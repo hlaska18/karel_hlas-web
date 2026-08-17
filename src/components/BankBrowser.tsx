@@ -377,7 +377,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           onChange={(e) => setQ(e.target.value)}
           aria-label={s.searchPlaceholder}
           placeholder={s.searchPlaceholder}
-          className="glass-soft w-full rounded-2xl py-3.5 pl-12 pr-4 text-base text-zinc-800 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-100"
+          className="glass-soft w-full rounded-karta py-3.5 pl-12 pr-4 text-base text-zinc-800 placeholder:text-zinc-600 focus:outline-none focus:ring-2 focus:ring-accent-500/50 dark:text-zinc-100"
         />
       </div>
 
@@ -395,11 +395,11 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                 <button
                   type="button"
                   onClick={() => setTool(t.name)}
-                  className="glass group flex h-full w-full flex-col items-center gap-2 overflow-hidden rounded-2xl p-4 text-center transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 sm:flex-row sm:items-center sm:gap-3 sm:p-5 sm:text-left"
+                  className="povrch group flex h-full w-full flex-col items-center gap-2 overflow-hidden rounded-karta p-4 text-center transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 sm:flex-row sm:items-center sm:gap-3 sm:p-5 sm:text-left"
                 >
                   {/* Text: na mobilu pod ikonou (přes celou šířku), na desktopu vlevo */}
                   <span className="order-2 flex min-w-0 flex-col gap-0.5 sm:order-1 sm:flex-1 sm:gap-1">
-                    <span className="font-display text-base font-semibold tracking-tight text-zinc-900 dark:text-white sm:text-lg">
+                    <span className="font-display text-base font-semibold tracking-podnadpis text-zinc-900 dark:text-white sm:text-lg">
                       {toolLabel(t.name, lang)}
                     </span>
                     {/* Kde nic vlastního není (Word, Excel, Power BI), řekne to
@@ -448,10 +448,10 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           {tool && !needle && TOOL_INTERACTIVE[tool] && (
             <a
               href={interaktivniOdkaz(TOOL_INTERACTIVE[tool], lang)}
-              className="glass-accent group mt-4 flex items-center justify-between gap-3 rounded-2xl px-5 py-4 transition hover:-translate-y-0.5"
+              className="glass-accent group mt-4 flex items-center justify-between gap-3 rounded-karta px-5 py-4 transition hover:-translate-y-0.5"
             >
               <span className="flex items-center gap-3">
-                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-600 text-white shadow-lg shadow-accent-600/30">
+                <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-ovladac bg-accent-700 text-white shadow-lg shadow-accent-700/30">
                   <Play className="h-5 w-5" />
                 </span>
                 <span className="font-medium text-zinc-900 dark:text-white">{s.tryOnline}</span>
@@ -514,7 +514,7 @@ function MaterialRow({
         {/* Odznak má pevnou šířku až od sm – na mobilu by spolu s textem
             tlačítka nechal na název pár pixelů („P..“). */}
         <span className="flex shrink-0 sm:w-[5.25rem]">
-          <span className="inline-flex items-center gap-1.5 rounded-lg bg-zinc-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-zinc-600 dark:text-zinc-300">
+          <span className="inline-flex items-center gap-1.5 rounded-stitek bg-zinc-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-zinc-600 dark:text-zinc-300">
             <ExternalLink className="h-4 w-4 shrink-0" />
             {s.sourceBadge}
           </span>
@@ -539,7 +539,7 @@ function MaterialRow({
       </>
     );
     const cls =
-      "glass flex items-start gap-3 rounded-2xl px-4 py-3 sm:items-center sm:gap-4 sm:py-3.5" +
+      "povrch flex items-start gap-3 rounded-karta px-4 py-3 sm:items-center sm:gap-4 sm:py-3.5" +
       (hasLink ? " group transition hover:shadow-lg hover:shadow-accent-600/15" : "");
     return (
       <li>
@@ -559,11 +559,11 @@ function MaterialRow({
   const materialType = materialTypeOf(it);
   const TypeIcon = typeIcon(t.key);
   return (
-    <li className="glass flex flex-wrap items-center gap-x-3 gap-y-1 rounded-2xl px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5">
+    <li className="povrch flex flex-wrap items-center gap-x-3 gap-y-1 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5">
       <span className="flex shrink-0 sm:w-[5.25rem]">
         <span
           title={t.label}
-          className="inline-flex items-center gap-1.5 rounded-lg bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300"
+          className="inline-flex items-center gap-1.5 rounded-stitek bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300"
         >
           <TypeIcon className="h-4 w-4 shrink-0" />
           {it.ext}
@@ -587,11 +587,11 @@ function MaterialRow({
       {it.audience !== "both" && (
         <span className="inline-flex shrink-0 items-center gap-1.5">
           {it.audience === "teacher" ? (
-            <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
+            <span className="inline-flex items-center gap-1 rounded-stitek bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
               <GraduationCap className="h-3.5 w-3.5" /> {s.teacherBadge}
             </span>
           ) : (
-            <span className="inline-flex items-center gap-1 rounded-md bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
+            <span className="inline-flex items-center gap-1 rounded-stitek bg-accent-500/10 px-2 py-0.5 text-xs font-medium text-accent-700 dark:text-accent-300">
               <Users className="h-3.5 w-3.5" /> {s.studentBadge}
             </span>
           )}
@@ -701,7 +701,7 @@ function SlotTag({
       ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
       : "bg-accent-500/10 text-accent-700 dark:text-accent-300";
   return (
-    <span className={`inline-flex items-center gap-1 rounded-md px-2 py-0.5 text-[11px] font-medium ${cls}`}>
+    <span className={`inline-flex items-center gap-1 rounded-stitek px-2 py-0.5 text-[11px] font-medium ${cls}`}>
       {children}
     </span>
   );
@@ -908,7 +908,7 @@ function FolderCard({
   const onlyTeacher = items.every((it) => it.audience === "teacher");
 
   return (
-    <div className="glass rounded-2xl">
+    <div className="povrch rounded-karta">
       <button
         type="button"
         onClick={() => setOpen((o) => !o)}
@@ -917,7 +917,7 @@ function FolderCard({
         className="transition active:scale-[0.99] active:duration-100 flex w-full items-center gap-3 px-4 py-3 text-left"
       >
         <span
-          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-xl ${
+          className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-ovladac ${
             onlyTeacher
               ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
               : "bg-accent-500/15 text-accent-700 dark:text-accent-300"
@@ -1029,15 +1029,15 @@ function LessonCard({
   };
 
   return (
-    <div ref={ref} className="glass rounded-2xl">
+    <div ref={ref} className="povrch rounded-karta">
       <div className="flex items-center gap-1 px-2.5 py-2 sm:px-3">
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
-          className="flex min-w-0 flex-1 items-center gap-3 rounded-xl px-1.5 py-1.5 text-left"
+          className="flex min-w-0 flex-1 items-center gap-3 rounded-ovladac px-1.5 py-1.5 text-left"
         >
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-accent-500/15 font-display text-sm font-bold text-accent-700 dark:text-accent-300">
+          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-ovladac bg-accent-500/15 font-display text-sm font-bold text-accent-700 dark:text-accent-300">
             {num}
           </span>
           <span className="min-w-0 flex-1">
@@ -1137,7 +1137,7 @@ function DocxView({
   }, [href]);
 
   return (
-    <div className="relative h-[78vh] w-full overflow-auto rounded-xl bg-zinc-300 dark:bg-zinc-700">
+    <div className="relative h-[78vh] w-full overflow-auto rounded-ovladac bg-zinc-300 dark:bg-zinc-700">
       {state === "loading" && (
         <p className="absolute inset-0 flex items-center justify-center gap-2 text-sm text-zinc-600 dark:text-zinc-200">
           <Loader2 className="h-4 w-4 animate-spin" /> {loadingText}
@@ -1209,12 +1209,12 @@ function PptxView({
       <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400">{s.pptxNote}</p>
       <ol className="space-y-3">
         {slides.map((sl) => (
-          <li key={sl.no} className="glass rounded-2xl p-4">
+          <li key={sl.no} className="povrch rounded-karta p-4">
             <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
               {s.pptxSlide} {sl.no}
             </p>
             {sl.title && (
-              <p className="mt-1 font-display font-semibold tracking-tight text-zinc-900 dark:text-white">
+              <p className="mt-1 font-display font-semibold tracking-podnadpis text-zinc-900 dark:text-white">
                 {sl.title}
               </p>
             )}
@@ -1295,7 +1295,7 @@ function TextView({
       <p className="px-6 py-16 text-center text-sm text-zinc-600 dark:text-zinc-300">{errorText}</p>
     );
   return (
-    <div className="h-[78vh] w-full overflow-auto rounded-xl bg-white dark:bg-zinc-900">
+    <div className="h-[78vh] w-full overflow-auto rounded-ovladac bg-white dark:bg-zinc-900">
       <pre className="whitespace-pre-wrap break-words p-5 font-mono text-sm leading-relaxed text-zinc-800 dark:text-zinc-100">
         {text}
       </pre>
@@ -1356,7 +1356,7 @@ function CodeView({
       <p className="px-6 py-16 text-center text-sm text-zinc-600 dark:text-zinc-300">{errorText}</p>
     );
   return (
-    <div className="h-[78vh] w-full overflow-auto rounded-xl bg-white dark:bg-zinc-900">
+    <div className="h-[78vh] w-full overflow-auto rounded-ovladac bg-white dark:bg-zinc-900">
       <pre className="p-5 font-mono text-xs leading-relaxed text-zinc-800 dark:text-zinc-100 sm:text-sm">
         <code className="hljs bg-transparent" dangerouslySetInnerHTML={{ __html: html }} />
       </pre>
@@ -1443,7 +1443,7 @@ function PreviewModal({
         ref={panelRef}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className="glass flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-3xl outline-none"
+        className="glass flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-panel outline-none"
       >
         <div className="flex items-center gap-3 border-b border-black/10 px-5 py-3.5 dark:border-white/10">
           <p className="min-w-0 flex-1 truncate font-medium text-zinc-900 dark:text-white">{label}</p>
@@ -1462,7 +1462,7 @@ function PreviewModal({
             href={item.href}
             download
             title={s.downloadTitle}
-            className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-accent-500"
+            className="inline-flex items-center gap-1.5 rounded-full bg-accent-700 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-accent-800"
           >
             <Download className="h-4 w-4" /> {s.downloadTitle}
           </a>
@@ -1499,7 +1499,7 @@ function PreviewModal({
               errorText={s.codeError}
             />
           ) : (
-            <iframe src={item.href} title={label} className="h-[78vh] w-full rounded-xl border-0 bg-white" />
+            <iframe src={item.href} title={label} className="h-[78vh] w-full rounded-ovladac border-0 bg-white" />
           )}
         </div>
       </div>

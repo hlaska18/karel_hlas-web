@@ -13,7 +13,7 @@ export function Mark({ className = "" }: { className?: string }) {
     <span
       // `shrink-0`: v patičce je řádek těsný a flexbox značku stlačoval
       // na 27 × 36 px místo 36 × 36. Logo se nemá smršťovat nikde.
-      className={`glass-accent flex h-9 w-9 shrink-0 items-center justify-center rounded-xl text-accent-700 dark:text-accent-300 ${className}`.trim()}
+      className={`glass-accent flex h-9 w-9 shrink-0 items-center justify-center rounded-ovladac text-accent-700 dark:text-accent-300 ${className}`.trim()}
     >
       <svg
         viewBox="0 0 24 24"

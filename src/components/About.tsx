@@ -14,7 +14,7 @@ export function About() {
   const a = tr.about;
 
   return (
-    <section id="about" className="py-10 sm:py-14">
+    <section id="about" className="sekce">
       <div className="container-page">
         {/* Nadpis je uvnitř levého sloupce, aby pravý sloupec mohl začít nahoře
             u nadpisu a skončit dole u odznaků. Kdyby byl nad mřížkou, časová
@@ -26,7 +26,7 @@ export function About() {
               no="03"
               kicker={a.kicker}
               heading={a.heading}
-              headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-tight text-balance sm:text-4xl"
+              headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-nadpis text-balance sm:text-4xl"
             />
 
             {/* Fotka + bio vedle sebe (na mobilu pod sebou). */}
@@ -37,7 +37,7 @@ export function About() {
                   alt={SITE.fullName}
                   width={733}
                   height={1100}
-                  className="h-auto w-56 rounded-2xl object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-80"
+                  className="h-auto w-56 rounded-karta object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-80"
                 />
               </Reveal>
               <Reveal
@@ -136,10 +136,10 @@ function TimelineGroup({
   items: { period: string; place: string; detail: string }[];
 }) {
   return (
-    <div className="glass rounded-3xl p-6 sm:p-7">
+    <div className="povrch rounded-panel p-6 sm:p-7">
       <div className="flex items-center gap-2.5 text-accent-700 dark:text-accent-400">
         {icon}
-        <h3 className="font-display text-lg font-semibold tracking-tight text-zinc-900 dark:text-white">
+        <h3 className="font-display text-lg font-semibold tracking-podnadpis text-zinc-900 dark:text-white">
           {title}
         </h3>
       </div>

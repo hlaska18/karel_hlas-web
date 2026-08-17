@@ -23,7 +23,7 @@ export function Contact() {
   const c = tr.contact;
 
   return (
-    <section id="contact" className="py-10 sm:py-14">
+    <section id="contact" className="sekce">
       <div className="container-page">
         <SectionHeader
           no="04"
@@ -67,8 +67,8 @@ export function Contact() {
           />
           {/* Škola + adresa (celá dlaždice odkazuje na mapu) */}
           <a href={SITE.mapsUrl} target="_blank" rel="noopener noreferrer" className="group">
-            <div className="glass flex h-full items-center gap-4 rounded-2xl p-5 transition group-hover:-translate-y-0.5">
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-700 dark:bg-accent-400/10 dark:text-accent-400">
+            <div className="povrch flex h-full items-center gap-4 rounded-karta p-5 transition group-hover:-translate-y-0.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-accent-50 text-accent-700 dark:bg-accent-400/10 dark:text-accent-400">
                 <Building2 className="h-5 w-5" />
               </span>
               <div className="min-w-0">
@@ -100,7 +100,7 @@ export function Contact() {
                 href={s.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="glass-soft group inline-flex items-center gap-2.5 rounded-lg px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:-translate-y-0.5 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-400"
+                className="glass-soft group inline-flex items-center gap-2.5 rounded-ovladac px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:-translate-y-0.5 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-400"
               >
                 {s.network === "instagram" ? (
                   <Instagram className="h-4 w-4" />
@@ -132,8 +132,8 @@ function ContactRow({
   external?: boolean;
 }) {
   const inner = (
-    <div className="glass flex h-full items-center gap-4 rounded-2xl p-5 transition group-hover:-translate-y-0.5">
-      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-accent-50 text-accent-700 dark:bg-accent-400/10 dark:text-accent-400">
+    <div className="povrch flex h-full items-center gap-4 rounded-karta p-5 transition group-hover:-translate-y-0.5">
+      <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-accent-50 text-accent-700 dark:bg-accent-400/10 dark:text-accent-400">
         {icon}
       </span>
       <div className="min-w-0">

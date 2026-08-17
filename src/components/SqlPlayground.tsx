@@ -263,7 +263,7 @@ export function SqlPlayground() {
 
   if (dbState === "loading") {
     return (
-      <div className="glass flex items-center gap-3 rounded-2xl p-6 text-zinc-600 dark:text-zinc-300">
+      <div className="povrch flex items-center gap-3 rounded-karta p-6 text-zinc-600 dark:text-zinc-300">
         <Loader2 className="h-5 w-5 animate-spin text-accent-700 dark:text-accent-400" />
         Spouštím SQL engine v prohlížeči… (pár sekund, nic se nestahuje do počítače)
       </div>
@@ -271,7 +271,7 @@ export function SqlPlayground() {
   }
   if (dbState === "error") {
     return (
-      <div className="glass rounded-2xl p-6 text-red-600 dark:text-red-400">
+      <div className="povrch rounded-karta p-6 text-red-600 dark:text-red-400">
         SQL engine se nepodařilo načíst. Zkontroluj připojení a načti stránku znovu.
       </div>
     );
@@ -305,9 +305,9 @@ export function SqlPlayground() {
               onClick={() => selectTask(l.id)}
               aria-current={l.id === lessonId ? "step" : undefined}
               title={copied.has(l.id) ? `${l.title} (splněno s pomocí řešení)` : l.title}
-              className={`relative flex h-9 w-9 items-center justify-center rounded-lg text-sm font-semibold transition ${
+              className={`relative flex h-9 w-9 items-center justify-center rounded-ovladac text-sm font-semibold transition ${
                 l.id === lessonId
-                  ? "bg-accent-600 text-white"
+                  ? "bg-accent-700 text-white"
                   : copied.has(l.id)
                     ? "bg-black/[0.06] text-zinc-600 dark:bg-white/10 dark:text-zinc-400"
                     : done.has(l.id)
@@ -326,7 +326,7 @@ export function SqlPlayground() {
 
       {/* Kurz dokončen */}
       {allDone && (
-        <div className="glass-accent rounded-2xl p-5">
+        <div className="glass-accent rounded-karta p-5">
           <p className="flex items-center gap-2 font-display text-lg font-bold text-zinc-900 dark:text-white">
             <PartyPopper className="h-5 w-5 text-accent-700 dark:text-accent-300" /> Kurz dokončen –
             všech {LESSONS.length} lekcí!
@@ -337,7 +337,7 @@ export function SqlPlayground() {
           </p>
           <a
             href="#praxe"
-            className="mt-3 inline-flex items-center gap-2 rounded-full bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-500"
+            className="mt-3 inline-flex items-center gap-2 rounded-full bg-accent-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-800"
           >
             Pokračovat do praxe <ArrowRight className="h-4 w-4" />
           </a>
@@ -345,18 +345,18 @@ export function SqlPlayground() {
       )}
 
       {/* Výklad lekce */}
-      <div className="glass rounded-2xl p-5">
+      <div className="povrch rounded-karta p-5">
         <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
           <BookOpen className="h-4 w-4" /> Lekce {lesson.id} · {lesson.title}
         </p>
         <p className="mt-3 leading-relaxed text-zinc-700 dark:text-zinc-200">{sazba(lesson.teach, "cs")}</p>
-        <pre className="mt-3 overflow-x-auto rounded-xl bg-black/5 px-4 py-3 font-mono text-sm text-zinc-800 dark:bg-white/5 dark:text-zinc-100">
+        <pre className="mt-3 overflow-x-auto rounded-ovladac bg-black/5 px-4 py-3 font-mono text-sm text-zinc-800 dark:bg-white/5 dark:text-zinc-100">
           {lesson.example}
         </pre>
       </div>
 
       {/* Úkol */}
-      <div className="glass rounded-2xl p-5">
+      <div className="povrch rounded-karta p-5">
         <p className="flex flex-wrap items-center gap-2 text-sm font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
           {bonus ? "Úloha navíc" : "Tvůj úkol"}
           {bonus && (
@@ -401,7 +401,7 @@ export function SqlPlayground() {
         )}
         {showSolution && (
           <div className="mt-3">
-            <pre className="overflow-x-auto rounded-xl bg-black/5 px-4 py-3 font-mono text-sm text-zinc-800 dark:bg-white/5 dark:text-zinc-100">
+            <pre className="overflow-x-auto rounded-ovladac bg-black/5 px-4 py-3 font-mono text-sm text-zinc-800 dark:bg-white/5 dark:text-zinc-100">
               {task.reference}
             </pre>
             <button
@@ -419,7 +419,7 @@ export function SqlPlayground() {
       </div>
 
       {/* Struktura tabulek */}
-      <div className="glass-soft flex flex-wrap items-center gap-x-5 gap-y-1 rounded-xl px-4 py-3 text-xs text-zinc-600 dark:text-zinc-300">
+      <div className="povrch flex flex-wrap items-center gap-x-5 gap-y-1 rounded-ovladac px-4 py-3 text-xs text-zinc-600 dark:text-zinc-300">
         <span className="inline-flex items-center gap-1.5 font-semibold text-zinc-600 dark:text-zinc-400">
           <Database className="h-3.5 w-3.5" /> Tabulky:
         </span>
@@ -446,13 +446,13 @@ export function SqlPlayground() {
           rows={4}
           aria-label="Tvůj SQL dotaz"
           placeholder="Sem napiš svůj SQL dotaz…"
-          className="w-full rounded-2xl border border-black/10 bg-white/70 px-4 py-3 font-mono text-sm text-zinc-900 shadow-inner outline-none transition focus:border-accent-400 dark:border-white/15 dark:bg-black/30 dark:text-zinc-100"
+          className="w-full rounded-karta border border-black/10 bg-white/70 px-4 py-3 font-mono text-sm text-zinc-900 shadow-inner outline-none transition focus:border-accent-400 dark:border-white/15 dark:bg-black/30 dark:text-zinc-100"
         />
         <div className="mt-3 flex flex-wrap items-center gap-2.5">
           <button
             type="button"
             onClick={onRun}
-            className="inline-flex items-center gap-2 rounded-full bg-accent-600 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-500"
+            className="inline-flex items-center gap-2 rounded-full bg-accent-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-800"
           >
             <Play className="h-4 w-4" /> Spustit
           </button>
@@ -482,7 +482,7 @@ export function SqlPlayground() {
       {status === "correct" && (
         <div
           role="status"
-          className="flex flex-wrap items-center justify-between gap-3 rounded-2xl bg-accent-500/15 px-4 py-3 text-accent-700 dark:text-accent-300"
+          className="flex flex-wrap items-center justify-between gap-3 rounded-karta bg-accent-500/15 px-4 py-3 text-accent-700 dark:text-accent-300"
         >
           <span className="inline-flex items-center gap-2">
             <CheckCircle2 className="h-5 w-5" /> Správně!
@@ -501,14 +501,14 @@ export function SqlPlayground() {
             <button
               type="button"
               onClick={() => selectTask(nextLesson.id)}
-              className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-500"
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-800"
             >
               Další lekce: {nextLesson.title} <ArrowRight className="h-4 w-4" />
             </button>
           ) : (
             <a
               href="#praxe"
-              className="inline-flex items-center gap-1.5 rounded-full bg-accent-600 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-500"
+              className="inline-flex items-center gap-1.5 rounded-full bg-accent-700 px-4 py-2 text-sm font-semibold text-white transition hover:bg-accent-800"
             >
               Pokračovat do praxe <ArrowRight className="h-4 w-4" />
             </a>
@@ -518,7 +518,7 @@ export function SqlPlayground() {
       {status === "wrong" && (
         <div
           role="status"
-          className="flex items-start gap-2 rounded-2xl bg-amber-500/15 px-4 py-3 text-amber-700 dark:text-amber-300"
+          className="flex items-start gap-2 rounded-karta bg-amber-500/15 px-4 py-3 text-amber-700 dark:text-amber-300"
         >
           <XCircle className="mt-0.5 h-5 w-5 shrink-0" />
           <span className="leading-relaxed">{why}</span>
@@ -529,7 +529,7 @@ export function SqlPlayground() {
       {error && (
         <div
           role="alert"
-          className="rounded-2xl bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400"
+          className="rounded-karta bg-red-500/10 px-4 py-3 text-sm text-red-600 dark:text-red-400"
         >
           {error}
         </div>
@@ -549,7 +549,7 @@ function ResultTable({ result }: { result: SqlResult }) {
     return <p className="text-sm text-zinc-600 dark:text-zinc-400">Dotaz nevrátil žádné řádky.</p>;
   }
   return (
-    <div className="glass overflow-x-auto rounded-2xl">
+    <div className="povrch overflow-x-auto rounded-karta">
       <table className="w-full text-sm">
         <thead>
           <tr className="border-b border-black/10 dark:border-white/10">

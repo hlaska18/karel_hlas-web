@@ -37,11 +37,11 @@ export function NotFoundContent() {
         <div className="absolute inset-0 text-black/[0.04] bg-dots dark:text-white/[0.05]" />
       </div>
 
-      <div className="glass w-full max-w-lg rounded-[2rem] p-10 text-center sm:p-12">
-        <p className="font-display text-7xl font-bold tracking-tight text-accent-700 dark:text-accent-400 sm:text-8xl">
+      <div className="povrch w-full max-w-lg rounded-[2rem] p-10 text-center sm:p-12">
+        <p className="font-display text-7xl font-bold tracking-hero text-accent-700 dark:text-accent-400 sm:text-8xl">
           404
         </p>
-        <h1 className="mt-4 font-display text-2xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-3xl">
+        <h1 className="mt-4 font-display text-2xl font-bold tracking-nadpis text-zinc-900 dark:text-white sm:text-3xl">
           {t.title}
         </h1>
         <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">{t.desc}</p>

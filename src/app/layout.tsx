@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Space_Grotesk } from "next/font/google";
 import { Analytics } from "@vercel/analytics/next";
 import "./globals.css";
 import { Providers } from "@/components/Providers";
@@ -7,11 +6,10 @@ import { SkipLink } from "@/components/SkipLink";
 import { SmoothScroll } from "@/components/SmoothScroll";
 import { SITE, SOCIALS } from "@/lib/content";
 
-const display = Space_Grotesk({
-  subsets: ["latin", "latin-ext"],
-  variable: "--font-display",
-  display: "swap",
-});
+/* Nadpisy jedou na systémovém písmu (řada je v tailwind.config.ts). Na Macu
+   a iPhonu se vykreslí přímo SF Pro, na Windows Segoe UI. Dřív se stahoval
+   Space Grotesk – kromě 40 kB navíc je to jedno z písem, která dnes nejvíc
+   prozrazují generovanou stránku, a jeho česká diakritika byla vlažná. */
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE.url),
@@ -115,7 +113,7 @@ export default function RootLayout({
     // běží JS. Až projekt přejde na Next 15, dá se to udělat pořádně.
     <html lang="cs" suppressHydrationWarning>
       <body
-        className={`${display.variable} font-sans antialiased selection:bg-accent-500 selection:text-white`}
+        className="font-sans antialiased selection:bg-accent-700 selection:text-white"
       >
         {/* Dvě věci ještě před vykreslením: jazyk podle adresy (aby čtečka
             nečetla anglickou stránku česky) a html.js-reveal pro odhalovací
