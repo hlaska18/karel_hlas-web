@@ -18,6 +18,7 @@ import {
 } from "lucide-react";
 import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky, sqlErrorCs } from "@/lib/sqlExercise";
 import { createDb, forkDb, type SqlDb, type SqlResult } from "@/lib/sqljs";
+import { sazba } from "@/lib/sazba";
 
 /** Příkaz, který data mění – nic nevrací a živou databázi po sobě přepíše. */
 const isMutation = (q: string) => /^\s*(insert|update|delete)\b/i.test(q);
@@ -264,7 +265,7 @@ export function SqlPlayground() {
     return (
       <div className="glass flex items-center gap-3 rounded-2xl p-6 text-zinc-600 dark:text-zinc-300">
         <Loader2 className="h-5 w-5 animate-spin text-accent-600" />
-        Spouštím SQL engine v prohlížeči… (pár vteřin, nic se nestahuje do počítače)
+        Spouštím SQL engine v prohlížeči… (pár sekund, nic se nestahuje do počítače)
       </div>
     );
   }
@@ -331,8 +332,8 @@ export function SqlPlayground() {
             všech {LESSONS.length} lekcí!
           </p>
           <p className="mt-1.5 text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">
-            Umíš data z databáze vybrat i změnit. Teď pokračuj do praxe: ta samá databáze v
-            opravdovém programu.
+            Umíš data z databáze vybrat i změnit. Teď pokračuj do praxe: stejná databáze
+            v opravdovém programu.
           </p>
           <a
             href="#praxe"
@@ -348,7 +349,7 @@ export function SqlPlayground() {
         <p className="flex items-center gap-2 text-sm font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
           <BookOpen className="h-4 w-4" /> Lekce {lesson.id} · {lesson.title}
         </p>
-        <p className="mt-3 leading-relaxed text-zinc-700 dark:text-zinc-200">{lesson.teach}</p>
+        <p className="mt-3 leading-relaxed text-zinc-700 dark:text-zinc-200">{sazba(lesson.teach, "cs")}</p>
         <pre className="mt-3 overflow-x-auto rounded-xl bg-black/5 px-4 py-3 font-mono text-sm text-zinc-800 dark:bg-white/5 dark:text-zinc-100">
           {lesson.example}
         </pre>
@@ -368,7 +369,7 @@ export function SqlPlayground() {
             </button>
           )}
         </p>
-        <p className="mt-2 text-lg text-zinc-900 dark:text-white">{task.zadani}</p>
+        <p className="mt-2 text-lg text-zinc-900 dark:text-white">{sazba(task.zadani, "cs")}</p>
         {/* Dva stupně: nejdřív postrčení, řešení až když ani to nestačí.
             Dřív byl v nápovědě rovnou celý dotaz, takže se nedalo „jen trochu“
             poradit – a kdo se zasekl, neměl se jak odblokovat jinak než opsáním. */}
@@ -392,7 +393,7 @@ export function SqlPlayground() {
             </button>
           )}
         </div>
-        {showHint && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{task.hint}</p>}
+        {showHint && <p className="mt-2 text-sm text-zinc-600 dark:text-zinc-300">{sazba(task.hint, "cs")}</p>}
         {showHint && !checked && (
           <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400">
             Řešení se nabídne, až jednou zkusíš Zkontrolovat.

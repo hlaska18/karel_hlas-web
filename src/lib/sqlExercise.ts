@@ -108,7 +108,7 @@ export function sqlErrorCs(raw: string): string {
 
   const noColumn = m.match(/no such column:\s*(\S+)/i);
   if (noColumn) {
-    return `Sloupec „${noColumn[1]}“ v tabulce není. Pokud jsi myslel(a) text, patří do apostrofů – tedy '${noColumn[1]}'. Jinak zkontroluj překlep, správné názvy jsou v přehledu tabulek nad editorem.`;
+    return `Sloupec „${noColumn[1]}“ v tabulce není. Jde-li o text, patří do apostrofů – tedy '${noColumn[1]}'. Jinak zkontroluj překlep, správné názvy jsou v přehledu tabulek nad editorem.`;
   }
 
   const noTable = m.match(/no such table:\s*(\S+)/i);

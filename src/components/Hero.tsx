@@ -2,6 +2,7 @@
 
 import { ArrowDown, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { sazba } from "@/lib/sazba";
 import { Typewriter } from "@/components/Typewriter";
 import { HeroPreview } from "@/components/HeroPreview";
 import { Ctenie } from "@/components/Ctenie";
@@ -17,7 +18,7 @@ export function Hero({
   /** Reálná čísla z banky pro důkazní řádek. */
   stats?: { files: number; topics: number };
 }) {
-  const { tr } = useLang();
+  const { tr, lang } = useLang();
 
   // „{files} souborů · {topics} témat · Word, PDF, Python" → části mezi „·"
   // se vykreslí jako samostatné položky (čísla přijdou z reálné banky).
@@ -66,7 +67,7 @@ export function Hero({
                 zinc-300 místo zinc-400 (kontrast 7,6 → 12 : 1). Menší řádky
                 pod ní zůstávají tlumené, ať hierarchie drží. */}
             <p className="mt-6 max-w-xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-300 text-balance">
-              {tr.hero.tagline}
+              {sazba(tr.hero.tagline, lang)}
             </p>
 
             {/* Důkaz místo přídavných jmen: kolik toho tu opravdu je. */}
@@ -91,7 +92,9 @@ export function Hero({
               />
             </div>
 
-            <p className="mt-7 text-sm text-zinc-500 dark:text-zinc-400">{tr.hero.byline}</p>
+            <p className="mt-7 text-sm text-zinc-500 dark:text-zinc-400">
+              {sazba(tr.hero.byline, lang)}
+            </p>
           </div>
 
           {/* Pravý sloupec: ukázkové karty a pod nimi odkazy na čtení.

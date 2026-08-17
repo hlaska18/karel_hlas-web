@@ -1101,7 +1101,11 @@ type Dict = {
   };
   /** Pozn.: sekce „Výuka" byla z homepage odstraněna (duplicitní plány 1S/1P,
       pro cizího učitele bez užitku). Texty i COURSES zůstávají – COURSES
-      dodává bance názvy témat a oborů, takže se NESMÍ smazat. */
+      dodává bance názvy témat a oborů, takže se NESMÍ smazat.
+
+      POZOR: řetězce v `lessons` se dnes NIKDE nevykreslují (`tr.lessons` nikdo
+      nečte, vlastní texty má i stránka 404). Než se sekce vrátí, projdi je –
+      tón se mezitím posunul k tykání a k prvnímu člověku. */
   lessons: {
     kicker: string;
     heading: string;
@@ -1194,7 +1198,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Hotové přípravy a materiály nejen do informatiky",
       role: "Učitel informatiky a angličtiny",
       tagline:
-        "Pro střední školy. Moje soubory zdarma, ke stažení i úpravě a bez přihlašování. Převzaté cvičebnice vedou k jejich autorovi.",
+        "Pro střední školy. Moje soubory si stáhneš i upravíš zdarma a bez přihlašování. U převzatých cvičebnic vede odkaz k jejich původnímu autorovi.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · 1. ročník SŠ",
       sample: "Ukázka materiálů",
@@ -1207,13 +1211,13 @@ export const t: Record<Lang, Dict> = {
       kicker: "O mně",
       heading: "Učitel, kterého baví technologie",
       paragraphs: [
-        "Učím informatiku a angličtinu na SPŠ strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum a učitelství na Pedagogické fakultě Jihočeské univerzity.",
-        "Ve výuce hledám praktické a srozumitelné cesty, jak žákům přiblížit moderní technologie. Mimo školu mě baví tvorba webů, programování a bowling.",
+        "Učím informatiku a angličtinu na SPŠ strojní a stavební v Táboře. Vystudoval jsem zdejší Technické lyceum a učitelství na Pedagogické fakultě Jihočeské univerzity.",
+        "Ve výuce hledám praktické a srozumitelné cesty, jak žákům přiblížit moderní technologie. Mimo školu mě baví tvorba webů, programování a bowling.",
       ],
       eduTitle: "Vzdělání",
       expTitle: "Praxe",
       interestsTitle: "Co mě baví",
-      badgesTitle: "Certifikáty a odznaky",
+      badgesTitle: "Certifikáty a odznaky",
       interests: ["Moderní technologie", "Vzdělávání", "Tvorba webů", "Programování", "Bowling"],
       education: [
         {
@@ -1249,13 +1253,13 @@ export const t: Record<Lang, Dict> = {
       kicker: "Ověřeno ve výuce",
       heading: "Výuka informatiky",
       intro:
-        "Takhle vypadá moje výuka v praxi – vyber si ročník a rozbalí se časová osa témat, kterými se svými třídami během roku projdeme.",
+        "Takhle vypadá moje výuka v praxi – vyber si ročník a rozbalí se časová osa témat, kterými se svými třídami během roku projdeme.",
       subject: "Informatika",
       pick: "Klikni pro zobrazení časové osy",
       goalLabel: "Cíl",
       topicsLabel: "Co probereme",
       materialsLabel: "Materiály",
-      noMaterials: "Materiály budou postupně doplňovány.",
+      noMaterials: "Materiály sem postupně doplním.",
       soon: "brzy",
       teacherNoteLabel: "Pro učitele",
       audienceTeacher: "Pro učitele",
@@ -1267,7 +1271,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Nejen do informatiky",
       badge: "Nová sekce",
       intro:
-        "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikni na svůj předmět – u většiny najdeš nástroje do hodiny, u češtiny a matematiky navíc cvičebnice Karla Klatovského u něj na OneDrivu. U každého nástroje je napsané, jestli potřebuje účet, jestli je česky a co tě při první hodině zaskočí.",
+        "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikni na svůj předmět – u většiny najdeš nástroje do hodiny, u češtiny a matematiky navíc cvičebnice Karla Klatovského na jeho OneDrivu. U každého nástroje je napsané, jestli potřebuje účet, jestli je česky a co tě při první hodině zaskočí.",
       note:
         "Nástroje jsou ověřené k srpnu 2026 – u cloudových služeb se podmínky mění, před hodinou si je proklikni. Učíš jiný předmět a něco ve výuce používáš? Napiš mi, rád to sem doplním a uvedu tě jako autora.",
       inviteTitle: "Chybí tu tvůj předmět?",
@@ -1293,7 +1297,7 @@ export const t: Record<Lang, Dict> = {
               name: "GeoGebra",
               url: "https://www.geogebra.org/calculator",
               why: "Grafy funkcí, geometrie a dynamické konstrukce.",
-              note: "Zdarma, bez účtu, celé česky. Web ukazuje souhlas s reklamou – u nezletilých zvaž.",
+              note: "Zdarma, bez účtu, celé česky. Web si vyžádá souhlas s reklamou – u nezletilých to zvaž předem.",
             },
             {
               name: "Desmos",
@@ -1318,13 +1322,13 @@ export const t: Record<Lang, Dict> = {
               name: "Falstad Circuit Simulator",
               url: "https://www.falstad.com/circuit/",
               why: "Elektrické obvody s okamžitým průběhem napětí a proudu.",
-              note: "Zdarma, bez účtu. Výchozí je angličtina, češtinu přepneš v Možnosti → Change Language (není úplná).",
+              note: "Zdarma, bez účtu. Výchozí je angličtina; češtinu přepneš v nabídce Možnosti → Change Language, ale překlad není úplný.",
             },
             {
               name: "GeoGebra",
               url: "https://www.geogebra.org/calculator",
               why: "Zpracování naměřených dat, graf a regrese.",
-              note: "Zdarma, bez účtu, česky. Web ukazuje souhlas s reklamou.",
+              note: "Zdarma, bez účtu, česky. Web si vyžádá souhlas s reklamou.",
             },
           ],
         },
@@ -1349,7 +1353,7 @@ export const t: Record<Lang, Dict> = {
               name: "MolView",
               url: "https://app.molview.com/",
               why: "Nakreslený vzorec převede rovnou do 3D modelu molekuly.",
-              note: "Zdarma, bez účtu. Načítá Google Analytics – při práci s nezletilými zvaž.",
+              note: "Zdarma, bez účtu. Načítá Google Analytics – při práci s nezletilými to zvaž předem.",
             },
           ],
         },
@@ -1427,14 +1431,14 @@ export const t: Record<Lang, Dict> = {
     materials: {
       kicker: "Materiály do informatiky",
       heading: "Vyber si téma",
-      sub: "Hotové materiály ke stažení a úpravě – klikni na téma a procházej.",
+      sub: "Hotové materiály ke stažení a úpravě – klikni na téma a procházej.",
     },
     contact: {
       kicker: "Kontakt",
       heading: "Ozvi se mi",
       intro:
         "Nejraději vše domluvíme osobně nebo e-mailem. Konzultace si rezervuj přes EduPage.",
-      school: "Střední průmyslová škola strojní a stavební, Tábor",
+      school: "Střední průmyslová škola strojní a stavební Tábor",
       addressLabel: "Adresa",
       emailLabel: "Školní e-mail",
       emailPersonalLabel: "Osobní e-mail",
@@ -1443,7 +1447,7 @@ export const t: Record<Lang, Dict> = {
       consultLabel: "Konzultace",
       consultValue: "Rezervace přes EduPage",
       mapLink: "Zobrazit na mapě",
-      socialsTitle: "Sledujte mě",
+      socialsTitle: "Sleduj mě",
     },
     footer: {
       role: "Učitel informatiky a angličtiny · SPŠ Tábor",
@@ -1460,7 +1464,7 @@ export const t: Record<Lang, Dict> = {
       // se k němu dá dojít jen přes dlaždici Databáze v bance.
       sqlCourse: "Kurz SQL v prohlížeči",
     },
-    ui: { theme: "Přepnout světlý / tmavý režim" },
+    ui: { theme: "Přepnout světlý/tmavý režim" },
   },
 
   en: {
@@ -1475,9 +1479,9 @@ export const t: Record<Lang, Dict> = {
     hero: {
       badge: "Teaching materials · free",
       headline: "Ready-made lesson plans and materials, not just for CS",
-      role: "Computer Science & English Language Teacher",
+      role: "Computer Science & English teacher",
       tagline:
-        "For secondary schools. My own files are free to download and edit, no sign-up. Borrowed workbooks link to their author.",
+        "For secondary schools. My own files are free to download and edit, no sign-up. Workbooks by other authors link to the original.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · Year 1 secondary",
       sample: "Sample materials",
@@ -1490,8 +1494,8 @@ export const t: Record<Lang, Dict> = {
       kicker: "About me",
       heading: "A teacher who loves technology",
       paragraphs: [
-        "I teach Computer Science and English at the Secondary Technical School of Mechanical and Civil Engineering in Tábor, Czech Republic. I studied the Technical Lyceum here and went on to a teaching degree at the Faculty of Education, University of South Bohemia.",
-        "In my lessons I look for practical, clear ways to bring modern technology closer to students. Outside school I enjoy web development, programming and bowling.",
+        "I teach Computer Science and English at the Secondary Technical School of Mechanical and Civil Engineering in Tábor, Czech Republic. I studied at the Technical Lyceum here and went on to a teaching degree at the Faculty of Education, University of South Bohemia.",
+        "In my lessons I look for practical, clear ways to make modern technology click for students. Outside school I enjoy web development, programming and bowling.",
       ],
       eduTitle: "Education",
       expTitle: "Experience",
@@ -1532,7 +1536,7 @@ export const t: Record<Lang, Dict> = {
       kicker: "Proven in the classroom",
       heading: "Computer Science lessons",
       intro:
-        "This is what my teaching looks like in practice – pick a year and a timeline of the topics I actually cover with my classes unfolds.",
+        "This is what my teaching looks like in practice. Pick a year and you get a timeline of the topics I actually cover with my classes.",
       subject: "Computer Science",
       pick: "Click to reveal the timeline",
       goalLabel: "Goal",
@@ -1550,9 +1554,9 @@ export const t: Record<Lang, Dict> = {
       heading: "Not just for CS lessons",
       badge: "New section",
       intro:
-        "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject: most have tools for the lesson, and Czech and Maths also link to Karel Klatovský's workbooks on his own OneDrive. Each tool says whether it needs an account, whether it is in Czech, and what will catch you out the first time.",
+        "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject and you will find tools for the lesson; Czech and Maths also link to Karel Klatovský's workbooks on his OneDrive. Each tool says whether it needs an account, whether it is in Czech, and what will catch you out the first time.",
       note:
-        "Tools verified as of August 2026 – cloud services change their terms, so click through before the lesson. Do you teach another subject and use something in class? Write to me and I will add it here with your name.",
+        "Tools verified as of August 2026 – cloud services change their terms, so click through before the lesson. Teach another subject and use something good in class? Email me and I will add it here, credited to you.",
       inviteTitle: "Missing your subject?",
       inviteText: "Tell me what you use in your lessons.",
       // Not „to download": this section only links to the author so far.
@@ -1569,7 +1573,7 @@ export const t: Record<Lang, Dict> = {
         {
           subject: "Maths",
           icon: "matematika",
-          what: "Tables, formulas and charts on data that actually means something.",
+          what: "Tables, formulas and charts on data that actually mean something.",
           tool: "Excel",
           tools: [
             {
@@ -1595,7 +1599,7 @@ export const t: Record<Lang, Dict> = {
               name: "PhET",
               url: "https://phet.colorado.edu/cs/",
               why: "Mechanics, electricity, optics, thermodynamics – built for measuring and hypotheses.",
-              note: "Free, no account, by the University of Colorado. All 119 simulations exist in Czech.",
+              note: "Free, no account, by the University of Colorado. Every simulation is available in Czech.",
             },
             {
               name: "Falstad Circuit Simulator",
@@ -1664,7 +1668,7 @@ export const t: Record<Lang, Dict> = {
               name: "Onshape",
               url: "https://www.onshape.com/en/education/",
               why: "Parametric CAD in the browser, assemblies and teamwork on one model.",
-              note: "Free for education, but every student needs a personal account. School Microsoft sign-in is paid-only.",
+              note: "Free for education, but every student needs a personal account. Signing in with a school Microsoft account only works in the paid tier.",
             },
             {
               name: "Autodesk Viewer",
@@ -1738,6 +1742,6 @@ export const t: Record<Lang, Dict> = {
       // Kurz je jen česky – ať to Angličan pozná dřív, než klikne.
       sqlCourse: "SQL course in the browser (in Czech)",
     },
-    ui: { theme: "Toggle light / dark mode" },
+    ui: { theme: "Toggle light/dark mode" },
   },
 };

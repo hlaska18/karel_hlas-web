@@ -12,13 +12,14 @@ import {
   ArrowUpRight,
 } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { sazba } from "@/lib/sazba";
 import { SITE, SOCIALS } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
 import { SectionHeader } from "@/components/SectionHeader";
 
 export function Contact() {
-  const { tr } = useLang();
+  const { tr, lang } = useLang();
   const c = tr.contact;
 
   return (
@@ -28,7 +29,7 @@ export function Contact() {
           no="04"
           kicker={c.kicker}
           heading={c.heading}
-          intro={c.intro}
+          intro={sazba(c.intro, lang)}
           introClassName="mt-4 max-w-2xl text-base leading-relaxed text-zinc-600 dark:text-zinc-400 sm:text-lg"
         />
 

@@ -13,6 +13,7 @@ import { LanguageProvider } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Mark } from "@/components/Mark";
 import { SqlPlayground } from "@/components/SqlPlayground";
+import { Proza } from "@/components/Proza";
 
 /** Cesty na soubory v bance (téma 8 – Základy databází). */
 const TEMA = "/materialy/1L/8";
@@ -57,11 +58,13 @@ export default function SqlPage() {
           Základy databází a SQL – kurz v prohlížeči
         </h1>
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Třináct lekcí od úplného začátku po zápis vlastních dat. Každá lekce tě nejdřív krátce
-          naučí nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny – napiš dotaz, klikni{" "}
-          <b>Spustit</b> a hned vidíš výsledek, <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
-          Nic se neinstaluje a tvůj postup se pamatuje. Na závěr přejdeš do praxe v opravdovém
-          programu.
+          <Proza>
+            Třináct lekcí od úplného začátku po zápis vlastních dat. Každá lekce tě nejdřív krátce
+            naučí nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny. Napiš dotaz, klikni na{" "}
+            <b>Spustit</b> a hned vidíš výsledek; <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
+            Nic se neinstaluje a tvůj postup se pamatuje. Na závěr přejdeš do praxe v opravdovém
+            programu.
+          </Proza>
         </p>
 
         {/* Kurz je psaný pro žáka – jediná stránka na webu, která není pro
@@ -71,41 +74,51 @@ export default function SqlPage() {
           <summary className="cursor-pointer list-none text-sm font-semibold text-zinc-700 marker:content-none dark:text-zinc-200">
             <span className="inline-flex items-center gap-2">
               <GraduationCap className="h-4 w-4 text-accent-600 dark:text-accent-400" />
-              Učíte podle toho? Rozklikněte, než to zadáte
+              Učíš podle toho? Rozklikni, než to zadáš
             </span>
           </summary>
           <div className="mt-3 space-y-2.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
             <p>
-              <b>Kolik hodin.</b> Jedna vyučovací hodina u počítačů. Průměrná třída 1. ročníku dojde
-              za 45 minut do lekce 8 až 10. Lekce 11–13 (zápis, změna a mazání dat) jsou dobrý
-              domácí úkol. Na druhou hodinu navazuje DB Browser – tam už nejde o nové příkazy, ale
-              o práci se souborem a o vlastní tabulku.
+              <Proza>
+                <b>Kolik hodin.</b> Jedna vyučovací hodina u počítačů. Průměrná třída 1. ročníku dojde
+                za 45 minut do lekce 8 až 10. Lekce 11–13 (zápis, změna a mazání dat) jsou dobrý
+                domácí úkol. Na druhou hodinu navazuje DB Browser – tam už nejde o nové příkazy, ale
+                o práci se souborem a o vlastní tabulku.
+              </Proza>
             </p>
             <p>
-              <b>Když nestihnou.</b> Nic se neztratí, postup i rozepsané dotazy se ukládají
-              v prohlížeči a žák pokračuje doma tam, kde skončil. Na počítači, kde se maže profil,
-              projde hotové lekce znovu za pár minut.
+              <Proza>
+                <b>Když nestihnou.</b> Nic se neztratí, postup i rozepsané dotazy se ukládají
+                v prohlížeči a žák pokračuje doma tam, kde skončil. Na počítači, kde se maže profil,
+                projde hotové lekce znovu za pár minut.
+              </Proza>
             </p>
             <p>
-              <b>Jak poznáte, že to umí.</b> Nad kurzem svítí „Hotovo X/13“, stačí obejít třídu. Na
-              známku to samo o sobě není: lekce jde splnit i tlačítkem <i>Ukázat řešení</i> – takové
-              se v postupu odliší šedou, ale spolehlivější je jedna otázka. „Přečti nahlas, co ten
-              tvůj dotaz dělá.“
+              <Proza>
+                <b>Jak poznáš, že to umí.</b> Nad kurzem svítí „Hotovo X/13“, stačí obejít třídu. Na
+                známku to samo o sobě není: lekce jde splnit i tlačítkem <i>Ukázat řešení</i> – takové
+                se v postupu odliší šedou, ale spolehlivější je jedna otázka. „Přečti nahlas, co ten
+                tvůj dotaz dělá.“
+              </Proza>
             </p>
             <p>
-              <b>Když se zeptají na něco mimo.</b> Klidně řekněte „nevím, zkusíme to“. Databáze
-              běží v prohlížeči, nejde rozbít a tlačítko <i>Obnovit databázi</i> ji vrátí do
-              výchozího stavu – odpověď uvidíte oba za pět vteřin.
+              <Proza>
+                <b>Když se zeptají na něco mimo.</b> Klidně řekni „nevím, zkusíme to“. Databáze
+                běží v prohlížeči, nejde rozbít a tlačítko <i>Obnovit databázi</i> ji vrátí do
+                výchozího stavu – odpověď uvidíte oba za pět sekund.
+              </Proza>
             </p>
             <p>
-              Plán hodin, pracovní list, řešení i databáze ke stažení jsou v bance u tématu{" "}
-              <Link
-                href="/?tema=Datab%C3%A1ze#banka"
-                className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-600 dark:text-accent-300"
-              >
-                Databáze
-              </Link>
-              . Začněte souborem „Jak toto téma učit“.
+              <Proza>
+                Plán hodin, pracovní list, řešení i databáze ke stažení jsou v bance u tématu{" "}
+                <Link
+                  href="/?tema=Datab%C3%A1ze#banka"
+                  className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-600 dark:text-accent-300"
+                >
+                  Databáze
+                </Link>
+                . Začni souborem „Jak toto téma učit“.
+              </Proza>
             </p>
           </div>
         </details>
@@ -123,18 +136,21 @@ export default function SqlPage() {
             Stejná databáze, opravdový program
           </h2>
           <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
-            Zvládáš úlohy v prohlížeči? Stáhni si <b>tu samou databázi</b> a otevři ji v programu{" "}
-            <a
-              href="https://sqlitebrowser.org/dl/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-600 dark:text-accent-300"
-            >
-              DB Browser for SQLite
-            </a>{" "}
-            (zdarma). Všechny dotazy, které už umíš, fungují beze změny. Nové tam nejsou příkazy –
-            ty máš z kurzu – ale to, že pracuješ se skutečným souborem na disku a že si postavíš
-            vlastní tabulku. Navazuje na to šest úloh v bance.
+            <Proza>
+              Zvládáš úlohy v prohlížeči? Stáhni si <b>stejnou databázi</b> a otevři ji v programu{" "}
+              <a
+                href="https://sqlitebrowser.org/dl/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-600 dark:text-accent-300"
+              >
+                DB Browser for SQLite
+              </a>{" "}
+              (zdarma). Všechny dotazy, které už umíš, fungují beze změny. Nové je prostředí:
+              pracuješ se skutečným souborem na disku. A přibude jeden příkaz navíc – v poslední
+              úloze si založíš vlastní tabulku pomocí <b>CREATE TABLE</b>. Navazuje na to šest úloh
+              v bance.
+            </Proza>
           </p>
           <div className="mt-5 flex flex-wrap gap-2.5">
             <a
@@ -171,10 +187,12 @@ export default function SqlPage() {
             Chceš toho ještě víc?
           </h2>
           <p className="mt-2 leading-relaxed text-zinc-600 dark:text-zinc-400">
-            <b>SQLBolt</b> je bezplatný kurz, který funguje na stejném principu jako tenhle –
-            krátký výklad a hned cvičení v prohlížeči. Jde ale dál: vnořené dotazy, sjednocení
-            tabulek, úpravy dat i tvorba vlastních tabulek – 18 lekcí, bez registrace. Je celý{" "}
-            <b>anglicky</b>, takže se do něj pouštěj až potom, co máš základ z tohohle kurzu.
+            <Proza>
+              <b>SQLBolt</b> je bezplatný kurz, který funguje na stejném principu jako tenhle –
+              krátký výklad a hned cvičení v prohlížeči. Jde ale dál: vnořené dotazy, sjednocení
+              tabulek, úpravy dat i tvorba vlastních tabulek – 18 lekcí, bez registrace. Je celý{" "}
+              <b>anglicky</b>, takže se do něj pouštěj, až budeš mít základ z tohohle kurzu.
+            </Proza>
           </p>
           <a
             href="https://sqlbolt.com"

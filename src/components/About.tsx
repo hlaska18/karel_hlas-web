@@ -3,13 +3,14 @@
 import Image from "next/image";
 import { GraduationCap, Briefcase } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { sazba } from "@/lib/sazba";
 import { BADGES, SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionJump } from "@/components/SectionJump";
 import { SectionHeader } from "@/components/SectionHeader";
 
 export function About() {
-  const { tr } = useLang();
+  const { tr, lang } = useLang();
   const a = tr.about;
 
   return (
@@ -44,7 +45,7 @@ export function About() {
                 className="min-w-0 flex-1 space-y-5 text-base leading-relaxed text-zinc-600 dark:text-zinc-300 sm:text-lg"
               >
                 {a.paragraphs.map((p, i) => (
-                  <p key={i}>{p}</p>
+                  <p key={i}>{sazba(p, lang)}</p>
                 ))}
               </Reveal>
             </div>

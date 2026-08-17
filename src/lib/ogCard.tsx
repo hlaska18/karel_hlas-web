@@ -2,6 +2,7 @@ import { ImageResponse } from "next/og";
 import { SITE, type Lang } from "@/lib/content";
 import { markDataUri } from "@/lib/mark";
 import { toolLabel } from "@/lib/bankLabels";
+import { sazba } from "@/lib/sazba";
 
 /**
  * Sdílená vizuální šablona pro OG/Twitter kartu (1200×630), generovaná přes
@@ -54,8 +55,10 @@ export function ogImageResponse(lang: Lang) {
   const c = OG_CONTENT[lang];
   return new ImageResponse(
     ogCard({
-      headline: c.headline,
-      sub: c.sub,
+      // Na kartě je osamocená předložka na konci řádku vidět nejvíc – je to
+      // obrázek, který se pak už nikde nepřeteče jinak.
+      headline: sazba(c.headline, lang),
+      sub: sazba(c.sub, lang),
       byline: SITE.name,
       domain: SITE.domain,
       temata: ogTemata(lang),

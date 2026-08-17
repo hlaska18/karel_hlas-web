@@ -2,6 +2,7 @@
 
 import { Info } from "lucide-react";
 import { useLang } from "@/lib/i18n";
+import { sazba } from "@/lib/sazba";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
 import { BankBrowser } from "@/components/BankBrowser";
@@ -44,7 +45,7 @@ export function BankSection({ items }: { items: BankItem[] }) {
   return (
     <section id="banka" className="relative py-10 sm:py-14">
       <div className="container-page">
-        <SectionHeader no="01" kicker={m.kicker} heading={m.heading} intro={m.sub} />
+        <SectionHeader no="01" kicker={m.kicker} heading={m.heading} intro={sazba(m.sub, lang)} />
 
         <div className="mt-8">
           <BankBrowser items={items} lang={lang} />
@@ -52,7 +53,7 @@ export function BankSection({ items }: { items: BankItem[] }) {
 
         <p className="mt-10 flex items-start gap-2 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
-          {STR[lang].license}
+          {sazba(STR[lang].license, lang)}
         </p>
 
         <SectionJump href="#jinam" label={tr.cross.kicker} />
