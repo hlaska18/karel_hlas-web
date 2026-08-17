@@ -153,6 +153,11 @@ const TOOL_INTERACTIVE: Record<string, string> = {
   Databáze: "/sql",
 };
 
+/** Kurz je jen česky; z anglické verze se přidá `?z=en`, aby vedl odkaz zpět na /en. */
+function interaktivniOdkaz(cesta: string, lang: Lang): string {
+  return lang === "en" ? `${cesta}?z=en` : cesta;
+}
+
 /** Vezme lokalizované pole {cs,en} (nebo prázdný řetězec, když chybí). */
 function L(field: { cs: string; en: string } | undefined, lang: Lang): string {
   return field ? field[lang] : "";
@@ -442,7 +447,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           {/* Interaktivní cvičení k tématu (např. Databáze → /sql) */}
           {tool && !needle && TOOL_INTERACTIVE[tool] && (
             <a
-              href={TOOL_INTERACTIVE[tool]}
+              href={interaktivniOdkaz(TOOL_INTERACTIVE[tool], lang)}
               className="glass-accent group mt-4 flex items-center justify-between gap-3 rounded-2xl px-5 py-4 transition hover:-translate-y-0.5"
             >
               <span className="flex items-center gap-3">

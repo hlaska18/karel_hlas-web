@@ -148,6 +148,15 @@ const NAME_EN: Record<string, string> = {
   "Díla a licence": "Works and licences",
   // Počítačová grafika a práce s multimédii (8 hodin)
   "Kontrola úplnosti": "Package completeness check",
+  // Digitální gramotnost – dvě lekce ze šesti překlad neměly, takže v EN
+  // verzi měly český nadpis celé karty lekce (bere se z popisku souboru).
+  "Soubory a cloud": "Files and the cloud",
+  "Soubory a cloud – plán hodiny": "Files and the cloud – lesson plan",
+  "Software a licence": "Software and licences",
+  "Software a licence – plán hodiny": "Software and licences – lesson plan",
+  "Zadání test Python A 25-26": "Python test A 25-26 – assignment",
+  "Zadání test Python B 25-26": "Python test B 25-26 – assignment",
+  "Microsoft 365 pro školy": "Microsoft 365 for schools",
   "Začni tady": "Start here",
   // Laboratoř byla dřív jedna s pěti moduly. Po rozdělení balíčku do hodin má
   // každá hodina svou – žák tak nevidí moduly, které do jeho hodiny nepatří.

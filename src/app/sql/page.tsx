@@ -27,12 +27,24 @@ export const metadata: Metadata = {
   alternates: { canonical: "/sql" },
 };
 
-export default function SqlPage() {
+/**
+ * Kurz je zatím jen česky. Kdo sem přijde z anglické verze, musí se mít jak
+ * vrátit – proto `?z=en`: odkaz zpět i značka pak míří na /en místo na /.
+ * Obsah kurzu zůstává český, to je slíbené předem u obou odkazů, které sem
+ * vedou (patička i dlaždice Databáze).
+ */
+export default function SqlPage({
+  searchParams,
+}: {
+  searchParams?: { z?: string };
+}) {
+  const zEn = searchParams?.z === "en";
+  const domu = zEn ? "/en" : "/";
   return (
     <LanguageProvider lang="cs">
       <header className="glass-bar sticky top-0 z-40">
         <nav className="container-page flex h-16 items-center justify-between gap-4">
-          <Link href="/" className="group flex items-center gap-2.5" aria-label={SITE.name}>
+          <Link href={domu} className="group flex items-center gap-2.5" aria-label={SITE.name}>
             <Mark />
             <span className="hidden font-display text-sm font-semibold tracking-tight sm:block">
               {SITE.name}
@@ -40,10 +52,10 @@ export default function SqlPage() {
           </Link>
           <div className="flex items-center gap-2">
             <Link
-              href="/#banka"
+              href={`${domu}#banka`}
               className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200"
             >
-              <ArrowLeft className="h-4 w-4" /> Zpět na web
+              <ArrowLeft className="h-4 w-4" /> {zEn ? "Back to the site" : "Zpět na web"}
             </Link>
             <ThemeToggle />
           </div>

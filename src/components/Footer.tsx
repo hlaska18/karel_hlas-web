@@ -7,7 +7,7 @@ import { SITE } from "@/lib/content";
 import { Mark } from "@/components/Mark";
 
 export function Footer() {
-  const { tr } = useLang();
+  const { tr, lang } = useLang();
   const year = new Date().getFullYear();
 
   return (
@@ -24,7 +24,7 @@ export function Footer() {
         {/* Jediná další stránka webu. Bez tohohle odkazu vede ke kurzu jen
             cesta přes dlaždici Databáze v bance – z úvodu o něm nikdo neví. */}
         <Link
-          href="/sql"
+          href={lang === "en" ? "/sql?z=en" : "/sql"}
           className="inline-flex items-center gap-2 text-sm font-semibold text-zinc-600 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-300 dark:hover:text-accent-300"
         >
           <Database className="h-4 w-4 text-accent-700 dark:text-accent-400" />

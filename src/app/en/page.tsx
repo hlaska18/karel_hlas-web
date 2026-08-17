@@ -19,7 +19,9 @@ export const metadata: Metadata = {
       "Ready-made materials for Computer Science lessons, free to download and edit – worksheets, tests, lesson plans and teaching notes. Graphics & multimedia, artificial intelligence, internet & online safety, digital literacy, databases.",
     url: "/en",
     siteName: "Karel Hlas",
-    locale: "en_US",
+    // Texty jsou důsledně britské (licence, organisation, colour, Maths),
+    // takže en_GB, ne en_US.
+    locale: "en_GB",
     type: "website",
     // Obrázek generuje src/app/en/opengraph-image.tsx (next/og).
   },

@@ -24,9 +24,11 @@ export function LangToggle({ counterpartPath }: { counterpartPath?: string }) {
       aria-label={label}
       title={label}
       onClick={(e) => {
-        // zachovej ?tema=&lekce= při přepnutí jazyka (Link má href bez query)
+        // Zachovej ?tema=&lekce= při přepnutí jazyka (Link má href bez query)
+        // a s nimi i kotvu: SmoothScroll ji do adresy zapisuje, takže kdo je
+        // u #banka a přepne jazyk, jinak skočí na začátek druhé verze.
         try {
-          const qs = window.location.search;
+          const qs = window.location.search + window.location.hash;
           if (qs) {
             e.preventDefault();
             window.location.assign(href + qs);
