@@ -42,6 +42,17 @@ function isStudentDir(name: string): boolean {
 }
 
 /**
+ * Rozcestník balíčku („Začni zde", „Jak toto téma učit") leží v kořeni tématu,
+ * takže by po složkách vyšel jako materiál pro oba. Fakticky je ale psaný
+ * vyučujícímu – „Ucelený výukový balíček", „DOPORUČENÝ START: otevři
+ * Pro učitele/Plány hodin a metodika". Odznak to má říkat; neschovává se tím
+ * nic, banka publikum stejně nefiltruje.
+ */
+function isRozcestnik(name: string): boolean {
+  return /^(za[čc]ni zde|jak toto t[ée]ma u[čc]it)\./i.test(name);
+}
+
+/**
  * Zobrazovaný název. Řadicí prefix „1. " / „2) " na začátku se NEzobrazí
  * (slouží jen k pořadí). Podtržítka → mezery. Vnitřní čísla úloh („01_…",
  * „PracL01…") zůstávají, protože nemají tečku/závorku za číslem.
@@ -496,7 +507,7 @@ export function getBankItems(): BankItem[] {
               lessonNo: lessonNoOf(file),
               topicNo: topicIndex + 1,
               topicLabel,
-              audience,
+              audience: isRozcestnik(file) ? "teacher" : audience,
               group,
               groupAuthor,
               groupSort,

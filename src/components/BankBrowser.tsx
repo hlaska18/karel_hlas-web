@@ -576,8 +576,11 @@ function MaterialRow({
       </span>
       {/* Odznak jen u vyhraněných materiálů. „both" (většina) ho nemá – tvrdit
           u průvodce pro učitele „žáci" nedávalo smysl. */}
+      {/* Odznak se ukazuje i na mobilu. Dřív měl `hidden sm:inline-flex`, takže
+          pod 640 px zmizel – a „Klíč k testům" pak vypadal stejně jako pracovní
+          list. Odkazy do skupin se přitom otevírají hlavně na telefonu. */}
       {it.audience !== "both" && (
-        <span className="hidden shrink-0 items-center gap-1.5 sm:inline-flex">
+        <span className="inline-flex shrink-0 items-center gap-1.5">
           {it.audience === "teacher" ? (
             <span className="inline-flex items-center gap-1 rounded-md bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
               <GraduationCap className="h-3.5 w-3.5" /> {s.teacherBadge}
@@ -658,12 +661,16 @@ const LESSON_CONFIG: Record<string, LessonConfig> = {
     studentLabel: { cs: "Podklad", en: "Activity file" },
     teacherLabel: { cs: "Prezentace", en: "Slides" },
   },
-  "Power BI": {
-    studentGroups: ["Úlohy"],
-    teacherGroups: ["Řešení"],
-    studentLabel: { cs: "Úloha", en: "Exercise" },
-    teacherLabel: { cs: "Řešení", en: "Solution" },
-  },
+  // Power BI tu mělo skupiny „Úlohy" a „Řešení", které na disku neexistují –
+  // reálné jsou „PowerBI" a „Microsoft 365 pro školy". Konfigurace tedy nikdy
+  // nevytvořila jedinou kartu lekce a jen mátla. Téma dnes vede na cizí
+  // cvičebnici, karty lekcí by neměl z čeho postavit.
+  //
+  // Grafika a multimédia tu naopak CHYBÍ, i když má na disku stejnou stavbu
+  // jako Internet a AI. Doplnit ji nejde jen tak: čísla v „Podklady
+  // k aktivitám" jsou POŘADOVÁ, ne čísla hodin (03. Rastr a vektor je hodina 1),
+  // takže by se podklady spárovaly s cizími prezentacemi. Napřed by se musely
+  // soubory přečíslovat.
 };
 
 function matchesGroup(it: BankItem, names: string[]): boolean {
@@ -808,7 +815,11 @@ function ToolFolders({
 }) {
   const s = STR[lang];
   const { loose, folders } = useMemo(() => {
-    const map = new Map<string, BankItem[]>();
+    // Klíč nese i publikum. Na disku má `_ucitel/` podsložky pojmenované stejně
+    // jako žákovské (téma Databáze: „2. Kurz SQL v prohlížeči" je v obou), a
+    // dokud se grupovalo jen podle názvu, slily se do jedné karty – vedle
+    // pracovního listu tak ležela i řešení a karta nebyla ani jantarová.
+    const map = new Map<string, { name: string; ucitelska: boolean; items: BankItem[] }>();
     const rest: BankItem[] = [];
     for (const it of items) {
       const name = it.group
@@ -822,19 +833,30 @@ function ToolFolders({
         rest.push(it);
         continue;
       }
-      const arr = map.get(name) ?? [];
-      arr.push(it);
-      map.set(name, arr);
+      const ucitelska = it.audience === "teacher";
+      const klic = `${name} ${ucitelska ? "u" : "z"}`;
+      const zaznam = map.get(klic) ?? { name, ucitelska, items: [] };
+      zaznam.items.push(it);
+      map.set(klic, zaznam);
     }
+
+    // Rozlišující popisek se přidá JEN při skutečné kolizi. Složka, která je
+    // celá učitelská (např. „Python – řešení testů"), ho nepotřebuje – že je
+    // učitelská, je vidět z jantarové karty.
+    const kolize = new Set<string>();
+    for (const a of map.values())
+      for (const b of map.values())
+        if (a.name === b.name && a.ucitelska !== b.ucitelska) kolize.add(a.name);
+
     return {
       loose: rest,
-      folders: [...map.entries()].map(([name, its]) => ({
-        name,
-        items: its,
-        author: its.find((i) => i.groupAuthor)?.groupAuthor,
+      folders: [...map.values()].map((f) => ({
+        name: kolize.has(f.name) && f.ucitelska ? `${f.name} · ${s.teacherFolder}` : f.name,
+        items: f.items,
+        author: f.items.find((i) => i.groupAuthor)?.groupAuthor,
       })),
     };
-  }, [items, lang, s.teacherFolder]);
+  }, [items, lang, s.teacherFolder, s.studentFolder]);
 
   return (
     <div className="mt-4 space-y-2.5">

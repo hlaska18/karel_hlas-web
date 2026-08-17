@@ -59,12 +59,21 @@ export function countLinks(n: number, lang: Lang): string {
 
 const norm = (s?: string) => (s ?? "").normalize("NFC").toLowerCase();
 
-/** Pravidla v pořadí priority: [regex na obsah, dvojjazyčný štítek]. */
+/**
+ * Pravidla v pořadí priority: [regex na obsah, dvojjazyčný štítek].
+ *
+ * NA POŘADÍ ZÁLEŽÍ. Řešení a klíč musí být NAD testem, jinak dostane
+ * „Klíč k testům A a B" štítek „Test" – tedy pravý opak toho, co to je.
+ *
+ * A pozor na kmeny, které se schovávají uvnitř jiných slov: `/metod/` chytne
+ * i „metodou" v názvu „Ověřování zdrojů metodou 5P", což je prezentace pro
+ * žáky, ne metodika. Proto se hledá celé slovo.
+ */
 const TYPE_RULES: [RegExp, { cs: string; en: string }][] = [
+  [/řešení|reseni|klíč|klic/, { cs: "Řešení", en: "Solution" }],
   [/test/, { cs: "Test", en: "Test" }],
-  [/řešení|reseni/, { cs: "Řešení", en: "Solution" }],
-  [/metod/, { cs: "Metodika", en: "Teaching notes" }],
-  [/plán hodiny|plan hodiny/, { cs: "Plán hodiny", en: "Lesson plan" }],
+  [/\bmetodik|\bmetodick/, { cs: "Metodika", en: "Teaching notes" }],
+  [/plán hodin|plan hodin/, { cs: "Plán hodiny", en: "Lesson plan" }],
   [/návod|navod/, { cs: "Návod", en: "Guide" }],
   [/pracovní list|pracovni list/, { cs: "Pracovní list", en: "Worksheet" }],
   [/úloh|uloh/, { cs: "Úloha", en: "Exercise" }],
