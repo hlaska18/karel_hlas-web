@@ -50,7 +50,7 @@ export default function SqlPage() {
         </nav>
       </header>
 
-      <main className="container-page py-10 sm:py-14">
+      <main id="main" className="container-page py-10 sm:py-14">
         <p className="text-sm font-semibold uppercase tracking-widest text-accent-600 dark:text-accent-400">
           Interaktivní kurz
         </p>
