@@ -149,7 +149,12 @@ const NAME_EN: Record<string, string> = {
   // Počítačová grafika a práce s multimédii (8 hodin)
   "Kontrola úplnosti": "Package completeness check",
   "Začni tady": "Start here",
-  "Laboratoř grafiky": "Graphics lab",
+  // Laboratoř byla dřív jedna s pěti moduly. Po rozdělení balíčku do hodin má
+  // každá hodina svou – žák tak nevidí moduly, které do jeho hodiny nepatří.
+  "Laboratoř – rastr a vektor": "Lab – raster and vector",
+  "Laboratoř – barevná hloubka": "Lab – colour depth",
+  "Laboratoř – komprese a formáty": "Lab – compression and formats",
+  "Laboratoř – vzorkování zvuku": "Lab – audio sampling",
   "Formáty a komprese": "Formats and compression",
   "Rastr a vektor": "Raster and vector",
   "Parametry médií": "Media parameters",
@@ -159,6 +164,7 @@ const NAME_EN: Record<string, string> = {
   "Infografika v Canvě": "Infographics in Canva",
   "Závěrečný výstup": "Final piece",
   "Bonus – co se do osmi hodin nevešlo": "Bonus – what did not fit into eight lessons",
+  Bonus: "Bonus",
   "Rastrová a vektorová grafika": "Raster and vector graphics",
   "Rozlišení, barvy a barevná hloubka": "Resolution, colour and colour depth",
   "Formáty obrázků a komprese": "Image formats and compression",
@@ -413,9 +419,16 @@ export function getBankItems(): BankItem[] {
             if (isTeacherDir(e.name)) aud = "teacher";
             else if (isStudentDir(e.name)) aud = "student";
             else {
+              // Vnořená složka si nese i rodiče. Bez toho se „Obrázky" uvnitř
+              // hodiny zobrazily jako samostatná složka vedle hodin – a protože
+              // se stejnojmenné složky z různých hodin slily, nebylo poznat,
+              // ke které hodině obrázek patří. Na disku hodina všechno má,
+              // v bance to musí být vidět taky.
               const gl = displayName(e.name);
-              grp = { cs: gl, en: enLabel(gl) };
-              grpSort = e.name;
+              grp = group
+                ? { cs: `${group.cs} › ${gl}`, en: `${group.en} › ${enLabel(gl)}` }
+                : { cs: gl, en: enLabel(gl) };
+              grpSort = groupSort ? `${groupSort}/${e.name}` : e.name;
             }
             // `_autor.txt` ve složce = autor celé skupiny (dědí se dovnitř)
             let author = groupAuthor;

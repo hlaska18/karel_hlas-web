@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratoř – vzorkování zvuku</title>
+<style>
+:root{--teal:#0c8a83;--teal-d:#076663;--ink:#17211e;--grey:#5c6965;--cream:#f7f6f2;--line:#dcdcd6;--rust:#c45a3e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+header{background:var(--ink);color:#fff;padding:26px 32px}
+header .lbl{color:#7fd6cf;font-weight:700;letter-spacing:.08em;font-size:13px;text-transform:uppercase}
+header h1{margin:6px 0 4px;font-size:30px}
+header p{margin:0;color:#b9c4c0;font-size:15px}
+.bar{background:var(--teal);height:6px}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px}
+.mod{background:#fff;border:1px solid var(--line);border-radius:10px;margin:22px 0;overflow:hidden}
+.mod>h2{margin:0;padding:16px 22px;background:#fbfbf9;border-bottom:1px solid var(--line);font-size:19px}
+.mod>h2 span{display:inline-block;background:var(--teal);color:#fff;border-radius:5px;
+  font-size:12px;padding:3px 9px;margin-right:10px;vertical-align:2px;letter-spacing:.06em}
+.body{padding:20px 22px}
+.q{background:#f2f8f7;border-left:4px solid var(--teal);padding:11px 15px;margin:16px 0;font-size:15px}
+.q b{color:var(--teal-d)}
+.ctrl{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:14px 0}
+.ctrl label{font-size:14px;color:var(--grey);font-weight:600}
+input[type=range]{width:230px;accent-color:var(--teal)}
+button{font:inherit;font-size:14px;padding:7px 14px;border:1px solid var(--teal);background:#fff;
+  color:var(--teal-d);border-radius:6px;cursor:pointer}
+button.on,button:hover{background:var(--teal);color:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.pane{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.pane h4{margin:0;padding:8px 12px;font-size:13px;background:#fbfbf9;border-bottom:1px solid var(--line);color:var(--grey);
+  text-transform:uppercase;letter-spacing:.05em}
+.pane .in{padding:12px;text-align:center}
+.pane img,.pane canvas{max-width:100%;display:block;margin:0 auto;image-rendering:auto}
+.pixelated{image-rendering:pixelated;image-rendering:crisp-edges}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:12px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:#f4f7f6;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.mark{background:#e7f3f1;font-weight:700}
+.badge{font-size:12px;padding:2px 8px;border-radius:20px;background:#eef2f1;color:var(--grey)}
+.badge.good{background:#e2f2ea;color:#1e6b45}.badge.bad{background:#fbe9e4;color:#a33c1e}
+.note{font-size:13px;color:var(--grey);margin-top:10px}
+.chk{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+.chk button{margin:4px 6px 4px 0}
+.res{font-size:14px;margin-top:8px;font-weight:600;min-height:22px}
+footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font-size:13px}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<header>
+  <div class="lbl">Informatika · 1. ročník SŠ</div>
+  <h1>Laboratoř – vzorkování zvuku</h1>
+  <p>Modul k hodině 6. Běží offline a nic neodesílá. Měň vzorkovací frekvenci a bitovou hloubku a sleduj tvar vlny.</p>
+</header>
+<main>
+
+<!-- ============ MODUL 05 ============ -->
+<section class="mod">
+  <h2><span>MODUL 01</span>Vzorkování zvuku — z vlny na čísla</h2>
+  <div class="body">
+    <p>Zvuk je plynulá vlna. Počítač ji musí zaznamenat jako <b>vzorky</b> — hodnoty odečítané mnohokrát za sekundu. Posuvník mění, jak často měříme.</p>
+    <div class="ctrl">
+      <label>Vzorkovací frekvence: <output id="sOut">32 vzorků / s</output></label>
+      <input type="range" id="srate" min="4" max="64" value="32" step="2">
+      <label style="margin-left:10px">Bitová hloubka: <output id="bOut">16 úrovní</output></label>
+      <input type="range" id="sbits" min="1" max="6" value="4" step="1">
+    </div>
+    <div class="pane"><h4>Původní vlna (šedá) a záznam po vzorkování (tyrkysová)</h4>
+      <div class="in"><canvas id="wave" width="1000" height="300" style="width:100%"></canvas></div></div>
+    <p class="note">Skutečné CD používá 44 100 vzorků za sekundu a 16 bitů, tedy 65 536 úrovní hlasitosti.
+      Soubory <b>Média/zvuk_*.wav</b> ukazují stejný princip skutečným zvukem — poslechni si je a porovnej.</p>
+    <div class="q"><b>Zapiš:</b> Co se s vlnou stane, když je vzorků málo? A co se změní, když ubereš úrovně hlasitosti? Který z obou parametrů má na tvůj poslech větší vliv?</div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Poznámka k původu materiálů.</b> Všechny obrázky, zvuky i videa v této laboratoři byly vytvořeny programově přímo pro tuto výukovou sadu.
+  Neobsahují žádné osoby ani cizí dílo a lze je volně používat ve výuce. Laboratoř nenačítá nic z internetu.</p>
+</footer>
+</main>
+
+<script>
+(function(){
+  function $(i){return document.getElementById(i)}
+
+  // M5 vzorkování
+  var c=$('wave'),x=c.getContext('2d'),sr=$('srate'),sb=$('sbits');
+  function f(t){return Math.sin(t*Math.PI*2)*0.55+Math.sin(t*Math.PI*6)*0.22+Math.sin(t*Math.PI*10)*0.1;}
+  function draw(){
+    var W=c.width,H=c.height,mid=H/2,amp=H*0.36;
+    var n=+sr.value,lv=Math.pow(2,+sb.value);
+    $('sOut').textContent=n+' vzorků / s';
+    $('bOut').textContent=lv+' úrovní';
+    x.clearRect(0,0,W,H);
+    x.strokeStyle='#ececea';x.lineWidth=1;
+    for(var g=0;g<=10;g++){x.beginPath();x.moveTo(0,H*g/10);x.lineTo(W,H*g/10);x.stroke();}
+    x.strokeStyle='#c9cdcb';x.lineWidth=2;x.beginPath();
+    for(var i=0;i<=W;i++){var t=i/W,y=mid-f(t)*amp;i?x.lineTo(i,y):x.moveTo(i,y);}x.stroke();
+    var pts=[];
+    for(var k=0;k<=n;k++){var t=k/n,v=f(t);
+      var q=Math.round((v+1)/2*(lv-1))/(lv-1)*2-1;pts.push([t*W,mid-q*amp]);}
+    x.strokeStyle='#0c8a83';x.lineWidth=2.5;x.beginPath();
+    pts.forEach(function(p,i){i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])});x.stroke();
+    x.fillStyle='#0c8a83';
+    pts.forEach(function(p){x.beginPath();x.arc(p[0],p[1],3.5,0,7);x.fill();});
+  }
+  sr.addEventListener('input',draw);sb.addEventListener('input',draw);draw();
+})();
+</script>
+</body>
+</html>

@@ -27,9 +27,10 @@ Stav
 Obsahově je balíček kompletní. Před první hodinou zbývá ověřit tři věci
 na skutečném školním počítači; dokud se tak nestane, jde o nezměřená tvrzení:
 
-1. NEOVĚŘENO – Otevřít 01. Laboratoř grafiky.html ve školním prohlížeči
-   a přehrát jeden soubor .mp4 a jeden .wav. Školní image bývá uzamčený
-   a může blokovat lokální soubory nebo kodeky.
+1. NEOVĚŘENO – Otevřít laboratoř ve školním prohlížeči (je ve složkách
+   hodin 1, 2, 3 a 6) a přehrát jeden soubor .mp4 a jeden .wav ze složky
+   hodiny 6. Školní image bývá uzamčený a může blokovat lokální soubory
+   nebo kodeky.
 2. NEOVĚŘENO – Zkontrolovat, že GIMP (hodina 4) a Inkscape (hodina 5)
    jsou nainstalované a že jejich nabídky odpovídají krokům v sešitu.
    Popisy menu zastarávají rychleji než cokoli jiného.

@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratoř – barevná hloubka</title>
+<style>
+:root{--teal:#0c8a83;--teal-d:#076663;--ink:#17211e;--grey:#5c6965;--cream:#f7f6f2;--line:#dcdcd6;--rust:#c45a3e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+header{background:var(--ink);color:#fff;padding:26px 32px}
+header .lbl{color:#7fd6cf;font-weight:700;letter-spacing:.08em;font-size:13px;text-transform:uppercase}
+header h1{margin:6px 0 4px;font-size:30px}
+header p{margin:0;color:#b9c4c0;font-size:15px}
+.bar{background:var(--teal);height:6px}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px}
+.mod{background:#fff;border:1px solid var(--line);border-radius:10px;margin:22px 0;overflow:hidden}
+.mod>h2{margin:0;padding:16px 22px;background:#fbfbf9;border-bottom:1px solid var(--line);font-size:19px}
+.mod>h2 span{display:inline-block;background:var(--teal);color:#fff;border-radius:5px;
+  font-size:12px;padding:3px 9px;margin-right:10px;vertical-align:2px;letter-spacing:.06em}
+.body{padding:20px 22px}
+.q{background:#f2f8f7;border-left:4px solid var(--teal);padding:11px 15px;margin:16px 0;font-size:15px}
+.q b{color:var(--teal-d)}
+.ctrl{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:14px 0}
+.ctrl label{font-size:14px;color:var(--grey);font-weight:600}
+input[type=range]{width:230px;accent-color:var(--teal)}
+button{font:inherit;font-size:14px;padding:7px 14px;border:1px solid var(--teal);background:#fff;
+  color:var(--teal-d);border-radius:6px;cursor:pointer}
+button.on,button:hover{background:var(--teal);color:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.pane{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.pane h4{margin:0;padding:8px 12px;font-size:13px;background:#fbfbf9;border-bottom:1px solid var(--line);color:var(--grey);
+  text-transform:uppercase;letter-spacing:.05em}
+.pane .in{padding:12px;text-align:center}
+.pane img,.pane canvas{max-width:100%;display:block;margin:0 auto;image-rendering:auto}
+.pixelated{image-rendering:pixelated;image-rendering:crisp-edges}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:12px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:#f4f7f6;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.mark{background:#e7f3f1;font-weight:700}
+.badge{font-size:12px;padding:2px 8px;border-radius:20px;background:#eef2f1;color:var(--grey)}
+.badge.good{background:#e2f2ea;color:#1e6b45}.badge.bad{background:#fbe9e4;color:#a33c1e}
+.note{font-size:13px;color:var(--grey);margin-top:10px}
+.chk{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+.chk button{margin:4px 6px 4px 0}
+.res{font-size:14px;margin-top:8px;font-weight:600;min-height:22px}
+footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font-size:13px}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<header>
+  <div class="lbl">Informatika · 1. ročník SŠ</div>
+  <h1>Laboratoř – barevná hloubka</h1>
+  <p>Modul k hodině 2. Běží offline a nic neodesílá. Přepínej barevnou hloubku a sleduj, kdy je obrázek ještě použitelný.</p>
+</header>
+<main>
+
+<!-- ============ MODUL 04 ============ -->
+<section class="mod">
+  <h2><span>MODUL 01</span>Barevná hloubka — kolik barev je ještě dost</h2>
+  <div class="body">
+    <p>Kolik bitů připadá na jeden pixel určuje, kolik různých barev může obrázek obsahovat.</p>
+    <div class="ctrl">
+      <button class="bd on" data-b="24">24 bit</button>
+      <button class="bd" data-b="8">8 bit</button>
+      <button class="bd" data-b="4">4 bit</button>
+      <button class="bd" data-b="1">1 bit</button>
+      <span class="badge" id="bdInfo">16 777 216 barev · 290,2 kB</span>
+    </div>
+    <div class="pane"><h4 id="bdTitle">hloubka_24bit.png</h4>
+      <div class="in"><img id="bdImg" src="Obrázky/hloubka_24bit.png" style="width:100%;max-width:780px"></div></div>
+    <div class="q"><b>Zapiš:</b> U kolika bitů se poprvé objeví pásy v obloze? Který motiv by 4 bity ještě snesl a který ne?</div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Poznámka k původu materiálů.</b> Všechny obrázky, zvuky i videa v této laboratoři byly vytvořeny programově přímo pro tuto výukovou sadu.
+  Neobsahují žádné osoby ani cizí dílo a lze je volně používat ve výuce. Laboratoř nenačítá nic z internetu.</p>
+</footer>
+</main>
+
+<script>
+(function(){
+  var S={hl:{24:['16 777 216 barev · 290,2 kB','hloubka_24bit.png'],
+             8:['256 barev · 123,4 kB','hloubka_8bit.png'],
+             4:['16 barev · 71,8 kB','hloubka_4bit.png'],
+             1:['2 barvy · 1,8 kB','hloubka_1bit.png']}};
+  function $(i){return document.getElementById(i)}
+  function group(sel,fn){var b=document.querySelectorAll(sel);
+    b.forEach(function(x){x.addEventListener('click',function(){
+      b.forEach(function(y){y.classList.remove('on')});x.classList.add('on');fn(x);});});}
+
+  // M4 hloubka
+  group('.bd',function(b){var d=S.hl[b.dataset.b];
+    $('bdInfo').textContent=d[0];$('bdTitle').textContent=d[1];$('bdImg').src='Obrázky/'+d[1];});
+
+})();
+</script>
+</body>
+</html>

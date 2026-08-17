@@ -18,9 +18,9 @@ JAK NA TO
    vlastními slovy, aniž by ses díval/a zpět.
 
 CO MŮŽEŠ UDĚLAT SÁM/SAMA A CO NE
-Sám/sama zvládneš: hodiny 1, 2, 3 a 6 — laboratoř
-Podklady k aktivitám/01. Laboratoř grafiky.html
-otevřeš dvojklikem a proklikáš celou. Zvládneš i hodinu 7, pokud máš Canvu.
+Sám/sama zvládneš: hodiny 1, 2, 3 a 6 — laboratoř je ve složce každé
+z nich, otevřeš ji dvojklikem a proklikáš celou.
+Zvládneš i hodinu 7, pokud máš Canvu.
 Potřebuješ pomoc s: hodinami 4 a 5, pokud nemáš doma GIMP nebo Inkscape.
 Zapiš si, co jsi nemohl/a udělat, a dodělej to ve škole.
 

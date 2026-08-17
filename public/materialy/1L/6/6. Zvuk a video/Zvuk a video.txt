@@ -9,7 +9,7 @@ Poslechni si postupně (Média/):
 2. Který parametr se změnil mezi 1. a 3. souborem? A mezi 1. a 4.?
 3. Vzorkovací frekvence 44 100 Hz zaznamená tóny přibližně do 22 kHz.
    Kam až sahá 8 000 Hz? Co to udělá s vysokými tóny?
-4. Doplň do 04. Parametry médií.csv velikosti a svá pozorování.
+4. Doplň do Parametry médií.csv velikosti a svá pozorování.
 
 ČÁST B — VIDEO
 Přehraj (Média/):

@@ -666,11 +666,9 @@ const LESSON_CONFIG: Record<string, LessonConfig> = {
   // nevytvořila jedinou kartu lekce a jen mátla. Téma dnes vede na cizí
   // cvičebnici, karty lekcí by neměl z čeho postavit.
   //
-  // Grafika a multimédia tu naopak CHYBÍ, i když má na disku stejnou stavbu
-  // jako Internet a AI. Doplnit ji nejde jen tak: čísla v „Podklady
-  // k aktivitám" jsou POŘADOVÁ, ne čísla hodin (03. Rastr a vektor je hodina 1),
-  // takže by se podklady spárovaly s cizími prezentacemi. Napřed by se musely
-  // soubory přečíslovat.
+  // Grafika a multimédia tu není schválně: balíček je rozdělený rovnou do
+  // složek hodin, takže si karty lekcí nemá z čeho stavět a nepotřebuje je –
+  // složka hodiny dělá totéž a nese i média, která hodina používá.
 };
 
 function matchesGroup(it: BankItem, names: string[]): boolean {

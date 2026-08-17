@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratoř – rastr a vektor</title>
+<style>
+:root{--teal:#0c8a83;--teal-d:#076663;--ink:#17211e;--grey:#5c6965;--cream:#f7f6f2;--line:#dcdcd6;--rust:#c45a3e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+header{background:var(--ink);color:#fff;padding:26px 32px}
+header .lbl{color:#7fd6cf;font-weight:700;letter-spacing:.08em;font-size:13px;text-transform:uppercase}
+header h1{margin:6px 0 4px;font-size:30px}
+header p{margin:0;color:#b9c4c0;font-size:15px}
+.bar{background:var(--teal);height:6px}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px}
+.mod{background:#fff;border:1px solid var(--line);border-radius:10px;margin:22px 0;overflow:hidden}
+.mod>h2{margin:0;padding:16px 22px;background:#fbfbf9;border-bottom:1px solid var(--line);font-size:19px}
+.mod>h2 span{display:inline-block;background:var(--teal);color:#fff;border-radius:5px;
+  font-size:12px;padding:3px 9px;margin-right:10px;vertical-align:2px;letter-spacing:.06em}
+.body{padding:20px 22px}
+.q{background:#f2f8f7;border-left:4px solid var(--teal);padding:11px 15px;margin:16px 0;font-size:15px}
+.q b{color:var(--teal-d)}
+.ctrl{display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin:14px 0}
+.ctrl label{font-size:14px;color:var(--grey);font-weight:600}
+input[type=range]{width:230px;accent-color:var(--teal)}
+button{font:inherit;font-size:14px;padding:7px 14px;border:1px solid var(--teal);background:#fff;
+  color:var(--teal-d);border-radius:6px;cursor:pointer}
+button.on,button:hover{background:var(--teal);color:#fff}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:760px){.two{grid-template-columns:1fr}}
+.pane{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.pane h4{margin:0;padding:8px 12px;font-size:13px;background:#fbfbf9;border-bottom:1px solid var(--line);color:var(--grey);
+  text-transform:uppercase;letter-spacing:.05em}
+.pane .in{padding:12px;text-align:center}
+.pane img,.pane canvas{max-width:100%;display:block;margin:0 auto;image-rendering:auto}
+.pixelated{image-rendering:pixelated;image-rendering:crisp-edges}
+table{border-collapse:collapse;width:100%;font-size:14px;margin-top:12px}
+th,td{border:1px solid var(--line);padding:8px 10px;text-align:left}
+th{background:#f4f7f6;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
+td.num{text-align:right;font-variant-numeric:tabular-nums}
+.mark{background:#e7f3f1;font-weight:700}
+.badge{font-size:12px;padding:2px 8px;border-radius:20px;background:#eef2f1;color:var(--grey)}
+.badge.good{background:#e2f2ea;color:#1e6b45}.badge.bad{background:#fbe9e4;color:#a33c1e}
+.note{font-size:13px;color:var(--grey);margin-top:10px}
+.chk{margin-top:14px;border-top:1px dashed var(--line);padding-top:14px}
+.chk button{margin:4px 6px 4px 0}
+.res{font-size:14px;margin-top:8px;font-weight:600;min-height:22px}
+footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font-size:13px}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<header>
+  <div class="lbl">Informatika · 1. ročník SŠ</div>
+  <h1>Laboratoř – rastr a vektor</h1>
+  <p>Modul k hodině 1. Běží offline a nic neodesílá. Ovládej posuvník a zapisuj pozorování do sešitu.</p>
+</header>
+<main>
+
+<!-- ============ MODUL 01 ============ -->
+<section class="mod">
+  <h2><span>MODUL 01</span>Rastr vs. vektor — co se stane při zvětšení</h2>
+  <div class="body">
+    <p>Vlevo je <b>rastrový</b> obrázek 64 × 64 px. Vpravo je <b>vektorový</b> obrázek stejného motivu. Táhni posuvníkem a sleduj okraje kruhu a trojúhelníku.</p>
+    <div class="ctrl">
+      <label>Zvětšení: <output id="zOut">100 %</output></label>
+      <input type="range" id="zoom" min="100" max="800" value="100" step="10">
+      <button id="zReset">Zpět na 100 %</button>
+    </div>
+    <div class="two">
+      <div class="pane"><h4>Rastr — rastr_64px.png (64 × 64 px)</h4>
+        <div class="in" style="height:290px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+          <img id="rastrImg" class="pixelated" src="Obrázky/rastr_64px.png" style="width:120px">
+        </div></div>
+      <div class="pane"><h4>Vektor — logo_vektor.svg</h4>
+        <div class="in" style="height:290px;display:flex;align-items:center;justify-content:center;overflow:hidden">
+          <img id="vektorImg" src="Obrázky/logo_vektor.svg" style="width:120px">
+        </div></div>
+    </div>
+    <table>
+      <tr><th>Vlastnost</th><th>Rastr</th><th>Vektor</th></tr>
+      <tr><td>Z čeho se skládá</td><td>mřížka pixelů s barvami</td><td>matematický popis tvarů</td></tr>
+      <tr><td>Zvětšení</td><td>viditelné pixely, rozmazání</td><td>zůstává ostrý v každé velikosti</td></tr>
+      <tr><td>Velikost tohoto souboru</td><td class="num">5,1 kB (logo_png.png)</td><td class="num">0,4 kB (logo_vektor.svg)</td></tr>
+      <tr><td>Hodí se na</td><td>fotografie, skeny</td><td>loga, ikony, schémata</td></tr>
+    </table>
+    <div class="q"><b>Zapiš do sešitu:</b> Při jakém zvětšení začneš u rastru rozeznávat jednotlivé pixely? Proč u vektoru k tomu nedojde ani při 800 %?</div>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">co použiješ na logo školy na plachtu 3 × 2 m?</span><br>
+      <button class="a1" data-ok="0">Rastr 500 × 500 px</button>
+      <button class="a1" data-ok="1">Vektor (SVG)</button>
+      <button class="a1" data-ok="0">JPEG z fotoaparátu</button>
+      <div class="res" id="r1"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Poznámka k původu materiálů.</b> Všechny obrázky, zvuky i videa v této laboratoři byly vytvořeny programově přímo pro tuto výukovou sadu.
+  Neobsahují žádné osoby ani cizí dílo a lze je volně používat ve výuce. Laboratoř nenačítá nic z internetu.</p>
+</footer>
+</main>
+
+<script>
+(function(){
+  function $(i){return document.getElementById(i)}
+  function group(sel,fn){var b=document.querySelectorAll(sel);
+    b.forEach(function(x){x.addEventListener('click',function(){
+      b.forEach(function(y){y.classList.remove('on')});x.classList.add('on');fn(x);});});}
+
+  // M1 zoom
+  var z=$('zoom');
+  function zap(){var v=+z.value;$('zOut').textContent=v+' %';
+    $('rastrImg').style.width=(120*v/100)+'px';$('vektorImg').style.width=(120*v/100)+'px';}
+  z.addEventListener('input',zap); $('zReset').addEventListener('click',function(){z.value=100;zap()}); zap();
+
+
+  function check(sel,out,ok,bad){group(sel,function(b){
+    var r=$(out);
+    if(b.dataset.ok==='1'){r.style.color='#1e6b45';r.textContent='Správně. '+ok;}
+    else{r.style.color='#a33c1e';r.textContent='Ne. '+bad;}});}
+  check('.a1','r1','Vektor lze zvětšit na jakoukoli velikost bez ztráty ostrosti.',
+        'Rastr má pevný počet pixelů; na plachtě by byl rozmazaný.');
+})();
+</script>
+</body>
+</html>

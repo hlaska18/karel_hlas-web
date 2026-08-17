@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Laboratoř počítačové grafiky</title>
+<title>Laboratoř – komprese a formáty</title>
 <style>
 :root{--teal:#0c8a83;--teal-d:#076663;--ink:#17211e;--grey:#5c6965;--cream:#f7f6f2;--line:#dcdcd6;--rust:#c45a3e}
 *{box-sizing:border-box}
@@ -53,52 +53,14 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
 <div class="bar"></div>
 <header>
   <div class="lbl">Informatika · 1. ročník SŠ</div>
-  <h1>Laboratoř počítačové grafiky a multimédií</h1>
-  <p>Pět modulů k hodinám 1–6. Vše běží offline a nic neodesílá. Ovládej posuvníky a tlačítka a zapisuj pozorování do sešitu.</p>
+  <h1>Laboratoř – komprese a formáty</h1>
+  <p>Dva moduly k hodině 3. Běží offline a nic neodesílá. Přepínej kvalitu a formát a sleduj, co to udělá s velikostí.</p>
 </header>
 <main>
 
-<!-- ============ MODUL 01 ============ -->
-<section class="mod">
-  <h2><span>MODUL 01</span>Rastr vs. vektor — co se stane při zvětšení</h2>
-  <div class="body">
-    <p>Vlevo je <b>rastrový</b> obrázek 64 × 64 px. Vpravo je <b>vektorový</b> obrázek stejného motivu. Táhni posuvníkem a sleduj okraje kruhu a trojúhelníku.</p>
-    <div class="ctrl">
-      <label>Zvětšení: <output id="zOut">100 %</output></label>
-      <input type="range" id="zoom" min="100" max="800" value="100" step="10">
-      <button id="zReset">Zpět na 100 %</button>
-    </div>
-    <div class="two">
-      <div class="pane"><h4>Rastr — rastr_64px.png (64 × 64 px)</h4>
-        <div class="in" style="height:290px;display:flex;align-items:center;justify-content:center;overflow:hidden">
-          <img id="rastrImg" class="pixelated" src="Obrázky/rastr_64px.png" style="width:120px">
-        </div></div>
-      <div class="pane"><h4>Vektor — logo_vektor.svg</h4>
-        <div class="in" style="height:290px;display:flex;align-items:center;justify-content:center;overflow:hidden">
-          <img id="vektorImg" src="Obrázky/logo_vektor.svg" style="width:120px">
-        </div></div>
-    </div>
-    <table>
-      <tr><th>Vlastnost</th><th>Rastr</th><th>Vektor</th></tr>
-      <tr><td>Z čeho se skládá</td><td>mřížka pixelů s barvami</td><td>matematický popis tvarů</td></tr>
-      <tr><td>Zvětšení</td><td>viditelné pixely, rozmazání</td><td>zůstává ostrý v každé velikosti</td></tr>
-      <tr><td>Velikost tohoto souboru</td><td class="num">5,1 kB (logo_png.png)</td><td class="num">0,4 kB (logo_vektor.svg)</td></tr>
-      <tr><td>Hodí se na</td><td>fotografie, skeny</td><td>loga, ikony, schémata</td></tr>
-    </table>
-    <div class="q"><b>Zapiš do sešitu:</b> Při jakém zvětšení začneš u rastru rozeznávat jednotlivé pixely? Proč u vektoru k tomu nedojde ani při 800 %?</div>
-    <div class="chk">
-      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">co použiješ na logo školy na plachtu 3 × 2 m?</span><br>
-      <button class="a1" data-ok="0">Rastr 500 × 500 px</button>
-      <button class="a1" data-ok="1">Vektor (SVG)</button>
-      <button class="a1" data-ok="0">JPEG z fotoaparátu</button>
-      <div class="res" id="r1"></div>
-    </div>
-  </div>
-</section>
-
 <!-- ============ MODUL 02 ============ -->
 <section class="mod">
-  <h2><span>MODUL 02</span>Komprese — kolik kvality stojí kolik kilobajtů</h2>
+  <h2><span>MODUL 01</span>Komprese — kolik kvality stojí kolik kilobajtů</h2>
   <div class="body">
     <p>Stejná fotografie uložená se stejnými rozměry, ale různou kvalitou JPEG. Sleduj zároveň obrázek i velikost souboru.</p>
     <div class="ctrl">
@@ -130,7 +92,7 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
 
 <!-- ============ MODUL 03 ============ -->
 <section class="mod">
-  <h2><span>MODUL 03</span>Formát podle obsahu — kdy PNG vyhraje nad JPEG</h2>
+  <h2><span>MODUL 02</span>Formát podle obsahu — kdy PNG vyhraje nad JPEG</h2>
   <div class="body">
     <p>Teď totéž, ale s <b>plošnou grafikou</b> — málo barev, ostré hrany. Přepínej a sleduj tabulku.</p>
     <div class="ctrl">
@@ -160,43 +122,6 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
   </div>
 </section>
 
-<!-- ============ MODUL 04 ============ -->
-<section class="mod">
-  <h2><span>MODUL 04</span>Barevná hloubka — kolik barev je ještě dost</h2>
-  <div class="body">
-    <p>Kolik bitů připadá na jeden pixel určuje, kolik různých barev může obrázek obsahovat.</p>
-    <div class="ctrl">
-      <button class="bd on" data-b="24">24 bit</button>
-      <button class="bd" data-b="8">8 bit</button>
-      <button class="bd" data-b="4">4 bit</button>
-      <button class="bd" data-b="1">1 bit</button>
-      <span class="badge" id="bdInfo">16 777 216 barev · 290,2 kB</span>
-    </div>
-    <div class="pane"><h4 id="bdTitle">hloubka_24bit.png</h4>
-      <div class="in"><img id="bdImg" src="Obrázky/hloubka_24bit.png" style="width:100%;max-width:780px"></div></div>
-    <div class="q"><b>Zapiš:</b> U kolika bitů se poprvé objeví pásy v obloze? Který motiv by 4 bity ještě snesl a který ne?</div>
-  </div>
-</section>
-
-<!-- ============ MODUL 05 ============ -->
-<section class="mod">
-  <h2><span>MODUL 05</span>Vzorkování zvuku — z vlny na čísla</h2>
-  <div class="body">
-    <p>Zvuk je plynulá vlna. Počítač ji musí zaznamenat jako <b>vzorky</b> — hodnoty odečítané mnohokrát za sekundu. Posuvník mění, jak často měříme.</p>
-    <div class="ctrl">
-      <label>Vzorkovací frekvence: <output id="sOut">32 vzorků / s</output></label>
-      <input type="range" id="srate" min="4" max="64" value="32" step="2">
-      <label style="margin-left:10px">Bitová hloubka: <output id="bOut">16 úrovní</output></label>
-      <input type="range" id="sbits" min="1" max="6" value="4" step="1">
-    </div>
-    <div class="pane"><h4>Původní vlna (šedá) a záznam po vzorkování (tyrkysová)</h4>
-      <div class="in"><canvas id="wave" width="1000" height="300" style="width:100%"></canvas></div></div>
-    <p class="note">Skutečné CD používá 44 100 vzorků za sekundu a 16 bitů, tedy 65 536 úrovní hlasitosti.
-      Soubory <b>Média/zvuk_*.wav</b> ukazují stejný princip skutečným zvukem — poslechni si je a porovnej.</p>
-    <div class="q"><b>Zapiš:</b> Co se s vlnou stane, když je vzorků málo? A co se změní, když ubereš úrovně hlasitosti? Který z obou parametrů má na tvůj poslech větší vliv?</div>
-  </div>
-</section>
-
 <footer>
   <p><b>Poznámka k původu materiálů.</b> Všechny obrázky, zvuky i videa v této laboratoři byly vytvořeny programově přímo pro tuto výukovou sadu.
   Neobsahují žádné osoby ani cizí dílo a lze je volně používat ve výuce. Laboratoř nenačítá nic z internetu.</p>
@@ -209,21 +134,11 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
          logo:{png:['5,1 kB','logo_png.png','Obrázky/logo_png.png'],
                q95:['39,6 kB','logo_jpeg_q95.jpg','Obrázky/logo_jpeg_q95.jpg'],
                q40:['18,2 kB','logo_jpeg_q40.jpg','Obrázky/logo_jpeg_q40.jpg'],
-               gif:['4,3 kB','logo_gif16.gif','Obrázky/logo_gif16.gif']},
-         hl:{24:['16 777 216 barev · 290,2 kB','hloubka_24bit.png'],
-             8:['256 barev · 123,4 kB','hloubka_8bit.png'],
-             4:['16 barev · 71,8 kB','hloubka_4bit.png'],
-             1:['2 barvy · 1,8 kB','hloubka_1bit.png']}};
+               gif:['4,3 kB','logo_gif16.gif','Obrázky/logo_gif16.gif']}};
   function $(i){return document.getElementById(i)}
   function group(sel,fn){var b=document.querySelectorAll(sel);
     b.forEach(function(x){x.addEventListener('click',function(){
       b.forEach(function(y){y.classList.remove('on')});x.classList.add('on');fn(x);});});}
-
-  // M1 zoom
-  var z=$('zoom');
-  function zap(){var v=+z.value;$('zOut').textContent=v+' %';
-    $('rastrImg').style.width=(120*v/100)+'px';$('vektorImg').style.width=(120*v/100)+'px';}
-  z.addEventListener('input',zap); $('zReset').addEventListener('click',function(){z.value=100;zap()}); zap();
 
   // M2 jpeg
   group('.jq',function(b){var q=b.dataset.q;
@@ -235,42 +150,13 @@ footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font
   group('.lg',function(b){var d=S.logo[b.dataset.k];
     $('lgSize').textContent=d[0];$('lgTitle').textContent=d[1];$('lgImg').src=d[2];});
 
-  // M4 hloubka
-  group('.bd',function(b){var d=S.hl[b.dataset.b];
-    $('bdInfo').textContent=d[0];$('bdTitle').textContent=d[1];$('bdImg').src='Obrázky/'+d[1];});
 
-  // kontroly
   function check(sel,out,ok,bad){group(sel,function(b){
     var r=$(out);
     if(b.dataset.ok==='1'){r.style.color='#1e6b45';r.textContent='Správně. '+ok;}
     else{r.style.color='#a33c1e';r.textContent='Ne. '+bad;}});}
-  check('.a1','r1','Vektor lze zvětšit na jakoukoli velikost bez ztráty ostrosti.',
-        'Rastr má pevný počet pixelů; na plachtě by byl rozmazaný.');
   check('.a2','r2','PNG je bezztrátový, takže text zůstane ostrý.',
         'Ztrátová komprese rozmaže hrany písmen a udělá kolem nich skvrny.');
-
-  // M5 vzorkování
-  var c=$('wave'),x=c.getContext('2d'),sr=$('srate'),sb=$('sbits');
-  function f(t){return Math.sin(t*Math.PI*2)*0.55+Math.sin(t*Math.PI*6)*0.22+Math.sin(t*Math.PI*10)*0.1;}
-  function draw(){
-    var W=c.width,H=c.height,mid=H/2,amp=H*0.36;
-    var n=+sr.value,lv=Math.pow(2,+sb.value);
-    $('sOut').textContent=n+' vzorků / s';
-    $('bOut').textContent=lv+' úrovní';
-    x.clearRect(0,0,W,H);
-    x.strokeStyle='#ececea';x.lineWidth=1;
-    for(var g=0;g<=10;g++){x.beginPath();x.moveTo(0,H*g/10);x.lineTo(W,H*g/10);x.stroke();}
-    x.strokeStyle='#c9cdcb';x.lineWidth=2;x.beginPath();
-    for(var i=0;i<=W;i++){var t=i/W,y=mid-f(t)*amp;i?x.lineTo(i,y):x.moveTo(i,y);}x.stroke();
-    var pts=[];
-    for(var k=0;k<=n;k++){var t=k/n,v=f(t);
-      var q=Math.round((v+1)/2*(lv-1))/(lv-1)*2-1;pts.push([t*W,mid-q*amp]);}
-    x.strokeStyle='#0c8a83';x.lineWidth=2.5;x.beginPath();
-    pts.forEach(function(p,i){i?x.lineTo(p[0],p[1]):x.moveTo(p[0],p[1])});x.stroke();
-    x.fillStyle='#0c8a83';
-    pts.forEach(function(p){x.beginPath();x.arc(p[0],p[1],3.5,0,7);x.fill();});
-  }
-  sr.addEventListener('input',draw);sb.addEventListener('input',draw);draw();
 })();
 </script>
 </body>
