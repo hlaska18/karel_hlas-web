@@ -68,35 +68,52 @@
      modal. Když je průsvitné všechno, přestane to znamenat cokoli a stránka
      působí šablonovitě. Tohle je klidná plocha s vlasovým okrajem. */
   .povrch {
-    background-color: var(--bg-soft);
-    border: 1px solid rgba(2, 44, 34, 0.09);
-    box-shadow: 0 1px 2px rgba(2, 44, 34, 0.04);
+    /* Neprůhledná obdoba skla – a schválně s přechodem, ne plnou barvou.
+       Plný malachitový tón by kartu ztmavil natolik, že by se přestala
+       oddělovat od světlého pozadí; přechod nechá horní půlku svítit bílou
+       a barvu ukáže dole. Přesně tohle dělalo sklo, jen průsvitně.
+       `background-color` je zároveň záloha a drží neprůhlednost, aby se
+       pod textem dal změřit kontrast. */
+    background-color: #f8fdfa;
+    background-image: linear-gradient(135deg, #ffffff, #f0fbf6);
+    border: 1px solid rgba(2, 44, 34, 0.1);
+    box-shadow:
+      0 1px 2px rgba(2, 44, 34, 0.05),
+      0 8px 20px -12px rgba(2, 44, 34, 0.16);
   }
 
   /* ───── Liquid glass (se smaragdovým nádechem) ───── */
   .glass {
+    /* Mátový tón posílen: dřív měla první zarážka 0,4 % sytosti, takže
+       skoro celá karta byla bílá plocha a nádech byl vidět jen v rohu.
+       Bílý okraj taky zmizel – na skoro bílém pozadí nic nedefinoval,
+       kartu drží jemný tmavý vlas. */
+    background-color: rgba(255, 255, 255, 0.7);
     background-image: linear-gradient(
       135deg,
-      rgba(255, 255, 255, 0.72),
-      rgba(236, 253, 245, 0.42)
+      rgba(255, 255, 255, 0.7),
+      rgba(214, 244, 233, 0.66)
     );
     backdrop-filter: blur(18px) saturate(180%);
     -webkit-backdrop-filter: blur(18px) saturate(180%);
-    border: 1px solid rgba(255, 255, 255, 0.6);
+    border: 1px solid rgba(2, 44, 34, 0.09);
     box-shadow:
       0 12px 32px -14px rgba(2, 44, 34, 0.18),
       inset 0 1px 0 rgba(255, 255, 255, 0.7);
   }
 
   .glass-soft {
+    /* Nádech i tady, ať vyhledávací pole a pilulky nepůsobí šedě mezi
+       zelenými kartami. Slabší než u .glass – jsou to ovládací prvky,
+       ne obsah. */
     background-image: linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.55),
-      rgba(255, 255, 255, 0.28)
+      rgba(226, 246, 238, 0.42)
     );
     backdrop-filter: blur(12px) saturate(160%);
     -webkit-backdrop-filter: blur(12px) saturate(160%);
-    border: 1px solid rgba(255, 255, 255, 0.55);
+    border: 1px solid rgba(2, 44, 34, 0.07);
   }
 
   .glass-accent {
@@ -133,9 +150,13 @@
    Pozor: třídy bez `dark:` protějšku platí v OBOU motivech, takže každý
    nový povrch tu musí mít svou tmavou variantu. */
 .dark .povrch {
-  background-color: var(--bg-soft);
-  border-color: rgba(255, 255, 255, 0.08);
-  box-shadow: none;
+  /* Dřív tu bylo jen --bg-soft (#0d1311), což proti pozadí #080d0b dělalo
+     odstup 1,04 : 1 – prakticky nic, karta „zapadla". Tenhle tón vrací
+     zelenou ze skla (162°) a odstup zvedá na 1,21 : 1. */
+  background-color: #0e251e;
+  background-image: linear-gradient(135deg, #102a23, #0c201a);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: 0 10px 26px -16px rgba(0, 0, 0, 0.75);
 }
 
 .dark .glass {
@@ -153,7 +174,7 @@
 .dark .glass-soft {
   background-image: linear-gradient(
     135deg,
-    rgba(255, 255, 255, 0.07),
+    rgba(53, 203, 164, 0.09),
     rgba(255, 255, 255, 0.02)
   );
   border-color: rgba(255, 255, 255, 0.1);
