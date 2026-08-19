@@ -3,13 +3,14 @@
 @tailwind utilities;
 
 :root {
-  /* Pozadí rozsvíceno nadvakrát z původní #f4f7f5. Dlaždice se přitom
-     musely překlopit na druhou stranu: dřív byly světlejší než podklad,
-     teď jsou jemně mátové a tedy o stupeň tmavší. Od té chvíle každé
-     další rozsvícení pozadí odstup naopak ZVEDÁ – proto druhý krok
-     nestál žádnou další zeleň (1,052 na 1,073). */
-  --bg: #fafcfb;
-  --bg-soft: #ffffff;
+  /* Zeleň nese POZADÍ, ne dlaždice. Karel chtěl stránku míň bílou a víc
+     malachitovou; cesta přes samotné zesvětlování skončila u skoro bílé
+     plochy, která působila vymydleně. Teď má podklad 7 % sytosti a dlaždice
+     na něm stojí o stupeň světlejší (2,8 %) – zelené zůstávají obě, liší se
+     jasem. `--bg-soft` drží barvu povrchu, ne bílou: sedí na něm prstenec
+     u časové osy v About a na bílé by kolem něj byl světlý flek. */
+  --bg: #e2f3ea;
+  --bg-soft: #f4fbf8;
   --fg: #0a0f0d;
 }
 
@@ -81,8 +82,8 @@
        a barvu ukáže dole. Přesně tohle dělalo sklo, jen průsvitně.
        `background-color` je zároveň záloha a drží neprůhlednost, aby se
        pod textem dal změřit kontrast. */
-    background-color: #e8f7f0;
-    background-image: linear-gradient(135deg, #f9fdfb, #d8f1e4);
+    background-color: #f4fbf8;
+    background-image: linear-gradient(135deg, #fefffe, #e9f7f1);
     border: 1px solid rgba(2, 44, 34, 0.1);
     box-shadow:
       0 1px 2px rgba(2, 44, 34, 0.05),
