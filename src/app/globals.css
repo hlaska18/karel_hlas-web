@@ -3,16 +3,22 @@
 @tailwind utilities;
 
 :root {
-  --bg: #f4f7f5;
+  /* Pozadí rozsvíceno z #f4f7f5 – Karel chtěl světlejší stránku. Dlaždice
+     se tím musely překlopit na druhou stranu: dřív byly světlejší než
+     podklad, teď jsou jemně mátové a tedy o stupeň tmavší. Odstup vyšel
+     stejný jako předtím, jen se drží barvou místo jasem. */
+  --bg: #f7faf8;
   --bg-soft: #ffffff;
   --fg: #0a0f0d;
 }
 
 .dark {
   /* Ne úplná čerň: o stupeň světlejší se zeleným nádechem. Na #070a09
-     splývaly skleněné karty s pozadím a stránka působila zhasle. */
-  --bg: #080d0b;
-  --bg-soft: #0d1311;
+     splývaly skleněné karty s pozadím a stránka působila zhasle.
+     Podruhé rozsvíceno z #080d0b, ať stránka není tak těžká; dlaždice
+     se zvedly s ním, takže odstup vzrostl z 1,21 na 1,29. */
+  --bg: #0c1411;
+  --bg-soft: #12201b;
   --fg: #e9efec;
 }
 
@@ -74,8 +80,8 @@
        a barvu ukáže dole. Přesně tohle dělalo sklo, jen průsvitně.
        `background-color` je zároveň záloha a drží neprůhlednost, aby se
        pod textem dal změřit kontrast. */
-    background-color: #f8fdfa;
-    background-image: linear-gradient(135deg, #ffffff, #f0fbf6);
+    background-color: #e8f7f0;
+    background-image: linear-gradient(135deg, #f9fdfb, #d8f1e4);
     border: 1px solid rgba(2, 44, 34, 0.1);
     box-shadow:
       0 1px 2px rgba(2, 44, 34, 0.05),
@@ -156,8 +162,8 @@
   /* Dřív tu bylo jen --bg-soft (#0d1311), což proti pozadí #080d0b dělalo
      odstup 1,04 : 1 – prakticky nic, karta „zapadla". Tenhle tón vrací
      zelenou ze skla (162°) a odstup zvedá na 1,21 : 1. */
-  background-color: #0e251e;
-  background-image: linear-gradient(135deg, #102a23, #0c201a);
+  background-color: #142e26;
+  background-image: linear-gradient(135deg, #16332a, #122922);
   border-color: rgba(255, 255, 255, 0.1);
   box-shadow: 0 10px 26px -16px rgba(0, 0, 0, 0.75);
 }
