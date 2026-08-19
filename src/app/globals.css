@@ -88,7 +88,10 @@
        skoro celá karta byla bílá plocha a nádech byl vidět jen v rohu.
        Bílý okraj taky zmizel – na skoro bílém pozadí nic nedefinoval,
        kartu drží jemný tmavý vlas. */
-    background-color: rgba(255, 255, 255, 0.7);
+    /* Bez `background-color`. Byl tu jako záloha, jenže `.dark .glass` níž
+       přepisuje jen `background-image` – takže v tmavém motivu zůstal pod
+       kartou bílý nátěr a světlý text na něm měl kontrast 1,17. Sklo má být
+       průsvitné, barvu nese přechod. */
     background-image: linear-gradient(
       135deg,
       rgba(255, 255, 255, 0.7),

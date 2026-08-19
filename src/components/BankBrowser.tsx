@@ -322,17 +322,10 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
       else c.vlastni += 1;
       counts.set(it.tool, c);
     }
-    // Řazení a velikost podle objemu: co má nejvíc materiálů, jde první
-    // a dostane vyšší dlaždici. Rozložení tím nese informaci – na první
-    // pohled je vidět, kde je toho hodně a kde vede jen odkaz jinam.
-    // Odvozuje se z počtu, ne z názvu: banka se mění a napevno psaná jména
-    // by se s obsahem rozešla.
+    // Řazení podle objemu: co má nejvíc materiálů, jde první. Různě velké
+    // dlaždice tu chvíli byly, ale Karlovi se nelíbily – zůstalo jen pořadí.
     return [...counts.entries()]
-      .map(([name, c]) => ({
-        name,
-        ...c,
-        velikost: c.vlastni >= 20 ? "velka" : c.vlastni > 0 ? "stredni" : "mala",
-      }))
+      .map(([name, c]) => ({ name, ...c }))
       .sort((a, b) => b.vlastni - a.vlastni || b.odkazy - a.odkazy);
   }, [items]);
 
@@ -398,32 +391,18 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           se „Grafika a multimédia“ lámalo na tři řádky a lepilo se na ikonu.
           Dva sloupce dají textu ~150 px a název se vejde na dva řádky. */}
       {!showList && (
-        <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:auto-rows-[11rem] lg:grid-cols-3">
+        <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {tiles.map((t) => {
             const Icon = toolIcon(t.name);
             return (
-              <li
-                key={t.name}
-                className={t.velikost === "velka" ? "lg:row-span-2" : undefined}
-              >
+              <li key={t.name}>
                 <button
                   type="button"
                   onClick={() => setTool(t.name)}
-                  className={
-                    "povrch group flex h-full w-full flex-col items-center gap-2 overflow-hidden rounded-karta p-4 text-center transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 sm:flex-row sm:items-center sm:gap-3 sm:p-5 sm:text-left" +
-                    // Vysoká dlaždice se na širokém displeji rozloží do sloupce: název
-                    // nahoře vlevo, velká ikona dole vpravo. V řádkovém rozložení zůstal
-                    // obsah svisle na střed a karta působila poloprázdně místo důležitě.
-                    (t.velikost === "velka" ? " lg:flex-col lg:items-start lg:justify-between" : "")
-                  }
+                  className="povrch group flex h-full w-full flex-col items-center gap-2 overflow-hidden rounded-karta p-4 text-center transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 sm:flex-row sm:items-center sm:gap-3 sm:p-5 sm:text-left"
                 >
                   {/* Text: na mobilu pod ikonou (přes celou šířku), na desktopu vlevo */}
-                  <span
-                    className={
-                      "order-2 flex min-w-0 flex-col gap-0.5 sm:order-1 sm:flex-1 sm:gap-1" +
-                      (t.velikost === "velka" ? " lg:flex-none lg:self-start" : "")
-                    }
-                  >
+                  <span className="order-2 flex min-w-0 flex-col gap-0.5 sm:order-1 sm:flex-1 sm:gap-1">
                     <span className="font-display text-base font-semibold tracking-podnadpis text-zinc-900 dark:text-white sm:text-lg">
                       {toolLabel(t.name, lang)}
                     </span>
@@ -436,12 +415,7 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                     </span>
                   </span>
                   {/* Velká „plovoucí" ikona: na mobilu nahoře menší, na desktopu vyplní pravou část */}
-                  <span
-                    className={
-                      "order-1 flex aspect-square w-20 shrink-0 items-center justify-center sm:order-2 sm:w-[46%] sm:max-w-[9.5rem]" +
-                      (t.velikost === "velka" ? " lg:w-[68%] lg:max-w-none lg:self-end" : "")
-                    }
-                  >
+                  <span className="order-1 flex aspect-square w-20 shrink-0 items-center justify-center sm:order-2 sm:w-[46%] sm:max-w-[9.5rem]">
                     {hasToolGlassIcon(t.name) ? (
                       <ToolGlassIcon tool={t.name} className="h-full w-full object-contain" />
                     ) : (
