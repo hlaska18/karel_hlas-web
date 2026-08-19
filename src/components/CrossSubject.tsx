@@ -81,18 +81,23 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
               className="povrch group flex w-full flex-col rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 dark:border-white/15"
             >
               <span className="flex items-center gap-3">
-                <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-karta bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
-                  <Plus className="h-6 w-6" />
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
+                  <Plus className="h-5 w-5" />
                 </span>
                 <span className="font-display text-lg font-semibold tracking-podnadpis text-zinc-700 dark:text-zinc-200">
                   {c.inviteTitle}
                 </span>
               </span>
-              <span className="mt-3 flex-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                {c.inviteText}
-              </span>
-              <span className="mt-4 inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-600 transition group-hover:gap-2.5 group-hover:text-accent-700 dark:text-accent-400 dark:text-zinc-300 dark:group-hover:text-accent-300">
-                {SITE.email} <ArrowRight className="h-4 w-4" />
+              {/* E-mail je součástí věty, ne samostatný řádek pod ní. Jako dva
+                  bloky byla tahle dlaždice o 27 px vyšší než ostatní v mřížce
+                  a v řádku vyčnívala; `items-start` na mřížce zůstat musí,
+                  protože dlaždice předmětu se rozbaluje. */}
+              <span className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                {c.inviteText}{" "}
+                <span className="inline-flex items-center gap-1 font-semibold text-zinc-700 transition group-hover:gap-1.5 group-hover:text-accent-700 dark:text-zinc-300 dark:group-hover:text-accent-300">
+                  {SITE.email}
+                  <ArrowRight className="h-3.5 w-3.5" />
+                </span>
               </span>
             </a>
           </Reveal>

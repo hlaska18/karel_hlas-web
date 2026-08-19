@@ -5,6 +5,7 @@ import { BarChart3, Database, Files, FileCode2, FileSpreadsheet, FileText, Image
 import { useLang } from "@/lib/i18n";
 import { toolLabel } from "@/lib/bankLabels";
 import { pickHeroHighlights } from "@/lib/heroPick";
+import { ToolGlassIcon, hasToolGlassIcon } from "@/components/ToolGlassIcon";
 import type { BankItem } from "@/lib/materials";
 
 /**
@@ -90,9 +91,18 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
             >
               {/* V klidu šedý, po najetí na kartu se rozsvítí – stejně jako
                   značky zdrojů u článků níž. Ikona zůstává táž, mění se barva. */}
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
-                <Icon className="h-5 w-5 text-zinc-600 transition duration-300 group-hover/karta:text-accent-700 dark:text-accent-400 dark:text-zinc-400 dark:group-hover/karta:text-accent-300" />
-              </span>
+              {/* Skleněná ikona tématu, stejná jako na dlaždicích v bance – ukázka
+                  tak rovnou říká, odkud materiál je. Kde ikona tématu neexistuje,
+                  zůstává původní symbol podle typu souboru. */}
+              {hasToolGlassIcon(it.tool) ? (
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center">
+                  <ToolGlassIcon tool={it.tool} className="h-full w-full object-contain" />
+                </span>
+              ) : (
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
+                  <Icon className="h-5 w-5 text-zinc-600 transition duration-300 group-hover/karta:text-accent-700 dark:text-accent-400 dark:text-zinc-400 dark:group-hover/karta:text-accent-300" />
+                </span>
+              )}
 
               <span className="min-w-0 flex-1">
                 <span className="block truncate text-sm font-semibold">
