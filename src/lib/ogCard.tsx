@@ -83,7 +83,9 @@ export function ogCard(opts: {
         flexDirection: "column",
         justifyContent: "space-between",
         padding: "64px 72px",
-        backgroundColor: "#070a09",
+        // Sladeno s tmavym pozadim webu. Bylo #070a09 z doby pred obema
+        // rozsvicenimi; karta se tim rozesla s tim, na co odkazuje.
+        backgroundColor: "#101a16",
         backgroundImage:
           "radial-gradient(circle at 12% 10%, rgba(20,178,139,0.35), transparent 55%), " +
           "radial-gradient(circle at 88% 85%, rgba(20,178,139,0.22), transparent 55%)",
@@ -119,7 +121,9 @@ export function ogCard(opts: {
           {opts.byline}
         </div>
         </div>
-        <div style={{ display: "flex", color: "#71717a", fontSize: 24 }}>{opts.domain}</div>
+        {/* zinc-400, ne zinc-500: na tmavem pozadi mela domena kontrast 3,7,
+            tedy pod pozadovanymi 4,5. Nove 6,9. */}
+        <div style={{ display: "flex", color: "#a1a1aa", fontSize: 24 }}>{opts.domain}</div>
       </div>
 
       <div style={{ display: "flex", flexDirection: "column", gap: 22, maxWidth: 990 }}>
