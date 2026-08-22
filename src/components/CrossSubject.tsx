@@ -78,7 +78,7 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           <Reveal as="li" delay={0.05 * c.items.length} className="flex">
             <a
               href={`mailto:${SITE.email}`}
-              className="povrch group flex w-full flex-col rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 dark:border-white/15"
+              className="povrch group flex w-full flex-col rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 dark:border-white/15"
             >
               <span className="flex items-center gap-3">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
@@ -136,8 +136,11 @@ function SubjectTile({
         .sort((a, b) => Number(a.external ?? false) - Number(b.external ?? false))
     : [];
 
+  // Stejné gesto jako u dlaždic témat v bance: nadzvednutí a smaragdová záře.
+  // Karta se rozbaluje, takže nadzvednutí platí i otevřené – chová se pak jako
+  // jeden kus, ne jako panel, co se rozjel.
   return (
-    <div className="povrch flex w-full flex-col rounded-karta">
+    <div className="povrch flex w-full flex-col rounded-karta transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15">
       <button
         type="button"
         onClick={onToggle}
