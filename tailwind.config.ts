@@ -51,6 +51,24 @@ const config: Config = {
         panel: "1.75rem", // velké plochy a modaly – 28 px
       },
       colors: {
+        /**
+         * Barvy simulace Windows. Ukazují na CSS proměnné, které nastavuje
+         * `.win` v `globals.css` – přepnutí světlého a tmavého režimu uvnitř
+         * virtuálního počítače je pak jen změna jednoho atributu a nemusí se
+         * kvůli tomu psát `dark:` u každé třídy. S webem okolo to schválně
+         * nesouvisí: prostředí má vypadat jako Windows, ne jako tenhle web.
+         */
+        win: {
+          plocha: "rgb(var(--win-plocha) / <alpha-value>)",
+          povrch: "rgb(var(--win-povrch) / <alpha-value>)",
+          zvyrazneny: "rgb(var(--win-zvyrazneny) / <alpha-value>)",
+          panel: "rgb(var(--win-panel) / <alpha-value>)",
+          text: "rgb(var(--win-text) / <alpha-value>)",
+          slaby: "rgb(var(--win-slaby) / <alpha-value>)",
+          linka: "rgb(var(--win-linka) / <alpha-value>)",
+          akcent: "rgb(var(--win-akcent) / <alpha-value>)",
+          "akcent-text": "rgb(var(--win-akcent-text) / <alpha-value>)",
+        },
         // Vlastní malachitová řada – vědomý posun od defaultní Tailwind
         // `emerald` (kterou má každý AI web), o pár stupňů k modrozelené.
         accent: {

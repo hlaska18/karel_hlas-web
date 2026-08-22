@@ -25,12 +25,22 @@ npm run build
 npm start
 ```
 
+## Samostatné stránky
+
+Kromě jednostránkového webu (`/` a `/en`) jsou tu dva nástroje do hodin:
+
+| Stránka | Co to je | Kde se upravuje |
+| --- | --- | --- |
+| `/sql` | Interaktivní kurz SQL v prohlížeči | `src/lib/sqlExercise.ts` |
+| `/windows` | Výuková simulace Windows 11 (vstup na kód, výchozí `WIN11`) | `src/lib/win/`, `src/components/win/` — podrobně v [`WINDOWS.md`](WINDOWS.md) |
+
 ## Co kde upravit
 
 | Co | Soubor |
 | --- | --- |
 | **Texty (CZ i EN)**, kontakt, odkazy, sociální sítě | `src/lib/content.ts` |
 | **Odkaz na Odevzdávárnu** | `SUBMIT_URL` v `src/lib/content.ts` |
+| **Přístupový kód do virtuálních Windows** | `PRISTUPOVY_KOD` v `src/lib/win/pristup.ts` |
 | **Profilová fotka** | ulož jako `public/images/karel.jpg` |
 | Barvy / akcent | `tailwind.config.ts` (paleta `accent`) |
 | Pořadí sekcí | `src/app/page.tsx` |
