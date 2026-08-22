@@ -26,5 +26,12 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      // Virtuální Windows 11 – samostatná stránka pro hodiny informatiky.
+      url: `${SITE.url}/windows`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 }
