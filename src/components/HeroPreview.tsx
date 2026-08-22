@@ -5,7 +5,7 @@ import { BarChart3, Database, Files, FileCode2, FileSpreadsheet, FileText, Image
 import { useLang } from "@/lib/i18n";
 import { toolLabel } from "@/lib/bankLabels";
 import { pickHeroHighlights } from "@/lib/heroPick";
-import { TOOL_ICON } from "@/lib/bankLabels";
+import { TOOL_MASKA } from "@/lib/bankLabels";
 import type { BankItem } from "@/lib/materials";
 
 /**
@@ -95,7 +95,7 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
                   tak rovnou říká, odkud materiál je. Kde ikona tématu neexistuje,
                   zůstává původní symbol podle typu souboru. */}
               <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
-                {TOOL_ICON[it.tool] ? (
+                {TOOL_MASKA[it.tool] ? (
                   /* Ikona tématu jako silueta, stejné gesto jako značky zdrojů
                      u článků níž: v klidu šedá, po najetí se rozsvítí. Barevná
                      skleněná verze sem nepatří – tyhle karty mají být tiché. */
@@ -103,8 +103,8 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
                     aria-hidden="true"
                     className="block h-6 w-6 bg-zinc-500 transition duration-300 group-hover/karta:bg-accent-700 dark:bg-zinc-400 dark:group-hover/karta:bg-accent-300"
                     style={{
-                      WebkitMaskImage: `url(${TOOL_ICON[it.tool]})`,
-                      maskImage: `url(${TOOL_ICON[it.tool]})`,
+                      WebkitMaskImage: `url(${TOOL_MASKA[it.tool]})`,
+                      maskImage: `url(${TOOL_MASKA[it.tool]})`,
                       WebkitMaskSize: "contain",
                       maskSize: "contain",
                       WebkitMaskRepeat: "no-repeat",
