@@ -86,6 +86,53 @@ describe("okna", () => {
     expect(posunute.okna[0].x).toBe(10);
   });
 
+  describe("srovnání oken po zmenšení plochy", () => {
+    // Okno otevřené na širokém displeji zůstane, kde bylo, i když se okno
+    // prohlížeče zmenší – a pak kouká ven z plochy. Skutečný Windows je po
+    // změně rozlišení vtáhne zpátky.
+    const sPosunutym = (x: number, y: number) => {
+      const stav = sOknem();
+      const id = stav.okna[0].id;
+      return proved(stav, {
+        typ: "okno/posun",
+        id,
+        obdelnik: { x, y, w: 900, h: 600 },
+      });
+    };
+
+    it("okno, které leze ven, vtáhne zpátky", () => {
+      const stav = sPosunutym(700, 400);
+      const po = reducer(stav, { typ: "okna/srovnej", plocha: { x: 0, y: 0, w: 1000, h: 700 } });
+      const o = po.okna[0];
+      expect(o.x + o.w).toBeLessThanOrEqual(1000);
+      expect(o.y + o.h).toBeLessThanOrEqual(700);
+      expect(o.x).toBeGreaterThanOrEqual(0);
+    });
+
+    it("okno větší než plocha se zmenší, ne odsune do minusu", () => {
+      const stav = sPosunutym(0, 0);
+      const po = reducer(stav, { typ: "okna/srovnej", plocha: { x: 0, y: 0, w: 600, h: 400 } });
+      expect(po.okna[0].w).toBe(600);
+      expect(po.okna[0].h).toBe(400);
+      expect(po.okna[0].x).toBe(0);
+    });
+
+    it("okno, které se vejde, nechá být – a vrátí TENTÝŽ stav", () => {
+      // Akce chodí z posluchače na `resize`, takže nový objekt pokaždé by
+      // rozjel překreslování dokola.
+      const stav = sPosunutym(20, 20);
+      const po = reducer(stav, { typ: "okna/srovnej", plocha: { x: 0, y: 0, w: 1400, h: 900 } });
+      expect(po).toBe(stav);
+    });
+
+    it("nesmyslně malou plochu ignoruje", () => {
+      // Během přepínání celé obrazovky se prvek na okamžik změří jako nulový;
+      // podle toho okna přepočítat by je slisovalo na nic.
+      const stav = sPosunutym(300, 200);
+      expect(reducer(stav, { typ: "okna/srovnej", plocha: { x: 0, y: 0, w: 0, h: 0 } })).toBe(stav);
+    });
+  });
+
   it("zavření okno odebere", () => {
     const stav = sOknem();
     expect(reducer(stav, { typ: "okno/zavri", id: stav.okna[0].id }).okna).toHaveLength(0);

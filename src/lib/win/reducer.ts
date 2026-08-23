@@ -32,6 +32,7 @@ export type Akce =
   | { typ: "okno/obnov"; id: number }
   | { typ: "okno/posun"; id: number; obdelnik: Obdelnik }
   | { typ: "okno/prichyt"; id: number; kam: Prichyceni }
+  | { typ: "okna/srovnej"; plocha: Obdelnik }
   | { typ: "okno/titul"; id: number; titul: string; arg?: string }
   | { typ: "disk/nastav"; disk: Slozka }
   | { typ: "kos/vloz"; polozky: PolozkaKose[] }
@@ -184,6 +185,31 @@ export function reducer(stav: Stav, akce: Akce): Stav {
         })),
         akce.id,
       );
+
+    case "okna/srovnej": {
+      // Plocha se zmenšila (zmenšené okno prohlížeče, zavřená celá obrazovka)
+      // a okna uložená z většího displeje by koukala ven. Skutečný Windows je
+      // po změně rozlišení taky vtáhne zpátky.
+      //
+      // Sahá se JEN na okna, která ven opravdu lezou. Kdyby se přepočítávala
+      // všechna, uživateli by se rozházela rozmístěná okna při každém
+      // pixelu změny šířky.
+      const { w: sirka, h: vyska } = akce.plocha;
+      if (sirka < 320 || vyska < 240) return stav;
+      let zmena = false;
+      const okna = stav.okna.map((o) => {
+        const w = Math.min(o.w, sirka);
+        const h = Math.min(o.h, vyska);
+        const x = Math.max(0, Math.min(o.x, sirka - w));
+        const y = Math.max(0, Math.min(o.y, vyska - h));
+        if (w === o.w && h === o.h && x === o.x && y === o.y) return o;
+        zmena = true;
+        return { ...o, x, y, w, h };
+      });
+      // Beze změny vrátit TÝŽ objekt: `srovnej` chodí z ResizeObserveru, takže
+      // nový stav pokaždé by rozjel překreslování dokola.
+      return zmena ? { ...stav, okna } : stav;
+    }
 
     case "okno/titul": {
       // Beze změny se stav nesmí vracet nový. Aplikace hlásí titulek z efektu

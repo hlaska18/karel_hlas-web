@@ -66,17 +66,28 @@ function Obrazovka() {
     if (!prvek || faze !== "bezi") return;
     const zmer = () => {
       const ram = prvek.getBoundingClientRect();
-      nastavPlochu({ x: ram.left, y: ram.top, w: ram.width, h: ram.height });
+      const obdelnik = { x: ram.left, y: ram.top, w: ram.width, h: ram.height };
+      nastavPlochu(obdelnik);
+      // Okna uložená z většího displeje by po zmenšení koukala ven z plochy.
+      // Akce sahá jen na ta, která tam opravdu nelezou, takže rozmístěná okna
+      // zůstanou, kde byla.
+      poslat({ typ: "okna/srovnej", plocha: obdelnik });
     };
     zmer();
     const sledovac = new ResizeObserver(zmer);
     sledovac.observe(prvek);
+    // `resize` vedle ResizeObserveru schválně: observer sleduje prvek zachycený
+    // ve chvíli, kdy efekt běžel, a když ho React později vymění, pozoruje
+    // odpojený uzel a mlčí. Změna velikosti okna je přitom přesně ta událost,
+    // kvůli které se tu měří – ověřeno, že po ní observer sám nepřišel.
+    window.addEventListener("resize", zmer);
     window.addEventListener("scroll", zmer, true);
     return () => {
       sledovac.disconnect();
+      window.removeEventListener("resize", zmer);
       window.removeEventListener("scroll", zmer, true);
     };
-  }, [faze, nastavPlochu]);
+  }, [faze, nastavPlochu, poslat]);
 
   /* Systémové klávesové zkratky. */
   useEffect(() => {
