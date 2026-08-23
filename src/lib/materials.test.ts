@@ -31,9 +31,21 @@ describe("getBankItems", () => {
 
   it("URL-encodes hosted file hrefs and never emits raw spaces", () => {
     for (const it of items) {
-      if (it.external) continue;
+      // Odkaz na cizí zdroj ani nástroj běžící na webu nejsou hostovaný soubor.
+      if (it.external || it.interactive) continue;
       expect(it.href.startsWith("/materialy/")).toBe(true);
       expect(it.href).not.toContain(" ");
+    }
+  });
+
+  it("nástroj na webu míří dovnitř webu a není to soubor", () => {
+    // Kdyby `_nastroj.json` dostal externí URL, tvářil by se odkaz ven jako
+    // naše věc – bez atribuce a bez target="_blank". Ta konvence je schválně
+    // jen pro vnitřní cesty; na cizí zdroje je `_zdroj.json`.
+    for (const it of items.filter((i) => i.interactive)) {
+      expect(it.href.startsWith("/")).toBe(true);
+      expect(it.external).toBeFalsy();
+      expect(it.sizeBytes).toBe(0);
     }
   });
 

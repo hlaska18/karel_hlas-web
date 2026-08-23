@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { VirtualniPocitac } from "@/components/win/VirtualniPocitac";
+import { OdkazNaWeb, VirtualniPocitac } from "@/components/win/VirtualniPocitac";
 import { PRISTUPOVY_KOD } from "@/lib/win/pristup";
 
 export const metadata: Metadata = {
@@ -39,12 +39,9 @@ export default function StrankaWindows() {
           displej telefonu nevejdou. Otevři si stránku na notebooku nebo ve školní
           učebně.
         </p>
-        <a
-          href="/"
-          className="povrch rounded-ovladac px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5"
-        >
+        <OdkazNaWeb className="povrch rounded-ovladac px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5">
           Zpět na web
-        </a>
+        </OdkazNaWeb>
       </div>
       <main className="hidden h-[100dvh] w-full overflow-hidden sm:block">
         <VirtualniPocitac />

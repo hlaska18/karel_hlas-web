@@ -227,6 +227,7 @@ const byName = (a: string, b: string) => a.localeCompare(b, "cs", { numeric: tru
 /** Pořadí dlaždic v galerii (dle pořadí témat ve výuce). */
 export const TOOL_ORDER = [
   "Digitální gramotnost",
+  "Operační systémy",
   "Word",
   "Excel",
   "Python",
@@ -287,6 +288,16 @@ export type BankItem = {
    * `_zdroj.json` ve složce skupiny místo souborů.
    */
   external?: boolean;
+  /**
+   * Nástroj, který běží tady na webu (virtuální Windows, kurz SQL). Není to
+   * soubor ani cizí odkaz – `href` je naše vnitřní cesta. Vzniká
+   * z `_nastroj.json`.
+   *
+   * Vlastní příznak potřebuje ze dvou důvodů: bez něj by se u položky ukázalo
+   * „Převzatý materiál – otevři u původního zdroje" (to platí pro `external`),
+   * a hero by ho započítal mezi soubory ke stažení, což není.
+   */
+  interactive?: boolean;
 };
 
 // Obsah je napříč obory sdílený, ale jednotlivé obory mají v plánu různě
@@ -312,6 +323,13 @@ const TOPIC_EXTRA: Record<number, { cs: string; en: string }> = {
   10: {
     cs: "Umělá inteligence a odpovědné používání",
     en: "Artificial intelligence and responsible use",
+  },
+  // V plánu 1L (ze kterého se berou názvy) tohle téma není – nejblíž je „Úvod
+  // do informatiky". V plánech 1S a 1P ale samostatné je, a virtuální Windows
+  // na něj vydají na celou hodinu.
+  11: {
+    cs: "Operační systémy a práce se soubory",
+    en: "Operating systems and working with files",
   },
 };
 
@@ -340,6 +358,9 @@ function toolOf(hay: string, ext: string): string {
   if (/excel|tabulkov/.test(h) || ["xlsx", "xlsm", "xls", "csv"].includes(ext)) return "Excel";
   if (/word|textov[ýy] procesor/.test(h)) return "Word";
   if (/python|programován|algoritm/.test(h) || ["py", "ipynb"].includes(ext)) return "Python";
+  // Nad digitální gramotností: ta má v plánu 1L v cíli „práci s operačním
+  // systémem", takže by si operační systémy vzala k sobě.
+  if (/opera[čc]n[íi] syst[ée]m|virtu[áa]ln[íi] windows/.test(h)) return "Operační systémy";
   if (/digit[áa]ln[íi] gramotnost|[úu]vod do informatiky/.test(h)) return "Digitální gramotnost";
   return "Ostatní";
 }
@@ -448,6 +469,53 @@ export function getBankItems(): BankItem[] {
               /* složka autora nemá – dědíme z nadřazené */
             }
             walk(path.join(absDir, e.name), [...segs, e.name], aud, grp, author, grpSort);
+          } else if (e.isFile() && e.name === "_nastroj.json") {
+            // Nástroj, který běží tady na webu – ve složce tématu není soubor
+            // ke stažení, ale odkaz dovnitř webu (např. /windows).
+            //
+            // Schválně vedle `_zdroj.json`, ne uvnitř něj: `_zdroj.json` je pro
+            // CIZÍ materiál, který nehostujeme, a nese s sebou atribuci
+            // původnímu autorovi. Tohle je naše a žádnou atribuci nechce.
+            type Nastroj = { cs?: string; en?: string; url?: string; note?: { cs: string; en: string } };
+            let nastroje: Nastroj[];
+            try {
+              const parsed = JSON.parse(fs.readFileSync(path.join(absDir, e.name), "utf8"));
+              nastroje = Array.isArray(parsed) ? parsed : [parsed];
+            } catch (err) {
+              console.warn(`[materials] Neplatný _nastroj.json v ${absDir}:`, err);
+              continue;
+            }
+            for (const n of nastroje) {
+              if (!n.cs || !n.url) continue;
+              const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${n.cs}`, "");
+              const key = [tool, audience, group?.cs ?? "", "__nastroj__", n.cs, "link"]
+                .join("|")
+                .normalize("NFC")
+                .toLowerCase();
+              const existing = seen.get(key);
+              if (existing) {
+                if (!existing.courseIds.includes(courseId)) existing.courseIds.push(courseId);
+                continue;
+              }
+              seen.set(key, {
+                href: n.url,
+                label: { cs: n.cs, en: n.en ?? n.cs },
+                ext: "link",
+                kind: "link",
+                sizeBytes: 0,
+                tool,
+                topicNo: topicIndex + 1,
+                topicLabel,
+                audience,
+                group,
+                groupAuthor,
+                groupSort,
+                interactive: true,
+                sourceNote: n.note,
+                courseIds: [courseId],
+                coursesLabel: { cs: "", en: "" },
+              });
+            }
           } else if (e.isFile() && e.name === "_zdroj.json") {
             // Převzatá skupina: místo souborů jen odkaz na originál (autorská práva).
             // Smí být jeden odkaz, nebo pole – učebnice a cvičné soubory k ní

@@ -8,6 +8,7 @@ import type { BankItem } from "@/lib/materials";
 
 export const TOOL_LABEL: Record<string, { cs: string; en: string }> = {
   "Digitální gramotnost": { cs: "Digitální gramotnost", en: "Digital literacy" },
+  "Operační systémy": { cs: "Operační systémy", en: "Operating systems" },
   Word: { cs: "Word", en: "Word" },
   Excel: { cs: "Excel", en: "Excel" },
   Python: { cs: "Python", en: "Python" },
@@ -29,6 +30,7 @@ export function toolLabel(tool: string, lang: Lang): string {
  */
 export const TOOL_ICON: Record<string, string> = {
   "Digitální gramotnost": "/images/tools/glass/digitalni-gramotnost.png",
+  "Operační systémy": "/images/tools/glass/operacni-systemy.png",
   Word: "/images/tools/glass/word.png",
   Excel: "/images/tools/glass/excel.png",
   Python: "/images/tools/glass/python.png",

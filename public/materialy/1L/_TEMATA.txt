@@ -10,3 +10,4 @@ Sem (do číslovaných podsložek) dávej materiály k jednotlivým tématům.
 7/  →  Internet, bezpečnost a práce s informacemi
 8/  →  Základy databází a práce s informacemi
 9/  →  Časová rezerva a opakování
+11/ →  Operační systémy a práce se soubory

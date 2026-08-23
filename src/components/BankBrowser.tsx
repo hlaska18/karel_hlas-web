@@ -10,6 +10,7 @@ import {
   Eye,
   ExternalLink,
   ArrowLeft,
+  ArrowRight,
   FileSpreadsheet,
   FileText,
   FileCode2,
@@ -58,11 +59,11 @@ const STR: Record<
     expandFolder: string;
     collapseFolder: string;
     sourceBadge: string;
+    toolBadge: string;
+    openTool: string;
     sourceNote: string;
     sourceNoteOffline: string;
     openSource: string;
-    tryOnline: string;
-    tryOnlineCta: string;
     docxLoading: string;
     docxError: string;
     pptxLoading: string;
@@ -94,11 +95,11 @@ const STR: Record<
     expandFolder: "Otevřít složku",
     collapseFolder: "Zavřít složku",
     sourceBadge: "zdroj",
+    toolBadge: "web",
+    openTool: "Spustit",
     sourceNote: "Převzatý materiál – otevři u původního zdroje",
     sourceNoteOffline: "Materiál třetí strany – zde není ke stažení",
     openSource: "Otevřít u zdroje",
-    tryOnline: "Projdi si interaktivní kurz SQL přímo v prohlížeči – nic se neinstaluje.",
-    tryOnlineCta: "Spustit kurz",
     docxLoading: "Načítám náhled dokumentu…",
     docxError: "Náhled se nepodařilo vykreslit – stáhni si dokument tlačítkem výše.",
     pptxLoading: "Načítám prezentaci…",
@@ -129,13 +130,11 @@ const STR: Record<
     expandFolder: "Open folder",
     collapseFolder: "Close folder",
     sourceBadge: "source",
+    toolBadge: "web",
+    openTool: "Open",
     sourceNote: "Third-party material – open at the original source",
     sourceNoteOffline: "Third-party material – not available here",
     openSource: "Open at source",
-    // Kurz je zatím jen česky – ať to anglický návštěvník ví předem, ne až po kliknutí.
-    tryOnline:
-      "Take the interactive SQL course right in your browser – nothing to install. The course itself is in Czech.",
-    tryOnlineCta: "Start the course",
     docxLoading: "Loading document preview…",
     docxError: "Preview failed to render – use the download button above.",
     pptxLoading: "Loading presentation…",
@@ -148,9 +147,38 @@ const STR: Record<
   },
 };
 
-/** Témata s interaktivním cvičením na webu (odkaz se ukáže po otevření dlaždice). */
-const TOOL_INTERACTIVE: Record<string, string> = {
-  Databáze: "/sql",
+/**
+ * Témata s interaktivním nástrojem na webu – odkaz se ukáže po otevření
+ * dlaždice. Popisek je u nástroje, ne ve sdíleném slovníku: dokud tu byl jeden
+ * (kurz SQL), stačily dva řetězce v STR, ale u druhého by pruh nad virtuálními
+ * Windows sliboval kurz SQL.
+ *
+ * Anglická verze u obou přiznává, že samotný nástroj je česky – návštěvník to
+ * má vědět předem, ne až po kliknutí.
+ */
+type Interaktivni = {
+  cesta: string;
+  popis: Record<Lang, string>;
+  cta: Record<Lang, string>;
+};
+
+const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
+  Databáze: {
+    cesta: "/sql",
+    popis: {
+      cs: "Projdi si interaktivní kurz SQL přímo v prohlížeči – nic se neinstaluje.",
+      en: "Take the interactive SQL course right in your browser – nothing to install. The course itself is in Czech.",
+    },
+    cta: { cs: "Spustit kurz", en: "Start the course" },
+  },
+  "Operační systémy": {
+    cesta: "/windows",
+    popis: {
+      cs: "Vyzkoušej si Windows 11 přímo v prohlížeči – nic se neinstaluje. Do prostředí se vchází kódem od vyučujícího.",
+      en: "Try Windows 11 right in your browser – nothing to install. Students enter with a code from their teacher; the environment is in Czech.",
+    },
+    cta: { cs: "Spustit prostředí", en: "Start the environment" },
+  },
 };
 
 /** Kurz je jen česky; z anglické verze se přidá `?z=en`, aby vedl odkaz zpět na /en. */
@@ -448,20 +476,22 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
             </p>
           </div>
 
-          {/* Interaktivní cvičení k tématu (např. Databáze → /sql) */}
+          {/* Interaktivní nástroj k tématu (Databáze → /sql, Operační systémy → /windows) */}
           {tool && !needle && TOOL_INTERACTIVE[tool] && (
             <a
-              href={interaktivniOdkaz(TOOL_INTERACTIVE[tool], lang)}
+              href={interaktivniOdkaz(TOOL_INTERACTIVE[tool].cesta, lang)}
               className="glass-accent group mt-4 flex items-center justify-between gap-3 rounded-karta px-5 py-4 transition hover:-translate-y-0.5"
             >
               <span className="flex items-center gap-3">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-ovladac bg-accent-700 text-white shadow-lg shadow-accent-700/30">
                   <Play className="h-5 w-5" />
                 </span>
-                <span className="font-medium text-zinc-900 dark:text-white">{s.tryOnline}</span>
+                <span className="font-medium text-zinc-900 dark:text-white">
+                  {TOOL_INTERACTIVE[tool].popis[lang]}
+                </span>
               </span>
               <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-accent-700 dark:text-accent-300">
-                {s.tryOnlineCta}
+                {TOOL_INTERACTIVE[tool].cta[lang]}
                 <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </span>
             </a>
@@ -508,6 +538,42 @@ function MaterialRow({
 }) {
   const s = STR[lang];
   const label = L(it.label, lang);
+
+  // Nástroj, který běží tady na webu. Vlastní řádek proto, že řádek pro soubor
+  // by mu dal odznak s příponou „link", velikost a tlačítko Stáhnout – nic
+  // z toho nedává smysl. A řádek pro převzatý zdroj by tvrdil, že je to cizí
+  // materiál a otevíral ho do nové karty.
+  if (it.interactive) {
+    return (
+      <li>
+        <a
+          // Stejný odkaz jako v pruhu nad seznamem, včetně `?z=en` – jinak by
+          // jeden z těch dvou vrátil anglického návštěvníka na českou úvodní.
+          href={interaktivniOdkaz(it.href, lang)}
+          className="povrch group flex items-start gap-3 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:items-center sm:gap-4 sm:py-3.5"
+        >
+          <span className="flex shrink-0 sm:w-[5.25rem]">
+            <span className="inline-flex items-center gap-1.5 rounded-stitek bg-accent-500/15 px-2 py-1 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+              <Play className="h-4 w-4 shrink-0" />
+              {s.toolBadge}
+            </span>
+          </span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
+            {it.sourceNote && (
+              <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
+                {L(it.sourceNote, lang)}
+              </span>
+            )}
+          </span>
+          <span className="inline-flex h-11 shrink-0 items-center justify-center gap-1.5 rounded-full px-2 text-sm font-medium text-accent-700 transition group-hover:bg-accent-500/10 sm:h-9 sm:px-3 dark:text-accent-300">
+            <span className="hidden sm:inline">{s.openTool}</span>
+            <ArrowRight className="h-4 w-4 shrink-0 transition-transform group-hover:translate-x-0.5" />
+          </span>
+        </a>
+      </li>
+    );
+  }
 
   // Převzatý materiál se nehostuje. S URL → odkaz na originál; bez URL → jen
   // informační atribuce (materiál třetí strany, nedostupný zde).

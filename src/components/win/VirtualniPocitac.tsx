@@ -47,6 +47,7 @@ export function VirtualniPocitac() {
 
 function Obrazovka() {
   const { stav, poslat, nastavPlochu } = useSystem();
+  const domu = useDomu();
   const [faze, nastavFazi] = useState<Faze>("prihlaseni");
   const [panel, nastavPanel] = useState<Panel>(null);
   const [celaObrazovka, nastavCelou] = useState(false);
@@ -176,7 +177,7 @@ function Obrazovka() {
               {celaObrazovka ? "Zpět z celé obrazovky" : "Celá obrazovka"}
             </button>
             <Link
-              href="/"
+              href={domu}
               className="flex items-center gap-2 rounded-md bg-black/40 px-3 py-2 text-[12px] text-white backdrop-blur hover:bg-black/60"
             >
               <ArrowLeft className="h-4 w-4" /> Zpět na web
@@ -207,7 +208,7 @@ function Obrazovka() {
               Zapnout znovu
             </button>
             <Link
-              href="/"
+              href={domu}
               className="rounded-md border border-white/30 px-4 py-2 text-[13px] hover:bg-white/10"
             >
               Zpět na web
@@ -340,4 +341,29 @@ function Aplikace({ app }: { app: AppId }) {
     default:
       return null;
   }
+}
+
+/**
+ * Kam vede „Zpět na web". Kdo sem přijde z anglické verze, má se mít jak
+ * vrátit na /en – stejně jako u kurzu SQL, který na to má `?z=en`. Prostředí
+ * samo zůstává české; slíbeno je to předem u obou odkazů, které sem vedou.
+ *
+ * Čte se až v prohlížeči schválně: kdyby stránka sáhla po `searchParams`,
+ * přestala by být statická, a kvůli jednomu odkazu to nestojí za to.
+ */
+function useDomu(): string {
+  const [domu, nastavDomu] = useState("/");
+  useEffect(() => {
+    if (new URLSearchParams(window.location.search).get("z") === "en") nastavDomu("/en");
+  }, []);
+  return domu;
+}
+
+/** Odkaz zpět pro obrazovku „tohle je stavěné na počítač" (mobil). */
+export function OdkazNaWeb({ className, children }: { className?: string; children: React.ReactNode }) {
+  return (
+    <Link href={useDomu()} className={className}>
+      {children}
+    </Link>
+  );
 }

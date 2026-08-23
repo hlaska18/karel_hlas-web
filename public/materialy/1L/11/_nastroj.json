@@ -1,0 +1,9 @@
+{
+  "cs": "Virtuální Windows 11",
+  "en": "Virtual Windows 11",
+  "url": "/windows",
+  "note": {
+    "cs": "Průzkumník, Poznámkový blok, Malování, Terminál a další. 34 úloh od zobrazení přípon přes zálohu do ZIPu až po cvičný škodlivý program.",
+    "en": "File Explorer, Notepad, Paint, Terminal and more. 34 exercises, from showing file extensions through ZIP backups to a mock malware lesson. The environment is in Czech."
+  }
+}
