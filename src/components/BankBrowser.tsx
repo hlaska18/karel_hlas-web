@@ -33,7 +33,14 @@ import {
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
-import { toolLabel, countMaterials, countLinks, materialTypeOf, fmtSize } from "@/lib/bankLabels";
+import {
+  toolLabel,
+  countMaterials,
+  countLinks,
+  materialTypeOf,
+  fmtSize,
+  TOOL_ORDER,
+} from "@/lib/bankLabels";
 import { ToolGlassIcon, hasToolGlassIcon } from "@/components/ToolGlassIcon";
 
 /** Rozhraní UI textů banky (CZ/EN). */
@@ -350,11 +357,21 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
       else c.vlastni += 1;
       counts.set(it.tool, c);
     }
-    // Řazení podle objemu: co má nejvíc materiálů, jde první. Různě velké
-    // dlaždice tu chvíli byly, ale Karlovi se nelíbily – zůstalo jen pořadí.
+    // Řazení podle OSNOVY, ne podle objemu. Dřív šlo první to, čeho je
+    // nejvíc – jenže tím mřížka říkala „tady je toho hodně" místo „takhle to
+    // jde za sebou", a nové téma s jedním materiálem spadlo na konec bez
+    // ohledu na to, kdy se učí. Pořadí drží TOOL_ORDER, které se řídí
+    // obsahovými okruhy informatiky v RVP 78-42-M/01 (Technické lyceum).
+    //
+    // `items` chodí ze serveru už seřazené dle TOOL_ORDER, ale spoléhat se na
+    // pořadí vložení do Mapy je křehké – radši se seřadí znovu a explicitně.
+    const poradi = (t: string) => {
+      const i = TOOL_ORDER.indexOf(t);
+      return i < 0 ? TOOL_ORDER.length : i;
+    };
     return [...counts.entries()]
       .map(([name, c]) => ({ name, ...c }))
-      .sort((a, b) => b.vlastni - a.vlastni || b.odkazy - a.odkazy);
+      .sort((a, b) => poradi(a.name) - poradi(b.name));
   }, [items]);
 
   // Výsledky podle režimu: hledání > vybraná dlaždice > nic.

@@ -1,6 +1,7 @@
 import fs from "fs";
 import path from "path";
 import { COURSES } from "@/lib/content";
+import { TOOL_ORDER } from "@/lib/bankLabels";
 import type { Material, Audience } from "@/lib/content";
 
 /**
@@ -224,20 +225,10 @@ const byName = (a: string, b: string) => a.localeCompare(b, "cs", { numeric: tru
  * typ, velikost, publikum). Slouží stránce /pro-ucitele (vyhledávání + filtry).
  * Běží při buildu na serveru (čte filesystem). */
 
-/** Pořadí dlaždic v galerii (dle pořadí témat ve výuce). */
-export const TOOL_ORDER = [
-  "Digitální gramotnost",
-  "Operační systémy",
-  "Word",
-  "Excel",
-  "Python",
-  "Grafika a multimédia",
-  "Internet a bezpečnost",
-  "Umělá inteligence",
-  "Databáze",
-  "Power BI",
-  "Ostatní",
-];
+// TOOL_ORDER bydlí v `bankLabels.ts`, protože ho potřebuje i klientská
+// komponenta galerie – a ta si `materials.ts` importovat nesmí, ten sahá na
+// `fs`. Re-export tu zůstává, ať se nemusí přepisovat volající.
+export { TOOL_ORDER };
 
 export type BankItem = {
   href: string;

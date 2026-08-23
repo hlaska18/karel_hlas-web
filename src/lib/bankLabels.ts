@@ -6,6 +6,48 @@ import type { BankItem } from "@/lib/materials";
  * bezpečné importovat do "use client" komponent (na rozdíl od materials.ts).
  */
 
+/**
+ * Pořadí dlaždic v galerii. Nedrží se počtu materiálů ani abecedy, ale
+ * INFORMATICKÉHO VZDĚLÁVÁNÍ V RVP 78-42-M/01 (Technické lyceum, revize
+ * platná od 1. 9. 2024) a pořadí, ve kterém se jeho obsahové okruhy učí.
+ *
+ * RVP dělí informatiku do čtyř okruhů. Mapování na dlaždice:
+ *
+ *   Digitální technologie (1. ročník)
+ *     – základní pojmy, hardware a software  → Digitální gramotnost
+ *     – operační systém, úložiště, zálohování → Operační systémy
+ *     – sítě, internet, bezpečnost zařízení a dat → Internet a bezpečnost
+ *   Digitální technologie (2. ročník)
+ *     – „aplikační software a jeho využití pro odborné činnosti (např.
+ *        textový procesor, tabulkový procesor, software pro tvorbu
+ *        prezentací, grafický software…)" → Word, Excel, Grafika a multimédia
+ *   Data, informace a modelování (2. ročník)
+ *     – digitalizace, modely, strojové učení → Umělá inteligence
+ *     – vyhledávání a vizualizace dat, trendy → Power BI
+ *   Informační systémy (2. a 4. ročník)
+ *     – datový záznam, entita, vazba, SQL → Databáze
+ *   Tvorba, testování a provoz softwaru (3. ročník)
+ *     – algoritmizace a programování → Python
+ *
+ * Pozor na jednu věc, kdyby se to někdy překopávalo: kancelářské aplikace ani
+ * grafika NEJSOU v RVP samostatné okruhy. Spadají pod Digitální technologie
+ * jako „aplikační software", proto stojí až za operačním systémem a sítěmi,
+ * ne na začátku.
+ */
+export const TOOL_ORDER = [
+  "Digitální gramotnost",
+  "Operační systémy",
+  "Internet a bezpečnost",
+  "Word",
+  "Excel",
+  "Grafika a multimédia",
+  "Umělá inteligence",
+  "Power BI",
+  "Databáze",
+  "Python",
+  "Ostatní",
+];
+
 export const TOOL_LABEL: Record<string, { cs: string; en: string }> = {
   "Digitální gramotnost": { cs: "Digitální gramotnost", en: "Digital literacy" },
   "Operační systémy": { cs: "Operační systémy", en: "Operating systems" },
