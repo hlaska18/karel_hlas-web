@@ -10,9 +10,28 @@
 
 import { FOTO_GRAF, FOTO_SNIMEK, FOTO_VYLET } from "./obrazky";
 import { komprimovanaVelikost } from "./zip";
+import { NAVNADA } from "./virus";
 import type { Slozka, Soubor, Uzel } from "./fs";
 
 const den = 24 * 60 * 60 * 1000;
+
+/** Skrytý soubor v Dokumentech – opora pro jednu z těžších úloh. */
+const POKYN_TXT = `SKRYTÉ POLOŽKY
+
+Když tohle čteš, zapnul sis v Průzkumníku zobrazení skrytých položek.
+Windows takhle schovává soubory, které nemá běžný uživatel měnit — třeba
+desktop.ini, podle kterého se řídí vzhled složky.
+
+Skrytý ale neznamená chráněný. Je to jen příznak, který jde odklikat.
+Kdo ti chce něco propašovat do počítače, s tím počítá.
+
+ÚKOL: založ v Dokumentech složku s názvem  Nasel jsem to
+`;
+
+/** Vzhled složky – ve skutečném Windows je taky skrytý. */
+const DESKTOP_INI = `[.ShellClassInfo]
+IconResource=%SystemRoot%\\system32\\imageres.dll,-113
+`;
 
 const slozka = (jmeno: string, deti: Uzel[], stari: number, zamceno = false): Slozka => ({
   druh: "slozka",
@@ -159,6 +178,10 @@ export function vytvorDisk(): Slozka {
                   slozka("Škola", [slozka("Matematika", [soubor("Vzorce.txt", VZORCE_TXT, 40)], 40)], 40),
                   soubor("Historie počítačů.txt", HISTORIE_TXT, 9),
                   soubor("Seznam žáků.csv", SEZNAM_CSV, 15),
+                  // Skryté položky: mechanismus v prostředí existoval, ale na disku nebyla
+                  // označená ani jedna, takže úkol „zapni skryté položky" přepnul nastavení
+                  // a nic se neobjevilo.
+                  soubor(".pokyn.txt", POKYN_TXT, 12, { skryty: true }),
                   binarni("Rozvrh.docx", 24_118, 21),
                   archiv(),
                 ],
@@ -168,6 +191,9 @@ export function vytvorDisk(): Slozka {
                 "Downloads",
                 [
                   binarni("instalace-programu.exe", 47_882_240, 5),
+                  // Návnada k hodině o bezpečnosti. Dvojitá přípona: při výchozím
+                  // skrytí přípon se tváří jako fotka. Nic nespouští – viz virus.ts.
+                  binarni(NAVNADA, 1_284_096, 1),
                   soubor("Čti mě.txt", README_TXT, 5),
                   binarni("prezentace.pptx", 3_641_344, 30),
                   binarni("manual.pdf", 1_204_224, 30),
@@ -178,6 +204,7 @@ export function vytvorDisk(): Slozka {
                 "Pictures",
                 [
                   slozka("Tapety", [], 60),
+                  soubor("desktop.ini", DESKTOP_INI, 60, { skryty: true, zamceno: true }),
                   soubor("Snímek obrazovky 2026-08-20 101533.png", FOTO_SNIMEK, 2, {
                     velikost: 184_320,
                   }),

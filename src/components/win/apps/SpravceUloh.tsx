@@ -14,6 +14,7 @@ import { Activity, Cpu, HardDrive, Rocket, Wifi } from "lucide-react";
 import { Ikona } from "../Ikona";
 import { Prepinac, Tlacitko } from "../ui";
 import { useOkno, useSystem } from "../system";
+import { PROCES as PROCES_VIRU } from "@/lib/win/virus";
 import { APLIKACE } from "@/lib/win/typy";
 import { cislo, velikostText } from "@/lib/win/format";
 
@@ -80,11 +81,30 @@ export function SpravceUloh() {
 
   const naPozadi: Proces[] = PROCESY_NA_POZADI.map((p, i) => ({ ...p, id: `bg-${i}` }));
 
+  /**
+   * Cvičný škodlivý proces z hodiny o bezpečnosti. Schválně žere procesor
+   * a schválně se jmenuje skoro jako systémový `svchost.exe` – rozdíl v jednom
+   * písmenu je to, co má žák najít.
+   */
+  const skodlivy: Proces[] = stav.virusBezi
+    ? [
+        {
+          id: "virus",
+          nazev: PROCES_VIRU,
+          cpu: 61.4,
+          pamet: 402,
+          disk: 8.7,
+          sit: 2.3,
+          systemovy: false,
+        },
+      ]
+    : [];
+
   /** Kolísání kolem základu – deterministické podle tiku, ať to nepodivně skáče. */
   const kolisej = (zaklad: number, seminko: number) =>
     Math.max(0, zaklad * (0.75 + 0.5 * Math.abs(Math.sin(tik * 0.7 + seminko))));
 
-  const vsechny = [...aplikace, ...naPozadi];
+  const vsechny = [...skodlivy, ...aplikace, ...naPozadi];
   const soucetCpu = vsechny.reduce((s, p, i) => s + kolisej(p.cpu, i), 0);
   const soucetPamet = vsechny.reduce((s, p) => s + p.pamet, 0) + 3800;
   const soucetDisk = vsechny.reduce((s, p, i) => s + kolisej(p.disk, i), 0);
@@ -93,6 +113,9 @@ export function SpravceUloh() {
   const ukonci = () => {
     const proces = vsechny.find((p) => p.id === vybrany);
     if (proces?.oknoId) poslat({ typ: "okno/zavri", id: proces.oknoId });
+    // Ukončení cvičného škodlivého procesu zastaví jeho běh. Přejmenované
+    // soubory zůstanou – uklidit po něm je druhá půlka lekce.
+    if (proces?.id === "virus") poslat({ typ: "virus/zastav" });
     nastavVybrany(null);
   };
 
@@ -126,7 +149,15 @@ export function SpravceUloh() {
             <div className="flex h-11 shrink-0 items-center justify-between px-3">
               <h1 className="text-[15px] font-semibold">Procesy</h1>
               <Tlacitko
-                disabled={!vsechny.find((p) => p.id === vybrany)?.oknoId}
+                // Ukončit jde okno aplikace a cvičný škodlivý proces. Systémové procesy
+                // zůstávají zašedlé – ve skutečném Windows to taky není nic, co by se
+                // mělo zkoušet.
+                disabled={
+                  !(() => {
+                    const p = vsechny.find((x) => x.id === vybrany);
+                    return Boolean(p?.oknoId) || p?.id === "virus";
+                  })()
+                }
                 onClick={ukonci}
               >
                 Ukončit úlohu
@@ -165,7 +196,7 @@ export function SpravceUloh() {
                   />
                   <SkupinaProcesu
                     nadpis="Procesy na pozadí"
-                    procesy={naPozadi}
+                    procesy={[...skodlivy, ...naPozadi]}
                     vybrany={vybrany}
                     onVyber={nastavVybrany}
                     kolisej={kolisej}

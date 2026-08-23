@@ -126,6 +126,12 @@ export interface Stav {
   splneno: string[];
   /** Schránka Průzkumníku: co a jestli se má po vložení smazat. */
   schranka: { uzly: Uzel[]; zdroj: string[]; vyjmout: boolean } | null;
+  /**
+   * Běží cvičný škodlivý proces? Schválně se NEUKLÁDÁ – po obnovení stránky
+   * je pryč, jako by se počítač restartoval. Přejmenované soubory zůstanou,
+   * protože jsou na disku, a to je přesně ta lekce: restart problém nevyřeší.
+   */
+  virusBezi: boolean;
 }
 
 /** Výchozí velikost a poloha okna podle aplikace. */
@@ -144,6 +150,7 @@ export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
 
 export function vychoziStav(): Stav {
   return {
+    virusBezi: false,
     verze: VERZE_ULOZISTE,
     disk: vytvorDisk(),
     kos: [],

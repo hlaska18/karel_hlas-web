@@ -66,6 +66,7 @@ import {
 import { NAZEV_DISKU, NAZEV_POCITACE, zobrazeneJmeno, KAPACITA_DISKU, OBSAZENO_SYSTEMEM } from "@/lib/win/nazvy";
 import { typSouboru, znamaPripona } from "@/lib/win/typy";
 import { komprimovanaVelikost, rozbal } from "@/lib/win/zip";
+import { jeNavnada, VYZVA } from "@/lib/win/virus";
 import {
   KOS,
   POCITAC,
@@ -120,6 +121,8 @@ export function Pruzkumnik() {
   const [vlastnostiPro, nastavVlastnosti] = useState<string | null>(null);
   const [nelzeOtevrit, nastavNelze] = useState<{ jmeno: string; duvod: string } | null>(null);
   const [chyba, nastavChybu] = useState<string | null>(null);
+  /** Návnada z hodiny o bezpečnosti čeká na potvrzení – viz lib/win/virus.ts. */
+  const [spustitNavnadu, nastavNavnadu] = useState<string | null>(null);
   const nabidka = useNabidka();
   const obal = useRef<HTMLDivElement>(null);
   const poleJmena = useRef<HTMLInputElement>(null);
@@ -258,6 +261,13 @@ export function Pruzkumnik() {
     }
     if (pripona(radek.uzel.jmeno) === "zip" && rozbal(radek.uzel as never)) {
       jdi(sloz([...casti, radek.uzel.jmeno]));
+      return;
+    }
+    // Návnada z hodiny o bezpečnosti se musí chytit dřív, než spadne do
+    // dialogu „nelze otevřít" – jinak by se žák k následku nedostal.
+    if (jeNavnada(radek.uzel.jmeno)) {
+      stopa("navnada:otevrena");
+      nastavNavnadu(radek.uzel.jmeno);
       return;
     }
     const typ = typSouboru(radek.uzel.jmeno);
@@ -783,6 +793,37 @@ export function Pruzkumnik() {
           onZavrit={() => nastavVlastnosti(null)}
           onOtevreno={(jmeno) => stopa(`vlastnosti:${jmeno}`)}
         />
+      )}
+
+      {spustitNavnadu && (
+        <Dialog
+          nadpis="Řízení uživatelských účtů"
+          onZavrit={() => nastavNavnadu(null)}
+          tlacitka={
+            <>
+              <Tlacitko onClick={() => nastavNavnadu(null)}>Ne</Tlacitko>
+              <Tlacitko
+                vzhled="akcent"
+                onClick={() => {
+                  poslat({ typ: "virus/spust" });
+                  nastavNavnadu(null);
+                  spust("poznamkovy-blok", `${DOMOV}\\Desktop\\${VYZVA}`);
+                }}
+              >
+                Ano
+              </Tlacitko>
+            </>
+          }
+        >
+          <p>Chcete povolit této aplikaci, aby prováděla změny ve vašem zařízení?</p>
+          <p className="mt-3">
+            <strong>{spustitNavnadu}</strong>
+            <br />
+            <span className="text-win-slaby">Vydavatel: Neznámý</span>
+            <br />
+            <span className="text-win-slaby">Původ souboru: Staženo z internetu</span>
+          </p>
+        </Dialog>
       )}
 
       {nelzeOtevrit && (

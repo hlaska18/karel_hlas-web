@@ -6,6 +6,7 @@
  * co je na disku.
  */
 
+import { zasifruj } from "./virus";
 import type { Slozka, Uzel } from "./fs";
 import {
   VYCHOZI_OKNO,
@@ -42,7 +43,10 @@ export type Akce =
   | { typ: "stopa"; klic: string }
   | { typ: "ukoly/splneno"; ids: string[] }
   | { typ: "system/nacti"; stav: Stav }
-  | { typ: "system/reset" };
+  | { typ: "system/reset" }
+  /** Cvičný škodlivý program – jen změna stavu simulace, nic se nespouští. */
+  | { typ: "virus/spust" }
+  | { typ: "virus/zastav" };
 
 /**
  * Aplikace, které běží jen v jedné kopii. Spuštění „podruhé" jen přepne na
@@ -225,6 +229,16 @@ export function reducer(stav: Stav, akce: Akce): Stav {
 
     case "system/nacti":
       return akce.stav;
+
+    case "virus/spust": {
+      // Přejmenuje připravené soubory a položí na plochu výzvu. Soubory, které
+      // si žák vytvořil sám, zůstávají – Karlovo rozhodnutí, ať nikdo nepřijde
+      // o vlastní práci.
+      if (stav.virusBezi) return stav;
+      return { ...stav, disk: zasifruj(stav.disk), virusBezi: true };
+    }
+    case "virus/zastav":
+      return stav.virusBezi ? { ...stav, virusBezi: false } : stav;
 
     case "system/reset":
       return vychoziStav();
