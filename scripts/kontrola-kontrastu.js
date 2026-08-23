@@ -11,8 +11,22 @@
  *
  * Motiv NIKDY nepřepínat přeřazením třídy za běhu: next-themes ji vzápětí
  * vrátí a měří se rozpůlený stav. Vždy localStorage + čisté načtení stránky.
+ *
+ * Druhá past je stejného druhu: `getComputedStyle` vrací barvu TAKOVOU, JAKÁ
+ * je právě teď — a `transition-colors` znamená, že chvíli po přepnutí motivu
+ * je to barva někde v půlce přechodu. Jednou mi to nahlásilo tři propadlé
+ * prvky s kontrastem 1,07, které ve skutečnosti byly v pořádku; o vteřinu
+ * později měřily bíle. Skript proto přechody na dobu měření vypne sám.
  */
 (() => {
+  /* Přechody a animace pryč: měří se ustálený stav, ne mezisnímek. */
+  const stopka = document.createElement("style");
+  stopka.textContent =
+    "*, *::before, *::after { transition: none !important; animation: none !important; }";
+  document.head.appendChild(stopka);
+  /* Vynutí přepočet stylů, aby barvy skočily na cílové hodnoty hned. */
+  void document.body.offsetHeight;
+
   function jas(c) {
     const [r, g, b] = c.map((v) => {
       v /= 255;
@@ -74,6 +88,8 @@
         });
       }
     });
+
+  stopka.remove();
 
   const de = document.documentElement;
   return {
