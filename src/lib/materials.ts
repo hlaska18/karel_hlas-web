@@ -280,6 +280,12 @@ export type BankItem = {
    */
   external?: boolean;
   /**
+   * Rozcestník tématu („Začni zde"). Leží v kořeni tématu a patří na začátek
+   * výpisu, ne mezi ostatní soubory – je to první, co má člověk otevřít.
+   * Odznak „učitelé" si přitom nechává, viz `isRozcestnik`.
+   */
+  rozcestnik?: boolean;
+  /**
    * Nástroj, který běží tady na webu (virtuální Windows, kurz SQL). Není to
    * soubor ani cizí odkaz – `href` je naše vnitřní cesta. Vzniká
    * z `_nastroj.json`.
@@ -589,6 +595,7 @@ export function getBankItems(): BankItem[] {
               topicNo: topicIndex + 1,
               topicLabel,
               audience: isRozcestnik(file) ? "teacher" : audience,
+              rozcestnik: isRozcestnik(file) || undefined,
               group,
               groupAuthor,
               groupSort,

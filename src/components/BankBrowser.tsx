@@ -830,10 +830,16 @@ function ToolLessons({
       .map(([no, its]) => ({ no, items: its }));
     // Volné soubory v kořeni tématu (typicky „Začni zde") patří NAD lekce –
     // je to rozcestník, kterým má člověk začít, ne dodatek na konci.
+    //
+    // Podmínka na `it.rozcestnik` tu musí být zvlášť: `isRozcestnik()` dává
+    // těmhle souborům odznak „učitelé", takže na `audience === "both"` neprošly
+    // a padaly mezi extras úplně dolů – přesně naopak, než co říká komentář
+    // nad tím. V tématech Internet a bezpečnost i Umělá inteligence stálo
+    // „Začni zde" jako poslední položka.
     return {
       lessons: lessonsArr,
-      intro: rest.filter((it) => !it.group && it.audience === "both"),
-      extras: rest.filter((it) => it.group || it.audience !== "both"),
+      intro: rest.filter((it) => it.rozcestnik || (!it.group && it.audience === "both")),
+      extras: rest.filter((it) => !it.rozcestnik && (it.group || it.audience !== "both")),
     };
   }, [items, cfg]);
 
@@ -908,14 +914,29 @@ function ToolFolders({
   onPreview: (it: BankItem) => void;
 }) {
   const s = STR[lang];
-  const { loose, folders } = useMemo(() => {
+  const { rozcestniky, loose, folders } = useMemo(() => {
     // Klíč nese i publikum. Na disku má `_ucitel/` podsložky pojmenované stejně
     // jako žákovské (téma Databáze: „2. Kurz SQL v prohlížeči" je v obou), a
     // dokud se grupovalo jen podle názvu, slily se do jedné karty – vedle
     // pracovního listu tak ležela i řešení a karta nebyla ani jantarová.
-    const map = new Map<string, { name: string; ucitelska: boolean; items: BankItem[] }>();
+    //
+    // Klíčem je navíc CESTA (`groupSort`), ne jen zobrazovaný název: podle ní
+    // se pozná, že „Obrázky" patří dovnitř své lekce, a ne vedle ní.
+    type Uzel = {
+      cesta: string;
+      name: string;
+      ucitelska: boolean;
+      items: BankItem[];
+      deti: Uzel[];
+    };
+    const map = new Map<string, Uzel>();
     const rest: BankItem[] = [];
+    const start: BankItem[] = [];
     for (const it of items) {
+      if (it.rozcestnik) {
+        start.push(it);
+        continue;
+      }
       const name = it.group
         ? L(it.group, lang)
         : it.audience === "teacher"
@@ -928,32 +949,70 @@ function ToolFolders({
         continue;
       }
       const ucitelska = it.audience === "teacher";
-      const klic = `${name} ${ucitelska ? "u" : "z"}`;
-      const zaznam = map.get(klic) ?? { name, ucitelska, items: [] };
+      const cesta = it.groupSort ?? name;
+      const klic = `${cesta} ${ucitelska ? "u" : "z"}`;
+      const zaznam = map.get(klic) ?? { cesta, name, ucitelska, items: [], deti: [] };
       zaznam.items.push(it);
       map.set(klic, zaznam);
+    }
+
+    // Vnoření: „1. Rastrová grafika/Obrázky" je dítě „1. Rastrová grafika".
+    // Bez toho měla grafika devatenáct karet – každou lekci dvakrát, jednou ji
+    // samotnou a jednou její přílohy – a největší kartou v celém tématu byla
+    // složka s osmnácti obrázky ke kompresi.
+    const korenove: Uzel[] = [];
+    for (const u of map.values()) {
+      const lom = u.cesta.lastIndexOf("/");
+      const rodic =
+        lom > 0 ? map.get(`${u.cesta.slice(0, lom)} ${u.ucitelska ? "u" : "z"}`) : undefined;
+      if (rodic) {
+        // Uvnitř stačí název samotné podsložky – nadřazenou lekci má člověk
+        // před očima v hlavičce karty, ve které ten řádek stojí.
+        rodic.deti.push({ ...u, name: u.name.split(" › ").pop() ?? u.name });
+      } else {
+        korenove.push(u);
+      }
     }
 
     // Rozlišující popisek se přidá JEN při skutečné kolizi. Složka, která je
     // celá učitelská (např. „Python – řešení testů"), ho nepotřebuje – že je
     // učitelská, je vidět z jantarové karty.
     const kolize = new Set<string>();
-    for (const a of map.values())
-      for (const b of map.values())
+    for (const a of korenove)
+      for (const b of korenove)
         if (a.name === b.name && a.ucitelska !== b.ucitelska) kolize.add(a.name);
 
+    const autor = (u: Uzel) => u.items.find((i) => i.groupAuthor)?.groupAuthor;
+
     return {
+      rozcestniky: start,
       loose: rest,
-      folders: [...map.values()].map((f) => ({
+      folders: korenove.map((f) => ({
         name: kolize.has(f.name) && f.ucitelska ? `${f.name} · ${s.teacherFolder}` : f.name,
         items: f.items,
-        author: f.items.find((i) => i.groupAuthor)?.groupAuthor,
+        deti: f.deti.map((d) => ({ name: d.name, items: d.items, author: autor(d) })),
+        author: autor(f),
       })),
     };
   }, [items, lang, s.teacherFolder, s.studentFolder]);
 
   return (
     <div className="mt-4 space-y-2.5">
+      {/* Rozcestník tématu jde první. Je psaný vyučujícímu, takže si nechává
+          jantarový odznak – ale schovávat ho na konec do složky „Pro učitele"
+          bylo přesně naopak, než k čemu je: má to být první, co člověk otevře. */}
+      {rozcestniky.length > 0 && (
+        <ul className="space-y-2.5">
+          {rozcestniky.map((it) => (
+            <MaterialRow
+              key={`${it.href}|${it.audience}|rozcestnik`}
+              it={it}
+              lang={lang}
+              onPreview={onPreview}
+            />
+          ))}
+        </ul>
+      )}
       {loose.length > 0 && (
         <ul className="space-y-2.5">
           {loose.map((it) => (
@@ -972,6 +1031,7 @@ function ToolFolders({
           name={f.name}
           author={f.author}
           items={f.items}
+          deti={f.deti}
           lang={lang}
           onPreview={onPreview}
         />
@@ -980,10 +1040,12 @@ function ToolFolders({
   );
 }
 
+
 function FolderCard({
   name,
   author,
   items,
+  deti = [],
   lang,
   onPreview,
 }: {
@@ -991,6 +1053,8 @@ function FolderCard({
   /** Autor celé složky (převzaté materiály) – ukáže se vedle šipky. */
   author?: string;
   items: BankItem[];
+  /** Podsložky – vykreslí se uvnitř, pod soubory samotné složky. */
+  deti?: { name: string; items: BankItem[]; author?: string }[];
   lang: Lang;
   onPreview: (it: BankItem) => void;
 }) {
@@ -1019,7 +1083,9 @@ function FolderCard({
         <span className="min-w-0 flex-1">
           <span className="block truncate font-medium text-zinc-900 dark:text-white">{name}</span>
           <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
-            {countMaterials(items.length, lang)}
+            {/* Počet včetně podsložek – karta se tváří jako jeden celek,
+                takže by lhala, kdyby své přílohy nepočítala. */}
+            {countMaterials(items.length + deti.reduce((n, d) => n + d.items.length, 0), lang)}
           </span>
         </span>
         {author && (
@@ -1047,6 +1113,19 @@ function FolderCard({
                 lang={lang}
                 onPreview={onPreview}
               />
+            ))}
+            {/* Podsložka (Obrázky, Média, Výstupy) jako sbalený řádek uvnitř
+                lekce, ne jako karta vedle ní. */}
+            {deti.map((d) => (
+              <li key={d.name}>
+                <FolderCard
+                  name={d.name}
+                  author={d.author}
+                  items={d.items}
+                  lang={lang}
+                  onPreview={onPreview}
+                />
+              </li>
             ))}
           </ul>
         </div>
