@@ -303,8 +303,17 @@ export function KontextovaNabidka({
               type="button"
               role="menuitem"
               disabled={p.nedostupne}
+              aria-haspopup={p.podnabidka ? "menu" : undefined}
+              aria-expanded={p.podnabidka ? otevrenaPodnabidka === p.id : undefined}
               onClick={() => {
-                if (p.podnabidka) return;
+                // Podnabidka se otevira i klikem, nejen najetim mysi. Ve
+                // skutecnem Windows to tak je taky - a hlavne: na dotykovem
+                // displeji zadne najeti neexistuje, takze drive se k polozkam
+                // "Zobrazit" a "Novy" nedalo dostat vubec.
+                if (p.podnabidka) {
+                  nastavPodnabidku(otevrenaPodnabidka === p.id ? null : p.id);
+                  return;
+                }
                 p.akce?.();
                 zavri();
               }}

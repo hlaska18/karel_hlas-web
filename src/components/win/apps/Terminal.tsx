@@ -27,7 +27,7 @@ const DOMOV = ["C:", "Users", "Zak"];
 
 export function Terminal() {
   const { stav, poslat, stopa } = useSystem();
-  const { arg, nastavTitul } = useOkno();
+  const { arg, nastavTitul, zavri: zavriOkno } = useOkno();
   const [karty, nastavKarty] = useState<Karta[]>(() => [
     {
       id: 1,
@@ -97,8 +97,11 @@ export function Terminal() {
 
   const zavriKartu = (id: number) => {
     if (karty.length === 1) {
-      // Poslední kartu nezavíráme – terminál by zůstal prázdný a bez cesty ven.
-      upravKartu((k) => ({ ...k, vystup: uvitani(k.rezim) }));
+      // Poslední karta zavře celé okno – přesně jako ve skutečném Terminálu
+      // a jako příkaz `exit`, který sem taky vede. Dřív se jen obnovilo
+      // uvítání, takže křížek na jediné kartě u čerstvého terminálu navenek
+      // neudělal vůbec nic. Cesta zpátky vede přes Start i hlavní panel.
+      zavriOkno();
       return;
     }
     const zbytek = karty.filter((k) => k.id !== id);

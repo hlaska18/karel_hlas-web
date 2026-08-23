@@ -87,14 +87,24 @@ export function Malovani() {
     };
   };
 
+  /**
+   * Historie kroků leží v `kroky` (ref), protože jsou to velké dataURL a
+   * překreslovat kvůli nim nemá smysl. Ref ale nespustí render, takže
+   * tlačítko Zpět se z něj nemá jak zašednout – na prázdném plátně šlo
+   * zmáčknout a nestalo se nic. Tenhle stav nese jen tu jednu informaci.
+   */
+  const [lzeZpet, nastavLzeZpet] = useState(false);
+
   const zapisKrok = () => {
     const url = platno.current?.toDataURL();
     if (!url) return;
     kroky.current = [...kroky.current.slice(-14), url];
+    nastavLzeZpet(true);
   };
 
   const zpet = () => {
     const posledni = kroky.current.pop();
+    nastavLzeZpet(kroky.current.length > 0);
     const k = kontext();
     if (!posledni || !k) return;
     const obrazek = new Image();
@@ -269,7 +279,7 @@ export function Malovani() {
 
         <div className="h-6 w-px bg-win-linka" />
 
-        <IkonoveTlacitko aria-label="Zpět" title="Zpět (Ctrl+Z)" onClick={zpet}>
+        <IkonoveTlacitko aria-label="Zpět" title="Zpět (Ctrl+Z)" disabled={!lzeZpet} onClick={zpet}>
           <Undo2 className="h-4 w-4" />
         </IkonoveTlacitko>
         <Tlacitko onClick={() => nastavDialog(true)}>
