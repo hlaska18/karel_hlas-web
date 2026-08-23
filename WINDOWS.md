@@ -58,10 +58,52 @@ a pak Zapnout znovu nezabere; stav se maže smazáním dat webu v prohlížeči
 
 ÚKOLOVNÍK
 ---------
-Vpravo dole je odkládací panel „Úkoly". 26 úkolů v pěti skupinách. Nic
+Vpravo dole je odkládací panel „Úkoly". 34 úkolů v šesti skupinách. Nic
 nezakazuje ani nevynucuje – jen se sám odškrtne, když je výsledek na počítači
 vidět. Kontroluje se výsledek, ne cesta k němu: složku jde založit myší
 i příkazem  md  a platí obojí.
+
+Prvních 26 je na rozjezd – jeden krok, jedna nabídka. Skupina DELŠÍ ÚLOHY
+je jinde: odpověď se zapisuje názvem složky, takže se kontroluje, jestli žák
+došel ke správnému číslu, ne jestli prošel správnou cestu.
+
+  Kolik fotek na 1 GB   správně 436. Kdo počítá s 1000 místo 1024, dostane
+                        406 a složka se mu neodškrtne. O to přesně jde.
+  Rok dvojkově          2026 = 11111101010
+  Adresa počítače       poslední část IPv4 z ipconfig
+  Co se zabalením       text se zmenší na dvě pětiny, fotka skoro vůbec –
+  zmenší víc            JPEG je uvnitř zabalený už sám
+  Kolize jmen           dvakrát Vzorce.txt ve dvou složkách; sloučit je jde
+                        jen přejmenováním
+  Skrytá zpráva         v Dokumentech je .pokyn.txt, který je vidět až po
+                        zapnutí skrytých položek
+  Web o dvou stránkách  index.html s nadpisem, třemi položkami a odkazem
+  Úklid po viru         viz níž
+
+
+CVIČNÝ ŠKODLIVÝ PROGRAM
+-----------------------
+Ve Stažených souborech leží  Fotky_z_vyletu.jpg.exe . Při výchozím nastavení
+Windows, kdy jsou přípony skryté, se v seznamu tváří jako obyčejná fotka –
+ale sloupec Typ už hlásí „Aplikace".
+
+NIC SE NESPOUŠTÍ. Je to naskriptovaná změna stavu simulace. Po potvrzení
+dialogu se připraveným souborům změní přípona na .zasifrovano, na plochu
+spadne výzva k výkupnému a ve Správci úloh začne běžet  svhost.exe  (překlep
+proti skutečnému svchost.exe je schválně – je to to, co má žák najít).
+
+Co se NEZMĚNÍ: soubory, které si žák za hodinu vytvořil. Zasažené jsou jen
+položky, které na disku byly od začátku. Nikdo tedy nepřijde o vlastní práci.
+
+Jak z toho ven:
+ - Správce úloh (Ctrl+Shift+Esc) → svhost.exe → Ukončit úlohu,
+ - komu se povedlo Dokumenty předtím zazálohovat do ZIPu, rozbalí si je zpátky.
+
+DOPORUČENÉ POŘADÍ V HODINĚ: nejdřív nechat žáky udělat zálohu, teprve potom
+je pustit k té „fotce". Rozdíl mezi tím, kdo zálohu má a kdo ne, je ta
+nejsilnější věc na celé lekci a nedá se odvyprávět.
+
+Prostředí se vrátí do výchozího stavu smazáním dat webu v prohlížeči.
 
 Splněný úkol zůstává splněný, i když po sobě žák uklidí.
 

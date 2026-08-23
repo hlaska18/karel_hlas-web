@@ -13,6 +13,17 @@ import { komprimovanaVelikost } from "./zip";
 import { NAVNADA } from "./virus";
 import type { Slozka, Soubor, Uzel } from "./fs";
 
+/** Druhé „Vzorce.txt" – kvůli úloze o kolizi jmen. */
+const VZORCE_FYZIKA_TXT = `FYZIKA — VZORCE
+
+Rychlost:      v = s / t
+Zrychlení:     a = (v - v0) / t
+Síla:          F = m * a
+Práce:         W = F * s
+Výkon:         P = W / t
+Hustota:       rho = m / V
+`;
+
 const den = 24 * 60 * 60 * 1000;
 
 /** Skrytý soubor v Dokumentech – opora pro jednu z těžších úloh. */
@@ -175,7 +186,17 @@ export function vytvorDisk(): Slozka {
               slozka(
                 "Documents",
                 [
-                  slozka("Škola", [slozka("Matematika", [soubor("Vzorce.txt", VZORCE_TXT, 40)], 40)], 40),
+                  // Dvakrát „Vzorce.txt" ve dvou složkách je schválně: o kolizi jmen se
+                  // opírá jedna z těžších úloh. Sloučit je tak, aby oba přežily, jde jen
+                  // přejmenováním.
+                  slozka(
+                    "Škola",
+                    [
+                      slozka("Matematika", [soubor("Vzorce.txt", VZORCE_TXT, 40)], 40),
+                      slozka("Fyzika", [soubor("Vzorce.txt", VZORCE_FYZIKA_TXT, 35)], 35),
+                    ],
+                    40,
+                  ),
                   soubor("Historie počítačů.txt", HISTORIE_TXT, 9),
                   soubor("Seznam žáků.csv", SEZNAM_CSV, 15),
                   // Skryté položky: mechanismus v prostředí existoval, ale na disku nebyla

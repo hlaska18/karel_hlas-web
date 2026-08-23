@@ -11,7 +11,9 @@
  * pokus uklidí, byl by panel k ničemu – smazat po sobě je správný návyk.
  */
 
-import { existuje, rozloz } from "./fs";
+import { existuje, jeSlozka, jeSoubor, najdiSlozku, najdiSoubor, rozloz } from "./fs";
+import type { Uzel } from "./fs";
+import { PRIPONA_ZASIFROVANO, VYZVA } from "./virus";
 import type { Stav } from "./stav";
 
 export interface Ukol {
@@ -29,6 +31,7 @@ export const SKUPINY = [
   "Nastavení systému",
   "Příkazový řádek",
   "Aplikace",
+  "Delší úlohy",
 ] as const;
 
 const cesta = (zapis: string) => rozloz(zapis);
@@ -38,6 +41,32 @@ const je = (stav: Stav, zapis: string) => existuje(stav.disk, cesta(zapis));
 const stopa = (stav: Stav, klic: string) => stav.stopy.includes(klic);
 
 const DOMOV = "C:\\Users\\Zak";
+
+/** Je někde v Dokumentech složka s tímhle názvem? Porovnává bez ohledu na velikost písmen. */
+const slozkaSNazvem = (stav: Stav, nazev: string): boolean => {
+  const dok = najdiSlozku(stav.disk, rozloz(`${DOMOV}\\Documents`));
+  return Boolean(
+    dok?.deti.some(
+      (d) => d.druh === "slozka" && d.jmeno.trim().toLowerCase() === nazev.toLowerCase(),
+    ),
+  );
+};
+
+/** Obsah souboru, nebo prázdný řetězec. */
+const obsah = (stav: Stav, zapis: string): string =>
+  najdiSoubor(stav.disk, rozloz(zapis))?.obsah ?? "";
+
+/** Kolik souborů v celém stromu má daný název (bez ohledu na velikost písmen). */
+const kolikSouboru = (stav: Stav, test: (jmeno: string) => boolean): number => {
+  let n = 0;
+  const projdi = (uzel: { druh: string; jmeno: string; deti?: unknown[] }) => {
+    if (uzel.druh === "slozka") {
+      for (const d of (uzel.deti ?? []) as typeof uzel[]) projdi(d);
+    } else if (test(uzel.jmeno)) n += 1;
+  };
+  projdi(stav.disk as never);
+  return n;
+};
 
 export const UKOLY: Ukol[] = [
   /* ─────────── Soubory a složky ─────────── */
@@ -247,6 +276,100 @@ export const UKOLY: Ukol[] = [
     popis:
       "Ctrl+Shift+Esc nebo pravým tlačítkem na hlavní panel. Kolik procent procesoru se používá?",
     hotovo: (s) => s.stopy.includes("spustil:spravce-uloh"),
+  },
+
+  /* ─────────── Delší úlohy ───────────
+     Tyhle nejde proklikat podle návodu. Odpověď se zapisuje názvem složky,
+     takže kontrola ověřuje, jestli žák došel ke správnému číslu — ne jestli
+     prošel správnou cestu. Kdo se splete, složka se neodškrtne. */
+  {
+    id: "skryta-zprava",
+    skupina: "Delší úlohy",
+    nazev: "Najdi skrytou zprávu",
+    popis:
+      "V Dokumentech je soubor, který normálně není vidět. Najdi ho, přečti si ho a udělej, co v něm stojí.",
+    hotovo: (s) => slozkaSNazvem(s, "Nasel jsem to"),
+  },
+  {
+    id: "kolik-fotek",
+    skupina: "Delší úlohy",
+    nazev: "Kolik fotek se vejde na 1 GB",
+    popis:
+      "Zjisti ve Vlastnostech přesnou velikost souboru Fotka z výletu.jpg v bajtech. V Kalkulačce spočítej, kolik se jich vejde do 1 GB, když 1 kB = 1024 B. Zaokrouhli dolů a založ v Dokumentech složku s tím číslem.",
+    hotovo: (s) => slozkaSNazvem(s, "436"),
+  },
+  {
+    id: "komprese-porovnani",
+    skupina: "Delší úlohy",
+    nazev: "Co se zabalením zmenší víc",
+    popis:
+      "Zabal zvlášť textový soubor a zvlášť fotku. Porovnej velikost archivu s originálem. Podle toho, co se zmenšilo víc, založ v Dokumentech složku s názvem text nebo fotka.",
+    hotovo: (s) => slozkaSNazvem(s, "text"),
+  },
+  {
+    id: "dvojkova-2026",
+    skupina: "Delší úlohy",
+    nazev: "Zapiš rok dvojkově",
+    popis:
+      "V Kalkulačce přepni na Programátorskou a převeď číslo 2026 do dvojkové soustavy. Založ v Dokumentech složku, která se bude jmenovat přesně tím výsledkem.",
+    hotovo: (s) => slozkaSNazvem(s, "11111101010"),
+  },
+  {
+    id: "ipv4-posledni",
+    skupina: "Delší úlohy",
+    nazev: "Přečti adresu počítače",
+    popis:
+      "V Terminálu spusť ipconfig a najdi adresu IPv4. Založ v Dokumentech složku pojmenovanou poslední částí té adresy, tedy číslem za poslední tečkou.",
+    hotovo: (s) => slozkaSNazvem(s, "147"),
+  },
+  {
+    id: "kolize-jmen",
+    skupina: "Delší úlohy",
+    nazev: "Sluč složky se stejným jménem",
+    popis:
+      "Ve složce Škola jsou Matematika i Fyzika a v obou leží Vzorce.txt. Dostaň oba soubory do jedné složky tak, aby ani jeden nezmizel. Dva stejné názvy vedle sebe Windows nedovolí — poraď si.",
+    hotovo: (s) => {
+      if (kolikSouboru(s, (j) => /^vzorce.*\.txt$/i.test(j)) < 2) return false;
+      const projdi = (uzel: Uzel): boolean => {
+        if (!jeSlozka(uzel)) return false;
+        const vzorce = uzel.deti.filter(
+          (d) => jeSoubor(d) && /^vzorce.*\.txt$/i.test(d.jmeno),
+        );
+        if (vzorce.length >= 2) return true;
+        return uzel.deti.some(projdi);
+      };
+      return projdi(s.disk);
+    },
+  },
+  {
+    id: "web-dve-stranky",
+    skupina: "Delší úlohy",
+    nazev: "Postav web o dvou stránkách",
+    popis:
+      "V Poznámkovém bloku napiš index.html s nadpisem, seznamem tří položek a odkazem na druha.html. Druhou stránku taky vytvoř. Obě ulož do Dokumentů a projdi je v Edge.",
+    hotovo: (s) => {
+      const index = obsah(s, `${DOMOV}\\Documents\\index.html`).toLowerCase();
+      const druha = existuje(s.disk, rozloz(`${DOMOV}\\Documents\\druha.html`));
+      return (
+        druha &&
+        /<h1[\s>]/.test(index) &&
+        (index.match(/<li[\s>]/g) ?? []).length >= 3 &&
+        /href\s*=\s*["']?[^"'>]*druha\.html/.test(index)
+      );
+    },
+  },
+  {
+    id: "uklid-po-viru",
+    skupina: "Delší úlohy",
+    nazev: "Ukliď po škodlivém programu",
+    popis:
+      "Když jsi spustil ten podezřelý soubor: ukonči jeho proces ve Správci úloh, vrať souborům původní příponu a smaž výzvu k výkupnému i samotnou návnadu.",
+    hotovo: (s) =>
+      // Dává smysl až po spuštění – kdo návnadu neotevřel, nemá co uklízet.
+      s.stopy.includes("navnada:otevrena") &&
+      !s.virusBezi &&
+      kolikSouboru(s, (j) => j.toLowerCase().endsWith(`.${PRIPONA_ZASIFROVANO}`)) === 0 &&
+      !existuje(s.disk, rozloz(`${DOMOV}\\Desktop\\${VYZVA}`)),
   },
 ];
 

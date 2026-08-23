@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { SKUPINY, UKOLY, postup, vyhodnot } from "@/lib/win/ukoly";
 import { vychoziStav, type Stav } from "@/lib/win/stav";
-import { novaSlozka, odeber, rozloz, vloz } from "@/lib/win/fs";
+import { existuje, novaSlozka, novySoubor, odeber, rozloz, vloz } from "@/lib/win/fs";
+import { zasifruj } from "@/lib/win/virus";
 
 const cerstvy = (): Stav => vychoziStav();
 
@@ -100,5 +101,93 @@ describe("postup", () => {
   it("počítá jen známé úkoly", () => {
     expect(postup([])).toEqual({ hotovo: 0, celkem: UKOLY.length });
     expect(postup(["pripony", "neznamy-ukol"]).hotovo).toBe(1);
+  });
+});
+
+describe("delší úlohy", () => {
+  const DOMOV = "C:\\Users\\Zak";
+  const dokumenty = rozloz(`${DOMOV}\\Documents`);
+  const splneno = (stav: Stav, id: string) => vyhodnot(stav).includes(id);
+
+  /** Založí v Dokumentech složku daného názvu. */
+  const zaloz = (stav: Stav, nazev: string): Stav => ({
+    ...stav,
+    disk: vloz(stav.disk, dokumenty, novaSlozka(nazev)),
+  });
+
+  it("skrytý pokyn na disku je", () => {
+    expect(existuje(cerstvy().disk, rozloz(`${DOMOV}\\Documents\\.pokyn.txt`))).toBe(true);
+  });
+
+  it("odpověď na počet fotek uzná jen 436", () => {
+    expect(splneno(cerstvy(), "kolik-fotek")).toBe(false);
+    // 406 je výsledek s 1000 místo 1024 – tedy právě ta chyba, o kterou jde
+    expect(splneno(zaloz(cerstvy(), "406"), "kolik-fotek")).toBe(false);
+    expect(splneno(zaloz(cerstvy(), "436"), "kolik-fotek")).toBe(true);
+  });
+
+  it("dvojkový zápis roku uzná jen správný", () => {
+    expect(splneno(zaloz(cerstvy(), "11111101011"), "dvojkova-2026")).toBe(false);
+    expect(splneno(zaloz(cerstvy(), "11111101010"), "dvojkova-2026")).toBe(true);
+  });
+
+  it("poslední část IP adresy uzná jen 147", () => {
+    expect(splneno(zaloz(cerstvy(), "1"), "ipv4-posledni")).toBe(false);
+    expect(splneno(zaloz(cerstvy(), "147"), "ipv4-posledni")).toBe(true);
+  });
+
+  it("u komprese uzná text, ne fotku", () => {
+    expect(splneno(zaloz(cerstvy(), "fotka"), "komprese-porovnani")).toBe(false);
+    expect(splneno(zaloz(cerstvy(), "text"), "komprese-porovnani")).toBe(true);
+  });
+
+  it("kolize jmen: dokud jsou soubory ve dvou složkách, není hotovo", () => {
+    expect(splneno(cerstvy(), "kolize-jmen")).toBe(false);
+  });
+
+  it("kolize jmen: dva různě pojmenované vedle sebe stačí", () => {
+    let stav = cerstvy();
+    const cil = rozloz(`${DOMOV}\\Documents\\Vzorce`);
+    stav = { ...stav, disk: vloz(stav.disk, dokumenty, novaSlozka("Vzorce")) };
+    stav = { ...stav, disk: vloz(stav.disk, cil, novySoubor("Vzorce-matematika.txt", "a")) };
+    stav = { ...stav, disk: vloz(stav.disk, cil, novySoubor("Vzorce-fyzika.txt", "b")) };
+    expect(splneno(stav, "kolize-jmen")).toBe(true);
+  });
+
+  it("web o dvou stránkách chce nadpis, tři položky i odkaz", () => {
+    const sHtml = (obsah: string, sDruhou: boolean): Stav => {
+      let stav = cerstvy();
+      stav = { ...stav, disk: vloz(stav.disk, dokumenty, novySoubor("index.html", obsah)) };
+      if (sDruhou) {
+        stav = { ...stav, disk: vloz(stav.disk, dokumenty, novySoubor("druha.html", "<p>ahoj</p>")) };
+      }
+      return stav;
+    };
+    const uplny = '<h1>Můj web</h1><ul><li>a</li><li>b</li><li>c</li></ul><a href="druha.html">dál</a>';
+
+    expect(splneno(sHtml(uplny, false), "web-dve-stranky")).toBe(false); // chybí druhá stránka
+    expect(splneno(sHtml("<h1>Jen nadpis</h1>", true), "web-dve-stranky")).toBe(false);
+    expect(
+      splneno(sHtml('<h1>A</h1><ul><li>a</li><li>b</li></ul><a href="druha.html">d</a>', true), "web-dve-stranky"),
+    ).toBe(false); // jen dvě položky
+    expect(splneno(sHtml(uplny, true), "web-dve-stranky")).toBe(true);
+  });
+
+  it("úklid po viru dává smysl až po jeho spuštění", () => {
+    const cisty = cerstvy();
+    // nikdo návnadu neotevřel – není co uklízet, a úkol se tedy neodškrtává
+    expect(splneno(cisty, "uklid-po-viru")).toBe(false);
+
+    const poSpusteni: Stav = {
+      ...cisty,
+      disk: zasifruj(cisty.disk),
+      virusBezi: true,
+      stopy: ["navnada:otevrena"],
+    };
+    expect(splneno(poSpusteni, "uklid-po-viru")).toBe(false);
+
+    // po úklidu: proces stojí, žádná .zasifrovano, výzva pryč
+    const poUklidu: Stav = { ...cisty, virusBezi: false, stopy: ["navnada:otevrena"] };
+    expect(splneno(poUklidu, "uklid-po-viru")).toBe(true);
   });
 });
