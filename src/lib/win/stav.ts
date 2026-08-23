@@ -20,9 +20,30 @@ export const KLIC_ULOZISTE = "win11-vyuka-stav";
 export const VERZE_ULOZISTE = 1;
 
 export type Motiv = "svetly" | "tmavy";
+export type Rozliseni = "1920" | "1600" | "1280";
+
+/**
+ * Měřítko prostředí podle zvoleného rozlišení.
+ *
+ * Realizuje se `zoom` na celém prostředí. Pozor: `zoom` sice ovlivní rozvržení,
+ * ale `e.clientX` z ukazatele zůstává v pixelech okna prohlížeče – proto se
+ * musí posuny při tažení oken tímhle číslem podělit, jinak okno utíká zpod
+ * kurzoru. Měřeno: bez podělení se okno při 1280 posune 1,5× dál než myš.
+ */
+export const MERITKO: Record<Rozliseni, number> = {
+  "1920": 1,
+  "1600": 1.2,
+  "1280": 1.5,
+};
 
 export interface Nastaveni {
   motiv: Motiv;
+  /**
+   * Rozlišení obrazovky. Nižší hodnota neznamená menší plochu, ale VĚTŠÍ prvky –
+   * přesně jako na skutečném monitoru, kde se do nižšího rozlišení vejde míň.
+   * Realizuje se `zoom` na celém prostředí, viz VirtualniPocitac.
+   */
+  rozliseni: Rozliseni;
   /** Id zvýrazňovací barvy z `AKCENTY`. */
   akcent: string;
   /** Id tapety z `TAPETY`. */
@@ -45,6 +66,7 @@ export interface Nastaveni {
 }
 
 export const VYCHOZI_NASTAVENI: Nastaveni = {
+  rozliseni: "1920",
   motiv: "svetly",
   akcent: "modra",
   tapeta: "zavoj",

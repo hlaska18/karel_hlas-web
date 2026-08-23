@@ -14,6 +14,7 @@ import { Minus, Square, X, Copy } from "lucide-react";
 import { Ikona } from "./Ikona";
 import { useSystem } from "./system";
 import type { Okno, Prichyceni } from "@/lib/win/stav";
+import { MERITKO } from "@/lib/win/stav";
 
 const MIN_SIRKA = 320;
 const MIN_VYSKA = 200;
@@ -54,7 +55,7 @@ export function OknoRam({
    */
   children: (slotZahlavi: HTMLDivElement | null) => ReactNode;
 }) {
-  const { poslat, plocha } = useSystem();
+  const { stav, poslat, plocha } = useSystem();
   const [nabidkaRozvrzeni, nastavNabidku] = useState(false);
   const casovacNabidky = useRef<number | null>(null);
   const tazeni = useRef<{
@@ -88,12 +89,23 @@ export function OknoRam({
 
   /* ───── tažení a změna velikosti ───── */
 
+  /*
+   * `zoom` na prostředí zvětší rozvržení, ale `clientX` z ukazatele zůstává
+   * v pixelech okna prohlížeče. Posuny se proto musí měřítkem podělit, jinak
+   * okno utíká zpod kurzoru – změřeno: při rozlišení 1280 se posunulo 1,5× dál.
+   *
+   * Počítá se ZDE, ne uvnitř efektu: musí být mezi jeho závislostmi. Napoprvé
+   * jsem ho měl uvnitř a posluchač si držel měřítko z doby, kdy vznikl, takže
+   * oprava nefungovala, dokud se okno nezavřelo a neotevřelo.
+   */
+  const meritko = MERITKO[stav.nastaveni.rozliseni];
+
   useEffect(() => {
     const pohyb = (e: PointerEvent) => {
       const t = tazeni.current;
       if (!t) return;
-      const dx = e.clientX - t.startX;
-      const dy = e.clientY - t.startY;
+      const dx = (e.clientX - t.startX) / meritko;
+      const dy = (e.clientY - t.startY) / meritko;
 
       if (t.rezim === "posun") {
         const x = Math.min(Math.max(t.ram.x + dx, -t.ram.w + 120), plocha.w - 120);
@@ -101,8 +113,8 @@ export function OknoRam({
         poslat({ typ: "okno/posun", id: okno.id, obdelnik: { ...t.ram, x, y } });
         // Kurzor u okraje plochy nabídne přichycení – u horního celou plochu,
         // u bočního půlku. Rozhoduje kurzor, ne okno: tak to dělá i Windows.
-        const mysX = e.clientX - plocha.x;
-        const mysY = e.clientY - plocha.y;
+        const mysX = e.clientX / meritko - plocha.x;
+        const mysY = e.clientY / meritko - plocha.y;
         const uOkraje = 6;
         nastavNahled(
           mysY <= uOkraje
@@ -149,7 +161,7 @@ export function OknoRam({
       window.removeEventListener("pointermove", pohyb);
       window.removeEventListener("pointerup", konec);
     };
-  }, [okno.id, plocha.x, plocha.y, plocha.w, plocha.h, poslat, nahled]);
+  }, [okno.id, plocha.x, plocha.y, plocha.w, plocha.h, poslat, nahled, meritko]);
 
   const zacniTahat = (e: React.PointerEvent, rezim: string) => {
     if (e.button !== 0) return;

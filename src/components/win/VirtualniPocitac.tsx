@@ -29,6 +29,7 @@ import { Fotky } from "./apps/Fotky";
 import { Prohlizec } from "./apps/Prohlizec";
 import { OvladaciPanely } from "./apps/OvladaciPanely";
 import { vybranyAkcent } from "@/lib/win/akcenty";
+import { MERITKO } from "@/lib/win/stav";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import type { AppId } from "@/lib/win/typy";
 import type { Okno } from "@/lib/win/stav";
@@ -46,7 +47,7 @@ export function VirtualniPocitac() {
 function Obrazovka() {
   const { stav, poslat, nastavPlochu } = useSystem();
   const [faze, nastavFazi] = useState<Faze>("prihlaseni");
-  const [panel, nastavPanel] = useState<"start" | "rychla" | "oznameni" | null>(null);
+  const [panel, nastavPanel] = useState<"start" | "rychla" | "oznameni" | "skryte" | null>(null);
   const [celaObrazovka, nastavCelou] = useState(false);
   const obrazovka = useRef<HTMLDivElement>(null);
   const plochaRef = useRef<HTMLDivElement>(null);
@@ -143,6 +144,11 @@ function Obrazovka() {
         filter: `brightness(${0.55 + (n.jas / 100) * 0.45})${
           n.nocniRezim ? " sepia(0.35) saturate(1.15) hue-rotate(-12deg)" : ""
         }`,
+        // Nižší rozlišení = větší prvky a míň místa, jako na skutečném monitoru.
+        // Schválně `zoom`, ne `transform: scale`: zoom se propíše do rozvržení
+        // i do souřadnic ukazatele, takže tažení a změna velikosti oken fungují
+        // dál. Se `scale` by okna „utíkala" od kurzoru.
+        zoom: MERITKO[n.rozliseni],
       }}
     >
       {faze === "prihlaseni" && (

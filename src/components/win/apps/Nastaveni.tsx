@@ -298,14 +298,14 @@ function OddilSystem({
           <div className="flex items-center justify-between">
             <span>Rozlišení obrazovky</span>
             <Rozbalovac
-              hodnota="1920"
+              hodnota={n.rozliseni}
               popis="Rozlišení obrazovky"
               moznosti={[
                 { id: "1920", nazev: "1920 × 1080 (doporučeno)" },
                 { id: "1600", nazev: "1600 × 900" },
                 { id: "1280", nazev: "1280 × 720" },
               ]}
-              onZmena={() => undefined}
+              onZmena={(id) => zmen({ rozliseni: id as typeof n.rozliseni })}
             />
           </div>
         </div>

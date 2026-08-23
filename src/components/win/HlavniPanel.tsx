@@ -23,6 +23,9 @@ import {
   VolumeX,
   Wifi,
   WifiOff,
+  HardDrive,
+  RefreshCw,
+  ShieldCheck
 } from "lucide-react";
 import { Ikona } from "./Ikona";
 import { Posuvnik, useVenkovniKlik } from "./ui";
@@ -32,7 +35,7 @@ import { datum, datumSlovy, hodiny } from "@/lib/win/format";
 
 const PRIPNUTE_NA_PANEL: AppId[] = ["pruzkumnik", "prohlizec", "poznamkovy-blok", "nastaveni"];
 
-type Panel = "start" | "rychla" | "oznameni" | null;
+type Panel = "start" | "rychla" | "oznameni" | "skryte" | null;
 
 export function HlavniPanel({
   otevreny,
@@ -133,7 +136,10 @@ export function HlavniPanel({
           <button
             type="button"
             aria-label="Skryté ikony"
-            className="flex h-8 w-6 items-center justify-center rounded hover:bg-win-zvyrazneny"
+            onClick={() => nastavOtevreny(otevreny === "skryte" ? null : "skryte")}
+            className={`flex h-8 w-6 items-center justify-center rounded ${
+              otevreny === "skryte" ? "bg-win-zvyrazneny" : "hover:bg-win-zvyrazneny"
+            }`}
           >
             <ChevronUp className="h-3.5 w-3.5" />
           </button>
@@ -177,6 +183,7 @@ export function HlavniPanel({
         </div>
       </div>
 
+      {otevreny === "skryte" && <SkryteIkony zavri={() => nastavOtevreny(null)} />}
       {otevreny === "rychla" && <RychlaNastaveni zavri={() => nastavOtevreny(null)} />}
       {otevreny === "oznameni" && cas && (
         <PanelOznameni cas={cas} zavri={() => nastavOtevreny(null)} />
@@ -226,6 +233,71 @@ function LogoStart() {
 }
 
 /* ───────────────────────── Rychlá nastavení ───────────────────────── */
+
+/**
+ * Ikony, které se na hlavní panel nevešly – ve Windows je schová šipka.
+ *
+ * Není to výplň: každá položka vede tam, kam patří, takže kliknutí něco udělá.
+ * Prázdný panel by byl stejná ozdoba jako mrtvá šipka, jen o patro níž.
+ */
+function SkryteIkony({ zavri }: { zavri: () => void }) {
+  const { stav, spust } = useSystem();
+  const obal = useRef<HTMLDivElement>(null);
+  useVenkovniKlik(obal, zavri);
+
+  const polozky = [
+    {
+      id: "zabezpeceni",
+      nazev: "Zabezpečení systému Windows",
+      // Oddíl „zabezpečení" v Nastavení není, a odkazovat naslepo by znamenalo
+      // spadnout na Systém. Vede proto tam, kde se s hrozbou dá něco udělat.
+      popis: stav.virusBezi ? "Zjištěna hrozba – zkontroluj procesy" : "Zkontrolovat běžící procesy",
+      ikona: <ShieldCheck className="h-5 w-5" />,
+      akce: () => spust("spravce-uloh"),
+    },
+    {
+      id: "aktualizace",
+      nazev: "Windows Update",
+      popis: stav.nastaveni.aktualizace ? "Systém je aktuální" : "K dispozici jsou aktualizace",
+      ikona: <RefreshCw className="h-5 w-5" />,
+      akce: () => spust("nastaveni", "update"),
+    },
+    {
+      id: "uloziste",
+      nazev: "Místní disk (C:)",
+      popis: "Otevřít v Průzkumníku",
+      ikona: <HardDrive className="h-5 w-5" />,
+      akce: () => spust("pruzkumnik", "C:"),
+    },
+  ];
+
+  return (
+    <div
+      ref={obal}
+      role="dialog"
+      aria-label="Skryté ikony"
+      className="win-stin-nabidka absolute bottom-14 right-3 z-50 w-72 rounded-lg border border-win-linka bg-win-panel p-1.5"
+    >
+      {polozky.map((p) => (
+        <button
+          key={p.id}
+          type="button"
+          onClick={() => {
+            p.akce();
+            zavri();
+          }}
+          className="flex w-full items-center gap-3 rounded px-2.5 py-2 text-left hover:bg-win-zvyrazneny"
+        >
+          <span className="text-win-akcent">{p.ikona}</span>
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-[13px]">{p.nazev}</span>
+            <span className="block truncate text-[11.5px] text-win-slaby">{p.popis}</span>
+          </span>
+        </button>
+      ))}
+    </div>
+  );
+}
 
 function RychlaNastaveni({ zavri }: { zavri: () => void }) {
   const { stav, poslat, spust } = useSystem();
