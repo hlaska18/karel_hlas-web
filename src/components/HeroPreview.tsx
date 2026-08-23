@@ -5,7 +5,7 @@ import { BarChart3, Database, Files, FileCode2, FileSpreadsheet, FileText, Image
 import { useLang } from "@/lib/i18n";
 import { toolLabel } from "@/lib/bankLabels";
 import { pickHeroHighlights } from "@/lib/heroPick";
-import { TOOL_MASKA } from "@/lib/bankLabels";
+import { ToolGlassIcon, hasToolGlassIcon } from "@/components/ToolGlassIcon";
 import type { BankItem } from "@/lib/materials";
 
 /**
@@ -89,29 +89,25 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
                  `dark:hover:` je nutné, jinak `dark:border-*` hover přebije. */
               className={`glass group/karta flex items-center gap-3 rounded-karta p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${LAYOUT[i % LAYOUT.length]}`}
             >
-              {/* V klidu šedý, po najetí na kartu se rozsvítí – stejně jako
-                  značky zdrojů u článků níž. Ikona zůstává táž, mění se barva. */}
-              {/* Skleněná ikona tématu, stejná jako na dlaždicích v bance – ukázka
-                  tak rovnou říká, odkud materiál je. Kde ikona tématu neexistuje,
-                  zůstává původní symbol podle typu souboru. */}
-              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
-                {TOOL_MASKA[it.tool] ? (
-                  /* Ikona tématu jako silueta, stejné gesto jako značky zdrojů
-                     u článků níž: v klidu šedá, po najetí se rozsvítí. Barevná
-                     skleněná verze sem nepatří – tyhle karty mají být tiché. */
-                  <span
-                    aria-hidden="true"
-                    className="block h-6 w-6 bg-zinc-500 transition duration-300 group-hover/karta:bg-accent-700 dark:bg-zinc-400 dark:group-hover/karta:bg-accent-300"
-                    style={{
-                      WebkitMaskImage: `url(${TOOL_MASKA[it.tool]})`,
-                      maskImage: `url(${TOOL_MASKA[it.tool]})`,
-                      WebkitMaskSize: "contain",
-                      maskSize: "contain",
-                      WebkitMaskRepeat: "no-repeat",
-                      maskRepeat: "no-repeat",
-                      WebkitMaskPosition: "center",
-                      maskPosition: "center",
-                    }}
+              {/* Barevná skleněná ikona tématu, TÁŽ jako na dlaždicích v bance –
+                  ukázka tak rovnou říká, odkud materiál je.
+
+                  Dřív tu byla jednobarevná silueta přes `mask-image`, protože
+                  karty měly být tiché. Jenže na 24 px z ní zbyla šedá šmouha:
+                  paleta bez důlků, sloupce Power BI slité do bloku. Silueta se
+                  kvůli tomu dvakrát ladila a pořád to nebylo ono, takže tady
+                  vyhrálo prokreslení nad tichostí.
+
+                  Bez šedého podkladu: skleněné ikony jsou dělané jako plovoucí
+                  objekt bez rámu a v bance se kreslí stejně. Čtverec zůstává
+                  jen kvůli zarovnání s textem. */}
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center">
+                {hasToolGlassIcon(it.tool) ? (
+                  <ToolGlassIcon
+                    tool={it.tool}
+                    className="h-9 w-9 object-contain"
+                    hoverClassName="group-hover/karta:scale-110"
+                    sizes="36px"
                   />
                 ) : (
                   <Icon className="h-5 w-5 text-zinc-600 transition duration-300 group-hover/karta:text-accent-700 dark:text-accent-400 dark:text-zinc-400 dark:group-hover/karta:text-accent-300" />

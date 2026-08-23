@@ -83,19 +83,6 @@ export const TOOL_ICON: Record<string, string> = {
   "Power BI": "/images/tools/glass/powerbi.png",
 };
 
-/**
- * Tytéž ikony jako maska pro CSS `mask-image` – malé, jen alfa kanál.
- * Ukázky materiálů v úvodu kreslí siluetu 26 px; barevný originál má
- * 170–380 kB a stahoval by se celý, protože maska jde mimo `next/image`.
- * Maska váží kolem 1,5 kB. Vyrábí je scripts/vyrob-masky-ikon.py.
- */
-export const TOOL_MASKA: Record<string, string> = Object.fromEntries(
-  Object.entries(TOOL_ICON).map(([tema, cesta]) => [
-    tema,
-    cesta.replace("/glass/", "/maska/"),
-  ]),
-);
-
 export function countMaterials(n: number, lang: Lang): string {
   if (lang === "en") return `${n} ${n === 1 ? "material" : "materials"}`;
   const word = n === 1 ? "materiál" : n >= 2 && n <= 4 ? "materiály" : "materiálů";

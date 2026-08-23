@@ -10,7 +10,13 @@ tvar o velikosti 26 px. Na úvodní stránce to dělalo 880 kB navíc.
 Maska potřebuje jen alfa kanál a jen v rozlišení, ve kterém se kreslí.
 Deset masek dohromady váží kolem 15 kB místo 2,9 MB.
 
-Barevné ikony zůstávají – používají je dlaždice v bance, kde jsou velké.
+POZOR: masky teď nic nepoužívá. Ukázky materiálů v úvodu se vrátily k barevné
+skleněné ikoně, protože silueta byla na 26 px k nepoznání (paleta bez důlků,
+sloupce Power BI slité do bloku). Skript tu zůstává proto, že vyrobit masky
+znovu je jeden příkaz – a je v něm zapsané, proč to není jen opsání alfy.
+Vygenerované PNG se ze `public/` smazaly, ať se nedeployuje, co nikdo nečte.
+
+Barevné ikony zůstávají – používají je dlaždice v bance i ukázky v úvodu.
 
 ────────────────────────────────────────────────────────────────────────────
 DVĚ VĚCI, KTERÉ SE NEDAJÍ UDĚLAT PROSTÝM OPSÁNÍM ALFY
