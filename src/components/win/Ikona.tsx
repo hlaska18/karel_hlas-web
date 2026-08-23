@@ -375,11 +375,30 @@ function kresba(klic: KlicIkony, popisek?: string) {
       );
 
     case "uzivatel":
+      /**
+       * Postava musí zůstat UVNITŘ kruhu a na jeho středu.
+       *
+       * Dřív ramena přetékala: tělo sahalo v y=41 od x=10 do x=38, jenže kruh
+       * má v té výšce jen 13,5…34,5, takže z něj po stranách koukaly dva cípy
+       * a vypadalo to jako rozbitý ořez. Postava k tomu seděla nízko – hlava
+       * i tělo zabíraly y 12…41, střed tedy 26,5 proti středu kruhu 24.
+       *
+       * Teď zabírá y 11…37, střed přesně 24, a nejširší místo těla (x 13…35)
+       * se do kruhu vejde s rezervou. `clipPath` je navíc pojistka: kdyby se
+       * tvar někdy měnil, kruh ho ořízne a ven se nedostane nic.
+       */
       return (
         <>
+          <defs>
+            <clipPath id="win-uzivatel-kruh">
+              <circle cx="24" cy="24" r="20" />
+            </clipPath>
+          </defs>
           <circle cx="24" cy="24" r="20" fill="#5b7fb5" />
-          <circle cx="24" cy="19" r="7" fill="#ffffff" fillOpacity="0.92" />
-          <path d="M10 41a14 14 0 0 1 28 0z" fill="#ffffff" fillOpacity="0.92" />
+          <g clipPath="url(#win-uzivatel-kruh)" fill="#ffffff" fillOpacity="0.92">
+            <circle cx="24" cy="17" r="6" />
+            <path d="M13 37a11 11 0 0 1 22 0z" />
+          </g>
         </>
       );
 

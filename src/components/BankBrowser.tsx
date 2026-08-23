@@ -497,9 +497,12 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           {tool && !needle && TOOL_INTERACTIVE[tool] && (
             <a
               href={interaktivniOdkaz(TOOL_INTERACTIVE[tool].cesta, lang)}
-              className="glass-accent group mt-4 flex items-center justify-between gap-3 rounded-karta px-5 py-4 transition hover:-translate-y-0.5"
+              /* Na úzké obrazovce sloupec, teprve od `sm` vedle sebe. Dokud
+                 tu byl jeden řádek pořád, text se na mobilu vmáčkl mezi ikonu
+                 a tlačítko a zbyla z něj nudle o třech slovech na řádek. */
+              className="glass-accent group mt-4 flex flex-col items-start gap-3 rounded-karta px-5 py-4 transition hover:-translate-y-0.5 sm:flex-row sm:items-center sm:justify-between"
             >
-              <span className="flex items-center gap-3">
+              <span className="flex items-start gap-3 sm:items-center">
                 <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-ovladac bg-accent-700 text-white shadow-lg shadow-accent-700/30">
                   <Play className="h-5 w-5" />
                 </span>
@@ -507,7 +510,8 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                   {TOOL_INTERACTIVE[tool].popis[lang]}
                 </span>
               </span>
-              <span className="inline-flex shrink-0 items-center gap-1.5 text-sm font-semibold text-accent-700 dark:text-accent-300">
+              {/* Odsazení na mobilu srovná tlačítko pod text, ne pod ikonu. */}
+              <span className="inline-flex shrink-0 items-center gap-1.5 pl-[3.25rem] text-sm font-semibold text-accent-700 dark:text-accent-300 sm:pl-0">
                 {TOOL_INTERACTIVE[tool].cta[lang]}
                 <ExternalLink className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
               </span>

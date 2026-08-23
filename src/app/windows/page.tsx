@@ -27,23 +27,27 @@ export default function StrankaWindows() {
   return (
     <>
       {/*
-        Na telefonu se prostředí sice vykreslí, ale okna mají pevné rozměry
-        (Nastavení 1000 px), takže z nich na 375 px zbude třetina. Radši to
-        říct rovnou, než aby si učitel otevřel odkaz v mobilu a odnesl si
-        dojem, že je něco rozbité.
+        Na telefonu ani na tabletu se prostředí nepouští. Okna mají pevné
+        rozměry (Nastavení 1000 px), takže z nich na uzsi obrazovce zbude
+        kus – a na tabletu to klame nejvic, protože tam to na první pohled
+        vypadá, že se to vejde. Hranice je proto na `lg` (1024 px), ne na
+        `sm`: až od ní má okno Nastavení kam růst.
+
+        Radši to říct rovnou, než aby si učitel otevřel odkaz na tabletu
+        a odnesl si dojem, že je něco rozbité.
       */}
-      <div className="flex h-[100dvh] w-full flex-col items-center justify-center gap-4 px-6 text-center sm:hidden">
+      <div className="flex h-[100dvh] w-full flex-col items-center justify-center gap-4 px-6 text-center lg:hidden">
         <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální Windows 11</h1>
         <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
           Tohle prostředí je stavěné na počítač – okna Průzkumníka a Nastavení se na
-          displej telefonu nevejdou. Otevři si stránku na notebooku nebo ve školní
-          učebně.
+          telefon ani na tablet nevejdou. Otevři si stránku na notebooku nebo ve
+          školní učebně.
         </p>
         <OdkazNaWeb className="povrch rounded-ovladac px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5">
           Zpět na web
         </OdkazNaWeb>
       </div>
-      <main className="hidden h-[100dvh] w-full overflow-hidden sm:block">
+      <main className="hidden h-[100dvh] w-full overflow-hidden lg:block">
         <VirtualniPocitac />
       </main>
       {/*
