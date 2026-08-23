@@ -13,7 +13,7 @@ import { ArrowRight, Loader2, Lock } from "lucide-react";
 import { Ikona } from "./Ikona";
 import { TAPETY, vybranaTapeta } from "@/lib/win/obrazky";
 import { datumSlovy, hodiny } from "@/lib/win/format";
-import { kodSedi } from "@/lib/win/pristup";
+import { PRISTUPOVY_KOD, jeVychoziKod, kodSedi } from "@/lib/win/pristup";
 
 type Faze = "zamek" | "prihlaseni" | "vitejte";
 
@@ -147,6 +147,23 @@ export function Prihlaseni({
           >
             Kód není správný. Zkus to znovu.
           </p>
+
+          {/* Dokud je kód ten výchozí, nemá co tajit: stojí i ve zdrojáku
+              stránky a je to závora, ne zámek. Lepší, když se návštěvník
+              dostane dovnitř, než aby stál před polem a nevěděl. Jakmile si
+              vyučující nastaví vlastní kód, nápověda zmizí sama. */}
+          {jeVychoziKod() && (
+            <p className="mt-1 text-[12px] text-white/60">
+              Nemáš kód od vyučujícího? Zkus{" "}
+              <button
+                type="button"
+                onClick={() => nastavKod(PRISTUPOVY_KOD)}
+                className="font-semibold tracking-[0.12em] text-white/85 underline decoration-dotted underline-offset-2 hover:text-white"
+              >
+                {PRISTUPOVY_KOD}
+              </button>
+            </p>
+          )}
 
           <p className="mt-8 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
             Tohle je výuková simulace Windows 11 pro hodiny informatiky.
