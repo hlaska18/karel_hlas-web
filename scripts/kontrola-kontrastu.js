@@ -23,26 +23,44 @@
 
   const rozloz = (s) => (s.match(/\d+(\.\d+)?/g) || []).slice(0, 3).map(Number);
 
+  /**
+   * Barva pozadi za prvkem, nebo `null`, kdyz ji nelze urcit.
+   *
+   * `null` vraci schvalne misto dohadu: pod textem muze byt obrazek na pozadi
+   * (tapeta, fotka, prechod), a tam se kontrast z CSS spocitat neda. Driv se
+   * v takovem pripade predpokladala bila - a bile popisky na tmave tapete pak
+   * vychazely jako propadle, prestoze maji stin a ctou se dobre.
+   * Radsi at meridlo prizna, ze nevi, nez aby hlasilo nesmysl.
+   */
   function pozadiZa(el) {
     let e = el;
     while (e) {
-      const b = getComputedStyle(e).backgroundColor;
+      const st = getComputedStyle(e);
+      if (st.backgroundImage && st.backgroundImage !== "none") return null;
+      const b = st.backgroundColor;
       const m = b.match(/[\d.]+/g);
       if (m && (m.length < 4 || parseFloat(m[3]) > 0.55)) return rozloz(b);
       e = e.parentElement;
     }
-    return [255, 255, 255];
+    return null;
   }
 
   const propadlo = [];
+  /** Prvky, pod kterymi je obrazek - kontrast z CSS spocitat nejde. */
+  const neurceno = [];
   document
     .querySelectorAll("p,span,a,h1,h2,h3,h4,h5,li,button,label,td,th,code,summary")
     .forEach((el) => {
       if (!el.offsetParent || !el.textContent.trim()) return;
       const st = getComputedStyle(el);
       if (parseFloat(st.opacity) < 0.6) return;
+      const pozadi = pozadiZa(el);
+      if (!pozadi) {
+        neurceno.push(el.textContent.trim().slice(0, 40));
+        return;
+      }
       const f = jas(rozloz(st.color));
-      const p = jas(pozadiZa(el));
+      const p = jas(pozadi);
       const k = (Math.max(f, p) + 0.05) / (Math.min(f, p) + 0.05);
       const velikost = parseFloat(st.fontSize);
       const tucne = parseInt(st.fontWeight, 10) >= 700;
@@ -65,5 +83,8 @@
     vodorovnyPresah: de.scrollWidth > de.clientWidth,
     propadlo: propadlo.length,
     ukazka: propadlo.slice(0, 8),
+    // Nezmereno kvuli obrazku na pozadi - posoudit okem, ne cislem.
+    neurceno: neurceno.length,
+    neurcenoUkazka: neurceno.slice(0, 5),
   };
 })();

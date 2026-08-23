@@ -26,7 +26,27 @@ export const metadata: Metadata = {
 export default function StrankaWindows() {
   return (
     <>
-      <main className="h-[100dvh] w-full overflow-hidden">
+      {/*
+        Na telefonu se prostředí sice vykreslí, ale okna mají pevné rozměry
+        (Nastavení 1000 px), takže z nich na 375 px zbude třetina. Radši to
+        říct rovnou, než aby si učitel otevřel odkaz v mobilu a odnesl si
+        dojem, že je něco rozbité.
+      */}
+      <div className="flex h-[100dvh] w-full flex-col items-center justify-center gap-4 px-6 text-center sm:hidden">
+        <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální Windows 11</h1>
+        <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+          Tohle prostředí je stavěné na počítač – okna Průzkumníka a Nastavení se na
+          displej telefonu nevejdou. Otevři si stránku na notebooku nebo ve školní
+          učebně.
+        </p>
+        <a
+          href="/"
+          className="povrch rounded-ovladac px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5"
+        >
+          Zpět na web
+        </a>
+      </div>
+      <main className="hidden h-[100dvh] w-full overflow-hidden sm:block">
         <VirtualniPocitac />
       </main>
       {/*
