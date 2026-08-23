@@ -30,6 +30,7 @@ import {
   Check,
   Play,
   Loader2,
+  Info,
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
@@ -151,6 +152,26 @@ const STR: Record<
     pptxNotes: "Speaker notes",
     codeLoading: "Loading code preview…",
     codeError: "Code preview failed to render – use the download button above.",
+  },
+};
+
+/**
+ * Poznámka k celému tématu – krátká věta pod počtem materiálů.
+ *
+ * Je v kódu, ne v souboru na disku, schválně: neříká nic o souborech, ale
+ * o STAVU tématu („tohle je nové a ještě se to hýbe"). Až se ustálí, řádek
+ * se smaže a nic po něm nezbyde.
+ */
+const TOOL_POZNAMKA: Record<string, Record<Lang, string>> = {
+  "Operační systémy": {
+    cs:
+      "Virtuální počítač je tu nový a pořád se dolaďuje – když něco nefunguje, jak má, dej vědět. " +
+      "Pracovní list a plán hodiny v tomhle tématu vznikly dřív a mají vlastní zadání; " +
+      "v listu je odkaz, že úkoly jde splnit i v simulaci, ale metodika s ní zatím nepočítá.",
+    en:
+      "The virtual computer is new here and still being polished – tell me if something misbehaves. " +
+      "The worksheet and lesson plan in this topic came first and stand on their own; the worksheet " +
+      "now points at the simulation as an option, but the methodology does not build on it yet.",
   },
 };
 
@@ -492,6 +513,15 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
               {countMaterials(results.length, lang)}
             </p>
           </div>
+
+          {/* Poznámka ke stavu tématu – hned pod počtem, ať ji člověk přečte
+              dřív, než se pustí do souborů. */}
+          {tool && !needle && TOOL_POZNAMKA[tool] && (
+            <p className="mt-3 flex items-start gap-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              <Info className="mt-0.5 h-4 w-4 shrink-0" />
+              <span>{TOOL_POZNAMKA[tool][lang]}</span>
+            </p>
+          )}
 
           {/* Interaktivní nástroj k tématu (Databáze → /sql, Operační systémy → /windows) */}
           {tool && !needle && TOOL_INTERACTIVE[tool] && (
