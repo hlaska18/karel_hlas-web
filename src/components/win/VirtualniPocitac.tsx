@@ -15,6 +15,7 @@ import { SystemProvider, OknoProvider, useSystem } from "./system";
 import { Plocha } from "./Plocha";
 import { OknoRam } from "./OknoRam";
 import { HlavniPanel } from "./HlavniPanel";
+import type { Panel } from "./HlavniPanel";
 import { Start } from "./Start";
 import { PanelUkolu } from "./PanelUkolu";
 import { Prihlaseni } from "./Prihlaseni";
@@ -47,7 +48,7 @@ export function VirtualniPocitac() {
 function Obrazovka() {
   const { stav, poslat, nastavPlochu } = useSystem();
   const [faze, nastavFazi] = useState<Faze>("prihlaseni");
-  const [panel, nastavPanel] = useState<"start" | "rychla" | "oznameni" | "skryte" | null>(null);
+  const [panel, nastavPanel] = useState<Panel>(null);
   const [celaObrazovka, nastavCelou] = useState(false);
   const obrazovka = useRef<HTMLDivElement>(null);
   const plochaRef = useRef<HTMLDivElement>(null);

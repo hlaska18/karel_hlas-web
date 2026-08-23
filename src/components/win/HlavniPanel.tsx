@@ -35,7 +35,12 @@ import { datum, datumSlovy, hodiny } from "@/lib/win/format";
 
 const PRIPNUTE_NA_PANEL: AppId[] = ["pruzkumnik", "prohlizec", "poznamkovy-blok", "nastaveni"];
 
-type Panel = "start" | "rychla" | "oznameni" | "skryte" | null;
+/**
+ * Který vyskakovací panel je otevřený. Exportuje se, protože stav drží
+ * `VirtualniPocitac` – dokud byl ten seznam opsaný na dvou místech, každá nová
+ * položka se musela dopsat dvakrát.
+ */
+export type Panel = "start" | "rychla" | "oznameni" | "skryte" | "prehled" | null;
 
 export function HlavniPanel({
   otevreny,
@@ -94,7 +99,14 @@ export function HlavniPanel({
           <TlacitkoPanelu popis="Hledat" onClick={() => nastavOtevreny("start")}>
             <Search className="h-5 w-5" strokeWidth={1.5} />
           </TlacitkoPanelu>
-          <TlacitkoPanelu popis="Zobrazení úkolů" onClick={onZobrazitPlochu}>
+          {/* Zobrazení úkolů ukazuje otevřená okna. Dřív bylo zavěšené na
+              „Zobrazit plochu", takže dělalo totéž co tlačítko o kus dál –
+              a bez otevřených oken nedělalo vůbec nic. */}
+          <TlacitkoPanelu
+            popis="Zobrazení úkolů"
+            aktivni={otevreny === "prehled"}
+            onClick={() => nastavOtevreny(otevreny === "prehled" ? null : "prehled")}
+          >
             <LayoutGrid className="h-5 w-5" strokeWidth={1.5} />
           </TlacitkoPanelu>
 
@@ -183,6 +195,7 @@ export function HlavniPanel({
         </div>
       </div>
 
+      {otevreny === "prehled" && <PrehledOken zavri={() => nastavOtevreny(null)} />}
       {otevreny === "skryte" && <SkryteIkony zavri={() => nastavOtevreny(null)} />}
       {otevreny === "rychla" && <RychlaNastaveni zavri={() => nastavOtevreny(null)} />}
       {otevreny === "oznameni" && cas && (
@@ -233,6 +246,53 @@ function LogoStart() {
 }
 
 /* ───────────────────────── Rychlá nastavení ───────────────────────── */
+
+/**
+ * Zobrazení úkolů – přehled otevřených oken přes celou plochu.
+ *
+ * Klik na dlaždici okno vytáhne dopředu, klik mimo přehled zavře. Když není
+ * otevřené nic, řekne to rovnou; prázdná obrazovka bez vysvětlení by vypadala
+ * jako rozbité tlačítko.
+ */
+function PrehledOken({ zavri }: { zavri: () => void }) {
+  const { stav, poslat } = useSystem();
+
+  return (
+    <div
+      className="absolute inset-0 z-[460] flex items-center justify-center bg-black/45 p-10 backdrop-blur-sm"
+      onClick={zavri}
+      role="dialog"
+      aria-label="Zobrazení úkolů"
+    >
+      {stav.okna.length === 0 ? (
+        <p className="text-[15px] text-white/85">Žádná otevřená okna</p>
+      ) : (
+        <div className="flex max-w-4xl flex-wrap items-stretch justify-center gap-5">
+          {stav.okna.map((o) => {
+            const app = APLIKACE[o.app];
+            return (
+              <button
+                key={o.id}
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  poslat({ typ: "okno/zamer", id: o.id });
+                  zavri();
+                }}
+                className="flex w-56 flex-col items-center gap-2 rounded-lg border border-white/25 bg-white/10 p-4 text-white transition hover:-translate-y-0.5 hover:bg-white/20"
+              >
+                {/* `app.ikona` je jen klíč, ne prvek – kreslí ho komponenta Ikona.
+                    Napoprvé jsem ho vypsal přímo a v dlaždici stálo „pruzkumnik". */}
+                <Ikona klic={o.app} velikost={30} />
+                <span className="w-full truncate text-[13px]">{o.titul || app.nazev}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
 
 /**
  * Ikony, které se na hlavní panel nevešly – ve Windows je schová šipka.
