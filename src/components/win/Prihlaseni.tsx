@@ -213,8 +213,9 @@ export function Prihlaseni({
 
           <p className="mt-8 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
             Tohle je výuková simulace Windows 11 pro hodiny informatiky.
-            Neběží tu skutečný systém, nic se neinstaluje a nic se neodesílá –
-            všechno zůstává v tomhle prohlížeči.
+            Neběží tu skutečný systém a nic se neinstaluje. Všechno, co v ní
+            uděláš, zůstává v tomhle prohlížeči – ven jde jen přezdívka
+            a seznam splněných úloh, když si v dalším kroku založíš účet.
           </p>
         </form>
       )}

@@ -5,7 +5,9 @@
  * `useSystem()`. Díky tomu vidí Průzkumník i terminál tentýž disk a úkolovník
  * pozná, že žák něco udělal, ať to udělal kdekoli.
  *
- * Ukládá se do `localStorage` prohlížeče, nikam se nic neodesílá. Práce tedy
+ * Ukládá se do `localStorage` prohlížeče. Disk, soubory ani nastavení nikam
+ * neodcházejí; na server jde jen seznam splněných úloh, a to až když si žák
+ * založí účet (viz `src/lib/postup/`). Práce tedy
  * přežije obnovení stránky i přestávku na tomtéž počítači, ale na jiném stroji
  * ani v anonymním okně po ní nic nezbyde. Pro hodinu informatiky to stačí
  * a odpadá tím celá otázka osobních údajů žáků.

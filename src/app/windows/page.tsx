@@ -5,7 +5,7 @@ import { PRISTUPOVY_KOD } from "@/lib/win/pristup";
 export const metadata: Metadata = {
   title: "Virtuální Windows 11",
   description:
-    "Výuková simulace Windows 11 přímo v prohlížeči: plocha, Průzkumník souborů, Nastavení, Poznámkový blok, Malování, Kalkulačka, příkazový řádek i PowerShell. Pro hodiny informatiky na střední škole – nic se neinstaluje, práce zůstává v prohlížeči žáka.",
+    "Výuková simulace Windows 11 přímo v prohlížeči: plocha, Průzkumník souborů, Nastavení, Poznámkový blok, Malování, Kalkulačka, příkazový řádek i PowerShell. Pro hodiny informatiky na střední škole – nic se neinstaluje a práce zůstává v prohlížeči žáka.",
   alternates: { canonical: "/windows" },
   openGraph: {
     title: "Virtuální Windows 11 – výuková simulace",
@@ -62,8 +62,9 @@ export default function StrankaWindows() {
           soubory a složkami v Průzkumníku, přípony a vlastnosti souborů, nastavení
           systému, Poznámkový blok, Malování, Kalkulačku v programátorském režimu,
           příkazový řádek a PowerShell. Vstup je na kód od vyučujícího (výchozí kód
-          je {PRISTUPOVY_KOD}). Nejde o skutečný operační systém, nic se neinstaluje
-          a žádná data se neodesílají – práce zůstává v prohlížeči žáka.
+          je {PRISTUPOVY_KOD}). Nejde o skutečný operační systém a nic se
+          neinstaluje. Práce zůstává v prohlížeči žáka; kdo si založí účet,
+          odešle se o něm jen přezdívka a seznam splněných úloh.
         </p>
       </div>
     </>
