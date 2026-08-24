@@ -67,6 +67,30 @@ export type Clanek = {
 
 export const CLANKY: Clanek[] = [
   {
+    title: "Mluvíte s člověkem, nebo s AI? V EU platí nová pravidla transparentnosti",
+    source: "E-Bezpečí",
+    url: "https://www.e-bezpeci.cz/index.php/90-technokoutek/5079-mluvite-s-clovekem-nebo-s-umelou-inteligenci-od-2-srpna-plati-v-eu-pravidla-transparentnosti-ai",
+    // Monogram, ne jejich celý nápis: „e-Bezpečí" na jednom řádku má poměr 5
+    // a ve čtverci 44 px z něj zbyla šestipixelová čárka – přesně to, před čím
+    // varuje poznámka u `pomer` výš.
+    logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
+    jazyk: "cs",
+  },
+  {
+    title: "Jak se českých škol týká AI Act",
+    source: "Václav Maněna",
+    url: "https://manena.info/2026/04/25/jak-se-ceskych-skol-tyka-ai-act/",
+    logo: { src: "/images/clanky/manena.png", pomer: 1.0 },
+    jazyk: "cs",
+  },
+  {
+    title: "Stop Teaching Students More Apps, Teach Them How to Handle Files",
+    source: "EdTechReview",
+    url: "https://www.edtechreview.in/elearning/stop-teaching-students-more-apps-teach-them-how-to-handle-files/",
+    logo: { src: "/images/clanky/etr.png", pomer: 1.31 },
+    jazyk: "en",
+  },
+  {
     title: "AI a děti: Co dělat jako rodič a jak AI používat ve škole",
     source: "Wired.cz",
     url: "https://www.wired.cz/clanky/ai-a-deti-co-delat-jako-rodic-a-jak-ai-pouzivat-ve-skole",
