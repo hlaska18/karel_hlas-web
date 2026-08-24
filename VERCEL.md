@@ -27,14 +27,28 @@ DŮLEŽITÉ PŘEDEM
 
 KROK 1 – ZŘÍDIT REDIS
 ---------------------
+Nejdřív se podívej do Storage v levém sloupci, jestli tam nějaké úložiště
+nemáš už z dřívějška. Když ano a je to Redis, přeskoč rovnou na krok 2.
+
+POZOR: pokud tam Redis databáze je, ale patří k jinému projektu, NEPŘIPOJUJ ji
+– založ novou. Klíče by se míchaly s tím, co v ní běží.
+
+Když tam nic není:
+
  1. Otevři nástěnku Vercelu a v levém sloupci klikni na Integrations.
  2. Klikni na Browse Marketplace. (Nebo rovnou vercel.com/integrations.)
  3. V sekci Native Integrations najdi Upstash a otevři ho.
- 4. Install → v dialogu se seznamem produktů znovu Install.
- 5. Vyber produkt Redis, region (ber ten nejbližší, tedy Frankfurt) a tarif.
-    Free tarif na naše použití bohatě stačí – ukládají se stovky bajtů na žáka.
-    Continue.
+ 4. Install → v dialogu se seznamem produktů vyber „Upstash for Redis"
+    (popisek Redis Compatible Database). Ostatní produkty Upstashe jsou na něco
+    jiného: QStash je fronta zpráv, Vector a Search jsou databáze pro AI
+    vyhledávání. My potřebujeme klíč–hodnota.
+ 5. Region ber nejbližší, tedy Frankfurt. Free tarif bohatě stačí – ukládají se
+    stovky bajtů na žáka. Continue.
  6. Vyplň Database Name (třeba „karelhlas-postup") a dej Create.
+
+Kdyby Vercel hlásil „Integration already installed", znamená to, že Upstash na
+účtu už je, jen v něm zatím není Redis. Pak jdi na Integrations → vedle Upstash
+tlačítko Manage → sekce More Products → u „Upstash for Redis" dej Install.
 
 Po vytvoření tě to hodí na stránku úložiště v sekci Storage.
 
