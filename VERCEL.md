@@ -101,13 +101,14 @@ Nejrychlejší kontrola – otevři si v prohlížeči adresu:
 
     https://karelhlas.vercel.app/api/postup/prihlaseni
 
-Vypíše dvě ano/ne, žádné hodnoty:
+Vypíše dvě ano/ne a co s tím. Žádné hodnoty, jen stav:
 
-    {"uloziste":true,"podpis":true}   ← takhle to má vypadat
-    {"uloziste":true,"podpis":false}  ← chybí POSTUP_PODPIS (krok 3)
-    {"uloziste":false,"podpis":true}  ← úložiště není připojené (krok 2)
+    Uloziste pripojene: ano
+    Podpis nastaveny:   NE
 
-Když je někde `false` a přitom sis myslel, že je hotovo, nejspíš chybí nové
+    Chybi promenna POSTUP_PODPIS - viz krok 3 v VERCEL.md.
+
+Když je někde NE a přitom sis myslel, že je hotovo, nejspíš chybí nové
 nasazení (krok 4) – proměnné se do běžící stránky nepropíšou samy.
 
 Potom už doopravdy:

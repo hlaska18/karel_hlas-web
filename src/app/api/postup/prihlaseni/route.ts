@@ -26,9 +26,26 @@ const MAX_TELO = 4 * 1024;
  * Bez tohohle by se při 503 dalo jen hádat, která z těch dvou věcí chybí.
  */
 export function GET() {
-  return NextResponse.json({
-    uloziste: Boolean(process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL),
-    podpis: Boolean(process.env.POSTUP_PODPIS),
+  const uloziste = Boolean(process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL);
+  const podpis = Boolean(process.env.POSTUP_PODPIS);
+  const znak = (ano: boolean) => (ano ? "ano" : "NE");
+
+  const radky = [
+    `Uloziste pripojene: ${znak(uloziste)}`,
+    `Podpis nastaveny:   ${znak(podpis)}`,
+    "",
+    uloziste && podpis
+      ? "Synchronizace postupu bezi."
+      : !podpis
+        ? "Chybi promenna POSTUP_PODPIS - viz krok 3 v VERCEL.md."
+        : "Uloziste neni pripojene k projektu - viz krok 2 v VERCEL.md.",
+    uloziste && podpis ? "" : "Kdyz sis myslel, ze je hotovo: chybi nove nasazeni (krok 4).",
+  ];
+
+  // Obycejny text, ne JSON: Safari odpoved typu application/json STAHNE misto
+  // zobrazeni, takze se Karlovi otevrelo okno se stahovanim misto odpovedi.
+  return new NextResponse(radky.join("\n"), {
+    headers: { "content-type": "text/plain; charset=utf-8" },
   });
 }
 
