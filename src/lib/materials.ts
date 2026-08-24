@@ -357,7 +357,15 @@ function toolOf(hay: string, ext: string): string {
   if (/python|programován|algoritm/.test(h) || ["py", "ipynb"].includes(ext)) return "Python";
   // Nad digitální gramotností: ta má v plánu 1L v cíli „práci s operačním
   // systémem", takže by si operační systémy vzala k sobě.
-  if (/opera[čc]n[íi] syst[ée]m|virtu[áa]ln[íi] windows/.test(h)) return "Operační systémy";
+  //
+  // Schválně se hledá CELÝ název tématu, ne jen „operační systém": `hay`
+  // obsahuje i název souboru, takže kratší vzorek si přitáhl i pracovní list
+  // „1. Operační systém" a jeho plán hodiny z digitální gramotnosti. Lekci 01
+  // to z jejího tématu vytrhlo a číslování tam začínalo dvojkou.
+  // Název musí sedět na `TOPIC_EXTRA[11]` – když se přejmenuje tam, patří to
+  // přepsat i sem.
+  if (/opera[čc]n[íi] syst[ée]my a pr[áa]ce se soubory|virtu[áa]ln[íi] windows/.test(h))
+    return "Operační systémy";
   if (/digit[áa]ln[íi] gramotnost|[úu]vod do informatiky/.test(h)) return "Digitální gramotnost";
   return "Ostatní";
 }

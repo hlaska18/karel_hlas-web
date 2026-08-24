@@ -166,12 +166,12 @@ const TOOL_POZNAMKA: Record<string, Record<Lang, string>> = {
   "Operační systémy": {
     cs:
       "Virtuální počítač je tu nový a pořád se dolaďuje – když něco nefunguje, jak má, dej vědět. " +
-      "Pracovní list a plán hodiny v tomhle tématu vznikly dřív a mají vlastní zadání; " +
-      "v listu je odkaz, že úkoly jde splnit i v simulaci, ale metodika s ní zatím nepočítá.",
+      "Vlastní pracovní listy k němu zatím nejsou; nejblíž má pracovní list \u201eOperační systém\u201c " +
+      "v Digitální gramotnosti, který na simulaci odkazuje, ale metodika s ní ještě nepočítá.",
     en:
       "The virtual computer is new here and still being polished – tell me if something misbehaves. " +
-      "The worksheet and lesson plan in this topic came first and stand on their own; the worksheet " +
-      "now points at the simulation as an option, but the methodology does not build on it yet.",
+      "It has no worksheets of its own yet; the closest is the \u201eOperating system\u201c worksheet under " +
+      "Digital literacy, which points at the simulation, though the methodology does not build on it yet.",
   },
 };
 
