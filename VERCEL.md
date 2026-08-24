@@ -111,6 +111,8 @@ CO S TÍM DÁL
 ------------
  - Účty jsou přezdívky, ne jména žáků. Na serveru tedy leží dvojice
    přezdívka → splněné úlohy a záznam sám o sobě nikoho neidentifikuje.
+ - Kdo si účet nechce zakládat, dá na přihlašovací obrazovce „Přeskočit" a
+   prostředí mu běží s postupem jen v tom počítači.
  - Na konci školního roku má smysl úložiště vyprázdnit. Jde to jedním tlačítkem
    v konzoli Upstashe (Data Browser → Flush).
  - Žák si svůj postup smaže sám v Nastavení virtuálního počítače.

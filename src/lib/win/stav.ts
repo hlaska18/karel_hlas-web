@@ -15,7 +15,21 @@ import type { Slozka, Uzel } from "./fs";
 import { vytvorDisk } from "./seed";
 import type { AppId } from "./typy";
 
-export const KLIC_ULOZISTE = "win11-vyuka-stav";
+const KLIC_ZAKLAD = "win11-vyuka-stav";
+
+/**
+ * Klíč místního úložiště. Když je žák přihlášený, nese i jeho přezdívku:
+ * na sdíleném školním počítači se u jednoho stroje vystřídají tři třídy
+ * a bez tohohle by si navzájem přepisovaly disk.
+ *
+ * Nepřihlášený žák dostane původní klíč, takže komu prostředí běželo dřív,
+ * o svoje soubory nepřijde.
+ */
+export let KLIC_ULOZISTE = KLIC_ZAKLAD;
+
+export function nastavUcetUloziste(prezdivka: string | null): void {
+  KLIC_ULOZISTE = prezdivka ? `${KLIC_ZAKLAD}:${prezdivka}` : KLIC_ZAKLAD;
+}
 /** Zvedni při nekompatibilní změně tvaru dat – starý stav se pak zahodí. */
 export const VERZE_ULOZISTE = 1;
 

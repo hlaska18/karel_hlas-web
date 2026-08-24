@@ -9,13 +9,21 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Loader2, Lock } from "lucide-react";
+import { ArrowRight, Loader2, Lock, UserRound } from "lucide-react";
 import { Ikona } from "./Ikona";
 import { TAPETY, vybranaTapeta } from "@/lib/win/obrazky";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { PRISTUPOVY_KOD, jeVychoziKod, kodSedi } from "@/lib/win/pristup";
+import { prihlas } from "@/lib/postup/klient";
 
-type Faze = "zamek" | "prihlaseni" | "vitejte";
+/**
+ * Kroky: zámek → třídní kód → vlastní účet → vítejte.
+ *
+ * Třídní kód zůstal jako závora (drží třídu pohromadě a brání zakládání účtů
+ * zvenčí), účet je nový – na něj se váže postup v úlohách, aby žák pokračoval
+ * i na jiném počítači.
+ */
+type Faze = "zamek" | "prihlaseni" | "ucet" | "vitejte";
 
 export function Prihlaseni({
   jmenoUctu,
@@ -24,11 +32,18 @@ export function Prihlaseni({
 }: {
   jmenoUctu: string;
   tapetaId: string;
-  onHotovo: () => void;
+  /** Přezdívka a postup ze serveru; bez synchronizace přijde `null`. */
+  onHotovo: (ucet: { prezdivka: string; splneno: string[] } | null) => void;
 }) {
   const [faze, nastavFazi] = useState<Faze>("zamek");
   const [kod, nastavKod] = useState("");
   const [chyba, nastavChybu] = useState(false);
+  const [prezdivka, nastavPrezdivku] = useState("");
+  const [heslo, nastavHeslo] = useState("");
+  const [ceka, nastavCekani] = useState(false);
+  const [hlaska, nastavHlasku] = useState("");
+  /** Výsledek přihlášení – předá se dál, až doběhne uvítání. */
+  const ucet = useRef<{ prezdivka: string; splneno: string[] } | null>(null);
   const [cas, nastavCas] = useState<Date | null>(null);
   const pole = useRef<HTMLInputElement>(null);
   const tapeta = vybranaTapeta(tapetaId) ?? TAPETY[0];
@@ -53,10 +68,11 @@ export function Prihlaseni({
 
   useEffect(() => {
     if (faze === "prihlaseni") window.setTimeout(() => pole.current?.focus(), 60);
+
     if (faze === "vitejte") {
       // Krátká pauza jako při skutečném přihlašování – ne kvůli efektu,
       // ale aby bylo poznat, že se přechází do jiného prostředí.
-      const id = window.setTimeout(onHotovo, 1400);
+      const id = window.setTimeout(() => onHotovo(ucet.current), 1400);
       return () => window.clearTimeout(id);
     }
   }, [faze, onHotovo]);
@@ -64,7 +80,7 @@ export function Prihlaseni({
   const odesli = (e: React.FormEvent) => {
     e.preventDefault();
     if (kodSedi(kod)) {
-      nastavFazi("vitejte");
+      nastavFazi("ucet");
       return;
     }
     nastavChybu(true);
@@ -72,6 +88,36 @@ export function Prihlaseni({
     window.setTimeout(() => nastavChybu(false), 700);
     pole.current?.focus();
   };
+
+  /**
+   * Přihlášení k vlastnímu účtu. Když synchronizace neběží nebo se nepovede,
+   * žák jde DÁL a postup se drží jen v tomhle prohlížeči – prostředí se kvůli
+   * nedostupnému serveru nesmí zavřít.
+   */
+  const odesliUcet = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (ceka) return;
+    nastavCekani(true);
+    nastavHlasku("");
+
+    const vysledek = await prihlas(prezdivka, heslo);
+    nastavCekani(false);
+
+    if (vysledek.stav === "nesedi") {
+      nastavHlasku("K téhle přezdívce patří jiné heslo.");
+      nastavChybu(true);
+      window.setTimeout(() => nastavChybu(false), 700);
+      return;
+    }
+    if (vysledek.stav === "ok") {
+      ucet.current = { prezdivka: vysledek.prezdivka, splneno: vysledek.splneno };
+    }
+    // „nenastaveno" i „chyba" pouštějí dál s postupem jen v prohlížeči.
+    nastavFazi("vitejte");
+  };
+
+  const prezdivkaSedi = /^[\p{L}\p{N}._-]{2,32}$/u.test(prezdivka.trim());
+  const lzeOdeslat = prezdivkaSedi && heslo.length >= 4 && !ceka;
 
   return (
     <div
@@ -169,6 +215,88 @@ export function Prihlaseni({
             Tohle je výuková simulace Windows 11 pro hodiny informatiky.
             Neběží tu skutečný systém, nic se neinstaluje a nic se neodesílá –
             všechno zůstává v tomhle prohlížeči.
+          </p>
+        </form>
+      )}
+
+      {faze === "ucet" && (
+        <form
+          onSubmit={odesliUcet}
+          className={`relative z-10 flex w-[min(92vw,420px)] flex-col items-center text-white ${
+            chyba ? "animate-[zatreseni_0.45s]" : ""
+          }`}
+        >
+          <Ikona klic="uzivatel" velikost={112} className="drop-shadow-lg" />
+          <h1 className="mt-4 text-[26px] font-light">Tvůj postup</h1>
+          <p className="mt-1 max-w-[320px] text-center text-[13px] leading-relaxed text-white/75">
+            Zvol si přezdívku a heslo. Splněné úlohy se k nim uloží, takže můžeš
+            pokračovat i na jiném počítači.
+          </p>
+
+          <div className="mt-5 flex w-full max-w-[300px] items-center gap-2 rounded-md border border-white/40 bg-black/35 px-3 backdrop-blur">
+            <UserRound className="h-4 w-4 shrink-0 text-white/60" />
+            <input
+              ref={pole}
+              value={prezdivka}
+              onChange={(e) => nastavPrezdivku(e.target.value)}
+              placeholder="Přezdívka"
+              aria-label="Přezdívka"
+              autoComplete="username"
+              spellCheck={false}
+              maxLength={32}
+              className="h-11 min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/50"
+            />
+          </div>
+
+          <div className="mt-2 flex w-full max-w-[300px] items-center gap-2 rounded-md border border-white/40 bg-black/35 px-3 backdrop-blur">
+            <Lock className="h-4 w-4 shrink-0 text-white/60" />
+            <input
+              value={heslo}
+              onChange={(e) => nastavHeslo(e.target.value)}
+              type="password"
+              placeholder="Heslo"
+              aria-label="Heslo"
+              autoComplete="current-password"
+              maxLength={128}
+              className="h-11 min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/50"
+            />
+            <button
+              type="submit"
+              disabled={!lzeOdeslat}
+              aria-label="Pokračovat"
+              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/35 disabled:opacity-40"
+            >
+              {ceka ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                <ArrowRight className="h-4 w-4" />
+              )}
+            </button>
+          </div>
+
+          <p
+            className={`mt-3 h-5 text-[13px] transition-opacity ${
+              hlaska ? "text-[#ff9a9a] opacity-100" : "opacity-0"
+            }`}
+          >
+            {hlaska || "\u00a0"}
+          </p>
+
+          {/* Přeskočení je tu schválně. Prostředí se kvůli přihlášení nesmí
+              zavřít – kdo nechce účet, nebo komu zrovna neběží síť, jde dál
+              a postup mu zůstane v tomhle prohlížeči. */}
+          <button
+            type="button"
+            onClick={() => nastavFazi("vitejte")}
+            className="mt-1 text-[12px] text-white/60 underline decoration-dotted underline-offset-2 hover:text-white/85"
+          >
+            Přeskočit – postup nechám jen v tomhle počítači
+          </button>
+
+          <p className="mt-8 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
+            Přezdívku si vymysli, nepoužívej svoje jméno. Na server se uloží jen
+            ona a seznam splněných úloh – všechno ostatní, co v prostředí
+            uděláš, zůstává v tomhle prohlížeči.
           </p>
         </form>
       )}

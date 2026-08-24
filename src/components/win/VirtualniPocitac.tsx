@@ -46,7 +46,7 @@ export function VirtualniPocitac() {
 }
 
 function Obrazovka() {
-  const { stav, poslat, nastavPlochu } = useSystem();
+  const { stav, poslat, nastavPlochu, prihlasUcet } = useSystem();
   const domu = useDomu();
   const [faze, nastavFazi] = useState<Faze>("prihlaseni");
   const [panel, nastavPanel] = useState<Panel>(null);
@@ -169,7 +169,8 @@ function Obrazovka() {
           <Prihlaseni
             jmenoUctu={n.jmenoUctu}
             tapetaId={n.tapeta}
-            onHotovo={() => {
+            onHotovo={(ucet) => {
+              prihlasUcet(ucet);
               zapamatujPrihlaseni(true);
               nastavFazi("bezi");
             }}

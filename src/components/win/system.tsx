@@ -21,8 +21,9 @@ import {
   type ReactNode,
 } from "react";
 import { reducer, type Akce } from "@/lib/win/reducer";
-import { nacti, uloz, vychoziStav, type Obdelnik, type Stav } from "@/lib/win/stav";
+import { nacti, nastavUcetUloziste, uloz, vychoziStav, type Obdelnik, type Stav } from "@/lib/win/stav";
 import { vyhodnot } from "@/lib/win/ukoly";
+import { ulozPostup } from "@/lib/postup/klient";
 import type { AppId } from "@/lib/win/typy";
 
 interface Kontext {
@@ -35,6 +36,8 @@ interface Kontext {
   spust: (app: AppId, arg?: string, titul?: string) => void;
   /** Zapíše doklad o tom, co žák udělal (pro úkolovník). */
   stopa: (klic: string) => void;
+  /** Přihlášení k účtu s postupem; `null` = pokračovat jen lokálně. */
+  prihlasUcet: (ucet: { prezdivka: string; splneno: string[] } | null) => void;
 }
 
 const SystemContext = createContext<Kontext | null>(null);
@@ -44,12 +47,21 @@ export function SystemProvider({ children }: { children: ReactNode }) {
   const [plocha, nastavPlochu] = useState<Obdelnik>({ x: 0, y: 0, w: 1280, h: 720 });
   // Než se přečte uložený stav, nemá cenu ho hned přepsat výchozím.
   const nacteno = useRef(false);
+  /** Přezdívka přihlášeného žáka; `null` = nepřihlášený, postup jen lokálně. */
+  const [ucet, nastavUcet] = useState<string | null>(null);
 
+  /**
+   * Načtení stavu z místního úložiště. Běží i při PŘEPNUTÍ ÚČTU, ne jen při
+   * startu: klíč nese přezdívku, takže se u přihlášení musí přečíst znovu
+   * z jiného místa. Bez toho by se stav načtený před přihlášením uložil pod
+   * cizí účet a dva žáci na jednom počítači by si míchali disk.
+   */
   useEffect(() => {
+    nastavUcetUloziste(ucet);
     const ulozeny = nacti();
-    if (ulozeny) poslat({ typ: "system/nacti", stav: ulozeny });
+    poslat({ typ: "system/nacti", stav: ulozeny ?? vychoziStav() });
     nacteno.current = true;
-  }, []);
+  }, [ucet]);
 
   useEffect(() => {
     if (!nacteno.current) return;
@@ -63,6 +75,40 @@ export function SystemProvider({ children }: { children: ReactNode }) {
     if (nove.length) poslat({ typ: "ukoly/splneno", ids: nove });
   }, [stav]);
 
+  /**
+   * Odeslání postupu na server. Nezávazně: když synchronizace neběží nebo
+   * spadne síť, prostředí jede dál a postup zůstane v prohlížeči.
+   *
+   * Server vrátí SLOUČENÝ seznam, takže se rovnou doplní i to, co žák udělal
+   * na jiném počítači.
+   */
+  useEffect(() => {
+    if (!ucet || !stav.splneno.length) return;
+    let zahozeno = false;
+    void ulozPostup(stav.splneno).then((sloucene) => {
+      if (zahozeno || !sloucene) return;
+      const chybejici = sloucene.filter((id) => !stav.splneno.includes(id));
+      if (chybejici.length) poslat({ typ: "ukoly/splneno", ids: chybejici });
+    });
+    return () => {
+      zahozeno = true;
+    };
+  }, [ucet, stav.splneno]);
+
+  /** Zavolá přihlašovací obrazovka, až žák projde účtem. */
+  const prihlasUcet = useCallback(
+    (novy: { prezdivka: string; splneno: string[] } | null) => {
+      if (!novy) return;
+      nastavUcet(novy.prezdivka);
+      // Postup ze serveru se přidá až po načtení stavu daného účtu, jinak by
+      // ho přepsalo `system/nacti` v efektu výš.
+      if (novy.splneno.length) {
+        window.setTimeout(() => poslat({ typ: "ukoly/splneno", ids: novy.splneno }), 0);
+      }
+    },
+    [],
+  );
+
   const spust = useCallback(
     (app: AppId, arg?: string, titul?: string) => {
       poslat({ typ: "okno/otevri", app, arg, titul, plocha });
@@ -73,8 +119,8 @@ export function SystemProvider({ children }: { children: ReactNode }) {
   const stopa = useCallback((klic: string) => poslat({ typ: "stopa", klic }), []);
 
   const hodnota = useMemo<Kontext>(
-    () => ({ stav, poslat, plocha, nastavPlochu, spust, stopa }),
-    [stav, plocha, spust, stopa],
+    () => ({ stav, poslat, plocha, nastavPlochu, spust, stopa, prihlasUcet }),
+    [stav, plocha, spust, stopa, prihlasUcet],
   );
 
   return <SystemContext.Provider value={hodnota}>{children}</SystemContext.Provider>;
