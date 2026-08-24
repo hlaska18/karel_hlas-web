@@ -97,6 +97,21 @@ a dej Redeploy.
 
 JAK POZNAT, ŽE TO JEDE
 ----------------------
+Nejrychlejší kontrola – otevři si v prohlížeči adresu:
+
+    https://karelhlas.vercel.app/api/postup/prihlaseni
+
+Vypíše dvě ano/ne, žádné hodnoty:
+
+    {"uloziste":true,"podpis":true}   ← takhle to má vypadat
+    {"uloziste":true,"podpis":false}  ← chybí POSTUP_PODPIS (krok 3)
+    {"uloziste":false,"podpis":true}  ← úložiště není připojené (krok 2)
+
+Když je někde `false` a přitom sis myslel, že je hotovo, nejspíš chybí nové
+nasazení (krok 4) – proměnné se do běžící stránky nepropíšou samy.
+
+Potom už doopravdy:
+
  1. Otevři /windows a projdi přihlášení. Pod polem pro heslo NESMÍ být hláška
     o nedostupné synchronizaci.
  2. Založ si účet, splň jednu úlohu (třeba otevři Správce úloh).

@@ -18,6 +18,20 @@ export const runtime = "nodejs";
 /** Strop na tělo požadavku – bez něj by šlo endpoint zahltit. */
 const MAX_TELO = 4 * 1024;
 
+/**
+ * Kontrola nastavení. Vrací JEN dvě „ano/ne" – jestli je připojené úložiště
+ * a jestli je nastavený podpis. ŽÁDNÉ hodnoty, takže se tím nic neprozradí:
+ * že synchronizace běží nebo neběží, stejně stojí na přihlašovací obrazovce.
+ *
+ * Bez tohohle by se při 503 dalo jen hádat, která z těch dvou věcí chybí.
+ */
+export function GET() {
+  return NextResponse.json({
+    uloziste: Boolean(process.env.KV_REST_API_URL ?? process.env.UPSTASH_REDIS_REST_URL),
+    podpis: Boolean(process.env.POSTUP_PODPIS),
+  });
+}
+
 export async function POST(req: Request) {
   const uloziste = ziskejUloziste();
   const podpis = process.env.POSTUP_PODPIS;
