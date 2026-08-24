@@ -34,6 +34,17 @@ import { CLANKY } from "@/lib/content";
 /** Šířka značky zdroje ve čtverci 44 px. Výška se dopočítá z poměru stran. */
 const SIRKA_LOGA = 28;
 
+/**
+ * Kolik článků se ukáže. Rubrika je KOLOTOČ, ne archiv: ráno přibydou nové
+ * a stejný počet nejstarších vypadne, takže jich na webu nikdy není víc.
+ *
+ * Strop je tady v komponentě schválně, i když ranní rutina pole `CLANKY`
+ * zároveň zkracuje. Kdyby rutina jednou selhala nebo Karel přidal článek
+ * ručně, seznam by se natáhl a sekce by přerostla sloupec vedle nadpisu.
+ * Takhle je nejhorší možný následek pár řádků navíc v souboru, ne rozbitý web.
+ */
+const KOLIK_CLANKU = 4;
+
 /** Natočení karet – volnější obdoba stohu výš, ať nevznikne pravidelný vzor. */
 const NATOCENI = [
   "-rotate-[3deg] translate-x-0",
@@ -46,7 +57,10 @@ const NATOCENI = [
 export function Ctenie() {
   const { tr, lang } = useLang();
 
-  if (CLANKY.length === 0) return null;
+  // Nejnovější jsou v `CLANKY` nahoře, takže se ořezává odspodu.
+  const clanky = CLANKY.slice(0, KOLIK_CLANKU);
+
+  if (clanky.length === 0) return null;
 
   return (
     <section aria-labelledby="ctenie-nadpis" className="group">
@@ -58,7 +72,7 @@ export function Ctenie() {
       </p>
 
       <ul className="space-y-2">
-        {CLANKY.map((c, i) => {
+        {clanky.map((c, i) => {
           // Zdroj · co po kliknutí čeká. Jazyk sem nepatří: řádek se ořezává,
           // takže by u delších poznámek zmizel právě on.
           const podtitulek = [c.source, c.pozor?.[lang]].filter(Boolean).join(" · ");

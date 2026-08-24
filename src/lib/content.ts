@@ -65,6 +65,15 @@ export type Clanek = {
   logo: { src: string; pomer: number };
 };
 
+/**
+ * Rubrika je KOLOTOČ, ne archiv – ukazují se jen čtyři nejnovější (viz
+ * `KOLIK_CLANKU` v `Ctenie.tsx`) a ranní rutina sem nové přidává NAHORU
+ * a stejný počet nejstarších maže.
+ *
+ * Značky zdrojů v `public/images/clanky/` se přitom NEMAŽOU s článkem.
+ * Wired, HN nebo InfoQ se v rubrice střídají dokola, takže je to zásobník,
+ * ne mrtvý soubor – stahovat je pokaždé znovu by byla zbytečná práce.
+ */
 export const CLANKY: Clanek[] = [
   {
     title: "Mluvíte s člověkem, nebo s AI? V EU platí nová pravidla transparentnosti",
@@ -94,29 +103,6 @@ export const CLANKY: Clanek[] = [
     title: "AI a děti: Co dělat jako rodič a jak AI používat ve škole",
     source: "Wired.cz",
     url: "https://www.wired.cz/clanky/ai-a-deti-co-delat-jako-rodic-a-jak-ai-pouzivat-ve-skole",
-    logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
-    jazyk: "cs",
-    pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
-  },
-  {
-    title: "AI ve výuce není podvádění. Školy potřebují jasná pravidla",
-    source: "Hospodářské noviny",
-    url: "https://archiv.hn.cz/c1-67915550-ai-ve-vyuce-neni-podvadeni-rikaji-odbornici-skoly-vsak-potrebuji-jasna-pravidla",
-    logo: { src: "/images/clanky/hn.png", pomer: 1.83 },
-    jazyk: "cs",
-    pozor: { cs: "placený archiv HN", en: "paid HN archive" },
-  },
-  {
-    title: "AI coding assistance reduces developer skill mastery by 17 %",
-    source: "InfoQ",
-    url: "https://www.infoq.com/news/2026/02/ai-coding-skill-formation/",
-    logo: { src: "/images/clanky/infoq.png", pomer: 3.23 },
-    jazyk: "en",
-  },
-  {
-    title: "Promptujte jako profík aneb Desatero správného promptování AI",
-    source: "Wired.cz",
-    url: "https://www.wired.cz/clanky/promptujte-jako-profik-aneb-desatero-spravneho-promptovani-ai",
     logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
     jazyk: "cs",
     pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
