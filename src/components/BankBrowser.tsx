@@ -680,7 +680,35 @@ function MaterialRow({
   const materialType = materialTypeOf(it);
   const TypeIcon = typeIcon(t.key);
   return (
-    <li className="povrch flex flex-wrap items-center gap-x-3 gap-y-1 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5">
+    /* Náhled otevře KLIK KAMKOLI do řádku, ne jen ikona oka. Karlova kolegyně
+       klikla pro náhled rovnou na buňku – když řádek vypadá jako karta, člověk
+       na něj klikne. Vpravo proto zůstalo jen stahování.
+
+       `role="button"` na `<li>`, ne `<button>` kolem: uvnitř je odkaz ke
+       stažení a odkaz uvnitř tlačítka je neplatné HTML.
+
+       Nepreviewovatelné typy zůstávají obyčejným řádkem – ani kurzor, ani
+       zvýraznění, ani štítek. Slibovat náhled tam, kde není, je horší než
+       nenabízet nic. */
+    <li
+      {...(previewable
+        ? {
+            role: "button",
+            tabIndex: 0,
+            "aria-label": `${s.previewTitle}: ${label}`,
+            onClick: () => onPreview(it),
+            onKeyDown: (e: React.KeyboardEvent) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault();
+                onPreview(it);
+              }
+            },
+          }
+        : {})}
+      className={`povrch group/radek flex flex-wrap items-center gap-x-3 gap-y-1 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5 ${
+        previewable ? "cursor-pointer hover:border-accent-500/40 dark:hover:border-accent-500/40" : ""
+      }`}
+    >
       <span className="flex shrink-0 sm:w-[5.25rem]">
         <span
           title={t.label}
@@ -722,26 +750,28 @@ function MaterialRow({
         {fmtSize(it.sizeBytes, lang)}
       </span>
       <span className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0 sm:gap-0">
-      {previewable && (
-        <button
-          type="button"
-          onClick={() => onPreview(it)}
-          title={s.previewTitle}
-          aria-label={`${s.previewTitle}: ${label}`}
+        {/* Jen náznak, že řádek něco umí – otevírá ho klik na řádek.
+            Vyskakovací náhled rovnou při najetí schválně ne: musel by se kvůli
+            němu načítat dokument i pro řádky, které nikdo otevřít nechtěl,
+            a na telefonu ani tabletu najíždění stejně neexistuje. */}
+        {previewable && (
+          <span
+            aria-hidden
+            className="hidden items-center gap-1 rounded-stitek px-2 py-1 text-xs font-medium text-zinc-600 opacity-0 transition group-hover/radek:opacity-100 dark:text-zinc-400 sm:inline-flex"
+          >
+            <Eye className="h-4 w-4" /> {s.previewTitle}
+          </span>
+        )}
+        <a
+          href={it.href}
+          download
+          onClick={(e) => e.stopPropagation()}
+          title={s.downloadTitle}
+          aria-label={`${s.downloadTitle}: ${label}`}
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
         >
-          <Eye className="h-5 w-5" />
-        </button>
-      )}
-      <a
-        href={it.href}
-        download
-        title={s.downloadTitle}
-        aria-label={`${s.downloadTitle}: ${label}`}
-        className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
-      >
-        <Download className="h-5 w-5" />
-      </a>
+          <Download className="h-5 w-5" />
+        </a>
       </span>
     </li>
   );
