@@ -92,11 +92,11 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
               {/* Barevná skleněná ikona tématu, TÁŽ jako na dlaždicích v bance –
                   ukázka tak rovnou říká, odkud materiál je.
 
-                  Dřív tu byla jednobarevná silueta přes `mask-image`, protože
-                  karty měly být tiché. Jenže na 24 px z ní zbyla šedá šmouha:
-                  paleta bez důlků, sloupce Power BI slité do bloku. Silueta se
-                  kvůli tomu dvakrát ladila a pořád to nebylo ono, takže tady
-                  vyhrálo prokreslení nad tichostí.
+                  V klidu ODBARVENÁ, po najetí na kartu se rozsvítí. Karty
+                  mají být tiché, ale silueta na to byla špatný nástroj: na
+                  24 px z ní zbyla šedá šmouha (paleta bez důlků, sloupce
+                  Power BI slité do bloku) a dvakrát se kvůli tomu ladila.
+                  `grayscale` drží obojí – prokreslení zůstane, klid taky.
 
                   Bez šedého podkladu: skleněné ikony jsou dělané jako plovoucí
                   objekt bez rámu a v bance se kreslí stejně. Čtverec zůstává
@@ -105,7 +105,7 @@ export function HeroPreview({ pool }: { pool: BankItem[] }) {
                 {hasToolGlassIcon(it.tool) ? (
                   <ToolGlassIcon
                     tool={it.tool}
-                    className="h-9 w-9 object-contain"
+                    className="h-9 w-9 object-contain grayscale group-hover/karta:grayscale-0"
                     hoverClassName="group-hover/karta:scale-110"
                     sizes="36px"
                   />
