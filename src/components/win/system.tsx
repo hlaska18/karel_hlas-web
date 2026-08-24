@@ -47,19 +47,28 @@ export function SystemProvider({ children }: { children: ReactNode }) {
   const [plocha, nastavPlochu] = useState<Obdelnik>({ x: 0, y: 0, w: 1280, h: 720 });
   // Než se přečte uložený stav, nemá cenu ho hned přepsat výchozím.
   const nacteno = useRef(false);
-  /** Přezdívka přihlášeného žáka; `null` = nepřihlášený, postup jen lokálně. */
-  const [ucet, nastavUcet] = useState<string | null>(null);
+  /** Přihlášený žák i s postupem ze serveru; `null` = jede se jen lokálně. */
+  const [ucet, nastavUcet] = useState<{ prezdivka: string; splneno: string[] } | null>(null);
 
   /**
    * Načtení stavu z místního úložiště. Běží i při PŘEPNUTÍ ÚČTU, ne jen při
    * startu: klíč nese přezdívku, takže se u přihlášení musí přečíst znovu
    * z jiného místa. Bez toho by se stav načtený před přihlášením uložil pod
    * cizí účet a dva žáci na jednom počítači by si míchali disk.
+   *
+   * Postup ze serveru se přimíchá PŘÍMO SEM, do jediného `system/nacti`.
+   * Napoprvé se posílal zvlášť přes `setTimeout(0)` s tím, že doběhne až po
+   * načtení – jenže je to naopak: efekt běží po vykreslení, takže `system/nacti`
+   * dorazilo později a serverový postup přepsalo. Žák se přihlásil na druhém
+   * počítači a viděl nula splněných úloh. Jedno dispatchnutí past ruší.
    */
   useEffect(() => {
-    nastavUcetUloziste(ucet);
-    const ulozeny = nacti();
-    poslat({ typ: "system/nacti", stav: ulozeny ?? vychoziStav() });
+    nastavUcetUloziste(ucet?.prezdivka ?? null);
+    const ulozeny = nacti() ?? vychoziStav();
+    const splneno = ucet
+      ? [...new Set([...ulozeny.splneno, ...ucet.splneno])]
+      : ulozeny.splneno;
+    poslat({ typ: "system/nacti", stav: { ...ulozeny, splneno } });
     nacteno.current = true;
   }, [ucet]);
 
@@ -96,18 +105,9 @@ export function SystemProvider({ children }: { children: ReactNode }) {
   }, [ucet, stav.splneno]);
 
   /** Zavolá přihlašovací obrazovka, až žák projde účtem. */
-  const prihlasUcet = useCallback(
-    (novy: { prezdivka: string; splneno: string[] } | null) => {
-      if (!novy) return;
-      nastavUcet(novy.prezdivka);
-      // Postup ze serveru se přidá až po načtení stavu daného účtu, jinak by
-      // ho přepsalo `system/nacti` v efektu výš.
-      if (novy.splneno.length) {
-        window.setTimeout(() => poslat({ typ: "ukoly/splneno", ids: novy.splneno }), 0);
-      }
-    },
-    [],
-  );
+  const prihlasUcet = useCallback((novy: { prezdivka: string; splneno: string[] } | null) => {
+    if (novy) nastavUcet(novy);
+  }, []);
 
   const spust = useCallback(
     (app: AppId, arg?: string, titul?: string) => {
