@@ -16,6 +16,7 @@ import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
+import { zaznamenejStazeni } from "@/lib/mereni";
 import { fmtSize, countMaterials } from "@/lib/bankLabels";
 import { SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
@@ -306,6 +307,7 @@ function MaterialFolder({
                 <a
                   href={it.href}
                   download
+                  onClick={() => zaznamenejStazeni(it)}
                   className="group flex items-center gap-2 rounded-stitek px-1 py-1 text-sm text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-300"
                   title={c.download}
                 >

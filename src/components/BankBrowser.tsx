@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
+import { zaznamenejStazeni } from "@/lib/mereni";
 import {
   toolLabel,
   countMaterials,
@@ -804,7 +805,10 @@ function MaterialRow({
         <a
           href={it.href}
           download
-          onClick={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation();
+            zaznamenejStazeni(it);
+          }}
           title={s.downloadTitle}
           aria-label={`${s.downloadTitle}: ${label}`}
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
@@ -1732,6 +1736,7 @@ function PreviewModal({
           <a
             href={item.href}
             download
+            onClick={() => zaznamenejStazeni(item)}
             title={s.downloadTitle}
             className="inline-flex items-center gap-1.5 rounded-full bg-accent-700 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-accent-800"
           >
