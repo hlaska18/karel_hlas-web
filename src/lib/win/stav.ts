@@ -6,11 +6,15 @@
  * pozná, že žák něco udělal, ať to udělal kdekoli.
  *
  * Ukládá se do `localStorage` prohlížeče. Disk, soubory ani nastavení nikam
- * neodcházejí; na server jde jen seznam splněných úloh, a to až když si žák
- * založí účet (viz `src/lib/postup/`). Práce tedy
- * přežije obnovení stránky i přestávku na tomtéž počítači, ale na jiném stroji
- * ani v anonymním okně po ní nic nezbyde. Pro hodinu informatiky to stačí
- * a odpadá tím celá otázka osobních údajů žáků.
+ * neodcházejí; na server jde jen přezdívka a seznam splněných úloh, a to až
+ * když si žák založí účet (viz `src/lib/postup/`). Práce tedy přežije
+ * obnovení stránky i přestávku na tomtéž počítači, ale na jiném stroji ani
+ * v anonymním okně po ní nic nezbyde.
+ *
+ * Otázka osobních údajů tím NEODPADÁ – jen je odpověď krátká: ven jde
+ * přezdívka, kterou si žák vymyslí, a seznam ID úloh. Nic z toho, co v
+ * prostředí vytvoří, server nikdy nevidí. Dřív tu stálo, že otázka odpadá
+ * úplně; to platilo, dokud účty neexistovaly.
  */
 
 import type { Slozka, Uzel } from "./fs";

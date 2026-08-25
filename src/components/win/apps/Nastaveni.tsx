@@ -670,7 +670,7 @@ function OddilUcty({ n, zmen }: { n: TypNastaveni; zmen: (z: Partial<TypNastaven
       </Karta>
       <Karta
         nadpis="Možnosti přihlášení"
-        popis="V učebně se přihlašuje kódem od vyučujícího"
+        popis="Přezdívkou a heslem, které sis zvolil. Přihlášení je dobrovolné."
         ikona={<ShieldCheck className="h-5 w-5" />}
       />
       {/* Ukazuje se jen přihlášenému. Kdo účet nemá, nemá co mazat – a nabízet

@@ -1,7 +1,8 @@
 VIRTUÁLNÍ WINDOWS 11 (stránka /windows)
 
 Výuková simulace prostředí Windows 11 pro hodiny informatiky. Běží celá
-v prohlížeči žáka, nic se neinstaluje a nic se neodesílá.
+v prohlížeči žáka a nic se neinstaluje. Bez účtu se neodesílá nic; kdo si
+účet založí, posílá na server přezdívku a seznam splněných úloh – nic víc.
 
 
 CO TO JE A CO TO NENÍ
@@ -22,38 +23,61 @@ nastavení systému, Malování ukládá skutečné PNG a prohlížeč vykreslí
 které si žák sám napíše v Poznámkovém bloku.
 
 
-PŘÍSTUPOVÝ KÓD
---------------
-Výchozí kód je  WIN11  (nezáleží na velikosti písmen, mezerách ani pomlčkách).
+ÚČET A POSTUP
+-------------
+Cesta dovnitř: zamykací obrazovka → účet → plocha. Žádný přístupový kód se
+nezadává; dřív tu byl, ale kontroloval se jen v prohlížeči, takže nic
+nechránil, a byl z něj jen krok navíc na začátku hodiny.
 
-Změna kódu: soubor  src/lib/win/pristup.ts , řádek
+Účet je DOBROVOLNÝ. Žák si zvolí přezdívku a heslo a jeho splněné úlohy se
+k nim uloží, takže může pokračovat i na jiném počítači. Kdo nechce, klikne
+na „Přeskočit" a jede dál – postup mu zůstane jen v tomhle prohlížeči.
 
-    export const PRISTUPOVY_KOD = "WIN11";
+Na server jde POUZE přezdívka a seznam ID splněných úloh. Nic z toho, co žák
+v prostředí vytvoří – soubory, obrázky, texty, nastavení – server nikdy
+nevidí; to všechno zůstává v prohlížeči.
 
-Přepiš řetězec, ulož, v GitHub Desktopu klikni Push. Za ~1–2 minuty platí
-nový kód. Nic jiného měnit netřeba.
+Přezdívku si žák vymýšlí, nemá to být jeho jméno; přihlašovací obrazovka na
+to upozorňuje. Heslo se ukládá zahashované (scrypt, vlastní sůl u každého
+účtu), takže z úložiště se přečíst nedá.
 
-POZOR: kód je závora, ne zámek. Je součástí stránky, takže kdo se umí
-podívat do zdrojového kódu, najde ho. Má držet pohromadě třídu, ne bránit
-útočníkovi – nic citlivého za ním není.
-
-Po zadání kódu si ho karta prohlížeče pamatuje, takže obnovení stránky
-nevyhodí žáka ven. Zavřením prohlížeče se zapomene.
+Po přihlášení si karta prohlížeče pamatuje, že sezení běží, takže obnovení
+stránky nevyhodí žáka ven. Zavřením prohlížeče se zapomene.
 
 
 KDE SE UKLÁDÁ PRÁCE ŽÁKA
 ------------------------
-V prohlížeči žáka (localStorage), pod klíčem  win11-vyuka-stav . To znamená:
+Všechno, co žák v prostředí vytvoří, je v jeho prohlížeči (localStorage).
+Klíč závisí na tom, jestli je přihlášený:
+
+  bez účtu     win11-vyuka-stav
+  s účtem      win11-vyuka-stav:<přezdívka>
+
+To znamená:
 
  - práce přežije obnovení stránky, přestávku i vypnutí prohlížeče,
- - na JINÉM počítači po ní nic nezbyde,
+ - na JINÉM počítači po ní nezbyde nic – i u přihlášeného žáka se přenáší
+   jenom seznam splněných úloh, ne jeho soubory,
  - v anonymním okně se nic neuloží,
- - ty jako učitel nevidíš, co kdo udělal – nic se nikam neodesílá.
+ - ty jako učitel nevidíš, CO kdo vytvořil. Na server jde jen přezdívka
+   a seznam splněných úloh, a dnes není nic, čím by sis to přečetl.
 
-Vyčistit prostředí (vrátit výchozí stav): Start → Napájení → Vypnout
-a pak Zapnout znovu nezabere; stav se maže smazáním dat webu v prohlížeči
-(Ctrl+Shift+Del → Data webů) nebo z konzole příkazem
-  localStorage.removeItem("win11-vyuka-stav")
+Vyčistit prostředí (vrátit výchozí stav): Start → Napájení → Vypnout a pak
+Zapnout znovu NEZABERE – to jen zhasne obrazovku. Stav se maže smazáním dat
+webu v prohlížeči (Ctrl+Shift+Del → Data webů), nebo z konzole:
+
+  Object.keys(localStorage)
+    .filter(k => k.startsWith("win11-vyuka-stav"))
+    .forEach(k => localStorage.removeItem(k))
+
+POZOR na dvě věci. Smazání dat webu v prohlížeči vymaže i stavy ostatních
+tříd, které na tom počítači pracovaly – na sdíleném školním PC je to
+hrubý nástroj. A samotný  localStorage.removeItem("win11-vyuka-stav")
+smaže jen stav BEZ účtu; přihlášenému žákovi nechá ten jeho jmenný, proto
+je výš ten delší příkaz.
+
+Postup uložený na serveru si žák smaže sám: ve virtuálních Windows
+Nastavení → Účty. Smaže se tím celý záznam včetně hesla.
 
 
 ÚKOLOVNÍK

@@ -40,7 +40,6 @@ Kromě jednostránkového webu (`/` a `/en`) jsou tu dva nástroje do hodin:
 | --- | --- |
 | **Texty (CZ i EN)**, kontakt, odkazy, sociální sítě | `src/lib/content.ts` |
 | **Odkaz na Odevzdávárnu** | `SUBMIT_URL` v `src/lib/content.ts` |
-| **Přístupový kód do virtuálních Windows** | `PRISTUPOVY_KOD` v `src/lib/win/pristup.ts` |
 | **Profilová fotka** | ulož jako `public/images/karel.jpg` |
 | Barvy / akcent | `tailwind.config.ts` (paleta `accent`) |
 | Pořadí sekcí | `src/app/page.tsx` |
