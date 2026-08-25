@@ -76,6 +76,21 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
+    title: "Sakra, jak to bylo? Správci hesel vám ušetří nervy",
+    source: "Wired.cz",
+    url: "https://www.wired.cz/clanky/enm4ku9tjy3-sakra-jak-to-bylo-spravci-hesel-vam-usetri-nervy",
+    logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
+    jazyk: "cs",
+    pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
+  },
+  {
+    title: "Co o vás ví obyčejná webová stránka? Zkuste si to sami",
+    source: "Václav Maněna",
+    url: "https://manena.info/2026/08/19/co-o-vas-vi-obycejna-webova-stranka-zkuste-si-to-sami/",
+    logo: { src: "/images/clanky/manena.png", pomer: 1.0 },
+    jazyk: "cs",
+  },
+  {
     title: "NÚKIB: kybernetických incidentů ubylo, ale útoky jsou závažnější",
     source: "E-Bezpečí",
     url: "https://www.e-bezpeci.cz/index.php/clanky/5137-nukib-kybernetickych-incidentu-ubylo-ale-utoky-jsou-zavaznejsi-a-pribyva-kyberkriminality",
@@ -87,20 +102,6 @@ export const CLANKY: Clanek[] = [
     source: "Lupa.cz",
     url: "https://www.lupa.cz/clanky/mame-hotovych-90-procent-dodelejte-nam-zbytek-zadaji-klienti-vyvojare-jak-to-vypada-kdyz-vibecoding-meni-byznysmodel/",
     logo: { src: "/images/clanky/lupa.png", pomer: 1.58 },
-    jazyk: "cs",
-  },
-  {
-    title: "Češi mají medaile z olympiády v IT, mladíci z ČR se sešli se šéfem OpenAI",
-    source: "Lupa.cz",
-    url: "https://www.lupa.cz/clanky/cesi-maji-medaile-z-olympiady-v-it-mladici-z-cr-se-sesli-s-sefem-openai-dalsi-cipovy-vzestup-ciny/",
-    logo: { src: "/images/clanky/lupa.png", pomer: 1.58 },
-    jazyk: "cs",
-  },
-  {
-    title: "ChatGPT pro teenagery: věk odhadne sama AI, rodiče dostanou kontrolu",
-    source: "E-Bezpečí",
-    url: "https://www.e-bezpeci.cz/index.php/clanky/5133-openai-spustila-chatgpt-pro-teenagery-vek-odhadne-sama-ai-rodice-dostanou-kontrolu",
-    logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
     jazyk: "cs",
   },
 ];
