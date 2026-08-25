@@ -76,6 +76,31 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
+    title: "AI Act a vytváření regulačních slepých uliček",
+    source: "Wired.cz",
+    url: "https://www.wired.cz/clanky/dozene-evropska-unie-ujizdejici-ai-vlak-ai-act-a-vytvareni-regulacnich-slepych-ulicek",
+    logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
+    jazyk: "cs",
+    pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
+  },
+  {
+    title: "Budou žáci kvůli AI hloupější? Naopak pomáhá myslet",
+    source: "Hospodářské noviny",
+    url: "https://archiv.hn.cz/c1-67882320-budou-zaci-kvuli-ai-hloupejsi-ne-mysleni-zaku-naopak-pomuze-rozvijet",
+    logo: { src: "/images/clanky/hn.png", pomer: 1.83 },
+    jazyk: "cs",
+    pozor: { cs: "placený archiv HN", en: "paid HN archive" },
+  },
+  {
+    title: "Plošný zákaz mobilů ve školách prošel vládou",
+    source: "Lupa.cz",
+    url: "https://www.lupa.cz/aktuality/plosny-zakaz-mobilu-ve-skolach-prosel-vladou-platit-ma-od-pristiho-zari/",
+    // Monogram "LU" z prvních dvou písmen loga (celý nápis "LUPA.cz" má poměr
+    // přes 3,8 a ve čtverci 44 px by z něj zbyla nečitelná čárka).
+    logo: { src: "/images/clanky/lupa.png", pomer: 1.58 },
+    jazyk: "cs",
+  },
+  {
     title: "Mluvíte s člověkem, nebo s AI? V EU platí nová pravidla transparentnosti",
     source: "E-Bezpečí",
     url: "https://www.e-bezpeci.cz/index.php/90-technokoutek/5079-mluvite-s-clovekem-nebo-s-umelou-inteligenci-od-2-srpna-plati-v-eu-pravidla-transparentnosti-ai",
@@ -84,28 +109,6 @@ export const CLANKY: Clanek[] = [
     // varuje poznámka u `pomer` výš.
     logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
     jazyk: "cs",
-  },
-  {
-    title: "Jak se českých škol týká AI Act",
-    source: "Václav Maněna",
-    url: "https://manena.info/2026/04/25/jak-se-ceskych-skol-tyka-ai-act/",
-    logo: { src: "/images/clanky/manena.png", pomer: 1.0 },
-    jazyk: "cs",
-  },
-  {
-    title: "Stop Teaching Students More Apps, Teach Them How to Handle Files",
-    source: "EdTechReview",
-    url: "https://www.edtechreview.in/elearning/stop-teaching-students-more-apps-teach-them-how-to-handle-files/",
-    logo: { src: "/images/clanky/etr.png", pomer: 1.31 },
-    jazyk: "en",
-  },
-  {
-    title: "AI a děti: Co dělat jako rodič a jak AI používat ve škole",
-    source: "Wired.cz",
-    url: "https://www.wired.cz/clanky/ai-a-deti-co-delat-jako-rodic-a-jak-ai-pouzivat-ve-skole",
-    logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
-    jazyk: "cs",
-    pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
   },
 ];
 
