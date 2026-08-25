@@ -9,7 +9,7 @@ import {
 import { existuje, najdiSlozku, novaSlozka, rozloz, vloz } from "@/lib/win/fs";
 import { vytvorDisk } from "@/lib/win/seed";
 import { rozbal } from "@/lib/win/zip";
-import { najdi, jeSlozka } from "@/lib/win/fs";
+import { najdi, jeSlozka, velikost } from "@/lib/win/fs";
 
 const PLOCHA = rozloz("C:\\Users\\Zak\\Desktop");
 const DOKUMENTY = rozloz("C:\\Users\\Zak\\Documents");
@@ -113,8 +113,11 @@ describe("archiv ZIP z výchozího disku", () => {
     if (!soubor || jeSlozka(soubor)) return;
     const uvnitr = rozbal(soubor);
     expect(uvnitr?.map((u) => u.jmeno)).toContain("Vzorce.txt");
+    // Porovnává se v BAJTECH, ne ve znacích. `obsah.length` je počet znaků
+    // v UTF-16 a čeština má diakritiku, takže bajtů je vždy víc – proti
+    // znakům vycházel archiv falešně jako „stejně velký".
     expect(soubor.velikost).toBeLessThan(
-      (uvnitr ?? []).reduce((s, u) => s + (jeSlozka(u) ? 0 : u.obsah.length), 0),
+      (uvnitr ?? []).reduce((s, u) => s + (jeSlozka(u) ? 0 : velikost(u)), 0),
     );
   });
 
