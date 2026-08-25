@@ -55,7 +55,7 @@ function Obrazovka() {
   const plochaRef = useRef<HTMLDivElement>(null);
   const n = stav.nastaveni;
 
-  /* Přihlášení si pamatuje karta – po obnovení stránky se kód nezadává znovu. */
+  /* Rozběhnuté sezení si pamatuje karta – obnovení stránky nevrací na zámek. */
   useEffect(() => {
     if (jePrihlasen()) nastavFazi("bezi");
   }, []);

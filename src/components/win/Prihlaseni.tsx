@@ -13,17 +13,18 @@ import { ArrowRight, Loader2, Lock, UserRound } from "lucide-react";
 import { Ikona } from "./Ikona";
 import { TAPETY, vybranaTapeta } from "@/lib/win/obrazky";
 import { datumSlovy, hodiny } from "@/lib/win/format";
-import { PRISTUPOVY_KOD, jeVychoziKod, kodSedi } from "@/lib/win/pristup";
 import { prihlas } from "@/lib/postup/klient";
 
 /**
- * Kroky: zámek → třídní kód → vlastní účet → vítejte.
+ * Kroky: zámek → vlastní účet → vítejte.
  *
- * Třídní kód zůstal jako závora (drží třídu pohromadě a brání zakládání účtů
- * zvenčí), účet je nový – na něj se váže postup v úlohách, aby žák pokračoval
- * i na jiném počítači.
+ * Třídní kód tu býval jako závora, ale nic nedržel. Kontroloval se jen
+ * v prohlížeči – API o něm vůbec nevědělo, takže účty nechránil – a dokud
+ * zůstával výchozí, obrazovka ho sama nabízela tlačítkem, které ho vyplnilo.
+ * Zbyl z něj krok navíc na začátku hodiny. Žák se teď rovnou dostane k účtu,
+ * na který se váže postup v úlohách, aby pokračoval i na jiném počítači.
  */
-type Faze = "zamek" | "prihlaseni" | "ucet" | "vitejte";
+type Faze = "zamek" | "ucet" | "vitejte";
 
 export function Prihlaseni({
   jmenoUctu,
@@ -36,7 +37,6 @@ export function Prihlaseni({
   onHotovo: (ucet: { prezdivka: string; splneno: string[] } | null) => void;
 }) {
   const [faze, nastavFazi] = useState<Faze>("zamek");
-  const [kod, nastavKod] = useState("");
   const [chyba, nastavChybu] = useState(false);
   const [prezdivka, nastavPrezdivku] = useState("");
   const [heslo, nastavHeslo] = useState("");
@@ -57,7 +57,7 @@ export function Prihlaseni({
   /* Uzamykací obrazovku odemkne cokoli – klik, mezerník, Enter. */
   useEffect(() => {
     if (faze !== "zamek") return;
-    const dal = () => nastavFazi("prihlaseni");
+    const dal = () => nastavFazi("ucet");
     window.addEventListener("keydown", dal);
     window.addEventListener("pointerdown", dal);
     return () => {
@@ -67,7 +67,7 @@ export function Prihlaseni({
   }, [faze]);
 
   useEffect(() => {
-    if (faze === "prihlaseni") window.setTimeout(() => pole.current?.focus(), 60);
+    if (faze === "ucet") window.setTimeout(() => pole.current?.focus(), 60);
 
     if (faze === "vitejte") {
       // Krátká pauza jako při skutečném přihlašování – ne kvůli efektu,
@@ -76,18 +76,6 @@ export function Prihlaseni({
       return () => window.clearTimeout(id);
     }
   }, [faze, onHotovo]);
-
-  const odesli = (e: React.FormEvent) => {
-    e.preventDefault();
-    if (kodSedi(kod)) {
-      nastavFazi("ucet");
-      return;
-    }
-    nastavChybu(true);
-    nastavKod("");
-    window.setTimeout(() => nastavChybu(false), 700);
-    pole.current?.focus();
-  };
 
   /**
    * Přihlášení k vlastnímu účtu. Když synchronizace neběží nebo se nepovede,
@@ -146,78 +134,19 @@ export function Prihlaseni({
               {cas ? datumSlovy(cas) : ""}
             </div>
           </div>
-          <p className="animate-pulse text-center text-[14px] text-white/85 drop-shadow">
-            Klikni nebo stiskni libovolnou klávesu
-          </p>
-        </div>
-      )}
-
-      {faze === "prihlaseni" && (
-        <form
-          onSubmit={odesli}
-          className={`relative z-10 flex w-[min(92vw,420px)] flex-col items-center text-white ${
-            chyba ? "animate-[zatreseni_0.45s]" : ""
-          }`}
-        >
-          <Ikona klic="uzivatel" velikost={112} className="drop-shadow-lg" />
-          <h1 className="mt-4 text-[26px] font-light">{jmenoUctu}</h1>
-          <p className="mt-1 text-[13px] text-white/75">
-            Zadej kód, který máš od vyučujícího
-          </p>
-
-          <div className="mt-5 flex w-full max-w-[300px] items-center gap-2 rounded-md border border-white/40 bg-black/35 px-3 backdrop-blur">
-            <Lock className="h-4 w-4 shrink-0 text-white/60" />
-            <input
-              ref={pole}
-              value={kod}
-              onChange={(e) => nastavKod(e.target.value)}
-              placeholder="Přístupový kód"
-              aria-label="Přístupový kód"
-              autoComplete="off"
-              spellCheck={false}
-              className="h-11 min-w-0 flex-1 bg-transparent text-center text-[15px] tracking-[0.2em] text-white outline-none placeholder:tracking-normal placeholder:text-white/50"
-            />
-            <button
-              type="submit"
-              aria-label="Přihlásit se"
-              className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 hover:bg-white/35"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </div>
-
-          <p
-            className={`mt-3 h-5 text-[13px] transition-opacity ${
-              chyba ? "text-[#ff9a9a] opacity-100" : "opacity-0"
-            }`}
-          >
-            Kód není správný. Zkus to znovu.
-          </p>
-
-          {/* Dokud je kód ten výchozí, nemá co tajit: stojí i ve zdrojáku
-              stránky a je to závora, ne zámek. Lepší, když se návštěvník
-              dostane dovnitř, než aby stál před polem a nevěděl. Jakmile si
-              vyučující nastaví vlastní kód, nápověda zmizí sama. */}
-          {jeVychoziKod() && (
-            <p className="mt-1 text-[12px] text-white/60">
-              Nemáš kód od vyučujícího? Zkus{" "}
-              <button
-                type="button"
-                onClick={() => nastavKod(PRISTUPOVY_KOD)}
-                className="font-semibold tracking-[0.12em] text-white/85 underline decoration-dotted underline-offset-2 hover:text-white"
-              >
-                {PRISTUPOVY_KOD}
-              </button>
+          <div className="flex flex-col items-center gap-3">
+            {/* Co to je, se říká hned tady. Dřív to stálo až u pole na třídní
+                kód, takže to člověk uviděl po kliknutí – a první minuta hodiny
+                se strávila hádáním, jestli jsou to skutečné Windows. */}
+            <p className="max-w-[340px] text-center text-[12px] leading-relaxed text-white/70 drop-shadow">
+              Výuková simulace Windows 11 pro hodiny informatiky. Neběží tu
+              skutečný systém a nic se neinstaluje.
             </p>
-          )}
-
-          <p className="mt-8 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
-            Tohle je výuková simulace Windows 11 pro hodiny informatiky.
-            Neběží tu skutečný systém a nic se neinstaluje. Všechno, co v ní
-            uděláš, zůstává v tomhle prohlížeči – ven jde jen přezdívka
-            a seznam splněných úloh, když si v dalším kroku založíš účet.
-          </p>
-        </form>
+            <p className="animate-pulse text-center text-[14px] text-white/85 drop-shadow">
+              Klikni nebo stiskni libovolnou klávesu
+            </p>
+          </div>
+        </div>
       )}
 
       {faze === "ucet" && (

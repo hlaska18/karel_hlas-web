@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { OdkazNaWeb, VirtualniPocitac } from "@/components/win/VirtualniPocitac";
-import { PRISTUPOVY_KOD } from "@/lib/win/pristup";
 
 export const metadata: Metadata = {
   title: "Virtuální Windows 11",
@@ -10,7 +9,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Virtuální Windows 11 – výuková simulace",
     description:
-      "Plocha, Průzkumník, Nastavení a příkazový řádek k procvičování práce se soubory. Vstup na kód od vyučujícího.",
+      "Plocha, Průzkumník, Nastavení a příkazový řádek k procvičování práce se soubory. Otevře se rovnou, nic se neinstaluje.",
     url: "/windows",
     type: "website",
   },
@@ -20,8 +19,6 @@ export const metadata: Metadata = {
  * Stránka je schválně bez hlavičky webu a bez patičky: simulace má zabrat
  * celou obrazovku, jinak by v ní okna neměla kam růst a iluze by se rozpadla.
  * Cesta zpátky vede z přihlašovací obrazovky a z nabídky Start (Vypnout).
- *
- * Přístupový kód se mění v `src/lib/win/pristup.ts`.
  */
 export default function StrankaWindows() {
   return (
@@ -61,10 +58,10 @@ export default function StrankaWindows() {
           Simulace prostředí Windows 11 v prohlížeči. Žáci si tu vyzkoušejí práci se
           soubory a složkami v Průzkumníku, přípony a vlastnosti souborů, nastavení
           systému, Poznámkový blok, Malování, Kalkulačku v programátorském režimu,
-          příkazový řádek a PowerShell. Vstup je na kód od vyučujícího (výchozí kód
-          je {PRISTUPOVY_KOD}). Nejde o skutečný operační systém a nic se
-          neinstaluje. Práce zůstává v prohlížeči žáka; kdo si založí účet,
-          odešle se o něm jen přezdívka a seznam splněných úloh.
+          příkazový řádek a PowerShell. Otevře se rovnou, bez kódu i bez
+          instalace – nejde o skutečný operační systém. Práce zůstává
+          v prohlížeči žáka; kdo si založí účet, odešle se o něm jen přezdívka
+          a seznam splněných úloh.
         </p>
       </div>
     </>
