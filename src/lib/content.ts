@@ -76,37 +76,30 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
-    title: "AI Act a vytváření regulačních slepých uliček",
-    source: "Wired.cz",
-    url: "https://www.wired.cz/clanky/dozene-evropska-unie-ujizdejici-ai-vlak-ai-act-a-vytvareni-regulacnich-slepych-ulicek",
-    logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
+    title: "NÚKIB: kybernetických incidentů ubylo, ale útoky jsou závažnější",
+    source: "E-Bezpečí",
+    url: "https://www.e-bezpeci.cz/index.php/clanky/5137-nukib-kybernetickych-incidentu-ubylo-ale-utoky-jsou-zavaznejsi-a-pribyva-kyberkriminality",
+    logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
     jazyk: "cs",
-    pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
   },
   {
-    title: "Budou žáci kvůli AI hloupější? Naopak pomáhá myslet",
-    source: "Hospodářské noviny",
-    url: "https://archiv.hn.cz/c1-67882320-budou-zaci-kvuli-ai-hloupejsi-ne-mysleni-zaku-naopak-pomuze-rozvijet",
-    logo: { src: "/images/clanky/hn.png", pomer: 1.83 },
-    jazyk: "cs",
-    pozor: { cs: "placený archiv HN", en: "paid HN archive" },
-  },
-  {
-    title: "Plošný zákaz mobilů ve školách prošel vládou",
+    title: "Když vibecoding mění řemeslo: klienti nosí hotových 90 procent a chtějí dodělat zbytek",
     source: "Lupa.cz",
-    url: "https://www.lupa.cz/aktuality/plosny-zakaz-mobilu-ve-skolach-prosel-vladou-platit-ma-od-pristiho-zari/",
-    // Monogram "LU" z prvních dvou písmen loga (celý nápis "LUPA.cz" má poměr
-    // přes 3,8 a ve čtverci 44 px by z něj zbyla nečitelná čárka).
+    url: "https://www.lupa.cz/clanky/mame-hotovych-90-procent-dodelejte-nam-zbytek-zadaji-klienti-vyvojare-jak-to-vypada-kdyz-vibecoding-meni-byznysmodel/",
     logo: { src: "/images/clanky/lupa.png", pomer: 1.58 },
     jazyk: "cs",
   },
   {
-    title: "Mluvíte s člověkem, nebo s AI? V EU platí nová pravidla transparentnosti",
+    title: "Češi mají medaile z olympiády v IT, mladíci z ČR se sešli se šéfem OpenAI",
+    source: "Lupa.cz",
+    url: "https://www.lupa.cz/clanky/cesi-maji-medaile-z-olympiady-v-it-mladici-z-cr-se-sesli-s-sefem-openai-dalsi-cipovy-vzestup-ciny/",
+    logo: { src: "/images/clanky/lupa.png", pomer: 1.58 },
+    jazyk: "cs",
+  },
+  {
+    title: "ChatGPT pro teenagery: věk odhadne sama AI, rodiče dostanou kontrolu",
     source: "E-Bezpečí",
-    url: "https://www.e-bezpeci.cz/index.php/90-technokoutek/5079-mluvite-s-clovekem-nebo-s-umelou-inteligenci-od-2-srpna-plati-v-eu-pravidla-transparentnosti-ai",
-    // Monogram, ne jejich celý nápis: „e-Bezpečí" na jednom řádku má poměr 5
-    // a ve čtverci 44 px z něj zbyla šestipixelová čárka – přesně to, před čím
-    // varuje poznámka u `pomer` výš.
+    url: "https://www.e-bezpeci.cz/index.php/clanky/5133-openai-spustila-chatgpt-pro-teenagery-vek-odhadne-sama-ai-rodice-dostanou-kontrolu",
     logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
     jazyk: "cs",
   },
