@@ -115,3 +115,101 @@ describe("ukládání postupu", () => {
     });
   });
 });
+
+describe("strop na počet pokusů", () => {
+  const IP = "10.0.0.1";
+
+  it("po deseti špatných heslech dál nepustí", async () => {
+    const { zaloz, u } = prihlas();
+    await zaloz("kolibrik", "tajne123");
+    for (let i = 0; i < 10; i++) {
+      expect(await prihlasNeboZaloz(u, "kolibrik", "spatne", PODPIS)).toMatchObject({
+        stav: "nesedi",
+      });
+    }
+    expect(await prihlasNeboZaloz(u, "kolibrik", "spatne", PODPIS)).toMatchObject({
+      stav: "prilis-mnoho-pokusu",
+    });
+    // A po vyčerpání stropu neprojde ani SPRÁVNÉ heslo – jinak by se strop
+    // dal obejít tím, že útočník mezi pokusy zkusí to, co už zná.
+    expect(await prihlasNeboZaloz(u, "kolibrik", "tajne123", PODPIS)).toMatchObject({
+      stav: "prilis-mnoho-pokusu",
+    });
+  });
+
+  it("úspěšné přihlášení rozpočet nespotřebovává", async () => {
+    // Nejdůležitější test celého stropu: žák, který se hlásí správně,
+    // nesmí být po dvacáté hodině zamčený.
+    const { u, zaloz } = prihlas();
+    await zaloz("kolibrik", "tajne123");
+    for (let i = 0; i < 30; i++) {
+      expect(await prihlasNeboZaloz(u, "kolibrik", "tajne123", PODPIS)).toMatchObject({
+        stav: "ok",
+      });
+    }
+  });
+
+  it("po několika překlepech a trefě se počítadlo vynuluje", async () => {
+    const { u, zaloz } = prihlas();
+    await zaloz("kolibrik", "tajne123");
+    for (let i = 0; i < 9; i++) await prihlasNeboZaloz(u, "kolibrik", "spatne", PODPIS);
+    expect(await prihlasNeboZaloz(u, "kolibrik", "tajne123", PODPIS)).toMatchObject({ stav: "ok" });
+    // Kdyby se nenulovalo, další překlep by žáka rovnou zamkl.
+    expect(await prihlasNeboZaloz(u, "kolibrik", "spatne", PODPIS)).toMatchObject({
+      stav: "nesedi",
+    });
+  });
+
+  it("po vypršení okna jde přihlášení znovu", async () => {
+    let ted = 0;
+    const u = pametoveUloziste(() => ted);
+    await prihlasNeboZaloz(u, "kolibrik", "tajne123", PODPIS);
+    for (let i = 0; i < 11; i++) await prihlasNeboZaloz(u, "kolibrik", "spatne", PODPIS);
+    expect(await prihlasNeboZaloz(u, "kolibrik", "tajne123", PODPIS)).toMatchObject({
+      stav: "prilis-mnoho-pokusu",
+    });
+    ted += 16 * 60 * 1000;
+    expect(await prihlasNeboZaloz(u, "kolibrik", "tajne123", PODPIS)).toMatchObject({ stav: "ok" });
+  });
+
+  it("celá třída z jedné IP se přihlásí bez potíží", async () => {
+    // Třicet žáků za jednou školní IP. Kdyby byl strop podle IP přísný,
+    // vyhodilo by to půlku třídy z hodiny.
+    const u = pametoveUloziste();
+    for (let i = 0; i < 30; i++) {
+      expect(
+        await prihlasNeboZaloz(u, `zak${i}`, "tajne123", PODPIS, Date.now(), IP),
+      ).toMatchObject({ stav: "ok" });
+    }
+  });
+
+  it("hromadné zakládání účtů z jedné IP se zastaví", async () => {
+    const u = pametoveUloziste();
+    for (let i = 0; i < 120; i++) {
+      await prihlasNeboZaloz(u, `bot${i}`, "tajne123", PODPIS, Date.now(), IP);
+    }
+    expect(
+      await prihlasNeboZaloz(u, "bot120", "tajne123", PODPIS, Date.now(), IP),
+    ).toMatchObject({ stav: "prilis-mnoho-pokusu" });
+  });
+
+  it("chybějící IP přihlášení nerozbije", async () => {
+    // Lokální vývoj nemá `x-forwarded-for`; přezdívkový strop platí dál.
+    const u = pametoveUloziste();
+    expect(await prihlasNeboZaloz(u, "kolibrik", "tajne123", PODPIS, Date.now(), null)).toMatchObject({
+      stav: "ok",
+    });
+  });
+
+  it("výpadek úložiště žáka nezamkne", async () => {
+    // Radši chvíli bez stropu než třicet lidí, co se uprostřed hodiny
+    // nedostanou k práci.
+    const u = pametoveUloziste();
+    u.pocitadlo = async () => {
+      throw new Error("Redis neodpovídá");
+    };
+    expect(await prihlasNeboZaloz(u, "kolibrik", "tajne123", PODPIS, Date.now(), IP)).toMatchObject({
+      stav: "ok",
+    });
+  });
+});

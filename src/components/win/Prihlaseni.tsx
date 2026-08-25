@@ -97,6 +97,15 @@ export function Prihlaseni({
       window.setTimeout(() => nastavChybu(false), 700);
       return;
     }
+    // Strop na počet pokusů. Nepouští dál stejně jako špatné heslo – jinak by
+    // se žák octl na ploše s prázdným postupem a myslel si, že o něj přišel.
+    // „Přeskočit" zůstává vedle a funguje, takže z hodiny nikdo nevypadne.
+    if (vysledek.stav === "pockej") {
+      nastavHlasku("Moc pokusů po sobě. Zkus to za chvíli, nebo klikni na Přeskočit.");
+      nastavChybu(true);
+      window.setTimeout(() => nastavChybu(false), 700);
+      return;
+    }
     if (vysledek.stav === "ok") {
       ucet.current = { prezdivka: vysledek.prezdivka, splneno: vysledek.splneno };
     }

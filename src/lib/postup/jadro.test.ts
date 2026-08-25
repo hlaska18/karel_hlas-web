@@ -40,17 +40,17 @@ describe("přezdívka", () => {
 });
 
 describe("heslo", () => {
-  it("ověří správné a odmítne špatné", () => {
-    const { hash, sul } = zahashuj("tajne");
-    expect(hesloSedi("tajne", hash, sul)).toBe(true);
-    expect(hesloSedi("tajné", hash, sul)).toBe(false);
-    expect(hesloSedi("", hash, sul)).toBe(false);
+  it("ověří správné a odmítne špatné", async () => {
+    const { hash, sul } = await zahashuj("tajne");
+    expect(await hesloSedi("tajne", hash, sul)).toBe(true);
+    expect(await hesloSedi("tajné", hash, sul)).toBe(false);
+    expect(await hesloSedi("", hash, sul)).toBe(false);
   });
 
-  it("stejné heslo dvou žáků dá jiný hash", () => {
+  it("stejné heslo dvou žáků dá jiný hash", async () => {
     // Sůl je na účet, ne globální – jinak by shodná hesla byla v úložišti
     // vidět jako shodné řetězce.
-    expect(zahashuj("stejne").hash).not.toBe(zahashuj("stejne").hash);
+    expect((await zahashuj("stejne")).hash).not.toBe((await zahashuj("stejne")).hash);
   });
 });
 

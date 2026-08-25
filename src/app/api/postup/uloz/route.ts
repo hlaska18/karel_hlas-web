@@ -51,7 +51,9 @@ export async function DELETE(req: Request) {
     return NextResponse.json({ duvod: "nenastaveno" }, { status: 503 });
   }
 
-  const listek = new URL(req.url).searchParams.get("listek") ?? "";
+  // Z hlavičky, ne z adresy: query se propisuje do logů, historie prohlížeče
+  // i do `Referer`, a přihlašovací lístek do žádného z těch míst nepatří.
+  const listek = req.headers.get("x-listek") ?? "";
   const prezdivka = precti(listek, podpis);
   if (!prezdivka) {
     return NextResponse.json({ duvod: "neplatny-listek" }, { status: 401 });

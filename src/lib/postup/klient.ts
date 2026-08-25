@@ -16,6 +16,7 @@ const KLIC_UCTU = "win11-vyuka-ucet";
 export type Prihlaseni =
   | { stav: "ok"; prezdivka: string; splneno: string[]; novy: boolean }
   | { stav: "nesedi" }
+  | { stav: "pockej" }
   | { stav: "nenastaveno" }
   | { stav: "chyba" };
 
@@ -33,6 +34,7 @@ export async function prihlas(prezdivka: string, heslo: string): Promise<Prihlas
   }
 
   if (odpoved.status === 503) return { stav: "nenastaveno" };
+  if (odpoved.status === 429) return { stav: "pockej" };
   if (odpoved.status === 401) return { stav: "nesedi" };
   if (!odpoved.ok) return { stav: "chyba" };
 
@@ -98,13 +100,21 @@ export async function ulozPostup(splneno: string[]): Promise<string[] | null> {
   }
 }
 
-/** Smaže postup uložený na serveru. Vrací, jestli se to povedlo. */
+/**
+ * Smaže postup uložený na serveru. Vrací, jestli se to povedlo.
+ *
+ * Lístek jde v HLAVIČCE, ne v adrese. Dřív visel v query (`?listek=…`)
+ * a adresy se zapisují na spoustu míst, kde token nemá co dělat: do logu
+ * serveru, do historie prohlížeče, do hlavičky `Referer`. Na sdíleném
+ * školním počítači by ho v historii našel kdokoli další, kdo si sedne.
+ */
 export async function smazPostup(): Promise<boolean> {
   const listek = nactiListek();
   if (!listek) return false;
   try {
-    const odpoved = await fetch(`/api/postup/uloz?listek=${encodeURIComponent(listek)}`, {
+    const odpoved = await fetch("/api/postup/uloz", {
       method: "DELETE",
+      headers: { "x-listek": listek },
     });
     return odpoved.ok;
   } catch {

@@ -9,7 +9,8 @@
  * schválně přezdívka, ne jméno – záznam pak sám o sobě nikoho neidentifikuje.
  */
 
-import { createHmac, randomBytes, scryptSync, timingSafeEqual } from "node:crypto";
+import { createHmac, randomBytes, scrypt, timingSafeEqual } from "node:crypto";
+import { promisify } from "node:util";
 
 import { UKOLY } from "@/lib/win/ukoly";
 
@@ -40,23 +41,47 @@ export function prezdivkaSedi(prezdivka: string): boolean {
 /* ───────────────────────── Heslo ───────────────────────── */
 
 /**
+ * Scrypt v asynchronní podobě.
+ *
+ * Schválně ne `scryptSync`: scrypt je drahý ZÁMĚRNĚ, aby se heslo nedalo
+ * hádat po milionech. Jenže v synchronní podobě to znamená, že po dobu
+ * výpočtu stojí celá smyčka a server nedělá nic jiného. Nejtěžší chvíle
+ * přitom nepřijde od útočníka, ale v 8:00, kdy se přihlásí celá třída naráz.
+ * Asynchronní varianta počítá na vlákně navíc, takže se požadavky nezablokují
+ * jeden druhým.
+ *
+ * Cena výpočtu se NESNIŽUJE. Levnější parametry by znehodnotily hashe všech
+ * existujících účtů a žáci by se uprostřed pololetí nepřihlásili; zbytek
+ * zátěže hlídá strop na počet pokusů v `sluzba.ts`.
+ */
+const scryptAsync = promisify(scrypt) as (
+  heslo: string,
+  sul: string,
+  delka: number,
+) => Promise<Buffer>;
+
+/**
  * Hashování scryptem ze standardní knihovny – žádná další závislost.
  * Sůl je na každý účet jiná, takže dva žáci se stejným heslem mají jiný hash.
  */
-export function zahashuj(heslo: string, sul = randomBytes(16).toString("hex")): {
-  hash: string;
-  sul: string;
-} {
-  return { hash: scryptSync(heslo, sul, 64).toString("hex"), sul };
+export async function zahashuj(
+  heslo: string,
+  sul = randomBytes(16).toString("hex"),
+): Promise<{ hash: string; sul: string }> {
+  const hash = await scryptAsync(heslo, sul, 64);
+  return { hash: hash.toString("hex"), sul };
 }
 
 /**
  * Ověření hesla. Porovnává se v konstantním čase: obyčejné `===` prozradí
  * délkou shodné předpony, jak daleko se útočník trefil.
  */
-export function hesloSedi(heslo: string, hash: string, sul: string): boolean {
+export async function hesloSedi(heslo: string, hash: string, sul: string): Promise<boolean> {
   const ocekavany = Buffer.from(hash, "hex");
-  const spocitany = scryptSync(heslo, sul, ocekavany.length);
+  // Poškozený nebo prázdný záznam: scrypt s nulovou délkou vyhodí výjimku,
+  // což by z toho udělalo pád serveru místo obyčejného „heslo nesedí".
+  if (ocekavany.length === 0) return false;
+  const spocitany = await scryptAsync(heslo, sul, ocekavany.length);
   return ocekavany.length === spocitany.length && timingSafeEqual(ocekavany, spocitany);
 }
 

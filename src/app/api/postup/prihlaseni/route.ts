@@ -70,9 +70,23 @@ export async function POST(req: Request) {
     return NextResponse.json({ duvod: "spatny-tvar" }, { status: 400 });
   }
 
-  const vysledek = await prihlasNeboZaloz(uloziste, telo.prezdivka, telo.heslo, podpis);
+  // `x-forwarded-for` doplňuje proxy Vercelu; první položka je klient.
+  // Když hlavička chybí (lokální vývoj), počítá se dál jen podle přezdívky.
+  const ip = req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || null;
+
+  const vysledek = await prihlasNeboZaloz(
+    uloziste,
+    telo.prezdivka,
+    telo.heslo,
+    podpis,
+    Date.now(),
+    ip,
+  );
   if (vysledek.stav === "spatny-tvar") {
     return NextResponse.json({ duvod: "spatny-tvar" }, { status: 400 });
+  }
+  if (vysledek.stav === "prilis-mnoho-pokusu") {
+    return NextResponse.json({ duvod: "prilis-mnoho-pokusu" }, { status: 429 });
   }
   if (vysledek.stav === "nesedi") {
     return NextResponse.json({ duvod: "nesedi" }, { status: 401 });
