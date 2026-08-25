@@ -38,15 +38,44 @@ describe("getBankItems", () => {
     }
   });
 
-  it("nástroj na webu míří dovnitř webu a není to soubor", () => {
+  it("nástroj na webu míří dovnitř webu", () => {
     // Kdyby `_nastroj.json` dostal externí URL, tvářil by se odkaz ven jako
     // naše věc – bez atribuce a bez target="_blank". Ta konvence je schválně
     // jen pro vnitřní cesty; na cizí zdroje je `_zdroj.json`.
     for (const it of items.filter((i) => i.interactive)) {
       expect(it.href.startsWith("/")).toBe(true);
       expect(it.external).toBeFalsy();
+    }
+  });
+
+  it("nástroj z _nastroj.json není soubor", () => {
+    // Nástroj bez vlastního souboru (virtuální Windows, kurz SQL) nesmí dostat
+    // velikost – hero by ho jinak počítal mezi věci ke stažení.
+    for (const it of items.filter((i) => i.interactive && !i.novaKarta)) {
       expect(it.sizeBytes).toBe(0);
     }
+  });
+
+  it("HTML se otevírá, nestahuje", () => {
+    // Laboratoře ke grafice a podobné hotové stránky. Stažené z prohlížeče
+    // jsou k ničemu; musí dostat řádek nástroje a novou kartu.
+    const stranky = items.filter((i) => i.ext === "html");
+    expect(stranky.length).toBeGreaterThan(0);
+    for (const it of stranky) {
+      expect(it.interactive).toBe(true);
+      expect(it.novaKarta).toBe(true);
+      expect(it.href.startsWith("/materialy/")).toBe(true);
+    }
+  });
+
+  it("ukázky ze složky se `_zdroje.txt` se v bance nevypisují", () => {
+    // Osmnáct řádků s `foto_jpeg_q*` byl hlavní důvod, proč byla Grafika
+    // nepřehledná. Složka na disku zůstává – pracovní listy na ni odkazují.
+    const nazvy = items.map((i) => i.label.cs.toLowerCase());
+    expect(nazvy.some((n) => n.startsWith("foto_jpeg_q"))).toBe(false);
+    expect(nazvy.some((n) => n.startsWith("hloubka_"))).toBe(false);
+    expect(items.some((i) => i.group?.cs.includes("Obrázky"))).toBe(false);
+    expect(items.some((i) => i.label.cs.startsWith("_zdroje"))).toBe(false);
   });
 
   it("deduplicates identical materials shared across course fields", () => {

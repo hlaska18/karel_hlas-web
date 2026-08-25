@@ -1,0 +1,8 @@
+Ukázky do výkladu, ne materiály ke stažení.
+
+Tenhle soubor říká bance materiálů, že má složku v seznamu přeskočit — jinak
+se z ukázek stane několik desítek řádků se stahovacím tlačítkem a v tématu je
+nepřehledno.
+
+Soubory tady zůstávají a nikam se nepřesouvají: odkazují na ně pracovní listy
+(„Pracuj se souborem Obrázky/foto_original.png") a laboratoře je ukazují.

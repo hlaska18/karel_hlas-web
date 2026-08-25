@@ -68,6 +68,7 @@ const STR: Record<
     collapseFolder: string;
     sourceBadge: string;
     toolBadge: string;
+    ukazkyNote: (pocet: number) => string;
     openTool: string;
     sourceNote: string;
     sourceNoteOffline: string;
@@ -105,6 +106,8 @@ const STR: Record<
     sourceBadge: "zdroj",
     toolBadge: "web",
     openTool: "Spustit",
+    ukazkyNote: (p) =>
+      `Ukázky do výkladu – ${p} ${p === 1 ? "soubor" : p < 5 ? "soubory" : "souborů"} k porovnání`,
     sourceNote: "Převzatý materiál – otevři u původního zdroje",
     sourceNoteOffline: "Materiál třetí strany – zde není ke stažení",
     openSource: "Otevřít u zdroje",
@@ -140,6 +143,7 @@ const STR: Record<
     sourceBadge: "source",
     toolBadge: "web",
     openTool: "Open",
+    ukazkyNote: (p) => `Examples for the lesson – ${p} file${p === 1 ? "" : "s"} to compare`,
     sourceNote: "Third-party material – open at the original source",
     sourceNoteOffline: "Third-party material – not available here",
     openSource: "Open at source",
@@ -582,10 +586,19 @@ function MaterialRow({
   it,
   lang,
   onPreview,
+  vKarte,
 }: {
   it: BankItem;
   lang: Lang;
   onPreview: (it: BankItem) => void;
+  /**
+   * Řádek stojí uvnitř rozbalovací karty lekce nebo složky. Ta má lekci
+   * v hlavičce a téma v nadpisu nad seznamem, takže drobečková cesta pod
+   * názvem jen dvakrát opakuje, co je vidět – u dvaceti řádků pod sebou to
+   * dělá druhou řádku textu, která nic nenese. Ve výsledcích hledání
+   * a v plochých seznamech je naopak jediné, podle čeho se materiál zařadí.
+   */
+  vKarte?: boolean;
 }) {
   const s = STR[lang];
   const label = L(it.label, lang);
@@ -600,7 +613,10 @@ function MaterialRow({
         <a
           // Stejný odkaz jako v pruhu nad seznamem, včetně `?z=en` – jinak by
           // jeden z těch dvou vrátil anglického návštěvníka na českou úvodní.
-          href={interaktivniOdkaz(it.href, lang)}
+          // Hotová stránka z `public/` (laboratoř) na `?z=en` nereaguje a jde
+          // do nové karty, ať učiteli zůstane rozescrollovaný seznam.
+          href={it.novaKarta ? it.href : interaktivniOdkaz(it.href, lang)}
+          {...(it.novaKarta ? { target: "_blank", rel: "noopener noreferrer" } : {})}
           className="povrch group flex items-start gap-3 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:items-center sm:gap-4 sm:py-3.5"
         >
           <span className="flex shrink-0 sm:w-[5.25rem]">
@@ -722,11 +738,34 @@ function MaterialRow({
           Jinak by dva dotykové cíle po 44 px ukrojily z názvu skoro všechno. */}
       <span className="min-w-0 flex-1 basis-[calc(100%-5rem)] sm:basis-auto">
         <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
-        <span className="mt-0.5 block truncate text-sm text-zinc-600 dark:text-zinc-400">
-          {materialType && <span className="text-zinc-600 dark:text-zinc-400">{materialType[lang]} · </span>}
-          {L(it.topicLabel, lang)}
-          {it.group ? ` · ${L(it.group, lang)}` : ""}
-        </span>
+        {/* Popisek ukázek se schválně zalamuje místo ořezávání: na 375 px
+            zbývá 204 px a celý se nevejde, takže by se uřízl přesně na počtu
+            souborů („Ukázky do výkladu – 5 soubo…"). Drobečky se ořezávat
+            smějí – tam je uříznutý konec cesty pořád k něčemu. */}
+        {(materialType || it.ukazky || !vKarte) && (
+          <span
+            className={`mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400 ${
+              it.ukazky ? "" : "truncate"
+            }`}
+          >
+            {/* Balík ukázek je jediný řádek, který sám o sobě neřekne, co je
+                uvnitř – „ZIP · Obrázky · 1,5 MB" může být cokoli. Popisek
+                proto zůstává i v kartě lekce, kde se drobečky schovávají. */}
+            {it.ukazky ? <span>{s.ukazkyNote(it.ukazky)}</span> : null}
+            {materialType && (
+              <span className="text-zinc-600 dark:text-zinc-400">
+                {materialType[lang]}
+                {vKarte ? "" : " · "}
+              </span>
+            )}
+            {!vKarte && (
+              <>
+                {L(it.topicLabel, lang)}
+                {it.group ? ` · ${L(it.group, lang)}` : ""}
+              </>
+            )}
+          </span>
+        )}
       </span>
       {/* Odznak jen u vyhraněných materiálů. „both" (většina) ho nemá – tvrdit
           u průvodce pro učitele „žáci" nedávalo smysl. */}
@@ -1171,6 +1210,7 @@ function FolderCard({
                 key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}|${it.label.cs}`}
                 it={it}
                 lang={lang}
+                vKarte
                 onPreview={onPreview}
               />
             ))}
@@ -1315,6 +1355,7 @@ function LessonCard({
                 key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}|${it.label.cs}`}
                 it={it}
                 lang={lang}
+                vKarte
                 onPreview={onPreview}
               />
             ))}

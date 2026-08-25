@@ -29,12 +29,27 @@ function kindFromExt(ext: string): Material["kind"] {
 }
 
 function isHidden(name: string): boolean {
-  return name.startsWith(".") || /^_tema|^_autor|^readme/i.test(name);
+  return name.startsWith(".") || /^_tema|^_autor|^_zdroje|^readme/i.test(name);
 }
 
 /** Učitelská podsložka – její obsah se ukáže jen v učitelském pohledu. Konvence: „_ucitel". */
 function isTeacherDir(name: string): boolean {
   return /^_?(u[čc]itel|pro[ _]u[čc]itel)/i.test(name);
+}
+
+/**
+ * Složka s ukázkami do výkladu – `hloubka_1bit.png` vedle `hloubka_24bit.png`,
+ * `foto_jpeg_q15.jpg` vedle `foto_jpeg_q95.jpg`. Jsou to obrázky v učebnici,
+ * ne přílohy ke stažení, a v seznamu z nich byl jen randál (samotná komprese
+ * měla osmnáct řádků). Banka takovou složku přeskočí celou.
+ *
+ * Pozná se podle souboru `_zdroje.txt` uvnitř, NE podle jména složky: do
+ * „Obrázky/" posílají žáka pracovní listy („Pracuj se souborem
+ * Obrázky/foto_original.png"), takže přejmenovat ji na `_zdroje/` by ta
+ * zadání rozbilo a poslalo žáky do složky s podtržítkem.
+ */
+function isSourceDir(absDir: string): boolean {
+  return fs.existsSync(path.join(absDir, "_zdroje.txt"));
 }
 
 /** Žákovská podsložka – odznak „žáci". Konvence: „_zaci" nebo „Pro žáky". */
@@ -295,6 +310,19 @@ export type BankItem = {
    * a hero by ho započítal mezi soubory ke stažení, což není.
    */
   interactive?: boolean;
+  /**
+   * Otevřít do nové karty místo do stejné. Nesou to laboratoře a podobné
+   * stránky z `public/` – je to samostatná stránka, ne část banky, a učitel
+   * o rozescrollovaný seznam materiálů přijít nemá.
+   */
+  novaKarta?: boolean;
+  /**
+   * ZIP s ukázkami do výkladu a počet souborů v něm (`Obrázky.zip` vedle
+   * složky `Obrázky/`, kterou banka nevypisuje). Bez tohohle by řádek říkal
+   * jen „ZIP · Obrázky · 1,5 MB" a učitel by netušil, jestli si stahuje
+   * materiál k hodině, nebo přílohu k výkladu.
+   */
+  ukazky?: number;
 };
 
 // Obsah je napříč obory sdílený, ale jednotlivé obory mají v plánu různě
@@ -448,6 +476,7 @@ export function getBankItems(): BankItem[] {
         ents.sort((a, b) => byName(a.name, b.name));
         for (const e of ents) {
           if (e.isDirectory()) {
+            if (isSourceDir(path.join(absDir, e.name))) continue;
             let aud = audience;
             let grp = group;
             let grpSort = groupSort;
@@ -585,6 +614,30 @@ export function getBankItems(): BankItem[] {
               continue;
             }
 
+            // HTML v bance není dokument ke stažení, ale hotová stránka:
+            // laboratoře ke grafice, „Podezřelá schránka", „Laboratoř
+            // fungování AI". Stažené z prohlížeče jsou k ničemu, kdežto
+            // otevřené fungují rovnou – leží v `public/`, takže je Vercel
+            // servíruje tak, jak jsou.
+            const jeStranka = ext === "html";
+
+            // `Obrázky.zip` vedle složky `Obrázky/` se `_zdroje.txt`: přesně
+            // ten balík, kterým se skrytá složka nahrazuje. Počet souborů
+            // bereme ze složky, ne ze ZIPu – je to totéž a je to levnější.
+            let ukazky: number | undefined;
+            if (ext === "zip") {
+              const zdrojova = path.join(absDir, file.slice(0, -4));
+              if (isSourceDir(zdrojova)) {
+                try {
+                  ukazky = fs
+                    .readdirSync(zdrojova, { withFileTypes: true })
+                    .filter((z) => z.isFile() && z.name !== "_zdroje.txt").length;
+                } catch (err) {
+                  console.warn(`[materials] Nepodařilo se spočítat ukázky v ${zdrojova}:`, err);
+                }
+              }
+            }
+
             const parts = [courseId, ...segs, file].map((s) => encodeURIComponent(s));
             let sizeBytes = 0;
             try {
@@ -604,6 +657,9 @@ export function getBankItems(): BankItem[] {
               topicLabel,
               audience: isRozcestnik(file) ? "teacher" : audience,
               rozcestnik: isRozcestnik(file) || undefined,
+              interactive: jeStranka || undefined,
+              novaKarta: jeStranka || undefined,
+              ukazky,
               group,
               groupAuthor,
               groupSort,
@@ -633,6 +689,14 @@ export function getBankItems(): BankItem[] {
       // soubory ze stejné složky (skupiny) drží u sebe, až pak podle názvu
       byName(a.groupSort ?? a.group?.cs ?? "", b.groupSort ?? b.group?.cs ?? "") ||
       (a.sourceOrder ?? 0) - (b.sourceOrder ?? 0) ||
+      // Laboratoř stojí v lekci první. Bez tohohle o jejím místě rozhodovala
+      // abeceda: v „Rastrová a vektorová grafika" vyšla první, ve „Formáty
+      // obrázků a komprese" třetí – a v tématu to vypadalo jako nepořádek.
+      Number(Boolean(b.novaKarta)) - Number(Boolean(a.novaKarta)) ||
+      // Balík ukázek je naopak příloha k výkladu – patří pod materiály lekce,
+      // ne mezi ně. Taky ho jinak rozhazovala abeceda (v jedné lekci druhý,
+      // ve druhé poslední).
+      Number(Boolean(a.ukazky)) - Number(Boolean(b.ukazky)) ||
       byName(a.label.cs, b.label.cs),
   );
   return items;
