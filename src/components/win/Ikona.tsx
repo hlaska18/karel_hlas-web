@@ -349,21 +349,6 @@ function kresba(klic: KlicIkony, popisek?: string) {
         </>
       );
 
-    case "ovladaci-panely":
-      return (
-        <>
-          <rect x="6" y="9" width="36" height="30" rx="4" fill="#eef2f6" stroke="#c3c9d1" />
-          <g stroke="#5b6470" strokeWidth="2.2" strokeLinecap="round">
-            <path d="M12 18h24M12 24h24M12 30h24" />
-          </g>
-          <g fill="#3f8ce0">
-            <circle cx="20" cy="18" r="3.4" />
-            <circle cx="29" cy="24" r="3.4" />
-            <circle cx="17" cy="30" r="3.4" />
-          </g>
-        </>
-      );
-
     case "sit":
       return (
         <>

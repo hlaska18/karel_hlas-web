@@ -28,7 +28,6 @@ import { Terminal } from "./apps/Terminal";
 import { SpravceUloh } from "./apps/SpravceUloh";
 import { Fotky } from "./apps/Fotky";
 import { Prohlizec } from "./apps/Prohlizec";
-import { OvladaciPanely } from "./apps/OvladaciPanely";
 import { vybranyAkcent } from "@/lib/win/akcenty";
 import { MERITKO } from "@/lib/win/stav";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
@@ -348,8 +347,6 @@ function Aplikace({ app }: { app: AppId }) {
       return <Fotky />;
     case "prohlizec":
       return <Prohlizec />;
-    case "ovladaci-panely":
-      return <OvladaciPanely />;
     default:
       return null;
   }

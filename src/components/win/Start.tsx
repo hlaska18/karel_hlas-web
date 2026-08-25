@@ -27,7 +27,6 @@ const PRIPNUTE: AppId[] = [
   "terminal",
   "fotky",
   "spravce-uloh",
-  "ovladaci-panely",
 ];
 
 /** Složky, ze kterých se skládají Doporučené. */

@@ -38,8 +38,7 @@ export type AppId =
   | "terminal"
   | "spravce-uloh"
   | "fotky"
-  | "prohlizec"
-  | "ovladaci-panely";
+  | "prohlizec";
 
 export interface TypSouboru {
   popis: string;
@@ -181,9 +180,4 @@ export const APLIKACE: Record<AppId, { nazev: string; ikona: AppId; popis: strin
   },
   fotky: { nazev: "Fotky", ikona: "fotky", popis: "Prohlížeč obrázků" },
   prohlizec: { nazev: "Microsoft Edge", ikona: "prohlizec", popis: "Webový prohlížeč" },
-  "ovladaci-panely": {
-    nazev: "Ovládací panely",
-    ikona: "ovladaci-panely",
-    popis: "Starší nastavení systému",
-  },
 };

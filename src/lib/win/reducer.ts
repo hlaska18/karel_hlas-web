@@ -53,7 +53,7 @@ export type Akce =
  * Aplikace, které běží jen v jedné kopii. Spuštění „podruhé" jen přepne na
  * už otevřené okno – stejně jako Nastavení nebo Správce úloh ve Windows.
  */
-const JEDINACEK: AppId[] = ["nastaveni", "spravce-uloh", "kalkulacka", "ovladaci-panely"];
+const JEDINACEK: AppId[] = ["nastaveni", "spravce-uloh", "kalkulacka"];
 
 /** Odsazení každého dalšího okna, aby se nová okna nekladla přesně na sebe. */
 const KASKADA = 28;

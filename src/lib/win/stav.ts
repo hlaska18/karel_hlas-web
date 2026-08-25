@@ -187,7 +187,6 @@ export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
   "spravce-uloh": { w: 900, h: 600 },
   fotky: { w: 880, h: 620 },
   prohlizec: { w: 1060, h: 680 },
-  "ovladaci-panely": { w: 860, h: 560 },
 };
 
 export function vychoziStav(): Stav {

@@ -161,7 +161,6 @@ Fotky               prohlížeč obrázků se zvětšením, otočením a informa
 Microsoft Edge      karty, adresní řádek, tři vnitřní stránky, stahování
                     souboru do složky Stažené soubory; otevře i .html soubor
                     z disku, který si žák sám napsal
-Ovládací panely     starší rozcestník, který vede do nových Nastavení
 
 Plocha: pravé tlačítko (Nový, Vložit, Zobrazit, Přizpůsobit), přejmenování
 F2, mazání Delete. Hlavní panel: Start, hledání, běžící aplikace, rychlá
