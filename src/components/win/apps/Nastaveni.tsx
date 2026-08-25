@@ -29,6 +29,7 @@ import {
 import { Ikona } from "../Ikona";
 import { Posuvnik, Prepinac, Rozbalovac, Tlacitko } from "../ui";
 import { useOkno, useSystem } from "../system";
+import { scenarPodleId } from "@/lib/win/scenare";
 import { AKCENTY, barvaAkcentu } from "@/lib/win/akcenty";
 import { TAPETY } from "@/lib/win/obrazky";
 import { velikostText } from "@/lib/win/format";
@@ -342,7 +343,52 @@ function OddilSystem({
         popis="Název zařízení, procesor, paměť, verze Windows"
         onClick={() => naPodstranku("Informace")}
       />
+
+      <Obnoveni />
     </>
+  );
+}
+
+/**
+ * Vrácení počítače do stavu, ve kterém hodina začínala.
+ *
+ * Dřív se prostředí čistilo jedině smazáním dat webu v prohlížeči. Na
+ * sdíleném školním počítači je to hrubý nástroj: smaže i disky ostatních
+ * tříd, které na něm ten den pracovaly, a odhlásí je. Tohle tlačítko sáhne
+ * jen na tenhle disk.
+ *
+ * Odškrtané úlohy zůstávají. Úklid počítače není důvod přijít o hodinu
+ * práce – a splněný úkol už je splněný.
+ */
+function Obnoveni() {
+  const { stav, poslat } = useSystem();
+  const [ptamSe, nastavPtamSe] = useState(false);
+  const scenar = scenarPodleId(stav.scenar);
+
+  return (
+    <Karta
+      nadpis="Vrátit počítač do výchozího stavu"
+      popis={`Disk se vrátí do podoby „${scenar.nazev}“. Splněné úlohy zůstanou zaškrtnuté.`}
+    >
+      {ptamSe ? (
+        <div className="flex flex-wrap items-center gap-3">
+          <span className="text-[12px] text-win-slaby">
+            Přijdeš o všechny soubory, které sis tady vytvořil. Opravdu?
+          </span>
+          <Tlacitko
+            onClick={() => {
+              poslat({ typ: "system/reset" });
+              nastavPtamSe(false);
+            }}
+          >
+            Ano, vrátit
+          </Tlacitko>
+          <Tlacitko onClick={() => nastavPtamSe(false)}>Zpět</Tlacitko>
+        </div>
+      ) : (
+        <Tlacitko onClick={() => nastavPtamSe(true)}>Vrátit do výchozího stavu</Tlacitko>
+      )}
+    </Karta>
   );
 }
 

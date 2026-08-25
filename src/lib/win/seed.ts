@@ -44,7 +44,7 @@ const DESKTOP_INI = `[.ShellClassInfo]
 IconResource=%SystemRoot%\\system32\\imageres.dll,-113
 `;
 
-const slozka = (jmeno: string, deti: Uzel[], stari: number, zamceno = false): Slozka => ({
+export const slozka = (jmeno: string, deti: Uzel[], stari: number, zamceno = false): Slozka => ({
   druh: "slozka",
   jmeno,
   deti,
@@ -52,7 +52,7 @@ const slozka = (jmeno: string, deti: Uzel[], stari: number, zamceno = false): Sl
   ...(zamceno ? { zamceno: true } : {}),
 });
 
-const soubor = (
+export const soubor = (
   jmeno: string,
   obsah: string,
   stari: number,
@@ -66,7 +66,7 @@ const soubor = (
 });
 
 /** Soubor, který v prostředí nemá obsah – nese jen deklarovanou velikost. */
-const binarni = (jmeno: string, velikost: number, stari: number): Soubor =>
+export const binarni = (jmeno: string, velikost: number, stari: number): Soubor =>
   soubor(jmeno, "", stari, { velikost });
 
 const UKOLY_TXT = `ÚKOLY DO INFORMATIKY

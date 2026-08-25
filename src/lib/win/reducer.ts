@@ -267,7 +267,10 @@ export function reducer(stav: Stav, akce: Akce): Stav {
       return stav.virusBezi ? { ...stav, virusBezi: false } : stav;
 
     case "system/reset":
-      return vychoziStav();
+      // Vrátí disk do stavu, ve kterém hodina začínala – z TÉHOŽ scénáře,
+      // ne z výchozího. Odškrtané úlohy zůstávají: úklid počítače není důvod
+      // přijít o hodinu práce, a splněný úkol už je splněný.
+      return { ...vychoziStav(stav.scenar), splneno: stav.splneno, stopy: stav.stopy };
 
     default:
       return stav;

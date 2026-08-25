@@ -18,7 +18,7 @@
  */
 
 import type { Slozka, Uzel } from "./fs";
-import { vytvorDisk } from "./seed";
+import { diskProScenar, VYCHOZI_SCENAR } from "./scenare";
 import type { AppId } from "./typy";
 
 const KLIC_ZAKLAD = "win11-vyuka-stav";
@@ -155,6 +155,12 @@ export interface PolozkaKose {
 
 export interface Stav {
   verze: number;
+  /**
+   * Ze kterého scénáře disk vznikl (viz `scenare.ts`). Ukládá se, aby se po
+   * návratu na `/windows` bez parametru nepřepsal disk, který si žák přinesl
+   * z odkazu na konkrétní hodinu.
+   */
+  scenar: string;
   /** Kořen disku C:. */
   disk: Slozka;
   kos: PolozkaKose[];
@@ -189,11 +195,12 @@ export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
   prohlizec: { w: 1060, h: 680 },
 };
 
-export function vychoziStav(): Stav {
+export function vychoziStav(scenar: string = VYCHOZI_SCENAR): Stav {
   return {
     virusBezi: false,
     verze: VERZE_ULOZISTE,
-    disk: vytvorDisk(),
+    scenar,
+    disk: diskProScenar(scenar),
     kos: [],
     okna: [],
     citac: 1,
@@ -207,17 +214,31 @@ export function vychoziStav(): Stav {
 /* ───────────────────── Ukládání ───────────────────── */
 
 /** Co se ukládá. Otevřená okna schválně ne – po obnovení se startuje na ploše. */
-type Ulozeny = Pick<Stav, "verze" | "disk" | "kos" | "nastaveni" | "stopy" | "splneno">;
+type Ulozeny = Pick<Stav, "verze" | "scenar" | "disk" | "kos" | "nastaveni" | "stopy" | "splneno">;
 
-export function nacti(): Stav | null {
+export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
   if (typeof window === "undefined") return null;
   try {
     const syrove = window.localStorage.getItem(KLIC_ULOZISTE);
     if (!syrove) return null;
     const ulozeny = JSON.parse(syrove) as Ulozeny;
     if (ulozeny?.verze !== VERZE_ULOZISTE || !ulozeny.disk) return null;
+
+    // Odkaz na jinou hodinu než minule: disk se postaví z nového scénáře, ale
+    // ODŠKRTANÉ ÚLOHY A STOPY ZŮSTANOU. Žák nesmí přijít o postup jen proto,
+    // že mu učitel poslal odkaz na jiné cvičení.
+    const ulozenyScenar = ulozeny.scenar ?? VYCHOZI_SCENAR;
+    if (ulozenyScenar !== scenar) {
+      return {
+        ...vychoziStav(scenar),
+        nastaveni: { ...VYCHOZI_NASTAVENI, ...ulozeny.nastaveni },
+        stopy: ulozeny.stopy ?? [],
+        splneno: ulozeny.splneno ?? [],
+      };
+    }
+
     return {
-      ...vychoziStav(),
+      ...vychoziStav(scenar),
       disk: ulozeny.disk,
       kos: ulozeny.kos ?? [],
       nastaveni: { ...VYCHOZI_NASTAVENI, ...ulozeny.nastaveni },
@@ -234,6 +255,7 @@ export function uloz(stav: Stav): void {
   if (typeof window === "undefined") return;
   const ulozeny: Ulozeny = {
     verze: stav.verze,
+    scenar: stav.scenar,
     disk: stav.disk,
     kos: stav.kos,
     nastaveni: stav.nastaveni,

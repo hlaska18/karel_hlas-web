@@ -45,6 +45,42 @@ Po přihlášení si karta prohlížeče pamatuje, že sezení běží, takže o
 stránky nevyhodí žáka ven. Zavřením prohlížeče se zapomene.
 
 
+SCÉNÁŘE — S JAKÝM POČÍTAČEM ŽÁK NASTOUPÍ
+----------------------------------------
+Simulace umí dvě věci, které skutečný školní počítač ne: dá se resetovat
+a dá se PŘEDEM ROZBÍT. Scénář se volí adresou, žák nic nenastavuje:
+
+  /windows                    Výchozí
+                              Uklizený počítač. Běžná hodina o souborech,
+                              nastavení a příkazovém řádku.
+
+  /windows?scenar=uklid       Úklid po spolužákovi
+                              Plocha zavalená 48 fotkami, prázdné „Nové
+                              složky", tři skoro stejné referáty a soubor
+                              s podvrženou příponou (Zaloha.jpg je text).
+                              Na třídění, hromadný výběr a řazení podle data
+                              — seřadit podle jména dá jiné pořadí než podle
+                              data, a to je půlka cvičení.
+
+  /windows?scenar=poviru      Po útoku
+                              Škodlivý program už proběhl: soubory mají cizí
+                              příponu a na ploše leží výzva k výkupnému. Žák
+                              nastupuje do následku, ne do prevence. Nic se
+                              nespouští, je to naskriptovaná změna disku.
+
+Překlep v adrese nevadí — neznámý scénář se chová jako výchozí. Který scénář
+je otevřený, stojí na zamykací obrazovce (u výchozího se nepíše nic).
+
+Přepnutí scénáře NESMAŽE odškrtané úlohy. Disk se postaví nový, postup
+zůstane — žák nemá přijít o hodinu práce jen proto, že mu přišel odkaz na
+jiné cvičení.
+
+Vrátit počítač do stavu, ve kterém hodina začínala: uvnitř prostředí
+Nastavení → Systém → Vrátit počítač do výchozího stavu. Vrací disk téhož
+scénáře a splněné úlohy nechává. Je to šetrnější než mazat data webu — viz
+níž, proč na sdíleném počítači.
+
+
 KDE SE UKLÁDÁ PRÁCE ŽÁKA
 ------------------------
 Všechno, co žák v prostředí vytvoří, je v jeho prohlížeči (localStorage).

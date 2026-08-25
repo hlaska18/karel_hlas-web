@@ -22,6 +22,7 @@ import {
 } from "react";
 import { reducer, type Akce } from "@/lib/win/reducer";
 import { nacti, nastavUcetUloziste, uloz, vychoziStav, type Obdelnik, type Stav } from "@/lib/win/stav";
+import { scenarZAdresy } from "@/lib/win/scenare";
 import { vyhodnot } from "@/lib/win/ukoly";
 import { ulozPostup } from "@/lib/postup/klient";
 import type { AppId } from "@/lib/win/typy";
@@ -43,7 +44,9 @@ interface Kontext {
 const SystemContext = createContext<Kontext | null>(null);
 
 export function SystemProvider({ children }: { children: ReactNode }) {
-  const [stav, poslat] = useReducer(reducer, null, vychoziStav);
+  // Lazy inicializace přes šipku, ne `vychoziStav` přímo: `useReducer` by mu
+  // předal druhý argument (`null`) jako scénář.
+  const [stav, poslat] = useReducer(reducer, null, () => vychoziStav());
   const [plocha, nastavPlochu] = useState<Obdelnik>({ x: 0, y: 0, w: 1280, h: 720 });
   // Než se přečte uložený stav, nemá cenu ho hned přepsat výchozím.
   const nacteno = useRef(false);
@@ -64,7 +67,10 @@ export function SystemProvider({ children }: { children: ReactNode }) {
    */
   useEffect(() => {
     nastavUcetUloziste(ucet?.prezdivka ?? null);
-    const ulozeny = nacti() ?? vychoziStav();
+    // Který scénář si žádá adresa (`?scenar=uklid`). Když má žák uložený
+    // jiný, `nacti` mu postaví nový disk a odškrtané úlohy nechá.
+    const scenar = scenarZAdresy();
+    const ulozeny = nacti(scenar) ?? vychoziStav(scenar);
     const splneno = ucet
       ? [...new Set([...ulozeny.splneno, ...ucet.splneno])]
       : ulozeny.splneno;

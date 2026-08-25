@@ -13,6 +13,7 @@ import { ArrowRight, Loader2, Lock, UserRound } from "lucide-react";
 import { Ikona } from "./Ikona";
 import { TAPETY, vybranaTapeta } from "@/lib/win/obrazky";
 import { datumSlovy, hodiny } from "@/lib/win/format";
+import { scenarPodleId, scenarZAdresy, VYCHOZI_SCENAR } from "@/lib/win/scenare";
 import { prihlas } from "@/lib/postup/klient";
 
 /**
@@ -37,6 +38,7 @@ export function Prihlaseni({
   onHotovo: (ucet: { prezdivka: string; splneno: string[] } | null) => void;
 }) {
   const [faze, nastavFazi] = useState<Faze>("zamek");
+  const scenar = scenarPodleId(scenarZAdresy());
   const [chyba, nastavChybu] = useState(false);
   const [prezdivka, nastavPrezdivku] = useState("");
   const [heslo, nastavHeslo] = useState("");
@@ -151,6 +153,14 @@ export function Prihlaseni({
               Výuková simulace Windows 11 pro hodiny informatiky. Neběží tu
               skutečný systém a nic se neinstaluje.
             </p>
+            {/* Který scénář se otevřel. Ukazuje se jen u jiného než výchozího:
+                učitel i žák hned vidí, že odkaz vedl na konkrétní cvičení
+                a že ten nepořádek na ploše tam patří. */}
+            {scenar.id !== VYCHOZI_SCENAR && (
+              <p className="rounded-full bg-white/15 px-3 py-1 text-center text-[12px] text-white/90 drop-shadow">
+                Cvičení: {scenar.nazev}
+              </p>
+            )}
             <p className="animate-pulse text-center text-[14px] text-white/85 drop-shadow">
               Klikni nebo stiskni libovolnou klávesu
             </p>
