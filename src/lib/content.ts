@@ -76,6 +76,20 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
+    title: "Obrazovka jako digitální dudlík: varují pediatři",
+    source: "E-Bezpečí",
+    url: "https://www.e-bezpeci.cz/index.php/clanky/5138-obrazovka-jako-digitalni-dudlik-pediatri-varuji-pred-zavislosti-uz-u-nejmensich-deti",
+    logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
+    jazyk: "cs",
+  },
+  {
+    title: "Když pravidla používání AI ve školách vytvoří teenageři",
+    source: "RVP.cz",
+    url: "https://clanky.rvp.cz/clanek/24471/KDYZ-PRAVIDLA-POUZIVANI-AI-VE-SKOLACH-VYTVORI-TEENAGERI.html",
+    logo: { src: "/images/clanky/rvp.png", pomer: 1.842 },
+    jazyk: "cs",
+  },
+  {
     title: "Sakra, jak to bylo? Správci hesel vám ušetří nervy",
     source: "Wired.cz",
     url: "https://www.wired.cz/clanky/enm4ku9tjy3-sakra-jak-to-bylo-spravci-hesel-vam-usetri-nervy",
@@ -88,20 +102,6 @@ export const CLANKY: Clanek[] = [
     source: "Václav Maněna",
     url: "https://manena.info/2026/08/19/co-o-vas-vi-obycejna-webova-stranka-zkuste-si-to-sami/",
     logo: { src: "/images/clanky/manena.png", pomer: 1.0 },
-    jazyk: "cs",
-  },
-  {
-    title: "NÚKIB: kybernetických incidentů ubylo, ale útoky jsou závažnější",
-    source: "E-Bezpečí",
-    url: "https://www.e-bezpeci.cz/index.php/clanky/5137-nukib-kybernetickych-incidentu-ubylo-ale-utoky-jsou-zavaznejsi-a-pribyva-kyberkriminality",
-    logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
-    jazyk: "cs",
-  },
-  {
-    title: "Když vibecoding mění řemeslo: klienti nosí hotových 90 procent a chtějí dodělat zbytek",
-    source: "Lupa.cz",
-    url: "https://www.lupa.cz/clanky/mame-hotovych-90-procent-dodelejte-nam-zbytek-zadaji-klienti-vyvojare-jak-to-vypada-kdyz-vibecoding-meni-byznysmodel/",
-    logo: { src: "/images/clanky/lupa.png", pomer: 1.58 },
     jazyk: "cs",
   },
 ];
