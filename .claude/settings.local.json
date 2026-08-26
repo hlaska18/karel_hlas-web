@@ -54,7 +54,13 @@
       "Bash(curl -s --max-time 20 http://localhost:3000/)",
       "Bash(curl -s --retry 40 --retry-delay 1 --retry-connrefused --max-time 120 -o /dev/null -w \"HTTP %{http_code}\\\\n\" http://localhost:3000/)",
       "Bash(curl -s --max-time 30 http://localhost:3000/)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(awk '/^export const CLANKY/,0' src/lib/content.ts)",
+      "WebFetch(domain:www.wired.cz)",
+      "Bash(git --no-pager log --oneline -30 -- src/lib/content.ts)",
+      "Bash(GIT_PAGER=cat PAGER=cat git log --oneline -30 -- src/lib/content.ts)",
+      "Bash(curl -sL --max-time 25 \"https://www.e-bezpeci.cz/index.php/clanky\")",
+      "Bash(curl -sL --max-time 25 \"https://www.lupa.cz/clanky/\")"
     ]
   }
 }
