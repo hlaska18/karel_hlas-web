@@ -76,6 +76,20 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
+    title: "20 výzev a 10 myšlenek pro školní rok 2026/2027",
+    source: "RVP.cz",
+    url: "https://clanky.rvp.cz/clanek/24473/20-VYZEV-A-10-MYSLENEK-NEJEN-PRO-SKOLNI-ROK-2026-2027.html",
+    logo: { src: "/images/clanky/rvp.png", pomer: 1.842 },
+    jazyk: "cs",
+  },
+  {
+    title: "AliExpress potají vytvářel zvukový otisk návštěvníků",
+    source: "E-Bezpečí",
+    url: "https://www.e-bezpeci.cz/index.php/clanky/5145-aliexpress-potaji-vytvarel-zvukovy-otisk-navstevniku-prozradila-ho-zavada-sluchatek",
+    logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
+    jazyk: "cs",
+  },
+  {
     title: "Obrazovka jako digitální dudlík: varují pediatři",
     source: "E-Bezpečí",
     url: "https://www.e-bezpeci.cz/index.php/clanky/5138-obrazovka-jako-digitalni-dudlik-pediatri-varuji-pred-zavislosti-uz-u-nejmensich-deti",
@@ -87,21 +101,6 @@ export const CLANKY: Clanek[] = [
     source: "RVP.cz",
     url: "https://clanky.rvp.cz/clanek/24471/KDYZ-PRAVIDLA-POUZIVANI-AI-VE-SKOLACH-VYTVORI-TEENAGERI.html",
     logo: { src: "/images/clanky/rvp.png", pomer: 1.842 },
-    jazyk: "cs",
-  },
-  {
-    title: "Sakra, jak to bylo? Správci hesel vám ušetří nervy",
-    source: "Wired.cz",
-    url: "https://www.wired.cz/clanky/enm4ku9tjy3-sakra-jak-to-bylo-spravci-hesel-vam-usetri-nervy",
-    logo: { src: "/images/clanky/wired.png", pomer: 1.23 },
-    jazyk: "cs",
-    pozor: { cs: "tři články zdarma za 30 dnů", en: "three free articles per 30 days" },
-  },
-  {
-    title: "Co o vás ví obyčejná webová stránka? Zkuste si to sami",
-    source: "Václav Maněna",
-    url: "https://manena.info/2026/08/19/co-o-vas-vi-obycejna-webova-stranka-zkuste-si-to-sami/",
-    logo: { src: "/images/clanky/manena.png", pomer: 1.0 },
     jazyk: "cs",
   },
 ];
