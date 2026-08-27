@@ -54,6 +54,12 @@ export function Footer() {
               {tr.footer.licenseName}
             </a>
           </p>
+          {/* Vazba na školu. Ne kosmetika: bez ní web vypadá jako soukromá
+              stránka učitele, který na SPŠ náhodou učí, a ne jako výstup
+              vznikající v rámci jeho práce tam. */}
+          <p className="max-w-[34rem] text-xs text-zinc-600 dark:text-zinc-400">
+            {tr.footer.affiliation}
+          </p>
           {/* Vercel Analytics neukládá cookies ani neidentifikuje návštěvníka,
               takže souhlas nepotřebuje – ale mlčet se o měření nemá. */}
           <p className="text-xs text-zinc-600 dark:text-zinc-400">{tr.footer.analytics}</p>

@@ -1179,6 +1179,7 @@ type Dict = {
     role: string;
     /** Uvozuje odkaz na licenci, proto končí bez tečky. */
     rights: string;
+    affiliation: string;
     licenseName: string;
     /** Odkaz na text licence – česká i anglická verze mají vlastní „deed“. */
     licenseHref: string;
@@ -1463,6 +1464,12 @@ export const t: Record<Lang, Dict> = {
       // z materiálů pod CC BY-NC-SA, jejíž podmínka „zachovej licenci“
       // se s vyhrazenými právy vylučuje.
       rights: "Materiály sdílím pod licencí",
+      // Vazba na školu stojí v patičce schválně: z webu se dá jinak vyčíst
+      // jen to, KDE autor učí, ne že materiály vznikají v rámci té práce.
+      // Pro čtenáře je to jedna věta navíc, pro posuzovatele projektu je to
+      // ten rozdíl mezi soukromou stránkou a výstupem školy.
+      affiliation:
+        "Materiály vznikají a ověřují se ve výuce na Střední průmyslové škole strojní a stavební Tábor.",
       licenseName: "CC BY-NC-SA 4.0",
       licenseHref: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs",
       analytics: "Návštěvnost měřím anonymně, bez cookies.",
@@ -1743,6 +1750,8 @@ export const t: Record<Lang, Dict> = {
     footer: {
       role: "Computer Science & English teacher · SPŠ Tábor",
       rights: "Materials shared under",
+      affiliation:
+        "The materials are created and classroom-tested at Střední průmyslová škola strojní a stavební Tábor (Secondary Technical School, Tábor, Czechia).",
       licenseName: "CC BY-NC-SA 4.0",
       licenseHref: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en",
       analytics: "Traffic is measured anonymously, without cookies.",
