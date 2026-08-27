@@ -60,7 +60,18 @@
       "Bash(git --no-pager log --oneline -30 -- src/lib/content.ts)",
       "Bash(GIT_PAGER=cat PAGER=cat git log --oneline -30 -- src/lib/content.ts)",
       "Bash(curl -sL --max-time 25 \"https://www.e-bezpeci.cz/index.php/clanky\")",
-      "Bash(curl -sL --max-time 25 \"https://www.lupa.cz/clanky/\")"
+      "Bash(curl -sL --max-time 25 \"https://www.lupa.cz/clanky/\")",
+      "Bash(git --no-pager log --format=%H -n 20 -- src/lib/content.ts)",
+      "Bash(git --no-pager log --oneline -30)",
+      "WebFetch(domain:www.e-bezpeci.cz)",
+      "WebFetch(domain:www.lupa.cz)",
+      "WebFetch(domain:clanky.rvp.cz)",
+      "WebFetch(domain:www.root.cz)",
+      "WebFetch(domain:spomocnik.rvp.cz)",
+      "Bash(./node_modules/.bin/tsc --noEmit)",
+      "Bash(npx vitest *)",
+      "Bash(kill -0 %1)",
+      "Bash(wait)"
     ]
   }
 }
