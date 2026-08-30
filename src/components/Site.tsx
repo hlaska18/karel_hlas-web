@@ -4,6 +4,7 @@ import { Hero } from "@/components/Hero";
 import { BankSection } from "@/components/BankSection";
 import { CrossSubject } from "@/components/CrossSubject";
 import { AiHub } from "@/components/AiHub";
+import { UkazatelPostupu } from "@/components/UkazatelPostupu";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
@@ -40,6 +41,7 @@ export function Site({
         className="pointer-events-none fixed inset-0 -z-10 bg-dots text-black/[0.03] dark:text-white/[0.045]"
       />
       <Header />
+      <UkazatelPostupu lang={lang} />
       <main id="main">
         <Hero pool={getHeroPool(items)} stats={getBankStats(items)} />
         <BankSection items={items} />
