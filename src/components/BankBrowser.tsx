@@ -854,6 +854,13 @@ const LESSON_CONFIG: Record<string, LessonConfig> = {
     studentLabel: { cs: "Podklad", en: "Activity file" },
     teacherLabel: { cs: "Prezentace", en: "Slides" },
   },
+  "Grafika a multimédia": {
+    studentGroups: ["Podklady k aktivitám"],
+    teacherGroups: ["Prezentace k hodinám"],
+    teacherTone: "neutral",
+    studentLabel: { cs: "Podklad", en: "Activity file" },
+    teacherLabel: { cs: "Prezentace", en: "Slides" },
+  },
   // Power BI tu mělo skupiny „Úlohy" a „Řešení", které na disku neexistují –
   // reálné jsou „PowerBI" a „Microsoft 365 pro školy". Konfigurace tedy nikdy
   // nevytvořila jedinou kartu lekce a jen mátla. Téma dnes vede na cizí
@@ -1241,11 +1248,32 @@ function cleanTitle(raw: string): string {
   return s;
 }
 
-/** Vytáhne název lekce z názvů souborů v balíčku (bere nejdelší/nejpopisnější shodu). */
-function lessonTitle(items: BankItem[], lang: Lang): string {
-  const candidates = items.map((it) => cleanTitle(L(it.label, lang))).filter(Boolean);
+/**
+ * Název lekce. Bere se z PREZENTACE k hodině, ne z nejdelšího názvu souboru.
+ *
+ * Dřív rozhodovala délka a v ostatních tématech to vycházelo, protože
+ * prezentace tam nese celé téma a je nejdelší. V Grafice ne: v hodinách
+ * 3 a 6 je „Laboratoř – komprese a formáty" delší než „Formáty obrázků
+ * a komprese", takže by se karta jmenovala po laboratoři místo po tématu.
+ *
+ * Prezentace je plán té hodiny, takže je to i významově správně. Nejdelší
+ * název zůstává jako záloha pro balíčky, které prezentaci nemají.
+ */
+function lessonTitle(items: BankItem[], lang: Lang, cfg: LessonConfig): string {
+  const zPrezentace = items
+    .filter((it) => isTeacherSlot(it, cfg))
+    .map((it) => cleanTitle(L(it.label, lang)))
+    .filter(Boolean)
+    .sort((a, b) => b.length - a.length);
+
+  const candidates = zPrezentace.length
+    ? zPrezentace
+    : items
+        .map((it) => cleanTitle(L(it.label, lang)))
+        .filter(Boolean)
+        .sort((a, b) => b.length - a.length);
+
   if (!candidates.length) return "";
-  candidates.sort((a, b) => b.length - a.length);
   const t = candidates[0];
   return t.charAt(0).toUpperCase() + t.slice(1);
 }
@@ -1273,7 +1301,7 @@ function LessonCard({
   const ref = useRef<HTMLDivElement>(null);
   const hasStudent = items.some((it) => isStudentSlot(it, cfg));
   const hasTeacher = items.some((it) => isTeacherSlot(it, cfg));
-  const title = lessonTitle(items, lang);
+  const title = lessonTitle(items, lang, cfg);
   const num = String(no).padStart(2, "0");
 
   // Otevření ze sdíleného odkazu (?tema=...&lekce=N) – odscroluj k ní jednou po načtení.

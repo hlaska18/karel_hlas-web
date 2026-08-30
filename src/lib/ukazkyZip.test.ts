@@ -63,10 +63,15 @@ describe("ZIPy s ukázkami", () => {
     const zip = `${slozka}.zip`;
     expect(fs.existsSync(zip), `chybí ${path.basename(zip)} – spusť scripts/vyrob-ukazky-zip.py`).toBe(true);
 
+    // Uvnitř archivu je jméno složky BEZ číselné předpony hodiny: na disku
+    // „4. Obrázky/", v archivu „Obrázky/". Drží to cesty v pracovních listech
+    // („Pracuj se souborem Obrázky/foto_original.png") i po rozbalení.
+    // Viz komentář v scripts/vyrob-ukazky-zip.py.
+    const uvnitr = path.basename(slozka).replace(/^\d+\.\s*/, "");
     const naDisku = fs
       .readdirSync(slozka, { withFileTypes: true })
       .filter((e) => e.isFile() && e.name !== MARKER)
-      .map((e) => `${path.basename(slozka)}/${e.name}`.normalize("NFC"))
+      .map((e) => `${uvnitr}/${e.name}`.normalize("NFC"))
       .sort();
 
     const vZipu = jmenaVZipu(fs.readFileSync(zip)).sort();

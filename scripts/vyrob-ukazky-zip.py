@@ -21,6 +21,7 @@ Spuštění:  python3 scripts/vyrob-ukazky-zip.py
 """
 
 from pathlib import Path
+import re
 import zipfile
 
 KOREN = Path(__file__).resolve().parent.parent / "public" / "materialy"
@@ -48,10 +49,21 @@ def main() -> int:
             continue
 
         with zipfile.ZipFile(cil, "w", zipfile.ZIP_DEFLATED, compresslevel=9) as z:
+            # Uvnitř ZIPu se z názvu složky ODŘÍZNE ČÍSELNÁ PŘEDPONA hodiny:
+            # „4. Obrázky/" na disku, ale „Obrázky/" v archivu.
+            #
+            # Vypadá to jako zbytečnost, ale drží pohromadě dvě věci, které se
+            # jinak perou. Předpona na disku je nutná, aby banka soubor zařadila
+            # do správné hodiny (číslo hodiny čte z názvu). A uvnitř archivu
+            # musí zůstat holé jméno, protože pracovní listy posílají žáka na
+            # „Obrázky/foto_original.png" — kdyby se po rozbalení objevila
+            # složka „4. Obrázky", byla by ta zadání špatně.
+            #
+            # NEOPRAVOVAT zpátky na slozka.name.
+            uvnitr = re.sub(r"^\d+\.\s*", "", slozka.name)
+
             for soubor in soubory:
-                # Uvnitř ZIPu zůstane původní jméno složky („Obrázky/foto.png"),
-                # aby cesty z pracovních listů seděly i po rozbalení.
-                info = zipfile.ZipInfo(f"{slozka.name}/{soubor.name}", CAS)
+                info = zipfile.ZipInfo(f"{uvnitr}/{soubor.name}", CAS)
                 info.compress_type = zipfile.ZIP_DEFLATED
                 info.external_attr = 0o644 << 16
                 z.writestr(info, soubor.read_bytes())

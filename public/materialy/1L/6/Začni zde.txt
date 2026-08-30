@@ -5,58 +5,39 @@ CÍL BLOKU
 Student zná principy počítačové grafiky a multimediálních formátů
 a umí tvořit grafiku a pracovat s multimédii.
 
-JAK JE BALÍČEK USPOŘÁDANÝ
-Každá hodina má vlastní složku a v ní všechno, co se v ní použije —
-prezentaci, zadání a média. Nemusíš nic hledat po jiných složkách.
-
-DOPORUČENÝ START
-1. Otevři Pro učitele/Plány hodin a metodika.docx.
-2. Vyzkoušej laboratoř — je ve složkách hodin 1, 2, 3 a 6.
-   Otevírá se dvojklikem v běžném prohlížeči a běží offline.
-3. Ověř GIMP (hodina 4), Inkscape (hodina 5) a přístup do Canvy (hodina 7).
-   K hodině 6 sežeň sluchátka — bez nich rozdíl mezi vzorkovacími
-   frekvencemi ve třídě neuslyší nikdo.
-4. Projdi Pro učitele/Kontrola úplnosti.txt — jsou v ní tři věci,
-   které je potřeba vyzkoušet na školním počítači, včetně časování.
-5. Studentům zpřístupni pracovní sešit a složku té hodiny, kterou učíš.
-   Spolu se sešitem jim dej i Pro žáky/Začni tady.txt —
-   je psaný přímo studentovi a slouží při absenci i k opakování.
-
-STRUKTURA
-1.–8. složka hodiny
-   - prezentace pro danou hodinu (7 snímků, s poznámkami pro vyučujícího),
-   - zadání aktivity,
-   - obrázky a média, která hodina používá,
-   - u hodin 1, 2, 3 a 6 navíc offline laboratoř.
-Bonus – co se do osmi hodin nevešlo
-   - nepovinná lekce: RGB a CMYK, ztrátová komprese zvuku, metadata fotografie.
-Pro učitele
-   - plány 8 hodin a metodika,
-   - hodnocení, testy A/B a řešení,
-   - protokol souladu.
-Pro žáky
-   - digitální pracovní sešit pro všech 8 hodin,
-   - rozcestník pro studenta.
-
 MAPA HODIN
 1. Rastrová a vektorová grafika        Laboratoř – rastr a vektor
 2. Rozlišení, barvy a barevná hloubka  Laboratoř – barevná hloubka
 3. Formáty obrázků a komprese          Laboratoř – komprese a formáty
 4. Úprava fotografie v GIMPu           GIMP
 5. Vektorová značka v Inkscapu         Inkscape
-6. Zvuk a video                        Laboratoř – vzorkování zvuku + Média
+6. Zvuk a video                        Laboratoř – vzorkování zvuku
 7. Infografika a prezentace            Canva
 8. Závěrečný výstup a obhajoba         dle volby studenta
 
-POTŘEBNÝ SOFTWARE
-Hodiny 1, 2, 3 a 6 vystačí s běžným prohlížečem a přehrávačem — nic se neinstaluje.
-Hodina 4 vyžaduje GIMP, hodina 5 Inkscape, hodina 7 přístup do Canvy.
-Ke každé z nich je v metodice uvedena náhradní varianta pro případ,
-že nástroj není k dispozici.
+Bonus – co se do osmi hodin nevešlo: RGB a CMYK, ztrátová komprese zvuku,
+metadata fotografie. Nepovinné.
 
-PŮVOD MATERIÁLŮ A BEZPEČNOST
-Všechny obrázky, zvuky i videa v balíčku byly vytvořeny programově přímo pro tuto sadu.
-Neobsahují žádné osoby ani cizí dílo. Laboratoře fungují offline a nic neodesílají;
-obrázky mají vepsané v sobě, takže fungují i po stažení samotného souboru.
-Do studentských výstupů nevkládej cizí obrázky bez ověřené licence
-ani fotografie spolužáků bez jejich souhlasu.
+POTŘEBNÝ SOFTWARE
+Hodiny 1, 2, 3 a 6 vystačí s běžným prohlížečem a přehrávačem — nic se
+neinstaluje. Laboratoře běží offline, obrázky mají vepsané v sobě.
+Hodina 4 vyžaduje GIMP, hodina 5 Inkscape, hodina 7 přístup do Canvy.
+Ke každé z nich je v metodice náhradní varianta pro případ, že nástroj
+není k dispozici.
+
+K hodině 6 sežeň sluchátka. Bez nich rozdíl mezi vzorkovacími frekvencemi
+ve třídě neuslyší nikdo.
+
+NEŽ ZAČNEŠ UČIT
+Otevři Pro učitele/Plány hodin a metodika.docx — je v ní průběh všech osmi
+hodin. Poznámky u jednotlivých snímků prezentace říkají, co na kterém
+snímku dělat a kolik na něj máte času.
+
+Studentům dej Pro žáky/Digitální pracovní sešit.docx a k němu
+Pro žáky/Začni tady.txt, který je psaný přímo jim a slouží i při absenci.
+
+PŮVOD MATERIÁLŮ
+Všechny obrázky, zvuky i videa byly vytvořeny programově přímo pro tuto
+sadu. Neobsahují žádné osoby ani cizí dílo a laboratoře nic neodesílají.
+Do studentských výstupů nevkládej cizí obrázky bez ověřené licence ani
+fotografie spolužáků bez jejich souhlasu.
