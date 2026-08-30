@@ -16,7 +16,8 @@ Obsah
 - testy A/B, řešení a rubrika závěrečného výstupu
 
 Kontrolované vazby
-- názvy podkladů v metodice, sešitu a prezentacích odpovídají souborům ve složkách hodin
+- názvy podkladů v metodice, sešitu a prezentacích odpovídají souborům ve složkách
+  Prezentace k hodinám a Podklady k aktivitám; číslo na začátku názvu určuje hodinu
 - cíle, aktivity, výstupy a časování se shodují ve všech řídicích dokumentech
 - uváděné velikosti souborů odpovídají skutečným souborům
 - laboratoře fungují offline, nenačítají externí zdroje a mají obrázky vepsané
@@ -28,10 +29,10 @@ Stav
 Obsahově je balíček kompletní. Před první hodinou zbývá ověřit tři věci
 na skutečném školním počítači; dokud se tak nestane, jde o nezměřená tvrzení:
 
-1. NEOVĚŘENO – Otevřít laboratoř ve školním prohlížeči (je ve složkách
-   hodin 1, 2, 3 a 6) a přehrát jeden soubor .mp4 a jeden .wav ze složky
-   hodiny 6. Školní image bývá uzamčený a může blokovat lokální soubory
-   nebo kodeky.
+1. NEOVĚŘENO – Otevřít laboratoř ve školním prohlížeči (jsou čtyři,
+   v Podkladech k aktivitám u hodin 1, 2, 3 a 6) a přehrát jeden soubor
+   .mp4 a jeden .wav z ukázek k hodině 6. Školní image bývá uzamčený
+   a může blokovat lokální soubory nebo kodeky.
 2. NEOVĚŘENO – Zkontrolovat, že GIMP (hodina 4) a Inkscape (hodina 5)
    jsou nainstalované a že jejich nabídky odpovídají krokům v sešitu.
    Popisy menu zastarávají rychleji než cokoli jiného.
