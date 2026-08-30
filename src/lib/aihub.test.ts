@@ -21,7 +21,7 @@ const UPLNY = {
   overeni: "Odučeno 14. 3. 2027 ve 2. B, dvě vyučovací hodiny.",
   reflexe: "Fungovalo u silnějších žáků; slabší se nechali argumentem zastavit.",
   doporuceni: "Zadat předem tři povolené protiargumenty.",
-  milnik: "M2",
+  faze: "behem",
   publikovano: "2027-03-14",
   prilohy: [{ nazev: "Pracovní list", soubor: "list.docx" }],
 };
@@ -60,7 +60,7 @@ describe("čtení výstupů", () => {
     poloz("sloh-s-ai", UPLNY);
     const v = await nactiVystupy();
     expect(v).toHaveLength(1);
-    expect(v[0]).toMatchObject({ id: "sloh-s-ai", nazev: UPLNY.nazev, milnik: "M2" });
+    expect(v[0]).toMatchObject({ id: "sloh-s-ai", nazev: UPLNY.nazev, faze: "behem" });
     expect(v[0].href).toBe("/ai-hub/sloh-s-ai");
     expect(v[0].prilohy).toHaveLength(1);
   });
@@ -70,6 +70,7 @@ describe("čtení výstupů", () => {
     ["overeni", "overeni"],
     ["doporuceni", "doporuceni"],
     ["autor", "autor"],
+    ["faze", "faze"],
   ])("výstup bez pole „%s“ se nezveřejní", async (_n, pole) => {
     // Jádro věci: karta bez reflexe nebo bez ověření by vypadala jako hotový
     // výstup a přitom by nedokládala nic. Radši ji neukázat vůbec.
@@ -82,9 +83,31 @@ describe("čtení výstupů", () => {
     expect(await nactiVystupy()).toEqual([]);
   });
 
-  it("neznámý milník výstup zastaví", async () => {
+  it("neznámá fáze výstup zastaví", async () => {
+    poloz("spatna-faze", { ...UPLNY, faze: "kdykoli" });
+    expect(await nactiVystupy()).toEqual([]);
+  });
+
+  it("výstup BEZ milníku projde", async () => {
+    // Milník je nepovinný: M1–M6 jsou milníky projektu, a dokud žádný neběží,
+    // označit jím materiál by byla nepravda.
+    const v = await (async () => {
+      poloz("bez-milniku", UPLNY);
+      return nactiVystupy();
+    })();
+    expect(v).toHaveLength(1);
+    expect(v[0].milnik).toBeUndefined();
+  });
+
+  it("ale nesmyslný milník výstup zastaví", async () => {
+    // Nepovinný neznamená „cokoli projde" – překlep by se tiše ukázal na kartě.
     poloz("spatny-milnik", { ...UPLNY, milnik: "M9" });
     expect(await nactiVystupy()).toEqual([]);
+  });
+
+  it("platný milník se přečte", async () => {
+    poloz("s-milnikem", { ...UPLNY, milnik: "M3" });
+    expect((await nactiVystupy())[0].milnik).toBe("M3");
   });
 
   it("poškozený JSON neshodí celou sekci", async () => {

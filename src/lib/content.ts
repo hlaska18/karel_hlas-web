@@ -1144,6 +1144,10 @@ type Dict = {
     labelReflexe: string;
     labelDoporuceni: string;
     labelPrilohy: string;
+    /** Nadpisy tří fází, podle kterých se sekce dělí. */
+    fazePred: string;
+    fazeBehem: string;
+    fazePo: string;
     /** Řádek o označení a licenci pod seznamem. */
     licenceNote: string;
     countOne: string;
@@ -1300,7 +1304,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Ověřené výstupy práce s AI",
       badge: "Nová sekce",
       intro:
-        "Materiály, které vzniknou s pomocí umělé inteligence a projdou skutečnou výukou. U každého je napsané, čím byl vytvořen, kdy se učil, co nefungovalo a za jakých podmínek ho může převzít někdo další – bez toho je to jen soubor ke stažení.",
+        "Návody a materiály pro práci s AI, rozdělené podle toho, kdy je učitel potřebuje: před hodinou, v hodině a po ní. U každého je napsané, čím byl vytvořen, kdy se učil, co nefungovalo a za jakých podmínek ho může převzít někdo další – bez toho je to jen soubor ke stažení.",
       emptyTitle: "Zatím tu nic není, a je to tak správně.",
       emptyText:
         "První materiály se tu objeví, až projdou skutečnou hodinou. Nedávám sem nic, co jsem si jen vyzkoušel u počítače – bez odučení a reflexe by to byl obyčejný soubor ke stažení, a těch je na webu dost jinde.",
@@ -1310,6 +1314,9 @@ export const t: Record<Lang, Dict> = {
       labelReflexe: "Co fungovalo a co ne",
       labelDoporuceni: "Doporučení pro přenos",
       labelPrilohy: "Přílohy",
+      fazePred: "Před hodinou",
+      fazeBehem: "V hodině",
+      fazePo: "Po hodině",
       licenceNote:
         "AI Hub vzniká na Střední průmyslové škole strojní a stavební Tábor v rámci mé práce koordinátora ICT. Vkládám sem vlastní materiály, nebo cizí se svolením autora; sdílejí se pod stejnou licencí jako zbytek webu.",
       countOne: "výstup",
@@ -1611,7 +1618,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Classroom-tested work with AI",
       badge: "New section",
       intro:
-        "Materials created with the help of AI that have been through a real lesson. Each one states the tool used, when it was taught, what did not work, and on what terms another teacher can reuse it — without that it is just a file to download.",
+        "Guides and materials for working with AI, sorted by when a teacher needs them: before the lesson, during it, and after. Each one states the tool used, when it was taught, what did not work, and on what terms another teacher can reuse it — without that it is just a file to download.",
       emptyTitle: "Nothing here yet, and that is correct.",
       emptyText:
         "The first materials will appear once they have been through a real lesson. Nothing goes here that was only tried out at a desk — without teaching it and reflecting on it, it would just be another file to download, and there are plenty of those elsewhere on this site.",
@@ -1621,6 +1628,9 @@ export const t: Record<Lang, Dict> = {
       labelReflexe: "What worked and what did not",
       labelDoporuceni: "Notes for reuse",
       labelPrilohy: "Attachments",
+      fazePred: "Before the lesson",
+      fazeBehem: "During the lesson",
+      fazePo: "After the lesson",
       licenceNote:
         "The AI Hub is run at Střední průmyslová škola strojní a stavební Tábor as part of my work as the school's ICT coordinator. I publish my own materials here, or other people's with their permission; everything is shared under the same licence as the rest of the site.",
       countOne: "output",

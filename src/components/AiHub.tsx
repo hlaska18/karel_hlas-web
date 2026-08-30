@@ -12,13 +12,19 @@ import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionJump } from "@/components/SectionJump";
-import { OZNACENI_VYSTUPU, type Vystup } from "@/lib/aihubLabels";
+import { FAZE, OZNACENI_VYSTUPU, type Faze, type Vystup } from "@/lib/aihubLabels";
 
 /** Český tvar podle počtu: 1 výstup, 2–4 výstupy, 5+ výstupů. */
 function pocetSlovy(n: number, a: { countOne: string; countFew: string; countMany: string }) {
   if (n === 1) return a.countOne;
   if (n >= 2 && n <= 4) return a.countFew;
   return a.countMany;
+}
+
+function nazevFaze(f: Faze, a: { fazePred: string; fazeBehem: string; fazePo: string }) {
+  if (f === "pred") return a.fazePred;
+  if (f === "behem") return a.fazeBehem;
+  return a.fazePo;
 }
 
 function Pole({ popisek, text }: { popisek: string; text: string }) {
@@ -39,9 +45,12 @@ function Karta({ v, a }: { v: Vystup; a: Texty }) {
     <li className="povrch rounded-karta p-5">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{v.nazev}</h3>
-        <span className="rounded-stitek bg-accent-500/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-          {v.milnik}
-        </span>
+        {/* Milník jen tehdy, když opravdu je – prázdný štítek by lhal. */}
+        {v.milnik && (
+          <span className="rounded-stitek bg-accent-500/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+            {v.milnik}
+          </span>
+        )}
       </div>
 
       {/* Označení, autor a zařazení. Škola a role jsou jednou pod seznamem,
@@ -119,16 +128,28 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
           </div>
         ) : (
           <>
-            {/* Počet je vidět schválně: v projektu je to sledovaný indikátor
-                a nikdo ho nemá počítat ručně. */}
             <p className="mt-6 text-sm font-medium text-zinc-700 dark:text-zinc-300">
               {vystupy.length} {pocetSlovy(vystupy.length, a)}
             </p>
-            <ul className="mt-4 grid gap-4">
-              {vystupy.map((v) => (
-                <Karta key={v.id} v={v} a={a} />
-              ))}
-            </ul>
+
+            {/* Dělení podle fáze učitelovy práce. Prázdná fáze se vynechá –
+                nadpis nad prázdnem vypadá jako chyba. */}
+            {FAZE.map((f) => {
+              const skupina = vystupy.filter((v) => v.faze === f);
+              if (skupina.length === 0) return null;
+              return (
+                <div key={f} className="mt-8">
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                    {nazevFaze(f, a)}
+                  </h3>
+                  <ul className="mt-3 grid gap-4">
+                    {skupina.map((v) => (
+                      <Karta key={v.id} v={v} a={a} />
+                    ))}
+                  </ul>
+                </div>
+              );
+            })}
           </>
         )}
 

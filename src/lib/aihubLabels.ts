@@ -18,7 +18,20 @@
  */
 export const OZNACENI_VYSTUPU = "AI Hub";
 
-/** Zařazení výstupu v čase. Kvůli přehledu, ne kvůli vykazování. */
+/**
+ * Kdy v učitelově práci se výstup použije. Podle tohohle se sekce dělí.
+ *
+ * Členění podle FÁZE, ne podle nástroje, je schválně: nástroje se mění každý
+ * rok, „před hodinou" se nezmění nikdy. A učitel, kterému zbývá dvacet minut
+ * do zvonění, ví, kterou třetinu otevřít.
+ */
+export const FAZE = ["pred", "behem", "po"] as const;
+export type Faze = (typeof FAZE)[number];
+
+/**
+ * Volitelné zařazení v čase. NEPOVINNÉ schválně: M1–M6 jsou milníky
+ * projektu, a dokud žádný neběží, označit jimi materiál by byla nepravda.
+ */
 export const MILNIKY = ["M1", "M2", "M3", "M4", "M5", "M6"] as const;
 export type Milnik = (typeof MILNIKY)[number];
 
@@ -50,7 +63,9 @@ export type Vystup = {
   doporuceni: string;
   prilohy: Priloha[];
   /* ── Zařazení ── */
-  milnik: Milnik;
+  faze: Faze;
+  /** Nepovinné – vyplní se, jen když výstup vznikl v rámci projektu. */
+  milnik?: Milnik;
   /** ISO datum publikace. Podle něj se výstupy řadí. */
   publikovano: string;
   /** Cesta ke složce výstupu na webu. */

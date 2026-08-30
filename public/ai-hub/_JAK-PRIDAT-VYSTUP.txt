@@ -23,15 +23,25 @@ vystup.json — všechna pole jsou POVINNÁ kromě příloh
   "overeni": "Kdy a jak byl výstup použit ve SKUTEČNÉ výuce.",
   "reflexe": "Co fungovalo, co nefungovalo, omezení a rizika.",
   "doporuceni": "Jak postup upravit a kdy je přenositelný pro další.",
-  "milnik": "M1",
+  "faze": "pred",
   "publikovano": "2027-03-14",
   "prilohy": [
     { "nazev": "Pracovní list", "soubor": "pracovni-list.docx" }
   ]
 }
 
-milnik: M1 až M6 podle harmonogramu projektu.
+faze: KDY to učitel potřebuje. Povinné, tři možnosti:
+  "pred"   – před hodinou (příprava, materiály, zadání)
+  "behem"  – v hodině
+  "po"     – po hodině (oprava, zpětná vazba, hodnocení)
+Podle fáze se sekce dělí na tři skupiny. Členění podle fáze, ne podle
+nástroje, je schválně: nástroje se mění každý rok, "před hodinou" nikdy.
+
 publikovano: ve tvaru RRRR-MM-DD. Podle toho se výstupy řadí.
+
+milnik: NEPOVINNÉ. M1 až M6, a jen tehdy, když výstup vznikl v rámci
+projektu, který má milníky. Dokud žádný neběží, pole vynech – označit jím
+materiál by byla nepravda. Když ho ale uvedeš špatně, výstup se nezveřejní.
 
 
 PROČ JSOU TA POLE POVINNÁ

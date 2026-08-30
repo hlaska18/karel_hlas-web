@@ -17,13 +17,13 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { MILNIKY, type Milnik, type Vystup } from "@/lib/aihubLabels";
+import { FAZE, MILNIKY, type Faze, type Milnik, type Vystup } from "@/lib/aihubLabels";
 
 // Typy a označení se re-exportují, ať to volající nemusí tahat ze dvou míst.
 // Klientské komponenty ale musí sáhnout PŘÍMO do `aihubLabels` – přes tenhle
 // modul by si do prohlížeče zatáhly `node:fs`.
-export { MILNIKY, OZNACENI_VYSTUPU } from "@/lib/aihubLabels";
-export type { Milnik, Priloha, Vystup } from "@/lib/aihubLabels";
+export { FAZE, MILNIKY, OZNACENI_VYSTUPU } from "@/lib/aihubLabels";
+export type { Faze, Milnik, Priloha, Vystup } from "@/lib/aihubLabels";
 
 const ROOT = path.join(process.cwd(), "public", "ai-hub");
 
@@ -38,7 +38,7 @@ const POVINNA = [
   "overeni",
   "reflexe",
   "doporuceni",
-  "milnik",
+  "faze",
   "publikovano",
 ] as const;
 
@@ -64,7 +64,16 @@ function precti(slozka: string): Vystup | null {
     return null;
   }
 
-  if (!MILNIKY.includes(syrove.milnik as Milnik)) {
+  if (!FAZE.includes(syrove.faze as Faze)) {
+    console.warn(
+      `[ai-hub] ${slozka}: neznámá fáze „${syrove.faze}" – čekám ${FAZE.join(", ")}.`,
+    );
+    return null;
+  }
+
+  // Milník je nepovinný, ale když tam je, musí dávat smysl. Překlep by se
+  // jinak tiše ukázal na kartě.
+  if (syrove.milnik !== undefined && !MILNIKY.includes(syrove.milnik as Milnik)) {
     console.warn(`[ai-hub] ${slozka}: neznámý milník „${syrove.milnik}".`);
     return null;
   }
