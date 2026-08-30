@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Menu, X, User, Mail, Library, Layers } from "lucide-react";
+import { Menu, X, User, Mail, Library, Layers, Sparkles } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { ICON_BUTTON } from "@/lib/styles";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -21,10 +21,11 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // One-page: všechno jsou kotvy na téže stránce (pořadí sekcí 01–03).
+  // One-page: všechno jsou kotvy na téže stránce, v pořadí sekcí 01–05.
   const links = [
     { href: "#banka", label: tr.nav.bank },
     { href: "#jinam", label: tr.cross.kicker },
+    { href: "#ai-hub", label: tr.aihub.kicker },
     { href: "#about", label: tr.nav.about },
     { href: "#contact", label: tr.nav.contact },
   ];
@@ -64,6 +65,12 @@ export function Header() {
             text={tr.cross.kicker}
             size="sm"
             icon={<Layers className="h-4 w-4" />}
+          />
+          <InteractiveHoverButton
+            href="#ai-hub"
+            text={tr.aihub.kicker}
+            size="sm"
+            icon={<Sparkles className="h-4 w-4" />}
           />
           <InteractiveHoverButton
             href="#about"
