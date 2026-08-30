@@ -1301,13 +1301,13 @@ export const t: Record<Lang, Dict> = {
     },
     aihub: {
       kicker: "AI Hub",
-      heading: "Ověřené výstupy práce s AI",
+      heading: "Jak si pomoct s AI ve výuce",
       badge: "Nová sekce",
       intro:
-        "Návody a materiály pro práci s AI, rozdělené podle toho, kdy je učitel potřebuje: před hodinou, v hodině a po ní. U každého je napsané, čím byl vytvořen, kdy se učil, co nefungovalo a za jakých podmínek ho může převzít někdo další – bez toho je to jen soubor ke stažení.",
+        "Praktické návody pro učitele: čím si pomoct při přípravě, co použít přímo v hodině a co potom – při opravování a zpětné vazbě. Nic teoretického. U každého návodu je napsané, kde jsem ho zkusil, co při tom nefungovalo a za jakých podmínek ho může převzít někdo další.",
       emptyTitle: "Zatím tu nic není, a je to tak správně.",
       emptyText:
-        "První materiály se tu objeví, až projdou skutečnou hodinou. Nedávám sem nic, co jsem si jen vyzkoušel u počítače – bez odučení a reflexe by to byl obyčejný soubor ke stažení, a těch je na webu dost jinde.",
+        "První návody přibudou, až je vyzkouším v hodině. Tipy na AI, které si nikdo neodučil, najdeš na internetu tisíckrát – smysl tohohle místa je, že u každého bude napsané i to, co nevyšlo.",
       labelCil: "Pedagogický cíl",
       labelNastroj: "AI nástroj a postup",
       labelOvereni: "Ověřeno ve výuce",
@@ -1615,13 +1615,13 @@ export const t: Record<Lang, Dict> = {
     },
     aihub: {
       kicker: "AI Hub",
-      heading: "Classroom-tested work with AI",
+      heading: "Practical help with AI in teaching",
       badge: "New section",
       intro:
-        "Guides and materials for working with AI, sorted by when a teacher needs them: before the lesson, during it, and after. Each one states the tool used, when it was taught, what did not work, and on what terms another teacher can reuse it — without that it is just a file to download.",
+        "Practical guides for teachers: what helps when preparing, what to use in the lesson itself, and what comes afterwards — marking and feedback. Nothing theoretical. Each guide says where I tried it, what did not work, and on what terms another teacher can reuse it.",
       emptyTitle: "Nothing here yet, and that is correct.",
       emptyText:
-        "The first materials will appear once they have been through a real lesson. Nothing goes here that was only tried out at a desk — without teaching it and reflecting on it, it would just be another file to download, and there are plenty of those elsewhere on this site.",
+        "The first guides will appear once I have tried them in a lesson. AI tips nobody has actually taught are all over the internet — the point of this place is that each one also says what went wrong.",
       labelCil: "Teaching goal",
       labelNastroj: "AI tool and method",
       labelOvereni: "Tested in class",
