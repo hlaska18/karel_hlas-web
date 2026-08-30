@@ -41,12 +41,12 @@ Karta bez reflexe nebo bez ověření by vypadala jako hotový výstup, a přito
 by nedokládala nic. Přesně tím se ověřený výstup liší od souboru v bance:
 cizí učitel se má dozvědět, co NEfungovalo, dřív než si to stáhne.
 
-Odpovídá to jednotné šabloně z projektového záměru, kapitola 10.1.
-
-
 OZNAČENÍ A LICENCE
 ------------------
 Označení se bere z konstanty OZNACENI_VYSTUPU v src/lib/aihub.ts a ukazuje se
-u každého výstupu. Podle záměru (10.3) má konkrétní podobu označení i licenci
-stanovit ŠKOLA před první publikací — v dokumentu je to vedeno jako DOPLNIT.
-Až vedení rozhodne, mění se jeden řádek v aihub.ts, ne jednotlivé výstupy.
+u každého výstupu. Kdyby se někdy měnilo, je to jeden řádek, ne tolik zásahů,
+kolik je výstupů.
+
+Sem patří jen materiály vlastní, nebo cizí se svolením autora. Sdílejí se pod
+stejnou licencí jako zbytek webu (viz patička). Když autor svolení nedal, do
+Hubu to nepatří ani s odkazem.

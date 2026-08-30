@@ -3,9 +3,6 @@
 /**
  * Sekce AI Hub.
  *
- * Podle projektového záměru (kapitola 10.3) je AI Hub veřejným ROZŠÍŘENÍM
- * tohoto webu, ne novým webem — proto sekce a ne samostatná adresa.
- *
  * Karta výstupu schválně ukazuje REFLEXI a OVĚŘENÍ hned, ne až po rozkliknutí.
  * Přesně tím se ověřený výstup liší od souboru v bance: cizí učitel se má
  * dozvědět, co nefungovalo, dřív než si to stáhne.
@@ -46,8 +43,8 @@ function Karta({ v, a }: { v: Vystup; a: Texty }) {
         </span>
       </div>
 
-      {/* Označení, autor a zařazení. Označení školy stojí u KAŽDÉHO výstupu,
-          ne jen v patičce – v projektu je to podmínka publikace. */}
+      {/* Označení, autor a zařazení. Škola a role jsou jednou pod seznamem,
+          ne u každé karty – na třiceti kartách by se to četlo jako výplň. */}
       <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
         {OZNACENI_VYSTUPU} · {v.autor} · {v.predmet} · {v.cilovaSkupina}
       </p>
@@ -103,13 +100,11 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
           heading={
             <>
               {a.heading}
-              {/* Prázdná sekce se musí přiznat u nadpisu. Mlčení by se četlo
-                  jako zanedbaná rubrika, ne jako rubrika, která čeká. */}
-              {vystupy.length === 0 && (
-                <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-                  {a.badge}
-                </span>
-              )}
+              {/* Stejně jako u sekce s nástroji do ostatních předmětů:
+                  „nová sekce" se čte jako živá, mlčení jako zanedbaná. */}
+              <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                {a.badge}
+              </span>
             </>
           }
         />

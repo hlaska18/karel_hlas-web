@@ -1,16 +1,13 @@
 /**
- * AI Hub — veřejné výstupy projektu AI PEDAGOG 2030.
+ * AI Hub — materiály vytvořené s pomocí AI, které prošly skutečnou výukou.
  *
- * Vzniká podle projektového záměru SPŠ Tábor pro výzvu OP JAK 02_26_048
- * („Poradím se s AI"), kapitola 10.3: veřejný AI Hub je ROZŠÍŘENÍM tohoto
- * webu, ne novým webem. Proto je to sekce na úvodní stránce a ne samostatná
- * adresa.
+ * Vzniká na SPŠ Tábor v rámci práce koordinátora ICT. Je to SEKCE tohoto
+ * webu, ne samostatný web: patří k bance materiálů, jen má přísnější vstup.
  *
- * Výstup NENÍ soubor ke stažení. Záměr (10.1) ho definuje jednotnou šablonou
- * o sedmi polích a hodnotu má právě to, co v běžné bance materiálů chybí:
- * KDY A JAK byl výstup ověřen ve skutečné výuce, co při tom NEfungovalo
- * a za jakých podmínek ho může převzít někdo další. Bez těch tří věcí je to
- * jen příloha a do Hubu nepatří.
+ * Výstup NENÍ soubor ke stažení. Popisuje ho jednotná šablona o sedmi polích
+ * a hodnotu má právě to, co v běžné bance chybí: KDY A JAK byl výstup ověřen
+ * ve skutečné výuce, co při tom NEfungovalo a za jakých podmínek ho může
+ * převzít někdo další. Bez těch tří věcí je to jen příloha a do Hubu nepatří.
  *
  * Data leží v `public/ai-hub/<slug>/vystup.json`, přílohy ve stejné složce.
  * Stejná úvaha jako u banky materiálů: přidat výstup znamená přidat složku,
@@ -23,17 +20,14 @@ import path from "node:path";
 const ROOT = path.join(process.cwd(), "public", "ai-hub");
 
 /**
- * Pod jakým označením se výstupy publikují.
+ * Pod jakým označením se výstupy publikují. Ukazuje se u každé karty.
  *
- * Záměr (10.3) říká „SPŠ Tábor / AI Lab". POZOR: konkrétní podobu označení
- * i licenci má podle téhož odstavce stanovit ŠKOLA před první publikací —
- * v dokumentu je to vedeno jako `DOPLNIT`. Tahle konstanta je proto na
- * jednom místě schválně: až vedení rozhodne, mění se jeden řádek, ne
- * třicet karet.
+ * Na jednom místě schválně: kdyby se označení někdy měnilo, je to jeden
+ * řádek, ne tolik zásahů, kolik je výstupů.
  */
-export const OZNACENI_VYSTUPU = "SPŠ Tábor / AI Lab";
+export const OZNACENI_VYSTUPU = "AI Hub";
 
-/** Milníky projektu podle harmonogramu záměru (M1–M5 po 6 měsících, M6 dva). */
+/** Zařazení výstupu v čase. Kvůli přehledu, ne kvůli vykazování. */
 export const MILNIKY = ["M1", "M2", "M3", "M4", "M5", "M6"] as const;
 export type Milnik = (typeof MILNIKY)[number];
 
@@ -52,7 +46,7 @@ export type Vystup = {
   autor: string;
   predmet: string;
   cilovaSkupina: string;
-  /* ── Zbytek šablony 10.1 ── */
+  /* ── Zbytek šablony ── */
   /** Co má aktivita nebo materiál ve výuce řešit. */
   cil: string;
   /** Použitý nástroj a způsob využití, případně postup nebo prompt. */
@@ -64,9 +58,9 @@ export type Vystup = {
   /** Jak postup upravit a kdy je přenositelný pro další pedagogy. */
   doporuceni: string;
   prilohy: Priloha[];
-  /* ── Evidence ── */
+  /* ── Zařazení ── */
   milnik: Milnik;
-  /** ISO datum publikace. Kvůli zprávě o realizaci projektu. */
+  /** ISO datum publikace. Podle něj se výstupy řadí. */
   publikovano: string;
   /** Cesta ke složce výstupu na webu. */
   href: string;
@@ -125,9 +119,8 @@ function precti(slozka: string): Vystup | null {
 /**
  * Zveřejněné výstupy, od nejnovějšího.
  *
- * Prázdný seznam je NORMÁLNÍ stav, ne chyba: realizace projektu je plánovaná
- * od ledna 2027 a do té doby tu žádný ověřený výstup není. Sekce to musí umět
- * říct, ne se tvářit rozbitě.
+ * Prázdný seznam je NORMÁLNÍ stav, ne chyba: dokud nic neprojde hodinou,
+ * není co zveřejnit. Sekce to musí umět říct, ne se tvářit rozbitě.
  */
 export function getVystupy(): Vystup[] {
   let slozky: string[] = [];

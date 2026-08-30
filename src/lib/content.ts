@@ -1298,12 +1298,12 @@ export const t: Record<Lang, Dict> = {
     aihub: {
       kicker: "AI Hub",
       heading: "Ověřené výstupy práce s AI",
-      badge: "Připravuje se",
+      badge: "Nová sekce",
       intro:
         "Materiály, které vzniknou s pomocí umělé inteligence a projdou skutečnou výukou. U každého je napsané, čím byl vytvořen, kdy se učil, co nefungovalo a za jakých podmínek ho může převzít někdo další – bez toho je to jen soubor ke stažení.",
       emptyTitle: "Zatím tu nic není, a je to tak správně.",
       emptyText:
-        "Sekce je připravená pro výstupy projektu AI PEDAGOG 2030, o který škola žádá ve výzvě OP JAK „Poradím se s AI“. Realizace je plánovaná od ledna 2027; do té doby tu žádný ověřený výstup není a nebudeme sem dávat nic, co neprošlo hodinou.",
+        "První materiály se tu objeví, až projdou skutečnou hodinou. Nedávám sem nic, co jsem si jen vyzkoušel u počítače – bez odučení a reflexe by to byl obyčejný soubor ke stažení, a těch je na webu dost jinde.",
       labelCil: "Pedagogický cíl",
       labelNastroj: "AI nástroj a postup",
       labelOvereni: "Ověřeno ve výuce",
@@ -1311,7 +1311,7 @@ export const t: Record<Lang, Dict> = {
       labelDoporuceni: "Doporučení pro přenos",
       labelPrilohy: "Přílohy",
       licenceNote:
-        "Výstupy se zveřejňují pod označením školy a pod licencí Creative Commons; konkrétní variantu stanoví škola před první publikací.",
+        "AI Hub vzniká na Střední průmyslové škole strojní a stavební Tábor v rámci mé práce koordinátora ICT. Vkládám sem vlastní materiály, nebo cizí se svolením autora; sdílejí se pod stejnou licencí jako zbytek webu.",
       countOne: "výstup",
       countFew: "výstupy",
       countMany: "výstupů",
@@ -1609,12 +1609,12 @@ export const t: Record<Lang, Dict> = {
     aihub: {
       kicker: "AI Hub",
       heading: "Classroom-tested work with AI",
-      badge: "In preparation",
+      badge: "New section",
       intro:
         "Materials created with the help of AI that have been through a real lesson. Each one states the tool used, when it was taught, what did not work, and on what terms another teacher can reuse it — without that it is just a file to download.",
       emptyTitle: "Nothing here yet, and that is correct.",
       emptyText:
-        "This section is ready for the outputs of the AI PEDAGOG 2030 project, for which the school is applying under the Czech OP JAK call. Delivery is planned from January 2027; until then there is no classroom-tested output, and nothing goes here that has not been taught.",
+        "The first materials will appear once they have been through a real lesson. Nothing goes here that was only tried out at a desk — without teaching it and reflecting on it, it would just be another file to download, and there are plenty of those elsewhere on this site.",
       labelCil: "Teaching goal",
       labelNastroj: "AI tool and method",
       labelOvereni: "Tested in class",
@@ -1622,7 +1622,7 @@ export const t: Record<Lang, Dict> = {
       labelDoporuceni: "Notes for reuse",
       labelPrilohy: "Attachments",
       licenceNote:
-        "Outputs are published under the school's name and a Creative Commons licence; the school sets the exact variant before the first publication.",
+        "The AI Hub is run at Střední průmyslová škola strojní a stavební Tábor as part of my work as the school's ICT coordinator. I publish my own materials here, or other people's with their permission; everything is shared under the same licence as the rest of the site.",
       countOne: "output",
       countFew: "outputs",
       countMany: "outputs",
