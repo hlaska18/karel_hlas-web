@@ -11,6 +11,7 @@
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { SectionHeader } from "@/components/SectionHeader";
+import { SectionJump } from "@/components/SectionJump";
 import { OZNACENI_VYSTUPU, type Vystup } from "@/lib/aihubLabels";
 
 /** Český tvar podle počtu: 1 výstup, 2–4 výstupy, 5+ výstupů. */
@@ -134,6 +135,9 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
         <p className="mt-6 max-w-[46rem] text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
           {sazba(a.licenceNote, lang)}
         </p>
+
+        {/* Bez tohohle řetěz šipek u této sekce končil a další se přeskočila. */}
+        <SectionJump href="#about" label={tr.nav.about} />
       </div>
     </section>
   );

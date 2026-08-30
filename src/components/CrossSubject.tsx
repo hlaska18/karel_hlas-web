@@ -109,7 +109,7 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           {sazba(c.note, lang)}
         </p>
 
-        <SectionJump href="#about" label={tr.nav.about} />
+        <SectionJump href="#ai-hub" label={tr.aihub.kicker} />
       </div>
     </section>
   );
