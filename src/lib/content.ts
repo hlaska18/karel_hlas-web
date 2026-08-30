@@ -1129,6 +1129,27 @@ type Dict = {
     audienceBoth: string;
   };
   /** Sekce „Nejen do informatiky" – hodiny z banky použitelné i v jiných předmětech. */
+  aihub: {
+    kicker: string;
+    heading: string;
+    badge: string;
+    intro: string;
+    /** Prázdný stav – dokud projekt nezačal, sekce musí říct proč. */
+    emptyTitle: string;
+    emptyText: string;
+    /** Popisky polí šablony z kapitoly 10.1 projektového záměru. */
+    labelCil: string;
+    labelNastroj: string;
+    labelOvereni: string;
+    labelReflexe: string;
+    labelDoporuceni: string;
+    labelPrilohy: string;
+    /** Řádek o označení a licenci pod seznamem. */
+    licenceNote: string;
+    countOne: string;
+    countFew: string;
+    countMany: string;
+  };
   cross: {
     kicker: string;
     heading: string;
@@ -1273,6 +1294,27 @@ export const t: Record<Lang, Dict> = {
       audienceTeacher: "Pro učitele",
       audienceStudent: "Pro žáky",
       audienceBoth: "Pro učitele i žáky",
+    },
+    aihub: {
+      kicker: "AI Hub",
+      heading: "Ověřené výstupy práce s AI",
+      badge: "Připravuje se",
+      intro:
+        "Materiály, které vzniknou s pomocí umělé inteligence a projdou skutečnou výukou. U každého je napsané, čím byl vytvořen, kdy se učil, co nefungovalo a za jakých podmínek ho může převzít někdo další – bez toho je to jen soubor ke stažení.",
+      emptyTitle: "Zatím tu nic není, a je to tak správně.",
+      emptyText:
+        "Sekce je připravená pro výstupy projektu AI PEDAGOG 2030, o který škola žádá ve výzvě OP JAK „Poradím se s AI“. Realizace je plánovaná od ledna 2027; do té doby tu žádný ověřený výstup není a nebudeme sem dávat nic, co neprošlo hodinou.",
+      labelCil: "Pedagogický cíl",
+      labelNastroj: "AI nástroj a postup",
+      labelOvereni: "Ověřeno ve výuce",
+      labelReflexe: "Co fungovalo a co ne",
+      labelDoporuceni: "Doporučení pro přenos",
+      labelPrilohy: "Přílohy",
+      licenceNote:
+        "Výstupy se zveřejňují pod označením školy a pod licencí Creative Commons; konkrétní variantu stanoví škola před první publikací.",
+      countOne: "výstup",
+      countFew: "výstupy",
+      countMany: "výstupů",
     },
     cross: {
       kicker: "Pro ostatní předměty",
@@ -1563,6 +1605,27 @@ export const t: Record<Lang, Dict> = {
       audienceTeacher: "For teachers",
       audienceStudent: "For students",
       audienceBoth: "For teachers & students",
+    },
+    aihub: {
+      kicker: "AI Hub",
+      heading: "Classroom-tested work with AI",
+      badge: "In preparation",
+      intro:
+        "Materials created with the help of AI that have been through a real lesson. Each one states the tool used, when it was taught, what did not work, and on what terms another teacher can reuse it — without that it is just a file to download.",
+      emptyTitle: "Nothing here yet, and that is correct.",
+      emptyText:
+        "This section is ready for the outputs of the AI PEDAGOG 2030 project, for which the school is applying under the Czech OP JAK call. Delivery is planned from January 2027; until then there is no classroom-tested output, and nothing goes here that has not been taught.",
+      labelCil: "Teaching goal",
+      labelNastroj: "AI tool and method",
+      labelOvereni: "Tested in class",
+      labelReflexe: "What worked and what did not",
+      labelDoporuceni: "Notes for reuse",
+      labelPrilohy: "Attachments",
+      licenceNote:
+        "Outputs are published under the school's name and a Creative Commons licence; the school sets the exact variant before the first publication.",
+      countOne: "output",
+      countFew: "outputs",
+      countMany: "outputs",
     },
     cross: {
       kicker: "For other subjects",
