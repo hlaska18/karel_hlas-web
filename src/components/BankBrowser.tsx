@@ -790,18 +790,12 @@ function MaterialRow({
         {fmtSize(it.sizeBytes, lang)}
       </span>
       <span className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0 sm:gap-0">
-        {/* Jen náznak, že řádek něco umí – otevírá ho klik na řádek.
-            Vyskakovací náhled rovnou při najetí schválně ne: musel by se kvůli
-            němu načítat dokument i pro řádky, které nikdo otevřít nechtěl,
-            a na telefonu ani tabletu najíždění stejně neexistuje. */}
-        {previewable && (
-          <span
-            aria-hidden
-            className="hidden items-center gap-1 rounded-stitek px-2 py-1 text-xs font-medium text-zinc-600 opacity-0 transition group-hover/radek:opacity-100 dark:text-zinc-400 sm:inline-flex"
-          >
-            <Eye className="h-4 w-4" /> {s.previewTitle}
-          </span>
-        )}
+        {/* Popisek „Náhled" tu býval jako náznak, že řádek něco umí. Odebrán:
+            při najetí se dějí tři jiné věci naráz – kurzor je ruka, řádek se
+            nadzvedne stínem a orámování zezelená. Čtvrtý signál k témuž byl
+            navíc. Pro odečítač obrazovky ani na mobilu stejně nikdy nebyl
+            (`aria-hidden`, `hidden sm:inline-flex`); přístupnost drží
+            `aria-label` na řádku. */}
         <a
           href={it.href}
           download
