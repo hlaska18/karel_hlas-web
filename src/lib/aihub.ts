@@ -17,54 +17,15 @@
 import fs from "node:fs";
 import path from "node:path";
 
+import { MILNIKY, type Milnik, type Vystup } from "@/lib/aihubLabels";
+
+// Typy a označení se re-exportují, ať to volající nemusí tahat ze dvou míst.
+// Klientské komponenty ale musí sáhnout PŘÍMO do `aihubLabels` – přes tenhle
+// modul by si do prohlížeče zatáhly `node:fs`.
+export { MILNIKY, OZNACENI_VYSTUPU } from "@/lib/aihubLabels";
+export type { Milnik, Priloha, Vystup } from "@/lib/aihubLabels";
+
 const ROOT = path.join(process.cwd(), "public", "ai-hub");
-
-/**
- * Pod jakým označením se výstupy publikují. Ukazuje se u každé karty.
- *
- * Na jednom místě schválně: kdyby se označení někdy měnilo, je to jeden
- * řádek, ne tolik zásahů, kolik je výstupů.
- */
-export const OZNACENI_VYSTUPU = "AI Hub";
-
-/** Zařazení výstupu v čase. Kvůli přehledu, ne kvůli vykazování. */
-export const MILNIKY = ["M1", "M2", "M3", "M4", "M5", "M6"] as const;
-export type Milnik = (typeof MILNIKY)[number];
-
-export type Priloha = {
-  /** Jak se příloha jmenuje v seznamu. */
-  nazev: string;
-  /** Soubor ve složce výstupu. */
-  soubor: string;
-};
-
-export type Vystup = {
-  /** Odvozeno z názvu složky – slouží jako kotva v adrese. */
-  id: string;
-  /* ── Identifikace ── */
-  nazev: string;
-  autor: string;
-  predmet: string;
-  cilovaSkupina: string;
-  /* ── Zbytek šablony ── */
-  /** Co má aktivita nebo materiál ve výuce řešit. */
-  cil: string;
-  /** Použitý nástroj a způsob využití, případně postup nebo prompt. */
-  nastroj: string;
-  /** Kdy a jak byl výstup použit v reálné výuce. */
-  overeni: string;
-  /** Co fungovalo, co nefungovalo, omezení a rizika. */
-  reflexe: string;
-  /** Jak postup upravit a kdy je přenositelný pro další pedagogy. */
-  doporuceni: string;
-  prilohy: Priloha[];
-  /* ── Zařazení ── */
-  milnik: Milnik;
-  /** ISO datum publikace. Podle něj se výstupy řadí. */
-  publikovano: string;
-  /** Cesta ke složce výstupu na webu. */
-  href: string;
-};
 
 /** Pole, bez kterých výstup není ověřeným výstupem, jen souborem. */
 const POVINNA = [

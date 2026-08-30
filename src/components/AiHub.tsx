@@ -11,7 +11,7 @@
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { SectionHeader } from "@/components/SectionHeader";
-import { OZNACENI_VYSTUPU, type Vystup } from "@/lib/aihub";
+import { OZNACENI_VYSTUPU, type Vystup } from "@/lib/aihubLabels";
 
 /** Český tvar podle počtu: 1 výstup, 2–4 výstupy, 5+ výstupů. */
 function pocetSlovy(n: number, a: { countOne: string; countFew: string; countMany: string }) {

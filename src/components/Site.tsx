@@ -9,7 +9,7 @@ import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
-import type { Vystup } from "@/lib/aihub";
+import type { Vystup } from "@/lib/aihubLabels";
 import { getBankStats, getHeroPool } from "@/lib/heroPick";
 import { t } from "@/lib/content";
 
