@@ -12,6 +12,7 @@ import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionJump } from "@/components/SectionJump";
+import { AiHubCifernik } from "@/components/AiHubCifernik";
 import { FAZE, OZNACENI_VYSTUPU, type Faze, type Vystup } from "@/lib/aihubLabels";
 
 /** Český tvar podle počtu: 1 výstup, 2–4 výstupy, 5+ výstupů. */
@@ -120,11 +121,20 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
         />
 
         {vystupy.length === 0 ? (
-          <div className="povrch mt-6 rounded-karta p-6">
-            <p className="font-medium text-zinc-900 dark:text-white">{a.emptyTitle}</p>
-            <p className="mt-2 max-w-[46rem] text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
-              {sazba(a.emptyText, lang)}
-            </p>
+          /* Ciferník stojí vedle prázdného stavu, ne nad ním: dokud tu není
+             žádný výstup, zbývá po pravé straně díra a legenda tří fází ji
+             zaplní něčím, co má co říct. Až přibudou karty, tahle větev
+             zmizí i s ním. */
+          <div className="mt-6 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
+            <div className="povrch rounded-karta p-6">
+              <p className="font-medium text-zinc-900 dark:text-white">{a.emptyTitle}</p>
+              <p className="mt-2 max-w-[46rem] text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+                {sazba(a.emptyText, lang)}
+              </p>
+            </div>
+            <AiHubCifernik
+              popisky={{ pred: a.fazePred, behem: a.fazeBehem, po: a.fazePo }}
+            />
           </div>
         ) : (
           <>
