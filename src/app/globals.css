@@ -619,11 +619,13 @@
 @media (min-width: 1024px) {
   .cifernik {
     display: block;
-    /* Ne `min(28rem, 34vw)`: matematické funkce neumí Chrome 64 ani
-       Firefox 67 a Safari 12 jen zčásti – celá deklarace by tam propadla.
-       Dvojice width + max-width dělá totéž a rozumí jí všechno. */
-    width: 28rem;
-    max-width: 34vw;
+    /* Ne `min()`: matematické funkce neumí Chrome 64 ani Firefox 67
+       a Safari 12 jen zčásti – celá deklarace by tam propadla. Dvojice
+       width + max-width dělá totéž a rozumí jí všechno.
+       Strop v `vw` drží ciferník úměrný oknu, `rem` mu nedovolí přerůst
+       na širokém monitoru – ve 28 rem už jen roztahoval sekci. */
+    width: 22rem;
+    max-width: 28vw;
   }
 }
 
@@ -746,8 +748,12 @@
   36%, 100% { stroke: rgb(228 228 231 / 0.16); }
 }
 
+/* Popisky se STŘÍDAJÍ, neprolínají. Prolnutí trvalo 1,56 s a po tu dobu
+   stály dvě jména přes sebe – u textu z toho není měkký přechod, ale
+   nečitelná změť („PVO HHOODDI NNĚĚ"). Každý popisek teď zhasne dřív,
+   než další začne svítit. */
 @keyframes cifernik-popisek {
-  0%, 30% { opacity: 1; }
-  36%, 94% { opacity: 0; }
-  100% { opacity: 1; }
+  0% { opacity: 0; }
+  1%, 32% { opacity: 1; }
+  33%, 100% { opacity: 0; }
 }
