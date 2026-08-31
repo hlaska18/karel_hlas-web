@@ -36,8 +36,9 @@ export type Social = {
  * u které je vidět, že poslední přírůstek je z května. Když je pole prázdné,
  * sekce se vůbec nevykreslí – nikdy tedy nesvítí prázdná.
  *
- * Nový odkaz = jeden řádek sem. Drž se čtyř až pěti položek; delší seznam
- * v úvodu přebíjí tlačítko k materiálům. Když přibude šestý, vyhoď nejstarší.
+ * Nový odkaz = jeden řádek sem. STROP JSOU ČTYŘI POLOŽKY (viz `KOLIK_CLANKU`
+ * v `Ctenie.tsx`); delší seznam v úvodu přebíjí tlačítko k materiálům.
+ * Když přibude pátý, vyhoď nejstarší.
  *
  * `jazyk` se ukazuje jen tomu, komu je cizí – Čech vidí u anglických textů
  * „anglicky", Angličan u českých „in Czech".
@@ -101,13 +102,6 @@ export const CLANKY: Clanek[] = [
     source: "RVP.cz",
     url: "https://clanky.rvp.cz/clanek/24473/20-VYZEV-A-10-MYSLENEK-NEJEN-PRO-SKOLNI-ROK-2026-2027.html",
     logo: { src: "/images/clanky/rvp.png", pomer: 1.842 },
-    jazyk: "cs",
-  },
-  {
-    title: "AliExpress potají vytvářel zvukový otisk návštěvníků",
-    source: "E-Bezpečí",
-    url: "https://www.e-bezpeci.cz/index.php/clanky/5145-aliexpress-potaji-vytvarel-zvukovy-otisk-navstevniku-prozradila-ho-zavada-sluchatek",
-    logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
     jazyk: "cs",
   },
 ];

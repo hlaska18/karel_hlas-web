@@ -43,7 +43,7 @@ const SIRKA_LOGA = 28;
  * ručně, seznam by se natáhl a sekce by přerostla sloupec vedle nadpisu.
  * Takhle je nejhorší možný následek pár řádků navíc v souboru, ne rozbitý web.
  */
-const KOLIK_CLANKU = 5;
+const KOLIK_CLANKU = 4;
 
 /** Natočení karet – volnější obdoba stohu výš, ať nevznikne pravidelný vzor. */
 const NATOCENI = [
