@@ -162,7 +162,16 @@ function SubjectTile({
           <span className="block font-display text-lg font-semibold tracking-podnadpis text-zinc-900 dark:text-white">
             {item.subject}
           </span>
-          <span className="mt-1 block text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+          {/* Spodní hranice tří řádků, a to jen od `lg`. Ve třech sloupcích
+              je sloupec 352 px široký a dva popisky se tam vejdou na dva
+              řádky místo tří – karty pak byly o 22 px nižší než sousedi.
+              Na užších šířkách jsou tři řádky tak jako tak, takže tam se
+              nic nemění. `em` je vázané na velikost písma (leading-relaxed
+              1,625 × 3), takže to přežije i změnu typografie, a není to
+              matematická funkce, kterou by starý cíl neuměl.
+              Vyrovnat to přes `items-stretch` na mřížce NELZE: dlaždice se
+              rozbaluje a rozbalení jedné by natáhlo celý řádek. */}
+          <span className="mt-1 block text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 lg:min-h-[4.875em]">
             {item.what}
           </span>
         </span>

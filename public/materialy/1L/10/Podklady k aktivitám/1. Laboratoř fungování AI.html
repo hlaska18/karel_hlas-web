@@ -213,7 +213,7 @@
     ["Za finální použití výstupu odpovídá…",["model","člověk nebo organizace, která jej použije","nejdelší zdroj"],1,"errors"]
   ];
   function save(){localStorage.setItem("aiLabDone",JSON.stringify([...state.done]));updateProgress()}
-  function complete(id){state.done.add(id);document.querySelector(`[data-target="${id}"]`)?.classList.add("done");save()}
+  function complete(id){state.done.add(id);var el=document.querySelector(`[data-target="${id}"]`);if(el)el.classList.add("done");save()}
   function show(id){document.querySelectorAll(".screen").forEach(x=>x.classList.toggle("active",x.id===id));document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("active",x.dataset.target===id));scrollTo(0,0)}
   document.addEventListener("click",e=>{const target=e.target.closest("[data-go],[data-target]");if(target)show(target.dataset.go||target.dataset.target)});
   function updateProgress(){const n=["classify","training","tokens","errors","gateway"].filter(x=>state.done.has(x)).length;document.getElementById("progressText").textContent=`${n} / 5`;document.getElementById("progressBar").style.width=`${n*20}%`;document.querySelectorAll(".nav button").forEach(x=>x.classList.toggle("done",state.done.has(x.dataset.target)))}
