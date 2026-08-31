@@ -1,0 +1,36 @@
+# Cíl prohlížečů. Schválně tady, ne v package.json – tady jde napsat proč.
+#
+# Jsou to PŘESNĚ hodnoty, které Next.js používá sám, když žádný cíl
+# nenajde (`MODERN_BROWSERSLIST_TARGET` v `next/dist/shared/lib/constants.js`).
+# Ověřit je jde takhle:
+#
+#   node -e "console.log(require('next/dist/shared/lib/constants.js').MODERN_BROWSERSLIST_TARGET)"
+#
+# PROČ TU TEN SOUBOR VŮBEC JE, když se hodnoty shodují s výchozím stavem:
+# Next ten výchozí cíl použije na CSS, ale UŽ NE na překlad JavaScriptu.
+# Bez tohohle souboru zůstalo v balíku volitelné řetězení `?.` a `??`, které
+# neumí ani jeden prohlížeč z cíle – a neznámá syntaxe neshodí jednu funkci,
+# nýbrž celý chunk. Padal na to `133-*.js`, tedy prohlížeč banky.
+# Změřeno 31. 8. 2026 na dvou buildech:
+#
+#   bez tohoto souboru   ?. = 8,  ?? = 26   (133-*.js: 2 a 22)
+#   s tímto souborem     ?. = 4,  ?? = 1
+#
+# Ty čtyři zbylé NEJSOU syntaxe: jsou to znaky uvnitř regulárních výrazů
+# `/[|\{}()[\]^$+*?.-]/` a `/()??/` v souborech 218-*, main-* a polyfills-*.
+# Ověřeno pohledem na kontext. Navíc `main-*.js` app router vůbec nenačítá,
+# ten používá `main-app-*.js` – a v tom není nic.
+#
+# CSS se tím nezhoršilo, naopak: přibylo `-webkit-backdrop-filter` a
+# `-webkit-text-decoration-*` pro Safari 12; ubyly předpony pro Firefox 62
+# a Operu 12, které v cíli stejně nejsou.
+#
+# CÍL NEZUŽOVAT. Když se sem napíše novější prohlížeč (zkusil jsem Safari 15.6),
+# vypadnou předpony, které starší Macy potřebují. `npx browserslist` navíc hlásí
+# úplně jiná čísla – to je výchozí stav balíčku browserslist, ne tohoto webu.
+
+chrome 64
+edge 79
+firefox 67
+opera 51
+safari 12
