@@ -171,7 +171,7 @@ export function Prihlaseni({
       {faze === "ucet" && (
         <form
           onSubmit={odesliUcet}
-          className={`relative z-10 flex w-[min(92vw,420px)] flex-col items-center text-white ${
+          className={`relative z-10 flex w-[420px] max-w-[92vw] flex-col items-center text-white ${
             chyba ? "animate-[zatreseni_0.45s]" : ""
           }`}
         >
