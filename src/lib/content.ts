@@ -76,6 +76,27 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
+    title: "AI Literacy: A Framework to Understand, Evaluate, and Use Emerging Technology",
+    source: "Digital Promise",
+    url: "https://digitalpromise.org/2024/06/18/ai-literacy-a-framework-to-understand-evaluate-and-use-emerging-technology/",
+    logo: { src: "/images/clanky/digitalpromise.png", pomer: 2.813 },
+    jazyk: "en",
+  },
+  {
+    title: "The Anthropic AI Course Schools Should Be Teaching",
+    source: "Lifewire",
+    url: "https://www.lifewire.com/anthropic-free-ai-fluency-course-11757129",
+    logo: { src: "/images/clanky/lifewire.png", pomer: 4.267 },
+    jazyk: "en",
+  },
+  {
+    title: "An Open Letter to TikTok and YouTube to Join Us in Supporting Teens",
+    source: "Meta Newsroom",
+    url: "https://about.fb.com/news/2026/08/open-letter-to-tiktok-and-youtube-to-join-us-in-supporting-teens/",
+    logo: { src: "/images/clanky/meta.png", pomer: 1.506 },
+    jazyk: "en",
+  },
+  {
     title: "20 výzev a 10 myšlenek pro školní rok 2026/2027",
     source: "RVP.cz",
     url: "https://clanky.rvp.cz/clanek/24473/20-VYZEV-A-10-MYSLENEK-NEJEN-PRO-SKOLNI-ROK-2026-2027.html",
@@ -87,20 +108,6 @@ export const CLANKY: Clanek[] = [
     source: "E-Bezpečí",
     url: "https://www.e-bezpeci.cz/index.php/clanky/5145-aliexpress-potaji-vytvarel-zvukovy-otisk-navstevniku-prozradila-ho-zavada-sluchatek",
     logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
-    jazyk: "cs",
-  },
-  {
-    title: "Obrazovka jako digitální dudlík: varují pediatři",
-    source: "E-Bezpečí",
-    url: "https://www.e-bezpeci.cz/index.php/clanky/5138-obrazovka-jako-digitalni-dudlik-pediatri-varuji-pred-zavislosti-uz-u-nejmensich-deti",
-    logo: { src: "/images/clanky/ebezpeci.png", pomer: 1.64 },
-    jazyk: "cs",
-  },
-  {
-    title: "Když pravidla používání AI ve školách vytvoří teenageři",
-    source: "RVP.cz",
-    url: "https://clanky.rvp.cz/clanek/24471/KDYZ-PRAVIDLA-POUZIVANI-AI-VE-SKOLACH-VYTVORI-TEENAGERI.html",
-    logo: { src: "/images/clanky/rvp.png", pomer: 1.842 },
     jazyk: "cs",
   },
 ];
