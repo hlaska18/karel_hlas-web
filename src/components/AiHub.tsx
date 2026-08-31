@@ -104,38 +104,42 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
   return (
     <section id="ai-hub" className="sekce">
       <div className="container-page">
-        <SectionHeader
-          no="03"
-          kicker={a.kicker}
-          intro={sazba(a.intro, lang)}
-          heading={
-            <>
-              {a.heading}
-              {/* Stejně jako u sekce s nástroji do ostatních předmětů:
-                  „nová sekce" se čte jako živá, mlčení jako zanedbaná. */}
-              <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-                {a.badge}
-              </span>
-            </>
-          }
-        />
-
-        {vystupy.length === 0 ? (
-          /* Ciferník je UVNITŘ karty, ne vedle ní. Vedle ní určoval výšku
-             řádku mřížky a karta je proti němu nízká, takže kolem ní zbývala
-             díra – nejdřív 280 px nad a pod, po zarovnání nahoru 132 px pod.
-             Uvnitř karty žádná díra nevzniká: blok je vysoký přesně tak jako
-             to, co v něm je. Až přibudou výstupy, tahle větev zmizí i s ním. */
-          <div className="povrch mt-6 flex flex-col gap-6 rounded-karta p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
-            <div>
-              <p className="font-medium text-zinc-900 dark:text-white">{a.emptyTitle}</p>
-              <p className="mt-2 max-w-[46rem] text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
-                {sazba(a.emptyText, lang)}
-              </p>
-            </div>
+        {/* Ciferník patří sem, vedle nadpisu. Vpravo od úvodního odstavce
+            (`max-w-2xl`) je jediné místo, které v sekci opravdu zeje prázdnotou –
+            všude jinde jen tlačil obsah od sebe. Vedle karty prázdného stavu
+            určoval výšku řádku a kolem karty zbývala díra; uvnitř karty ji sice
+            zaplnil, ale karta kvůli němu zdvojnásobila výšku.
+            Zobrazuje se jen u prázdné sekce (viz `vystupy.length === 0` níž),
+            takže tahle řada je pak jen hlavička. */}
+        <div className="lg:flex lg:items-start lg:justify-between lg:gap-10">
+          <SectionHeader
+            no="03"
+            kicker={a.kicker}
+            intro={sazba(a.intro, lang)}
+            heading={
+              <>
+                {a.heading}
+                {/* Stejně jako u sekce s nástroji do ostatních předmětů:
+                    „nová sekce" se čte jako živá, mlčení jako zanedbaná. */}
+                <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                  {a.badge}
+                </span>
+              </>
+            }
+          />
+          {vystupy.length === 0 && (
             <AiHubCifernik
               popisky={{ pred: a.fazePred, behem: a.fazeBehem, po: a.fazePo }}
             />
+          )}
+        </div>
+
+        {vystupy.length === 0 ? (
+          <div className="povrch mt-6 rounded-karta p-6">
+            <p className="font-medium text-zinc-900 dark:text-white">{a.emptyTitle}</p>
+            <p className="mt-2 max-w-[46rem] text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+              {sazba(a.emptyText, lang)}
+            </p>
           </div>
         ) : (
           <>

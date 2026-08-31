@@ -625,9 +625,10 @@
        Strop v `vw` drží ciferník úměrný oknu, `rem` mu nedovolí přerůst
        na širokém monitoru.
 
-       PROČ TAK MALÝ: ciferník sedí uvnitř karty prázdného stavu a určuje
-       její výšku – text vedle něj má jen 88 px. Ve 22 rem byla karta přes
-       400 px vysoká a sekce z toho byla zbytečně roztahaná. */
+       VELIKOST: ciferník stojí vedle nadpisu a úvodního odstavce, které
+       měří 209 px. V 11 rem je vysoký 204 px, takže se vejde přesně vedle
+       nich a k výšce sekce NEPŘIDÁ ANI PIXEL – jen zaplní místo, které
+       vpravo od textu stejně zeje. Ve 14 rem řadu natahoval o 51 px. */
     width: 11rem;
     max-width: 16vw;
   }
