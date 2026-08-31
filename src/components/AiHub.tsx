@@ -12,7 +12,6 @@ import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionJump } from "@/components/SectionJump";
-import { AiHubCifernik } from "@/components/AiHubCifernik";
 import { FAZE, OZNACENI_VYSTUPU, type Faze, type Vystup } from "@/lib/aihubLabels";
 
 /** Český tvar podle počtu: 1 výstup, 2–4 výstupy, 5+ výstupů. */
@@ -104,35 +103,21 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
   return (
     <section id="ai-hub" className="sekce">
       <div className="container-page">
-        {/* Ciferník patří sem, vedle nadpisu. Vpravo od úvodního odstavce
-            (`max-w-2xl`) je jediné místo, které v sekci opravdu zeje prázdnotou –
-            všude jinde jen tlačil obsah od sebe. Vedle karty prázdného stavu
-            určoval výšku řádku a kolem karty zbývala díra; uvnitř karty ji sice
-            zaplnil, ale karta kvůli němu zdvojnásobila výšku.
-            Zobrazuje se jen u prázdné sekce (viz `vystupy.length === 0` níž),
-            takže tahle řada je pak jen hlavička. */}
-        <div className="lg:flex lg:items-start lg:justify-between lg:gap-10">
-          <SectionHeader
-            no="03"
-            kicker={a.kicker}
-            intro={sazba(a.intro, lang)}
-            heading={
-              <>
-                {a.heading}
-                {/* Stejně jako u sekce s nástroji do ostatních předmětů:
-                    „nová sekce" se čte jako živá, mlčení jako zanedbaná. */}
-                <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-                  {a.badge}
-                </span>
-              </>
-            }
-          />
-          {vystupy.length === 0 && (
-            <AiHubCifernik
-              popisky={{ pred: a.fazePred, behem: a.fazeBehem, po: a.fazePo }}
-            />
-          )}
-        </div>
+        <SectionHeader
+          no="03"
+          kicker={a.kicker}
+          intro={sazba(a.intro, lang)}
+          heading={
+            <>
+              {a.heading}
+              {/* Stejně jako u sekce s nástroji do ostatních předmětů:
+                  „nová sekce" se čte jako živá, mlčení jako zanedbaná. */}
+              <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                {a.badge}
+              </span>
+            </>
+          }
+        />
 
         {vystupy.length === 0 ? (
           <div className="povrch mt-6 rounded-karta p-6">
