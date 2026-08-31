@@ -73,8 +73,13 @@ function Obrazovka() {
       poslat({ typ: "okna/srovnej", plocha: obdelnik });
     };
     zmer();
-    const sledovac = new ResizeObserver(zmer);
-    sledovac.observe(prvek);
+    // `typeof`, ne rovnou `new`: ResizeObserver umí až Safari 13.1 a Firefox 69,
+    // ale cíl webu sahá na Safari 12 a Firefox 67 (viz .browserslistrc). Bez téhle
+    // pojistky vyhodí konstruktor ReferenceError, výjimka propadne z useEffect do
+    // Reactu a shodí celé prostředí — a posluchače `resize` a `scroll` pod ním,
+    // které observer zastupují, by se navíc vůbec nestihly připojit.
+    const sledovac = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(zmer);
+    sledovac?.observe(prvek);
     // `resize` vedle ResizeObserveru schválně: observer sleduje prvek zachycený
     // ve chvíli, kdy efekt běžel, a když ho React později vymění, pozoruje
     // odpojený uzel a mlčí. Změna velikosti okna je přitom přesně ta událost,
@@ -82,7 +87,7 @@ function Obrazovka() {
     window.addEventListener("resize", zmer);
     window.addEventListener("scroll", zmer, true);
     return () => {
-      sledovac.disconnect();
+      sledovac?.disconnect();
       window.removeEventListener("resize", zmer);
       window.removeEventListener("scroll", zmer, true);
     };

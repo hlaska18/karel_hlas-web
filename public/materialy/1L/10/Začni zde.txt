@@ -29,6 +29,10 @@ Prezentace k hodinám
 Zdroje AI Fluency
 - původní ověřené materiály s licencí a atribucí.
 
+Doporučené čtení
+- odkaz na příručku „101 tipů, jak využít AI ve výuce" Karla Klatovského.
+  Není součástí hodin, je to čtení navíc pro učitele.
+
 DIDAKTICKÁ POSLOUPNOST
 Hodiny 1–3: jak AI funguje, učí se, generuje a chybuje.
 Po 3. hodině: diagnostická brána.
