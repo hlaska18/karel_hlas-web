@@ -121,12 +121,13 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
         />
 
         {vystupy.length === 0 ? (
-          /* Ciferník stojí vedle prázdného stavu, ne nad ním: dokud tu není
-             žádný výstup, zbývá po pravé straně díra a legenda tří fází ji
-             zaplní něčím, co má co říct. Až přibudou karty, tahle větev
-             zmizí i s ním. */
-          <div className="mt-6 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_auto]">
-            <div className="povrch rounded-karta p-6">
+          /* Ciferník je UVNITŘ karty, ne vedle ní. Vedle ní určoval výšku
+             řádku mřížky a karta je proti němu nízká, takže kolem ní zbývala
+             díra – nejdřív 280 px nad a pod, po zarovnání nahoru 132 px pod.
+             Uvnitř karty žádná díra nevzniká: blok je vysoký přesně tak jako
+             to, co v něm je. Až přibudou výstupy, tahle větev zmizí i s ním. */
+          <div className="povrch mt-6 flex flex-col gap-6 rounded-karta p-6 lg:flex-row lg:items-center lg:justify-between lg:gap-10">
+            <div>
               <p className="font-medium text-zinc-900 dark:text-white">{a.emptyTitle}</p>
               <p className="mt-2 max-w-[46rem] text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
                 {sazba(a.emptyText, lang)}

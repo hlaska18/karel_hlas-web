@@ -623,9 +623,13 @@
        a Safari 12 jen zčásti – celá deklarace by tam propadla. Dvojice
        width + max-width dělá totéž a rozumí jí všechno.
        Strop v `vw` drží ciferník úměrný oknu, `rem` mu nedovolí přerůst
-       na širokém monitoru – ve 28 rem už jen roztahoval sekci. */
-    width: 22rem;
-    max-width: 28vw;
+       na širokém monitoru.
+
+       PROČ TAK MALÝ: ciferník sedí uvnitř karty prázdného stavu a určuje
+       její výšku – text vedle něj má jen 88 px. Ve 22 rem byla karta přes
+       400 px vysoká a sekce z toho byla zbytečně roztahaná. */
+    width: 11rem;
+    max-width: 16vw;
   }
 }
 
