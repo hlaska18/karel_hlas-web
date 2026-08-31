@@ -7,7 +7,7 @@ když dobíráš zameškanou hodinu nebo když se připravuješ na test.
 CO POTŘEBUJEŠ
 Počítač s prohlížečem. Pro hodiny 4 a 5 navíc GIMP a Inkscape
 (oba jsou zdarma ke stažení). Pro hodinu 7 přístup do Canvy.
-Všechny ostatní materiály jsou ve složce 03 a fungují bez internetu.
+Všechny ostatní materiály jsou v tomto balíčku a fungují bez internetu.
 
 JAK NA TO
 1. Otevři pracovní sešit: Pro žáky/Digitální pracovní sešit.docx
@@ -18,8 +18,9 @@ JAK NA TO
    vlastními slovy, aniž by ses díval/a zpět.
 
 CO MŮŽEŠ UDĚLAT SÁM/SAMA A CO NE
-Sám/sama zvládneš: hodiny 1, 2, 3 a 6 — laboratoř je ve složce každé
-z nich, otevřeš ji dvojklikem a proklikáš celou.
+Sám/sama zvládneš: hodiny 1, 2, 3 a 6 — laboratoř k nim najdeš ve složce
+Podklady k aktivitám, číslo na začátku názvu říká, ke které hodině patří.
+Otevřeš ji dvojklikem a proklikáš celou.
 Zvládneš i hodinu 7, pokud máš Canvu.
 Potřebuješ pomoc s: hodinami 4 a 5, pokud nemáš doma GIMP nebo Inkscape.
 Zapiš si, co jsi nemohl/a udělat, a dodělej to ve škole.
