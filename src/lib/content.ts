@@ -1142,13 +1142,17 @@ type Dict = {
     labelCil: string;
     labelNastroj: string;
     labelOvereni: string;
+    /** Kolik času postup ušetřil – měřítko, podle kterého se sem věci vybírají. */
+    labelUspora: string;
     labelReflexe: string;
     labelDoporuceni: string;
     labelPrilohy: string;
     /** Nadpisy tří fází, podle kterých se sekce dělí. */
     fazePred: string;
-    fazeBehem: string;
     fazePo: string;
+    /** Štítek na kartě: vyplatilo se, nebo ne. */
+    vysledekVyplatilo: string;
+    vysledekNevyplatilo: string;
     /** Řádek o označení a licenci pod seznamem. */
     licenceNote: string;
     countOne: string;
@@ -1302,21 +1306,23 @@ export const t: Record<Lang, Dict> = {
     },
     aihub: {
       kicker: "AI Hub",
-      heading: "Jak si pomoct s AI ve výuce",
+      heading: "Jak si s AI ušetřit čas kolem hodiny",
       badge: "Nová sekce",
       intro:
-        "Praktické návody pro učitele: čím si pomoct při přípravě, co použít přímo v hodině a co potom – při opravování a zpětné vazbě. Nic teoretického. U každého návodu je napsané, kde jsem ho zkusil, co při tom nefungovalo a za jakých podmínek ho může převzít někdo další.",
+        "Návody na učitelovu vlastní práci, ne na hodinu: čím si pomoct při přípravě a co potom – při opravování, vyhodnocování a reflexi. Nic teoretického a nic pro studenty. U každého návodu stojí, na čem jsem ho zkusil, kolik času ušetřil a jestli se vůbec vyplatil.",
       emptyTitle: "Zatím tu nic není, a je to tak správně.",
       emptyText:
-        "První návody přibudou, až je vyzkouším v hodině. Tipy na AI, které si nikdo neodučil, najdeš na internetu tisíckrát – smysl tohohle místa je, že u každého bude napsané i to, co nevyšlo.",
-      labelCil: "Pedagogický cíl",
+        "První návody přibudou, až si je sám vyzkouším na přípravě a opravování. Tipy na AI, které nikdo nezkusil, najdeš na internetu tisíckrát – smysl tohohle místa je, že u každého bude napsané, kolik času doopravdy ušetřil. A klidně i to, že se nevyplatil vůbec.",
+      labelCil: "Co bylo potřeba udělat",
       labelNastroj: "AI nástroj a postup",
-      labelOvereni: "Ověřeno ve výuce",
+      labelOvereni: "Na čem jsem to zkusil",
+      labelUspora: "Kolik času to ušetřilo",
       labelReflexe: "Co fungovalo a co ne",
-      labelDoporuceni: "Doporučení pro přenos",
+      labelDoporuceni: "Za jakých podmínek to převzít",
       labelPrilohy: "Přílohy",
+      vysledekVyplatilo: "Vyplatilo se",
+      vysledekNevyplatilo: "Nevyplatilo se",
       fazePred: "Před hodinou",
-      fazeBehem: "V hodině",
       fazePo: "Po hodině",
       licenceNote:
         "AI Hub vzniká na Střední průmyslové škole strojní a stavební Tábor v rámci mé práce koordinátora ICT. Vkládám sem vlastní materiály, nebo cizí se svolením autora; sdílejí se pod stejnou licencí jako zbytek webu.",
@@ -1616,21 +1622,23 @@ export const t: Record<Lang, Dict> = {
     },
     aihub: {
       kicker: "AI Hub",
-      heading: "Practical help with AI in teaching",
+      heading: "Using AI to save time around the lesson",
       badge: "New section",
       intro:
-        "Practical guides for teachers: what helps when preparing, what to use in the lesson itself, and what comes afterwards — marking and feedback. Nothing theoretical. Each guide says where I tried it, what did not work, and on what terms another teacher can reuse it.",
+        "Guides for a teacher's own work, not for the lesson: what helps when preparing, and what comes afterwards — marking, evaluating and reflecting. Nothing theoretical and nothing aimed at students. Each guide says what I tried it on, how much time it saved, and whether it was worth it at all.",
       emptyTitle: "Nothing here yet, and that is correct.",
       emptyText:
-        "The first guides will appear once I have tried them in a lesson. AI tips nobody has actually taught are all over the internet — the point of this place is that each one also says what went wrong.",
-      labelCil: "Teaching goal",
+        "The first guides will appear once I have tried them on my own prep and marking. AI tips nobody has actually tried are all over the internet — the point of this place is that each one says how much time it really saved. Including the ones that saved none.",
+      labelCil: "What needed doing",
       labelNastroj: "AI tool and method",
-      labelOvereni: "Tested in class",
+      labelOvereni: "What I tried it on",
+      labelUspora: "Time saved",
       labelReflexe: "What worked and what did not",
-      labelDoporuceni: "Notes for reuse",
+      labelDoporuceni: "When it transfers",
       labelPrilohy: "Attachments",
+      vysledekVyplatilo: "Worth it",
+      vysledekNevyplatilo: "Not worth it",
       fazePred: "Before the lesson",
-      fazeBehem: "During the lesson",
       fazePo: "After the lesson",
       licenceNote:
         "The AI Hub is run at Střední průmyslová škola strojní a stavební Tábor as part of my work as the school's ICT coordinator. I publish my own materials here, or other people's with their permission; everything is shared under the same licence as the rest of the site.",

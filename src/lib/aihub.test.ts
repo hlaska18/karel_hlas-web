@@ -21,7 +21,9 @@ const UPLNY = {
   overeni: "Odučeno 14. 3. 2027 ve 2. B, dvě vyučovací hodiny.",
   reflexe: "Fungovalo u silnějších žáků; slabší se nechali argumentem zastavit.",
   doporuceni: "Zadat předem tři povolené protiargumenty.",
-  faze: "behem",
+  faze: "po",
+  vysledek: "vyplatilo",
+  uspora: "Z hodiny a půl na dvacet minut.",
   publikovano: "2027-03-14",
   prilohy: [{ nazev: "Pracovní list", soubor: "list.docx" }],
 };
@@ -60,7 +62,7 @@ describe("čtení výstupů", () => {
     poloz("sloh-s-ai", UPLNY);
     const v = await nactiVystupy();
     expect(v).toHaveLength(1);
-    expect(v[0]).toMatchObject({ id: "sloh-s-ai", nazev: UPLNY.nazev, faze: "behem" });
+    expect(v[0]).toMatchObject({ id: "sloh-s-ai", nazev: UPLNY.nazev, faze: "po" });
     expect(v[0].href).toBe("/ai-hub/sloh-s-ai");
     expect(v[0].prilohy).toHaveLength(1);
   });
@@ -71,6 +73,8 @@ describe("čtení výstupů", () => {
     ["doporuceni", "doporuceni"],
     ["autor", "autor"],
     ["faze", "faze"],
+    ["uspora", "uspora"],
+    ["vysledek", "vysledek"],
   ])("výstup bez pole „%s“ se nezveřejní", async (_n, pole) => {
     // Jádro věci: karta bez reflexe nebo bez ověření by vypadala jako hotový
     // výstup a přitom by nedokládala nic. Radši ji neukázat vůbec.
@@ -85,6 +89,18 @@ describe("čtení výstupů", () => {
 
   it("neznámá fáze výstup zastaví", async () => {
     poloz("spatna-faze", { ...UPLNY, faze: "kdykoli" });
+    expect(await nactiVystupy()).toEqual([]);
+  });
+
+  it("fáze v hodině už neexistuje", async () => {
+    // AI Hub je o učitelově vlastní práci, ne o tom, co dělá se třídou.
+    poloz("behem", { ...UPLNY, faze: "behem" });
+    expect(await nactiVystupy()).toEqual([]);
+  });
+
+  it("neznámý výsledek výstup zastaví", async () => {
+    // Bez výsledku by neúspěšný pokus vypadal jako doporučení.
+    poloz("spatny-vysledek", { ...UPLNY, vysledek: "mozna" });
     expect(await nactiVystupy()).toEqual([]);
   });
 

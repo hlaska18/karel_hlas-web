@@ -21,10 +21,8 @@ function pocetSlovy(n: number, a: { countOne: string; countFew: string; countMan
   return a.countMany;
 }
 
-function nazevFaze(f: Faze, a: { fazePred: string; fazeBehem: string; fazePo: string }) {
-  if (f === "pred") return a.fazePred;
-  if (f === "behem") return a.fazeBehem;
-  return a.fazePo;
+function nazevFaze(f: Faze, a: { fazePred: string; fazePo: string }) {
+  return f === "pred" ? a.fazePred : a.fazePo;
 }
 
 function Pole({ popisek, text }: { popisek: string; text: string }) {
@@ -45,6 +43,17 @@ function Karta({ v, a }: { v: Vystup; a: Texty }) {
     <li className="povrch rounded-karta p-5">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{v.nazev}</h3>
+        {/* Vyplatilo se, nebo ne. Neúspěch je plnohodnotný záznam Hubu, ale
+            nesmí vypadat jako doporučení – proto barva, ne jen slovo. */}
+        <span
+          className={
+            v.vysledek === "vyplatilo"
+              ? "rounded-stitek bg-accent-500/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300"
+              : "rounded-stitek bg-amber-500/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300"
+          }
+        >
+          {v.vysledek === "vyplatilo" ? a.vysledekVyplatilo : a.vysledekNevyplatilo}
+        </span>
         {/* Milník jen tehdy, když opravdu je – prázdný štítek by lhal. */}
         {v.milnik && (
           <span className="rounded-stitek bg-accent-500/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-accent-700 dark:text-accent-300">
@@ -63,6 +72,7 @@ function Karta({ v, a }: { v: Vystup; a: Texty }) {
         <Pole popisek={a.labelCil} text={v.cil} />
         <Pole popisek={a.labelNastroj} text={v.nastroj} />
         <Pole popisek={a.labelOvereni} text={v.overeni} />
+        <Pole popisek={a.labelUspora} text={v.uspora} />
         <Pole popisek={a.labelReflexe} text={v.reflexe} />
       </dl>
 

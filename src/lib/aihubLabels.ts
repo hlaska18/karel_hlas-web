@@ -19,14 +19,23 @@
 export const OZNACENI_VYSTUPU = "AI Hub";
 
 /**
- * Kdy v učitelově práci se výstup použije. Podle tohohle se sekce dělí.
+ * Fáze učitelovy VLASTNÍ práce, ne fáze vyučovací hodiny.
  *
- * Členění podle FÁZE, ne podle nástroje, je schválně: nástroje se mění každý
- * rok, „před hodinou" se nezmění nikdy. A učitel, kterému zbývá dvacet minut
- * do zvonění, ví, kterou třetinu otevřít.
+ * „V hodině" tu schválně NENÍ. AI Hub není o tom, co učitel dělá se třídou –
+ * na to je banka materiálů. Je o tom, čím si ušetří čas, když u toho žádní
+ * žáci nejsou: příprava předem a po hodině opravování, vyhodnocení,
+ * zpětná vazba a reflexe vlastní hodiny.
  */
-export const FAZE = ["pred", "behem", "po"] as const;
+export const FAZE = ["pred", "po"] as const;
 export type Faze = (typeof FAZE)[number];
+
+/**
+ * Vyplatilo se to, nebo ne. NENÍ to jen štítek: záznam „tohle nefunguje,
+ * nezkoušej to" je plnohodnotný obsah Hubu a musí jít poznat na první
+ * pohled, aby ho nikdo nečetl jako doporučení.
+ */
+export const VYSLEDKY = ["vyplatilo", "nevyplatilo"] as const;
+export type Vysledek = (typeof VYSLEDKY)[number];
 
 /**
  * Volitelné zařazení v čase. NEPOVINNÉ schválně: M1–M6 jsou milníky
@@ -51,12 +60,14 @@ export type Vystup = {
   predmet: string;
   cilovaSkupina: string;
   /* ── Zbytek šablony ── */
-  /** Co má aktivita nebo materiál ve výuce řešit. */
+  /** Co bylo potřeba udělat – úkol z učitelovy vlastní práce, ne cíl hodiny. */
   cil: string;
   /** Použitý nástroj a způsob využití, případně postup nebo prompt. */
   nastroj: string;
-  /** Kdy a jak byl výstup použit v reálné výuce. */
+  /** Na čem a kdy to autor zkusil ve své práci. */
   overeni: string;
+  /** Kolik času to ušetřilo – měřítko, podle kterého se sem věci vybírají. */
+  uspora: string;
   /** Co fungovalo, co nefungovalo, omezení a rizika. */
   reflexe: string;
   /** Jak postup upravit a kdy je přenositelný pro další pedagogy. */
@@ -64,6 +75,8 @@ export type Vystup = {
   prilohy: Priloha[];
   /* ── Zařazení ── */
   faze: Faze;
+  /** Vyplatilo se to. Neúspěch je plnohodnotný záznam, ne chybějící údaj. */
+  vysledek: Vysledek;
   /** Nepovinné – vyplní se, jen když výstup vznikl v rámci projektu. */
   milnik?: Milnik;
   /** ISO datum publikace. Podle něj se výstupy řadí. */

@@ -22,20 +22,39 @@ vystup.json — všechna pole jsou POVINNÁ kromě příloh
   "nastroj": "Jaký nástroj, jak použitý, případně prompt nebo postup.",
   "overeni": "Kdy a jak byl výstup použit ve SKUTEČNÉ výuce.",
   "reflexe": "Co fungovalo, co nefungovalo, omezení a rizika.",
-  "doporuceni": "Jak postup upravit a kdy je přenositelný pro další.",
+  "doporuceni": "Za jakých podmínek to může převzít někdo další.",
+  "uspora": "Z hodiny a půl na dvacet minut.",
   "faze": "pred",
+  "vysledek": "vyplatilo",
   "publikovano": "2027-03-14",
   "prilohy": [
     { "nazev": "Pracovní list", "soubor": "pracovni-list.docx" }
   ]
 }
 
-faze: KDY to učitel potřebuje. Povinné, tři možnosti:
-  "pred"   – před hodinou (příprava, materiály, zadání)
-  "behem"  – v hodině
-  "po"     – po hodině (oprava, zpětná vazba, hodnocení)
-Podle fáze se sekce dělí na tři skupiny. Členění podle fáze, ne podle
-nástroje, je schválně: nástroje se mění každý rok, "před hodinou" nikdy.
+faze: KDY si tím učitel pomůže. Povinné, dvě možnosti:
+  "pred"  – před hodinou (příprava, materiály, zadání)
+  "po"    – po hodině (oprava, vyhodnocení, zpětná vazba, reflexe)
+
+"V hodině" tu SCHVÁLNĚ NENÍ. AI Hub není o tom, co učitel dělá se třídou —
+na to je banka materiálů. Je o jeho vlastní práci, když u toho žádní žáci
+nejsou. Návod, který se odučí se studenty, sem nepatří.
+
+Členění podle fáze, ne podle nástroje, je schválně: nástroje se mění každý
+rok, "před hodinou" se nezmění nikdy.
+
+uspora: KOLIK ČASU to ušetřilo. Povinné, a je to měřítko, podle kterého se
+sem věci vybírají. Piš konkrétně ("z hodiny a půl na dvacet minut"), ne
+"hodně". U toho, co se nevyplatilo, sem patří, kolik času to naopak sebralo.
+
+vysledek: Povinné, dvě možnosti:
+  "vyplatilo"    – ušetřilo to čas nebo práci
+  "nevyplatilo"  – nefungovalo to, nebo se to nevyplatilo
+
+Neúspěch je plnohodnotný záznam, ne poznámka pod čarou: "tohle jsem zkusil
+a nestálo to za to" ušetří cizímu učiteli přesně ten čas, který jsem na tom
+promarnil já. Na kartě se ale odliší barvou, aby to nikdo nečetl jako
+doporučení.
 
 publikovano: ve tvaru RRRR-MM-DD. Podle toho se výstupy řadí.
 

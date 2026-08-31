@@ -17,13 +17,21 @@
 import fs from "node:fs";
 import path from "node:path";
 
-import { FAZE, MILNIKY, type Faze, type Milnik, type Vystup } from "@/lib/aihubLabels";
+import {
+  FAZE,
+  MILNIKY,
+  VYSLEDKY,
+  type Faze,
+  type Milnik,
+  type Vysledek,
+  type Vystup,
+} from "@/lib/aihubLabels";
 
 // Typy a označení se re-exportují, ať to volající nemusí tahat ze dvou míst.
 // Klientské komponenty ale musí sáhnout PŘÍMO do `aihubLabels` – přes tenhle
 // modul by si do prohlížeče zatáhly `node:fs`.
-export { FAZE, MILNIKY, OZNACENI_VYSTUPU } from "@/lib/aihubLabels";
-export type { Faze, Milnik, Priloha, Vystup } from "@/lib/aihubLabels";
+export { FAZE, MILNIKY, VYSLEDKY, OZNACENI_VYSTUPU } from "@/lib/aihubLabels";
+export type { Faze, Milnik, Priloha, Vysledek, Vystup } from "@/lib/aihubLabels";
 
 const ROOT = path.join(process.cwd(), "public", "ai-hub");
 
@@ -36,9 +44,11 @@ const POVINNA = [
   "cil",
   "nastroj",
   "overeni",
+  "uspora",
   "reflexe",
   "doporuceni",
   "faze",
+  "vysledek",
   "publikovano",
 ] as const;
 
@@ -67,6 +77,14 @@ function precti(slozka: string): Vystup | null {
   if (!FAZE.includes(syrove.faze as Faze)) {
     console.warn(
       `[ai-hub] ${slozka}: neznámá fáze „${syrove.faze}" – čekám ${FAZE.join(", ")}.`,
+    );
+    return null;
+  }
+
+  // Bez výsledku by neúspěšný pokus vypadal jako doporučení. Radši nezveřejnit.
+  if (!VYSLEDKY.includes(syrove.vysledek as Vysledek)) {
+    console.warn(
+      `[ai-hub] ${slozka}: neznámý výsledek „${syrove.vysledek}" – čekám ${VYSLEDKY.join(", ")}.`,
     );
     return null;
   }
