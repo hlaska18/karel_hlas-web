@@ -598,3 +598,69 @@
   60% { transform: translateX(-5px); }
   80% { transform: translateX(5px); }
 }
+
+/* ─────────────────── Souhvězdí u nadpisu AI Hubu ───────────────────
+   Grafika vedle nadpisu sekce (komponenta `AiHubSouhvezdi`). Rozvádí
+   hvězdičku, kterou má AI Hub v hlavičce, do souhvězdí – sekce tím
+   navazuje na svou položku v menu.
+
+   Široké a nízké schválně: předchůdce téhle grafiky byl vysoký ciferník
+   a dělal kolem sebe díry. Tohle se roztáhne do šířky a k výšce řady
+   nepřidá nic.
+
+   Bez pohybu (`prefers-reduced-motion`) souhvězdí ZŮSTÁVÁ a jen se
+   zastaví – statické pořád vypadá jako záměr, ne jako chybějící obrázek. */
+.souhvezdi {
+  display: none;
+}
+
+/* Až od lg. Pod tím není vedle nadpisu místo a jako pruh pod ním by
+   z toho byla ozdoba navíc. */
+@media (min-width: 1024px) {
+  .souhvezdi {
+    display: block;
+    /* Ne `min()`: matematické funkce neumí Chrome 64 ani Firefox 67. */
+    width: 17rem;
+    max-width: 24vw;
+    flex-shrink: 0;
+  }
+}
+
+.souhvezdi__plocha {
+  width: 100%;
+  height: auto;
+  overflow: visible;
+}
+
+.souhvezdi__hvezda {
+  fill: none;
+  stroke: rgb(5 150 105 / 0.55);
+  stroke-width: 1.5;
+  stroke-linejoin: round;
+}
+.dark .souhvezdi__hvezda {
+  stroke: rgb(52 211 153 / 0.55);
+}
+
+/* Probliknutí. Pět rytmů, aby dvě sousední hvězdy nezhasínaly zároveň;
+   `opacity` a `transform` prohlížeč skládá na GPU, takže to nenutí
+   stránku k přepočtu rozvržení. */
+@media (prefers-reduced-motion: no-preference) {
+  /* Animuje se JEN průhlednost, schválně. `transform-box: fill-box`, který by
+     byl potřeba pro otáčení nebo zvětšování kolem středu, umí až Safari 14 –
+     a cíl webu sahá na Safari 12. Navíc by CSS `transform` přebil ten
+     v atributu `transform`, kterým jsou hvězdy rozmístěné, a souhvězdí by se
+     seskupilo do jednoho bodu. */
+  .souhvezdi__hvezda {
+    animation: souhvezdi-problikni 7s ease-in-out infinite;
+  }
+  .souhvezdi__hvezda--2 { animation-delay: -1.4s; }
+  .souhvezdi__hvezda--3 { animation-delay: -2.8s; }
+  .souhvezdi__hvezda--4 { animation-delay: -4.2s; }
+  .souhvezdi__hvezda--5 { animation-delay: -5.6s; }
+}
+
+@keyframes souhvezdi-problikni {
+  0%, 100% { opacity: 0.45; }
+  50% { opacity: 1; }
+}

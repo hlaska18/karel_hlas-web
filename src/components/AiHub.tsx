@@ -8,6 +8,7 @@
  * dozvědět, co nefungovalo, dřív než si to stáhne.
  */
 
+import { AiHubSouhvezdi } from "@/components/AiHubSouhvezdi";
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { SectionHeader } from "@/components/SectionHeader";
@@ -113,21 +114,29 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
   return (
     <section id="ai-hub" className="sekce">
       <div className="container-page">
-        <SectionHeader
-          no="03"
-          kicker={a.kicker}
-          intro={sazba(a.intro, lang)}
-          heading={
-            <>
-              {a.heading}
-              {/* Stejně jako u sekce s nástroji do ostatních předmětů:
-                  „nová sekce" se čte jako živá, mlčení jako zanedbaná. */}
-              <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-                {a.badge}
-              </span>
-            </>
-          }
-        />
+        {/* Text vlevo, hvězdičky vpravo. Vpravo od úvodního odstavce (`max-w-2xl`)
+            je jediné místo, které v sekci zeje prázdnotou, a souhvězdí je nízké,
+            takže k výšce řady nepřidá nic — na tom padl jeho předchůdce.
+            Ukazuje se i s výstupy: není to výplň prázdné sekce, ale navázání
+            na hvězdičku, kterou má AI Hub v menu. */}
+        <div className="lg:flex lg:items-start lg:justify-between lg:gap-10">
+          <SectionHeader
+            no="03"
+            kicker={a.kicker}
+            intro={sazba(a.intro, lang)}
+            heading={
+              <>
+                {a.heading}
+                {/* Stejně jako u sekce s nástroji do ostatních předmětů:
+                    „nová sekce" se čte jako živá, mlčení jako zanedbaná. */}
+                <span className="glass-accent ml-3 inline-block whitespace-nowrap rounded-full px-3 py-1 align-middle font-sans text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                  {a.badge}
+                </span>
+              </>
+            }
+          />
+          <AiHubSouhvezdi />
+        </div>
 
         {vystupy.length === 0 ? (
           <div className="povrch mt-6 rounded-karta p-6">
