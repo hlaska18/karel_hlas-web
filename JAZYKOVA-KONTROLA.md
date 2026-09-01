@@ -74,6 +74,22 @@ Opraveno na „Dohledej".
 odkaz na příručku „101 tipů, jak využít AI ve výuce" Karla Klatovského.
 Doplněno, včetně poznámky, že je to čtení navíc, ne součást hodin.
 
+### 6 · Časování na dvou prezentacích nesedělo s metodikou
+
+Prezentace tématu 7 mají na každém snímku časové pásmo (`13–42 MIN · PRÁCE`)
+a devět z deseti drží tentýž vzor: `PRÁCE` začíná tam, kde končí `MINIMUM`.
+
+**Hodina 8 měla `5–43 MIN · PRÁCE`**, tedy start v páté minutě — uvnitř
+vlastního bloku `MINIMUM` (5–21) a v rozporu s metodikou, kde praktická část
+začíná ve 21. minutě. Opraveno na `21–43`.
+
+Druhá věc: závěrečný snímek nese štítek `POSLEDNÍ 3 MINUTY`. U osmi hodin
+odpovídá metodice přesně, u dvou ne — hodina 2 má exit ticket 41–45 (čtyři
+minuty) a hodina 8 má 43–45 (dvě). Že to osmkrát sedí, ukazuje, že je to
+myšlené doslova, ne jako obecné heslo. Opraveno podle metodiky, protože její
+minutové scénáře pokrývají 0→45 bez děr a překryvů — jsou tedy autoritativní,
+štítek je z nich odvozený.
+
 ---
 
 ## Na zvážení — neopravuji sám
@@ -141,6 +157,16 @@ B  f74207f076946cd45f8356f51a820bfba7a70531dc69a61631f0beea53331c51
 
 Klíč to i takhle vysvětluje: *„liší se částka rozpočtu; hash sám neřekne,
 která verze je správná."*
+
+### Prezentace popisují studii přesně
+
+Prezentace 6 shrnuje fiktivní studii jako *„32 účastníků, tři podmínky a tři
+krátké úlohy; rozdíl se projevil pouze v jedné úloze."* Sešit mluví jen
+o „krátkodobém testu paměti", takže „tři úlohy" vypadaly jako přidané. Zdroj
+je ale potvrzuje doslova — `Zdroj C.html` v podkladech k 5P má v oddílu
+Method: *„Třicet dva účastníků absolvovalo tři krátké úlohy pracovní paměti
+ve třech podmínkách"* a v Results *„Rozdíl mezi podmínkami byl pozorován
+pouze v jedné úloze."*
 
 ### Metodika záměrně nemá položkové klíče
 
@@ -225,9 +251,9 @@ Píšu to sem, protože to říká, jak spolehlivá tahle kontrola je.
 
 ## Co zbývá
 
-Pozorné čtení věta po větě je hotové u **všech čtyř velkých témat** —
-Grafika, Umělá inteligence, Internet a bezpečnost i Digitální gramotnost.
+**Nic.** Pozorné čtení věta po větě je hotové u všech čtyř velkých témat —
+Grafika, Umělá inteligence, Internet a bezpečnost i Digitální gramotnost —
+včetně všech deseti prezentací tématu 7 (70 snímků, 70 stran poznámek).
 
-Nepřečtené zůstávají prezentace tématu 7 (10 souborů, 70 snímků). Automatikou
-prošly a čísla i odkazy v nich sedí; jejich mluvený obsah se ale opírá o tytéž
-„Očekávané závěry", které jsem četl v metodice, takže riziko je malé.
+Otevřené zůstávají jen dvě věci z oddílu „Na zvážení", a obě jsou tvoje
+rozhodnutí, ne nález: složka `CHAOS` a pevné mezery.
