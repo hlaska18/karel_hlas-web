@@ -8,6 +8,8 @@
  * dozvědět, co nefungovalo, dřív než si to stáhne.
  */
 
+import { ExternalLink, Images, Info, MessageSquare, Sparkles } from "lucide-react";
+
 import { AiHubSouhvezdi } from "@/components/AiHubSouhvezdi";
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
@@ -33,6 +35,106 @@ function Pole({ popisek, text }: { popisek: string; text: string }) {
         {popisek}
       </dt>
       <dd className="mt-1 text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">{text}</dd>
+    </div>
+  );
+}
+
+
+const IKONY = {
+  chat: MessageSquare,
+  obraz: Images,
+  trida: Sparkles,
+} as const;
+
+/**
+ * Rozcestník nástrojů pod ověřenými výstupy.
+ *
+ * ODDĚLENÝ SCHVÁLNĚ. Nahoře je to, co jsem změřil; tady to, co jsem jen našel.
+ * Kdyby to splynulo, Hub by přestal znamenat, co slibuje. Proto vodorovná
+ * čára, vlastní nadpis a přiznání hned pod ním – a proto tu nikde není číslo
+ * o ušetřeném čase.
+ */
+function Nastroje() {
+  const { tr, lang } = useLang();
+  const n = tr.nastroje;
+
+  return (
+    <div className="mt-14 border-t border-black/[0.08] pt-10 dark:border-white/10">
+      <h3 className="font-display text-xl font-semibold tracking-podnadpis text-zinc-900 dark:text-zinc-50">
+        {n.heading}
+      </h3>
+      <p className="povrch mt-4 flex max-w-[46rem] items-start gap-2.5 rounded-karta p-4 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <Info className="mt-0.5 h-4 w-4 shrink-0 text-accent-700 dark:text-accent-300" />
+        <span>{sazba(n.disclaimer, lang)}</span>
+      </p>
+
+      <div className="mt-8 space-y-10">
+        {n.items.map((kat) => {
+          const Ikona = IKONY[kat.icon];
+          return (
+            <div key={kat.kategorie}>
+              {/* `items-start`, ne `items-center`: popis se na úzkém okně zalomí
+                  a vystředěná ikona by stála u popisu místo u nadpisu. */}
+              <div className="flex items-start gap-3">
+                <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] text-accent-700 dark:bg-white/5 dark:text-accent-300">
+                  <Ikona className="h-5 w-5" />
+                </span>
+                <div className="min-w-0">
+                  <h4 className="font-display text-lg font-semibold tracking-podnadpis text-zinc-900 dark:text-zinc-50">
+                    {kat.kategorie}
+                  </h4>
+                  <p className="mt-0.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                    {sazba(kat.what, lang)}
+                  </p>
+                </div>
+              </div>
+
+              <ul className="mt-4 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {kat.tools.map((x) => (
+                  <li key={x.name} className="flex">
+                    <a
+                      href={x.url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="povrch group flex w-full flex-col rounded-karta p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
+                    >
+                      <span className="flex items-start justify-between gap-2">
+                        <span className="font-display text-base font-semibold tracking-podnadpis text-zinc-900 dark:text-zinc-50">
+                          {x.name}
+                        </span>
+                        <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-400 transition group-hover:text-accent-700 dark:group-hover:text-accent-300" />
+                      </span>
+                      <span className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+                        {sazba(x.why, lang)}
+                      </span>
+                      {/* Návod dostane vlastní pruh: je to to, kvůli čemu sem
+                          člověk přišel, ne dovětek. */}
+                      <span className="mt-3 rounded-ovladac bg-black/[0.03] p-3 text-sm leading-relaxed text-zinc-700 dark:bg-white/[0.04] dark:text-zinc-300">
+                        {sazba(x.navod, lang)}
+                      </span>
+                      <span className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
+                        {sazba(x.note, lang)}
+                      </span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          );
+        })}
+      </div>
+
+      <p className="mt-8 flex items-start gap-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
+        <a
+          href={n.creditUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="underline decoration-dotted underline-offset-2 transition hover:text-accent-700 dark:hover:text-accent-300"
+        >
+          {n.credit}
+        </a>
+      </p>
     </div>
   );
 }
@@ -172,12 +274,14 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
           </>
         )}
 
-        <p className="mt-6 max-w-[46rem] text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+        <Nastroje />
+
+        <p className="mt-10 max-w-[46rem] text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
           {sazba(a.licenceNote, lang)}
         </p>
 
         {/* Bez tohohle řetěz šipek u této sekce končil a další se přeskočila. */}
-        <SectionJump href="#ai-nastroje" label={tr.nastroje.kicker} />
+        <SectionJump href="#about" label={tr.nav.about} />
       </div>
     </section>
   );

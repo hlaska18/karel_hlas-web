@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Compass, Layers, Library, Mail, Menu, Sparkles, User, X } from "lucide-react";
+import { Layers, Library, Mail, Menu, Sparkles, User, X } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { ICON_BUTTON } from "@/lib/styles";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -71,12 +71,6 @@ export function Header() {
             text={tr.aihub.kicker}
             size="sm"
             icon={<Sparkles className="h-4 w-4" />}
-          />
-          <InteractiveHoverButton
-            href="#ai-nastroje"
-            text={tr.nastroje.kicker}
-            size="sm"
-            icon={<Compass className="h-4 w-4" />}
           />
           <InteractiveHoverButton
             href="#about"

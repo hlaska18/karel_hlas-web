@@ -1188,19 +1188,22 @@ type Dict = {
     }[];
   };
   /**
-   * Sekce „AI nástroje" – ROZCESTNÍK, ne doporučení. Vědomě stojí vedle
-   * AI Hubu a nesmí si s ním protiřečit: AI Hub je to, co jsem sám změřil,
-   * tohle je jen mapa, kde co hledat. Proto má sekce `disclaimer`, který to
-   * říká nahlas, a proto tu není ani slovo o ušetřeném čase.
+   * Nástroje uvnitř AI Hubu – ROZCESTNÍK vedle ověřených výstupů.
    *
-   * `note` u nástroje drží stejnou konvenci jako u `cross` a u článků:
-   * co člověka čeká po kliknutí – účet, jazyk, limit, cookies.
+   * Vykresluje se v `AiHub.tsx` pod výstupy, ne jako vlastní sekce: Karel to
+   * chtěl mít pohromadě („Vlož to do AI Hubu a AI nástroje smaž“).
+   *
+   * Hub si tím ale musí ohlídat vlastní slib. Stojí na tom, že se do něj
+   * dostane jen změřená práce – tenhle blok se proto od výstupů viditelně
+   * odděluje čarou a `disclaimer` hned pod nadpisem říká, že tady měřené nic
+   * není. Nepadne tu ani slovo o ušetřeném čase; to patří jen nahoru.
+   *
+   * `navod` je stručný první krok: čím začít, aby to dalo použitelný výsledek.
+   * `note` drží konvenci celého webu – co člověka po kliknutí čeká: účet,
+   * jazyk, limit, cookies.
    */
   nastroje: {
-    kicker: string;
     heading: string;
-    badge: string;
-    intro: string;
     disclaimer: string;
     /** Atribuce: výběr kategorií vznikl podle databáze na aidetem.cz. */
     credit: string;
@@ -1209,7 +1212,7 @@ type Dict = {
       kategorie: string;
       what: string;
       icon: "chat" | "obraz" | "trida";
-      tools: { name: string; url: string; why: string; note: string }[];
+      tools: { name: string; url: string; why: string; navod: string; note: string }[];
     }[];
   };
   materials: {
@@ -1337,9 +1340,9 @@ export const t: Record<Lang, Dict> = {
       badge: "Nová sekce",
       intro:
         "Návody na učitelovu vlastní práci, ne na hodinu: čím si pomoct při přípravě a co potom – při opravování, vyhodnocování a reflexi. Nic teoretického a nic pro studenty. U každého návodu stojí, na čem jsem ho zkusil, kolik času ušetřil a jestli se vůbec vyplatil.",
-      emptyTitle: "Zatím tu nic není, a je to tak správně.",
+      emptyTitle: "Ověřené postupy tu zatím nejsou, a je to tak správně.",
       emptyText:
-        "První návody přibudou, až si je sám vyzkouším na přípravě a opravování. Tipy na AI, které nikdo nezkusil, najdeš na internetu tisíckrát – smysl tohohle místa je, že u každého bude napsané, kolik času doopravdy ušetřil. A klidně i to, že se nevyplatil vůbec.",
+        "První přibudou, až si je sám vyzkouším na přípravě a opravování. Tipy na AI, které nikdo nezkusil, najdeš na internetu tisíckrát – a pár jich máš i kousek níž. Smysl tohohle místa je, že u postupů tady nahoře bude navíc napsané, kolik času doopravdy ušetřily. A klidně i to, že se nevyplatily vůbec.",
       labelCil: "Co bylo potřeba udělat",
       labelNastroj: "AI nástroj a postup",
       labelOvereni: "Na čem jsem to zkusil",
@@ -1520,18 +1523,14 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     nastroje: {
-      kicker: "AI nástroje",
-      heading: "Čím vlastně začít",
-      badge: "Nová sekce",
-      intro:
-        "Mapa nástrojů, na které narazíš nejdřív: čím psát, čím vyrobit obrázek nebo prezentaci a co pustit rovnou žákům. U každého je napsané, jestli chce účet, jestli umí česky a co tě po kliknutí čeká.",
+      heading: "Čím začít, než něco vyzkouším",
       disclaimer:
-        "Tohle je rozcestník, ne doporučení. Na rozdíl od AI Hubu jsem tyhle nástroje sám neproměřil – neříkám ti tedy, kolik času ušetří, jen kde je hledat a s čím u nich počítat. Až něco z toho projde mou vlastní přípravou, popíšu to o kus výš i s časem.",
+        "Tohle ještě nejsou ověřené postupy nahoře – tyhle nástroje jsem sám nezměřil, takže ti neřeknu, kolik času ušetří. Je to mapa, kde co hledat, s čím u toho počítat a jak se do toho pustit. Co z toho projde mou vlastní přípravou, popíšu výš i s časem.",
       credit: "Výběr kategorií vznikl podle databáze AI nástrojů na aidetem.cz.",
       creditUrl: "https://aidetem.cz/databaze-ai-nastroju-a-aplikaci-s-navody/",
       items: [
         {
-          kategorie: "Chatboti",
+          kategorie: "Čím psát",
           what: "Univerzální pomocník na text. Rozdíl mezi nimi je hlavně v tom, k jakému účtu tě pustí škola.",
           icon: "chat",
           tools: [
@@ -1539,24 +1538,30 @@ export const t: Record<Lang, Dict> = {
               name: "Microsoft Copilot",
               url: "https://copilot.microsoft.com",
               why: "Nejblíž tomu, co škola nejspíš už má – přihlásíš se školním účtem a zůstaneš v prostředí Microsoftu.",
+              navod:
+                "Přihlas se školním účtem, ne osobním – ochrana dat platí jen u toho školního. Do prvního zadání dej vždycky tři věci: kdo jsi, pro koho to je a kolik na to máš času („Učím informatiku v prvním ročníku SŠ, potřebuju aktivitu na 20 minut na…“). Bez nich dostaneš obecnou vatu, kterou stejně přepíšeš.",
               note: "Zdarma, česky. Se školním účtem nabízí Microsoft ochranu dat, ale zapíná ji správce – ověř si u něj, jak to má vaše škola nastavené.",
             },
             {
               name: "Google Gemini",
               url: "https://gemini.google.com",
               why: "Volba pro školy, které jedou na Google Workspace; česky umí a drží se v témže účtu jako Disk a Učebna.",
+              navod:
+                "Přihlas se školním účtem Google. Hlavní výhoda je, že mu můžeš povolit přístup na svůj Disk – pak nemusíš nic vkládat a rovnou řekneš, ať z existujícího materiálu udělá osnovu, otázky nebo shrnutí pro žáky.",
               note: "Chce účet Google. U žákovských účtů rozhoduje nastavení školy a věková hranice – sám si to žák neodemkne.",
             },
             {
               name: "ChatGPT",
               url: "https://chatgpt.com",
               why: "Nejrozšířenější, takže ho žáci nejspíš už znají. Zvládne text i obrázky a česky mluví dobře.",
+              navod:
+                "Zkusíš ho i bez účtu, jen se ti neuloží historie. Nejrychlejší zisk pro učitele není psaní od nuly, ale úpravy: vlož vlastní hotové zadání a nech si k němu udělat variantu B, klíč nebo tři těžší otázky. S cizím textem si poradí líp než s prázdnou stránkou.",
               note: "Bez účtu jen omezeně, plné funkce chtějí registraci. Podmínky žádají věk 13+ a u nezletilých souhlas rodiče.",
             },
           ],
         },
         {
-          kategorie: "Obrázky, diagramy a prezentace",
+          kategorie: "Čím to ukázat",
           what: "Když potřebuješ vizuál do materiálu a nechceš ho hledat ve fotobance ani řešit licenci cizí fotky.",
           icon: "obraz",
           tools: [
@@ -1564,36 +1569,46 @@ export const t: Record<Lang, Dict> = {
               name: "Zoner AI",
               url: "https://zonerai.com/cs/image-creator/",
               why: "Generátor obrázků od české firmy. Zadáš popis česky a hned generuješ – nejnižší práh ze všech tady.",
+              navod:
+                "Nic nezakládáš – napiš popis česky rovnou do pole na stránce a dej Generovat. Popiš scénu, styl i to, co má být v popředí; jedno slovo („traktor“) dá obrázek, který stejně nepoužiješ.",
               note: "Zdarma a bez registrace, celé česky. Po otevření vyskočí lišta se souhlasem s cookies.",
             },
             {
               name: "Napkin AI",
               url: "https://www.napkin.ai/",
               why: "Vložíš hotový text a on z něj udělá diagram nebo schéma. Nic se nepromptuje, což je při přípravě rychlejší.",
+              navod:
+                "Zkopíruj do něj hotový odstavec a on nabídne několik diagramů, ze kterých vybereš. Nejlíp funguje na text, který už strukturu má – kroky postupu, srovnání dvou věcí, příčina a následek. Na souvislé vyprávění je krátký.",
               note: "Chce účet, rozhraní je anglicky.",
             },
             {
               name: "Ideogram",
               url: "https://ideogram.ai",
               why: "Z generátorů obrázků nejlíp zvládá čitelný text uvnitř obrázku – použitelné na plakát nebo nadpis.",
+              navod:
+                "Text, který má být v obrázku, dej do popisu v uvozovkách – jinak si ho model přepíše po svém. Sahej po něm jen tam, kde má být nápis součástí obrázku; na běžnou ilustraci ti stačí Zoner a nemusíš zakládat účet.",
               note: "Chce účet, zdarma s denním limitem. Anglicky.",
             },
             {
               name: "Adobe Firefly",
               url: "https://firefly.adobe.com",
               why: "Trénovaný na licencovaném obsahu, takže je u výstupů nejmenší riziko sporu o autorská práva.",
+              navod:
+                "Přihlas se účtem Adobe a hlídej si kredity – po vyčerpání měsíčního přídělu generování zpomalí. Ber ho na obrázky, které půjdou ven ze školy (web, ročenka, plakát na dveře), právě kvůli tomu nižšímu riziku.",
               note: "Chce účet Adobe, zdarma s měsíčním přídělem kreditů. Anglicky.",
             },
             {
               name: "Gamma",
               url: "https://gamma.app",
               why: "Z osnovy udělá celou prezentaci i s obsahem, ne jen prázdnou šablonu.",
+              navod:
+                "Vlož osnovu po bodech, ne jedno téma – z bodů postaví strukturu, ze samotného tématu si obsah vymyslí. Výstup ber jako první verzi a projdi fakta: doplňuje je i tam, kde jsi nic nezadal.",
               note: "Chce účet, zdarma s omezeným počtem kreditů. Anglicky.",
             },
           ],
         },
         {
-          kategorie: "Rovnou do hodiny",
+          kategorie: "Co pustit žákům",
           what: "Dvě věci, které nejsou o generování, ale o tom, aby žák pochopil, jak se AI učí.",
           icon: "trida",
           tools: [
@@ -1601,12 +1616,16 @@ export const t: Record<Lang, Dict> = {
               name: "Teachable Machine",
               url: "https://teachablemachine.withgoogle.com",
               why: "Žák natrénuje z webkamery vlastní model za pár minut. Nejnázornější způsob, jak ukázat, co je trénovací sada – a co se stane, když je jednostranná.",
+              navod:
+                "Get Started → Image Project → Standard. Nasbírej dvě třídy asi po třiceti snímcích z webkamery, natrénuj a hned zkoušej. Nejsilnější moment hodiny přijde, když model natrénuješ schválně jen na jednom žákovi a pak před třídou ukážeš, že ostatní nepozná.",
               note: "Zdarma, běží v prohlížeči a k trénování účet nepotřebuje; uložení modelu do cloudu už účet Google chce. Rozhraní anglicky.",
             },
             {
               name: "Experiments with Google",
               url: "https://experiments.withgoogle.com",
               why: "Sbírka hravých pokusů, ze které se dá vybrat pětiminutová ukázka na začátek hodiny.",
+              navod:
+                "Nevybírej za pochodu před třídou – projdi si to předem a vyber jeden pokus. Do hodiny o strojovém učení sedí Quick, Draw!: žáci kreslí, model hádá a je na tom vidět, z čeho se učí a kde má mezery.",
               note: "Zdarma, bez účtu, anglicky. Kvalita se kus od kusu liší – vyber a vyzkoušej si to předem.",
             },
           ],
@@ -1747,9 +1766,9 @@ export const t: Record<Lang, Dict> = {
       badge: "New section",
       intro:
         "Guides for a teacher's own work, not for the lesson: what helps when preparing, and what comes afterwards — marking, evaluating and reflecting. Nothing theoretical and nothing aimed at students. Each guide says what I tried it on, how much time it saved, and whether it was worth it at all.",
-      emptyTitle: "Nothing here yet, and that is correct.",
+      emptyTitle: "No verified write-ups yet, and that is correct.",
       emptyText:
-        "The first guides will appear once I have tried them on my own prep and marking. AI tips nobody has actually tried are all over the internet — the point of this place is that each one says how much time it really saved. Including the ones that saved none.",
+        "The first ones will appear once I have tried them on my own prep and marking. AI tips nobody has actually tried are all over the internet — and you will find a few just below. The point of this place is that the write-ups up here also say how much time they really saved. Including the ones that saved none.",
       labelCil: "What needed doing",
       labelNastroj: "AI tool and method",
       labelOvereni: "What I tried it on",
@@ -1930,18 +1949,14 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     nastroje: {
-      kicker: "AI tools",
-      heading: "Where to actually start",
-      badge: "New section",
-      intro:
-        "A map of the tools you meet first: what to write with, what to make an image or a deck with, and what you can put in front of a class. Each one says whether it needs an account, whether it speaks Czech, and what happens after you click.",
+      heading: "Where to start, before I have tested anything",
       disclaimer:
-        "This is a signpost, not a recommendation. Unlike the AI Hub, I have not measured these myself – so I am not telling you how much time they save, only where to find them and what to expect. Once one of them survives my own lesson prep, it moves up there, with the numbers.",
+        "These are not the verified write-ups above – I have not measured these tools myself, so I cannot tell you how much time they save. This is a map: where to find them, what to expect, and how to get going. Whatever survives my own lesson prep moves up there, with the numbers.",
       credit: "The categories follow the AI tool database at aidetem.cz.",
       creditUrl: "https://aidetem.cz/databaze-ai-nastroju-a-aplikaci-s-navody/",
       items: [
         {
-          kategorie: "Chatbots",
+          kategorie: "For writing",
           what: "The general-purpose helper for text. What mostly separates them is which account your school lets you use.",
           icon: "chat",
           tools: [
@@ -1949,24 +1964,30 @@ export const t: Record<Lang, Dict> = {
               name: "Microsoft Copilot",
               url: "https://copilot.microsoft.com",
               why: "Closest to what your school probably already has – you sign in with the school account and stay inside Microsoft.",
+              navod:
+                "Sign in with the school account, not a personal one – the data protection only applies to the school one. Always give your first prompt three things: who you are, who it is for, and how long you have. Without them you get generic filler you will rewrite anyway.",
               note: "Free. With a school account Microsoft offers data protection, but an administrator switches it on – check how your school has it set.",
             },
             {
               name: "Google Gemini",
               url: "https://gemini.google.com",
               why: "The choice for schools on Google Workspace; it stays in the same account as Drive and Classroom.",
+              navod:
+                "Sign in with the school Google account. The real advantage is that you can grant it access to your Drive – then you paste nothing and simply ask it to turn an existing handout into an outline, questions or a summary.",
               note: "Needs a Google account. For pupil accounts the school's settings and age limits decide – a pupil cannot unlock it alone.",
             },
             {
               name: "ChatGPT",
               url: "https://chatgpt.com",
               why: "The most widely used one, so your pupils likely know it already. Handles both text and images.",
+              navod:
+                "You can try it without an account; you just lose your history. The fastest win is not writing from scratch but editing: paste your own finished assignment and ask for a variant B, an answer key, or three harder questions.",
               note: "Limited without an account; full features need signing up. The terms require age 13+ and a parent's consent for minors.",
             },
           ],
         },
         {
-          kategorie: "Images, diagrams and slides",
+          kategorie: "For showing it",
           what: "For when a handout needs a visual and you would rather not hunt through a stock library or sort out someone's licence.",
           icon: "obraz",
           tools: [
@@ -1974,36 +1995,46 @@ export const t: Record<Lang, Dict> = {
               name: "Zoner AI",
               url: "https://zonerai.com/cs/image-creator/",
               why: "An image generator from a Czech company. You type the description and generate straight away – the lowest barrier here.",
+              navod:
+                "Nothing to set up – type the description straight into the field on the page and hit generate. Describe the scene, the style and what belongs in the foreground; a single word gives you a picture you will not use.",
               note: "Free, no sign-up, entirely in Czech. A cookie consent bar appears when you open it.",
             },
             {
               name: "Napkin AI",
               url: "https://www.napkin.ai/",
               why: "You paste finished text and it turns it into a diagram. No prompting, which is faster when preparing.",
+              navod:
+                "Paste in a finished paragraph and it offers several diagrams to choose from. It works best on text that already has a shape – steps of a procedure, a comparison, cause and effect. On flowing prose it falls short.",
               note: "Needs an account; the interface is in English.",
             },
             {
               name: "Ideogram",
               url: "https://ideogram.ai",
               why: "Of the image generators it handles legible text inside the picture best – usable for a poster or a heading.",
+              navod:
+                "Put the text you want inside the image in quotation marks – otherwise the model rewrites it its own way. Reach for it only when the lettering is part of the picture; for an ordinary illustration Zoner is enough.",
               note: "Needs an account, free with a daily limit. In English.",
             },
             {
               name: "Adobe Firefly",
               url: "https://firefly.adobe.com",
               why: "Trained on licensed content, so its output carries the lowest risk of a copyright dispute.",
+              navod:
+                "Sign in with an Adobe account and watch your credits – once the monthly allowance runs out, generating slows down. Use it for images that leave the school, precisely because of that lower risk.",
               note: "Needs an Adobe account, free with a monthly credit allowance. In English.",
             },
             {
               name: "Gamma",
               url: "https://gamma.app",
               why: "Turns an outline into a whole deck including the content, not just an empty template.",
+              navod:
+                "Give it a bulleted outline rather than a single topic – from bullets it builds your structure, from a bare topic it invents its own. Treat the result as a first draft and check the facts.",
               note: "Needs an account, free with limited credits. In English.",
             },
           ],
         },
         {
-          kategorie: "Straight into a lesson",
+          kategorie: "For putting in front of a class",
           what: "Two things that are not about generating, but about pupils understanding how AI learns.",
           icon: "trida",
           tools: [
@@ -2011,12 +2042,16 @@ export const t: Record<Lang, Dict> = {
               name: "Teachable Machine",
               url: "https://teachablemachine.withgoogle.com",
               why: "A pupil trains their own model from the webcam in minutes. The clearest way to show what a training set is – and what happens when it is one-sided.",
+              navod:
+                "Get Started → Image Project → Standard. Collect two classes of about thirty webcam shots each, train, and test right away. The strongest moment comes when you deliberately train it on one pupil only and then show that it fails to recognise anyone else.",
               note: "Free, runs in the browser and needs no account to train; saving the model to the cloud does need a Google account. Interface in English.",
             },
             {
               name: "Experiments with Google",
               url: "https://experiments.withgoogle.com",
               why: "A collection of playful experiments to pick a five-minute opener from.",
+              navod:
+                "Do not browse it in front of the class – go through it beforehand and pick one. For a lesson on machine learning, Quick, Draw! fits: pupils draw, the model guesses, and you can see what it learned from.",
               note: "Free, no account, in English. Quality varies from one to the next – pick and try yours in advance.",
             },
           ],

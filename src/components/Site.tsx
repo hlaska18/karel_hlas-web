@@ -4,7 +4,6 @@ import { Hero } from "@/components/Hero";
 import { BankSection } from "@/components/BankSection";
 import { CrossSubject } from "@/components/CrossSubject";
 import { AiHub } from "@/components/AiHub";
-import { AiNastroje } from "@/components/AiNastroje";
 import { About } from "@/components/About";
 import { Contact } from "@/components/Contact";
 import { Footer } from "@/components/Footer";
@@ -46,7 +45,6 @@ export function Site({
         <BankSection items={items} />
         <CrossSubject items={items.filter((i) => crossTools.has(i.tool))} />
         <AiHub vystupy={vystupy} />
-        <AiNastroje />
         <About />
         <Contact />
       </main>
