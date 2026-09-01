@@ -1,19 +1,27 @@
 # NÁVRH: Zpracování údajů
 
 > **Tohle není hotový dokument.** Je to návrh sepsaný z toho, co web podle
-> kódu doopravdy dělá — ověřoval jsem `src/lib/postup/`, `src/app/api/postup/`
-> a `src/app/layout.tsx`. Než to půjde na web, musí to projít někdo, kdo na
-> to má razítko, a musí se doplnit dvě věci, které z kódu vyčíst nejdou:
-> **kdo je správce** (Karel jako fyzická osoba, nebo škola) a **jak dlouho
-> se účty drží**.
+> kódu doopravdy dělá. Než půjde na web, měl by ho projít někdo, kdo na to
+> má razítko.
 >
-> Místa k doplnění jsou označená `⟨takto⟩`.
+> **Popisuje CÍLOVÝ stav po zrušení účtů** (Karel, 1. 9. 2026: *„držet účty
+> žáků nakonec vůbec nebudeme, uděláme to na ten kód WIN11"*). Dokud se účty
+> z kódu neodstraní, text neodpovídá skutečnosti a **nesmí se zveřejnit** —
+> odstranění je popsané na konci.
+>
+> Zbývá doplnit jedinou věc: `⟨adresu pro doručování⟩`.
 
 ---
 
 ## Kdo web provozuje
 
-⟨Doplnit: jméno nebo škola, adresa.⟩
+Web provozuje **Mgr. Karel Hlas** jako fyzická osoba. Není to web školy,
+i když materiály vznikají a ověřují se ve výuce na Střední průmyslové škole
+strojní a stavební Tábor.
+
+⟨Doplnit adresu pro doručování. U fyzické osoby stačí kontaktní adresa,
+nemusí to být adresa bydliště — dá se uvést adresa školy, pokud s tím škola
+souhlasí.⟩
 
 Kontakt: hlas@sps-tabor.cz
 
@@ -21,100 +29,107 @@ Kontakt: hlas@sps-tabor.cz
 
 ## Co web ukládá
 
-### Většina webu neukládá nic
+**Nic, podle čeho by šlo poznat, kdo jsi.**
 
 Materiály si můžeš prohlížet a stahovat bez přihlášení. Nic se při tom
-neodesílá a nic se neukládá.
+neodesílá a nic se o tobě neukládá.
 
-### Virtuální Windows — jen když se přihlásíš
+### Virtuální Windows
 
-V prostředí virtuálního Windows si můžeš založit účet, aby ti zůstal
-splněný postup i po zavření prohlížeče. **Je to dobrovolné.** Když klikneš
-na *Přeskočit*, postup zůstane jen v tomhle počítači a na server nejde nic.
+Do prostředí se vstupuje **kódem**, který dostaneš od učitele. Kód není
+účet: neváže se k tobě, nic si k němu neukládáme a je společný pro celou
+třídu.
 
-Když se přihlásíš, uloží se:
-
-| co | proč |
-|---|---|
-| přezdívka | aby se ti postup našel |
-| otisk hesla | aby se dalo ověřit heslo, aniž by se ukládalo |
-| seznam splněných úloh | vlastní postup |
-| kdy jsi účet založil a kdy ses naposled přihlásil | úklid starých účtů |
-
-**Heslo se neukládá.** Ukládá se z něj jen otisk (scrypt se solí), ze
-kterého heslo zpátky nesestavíš.
-
-**Přezdívku si vymysli.** Na přihlašovací obrazovce to stojí a platí to:
-když nepoužiješ svoje jméno, nikdo z toho, co je uložené, nepozná, kdo jsi.
-
-Nic dalšího z prostředí se neukládá — jaká okna jsi otevřel, co jsi
-nakreslil v Malování ani co sis nastavil zůstává v tomhle prohlížeči.
-
-### Ochrana proti hádání hesla
-
-Aby nešlo hesla zkoušet dokola, počítá se počet neúspěšných pokusů podle
-přezdívky a podle IP adresy. Tahle počítadla **se sama mažou** po patnácti
-minutách, respektive po deseti.
-
-### Návštěvnost
-
-Web měří návštěvnost přes Vercel Analytics. **Nepoužívá cookies** a data
-jsou souhrnná — kolik lidí kterou stránku otevřelo. Jednotliví návštěvníci
-se z toho nepoznají.
+Co v prostředí uděláš — jaká okna otevřeš, co nakreslíš v Malování, jak
+daleko dojdeš v úlohách — **zůstává v tomhle prohlížeči** a na server se
+neodesílá. Když si smažeš data prohlížeče, zmizí to i tobě.
 
 ### SQL hřiště
 
 Rozepsané dotazy zůstávají v tomhle prohlížeči. Na server se neodesílají.
 
+### Návštěvnost
+
+Web měří návštěvnost přes **Vercel Analytics**. Nepoužívá cookies a data
+jsou souhrnná — kolik lidí kterou stránku otevřelo, odkud přišli, na jakém
+zařízení. Jednotliví návštěvníci se z toho nepoznají a nespojují se
+s ničím jiným.
+
 ---
 
-## Kdo se k tomu dostane
+## Kdo web provozuje technicky a kde běží
 
-| kdo | k čemu |
-|---|---|
-| ⟨správce⟩ | k účtům v prostředí |
-| Vercel | provoz webu a měření návštěvnosti |
-| Upstash | úložiště, ve kterém účty leží |
+Web běží na **Vercelu**. Požadavek nejdřív obslouží nejbližší okraj sítě —
+z Česka je to Frankfurt — ale **serverová část běží ve Spojených státech**
+(oblast `iad1`, Washington). Vercel je americká společnost.
+
+Znamená to, že technické údaje, které vzniknou při každém požadavku na
+jakýkoli web (IP adresa, čas, typ prohlížeče), se zpracují i mimo Evropskou
+unii. Vercel k tomu má standardní smluvní doložky.
 
 Data se nikomu neprodávají ani nepředávají dál.
-
-⟨Doplnit: kde servery leží — u Vercelu i Upstashe jde region nastavit
-a je potřeba ověřit, jak je nastavený tenhle projekt.⟩
 
 ---
 
 ## Jak dlouho
 
-⟨Doplnit. Dnes účty **žádnou expiraci nemají** a to je potřeba změnit —
-navrhuju smazat účet, na který se rok nikdo nepřihlásil. Počítadla pokusů
-se mažou sama, viz výše.⟩
+Na serveru se **nic o návštěvnících nedrží**. Souhrnná návštěvnost si
+uchovává Vercel podle svých podmínek.
+
+Co je uložené v tvém prohlížeči, tam zůstane, dokud si to nesmažeš.
 
 ---
 
 ## Co s tím můžeš udělat
 
-Napiš na hlas@sps-tabor.cz a:
+Protože o tobě nic neukládáme, není co vymazat ani opravit. Kdyby ti přesto
+něco vrtalo hlavou, napiš na hlas@sps-tabor.cz.
 
-- řeknu ti, co je u tvé přezdívky uložené,
-- smažu to,
-- opravím, co je špatně.
-
-Když si nepamatuješ přezdívku, nemám jak účet najít — a to je záměr, ne
-chyba. Nic jiného, podle čeho by šel dohledat, uložené není.
+Data, která si prostředí uložilo u tebe, smažeš v nastavení prohlížeče
+(historie → data webů) nebo přímo v prostředí.
 
 ---
 
 ## Nezletilí
 
-Prostředí používají žáci střední školy. Proto je to postavené tak, aby
-**nebylo potřeba nic osobního**: vymyšlená přezdívka, žádný e-mail, žádné
-jméno, a přihlášení je dobrovolné.
-
-⟨Zvážit: jestli o tom mají vědět zákonní zástupci, a jestli to nemá být
-součástí školní dokumentace.⟩
+Prostředí používají žáci střední školy. Proto je postavené tak, aby se
+**nezadávalo nic osobního**: žádný účet, žádné jméno, žádný e-mail, jen kód
+od učitele.
 
 ---
 
 ## Změny
 
 Až se tenhle text změní, bude tu datum poslední úpravy.
+
+---
+---
+
+# Co je potřeba udělat v kódu, než to půjde ven
+
+Dnešní stav tomuhle textu **neodpovídá**. Ve virtuálním Windows si žáci
+zakládají účty a postup se jim ukládá na server — a na produkci to běží.
+
+1. **Odstranit serverovou část postupu:** `src/lib/postup/`,
+   `src/app/api/postup/`, klienta v `Prihlaseni.tsx`.
+2. **Vrátit vstupní kód**, tentokrát i s kódy pro třídy. Pozor na to, proč
+   se ten původní rušil (`de570c6`): kontroloval se **jen v prohlížeči**,
+   a protože zůstával výchozí, přihlašovací obrazovka ho sama nabízela
+   tlačítkem. Zábrana, kterou obsluha otevírá návštěvníkovi sama. Nový kód
+   má smysl jako **organizační opatření** — „tohle je pro moji třídu" —
+   a je poctivé to tak i pojmenovat, ne vydávat ho za zabezpečení.
+3. **Smazat, co v úložišti zbylo.** Účty, které si žáci stihli založit,
+   je potřeba odstranit — jinak text lže i po odstranění kódu.
+4. **Odpojit úložiště** od projektu ve Vercelu (proměnné `KV_REST_API_URL`
+   a `POSTUP_PODPIS`), ať se nedá omylem oživit.
+
+Teprve pak text výše popisuje pravdu.
+
+## Kdyby ses přece jen rozhodl účty ponechat
+
+Pak je potřeba doplnit ještě dvě věci, které z kódu vyčíst nejde:
+
+- **Kde leží úložiště Upstash.** Ve Vercelu: projekt → *Storage* → klikni na
+  databázi → *Region*. Nebo na console.upstash.com u té databáze. Region je
+  potřeba znát, protože u Upstashe jde vybrat i evropský a to je rozdíl.
+- **Jak dlouho účty držet.** Dnes se nemažou nikdy.

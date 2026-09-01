@@ -10,7 +10,6 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
-import { nactiUcet, smazPostup, zapomenUcet } from "@/lib/postup/klient";
 import {
   Accessibility,
   Bluetooth,
@@ -670,23 +669,6 @@ function OddilAplikace() {
 
 function OddilUcty({ n, zmen }: { n: TypNastaveni; zmen: (z: Partial<TypNastaveni>) => void }) {
   const [jmeno, nastavJmeno] = useState(n.jmenoUctu);
-  /** Přezdívka účtu, ke kterému se ukládá postup; `null` = nepřihlášený. */
-  const [ucet, nastavUcet] = useState<string | null>(null);
-  const [mazani, nastavMazani] = useState<"maze" | "hotovo" | "chyba" | null>(null);
-
-  // Čte se až v prohlížeči – na serveru žádná relace není.
-  useEffect(() => nastavUcet(nactiUcet()), []);
-
-  const smaz = async () => {
-    nastavMazani("maze");
-    const povedlo = await smazPostup();
-    if (povedlo) {
-      // Účet je pryč i pro tuhle kartu: dál je co mazat až po novém přihlášení.
-      zapomenUcet();
-      nastavUcet(null);
-    }
-    nastavMazani(povedlo ? "hotovo" : "chyba");
-  };
 
   return (
     <>
@@ -716,31 +698,9 @@ function OddilUcty({ n, zmen }: { n: TypNastaveni; zmen: (z: Partial<TypNastaven
       </Karta>
       <Karta
         nadpis="Možnosti přihlášení"
-        popis="Přezdívkou a heslem, které sis zvolil. Přihlášení je dobrovolné."
+        popis="Kódem od vyučujícího. Žádný účet se nezakládá a nic se neodesílá."
         ikona={<ShieldCheck className="h-5 w-5" />}
       />
-      {/* Ukazuje se jen přihlášenému. Kdo účet nemá, nemá co mazat – a nabízet
-          mu tlačítko, které nic neudělá, by bylo horší než ho neukázat. */}
-      {ucet && (
-        <Karta
-          nadpis="Uložený postup"
-          popis={`Splněné úlohy se ukládají k přezdívce \u201e${ucet}\u201c a načtou se ti i na jiném počítači.`}
-        >
-          <div className="flex items-center gap-3">
-            <Tlacitko disabled={mazani !== null} onClick={smaz}>
-              {mazani === "maze" ? "Mažu…" : "Smazat můj postup"}
-            </Tlacitko>
-            {mazani === "hotovo" && (
-              <span className="text-[12px] text-win-slaby">
-                Smazáno. Splněné úlohy zůstávají zaškrtnuté jen v tomhle počítači.
-              </span>
-            )}
-            {mazani === "chyba" && (
-              <span className="text-[12px] text-win-slaby">Nepovedlo se – zkus to za chvíli.</span>
-            )}
-          </div>
-        </Karta>
-      )}
     </>
   );
 }

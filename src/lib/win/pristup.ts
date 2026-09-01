@@ -1,19 +1,44 @@
 /**
- * Paměť rozběhnutého sezení.
+ * Vstup do prostředí: kód od učitele a paměť rozběhnutého sezení.
  *
- * Dřív tu byl přístupový kód do prostředí. Zrušen schválně: kontroloval se
- * jen v prohlížeči, takže API o něm nevědělo a zakládání účtů nechránil ani
- * náhodou, a dokud zůstával výchozí, přihlašovací obrazovka ho sama nabízela
- * tlačítkem, které ho vyplnilo. Byl to krok navíc na začátku hodiny, ne
- * závora. Kdo do prostředí nemá, tomu ho neotevře ani kód stojící ve zdrojáku
- * stránky; kdo v něm chce mít uložený postup, zakládá si účet, a ten je
- * ověřovaný na serveru doopravdy.
+ * ORGANIZAČNÍ ZÁVORA, NE ZÁMEK — a je to tak napsané i na obrazovce.
+ * Kód se porovnává v prohlížeči, takže kdo se podívá do zdrojového kódu
+ * stránky, najde ho. Nevadí to: po zrušení účtů žáků tu není co chránit,
+ * na server nejde nic. Kód drží pohromadě třídu a otevírá hodinu.
  *
- * Zbylo jen tohle: po obnovení stránky se nezačíná znovu od zamykací
- * obrazovky. Drží to karta prohlížeče, takže zavřením zmizí.
+ * ŽÁDNÁ NÁPOVĚDA. Dřívější podoba kódu nabízela výchozí hodnotu tlačítkem,
+ * které ji po kliknutí vyplnilo — závora, kterou obsluha otevírá
+ * návštěvníkovi. Přesně kvůli tomu se rušila (`de570c6`) a nevrací se.
+ *
+ * PŘIDÁNÍ KÓDU PRO TŘÍDU: dopiš řádek do `KODY` níž a nahraj web. Nic
+ * jiného měnit netřeba.
  */
 
-/** Klíč v `sessionStorage`. */
+/**
+ * Kódy, kterými se do prostředí vchází. Stačí, když sedí kterýkoli.
+ *
+ * `WIN11` je společný a zůstává. Kódy tříd se dopisují podle potřeby —
+ * hodí se, když má učitel vědět, odkud kdo přišel, nebo když chce mít
+ * pro každou třídu vlastní vstup.
+ */
+export const KODY: readonly string[] = [
+  "WIN11",
+  // "1A-2026",
+  // "2B-2026",
+];
+
+/**
+ * Mezery, pomlčky a velikost písmen se ignorují. Žák opisuje z tabule
+ * a překlep ve „win 11" nemá být důvod, proč se nedostane do hodiny.
+ */
+const normalizuj = (text: string) => text.replace(/[\s-]/g, "").toUpperCase();
+
+export const kodSedi = (zadano: string): boolean => {
+  const hledany = normalizuj(zadano);
+  return hledany.length > 0 && KODY.some((k) => normalizuj(k) === hledany);
+};
+
+/** Klíč v `sessionStorage`: po obnovení stránky se kód nezadává znovu. */
 export const KLIC_ODEMCENO = "win11-vyuka-odemceno";
 
 export function jePrihlasen(): boolean {

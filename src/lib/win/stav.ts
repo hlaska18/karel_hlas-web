@@ -5,37 +5,30 @@
  * `useSystem()`. Díky tomu vidí Průzkumník i terminál tentýž disk a úkolovník
  * pozná, že žák něco udělal, ať to udělal kdekoli.
  *
- * Ukládá se do `localStorage` prohlížeče. Disk, soubory ani nastavení nikam
- * neodcházejí; na server jde jen přezdívka a seznam splněných úloh, a to až
- * když si žák založí účet (viz `src/lib/postup/`). Práce tedy přežije
- * obnovení stránky i přestávku na tomtéž počítači, ale na jiném stroji ani
- * v anonymním okně po ní nic nezbyde.
+ * Ukládá se do `localStorage` prohlížeče a NIKAM JINAM. Disk, soubory,
+ * nastavení ani splněné úlohy neodcházejí na server – účty žáků byly
+ * zrušené. Práce tedy přežije obnovení stránky i přestávku na tomtéž
+ * počítači, ale na jiném stroji ani v anonymním okně po ní nic nezbyde.
  *
- * Otázka osobních údajů tím NEODPADÁ – jen je odpověď krátká: ven jde
- * přezdívka, kterou si žák vymyslí, a seznam ID úloh. Nic z toho, co v
- * prostředí vytvoří, server nikdy nevidí. Dřív tu stálo, že otázka odpadá
- * úplně; to platilo, dokud účty neexistovaly.
+ * Otázka osobních údajů tím ODPADÁ: ven nejde nic. Do prostředí se vchází
+ * kódem od vyučujícího, který se porovnává taky jen v prohlížeči.
  */
 
 import type { Slozka, Uzel } from "./fs";
 import { diskProScenar, VYCHOZI_SCENAR } from "./scenare";
 import type { AppId } from "./typy";
 
-const KLIC_ZAKLAD = "win11-vyuka-stav";
-
 /**
- * Klíč místního úložiště. Když je žák přihlášený, nese i jeho přezdívku:
- * na sdíleném školním počítači se u jednoho stroje vystřídají tři třídy
- * a bez tohohle by si navzájem přepisovaly disk.
+ * Klíč místního úložiště.
  *
- * Nepřihlášený žák dostane původní klíč, takže komu prostředí běželo dřív,
- * o svoje soubory nepřijde.
+ * Dřív k němu přibývala přezdívka přihlášeného žáka, aby si tři třídy na
+ * jednom školním počítači nepřepisovaly disk. Účty na serveru jsou zrušené,
+ * takže klíč je zase jeden – a na sdíleném počítači platí, co u sdíleného
+ * počítače platit má: kdo přijde po někom, najde jeho práci. Prostředí je
+ * cvičné a `Nastavení → Obnovit` ho vrátí do výchozího stavu.
  */
-export let KLIC_ULOZISTE = KLIC_ZAKLAD;
+export const KLIC_ULOZISTE = "win11-vyuka-stav";
 
-export function nastavUcetUloziste(prezdivka: string | null): void {
-  KLIC_ULOZISTE = prezdivka ? `${KLIC_ZAKLAD}:${prezdivka}` : KLIC_ZAKLAD;
-}
 /** Zvedni při nekompatibilní změně tvaru dat – starý stav se pak zahodí. */
 export const VERZE_ULOZISTE = 1;
 

@@ -11,7 +11,17 @@ k odsouhlasení, ne hotový dokument.
 
 ---
 
-## 1 · Vysoká — chybí informace o zpracování osobních údajů
+## 1 · VYŘEŠENO — účty žáků zrušeny
+
+> **1. 9. 2026:** Karel rozhodl účty nedržet vůbec a nahradit je vstupním
+> kódem. Serverová část je odstraněná, `/api/postup/*` vrací 404 a na server
+> nejde nic. Nález níž popisuje stav, který tím zanikl — nechávám ho pro
+> dohledatelnost.
+>
+> **Zbývá Karlovi:** smazat účty, které si žáci stihli založit, v Upstash
+> konzoli, a odpojit od projektu `KV_REST_API_URL` a `POSTUP_PODPIS`.
+
+### Původní nález — chybí informace o zpracování osobních údajů
 
 **Co se děje.** Ve virtuálním Windows (`/windows`) si žáci zakládají účty
 a ukládá se jim postup na server. Ověřeno, že to na produkci **běží**:
@@ -76,7 +86,10 @@ kterou v kódu rozhodnout nejde: **je provozovatelem webu Karel jako fyzická
 osoba, nebo škola?** Na tom visí, kdo je správcem údajů z bodu 1 a kdo za
 web odpovídá.
 
-**Toto je otázka, ne nález.** V kódu je jen ta věta; skutečnost znáš ty.
+**Zodpovězeno 1. 9. 2026: web provozuje Karel jako fyzická osoba, ne škola.**
+Správcem údajů z bodu 1 je tedy on. Věta o vzniku AI Hubu na škole tím
+nepřestává platit — materiály tam opravdu vznikají — ale provozovatel webu
+a škola jsou dvě různé věci a text o zpracování údajů to musí říkat jasně.
 
 ---
 
