@@ -207,8 +207,8 @@ const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
   "Operační systémy": {
     cesta: "/windows",
     popis: {
-      cs: "Vyzkoušej si Windows 11 přímo v prohlížeči – otevře se rovnou a nic se neinstaluje. Kdo chce, aby se mu postup v úlohách přenesl i na jiný počítač, zvolí si přezdívku a heslo.",
-      en: "Try Windows 11 right in your browser – it opens straight away, nothing to install. Pick a nickname to carry your progress between computers. The environment is in Czech.",
+      cs: "Vyzkoušej si Windows 11 přímo v prohlížeči – nic se neinstaluje, vejdeš kódem od vyučujícího. Odškrtané úlohy zůstávají v tomhle prohlížeči.",
+      en: "Try Windows 11 right in your browser – nothing to install, you enter with a code from your teacher. Completed tasks stay in this browser. The environment is in Czech.",
     },
     cta: { cs: "Spustit prostředí", en: "Start the environment" },
   },

@@ -58,10 +58,10 @@ export default function StrankaWindows() {
           Simulace prostředí Windows 11 v prohlížeči. Žáci si tu vyzkoušejí práci se
           soubory a složkami v Průzkumníku, přípony a vlastnosti souborů, nastavení
           systému, Poznámkový blok, Malování, Kalkulačku v programátorském režimu,
-          příkazový řádek a PowerShell. Otevře se rovnou, bez kódu i bez
-          instalace – nejde o skutečný operační systém. Práce zůstává
-          v prohlížeči žáka; kdo si založí účet, odešle se o něm jen přezdívka
-          a seznam splněných úloh.
+          příkazový řádek a PowerShell. Nic se neinstaluje a nejde o skutečný
+          operační systém; vstupuje se kódem od vyučujícího. Práce zůstává
+          v prohlížeči žáka – na server se neodesílá nic a žádné účty se
+          nezakládají.
         </p>
       </div>
     </>
