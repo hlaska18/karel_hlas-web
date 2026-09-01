@@ -1,0 +1,20 @@
+[
+  {
+    "cs": "Elements of AI – bezplatný online kurz (česky)",
+    "en": "Elements of AI – free online course (Czech version)",
+    "url": "https://course.elementsofai.com/cs",
+    "note": {
+      "cs": "Kurz vytvořily MinnaLearn a Helsinská univerzita, česká verze vznikla jako dar finského předsednictví EU. Šest kapitol, vlastní tempo, bez matematiky a programování. Zdarma, ale vyžaduje registraci.",
+      "en": "Created by MinnaLearn and the University of Helsinki; the Czech version was a gift of the Finnish EU presidency. Six chapters, self-paced, no maths or programming needed. Free, but requires signing up."
+    }
+  },
+  {
+    "cs": "Building AI – druhý díl kurzu (anglicky)",
+    "en": "Building AI – part two of the course",
+    "url": "https://buildingai.elementsofai.com/",
+    "note": {
+      "cs": "Navazuje na kurz výše: metody, kterými AI opravdu vzniká. Pět kapitol, zhruba 50 hodin, tři obtížnosti – od výběru z možností až po programování v Pythonu. Zdarma a s registrací, ale jen anglicky a certifikát je placený.",
+      "en": "Follows on from the course above: the methods AI is actually built from. Five chapters, about 50 hours, three difficulty levels – from multiple choice to Python. Free and requires signing up; the certificate is paid."
+    }
+  }
+]

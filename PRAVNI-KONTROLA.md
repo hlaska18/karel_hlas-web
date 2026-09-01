@@ -112,11 +112,16 @@ nelíbilo, jsou to tři soubory a jeden řádek v `content.ts`.
 Web to i říká: *„Cizí cvičebnice tu nehostuju, vede k nim jen odkaz na
 původní zdroj."* Ověřeno u všech patnácti `_zdroj.json`.
 
-**Balíček AI Fluency má vše, co má mít.** Je to jediná výjimka, kdy se cizí
-dílo hostuje, a je pokrytá: `Licence a zdroj.txt` uvádí autory (Rick Dakan,
-Joseph Feller, Anthropic), licenci CC BY-NC-SA 4.0, odkaz na originální kurz
-i na plné znění licence. Web má **tutéž** licenci, takže podmínka „zachovej
-licenci" je splněná.
+**Žádné cizí dílo se už nehostuje.** Balíček AI Fluency byl jedinou výjimkou
+a byl pokrytý správně (autoři Rick Dakan, Joseph Feller a Anthropic, licence
+CC BY-NC-SA 4.0, odkaz na originál i na plné znění licence). **1. 9. 2026ho
+Karel odstranil** — téma Umělá inteligence je nově jen odkaz na kurz Elements
+of AI od MinnaLearn a Helsinské univerzity, který se tu nehostuje.
+
+Tím zaniká jediný důvod, proč web **musel** mít licenci se ShareAlike: podmínka
+„zachovej licenci" se dědila právě z toho balíčku. `CC BY-NC-SA 4.0` v patičce
+teď drží jen proto, že si ji Karel vybral — což je legitimní, ale je to nově
+volba, ne povinnost. Kdyby ji chtěl změnit, nic už tomu nebrání.
 
 **Vlastní materiály neobsahují osobní údaje.** Obrázky, zvuky i videa
 v ukázkách vznikly programově, nejsou na nich žádné osoby. `foto_s_exif.jpg`

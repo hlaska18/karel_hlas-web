@@ -1,1 +1,9 @@
-{"cs": "Microsoft 365 pro školy – odkud vzít Excel a Power BI", "en": "Microsoft 365 for schools – where to get Excel and Power BI", "url": "https://www.microsoft.com/cs-cz/education/products/microsoft-365"}
+{
+  "cs": "Microsoft 365 pro školy – odkud vzít Excel a Power BI",
+  "en": "Microsoft 365 for schools – where to get Excel and Power BI",
+  "url": "https://www.microsoft.com/cs-cz/education/products/microsoft-365",
+  "note": {
+    "cs": "Rozcestník Microsoftu, ne materiál. Excel ani Power BI odtud nestáhneš bez školního účtu – ten zakládá škola, ne ty.",
+    "en": "Microsoft's own landing page, not a material. Getting Excel or Power BI from here needs a school account, which your school issues, not you."
+  }
+}

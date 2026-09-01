@@ -44,9 +44,11 @@ export type Social = {
  * „anglicky", Angličan u českých „in Czech".
  *
  * `pozor` říká, co člověka po kliknutí čeká (přihlášení, předplatné, limit).
- * Stejná konvence jako u nástrojů v sekci „Nejen do informatiky": web slibuje
- * materiály bez přihlašování, takže odkaz vedoucí na zeď musí být přiznaný
- * dřív, než na něj někdo klikne.
+ * Stejná konvence jako u nástrojů v sekci „Nejen do informatiky" a u převzatých
+ * odkazů v bance (`note` v `_zdroj.json`). Úvod tuhle podmínku schválně
+ * neslibuje paušálně: moje vlastní soubory přihlášení nechtějí, ale cizí kurz
+ * nebo cvičebnice ano, a to patří k té konkrétní položce – ať to člověk ví
+ * dřív, než na odkaz klikne, a ne až po něm.
  */
 export type Clanek = {
   title: string;
@@ -1236,7 +1238,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Hotové přípravy a materiály nejen do informatiky",
       role: "Učitel informatiky a angličtiny",
       tagline:
-        "Pro střední školy. Moje soubory si stáhneš i upravíš zdarma a bez přihlašování; kurz SQL a virtuální Windows běží rovnou v prohlížeči. U převzatých cvičebnic vede odkaz k jejich původnímu autorovi.",
+        "Pro střední školy. Moje soubory si stáhneš i upravíš zdarma; kurz SQL a virtuální Windows běží rovnou v prohlížeči. U převzatých cvičebnic vede odkaz k jejich původnímu autorovi.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · všechny ročníky SŠ",
       sample: "Ukázka materiálů",
@@ -1552,7 +1554,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Ready-made lesson plans and materials, not just for CS",
       role: "Computer Science & English teacher",
       tagline:
-        "For secondary schools. My own files are free to download and edit, no sign-up; the SQL course and virtual Windows run right in the browser. Workbooks by other authors link to the original.",
+        "For secondary schools. My own files are free to download and edit; the SQL course and virtual Windows run right in the browser. Workbooks by other authors link to the original.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · all secondary years",
       sample: "Sample materials",

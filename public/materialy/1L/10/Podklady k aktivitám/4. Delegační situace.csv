@@ -1,9 +1,0 @@
-﻿ID;Situace;Cil_uceni;Riziko;Data;Rozhodnuti;Role_cloveka;Role_AI;Kontrola
-1;Vymyslet tři názvy fiktivního školního podcastu;tvořivost a výběr;nízké;žádná osobní;;;;
-2;Napsat za studenta osobní reflexi praxe;sebereflexe;střední;osobní zkušenost;;;;
-3;Shrnout fiktivní technický text z balíčku;porozumění a výběr hlavních bodů;nízké;syntetický zdroj;;;;
-4;Rozhodnout, zda má spolužák zdravotní problém;není vhodný školní cíl;vysoké;zdravotní údaje;;;;
-5;Navrhnout otázky k opakování po vlastním studiu;procvičení;nízké;bez osobních údajů;;;;
-6;Vyřešit celý test místo studenta;ověření znalostí studenta;vysoké;zadání testu;;;;
-7;Zkontrolovat srozumitelnost vlastního odstavce;revize textu;nízké;vlastní necitlivý text;;;;
-8;Vybrat uchazeče z životopisů skutečných lidí;personální rozhodnutí;vysoké;osobní údaje;;;;
