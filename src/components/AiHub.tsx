@@ -177,7 +177,7 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
         </p>
 
         {/* Bez tohohle řetěz šipek u této sekce končil a další se přeskočila. */}
-        <SectionJump href="#about" label={tr.nav.about} />
+        <SectionJump href="#ai-nastroje" label={tr.nastroje.kicker} />
       </div>
     </section>
   );

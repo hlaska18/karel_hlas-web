@@ -1187,6 +1187,31 @@ type Dict = {
       tools?: { name: string; url: string; why: string; note: string }[];
     }[];
   };
+  /**
+   * Sekce „AI nástroje" – ROZCESTNÍK, ne doporučení. Vědomě stojí vedle
+   * AI Hubu a nesmí si s ním protiřečit: AI Hub je to, co jsem sám změřil,
+   * tohle je jen mapa, kde co hledat. Proto má sekce `disclaimer`, který to
+   * říká nahlas, a proto tu není ani slovo o ušetřeném čase.
+   *
+   * `note` u nástroje drží stejnou konvenci jako u `cross` a u článků:
+   * co člověka čeká po kliknutí – účet, jazyk, limit, cookies.
+   */
+  nastroje: {
+    kicker: string;
+    heading: string;
+    badge: string;
+    intro: string;
+    disclaimer: string;
+    /** Atribuce: výběr kategorií vznikl podle databáze na aidetem.cz. */
+    credit: string;
+    creditUrl: string;
+    items: {
+      kategorie: string;
+      what: string;
+      icon: "chat" | "obraz" | "trida";
+      tools: { name: string; url: string; why: string; note: string }[];
+    }[];
+  };
   materials: {
     kicker: string;
     heading: string;
@@ -1489,6 +1514,100 @@ export const t: Record<Lang, Dict> = {
               url: "https://skyciv.com/free-tools/",
               why: "Kontrola ručního výpočtu nosníku – reakce, momenty, průhyb.",
               note: "Základní výpočet bez registrace, ale s limitem, bez uložení a s rozmazanými výsledky napětí.",
+            },
+          ],
+        },
+      ],
+    },
+    nastroje: {
+      kicker: "AI nástroje",
+      heading: "Čím vlastně začít",
+      badge: "Nová sekce",
+      intro:
+        "Mapa nástrojů, na které narazíš nejdřív: čím psát, čím vyrobit obrázek nebo prezentaci a co pustit rovnou žákům. U každého je napsané, jestli chce účet, jestli umí česky a co tě po kliknutí čeká.",
+      disclaimer:
+        "Tohle je rozcestník, ne doporučení. Na rozdíl od AI Hubu jsem tyhle nástroje sám neproměřil – neříkám ti tedy, kolik času ušetří, jen kde je hledat a s čím u nich počítat. Až něco z toho projde mou vlastní přípravou, popíšu to o kus výš i s časem.",
+      credit: "Výběr kategorií vznikl podle databáze AI nástrojů na aidetem.cz.",
+      creditUrl: "https://aidetem.cz/databaze-ai-nastroju-a-aplikaci-s-navody/",
+      items: [
+        {
+          kategorie: "Chatboti",
+          what: "Univerzální pomocník na text. Rozdíl mezi nimi je hlavně v tom, k jakému účtu tě pustí škola.",
+          icon: "chat",
+          tools: [
+            {
+              name: "Microsoft Copilot",
+              url: "https://copilot.microsoft.com",
+              why: "Nejblíž tomu, co škola nejspíš už má – přihlásíš se školním účtem a zůstaneš v prostředí Microsoftu.",
+              note: "Zdarma, česky. Se školním účtem nabízí Microsoft ochranu dat, ale zapíná ji správce – ověř si u něj, jak to má vaše škola nastavené.",
+            },
+            {
+              name: "Google Gemini",
+              url: "https://gemini.google.com",
+              why: "Volba pro školy, které jedou na Google Workspace; česky umí a drží se v témže účtu jako Disk a Učebna.",
+              note: "Chce účet Google. U žákovských účtů rozhoduje nastavení školy a věková hranice – sám si to žák neodemkne.",
+            },
+            {
+              name: "ChatGPT",
+              url: "https://chatgpt.com",
+              why: "Nejrozšířenější, takže ho žáci nejspíš už znají. Zvládne text i obrázky a česky mluví dobře.",
+              note: "Bez účtu jen omezeně, plné funkce chtějí registraci. Podmínky žádají věk 13+ a u nezletilých souhlas rodiče.",
+            },
+          ],
+        },
+        {
+          kategorie: "Obrázky, diagramy a prezentace",
+          what: "Když potřebuješ vizuál do materiálu a nechceš ho hledat ve fotobance ani řešit licenci cizí fotky.",
+          icon: "obraz",
+          tools: [
+            {
+              name: "Zoner AI",
+              url: "https://zonerai.com/cs/image-creator/",
+              why: "Generátor obrázků od české firmy. Zadáš popis česky a hned generuješ – nejnižší práh ze všech tady.",
+              note: "Zdarma a bez registrace, celé česky. Po otevření vyskočí lišta se souhlasem s cookies.",
+            },
+            {
+              name: "Napkin AI",
+              url: "https://www.napkin.ai/",
+              why: "Vložíš hotový text a on z něj udělá diagram nebo schéma. Nic se nepromptuje, což je při přípravě rychlejší.",
+              note: "Chce účet, rozhraní je anglicky.",
+            },
+            {
+              name: "Ideogram",
+              url: "https://ideogram.ai",
+              why: "Z generátorů obrázků nejlíp zvládá čitelný text uvnitř obrázku – použitelné na plakát nebo nadpis.",
+              note: "Chce účet, zdarma s denním limitem. Anglicky.",
+            },
+            {
+              name: "Adobe Firefly",
+              url: "https://firefly.adobe.com",
+              why: "Trénovaný na licencovaném obsahu, takže je u výstupů nejmenší riziko sporu o autorská práva.",
+              note: "Chce účet Adobe, zdarma s měsíčním přídělem kreditů. Anglicky.",
+            },
+            {
+              name: "Gamma",
+              url: "https://gamma.app",
+              why: "Z osnovy udělá celou prezentaci i s obsahem, ne jen prázdnou šablonu.",
+              note: "Chce účet, zdarma s omezeným počtem kreditů. Anglicky.",
+            },
+          ],
+        },
+        {
+          kategorie: "Rovnou do hodiny",
+          what: "Dvě věci, které nejsou o generování, ale o tom, aby žák pochopil, jak se AI učí.",
+          icon: "trida",
+          tools: [
+            {
+              name: "Teachable Machine",
+              url: "https://teachablemachine.withgoogle.com",
+              why: "Žák natrénuje z webkamery vlastní model za pár minut. Nejnázornější způsob, jak ukázat, co je trénovací sada – a co se stane, když je jednostranná.",
+              note: "Zdarma, běží v prohlížeči a k trénování účet nepotřebuje; uložení modelu do cloudu už účet Google chce. Rozhraní anglicky.",
+            },
+            {
+              name: "Experiments with Google",
+              url: "https://experiments.withgoogle.com",
+              why: "Sbírka hravých pokusů, ze které se dá vybrat pětiminutová ukázka na začátek hodiny.",
+              note: "Zdarma, bez účtu, anglicky. Kvalita se kus od kusu liší – vyber a vyzkoušej si to předem.",
             },
           ],
         },
@@ -1805,6 +1924,100 @@ export const t: Record<Lang, Dict> = {
               url: "https://skyciv.com/free-tools/",
               why: "Checking a hand-calculated beam – reactions, moments, deflection.",
               note: "Basic calculation without registration, but limited, nothing saved and stress results blurred.",
+            },
+          ],
+        },
+      ],
+    },
+    nastroje: {
+      kicker: "AI tools",
+      heading: "Where to actually start",
+      badge: "New section",
+      intro:
+        "A map of the tools you meet first: what to write with, what to make an image or a deck with, and what you can put in front of a class. Each one says whether it needs an account, whether it speaks Czech, and what happens after you click.",
+      disclaimer:
+        "This is a signpost, not a recommendation. Unlike the AI Hub, I have not measured these myself – so I am not telling you how much time they save, only where to find them and what to expect. Once one of them survives my own lesson prep, it moves up there, with the numbers.",
+      credit: "The categories follow the AI tool database at aidetem.cz.",
+      creditUrl: "https://aidetem.cz/databaze-ai-nastroju-a-aplikaci-s-navody/",
+      items: [
+        {
+          kategorie: "Chatbots",
+          what: "The general-purpose helper for text. What mostly separates them is which account your school lets you use.",
+          icon: "chat",
+          tools: [
+            {
+              name: "Microsoft Copilot",
+              url: "https://copilot.microsoft.com",
+              why: "Closest to what your school probably already has – you sign in with the school account and stay inside Microsoft.",
+              note: "Free. With a school account Microsoft offers data protection, but an administrator switches it on – check how your school has it set.",
+            },
+            {
+              name: "Google Gemini",
+              url: "https://gemini.google.com",
+              why: "The choice for schools on Google Workspace; it stays in the same account as Drive and Classroom.",
+              note: "Needs a Google account. For pupil accounts the school's settings and age limits decide – a pupil cannot unlock it alone.",
+            },
+            {
+              name: "ChatGPT",
+              url: "https://chatgpt.com",
+              why: "The most widely used one, so your pupils likely know it already. Handles both text and images.",
+              note: "Limited without an account; full features need signing up. The terms require age 13+ and a parent's consent for minors.",
+            },
+          ],
+        },
+        {
+          kategorie: "Images, diagrams and slides",
+          what: "For when a handout needs a visual and you would rather not hunt through a stock library or sort out someone's licence.",
+          icon: "obraz",
+          tools: [
+            {
+              name: "Zoner AI",
+              url: "https://zonerai.com/cs/image-creator/",
+              why: "An image generator from a Czech company. You type the description and generate straight away – the lowest barrier here.",
+              note: "Free, no sign-up, entirely in Czech. A cookie consent bar appears when you open it.",
+            },
+            {
+              name: "Napkin AI",
+              url: "https://www.napkin.ai/",
+              why: "You paste finished text and it turns it into a diagram. No prompting, which is faster when preparing.",
+              note: "Needs an account; the interface is in English.",
+            },
+            {
+              name: "Ideogram",
+              url: "https://ideogram.ai",
+              why: "Of the image generators it handles legible text inside the picture best – usable for a poster or a heading.",
+              note: "Needs an account, free with a daily limit. In English.",
+            },
+            {
+              name: "Adobe Firefly",
+              url: "https://firefly.adobe.com",
+              why: "Trained on licensed content, so its output carries the lowest risk of a copyright dispute.",
+              note: "Needs an Adobe account, free with a monthly credit allowance. In English.",
+            },
+            {
+              name: "Gamma",
+              url: "https://gamma.app",
+              why: "Turns an outline into a whole deck including the content, not just an empty template.",
+              note: "Needs an account, free with limited credits. In English.",
+            },
+          ],
+        },
+        {
+          kategorie: "Straight into a lesson",
+          what: "Two things that are not about generating, but about pupils understanding how AI learns.",
+          icon: "trida",
+          tools: [
+            {
+              name: "Teachable Machine",
+              url: "https://teachablemachine.withgoogle.com",
+              why: "A pupil trains their own model from the webcam in minutes. The clearest way to show what a training set is – and what happens when it is one-sided.",
+              note: "Free, runs in the browser and needs no account to train; saving the model to the cloud does need a Google account. Interface in English.",
+            },
+            {
+              name: "Experiments with Google",
+              url: "https://experiments.withgoogle.com",
+              why: "A collection of playful experiments to pick a five-minute opener from.",
+              note: "Free, no account, in English. Quality varies from one to the next – pick and try yours in advance.",
             },
           ],
         },
