@@ -1205,6 +1205,9 @@ type Dict = {
   nastroje: {
     heading: string;
     disclaimer: string;
+    /** Popisky nad dvěma texty u nástroje – bez nich karta splyne v odstavec. */
+    labelNavod: string;
+    labelPouziti: string;
     /** Atribuce: výběr kategorií vznikl podle databáze na aidetem.cz. */
     credit: string;
     creditUrl: string;
@@ -1212,7 +1215,16 @@ type Dict = {
       kategorie: string;
       what: string;
       icon: "chat" | "obraz" | "trida";
-      tools: { name: string; url: string; why: string; navod: string; note: string }[];
+      tools: {
+        name: string;
+        url: string;
+        why: string;
+        /** Čím začít, aby první pokus dal použitelný výsledek. */
+        navod: string;
+        /** Na co to učitel reálně nasadí – konkrétní situace z jeho týdne. */
+        pouziti: string;
+        note: string;
+      }[];
     }[];
   };
   materials: {
@@ -1526,6 +1538,8 @@ export const t: Record<Lang, Dict> = {
       heading: "Čím začít, než něco vyzkouším",
       disclaimer:
         "Tohle ještě nejsou ověřené postupy nahoře – tyhle nástroje jsem sám nezměřil, takže ti neřeknu, kolik času ušetří. Je to mapa, kde co hledat, s čím u toho počítat a jak se do toho pustit. Co z toho projde mou vlastní přípravou, popíšu výš i s časem.",
+      labelNavod: "Jak začít",
+      labelPouziti: "K čemu to použiješ",
       credit: "Výběr kategorií vznikl podle databáze AI nástrojů na aidetem.cz.",
       creditUrl: "https://aidetem.cz/databaze-ai-nastroju-a-aplikaci-s-navody/",
       items: [
@@ -1540,6 +1554,8 @@ export const t: Record<Lang, Dict> = {
               why: "Nejblíž tomu, co škola nejspíš už má – přihlásíš se školním účtem a zůstaneš v prostředí Microsoftu.",
               navod:
                 "Přihlas se školním účtem, ne osobním – ochrana dat platí jen u toho školního. Do prvního zadání dej vždycky tři věci: kdo jsi, pro koho to je a kolik na to máš času („Učím informatiku v prvním ročníku SŠ, potřebuju aktivitu na 20 minut na…“). Bez nich dostaneš obecnou vatu, kterou stejně přepíšeš.",
+              pouziti:
+                "Na přípravy, které se opakují: z osnovy tématu vygeneruješ pět kontrolních otázek na konec hodiny, zadání navíc pro rychlíky nebo shrnutí na tabuli. Práce žáků do něj neposílej – ani se školním účtem k tomu není důvod.",
               note: "Zdarma, česky. Se školním účtem nabízí Microsoft ochranu dat, ale zapíná ji správce – ověř si u něj, jak to má vaše škola nastavené.",
             },
             {
@@ -1548,6 +1564,8 @@ export const t: Record<Lang, Dict> = {
               why: "Volba pro školy, které jedou na Google Workspace; česky umí a drží se v témže účtu jako Disk a Učebna.",
               navod:
                 "Přihlas se školním účtem Google. Hlavní výhoda je, že mu můžeš povolit přístup na svůj Disk – pak nemusíš nic vkládat a rovnou řekneš, ať z existujícího materiálu udělá osnovu, otázky nebo shrnutí pro žáky.",
+              pouziti:
+                "Máš na Disku loňskou prezentaci a potřebuješ z ní letos pracovní list? Necháš ho sáhnout přímo na ten soubor a přepsat ho do úkolů. Ušetří to přepisování, ne přemýšlení – obsah si stejně projdi.",
               note: "Chce účet Google. U žákovských účtů rozhoduje nastavení školy a věková hranice – sám si to žák neodemkne.",
             },
             {
@@ -1556,6 +1574,8 @@ export const t: Record<Lang, Dict> = {
               why: "Nejrozšířenější, takže ho žáci nejspíš už znají. Zvládne text i obrázky a česky mluví dobře.",
               navod:
                 "Zkusíš ho i bez účtu, jen se ti neuloží historie. Nejrychlejší zisk pro učitele není psaní od nuly, ale úpravy: vlož vlastní hotové zadání a nech si k němu udělat variantu B, klíč nebo tři těžší otázky. S cizím textem si poradí líp než s prázdnou stránkou.",
+              pouziti:
+                "Nejlíp poslouží na varianty: z hotového testu uděláš skupinu B, z jednoho zadání tři obtížnosti, z dlouhého textu verzi pro žáka, který čte pomaleji.",
               note: "Bez účtu jen omezeně, plné funkce chtějí registraci. Podmínky žádají věk 13+ a u nezletilých souhlas rodiče.",
             },
           ],
@@ -1571,6 +1591,8 @@ export const t: Record<Lang, Dict> = {
               why: "Generátor obrázků od české firmy. Zadáš popis česky a hned generuješ – nejnižší práh ze všech tady.",
               navod:
                 "Nic nezakládáš – napiš popis česky rovnou do pole na stránce a dej Generovat. Popiš scénu, styl i to, co má být v popředí; jedno slovo („traktor“) dá obrázek, který stejně nepoužiješ.",
+              pouziti:
+                "Když do pracovního listu potřebuješ obrázek, který ve fotobance není – konkrétní stroj v konkrétní situaci, ilustrace přesně k tvému zadání, obrázek na titulní stranu.",
               note: "Zdarma a bez registrace, celé česky. Po otevření vyskočí lišta se souhlasem s cookies.",
             },
             {
@@ -1579,6 +1601,8 @@ export const t: Record<Lang, Dict> = {
               why: "Vložíš hotový text a on z něj udělá diagram nebo schéma. Nic se nepromptuje, což je při přípravě rychlejší.",
               navod:
                 "Zkopíruj do něj hotový odstavec a on nabídne několik diagramů, ze kterých vybereš. Nejlíp funguje na text, který už strukturu má – kroky postupu, srovnání dvou věcí, příčina a následek. Na souvislé vyprávění je krátký.",
+              pouziti:
+                "Máš odstavec teorie a chceš z něj schéma na snímek. Vložíš text z vlastní přípravy a vybereš si diagram – rychlejší než skládat tvary v PowerPointu.",
               note: "Chce účet, rozhraní je anglicky.",
             },
             {
@@ -1587,6 +1611,8 @@ export const t: Record<Lang, Dict> = {
               why: "Z generátorů obrázků nejlíp zvládá čitelný text uvnitř obrázku – použitelné na plakát nebo nadpis.",
               navod:
                 "Text, který má být v obrázku, dej do popisu v uvozovkách – jinak si ho model přepíše po svém. Sahej po něm jen tam, kde má být nápis součástí obrázku; na běžnou ilustraci ti stačí Zoner a nemusíš zakládat účet.",
+              pouziti:
+                "Plakát na dveře učebny, titulek do prezentace, cedule na projektový den. Všude, kde má být nápis součástí obrázku a nemá vypadat jako slepenec.",
               note: "Chce účet, zdarma s denním limitem. Anglicky.",
             },
             {
@@ -1595,6 +1621,8 @@ export const t: Record<Lang, Dict> = {
               why: "Trénovaný na licencovaném obsahu, takže je u výstupů nejmenší riziko sporu o autorská práva.",
               navod:
                 "Přihlas se účtem Adobe a hlídej si kredity – po vyčerpání měsíčního přídělu generování zpomalí. Ber ho na obrázky, které půjdou ven ze školy (web, ročenka, plakát na dveře), právě kvůli tomu nižšímu riziku.",
+              pouziti:
+                "Obrázky, které opustí školu: web školy, ročenka, plakát na den otevřených dveří. Tam se nižší nejistota kolem práv vyplatí víc než rychlost.",
               note: "Chce účet Adobe, zdarma s měsíčním přídělem kreditů. Anglicky.",
             },
             {
@@ -1603,6 +1631,8 @@ export const t: Record<Lang, Dict> = {
               why: "Z osnovy udělá celou prezentaci i s obsahem, ne jen prázdnou šablonu.",
               navod:
                 "Vlož osnovu po bodech, ne jedno téma – z bodů postaví strukturu, ze samotného tématu si obsah vymyslí. Výstup ber jako první verzi a projdi fakta: doplňuje je i tam, kde jsi nic nezadal.",
+              pouziti:
+                "První verze prezentace k tématu, které učíš poprvé. Dá ti strukturu a rozvržení snímků; obsah pak přepíšeš po svém, ale nezačínáš od prázdné stránky.",
               note: "Chce účet, zdarma s omezeným počtem kreditů. Anglicky.",
             },
           ],
@@ -1618,6 +1648,8 @@ export const t: Record<Lang, Dict> = {
               why: "Žák natrénuje z webkamery vlastní model za pár minut. Nejnázornější způsob, jak ukázat, co je trénovací sada – a co se stane, když je jednostranná.",
               navod:
                 "Get Started → Image Project → Standard. Nasbírej dvě třídy asi po třiceti snímcích z webkamery, natrénuj a hned zkoušej. Nejsilnější moment hodiny přijde, když model natrénuješ schválně jen na jednom žákovi a pak před třídou ukážeš, že ostatní nepozná.",
+              pouziti:
+                "Patnáct minut hodiny o strojovém učení: dvojice natrénují model, který rozezná dvě věci na lavici, a pak si zkusí, čím ho dokážou rozbít.",
               note: "Zdarma, běží v prohlížeči a k trénování účet nepotřebuje; uložení modelu do cloudu už účet Google chce. Rozhraní anglicky.",
             },
             {
@@ -1626,6 +1658,8 @@ export const t: Record<Lang, Dict> = {
               why: "Sbírka hravých pokusů, ze které se dá vybrat pětiminutová ukázka na začátek hodiny.",
               navod:
                 "Nevybírej za pochodu před třídou – projdi si to předem a vyber jeden pokus. Do hodiny o strojovém učení sedí Quick, Draw!: žáci kreslí, model hádá a je na tom vidět, z čeho se učí a kde má mezery.",
+              pouziti:
+                "Pětiminutová rozcvička na začátek hodiny nebo výplň času, který zbyde po písemce.",
               note: "Zdarma, bez účtu, anglicky. Kvalita se kus od kusu liší – vyber a vyzkoušej si to předem.",
             },
           ],
@@ -1952,6 +1986,8 @@ export const t: Record<Lang, Dict> = {
       heading: "Where to start, before I have tested anything",
       disclaimer:
         "These are not the verified write-ups above – I have not measured these tools myself, so I cannot tell you how much time they save. This is a map: where to find them, what to expect, and how to get going. Whatever survives my own lesson prep moves up there, with the numbers.",
+      labelNavod: "How to start",
+      labelPouziti: "What you use it for",
       credit: "The categories follow the AI tool database at aidetem.cz.",
       creditUrl: "https://aidetem.cz/databaze-ai-nastroju-a-aplikaci-s-navody/",
       items: [
@@ -1966,6 +2002,8 @@ export const t: Record<Lang, Dict> = {
               why: "Closest to what your school probably already has – you sign in with the school account and stay inside Microsoft.",
               navod:
                 "Sign in with the school account, not a personal one – the data protection only applies to the school one. Always give your first prompt three things: who you are, who it is for, and how long you have. Without them you get generic filler you will rewrite anyway.",
+              pouziti:
+                "For the prep that repeats: turn a topic outline into five check questions for the end of the lesson, an extra task for the fast finishers, or a summary for the board. Do not put pupils' work into it – even with a school account there is no reason to.",
               note: "Free. With a school account Microsoft offers data protection, but an administrator switches it on – check how your school has it set.",
             },
             {
@@ -1974,6 +2012,8 @@ export const t: Record<Lang, Dict> = {
               why: "The choice for schools on Google Workspace; it stays in the same account as Drive and Classroom.",
               navod:
                 "Sign in with the school Google account. The real advantage is that you can grant it access to your Drive – then you paste nothing and simply ask it to turn an existing handout into an outline, questions or a summary.",
+              pouziti:
+                "You have last year's deck on Drive and need a worksheet from it? Let it reach the file directly and turn it into tasks. It saves the retyping, not the thinking – check the content anyway.",
               note: "Needs a Google account. For pupil accounts the school's settings and age limits decide – a pupil cannot unlock it alone.",
             },
             {
@@ -1982,6 +2022,8 @@ export const t: Record<Lang, Dict> = {
               why: "The most widely used one, so your pupils likely know it already. Handles both text and images.",
               navod:
                 "You can try it without an account; you just lose your history. The fastest win is not writing from scratch but editing: paste your own finished assignment and ask for a variant B, an answer key, or three harder questions.",
+              pouziti:
+                "It serves best for variants: turn a finished test into a group B, one task into three difficulty levels, a long text into a version for a pupil who reads more slowly.",
               note: "Limited without an account; full features need signing up. The terms require age 13+ and a parent's consent for minors.",
             },
           ],
@@ -1997,6 +2039,8 @@ export const t: Record<Lang, Dict> = {
               why: "An image generator from a Czech company. You type the description and generate straight away – the lowest barrier here.",
               navod:
                 "Nothing to set up – type the description straight into the field on the page and hit generate. Describe the scene, the style and what belongs in the foreground; a single word gives you a picture you will not use.",
+              pouziti:
+                "When a worksheet needs a picture no stock library has – a specific machine in a specific situation, an illustration matching your exact task, a cover image.",
               note: "Free, no sign-up, entirely in Czech. A cookie consent bar appears when you open it.",
             },
             {
@@ -2005,6 +2049,8 @@ export const t: Record<Lang, Dict> = {
               why: "You paste finished text and it turns it into a diagram. No prompting, which is faster when preparing.",
               navod:
                 "Paste in a finished paragraph and it offers several diagrams to choose from. It works best on text that already has a shape – steps of a procedure, a comparison, cause and effect. On flowing prose it falls short.",
+              pouziti:
+                "You have a paragraph of theory and want a diagram from it for a slide. Paste the text from your own prep and pick a diagram – faster than assembling shapes in PowerPoint.",
               note: "Needs an account; the interface is in English.",
             },
             {
@@ -2013,6 +2059,8 @@ export const t: Record<Lang, Dict> = {
               why: "Of the image generators it handles legible text inside the picture best – usable for a poster or a heading.",
               navod:
                 "Put the text you want inside the image in quotation marks – otherwise the model rewrites it its own way. Reach for it only when the lettering is part of the picture; for an ordinary illustration Zoner is enough.",
+              pouziti:
+                "A poster for the classroom door, a title slide, a sign for a project day. Anywhere the lettering belongs to the picture and should not look glued on.",
               note: "Needs an account, free with a daily limit. In English.",
             },
             {
@@ -2021,6 +2069,8 @@ export const t: Record<Lang, Dict> = {
               why: "Trained on licensed content, so its output carries the lowest risk of a copyright dispute.",
               navod:
                 "Sign in with an Adobe account and watch your credits – once the monthly allowance runs out, generating slows down. Use it for images that leave the school, precisely because of that lower risk.",
+              pouziti:
+                "Images that leave the school: the school website, a yearbook, an open-day poster. There the lower uncertainty about rights matters more than speed.",
               note: "Needs an Adobe account, free with a monthly credit allowance. In English.",
             },
             {
@@ -2029,6 +2079,8 @@ export const t: Record<Lang, Dict> = {
               why: "Turns an outline into a whole deck including the content, not just an empty template.",
               navod:
                 "Give it a bulleted outline rather than a single topic – from bullets it builds your structure, from a bare topic it invents its own. Treat the result as a first draft and check the facts.",
+              pouziti:
+                "A first draft of a deck for a topic you are teaching for the first time. It gives you the structure and the slide layout; you rewrite the content yourself, but not from a blank page.",
               note: "Needs an account, free with limited credits. In English.",
             },
           ],
@@ -2044,6 +2096,8 @@ export const t: Record<Lang, Dict> = {
               why: "A pupil trains their own model from the webcam in minutes. The clearest way to show what a training set is – and what happens when it is one-sided.",
               navod:
                 "Get Started → Image Project → Standard. Collect two classes of about thirty webcam shots each, train, and test right away. The strongest moment comes when you deliberately train it on one pupil only and then show that it fails to recognise anyone else.",
+              pouziti:
+                "Fifteen minutes of a lesson on machine learning: pairs train a model that tells apart two objects on the desk, then try to find what breaks it.",
               note: "Free, runs in the browser and needs no account to train; saving the model to the cloud does need a Google account. Interface in English.",
             },
             {
@@ -2052,6 +2106,8 @@ export const t: Record<Lang, Dict> = {
               why: "A collection of playful experiments to pick a five-minute opener from.",
               navod:
                 "Do not browse it in front of the class – go through it beforehand and pick one. For a lesson on machine learning, Quick, Draw! fits: pupils draw, the model guesses, and you can see what it learned from.",
+              pouziti:
+                "A five-minute warm-up at the start of a lesson, or something to fill the time left after a test.",
               note: "Free, no account, in English. Quality varies from one to the next – pick and try yours in advance.",
             },
           ],

@@ -107,10 +107,22 @@ function Nastroje() {
                       <span className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                         {sazba(x.why, lang)}
                       </span>
-                      {/* Návod dostane vlastní pruh: je to to, kvůli čemu sem
-                          člověk přišel, ne dovětek. */}
-                      <span className="mt-3 rounded-ovladac bg-black/[0.03] p-3 text-sm leading-relaxed text-zinc-700 dark:bg-white/[0.04] dark:text-zinc-300">
-                        {sazba(x.navod, lang)}
+                      {/* Dva texty vedle sebe by splynuly v odstavec, proto
+                          popisky: „Jak začít" je první krok, „K čemu to
+                          použiješ" konkrétní situace z učitelova týdne. */}
+                      <span className="mt-3 rounded-ovladac bg-black/[0.03] p-3 dark:bg-white/[0.04]">
+                        <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                          {n.labelNavod}
+                        </span>
+                        <span className="mt-1 block text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+                          {sazba(x.navod, lang)}
+                        </span>
+                        <span className="mt-3 block text-[0.65rem] font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+                          {n.labelPouziti}
+                        </span>
+                        <span className="mt-1 block text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+                          {sazba(x.pouziti, lang)}
+                        </span>
                       </span>
                       <span className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
                         {sazba(x.note, lang)}
