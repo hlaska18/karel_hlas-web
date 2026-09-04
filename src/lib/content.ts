@@ -1532,6 +1532,19 @@ export const t: Record<Lang, Dict> = {
             },
           ],
         },
+        {
+          subject: "Hudební výchova",
+          icon: "hudebni-vychova",
+          what: "Nástroj, na kterém je harmonie vidět a cítit v rukou dřív, než ji žák umí pojmenovat.",
+          tools: [
+            {
+              name: "Gesture Synth",
+              url: "https://gesture-synth-weld.vercel.app/",
+              why: "Hraní akordů rukama před kamerou. Levá ruka určuje stupeň (počet prstů I–VII) a náklonem dur nebo moll, pravá obrat a septakord; výška ruky je hlasitost. Do hodiny se hodí přesně na to, co se z tabule vysvětluje těžko – že akord má stupeň, pohlaví a obrat. Žák si vyzkouší I–IV–V–I, uslyší rozdíl mezi durem a mollem jako otočení dlaně a na obratech pozná, že jde pořád o tentýž akord. Vybrat jde tónina i nástroj (smyčce, žestě, tři syntezátory), takže se dá ukázat i to, jak stejná harmonie zní jinou barvou.",
+              note: "Zdarma, bez účtu, potřebuje ale povolit kameru a slušné světlo. Rozhraní je anglicky. Sledování rukou běží v prohlížeči (MediaPipe od Googlu) – obraz z kamery se nikam neodesílá, jen se jednorázově stáhne model. Autorem je Eric Wei. Je i režim pro jednu ruku.",
+            },
+          ],
+        },
       ],
     },
     nastroje: {
@@ -1977,6 +1990,19 @@ export const t: Record<Lang, Dict> = {
               url: "https://skyciv.com/free-tools/",
               why: "Checking a hand-calculated beam – reactions, moments, deflection.",
               note: "Basic calculation without registration, but limited, nothing saved and stress results blurred.",
+            },
+          ],
+        },
+        {
+          subject: "Music",
+          icon: "hudebni-vychova",
+          what: "An instrument where harmony is visible and felt in the hands before a pupil can name it.",
+          tools: [
+            {
+              name: "Gesture Synth",
+              url: "https://gesture-synth-weld.vercel.app/",
+              why: "Playing chords with your hands in front of the camera. The left hand sets the scale degree (fingers I–VII) and major or minor by tilt, the right hand the inversion and seventh; hand height is volume. It suits exactly what is hard to explain from the board – that a chord has a degree, a quality and an inversion. A pupil plays I–IV–V–I, hears major turn to minor as a turn of the palm, and discovers through inversions that it is still the same chord. Key and timbre are selectable (strings, horns, three synths), so you can also show the same harmony in a different colour.",
+              note: "Free, no account, but it needs camera permission and decent light. The interface is in English. Hand tracking runs in the browser (Google's MediaPipe) – the camera image is never uploaded, only the model is downloaded once. Created by Eric Wei. There is also a one-handed mode.",
             },
           ],
         },
