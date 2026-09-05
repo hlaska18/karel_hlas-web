@@ -1,0 +1,46 @@
+SLOŽKA CHAOS – ŘEŠENÍ PRO UČITELE
+Pracovní list 2 · Soubory a cloud · úkol 3 „Ukliď chaos"
+
+Složka je hotová v Podkladech k aktivitám (2. CHAOS.zip). Rozbal ji a dej
+žákům ke stažení; nemusíš nic vyrábět. Uvnitř je deset souborů šesti typů,
+každý patří do jedné ze čtyř složek z listu a jeho obsah předmět prozrazuje
+jednoznačně. Názvy jsou špatně schválně – přesně ty, které list v teorii
+zakazuje – a žák je má opravit podle pravidel z listu:
+
+  1. z názvu poznám obsah (ne „dokument1"),
+  2. bez mezer a diakritiky,
+  3. datum ve tvaru 2026-06-11, aby se řadilo.
+
+KAM CO PATŘÍ A JAK TO POJMENOVAT
+
+  původní název                                  → složka              → dobrý název (jedna z možností)
+  ─────────────────────────────────────────────────────────────────────────────────────────────────────
+  dokument1.docx                                 → Cestina             → cestina_charakteristika_viktorka.docx
+  bez názvu.txt                                  → Cestina             → cestina_erben_vodnik_rozbor.txt
+  Nový textový dokument.txt                      → Matematika          → matematika_kvadraticka_rovnice.txt
+  tabulka (kopie).csv                            → Matematika          → matematika_linearni_funkce_tabulka.csv
+  scan0001.pdf                                   → Matematika          → matematika_linearni_rovnice_procvicovani.pdf
+  snimek obrazovky 2026-03-17 v 9.41.33.png      → Informatika         → informatika_o_systemu_2026-03-17.png
+  úkol (1).docx                                  → Informatika         → informatika_prikazovy_radek_ukol.docx
+  IMG_20260315_142211.jpg                        → Odborne_predmety    → strojirenstvi_vykres_ozubene_kolo.jpg
+  DSC_0042.jpg                                   → Odborne_predmety    → stavebnictvi_krov_nacrt.jpg
+  Kopie - final2.docx                            → Odborne_predmety    → strojirenstvi_protokol_posuvne_meridlo.docx
+
+Uznávej každý název, který splňuje tři pravidla výše – tvar nad rámec toho
+je věc vkusu. Časté chyby, na které se ptej:
+
+  · „snimek obrazovky" přejmenovaný, ale s ponechaným datem 9.41.33 uvnitř
+    názvu – je to sice bez mezer, ale datum má být na konci a ve tvaru
+    RRRR-MM-DD, aby se soubory řadily.
+  · „úkol.docx" jen bez závorky – pořád neříká, z čeho je to úkol.
+  · Odborné soubory zařazené podle typu (obrázek → „Materiály") místo podle
+    obsahu. List říká „podle obsahu a typu" – obsah rozhoduje o složce,
+    typ o příponě.
+
+KONTROLA NA KONCI
+Ve složce CHAOS nesmí nic zbýt. Pokud žák něco nechá, zeptej se, proč – většinou
+je to soubor, u kterého nepoznal předmět z obsahu (typicky scan0001.pdf, protože
+ho neotevřel).
+
+Soubory vznikají skriptem scripts/vyrob-chaos.py; kdyby bylo potřeba je změnit,
+uprav skript, ne soubory.
