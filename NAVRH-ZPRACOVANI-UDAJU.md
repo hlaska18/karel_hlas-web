@@ -4,10 +4,10 @@
 > kódu doopravdy dělá. Než půjde na web, měl by ho projít někdo, kdo na to
 > má razítko.
 >
-> **Popisuje CÍLOVÝ stav po zrušení účtů** (Karel, 1. 9. 2026: *„držet účty
-> žáků nakonec vůbec nebudeme, uděláme to na ten kód WIN11"*). Dokud se účty
-> z kódu neodstraní, text neodpovídá skutečnosti a **nesmí se zveřejnit** —
-> odstranění je popsané na konci.
+> **Od 4. 9. 2026 popisuje skutečnost.** Účty žáků byly zrušené (Karel,
+> 1. 9. 2026: *„držet účty žáků nakonec vůbec nebudeme, uděláme to na ten kód
+> WIN11"*), serverová část je pryč z kódu a Karel smazal i databázi v Upstashi
+> a proměnné ve Vercelu. Ověřeno: `/api/postup/*` vrací 404.
 >
 > Zbývá doplnit jedinou věc: `⟨adresu pro doručování⟩`.
 
@@ -105,31 +105,25 @@ Až se tenhle text změní, bude tu datum poslední úpravy.
 ---
 ---
 
-# Co je potřeba udělat v kódu, než to půjde ven
+# Co bylo potřeba udělat, než to mohlo ven
 
-Dnešní stav tomuhle textu **neodpovídá**. Ve virtuálním Windows si žáci
-zakládají účty a postup se jim ukládá na server — a na produkci to běží.
+Všechno hotovo. Nechávám tu pro dohledatelnost, co se muselo stát, aby text
+výše popisoval pravdu:
 
-1. **Odstranit serverovou část postupu:** `src/lib/postup/`,
-   `src/app/api/postup/`, klienta v `Prihlaseni.tsx`.
-2. **Vrátit vstupní kód**, tentokrát i s kódy pro třídy. Pozor na to, proč
-   se ten původní rušil (`de570c6`): kontroloval se **jen v prohlížeči**,
-   a protože zůstával výchozí, přihlašovací obrazovka ho sama nabízela
-   tlačítkem. Zábrana, kterou obsluha otevírá návštěvníkovi sama. Nový kód
-   má smysl jako **organizační opatření** — „tohle je pro moji třídu" —
-   a je poctivé to tak i pojmenovat, ne vydávat ho za zabezpečení.
-3. **Smazat, co v úložišti zbylo.** Účty, které si žáci stihli založit,
-   je potřeba odstranit — jinak text lže i po odstranění kódu.
-4. **Odpojit úložiště** od projektu ve Vercelu (proměnné `KV_REST_API_URL`
-   a `POSTUP_PODPIS`), ať se nedá omylem oživit.
+1. **Odstranit serverovou část postupu** — `src/lib/postup/`,
+   `src/app/api/postup/`, klienta v `Prihlaseni.tsx`. ✓ `2a29fef`
+2. **Vrátit vstupní kód**, tentokrát i s kódy pro třídy. ✓ `2a29fef`
+   Pozor na to, proč se ten původní rušil (`de570c6`): kontroloval se **jen
+   v prohlížeči**, a protože zůstával výchozí, přihlašovací obrazovka ho sama
+   nabízela tlačítkem. Nový kód je proto pojmenovaný jako **organizační
+   opatření** — „tohle je pro moji třídu" — a nevydává se za zabezpečení.
+3. **Smazat, co v úložišti zbylo.** ✓ 4. 9. 2026 — Karel smazal celou
+   databázi v Upstash konzoli, takže s ní zanikly i účty žáků.
+4. **Odpojit úložiště od projektu ve Vercelu.** ✓ 4. 9. 2026 — `POSTUP_PODPIS`
+   i všechny proměnné `KV_*` odstraněné.
 
-Teprve pak text výše popisuje pravdu.
+Ověřeno zvenčí: `/api/postup/prihlaseni` i `/api/postup/ulozit` vracejí 404
+a v `src/` není jediná zmínka o `KV_REST_API`, `POSTUP_PODPIS` ani `UPSTASH`.
 
-## Kdyby ses přece jen rozhodl účty ponechat
-
-Pak je potřeba doplnit ještě dvě věci, které z kódu vyčíst nejde:
-
-- **Kde leží úložiště Upstash.** Ve Vercelu: projekt → *Storage* → klikni na
-  databázi → *Region*. Nebo na console.upstash.com u té databáze. Region je
-  potřeba znát, protože u Upstashe jde vybrat i evropský a to je rozdíl.
-- **Jak dlouho účty držet.** Dnes se nemažou nikdy.
+**Zbývá jediná věc, a je to věc textu:** doplnit `⟨adresu pro doručování⟩`
+nahoře. Bez ní stránku nezveřejňuju.

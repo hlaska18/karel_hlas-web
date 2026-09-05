@@ -18,8 +18,13 @@ k odsouhlasení, ne hotový dokument.
 > nejde nic. Nález níž popisuje stav, který tím zanikl — nechávám ho pro
 > dohledatelnost.
 >
-> **Zbývá Karlovi:** smazat účty, které si žáci stihli založit, v Upstash
-> konzoli, a odpojit od projektu `KV_REST_API_URL` a `POSTUP_PODPIS`.
+> **4. 9. 2026 dokončeno.** Karel smazal databázi v Upstash konzoli (a s ní
+> i účty, které si žáci stihli založit) a odstranil z Vercelu `POSTUP_PODPIS`
+> i všechny proměnné `KV_*`. Ověřeno zvenčí: `/api/postup/prihlaseni`
+> i `/api/postup/ulozit` vracejí 404 a v kódu není jediná zmínka o úložišti.
+>
+> **Tím na webu nezůstal žádný osobní údaj nikoho.** Zbývá jediné, a je to
+> věc textu, ne kódu: doplnit adresu pro doručování (bod 5).
 
 ### Původní nález — chybí informace o zpracování osobních údajů
 
