@@ -92,7 +92,7 @@ minutové scénáře pokrývají 0→45 bez děr a překryvů — jsou tedy auto
 
 ---
 
-## Na zvážení — neopravuji sám
+## Na zvážení — vyřešeno
 
 ### A · Digitální gramotnost nedodává složku `CHAOS`
 
@@ -107,28 +107,30 @@ s jedenácti hotovými soubory. Osm až deset souborů, které se dají roztří
 do `Informatika` / `Matematika` / `Cestina` / `Odborne_predmety`, je práce
 na pár minut a ušetří ji každému, kdo si materiál stáhne.
 
-**Neudělal jsem to** — je to nový výukový obsah a ten píšeš ty. Řekni a dodám
-ho jako ZIP ve tvaru, jaký má téma 7.
+**Dodáno 4. 9. 2026** (`838482b`): `2. CHAOS.zip` s deseti soubory šesti typů
+a klíč pro učitele `_ucitel/2. CHAOS - řešení.txt`. Metodika už složku
+neukládá vyrobit, ale odkazuje na hotovou.
 
-### B · Nikde nejsou pevné mezery
+### B · Pevné mezery — vyřešeno, a můj původní nález byl z poloviny chybný
 
-Změřeno na všech materiálech i na webu:
+**Dokumenty opraveny.** 3 804 pevných mezer ve 40 souborech, doplněné skriptem
+[pevne-mezery.py](scripts/pevne-mezery.py). Ověřeno, že se nezměnilo nic
+jiného: po nahrazení pevné mezery zpět obyčejnou jsou texty všech souborů
+shodné s verzí v gitu, žádný archiv se nepoškodil a počet částí sedí.
 
-| | jednopísmenné předložky | z toho s pevnou mezerou |
-|---|---:|---:|
-| materiály (111 souborů) | 4 824 | **0** |
-| web (`src/`) | 2 344 | **0** |
+**Web opravovat nebylo co.** Tady jsem se spletl. Původní nález tvrdil „2 344
+míst na webu, z toho pevných nula" — jenže měřil ZDROJOVÉ ŘETĚZCE v `src/`,
+kde pevné mezery být nemají. Web je řeší funkcí `sazba()` v
+`src/lib/sazba.ts`, která je doplňuje **až při vykreslení** a jen pro češtinu.
 
-Česká sazba (ČSN 01 6910) nemá nechávat `k`, `s`, `v`, `z`, `o`, `u`, `a`,
-`i` na konci řádku. Je to stejnoměrné — nikde to udělané není, takže to není
-nedůslednost, jen to zatím nikdo neřešil. Word ani prohlížeč to sám neopraví.
+Změřeno na vykreslené stránce: **232 pevných mezer proti dvěma obyčejným** —
+a ty dvě jsou „Zadání test Python A 25-26" a „Zvuk a video", tedy názvy
+souborů, které `sazba()` vynechává schválně („Pouští se jen na souvislou
+prózu, ne na názvy souborů a popisky").
 
-Na webu je to vidět víc: text se přelévá podle šířky okna, takže na mobilu
-osamocená předložka vyskočí tam, kde na počítači není.
-
-**Neopravuji plošně** — je to sedm tisíc zásahů do 111 souborů a ve Wordu by
-z toho byl obrovský rozdíl proti tvým originálům. Dávalo by smysl začít
-webem, kde je jich čtvrtina a jde o jeden soubor s texty.
+Že do zdrojů sahat nesmím, se navíc ukázalo tvrdě: první pokus tam mezery
+vepsal a **shodil tři testy**, protože některé texty slouží zároveň jako
+klíče — „Grafika a multimédia" se hledá při překladu popisků. Vráceno zpět.
 
 ---
 
