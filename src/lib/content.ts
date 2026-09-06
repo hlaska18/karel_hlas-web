@@ -1375,10 +1375,10 @@ export const t: Record<Lang, Dict> = {
       heading: "Jak si s AI ušetřit čas kolem hodiny",
       badge: "Nová sekce",
       intro:
-        "Návody na učitelovu vlastní práci, ne na hodinu: čím si pomoct při přípravě a co potom – při opravování, vyhodnocování a reflexi. Nic teoretického a nic pro studenty. U každého návodu stojí, na čem jsem ho zkusil, kolik času ušetřil a jestli se vůbec vyplatil.",
+        "Návody na učitelovu vlastní práci, ne na hodinu: čím si pomoct při přípravě a co potom – při opravování, vyhodnocování a reflexi. Nic teoretického a nic pro studenty. Tipy na AI, které nikdo nezkusil, najdeš na internetu tisíckrát; sem se dostane jen postup, u kterého dokážu napsat, na čem jsem ho zkusil, kolik času ušetřil a jestli se vůbec vyplatil.",
       emptyTitle: "Ověřené postupy tu zatím nejsou, a je to tak správně.",
       emptyText:
-        "První přibudou, až si je sám vyzkouším na přípravě a opravování. Tipy na AI, které nikdo nezkusil, najdeš na internetu tisíckrát – a pár jich máš i kousek níž. Smysl tohohle místa je, že u postupů tady nahoře bude navíc napsané, kolik času doopravdy ušetřily. A klidně i to, že se nevyplatily vůbec.",
+        "Zatím jsem žádný postup nedotáhl až k číslu, kolik času doopravdy ušetřil – a bez toho čísla sem nepatří. První přibude, až na něj při přípravě nebo opravování dojde; do té doby je v téhle sekci nejužitečnější rozcestník nástrojů o kousek níž.",
       labelCil: "Co bylo potřeba udělat",
       labelNastroj: "AI nástroj a postup",
       labelOvereni: "Na čem jsem to zkusil",
@@ -1905,10 +1905,10 @@ export const t: Record<Lang, Dict> = {
       heading: "Using AI to save time around the lesson",
       badge: "New section",
       intro:
-        "Guides for a teacher's own work, not for the lesson: what helps when preparing, and what comes afterwards — marking, evaluating and reflecting. Nothing theoretical and nothing aimed at students. Each guide says what I tried it on, how much time it saved, and whether it was worth it at all.",
+        "Guides for a teacher's own work, not for the lesson: what helps when preparing, and what comes afterwards — marking, evaluating and reflecting. Nothing theoretical and nothing aimed at students. AI tips nobody has actually tried are all over the internet; nothing gets in here until I can say what I tried it on, how much time it saved, and whether it was worth it at all.",
       emptyTitle: "No verified write-ups yet, and that is correct.",
       emptyText:
-        "The first ones will appear once I have tried them on my own prep and marking. AI tips nobody has actually tried are all over the internet — and you will find a few just below. The point of this place is that the write-ups up here also say how much time they really saved. Including the ones that saved none.",
+        "No method has yet made it as far as a real number for the time it saved — and without that number it does not belong here. The first one will appear when my own prep or marking calls for it; until then, the most useful thing in this section is the map of tools a little further down.",
       labelCil: "What needed doing",
       labelNastroj: "AI tool and method",
       labelOvereni: "What I tried it on",
