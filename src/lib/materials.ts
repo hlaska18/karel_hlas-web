@@ -170,8 +170,10 @@ const NAME_EN: Record<string, string> = {
   "Soubory a cloud – plán hodiny": "Files and the cloud – lesson plan",
   "Software a licence": "Software and licences",
   "Software a licence – plán hodiny": "Software and licences – lesson plan",
-  "Zadání test Python A 25-26": "Python test A 25-26 – assignment",
-  "Zadání test Python B 25-26": "Python test B 25-26 – assignment",
+  // Ročník je složka, ne součást názvu – viz `Python - testy z minulých let`.
+  "2025-26": "2025/26",
+  "Zadání test Python A": "Python test A – assignment",
+  "Zadání test Python B": "Python test B – assignment",
   "Microsoft 365 pro školy": "Microsoft 365 for schools",
   "Začni tady": "Start here",
   // Laboratoř byla dřív jedna s pěti moduly. Po rozdělení balíčku do hodin má
