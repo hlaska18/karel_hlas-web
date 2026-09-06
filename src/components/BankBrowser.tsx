@@ -1603,7 +1603,14 @@ function CodeView({
   );
 }
 
-function PreviewModal({
+/**
+ * Modální náhled materiálu.
+ *
+ * Exportovaný, protože ho otevírá i stoh ukázek v hlavičce webu
+ * (`HeroPreview`) – aby karta v hlavičce ukázala materiál na místě
+ * a neposílala učitele o tři obrazovky níž do banky.
+ */
+export function PreviewModal({
   item,
   lang,
   onClose,

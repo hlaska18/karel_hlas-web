@@ -6,6 +6,7 @@
  * potřebuje i prohlížeč (losuje ukázku při každém načtení). */
 
 import type { BankItem } from "@/lib/materials";
+import { canPreview } from "@/lib/nahled";
 
 /** Kolik souborů a v kolika tématech – čísla do hera. Odkazy se nepočítají. */
 export function getBankStats(items: BankItem[]): { files: number; topics: number } {
@@ -17,14 +18,35 @@ export function getBankStats(items: BankItem[]): { files: number; topics: number
   return { files: own.length, topics: new Set(items.map((i) => i.tool)).size };
 }
 
-/** Typy souborů, které se hodí do ukázky (binárky jako `.db` ne). */
-const SHOWCASE_EXT = ["docx", "pdf", "py", "sql", "xlsx", "pbix", "txt"];
+/**
+ * Typy souborů, které se hodí do ukázky (binárky jako `.db` ne).
+ *
+ * Dřív tu byly i `xlsx` a `pbix`. Náhled je neumí (`canPreview`), takže od
+ * chvíle, kdy karta v hlavičce otevírá náhled, by to byla karta, po jejímž
+ * kliknutí se nic nestane. Dnes takový soubor v bance není, takže by ta chyba
+ * spala až do prvního nahraného `.xlsx` – proto radši pryč než dva seznamy
+ * v jednom souboru, které si odporují.
+ */
+const SHOWCASE_EXT = ["docx", "pdf", "py", "sql", "txt"];
 
-/** Kandidáti do ukázky: veřejné hostované soubory (bez metodik a odkazů). */
+/**
+ * Kandidáti do ukázky: veřejné hostované soubory (bez metodik a odkazů),
+ * a jen takové, které umí náhled.
+ *
+ * `canPreview` je tvrdá branka, ne preference: karta v hlavičce po kliknutí
+ * otevírá náhled, takže položka, kterou náhled neumí, by byla slepý odkaz.
+ *
+ * `!interactive` je tam kvůli laboratořím. `canPreview("html")` je `true`
+ * (html je mezi typy kódu), takže hotová stránka ke spuštění by šla ukázat
+ * jako zdroják – špatně dvakrát.
+ */
 export function getHeroPool(items: BankItem[]): BankItem[] {
-  const pool = items.filter((i) => !i.external && i.audience !== "teacher");
-  // Přednostně jen názorné typy (ať se v ukázce neobjeví binárka .db);
-  // kdyby po filtru nic nezbylo, radši ukážeme cokoliv než nic.
+  const pool = items.filter(
+    (i) => !i.external && !i.interactive && i.audience !== "teacher" && canPreview(i.ext),
+  );
+  // Přednostně jen názorné typy; kdyby po filtru nic nezbylo, ukážeme
+  // cokoliv, co projde brankou výš. Uvolňuje se preference typu, ne
+  // schopnost náhledu – prázdný stoh je poctivější než mrtvá karta.
   const nice = pool.filter((i) => SHOWCASE_EXT.includes(i.ext));
   return nice.length >= 3 ? nice : pool;
 }

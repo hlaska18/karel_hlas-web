@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getBankStats, getHeroPool, pickHeroHighlights } from "@/lib/heroPick";
+import { canPreview } from "@/lib/nahled";
 import type { BankItem } from "@/lib/materials";
 
 /** Minimální položka banky – testy zajímá jen nástroj, přípona a publikum. */
@@ -37,9 +38,36 @@ describe("getHeroPool", () => {
     expect(pool.map((i) => i.href)).toEqual(POOL.map((i) => i.href));
   });
 
-  it("radši ukáže i méně názorné typy, než aby ukázka zůstala prázdná", () => {
-    const only = [item({ href: "x.db", tool: "Databáze", ext: "db" })];
-    expect(getHeroPool(only)).toHaveLength(1);
+  it("radši ukáže i méně názorné typy – ale jen ty, které umí náhled", () => {
+    // Dřív tenhle test tvrdil, že samotná `.db` se ukáže, než aby bylo
+    // prázdno. Od chvíle, kdy karta otevírá náhled, je to naopak: karta,
+    // po jejímž kliknutí se nic nestane, je horší než žádná karta.
+    expect(getHeroPool([item({ href: "x.db", tool: "Databáze", ext: "db" })])).toHaveLength(0);
+
+    // Uvolňuje se jen preference typu: `.png` není v SHOWCASE_EXT, ale
+    // náhled ho umí, takže projde.
+    const png = item({ href: "x.png", tool: "Grafika a multimédia", ext: "png" });
+    expect(getHeroPool([png, item({ href: "y.db", tool: "Databáze", ext: "db" })])).toEqual([png]);
+  });
+
+  it("nenabídne nic, co náhled neumí otevřít", () => {
+    const pool = getHeroPool([
+      ...POOL,
+      item({ href: "t.xlsx", tool: "Excel", ext: "xlsx" }),
+      item({ href: "u.pbix", tool: "Power BI", ext: "pbix" }),
+      item({ href: "v.zip", tool: "Grafika a multimédia", ext: "zip" }),
+      item({ href: "/windows", tool: "Operační systémy", ext: "link", interactive: true }),
+      // Laboratoř: `canPreview("html")` je true, ale je to hotová stránka
+      // ke spuštění, ne zdroják ke čtení – vyřadit ji musí `!interactive`.
+      item({ href: "lab.html", tool: "Grafika a multimédia", ext: "html", interactive: true }),
+    ]);
+    expect(pool.map((i) => i.href)).toEqual(POOL.map((i) => i.href));
+  });
+
+  it("každá nabídnutá položka projde náhledem", () => {
+    // Invariant místo výčtu přípon: kdyby někdo přidal do SHOWCASE_EXT typ,
+    // který náhled neumí, spadne tohle, ne až karta v prohlížeči.
+    for (const it of getHeroPool(POOL)) expect(canPreview(it.ext)).toBe(true);
   });
 });
 
