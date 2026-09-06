@@ -62,7 +62,17 @@ export function Footer() {
           </p>
           {/* Vercel Analytics neukládá cookies ani neidentifikuje návštěvníka,
               takže souhlas nepotřebuje – ale mlčet se o měření nemá. */}
-          <p className="text-xs text-zinc-600 dark:text-zinc-400">{tr.footer.analytics}</p>
+          {/* Odkaz stojí hned za větou o měření: kdo se nad ní pozastaví,
+              má odpověď na dosah a nemusí ji hledat jinde. */}
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">
+            {tr.footer.analytics}{" "}
+            <Link
+              href={lang === "en" ? "/en/soukromi" : "/soukromi"}
+              className="font-semibold underline decoration-dotted underline-offset-2 transition hover:text-accent-700 dark:text-accent-400"
+            >
+              {tr.footer.soukromiOdkaz}
+            </Link>
+          </p>
           <a
             href="#top"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-accent-700 transition hover:text-accent-700 dark:text-accent-400"

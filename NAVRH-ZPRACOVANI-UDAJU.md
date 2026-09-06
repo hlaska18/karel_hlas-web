@@ -9,7 +9,7 @@
 > WIN11"*), serverová část je pryč z kódu a Karel smazal i databázi v Upstashi
 > a proměnné ve Vercelu. Ověřeno: `/api/postup/*` vrací 404.
 >
-> Zbývá doplnit jedinou věc: `⟨adresu pro doručování⟩`.
+> **Zveřejněno 6. 9. 2026** na `/soukromi` a `/en/soukromi`.
 
 ---
 
@@ -19,11 +19,12 @@ Web provozuje **Mgr. Karel Hlas** jako fyzická osoba. Není to web školy,
 i když materiály vznikají a ověřují se ve výuce na Střední průmyslové škole
 strojní a stavební Tábor.
 
-⟨Doplnit adresu pro doručování. U fyzické osoby stačí kontaktní adresa,
-nemusí to být adresa bydliště — dá se uvést adresa školy, pokud s tím škola
-souhlasí.⟩
-
 Kontakt: hlas@sps-tabor.cz
+
+Poštovní adresu tu neuvádím. Karel to jako provozovatel rozhodl 6. 9. 2026
+s tím, že za web odpovídá on a spojit se s ním jde e-mailem. Je to jeho
+volba, ne opomenutí — kdyby se někdy ukázalo, že je adresa potřeba,
+doplní se sem jedna věta.
 
 ---
 
@@ -125,5 +126,7 @@ výše popisoval pravdu:
 Ověřeno zvenčí: `/api/postup/prihlaseni` i `/api/postup/ulozit` vracejí 404
 a v `src/` není jediná zmínka o `KV_REST_API`, `POSTUP_PODPIS` ani `UPSTASH`.
 
-**Zbývá jediná věc, a je to věc textu:** doplnit `⟨adresu pro doručování⟩`
-nahoře. Bez ní stránku nezveřejňuju.
+**Hotovo.** Karel 6. 9. 2026 rozhodl, že poštovní adresa se uvádět nebude
+a kontaktem zůstává e-mail. Text tím ztratil poslední `⟨…⟩` a je zveřejněný
+na `/soukromi` (a `/en/soukromi`), odkazovaný z patičky a ze zamykací
+obrazovky virtuálního prostředí.

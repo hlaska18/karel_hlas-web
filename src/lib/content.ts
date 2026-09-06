@@ -1227,6 +1227,28 @@ type Dict = {
       }[];
     }[];
   };
+  /**
+   * Stránka o zpracování údajů (`/soukromi`).
+   *
+   * Nestojí na homepage jako sekce, i když web je jinak one-page: tohle se
+   * nečte při procházení, ale když někdo hledá konkrétní odpověď, a odkazuje
+   * se na to z patičky i ze zamykací obrazovky prostředí.
+   *
+   * Text vychází z `NAVRH-ZPRACOVANI-UDAJU.md` a popisuje SKUTEČNOST, ne
+   * záměr: účty žáků byly zrušené (`2a29fef`) a Karel 4. 9. 2026 smazal
+   * i databázi v Upstashi. Kdyby se na web někdy vrátilo cokoli, co se ukládá
+   * na server, musí se tenhle text změnit DŘÍV, než to půjde ven.
+   *
+   * Poštovní adresa tu není schválně – Karel to jako provozovatel rozhodl
+   * 6. 9. 2026 a kontaktem je e-mail.
+   */
+  soukromi: {
+    title: string;
+    intro: string;
+    updated: string;
+    zpet: string;
+    sekce: { nadpis: string; odstavce: string[] }[];
+  };
   materials: {
     kicker: string;
     heading: string;
@@ -1256,6 +1278,8 @@ type Dict = {
     /** Odkaz na text licence – česká i anglická verze mají vlastní „deed“. */
     licenseHref: string;
     analytics: string;
+    /** Odkaz na `/soukromi`. V patičce schválně hned za větou o měření. */
+    soukromiOdkaz: string;
     top: string;
     sqlCourse: string;
     windows: string;
@@ -1679,6 +1703,74 @@ export const t: Record<Lang, Dict> = {
         },
       ],
     },
+    soukromi: {
+      title: "Co web ukládá",
+      intro:
+        "Krátce a bez právničiny: nic, podle čeho by šlo poznat, kdo jsi. Níž je napsané, co to znamená u každé části webu, kdo ho provozuje a kde technicky běží.",
+      updated: "Naposledy upraveno 6. 9. 2026.",
+      zpet: "Zpátky na web",
+      sekce: [
+        {
+          nadpis: "Kdo web provozuje",
+          odstavce: [
+            "Web provozuje Mgr. Karel Hlas jako fyzická osoba. Není to web školy, i když materiály vznikají a ověřují se ve výuce na Střední průmyslové škole strojní a stavební Tábor.",
+            "Kontakt: hlas@sps-tabor.cz",
+          ],
+        },
+        {
+          nadpis: "Materiály",
+          odstavce: [
+            "Prohlížet i stahovat můžeš bez přihlášení. Nic se při tom neodesílá a nic se o tobě neukládá.",
+          ],
+        },
+        {
+          nadpis: "Virtuální Windows",
+          odstavce: [
+            "Do prostředí se vstupuje kódem, který dostaneš od učitele. Kód není účet: neváže se k tobě, nic si k němu neukládáme a je společný pro celou třídu.",
+            "Co v prostředí uděláš – jaká okna otevřeš, co nakreslíš v Malování, jak daleko dojdeš v úlohách – zůstává v tomhle prohlížeči a na server se neodesílá. Když si smažeš data prohlížeče, zmizí to i tobě.",
+            "Dřív si tu žáci mohli zakládat účet a postup se ukládal na server. To bylo 1. 9. 2026 zrušené a 4. 9. 2026 bylo smazané i úložiště včetně účtů, které do té doby vznikly.",
+          ],
+        },
+        {
+          nadpis: "SQL hřiště",
+          odstavce: ["Rozepsané dotazy zůstávají v tomhle prohlížeči. Na server se neodesílají."],
+        },
+        {
+          nadpis: "Návštěvnost",
+          odstavce: [
+            "Web měří návštěvnost přes Vercel Analytics. Nepoužívá cookies a data jsou souhrnná – kolik lidí kterou stránku otevřelo, odkud přišli, na jakém zařízení. Jednotliví návštěvníci se z toho nepoznají a nespojují se s ničím jiným.",
+          ],
+        },
+        {
+          nadpis: "Kde web technicky běží",
+          odstavce: [
+            "Web běží na Vercelu. Požadavek nejdřív obslouží nejbližší okraj sítě – z Česka je to Frankfurt – ale serverová část běží ve Spojených státech (oblast iad1, Washington). Vercel je americká společnost.",
+            "Znamená to, že technické údaje, které vzniknou při každém požadavku na jakýkoli web (IP adresa, čas, typ prohlížeče), se zpracují i mimo Evropskou unii. Vercel k tomu má standardní smluvní doložky.",
+            "Data se nikomu neprodávají ani nepředávají dál.",
+          ],
+        },
+        {
+          nadpis: "Jak dlouho",
+          odstavce: [
+            "Na serveru se o návštěvnících nedrží nic. Souhrnnou návštěvnost si uchovává Vercel podle svých podmínek.",
+            "Co je uložené v tvém prohlížeči, tam zůstane, dokud si to nesmažeš.",
+          ],
+        },
+        {
+          nadpis: "Co s tím můžeš udělat",
+          odstavce: [
+            "Protože o tobě nic neukládáme, není co vymazat ani opravit. Kdyby ti přesto něco vrtalo hlavou, napiš na hlas@sps-tabor.cz.",
+            "Data, která si prostředí uložilo u tebe, smažeš v nastavení prohlížeče (historie → data webů) nebo přímo v prostředí.",
+          ],
+        },
+        {
+          nadpis: "Nezletilí",
+          odstavce: [
+            "Prostředí používají žáci střední školy. Proto je postavené tak, aby se nezadávalo nic osobního: žádný účet, žádné jméno, žádný e-mail, jen kód od učitele.",
+          ],
+        },
+      ],
+    },
     materials: {
       kicker: "Materiály do informatiky",
       heading: "Vyber si téma",
@@ -1716,6 +1808,7 @@ export const t: Record<Lang, Dict> = {
       licenseName: "CC BY-NC-SA 4.0",
       licenseHref: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs",
       analytics: "Návštěvnost měřím anonymně, bez cookies.",
+      soukromiOdkaz: "Co web ukládá",
       top: "Nahoru",
       // Kurz je vlastní stránka mimo jednostránkový web – bez tohohle odkazu
       // se k němu dá dojít jen přes dlaždici Databáze v bance.
@@ -2140,6 +2233,74 @@ export const t: Record<Lang, Dict> = {
         },
       ],
     },
+    soukromi: {
+      title: "What this site stores",
+      intro:
+        "Briefly and without legalese: nothing that could identify you. Below is what that means for each part of the site, who runs it and where it technically runs.",
+      updated: "Last updated 6 September 2026.",
+      zpet: "Back to the site",
+      sekce: [
+        {
+          nadpis: "Who runs this site",
+          odstavce: [
+            "The site is run by Karel Hlas as a private individual. It is not a school website, although the materials are created and tested in lessons at the Secondary Technical School of Mechanical Engineering and Construction in Tábor.",
+            "Contact: hlas@sps-tabor.cz",
+          ],
+        },
+        {
+          nadpis: "Materials",
+          odstavce: [
+            "You can browse and download them without signing in. Nothing is sent and nothing about you is stored.",
+          ],
+        },
+        {
+          nadpis: "Virtual Windows",
+          odstavce: [
+            "You enter the environment with a code from your teacher. The code is not an account: it is not tied to you, nothing is stored against it, and it is shared by the whole class.",
+            "What you do inside – which windows you open, what you draw in Paint, how far you get in the tasks – stays in this browser and is never sent to a server. Clear your browser data and it is gone for you too.",
+            "Pupils used to be able to create an account here, with progress stored on a server. That was removed on 1 September 2026, and on 4 September 2026 the storage itself was deleted, including the accounts created until then.",
+          ],
+        },
+        {
+          nadpis: "SQL playground",
+          odstavce: ["Queries you are writing stay in this browser. They are not sent to a server."],
+        },
+        {
+          nadpis: "Analytics",
+          odstavce: [
+            "The site measures traffic through Vercel Analytics. It uses no cookies and the data is aggregated – how many people opened which page, where they came from, on what device. Individual visitors cannot be identified from it and it is not linked to anything else.",
+          ],
+        },
+        {
+          nadpis: "Where the site technically runs",
+          odstavce: [
+            "The site runs on Vercel. A request is first handled by the nearest edge – from the Czech Republic that is Frankfurt – but the server part runs in the United States (region iad1, Washington). Vercel is an American company.",
+            "This means the technical data produced by any request to any website (IP address, time, browser type) is also processed outside the European Union. Vercel has standard contractual clauses in place for this.",
+            "No data is sold or passed on to anyone.",
+          ],
+        },
+        {
+          nadpis: "For how long",
+          odstavce: [
+            "Nothing about visitors is kept on the server. Aggregated traffic is retained by Vercel under its own terms.",
+            "Whatever is stored in your browser stays there until you delete it.",
+          ],
+        },
+        {
+          nadpis: "What you can do about it",
+          odstavce: [
+            "Since nothing about you is stored, there is nothing to erase or correct. If something still bothers you, write to hlas@sps-tabor.cz.",
+            "Data the environment saved on your device can be cleared in your browser settings (history → site data) or from inside the environment.",
+          ],
+        },
+        {
+          nadpis: "Minors",
+          odstavce: [
+            "The environment is used by secondary school pupils. That is why it is built so that nothing personal is ever entered: no account, no name, no e-mail, just a code from the teacher.",
+          ],
+        },
+      ],
+    },
     materials: {
       kicker: "Materials for CS",
       heading: "Pick a topic",
@@ -2169,6 +2330,7 @@ export const t: Record<Lang, Dict> = {
       licenseName: "CC BY-NC-SA 4.0",
       licenseHref: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en",
       analytics: "Traffic is measured anonymously, without cookies.",
+      soukromiOdkaz: "What this site stores",
       top: "Top",
       // Kurz je jen česky – ať to Angličan pozná dřív, než klikne.
       sqlCourse: "SQL course in the browser (in Czech)",

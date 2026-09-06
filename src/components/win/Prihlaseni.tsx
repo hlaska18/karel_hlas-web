@@ -188,7 +188,18 @@ export function Prihlaseni({
           <p className="mt-8 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
             Kód drží pohromadě třídu, nechrání žádné údaje – žádné se tu
             neukládají. Co v prostředí uděláš, zůstává v tomhle prohlížeči
-            a na server se neodesílá nic.
+            a na server se neodesílá nic.{" "}
+            {/* Odkaz je tady schválně, ne až v patičce webu: tvrzení „nic se
+                neukládá" má být doložitelné právě ve chvíli, kdy ho žák čte
+                a rozhoduje se, jestli kód zadá. */}
+            <a
+              href="/soukromi"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="underline decoration-dotted underline-offset-2 transition hover:text-white"
+            >
+              Co web ukládá
+            </a>
           </p>
         </form>
       )}
