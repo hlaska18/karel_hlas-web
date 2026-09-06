@@ -33,6 +33,16 @@ import {
   Info,
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
+import {
+  CODE,
+  DOCX,
+  IMG,
+  NAHLED_STR,
+  PPTX,
+  TEXT,
+  canPreview,
+  opensInBrowser,
+} from "@/lib/nahled";
 import type { BankItem } from "@/lib/materials";
 import { zaznamenejStazeni } from "@/lib/mereni";
 import {
@@ -55,10 +65,6 @@ const STR: Record<
     empty: string;
     teacherBadge: string;
     studentBadge: string;
-    previewTitle: string;
-    downloadTitle: string;
-    openNewTab: string;
-    close: string;
     lesson: string;
     shareLesson: string;
     expandLesson: string;
@@ -74,15 +80,6 @@ const STR: Record<
     sourceNote: string;
     sourceNoteOffline: string;
     openSource: string;
-    docxLoading: string;
-    docxError: string;
-    pptxLoading: string;
-    pptxError: string;
-    pptxNote: string;
-    pptxSlide: string;
-    pptxNotes: string;
-    codeLoading: string;
-    codeError: string;
   }
 > = {
   cs: {
@@ -92,10 +89,6 @@ const STR: Record<
     empty: "Nic neodpovídá. Zkus jiné slovo nebo se vrať na témata.",
     teacherBadge: "učitelé",
     studentBadge: "žáci",
-    previewTitle: "Náhled",
-    downloadTitle: "Stáhnout",
-    openNewTab: "Otevřít v nové záložce",
-    close: "Zavřít",
     lesson: "Lekce",
     shareLesson: "Sdílet odkaz na lekci",
     expandLesson: "Rozbalit lekci",
@@ -112,15 +105,6 @@ const STR: Record<
     sourceNote: "Převzatý materiál – otevři u původního zdroje",
     sourceNoteOffline: "Materiál třetí strany – zde není ke stažení",
     openSource: "Otevřít u zdroje",
-    docxLoading: "Načítám náhled dokumentu…",
-    docxError: "Náhled se nepodařilo vykreslit – stáhni si dokument tlačítkem výše.",
-    pptxLoading: "Načítám prezentaci…",
-    pptxError: "Prezentaci se nepodařilo přečíst – stáhni si ji tlačítkem výše.",
-    pptxNote: "Textový přehled snímků. Obrázky a rozvržení uvidíš po stažení.",
-    pptxSlide: "Snímek",
-    pptxNotes: "Poznámky pro vyučujícího",
-    codeLoading: "Načítám náhled kódu…",
-    codeError: "Náhled kódu se nepodařilo vykreslit – stáhni si soubor tlačítkem výše.",
   },
   en: {
     searchPlaceholder: "Search material, topic, tool…",
@@ -129,10 +113,6 @@ const STR: Record<
     empty: "Nothing matches. Try another word or go back to topics.",
     teacherBadge: "teachers",
     studentBadge: "students",
-    previewTitle: "Preview",
-    downloadTitle: "Download",
-    openNewTab: "Open in new tab",
-    close: "Close",
     lesson: "Lesson",
     shareLesson: "Share lesson link",
     expandLesson: "Expand lesson",
@@ -148,15 +128,6 @@ const STR: Record<
     sourceNote: "Third-party material – open at the original source",
     sourceNoteOffline: "Third-party material – not available here",
     openSource: "Open at source",
-    docxLoading: "Loading document preview…",
-    docxError: "Preview failed to render – use the download button above.",
-    pptxLoading: "Loading presentation…",
-    pptxError: "Could not read the presentation – use the download button above.",
-    pptxNote: "Text overview of the slides. Images and layout appear after download.",
-    pptxSlide: "Slide",
-    pptxNotes: "Speaker notes",
-    codeLoading: "Loading code preview…",
-    codeError: "Code preview failed to render – use the download button above.",
   },
 };
 
@@ -224,37 +195,6 @@ function L(field: { cs: string; en: string } | undefined, lang: Lang): string {
   return field ? field[lang] : "";
 }
 
-/** Typy, které umíme spolehlivě zobrazit přímo (bez cizí služby). */
-const IMG = ["png", "jpg", "jpeg", "gif", "svg", "webp"];
-/** PDF ukážeme v <iframe> (prohlížeč má vestavěný prohlížeč PDF). */
-const PDF = ["pdf"];
-/** Prostý text: stáhneme a vypíšeme do <pre> (iframe s text/plain se na mobilu nevykreslí). */
-const TEXT = ["txt", "csv"];
-/** Word: vykreslujeme client-side přes docx-preview (jen moderní .docx, ne starý .doc). */
-const DOCX = ["docx"];
-/** Zdrojový kód: obarvíme přes highlight.js (lazy z CDN) a vypíšeme do <pre>. */
-const CODE = ["py", "sql", "js", "ts", "tsx", "jsx", "json", "html", "css", "java", "c", "cpp", "sh", "xml"];
-/** PowerPoint: vypíšeme text snímků a poznámky (viz `pptxPreview`). */
-const PPTX = ["pptx"];
-/**
- * Otevře prohlížeč tenhle typ přímo v záložce? U .docx, .pptx nebo .zip ne –
- * jen se stáhnou, takže tlačítko „Otevřít v nové záložce" by dělalo totéž
- * co „Stáhnout" a v hlavičce náhledu by byla dvě tlačítka s jedním účinkem.
- */
-function opensInBrowser(ext: string): boolean {
-  return PDF.includes(ext) || IMG.includes(ext) || ["txt", "csv", "html"].includes(ext);
-}
-
-function canPreview(ext: string): boolean {
-  return (
-    IMG.includes(ext) ||
-    PDF.includes(ext) ||
-    TEXT.includes(ext) ||
-    DOCX.includes(ext) ||
-    PPTX.includes(ext) ||
-    CODE.includes(ext)
-  );
-}
 
 /** Sloučí přípony do přátelské kategorie (odznak typu u řádku). */
 function fileType(ext: string, lang: Lang): { key: string; label: string } {
@@ -602,6 +542,7 @@ function MaterialRow({
   vKarte?: boolean;
 }) {
   const s = STR[lang];
+  const n = NAHLED_STR[lang];
   const label = L(it.label, lang);
 
   // Nástroj, který běží tady na webu. Vlastní řádek proto, že řádek pro soubor
@@ -712,7 +653,7 @@ function MaterialRow({
         ? {
             role: "button",
             tabIndex: 0,
-            "aria-label": `${s.previewTitle}: ${label}`,
+            "aria-label": `${n.previewTitle}: ${label}`,
             onClick: () => onPreview(it),
             onKeyDown: (e: React.KeyboardEvent) => {
               if (e.key === "Enter" || e.key === " ") {
@@ -803,8 +744,8 @@ function MaterialRow({
             e.stopPropagation();
             zaznamenejStazeni(it);
           }}
-          title={s.downloadTitle}
-          aria-label={`${s.downloadTitle}: ${label}`}
+          title={n.downloadTitle}
+          aria-label={`${n.downloadTitle}: ${label}`}
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
         >
           <Download className="h-5 w-5" />
@@ -1467,6 +1408,7 @@ function PptxView({
   errorText: string;
 }) {
   const s = STR[lang];
+  const n = NAHLED_STR[lang];
   const [slides, setSlides] = useState<import("@/lib/pptxPreview").Slide[] | null>(null);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
 
@@ -1503,12 +1445,12 @@ function PptxView({
 
   return (
     <div className="h-[78vh] w-full overflow-auto">
-      <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400">{s.pptxNote}</p>
+      <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400">{n.pptxNote}</p>
       <ol className="space-y-3">
         {slides.map((sl) => (
           <li key={sl.no} className="povrch rounded-karta p-4">
             <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
-              {s.pptxSlide} {sl.no}
+              {n.pptxSlide} {sl.no}
             </p>
             {sl.title && (
               <p className="mt-1 font-display font-semibold tracking-podnadpis text-zinc-900 dark:text-white">
@@ -1525,7 +1467,7 @@ function PptxView({
             {sl.notes.length > 0 && (
               <details className="mt-3">
                 <summary className="cursor-pointer text-xs font-medium text-zinc-600 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-400 dark:hover:text-accent-400">
-                  {s.pptxNotes}
+                  {n.pptxNotes}
                 </summary>
                 <div className="mt-2 space-y-1 border-l border-black/10 pl-3 text-sm leading-relaxed text-zinc-600 dark:border-white/10 dark:text-zinc-400">
                   {sl.notes.map((line, i) => (
@@ -1671,6 +1613,7 @@ function PreviewModal({
   onClose: () => void;
 }) {
   const s = STR[lang];
+  const n = NAHLED_STR[lang];
   const isImg = IMG.includes(item.ext);
   const isDocx = DOCX.includes(item.ext);
   const isText = TEXT.includes(item.ext);
@@ -1732,7 +1675,7 @@ function PreviewModal({
     <div
       role="dialog"
       aria-modal="true"
-      aria-label={`${s.previewTitle}: ${label}`}
+      aria-label={`${n.previewTitle}: ${label}`}
       onClick={onClose}
       className="fixed inset-0 z-[100] flex items-center justify-center bg-black/60 p-3 backdrop-blur-sm sm:p-6"
     >
@@ -1749,7 +1692,7 @@ function PreviewModal({
               href={item.href}
               target="_blank"
               rel="noopener noreferrer"
-              title={s.openNewTab}
+              title={n.openNewTab}
               className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:text-zinc-300 dark:hover:text-accent-400"
             >
               <ExternalLink className="h-5 w-5" />
@@ -1759,15 +1702,15 @@ function PreviewModal({
             href={item.href}
             download
             onClick={() => zaznamenejStazeni(item)}
-            title={s.downloadTitle}
+            title={n.downloadTitle}
             className="inline-flex items-center gap-1.5 rounded-full bg-accent-700 px-3.5 py-2 text-sm font-semibold text-white transition hover:bg-accent-800"
           >
-            <Download className="h-4 w-4" /> {s.downloadTitle}
+            <Download className="h-4 w-4" /> {n.downloadTitle}
           </a>
           <button
             type="button"
             onClick={onClose}
-            aria-label={s.close}
+            aria-label={n.close}
             className="inline-flex h-9 w-9 items-center justify-center rounded-full text-zinc-600 transition hover:bg-black/5 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-white/10 dark:hover:text-white"
           >
             <X className="h-5 w-5" />
@@ -1779,22 +1722,22 @@ function PreviewModal({
             // eslint-disable-next-line @next/next/no-img-element
             <img src={item.href} alt={label} className="max-h-[78vh] max-w-full object-contain" />
           ) : isDocx ? (
-            <DocxView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
+            <DocxView href={item.href} loadingText={n.docxLoading} errorText={n.docxError} />
           ) : isText ? (
-            <TextView href={item.href} loadingText={s.docxLoading} errorText={s.docxError} />
+            <TextView href={item.href} loadingText={n.docxLoading} errorText={n.docxError} />
           ) : isPptx ? (
             <PptxView
               href={item.href}
               lang={lang}
-              loadingText={s.pptxLoading}
-              errorText={s.pptxError}
+              loadingText={n.pptxLoading}
+              errorText={n.pptxError}
             />
           ) : isCode ? (
             <CodeView
               href={item.href}
               ext={item.ext}
-              loadingText={s.codeLoading}
-              errorText={s.codeError}
+              loadingText={n.codeLoading}
+              errorText={n.codeError}
             />
           ) : (
             <iframe src={item.href} title={label} className="h-[78vh] w-full rounded-ovladac border-0 bg-white" />
