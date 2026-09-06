@@ -101,6 +101,77 @@ export function countLinks(n: number, lang: Lang): string {
   return `${n} ${word}`;
 }
 
+/** Rozpad jednoho tématu na druhy položek – podklad pro podtitulek dlaždice. */
+export type TileCounts = {
+  /** Hostované soubory ke stažení. Stejná definice jako v heru, viz níž. */
+  soubory: number;
+  /** Běží tady na webu: `_nastroj.json` a hotové stránky (laboratoře). */
+  nastroje: number;
+  /** Odkaz na cizí zdroj – nehostuje se. */
+  odkazy: number;
+  /** Kolik karet lekcí téma po otevření vykreslí. 0 = nemá je. */
+  lekce: number;
+};
+
+/**
+ * Rozpad podle druhu. `lekce` neumí – ty ví až banka, protože je skládá
+ * z `LESSON_CONFIG`, které je vázané na jména složek.
+ *
+ * `soubory` se schválně počítá jako `!external && !interactive`, tedy STEJNĚ
+ * jako `getBankStats` v heru. Když se ty dvě definice rozešly, hlásila
+ * mřížka jiný součet než číslo nad ní (dřív 161 proti 152, pak 93 proti 87).
+ */
+export function countByKind(items: BankItem[]): Omit<TileCounts, "lekce"> {
+  let soubory = 0;
+  let nastroje = 0;
+  let odkazy = 0;
+  for (const it of items) {
+    if (it.external) odkazy += 1;
+    else if (it.interactive) nastroje += 1;
+    else soubory += 1;
+  }
+  return { soubory, nastroje, odkazy };
+}
+
+function countLessons(n: number, lang: Lang): string {
+  if (lang === "en") return `${n} ${n === 1 ? "lesson" : "lessons"}`;
+  const word = n === 1 ? "lekce" : n >= 2 && n <= 4 ? "lekce" : "lekcí";
+  return `${n} ${word}`;
+}
+
+function countTools(n: number, lang: Lang): string {
+  if (lang === "en") return `${n} ${n === 1 ? "in-browser tool" : "in-browser tools"}`;
+  const word = n === 1 ? "nástroj" : n >= 2 && n <= 4 ? "nástroje" : "nástrojů";
+  return `${n} ${word} v prohlížeči`;
+}
+
+/**
+ * Podtitulek dlaždice tématu.
+ *
+ * Dřív tu stál jen počet souborů. To je metrika pro autora („kolik práce
+ * tam je"), ne pro učitele, který se ptá „co s tím odučím" – a u Operačních
+ * systémů to navíc lhalo: „1 materiál" za celé virtuální Windows s 34 úlohami.
+ *
+ * NIC SE NEDOPOČÍTÁVÁ ODHADEM. Hodinová dotace v datech není, takže tu není
+ * ani „~10 hodin"; počet lekcí je skutečný počet karet, které se po otevření
+ * vykreslí. Tvrdit o tématu něco, co se nedá spočítat, je totéž, co web
+ * odmítá u AI tipů.
+ *
+ * NEJVÝŠ DVĚ ČÁSTI. Dlaždice má na `sm` pro text okolo 150 px a název už
+ * bere dva řádky; třetí část by se nevešla. Nástroje a odkazy jsou vidět
+ * hned po otevření, na obal patří to nejsilnější.
+ */
+export function tileSubtitle(c: TileCounts, lang: Lang): string {
+  if (c.lekce > 0) return `${countLessons(c.lekce, lang)} · ${countMaterials(c.soubory, lang)}`;
+  if (c.soubory > 0 && c.odkazy > 0) {
+    return `${countMaterials(c.soubory, lang)} · ${countLinks(c.odkazy, lang)}`;
+  }
+  if (c.soubory > 0) return countMaterials(c.soubory, lang);
+  if (c.nastroje > 0) return countTools(c.nastroje, lang);
+  if (c.odkazy > 0) return countLinks(c.odkazy, lang);
+  return "";
+}
+
 const norm = (s?: string) => (s ?? "").normalize("NFC").toLowerCase();
 
 /**

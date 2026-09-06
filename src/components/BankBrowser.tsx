@@ -46,12 +46,14 @@ import {
 import type { BankItem } from "@/lib/materials";
 import { zaznamenejStazeni } from "@/lib/mereni";
 import {
-  toolLabel,
-  countMaterials,
-  countLinks,
-  materialTypeOf,
-  fmtSize,
   TOOL_ORDER,
+  countByKind,
+  countLinks,
+  countMaterials,
+  fmtSize,
+  materialTypeOf,
+  tileSubtitle,
+  toolLabel,
 } from "@/lib/bankLabels";
 import { ToolGlassIcon, hasToolGlassIcon } from "@/components/ToolGlassIcon";
 
@@ -316,13 +318,31 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
   // soubory, takže dokud dlaždice počítaly obojí dohromady, součet dlaždic
   // nesouhlasil s číslem nad nimi (161 proti 152).
   const tiles = useMemo(() => {
-    const counts = new Map<string, { vlastni: number; odkazy: number }>();
+    // Seskupení na CELÉ položky, ne rovnou na čísla: podtitulek potřebuje
+    // rozlišit soubory, nástroje a odkazy, a navíc spočítat lekce.
+    const podle = new Map<string, BankItem[]>();
     for (const it of items) {
-      const c = counts.get(it.tool) ?? { vlastni: 0, odkazy: 0 };
-      if (it.external) c.odkazy += 1;
-      else c.vlastni += 1;
-      counts.set(it.tool, c);
+      const list = podle.get(it.tool);
+      if (list) list.push(it);
+      else podle.set(it.tool, [it]);
     }
+
+    /**
+     * Kolik karet lekcí téma po otevření vykreslí. Počítá se ze stejné
+     * konfigurace, podle které se karty skládají – kdyby se to počítalo
+     * jinak, dlaždice by slibovala jiné číslo, než co učitel uvidí.
+     */
+    const pocetLekci = (tool: string, its: BankItem[]) => {
+      const cfg = LESSON_CONFIG[tool];
+      if (!cfg) return 0;
+      const nos = new Set<number>();
+      for (const it of its) {
+        if ((isStudentSlot(it, cfg) || isTeacherSlot(it, cfg)) && it.lessonNo != null) {
+          nos.add(it.lessonNo);
+        }
+      }
+      return nos.size;
+    };
     // Řazení podle OSNOVY, ne podle objemu. Dřív šlo první to, čeho je
     // nejvíc – jenže tím mřížka říkala „tady je toho hodně" místo „takhle to
     // jde za sebou", a nové téma s jedním materiálem spadlo na konec bez
@@ -335,8 +355,11 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
       const i = TOOL_ORDER.indexOf(t);
       return i < 0 ? TOOL_ORDER.length : i;
     };
-    return [...counts.entries()]
-      .map(([name, c]) => ({ name, ...c }))
+    return [...podle.entries()]
+      .map(([name, its]) => ({
+        name,
+        pocty: { ...countByKind(its), lekce: pocetLekci(name, its) },
+      }))
       .sort((a, b) => poradi(a.name) - poradi(b.name));
   }, [items]);
 
@@ -417,12 +440,12 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                     <span className="font-display text-base font-semibold tracking-podnadpis text-zinc-900 dark:text-white sm:text-lg">
                       {toolLabel(t.name, lang)}
                     </span>
-                    {/* Kde nic vlastního není (Word, Excel, Power BI), řekne to
-                        dlaždice rovnou – ať učitel nekliká pro nic. */}
+                    {/* Složení tématu, ne jen počet souborů. Učitel se ptá
+                        „co s tím odučím", ne „kolik toho tam je" – a u témat
+                        bez vlastních souborů to navíc říká rovnou, že tu
+                        nic ke stažení není. */}
                     <span className="text-xs text-zinc-600 dark:text-zinc-400 sm:text-sm">
-                      {t.vlastni > 0
-                        ? countMaterials(t.vlastni, lang)
-                        : countLinks(t.odkazy, lang)}
+                      {tileSubtitle(t.pocty, lang)}
                     </span>
                   </span>
                   {/* Velká „plovoucí" ikona: na mobilu nahoře menší, na desktopu vyplní pravou část */}

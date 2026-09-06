@@ -5,6 +5,8 @@ import {
   getBankToolCounts,
   type BankItem,
 } from "@/lib/materials";
+import { countByKind } from "@/lib/bankLabels";
+import { getBankStats } from "@/lib/heroPick";
 
 const items = getBankItems();
 
@@ -131,5 +133,24 @@ describe("getBankToolCounts", () => {
   it("accounts for every material across all tool buckets", () => {
     const total = counts.reduce((sum, c) => sum + c.count, 0);
     expect(total).toBe(items.length);
+  });
+});
+
+describe("součet dlaždic proti číslu v hlavičce", () => {
+  it("dlaždice napočítají stejně souborů jako hero", () => {
+    // Tohle se už dvakrát rozešlo: mřížka hlásila 161 proti 152 v heru,
+    // po opravě 93 proti 87. Pokaždé proto, že každá strana počítala
+    // „soubor" jinak. Test hlídá, že obě definice zůstanou tatáž věc.
+    const items = getBankItems();
+    const podle = new Map<string, typeof items>();
+    for (const it of items) {
+      const l = podle.get(it.tool);
+      if (l) l.push(it);
+      else podle.set(it.tool, [it]);
+    }
+    let soucet = 0;
+    for (const its of podle.values()) soucet += countByKind(its).soubory;
+
+    expect(soucet).toBe(getBankStats(items).files);
   });
 });

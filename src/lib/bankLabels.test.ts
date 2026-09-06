@@ -6,6 +6,8 @@ import {
   countMaterials,
   materialTypeOf,
   fmtSize,
+  tileSubtitle,
+  countByKind,
 } from "@/lib/bankLabels";
 import type { BankItem } from "@/lib/materials";
 
@@ -149,5 +151,70 @@ describe("fmtSize", () => {
     expect(fmtSize(512)).toBe("512 B");
     expect(fmtSize(4096)).toBe("4 kB");
     expect(fmtSize(0)).toBe("");
+  });
+});
+
+
+describe("tileSubtitle", () => {
+  const c = (p: Partial<{ soubory: number; nastroje: number; odkazy: number; lekce: number }>) => ({
+    soubory: 0,
+    nastroje: 0,
+    odkazy: 0,
+    lekce: 0,
+    ...p,
+  });
+
+  it("balíček lekcí ukáže lekce a materiály", () => {
+    expect(tileSubtitle(c({ lekce: 10, soubory: 25, nastroje: 1 }), "cs")).toBe(
+      "10 lekcí · 25 materiálů",
+    );
+    expect(tileSubtitle(c({ lekce: 10, soubory: 25, nastroje: 1 }), "en")).toBe(
+      "10 lessons · 25 materials",
+    );
+  });
+
+  it("nikdy nedá tři části – dlaždice je na ně úzká", () => {
+    const vse = tileSubtitle(c({ lekce: 10, soubory: 25, nastroje: 1, odkazy: 2 }), "cs");
+    expect(vse.split("·")).toHaveLength(2);
+  });
+
+  it("hybrid přizná soubory i odkazy", () => {
+    expect(tileSubtitle(c({ soubory: 5, odkazy: 1 }), "cs")).toBe("5 materiálů · 1 odkaz");
+    expect(tileSubtitle(c({ soubory: 5, odkazy: 1 }), "en")).toBe("5 materials · 1 link");
+  });
+
+  it("téma s jedním nástrojem neříká „1 materiál“", () => {
+    // Přesně ta lež, kvůli které to vzniklo: virtuální Windows s 34 úlohami
+    // se hlásily jako jeden materiál ke stažení.
+    expect(tileSubtitle(c({ nastroje: 1 }), "cs")).toBe("1 nástroj v prohlížeči");
+    expect(tileSubtitle(c({ nastroje: 1 }), "en")).toBe("1 in-browser tool");
+  });
+
+  it("téma jen s odkazy", () => {
+    expect(tileSubtitle(c({ odkazy: 2 }), "cs")).toBe("2 odkazy");
+  });
+
+  it("prázdné téma nic nepředstírá", () => {
+    expect(tileSubtitle(c({}), "cs")).toBe("");
+  });
+
+  it("české plurály sedí u lekcí i nástrojů", () => {
+    expect(tileSubtitle(c({ lekce: 1, soubory: 1 }), "cs")).toBe("1 lekce · 1 materiál");
+    expect(tileSubtitle(c({ lekce: 2, soubory: 2 }), "cs")).toBe("2 lekce · 2 materiály");
+    expect(tileSubtitle(c({ lekce: 5, soubory: 5 }), "cs")).toBe("5 lekcí · 5 materiálů");
+    expect(tileSubtitle(c({ nastroje: 5 }), "cs")).toBe("5 nástrojů v prohlížeči");
+  });
+});
+
+describe("countByKind", () => {
+  it("rozdělí položky na soubory, nástroje a odkazy", () => {
+    const it = (p: Partial<BankItem>) => makeItem(p);
+    const c = countByKind([
+      it({}),
+      it({}),
+      it({ interactive: true }),
+      it({ external: true }),
+    ]);
+    expect(c).toEqual({ soubory: 2, nastroje: 1, odkazy: 1 });
   });
 });
