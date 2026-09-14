@@ -6,6 +6,7 @@ import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { BADGES, SITE } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
+import { CasovaOsa } from "@/components/CasovaOsa";
 import { SectionJump } from "@/components/SectionJump";
 import { SectionHeader } from "@/components/SectionHeader";
 
@@ -16,11 +17,11 @@ export function About() {
   return (
     <section id="about" className="sekce">
       <div className="container-page">
-        {/* Nadpis je uvnitř levého sloupce, aby pravý sloupec mohl začít nahoře
-            u nadpisu a skončit dole u odznaků. Kdyby byl nad mřížkou, časová
-            osa by začínala až pod ním a na široké obrazovce by „ujížděla". */}
-        <div className="grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
-          {/* Text */}
+        {/* Jeden sloupec. Dřív tu byla mřížka [1.45fr 0.55fr] s časovou osou
+            v tom úzkém pravém – jenže na 340 px se jedenáct let vodorovně
+            nevejde a sloupce se rozcházely (změřeno 2601 proti 572 px).
+            Osa je teď pod fotkou přes celou šířku. */}
+        <div>
           <div className="flex flex-col">
             <SectionHeader
               no="04"
@@ -49,6 +50,11 @@ export function About() {
                 ))}
               </Reveal>
             </div>
+
+            {/* Časová osa studia a praxe – přes celou šířku pod fotkou a bio. */}
+            <Reveal delay={0.12}>
+              <CasovaOsa />
+            </Reveal>
 
             {/* Certifikáty a odznaky – přes celou šířku pod fotkou a bio. */}
             {BADGES.length > 0 && (
@@ -96,65 +102,10 @@ export function About() {
               </div>
             )}
           </div>
-
-          {/* Časová osa lícuje nahoře s nadpisem. Dole ji NEROZTAHUJEME:
-              obsah obou sloupců je různě vysoký, takže vynucené zarovnání
-              spodků jen přesune prázdno jinam – buď do mezery mezi karty,
-              nebo dovnitř karty. Sloupec prostě skončí, kde skončí. */}
-          <div className="flex flex-col gap-6 lg:mt-9">
-            <Reveal delay={0.1}>
-              <TimelineGroup
-                icon={<GraduationCap className="h-5 w-5" />}
-                title={a.eduTitle}
-                items={a.education}
-              />
-            </Reveal>
-            <Reveal delay={0.18}>
-              <TimelineGroup
-                icon={<Briefcase className="h-5 w-5" />}
-                title={a.expTitle}
-                items={a.experience}
-              />
-            </Reveal>
-
-          </div>
         </div>
 
         <SectionJump href="#contact" label={tr.nav.contact} className="mt-10 flex sm:mt-12" />
       </div>
     </section>
-  );
-}
-
-function TimelineGroup({
-  icon,
-  title,
-  items,
-}: {
-  icon: React.ReactNode;
-  title: string;
-  items: { period: string; place: string; detail: string }[];
-}) {
-  return (
-    <div className="povrch rounded-panel p-6 sm:p-7">
-      <div className="flex items-center gap-2.5 text-accent-700 dark:text-accent-400">
-        {icon}
-        <h3 className="font-display text-lg font-semibold tracking-podnadpis text-zinc-900 dark:text-white">
-          {title}
-        </h3>
-      </div>
-      <ol className="mt-5 space-y-5 border-l border-black/10 pl-5 dark:border-white/10">
-        {items.map((it, i) => (
-          <li key={i} className="relative">
-            <span className="absolute -left-[1.6rem] top-1.5 h-2.5 w-2.5 rounded-full bg-accent-500 ring-4 ring-[var(--bg-soft)]" />
-            <p className="text-xs font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-400">
-              {it.period}
-            </p>
-            <p className="mt-0.5 font-medium text-zinc-900 dark:text-white">{it.place}</p>
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">{it.detail}</p>
-          </li>
-        ))}
-      </ol>
-    </div>
   );
 }

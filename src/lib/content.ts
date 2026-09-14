@@ -1078,7 +1078,20 @@ export const COURSES: Course[] = [
 
 /* ───────────────────────────── PŘEKLADY UI ───────────────────────────── */
 
-type TimelineItem = { period: string; place: string; detail: string };
+/**
+ * Položka časové osy v sekci O mně.
+ *
+ * `od`/`do` jsou roky, ze kterých se počítá délka pruhu; `do: null` znamená
+ * „trvá dodnes". `period` zůstává jako čitelný zápis – z pruhu se přesný
+ * rozsah vyčíst nedá a odečítač obrazovky by z něj nedostal nic.
+ */
+type TimelineItem = {
+  period: string;
+  place: string;
+  detail: string;
+  od: number;
+  do: number | null;
+};
 
 type Dict = {
   nav: {
@@ -1114,6 +1127,8 @@ type Dict = {
     interestsTitle: string;
     badgesTitle: string;
     interests: string[];
+    /** Popisek konce otevřeného období („nyní"). */
+    nyni: string;
     education: TimelineItem[];
     experience: TimelineItem[];
   };
@@ -1325,6 +1340,7 @@ export const t: Record<Lang, Dict> = {
         "Ve výuce hledám praktické a srozumitelné cesty, jak žákům přiblížit moderní technologie. Mimo školu mě baví tvorba webů, programování a bowling.",
       ],
       eduTitle: "Vzdělání",
+ nyni: "nyní",
       expTitle: "Praxe",
       interestsTitle: "Co mě baví",
       badgesTitle: "Certifikáty a odznaky",
@@ -1332,11 +1348,15 @@ export const t: Record<Lang, Dict> = {
       education: [
         {
           period: "2015–2019",
+          od: 2015,
+          do: 2019,
           place: "SPŠ strojní a stavební, Tábor",
           detail: "Technické lyceum – programování a robotika",
         },
         {
           period: "2019–2026",
+          od: 2019,
+          do: 2026,
           place: "Pedagogická fakulta JČU",
           detail: "Bc. i Mgr. – učitelství informatiky a angličtiny pro 2. stupeň",
         },
@@ -1344,11 +1364,15 @@ export const t: Record<Lang, Dict> = {
       experience: [
         {
           period: "2022–2024",
+          od: 2022,
+          do: 2024,
           place: "ZŠ a MŠ Malšice, okres Tábor",
           detail: "Asistent pedagoga, poté učitel informatiky na 2. stupni",
         },
         {
           period: "2024 – nyní",
+          od: 2024,
+          do: null,
           place: "SPŠ strojní a stavební, Tábor",
           detail: "Učitel informatiky a angličtiny",
         },
@@ -1855,6 +1879,7 @@ export const t: Record<Lang, Dict> = {
         "In my lessons I look for practical, clear ways to make modern technology click for students. Outside school I enjoy web development, programming and bowling.",
       ],
       eduTitle: "Education",
+ nyni: "present",
       expTitle: "Experience",
       interestsTitle: "What I enjoy",
       badgesTitle: "Certificates & badges",
@@ -1862,11 +1887,15 @@ export const t: Record<Lang, Dict> = {
       education: [
         {
           period: "2015–2019",
+          od: 2015,
+          do: 2019,
           place: "Secondary Technical School of Mechanical and Civil Engineering",
           detail: "Technical Lyceum – programming & robotics",
         },
         {
           period: "2019–2026",
+          od: 2019,
+          do: 2026,
           place: "Faculty of Education, University of South Bohemia",
           detail: "Bachelor's & Master's – teaching Computer Science & English, lower secondary",
         },
@@ -1874,11 +1903,15 @@ export const t: Record<Lang, Dict> = {
       experience: [
         {
           period: "2022–2024",
+          od: 2022,
+          do: 2024,
           place: "Primary & Nursery School Malšice",
           detail: "Teaching assistant, then Computer Science teacher (lower secondary)",
         },
         {
           period: "2024 – present",
+          od: 2024,
+          do: null,
           place: "Secondary Technical School of Mechanical and Civil Engineering",
           detail: "Computer Science & English teacher",
         },
