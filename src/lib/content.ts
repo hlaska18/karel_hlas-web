@@ -49,6 +49,15 @@ export type Social = {
  * neslibuje paušálně: moje vlastní soubory přihlášení nechtějí, ale cizí kurz
  * nebo cvičebnice ano, a to patří k té konkrétní položce – ať to člověk ví
  * dřív, než na odkaz klikne, a ne až po něm.
+ *
+ * JEN PÁR SLOV. Lepí se za zdroj na JEDEN řádek, který se ořezává
+ * (`Ctenie.tsx`), takže věta se usekne uprostřed a zbyde z ní šum:
+ * „Seznam Zprávy · Web si před otevření…". Vyzkoušeno a zase odstraněno.
+ * Sem patří „předplatné" nebo „vyžaduje účet", ne vysvětlení.
+ *
+ * A nepatří sem to, co čtenář čeká stejně: souhlas s cookies má skoro každý
+ * zpravodajský web, takže varovat před ním znamená plýtvat tím jediným
+ * řádkem, který na upozornění je.
  */
 export type Clanek = {
   title: string;
@@ -84,10 +93,6 @@ export const CLANKY: Clanek[] = [
     url: "https://www.seznamzpravy.cz/clanek/tech-technologie-veda-ai-ve-skolach-az-zazracne-pomaha-dopad-na-vysledky-zaku-je-tragicky-314538",
     logo: { src: "/images/clanky/seznamzpravy.png", pomer: 1.652 },
     jazyk: "cs",
-    pozor: {
-      cs: "Web si před otevřením vyžádá souhlas s personalizací a bez něj článek nepustí.",
-      en: "The site demands a personalisation consent before it will show the article.",
-    },
   },
   {
     title: "The Anthropic AI Course Schools Should Be Teaching",
