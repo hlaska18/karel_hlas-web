@@ -1705,7 +1705,7 @@ export const t: Record<Lang, Dict> = {
       title: "Co web ukládá",
       intro:
         "Krátce a bez právničiny: nic, podle čeho by šlo poznat, kdo jsi. Níž je napsané, co to znamená u každé části webu, kdo ho provozuje a kde technicky běží.",
-      updated: "Naposledy upraveno 6. 9. 2026.",
+      updated: "Naposledy upraveno 14. 9. 2026.",
       zpet: "Zpátky na web",
       sekce: [
         {
@@ -1732,6 +1732,14 @@ export const t: Record<Lang, Dict> = {
         {
           nadpis: "SQL hřiště",
           odstavce: ["Rozepsané dotazy zůstávají v tomhle prohlížeči. Na server se neodesílají."],
+        },
+        {
+          nadpis: "Cookies a co zůstane v prohlížeči",
+          odstavce: [
+            "Web nenastavuje žádnou cookie. Ani vlastní, ani cizí – proto tu nenajdeš lištu, kterou by bylo potřeba odklikávat. Změřeno na všech stránkách včetně virtuálního Windows a SQL hřiště.",
+            "Do prohlížeče se ukládají dvě věci, a obě až ve chvíli, kdy si o ně sám řekneš: zvolený světlý nebo tmavý režim a stav virtuálního Windows, tedy tvoje rozdělaná práce. Nic z toho tě neidentifikuje, nic se neodesílá na server a nikdo jiný se k tomu nedostane.",
+            "Souhlas se na tohle nevyžaduje, protože bez toho uložení by ta funkce nefungovala – motiv by se zapomněl při každém načtení a práce v prostředí by zmizela. Smažeš to v nastavení prohlížeče (historie → data webů).",
+          ],
         },
         {
           nadpis: "Návštěvnost",
@@ -2227,7 +2235,7 @@ export const t: Record<Lang, Dict> = {
       title: "What this site stores",
       intro:
         "Briefly and without legalese: nothing that could identify you. Below is what that means for each part of the site, who runs it and where it technically runs.",
-      updated: "Last updated 6 September 2026.",
+      updated: "Last updated 14 September 2026.",
       zpet: "Back to the site",
       sekce: [
         {
@@ -2254,6 +2262,14 @@ export const t: Record<Lang, Dict> = {
         {
           nadpis: "SQL playground",
           odstavce: ["Queries you are writing stay in this browser. They are not sent to a server."],
+        },
+        {
+          nadpis: "Cookies and what stays in your browser",
+          odstavce: [
+            "This site sets no cookies at all – neither its own nor anyone else's. That is why there is no consent bar to click away. Measured across every page, including the virtual Windows and the SQL playground.",
+            "Two things are stored in your browser, and both only once you ask for them: the light or dark theme you picked, and the state of the virtual Windows – your unfinished work. Neither identifies you, neither is sent to a server, and nobody else can reach it.",
+            "No consent is required for this, because without that storage the feature would not work – the theme would be forgotten on every load and your work in the environment would vanish. You can clear it in your browser settings (history → site data).",
+          ],
         },
         {
           nadpis: "Analytics",
