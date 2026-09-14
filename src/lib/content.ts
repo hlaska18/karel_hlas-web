@@ -79,11 +79,15 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
-    title: "AI Literacy: A Framework to Understand, Evaluate, and Use Emerging Technology",
-    source: "Digital Promise",
-    url: "https://digitalpromise.org/2024/06/18/ai-literacy-a-framework-to-understand-evaluate-and-use-emerging-technology/",
-    logo: { src: "/images/clanky/digitalpromise.png", pomer: 2.813 },
-    jazyk: "en",
+    title: "AI ve školách až zázračně pomáhá. Dopad na výsledky žáků je tragický",
+    source: "Seznam Zprávy",
+    url: "https://www.seznamzpravy.cz/clanek/tech-technologie-veda-ai-ve-skolach-az-zazracne-pomaha-dopad-na-vysledky-zaku-je-tragicky-314538",
+    logo: { src: "/images/clanky/seznamzpravy.png", pomer: 1.652 },
+    jazyk: "cs",
+    pozor: {
+      cs: "Web si před otevřením vyžádá souhlas s personalizací a bez něj článek nepustí.",
+      en: "The site demands a personalisation consent before it will show the article.",
+    },
   },
   {
     title: "The Anthropic AI Course Schools Should Be Teaching",
