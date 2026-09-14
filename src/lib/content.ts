@@ -1146,9 +1146,6 @@ type Dict = {
     heading: string;
     badge: string;
     intro: string;
-    /** Prázdný stav – dokud projekt nezačal, sekce musí říct proč. */
-    emptyTitle: string;
-    emptyText: string;
     /** Popisky polí šablony z kapitoly 10.1 projektového záměru. */
     labelCil: string;
     labelNastroj: string;
@@ -1334,11 +1331,6 @@ export const t: Record<Lang, Dict> = {
       interests: ["Moderní technologie", "Vzdělávání", "Tvorba webů", "Programování", "Bowling"],
       education: [
         {
-          period: "2006–2015",
-          place: "ZŠ a MŠ Sezimovo Ústí",
-          detail: "9. května 489, okres Tábor",
-        },
-        {
           period: "2015–2019",
           place: "SPŠ strojní a stavební, Tábor",
           detail: "Technické lyceum – programování a robotika",
@@ -1351,12 +1343,12 @@ export const t: Record<Lang, Dict> = {
       ],
       experience: [
         {
-          period: "Začátky",
+          period: "2022–2024",
           place: "ZŠ a MŠ Malšice, okres Tábor",
           detail: "Asistent pedagoga, poté učitel informatiky na 2. stupni",
         },
         {
-          period: "Nyní",
+          period: "2024 – nyní",
           place: "SPŠ strojní a stavební, Tábor",
           detail: "Učitel informatiky a angličtiny",
         },
@@ -1385,9 +1377,6 @@ export const t: Record<Lang, Dict> = {
       badge: "Nová sekce",
       intro:
         "Návody na učitelovu vlastní práci, ne na hodinu: čím si pomoct při přípravě a co potom – při opravování, vyhodnocování a reflexi. Nic teoretického a nic pro studenty. Tipy na AI, které nikdo nezkusil, najdeš na internetu tisíckrát; sem se dostane jen postup, u kterého dokážu napsat, na čem jsem ho zkusil, kolik času ušetřil a jestli se vůbec vyplatil.",
-      emptyTitle: "Ověřené postupy tu zatím nejsou, a je to tak správně.",
-      emptyText:
-        "Zatím jsem žádný postup nedotáhl až k číslu, kolik času doopravdy ušetřil – a bez toho čísla sem nepatří. První přibude, až na něj při přípravě nebo opravování dojde; do té doby je v téhle sekci nejužitečnější rozcestník nástrojů o kousek níž.",
       labelCil: "Co bylo potřeba udělat",
       labelNastroj: "AI nástroj a postup",
       labelOvereni: "Na čem jsem to zkusil",
@@ -1581,9 +1570,9 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     nastroje: {
-      heading: "Čím začít, než něco vyzkouším",
+      heading: "Čím si pomoct při přípravě, opravování a reflexi",
       disclaimer:
-        "Tohle ještě nejsou ověřené postupy nahoře – tyhle nástroje jsem sám nezměřil, takže ti neřeknu, kolik času ušetří. Je to mapa, kde co hledat, s čím u toho počítat a jak se do toho pustit. Co z toho projde mou vlastní přípravou, popíšu výš i s časem.",
+        "Každý z nich míří na jednu část učitelovy práce kolem hodiny – na přípravu před ní, na opravování a vyhodnocení po ní, nebo na to, co pustit rovnou žákům. U každého je napsané, čím začít a na co ho nasadit. Vlastní ověřené postupy i s časem, který ušetřily, sem přibydou, jak je odučím.",
       labelNavod: "Jak začít",
       labelPouziti: "K čemu to použiješ",
       credit: "Výběr kategorií vznikl podle databáze AI nástrojů na aidetem.cz.",
@@ -1864,11 +1853,6 @@ export const t: Record<Lang, Dict> = {
       interests: ["Modern technology", "Education", "Web development", "Programming", "Bowling"],
       education: [
         {
-          period: "2006–2015",
-          place: "Primary & Nursery School Sezimovo Ústí",
-          detail: "9. května 489, Tábor district",
-        },
-        {
           period: "2015–2019",
           place: "Secondary Technical School of Mechanical and Civil Engineering",
           detail: "Technical Lyceum – programming & robotics",
@@ -1881,12 +1865,12 @@ export const t: Record<Lang, Dict> = {
       ],
       experience: [
         {
-          period: "Early on",
+          period: "2022–2024",
           place: "Primary & Nursery School Malšice",
           detail: "Teaching assistant, then Computer Science teacher (lower secondary)",
         },
         {
-          period: "Now",
+          period: "2024 – present",
           place: "Secondary Technical School of Mechanical and Civil Engineering",
           detail: "Computer Science & English teacher",
         },
@@ -1915,9 +1899,6 @@ export const t: Record<Lang, Dict> = {
       badge: "New section",
       intro:
         "Guides for a teacher's own work, not for the lesson: what helps when preparing, and what comes afterwards — marking, evaluating and reflecting. Nothing theoretical and nothing aimed at students. AI tips nobody has actually tried are all over the internet; nothing gets in here until I can say what I tried it on, how much time it saved, and whether it was worth it at all.",
-      emptyTitle: "No verified write-ups yet, and that is correct.",
-      emptyText:
-        "No method has yet made it as far as a real number for the time it saved — and without that number it does not belong here. The first one will appear when my own prep or marking calls for it; until then, the most useful thing in this section is the map of tools a little further down.",
       labelCil: "What needed doing",
       labelNastroj: "AI tool and method",
       labelOvereni: "What I tried it on",
@@ -2111,9 +2092,9 @@ export const t: Record<Lang, Dict> = {
       ],
     },
     nastroje: {
-      heading: "Where to start, before I have tested anything",
+      heading: "What helps with prep, marking and reflection",
       disclaimer:
-        "These are not the verified write-ups above – I have not measured these tools myself, so I cannot tell you how much time they save. This is a map: where to find them, what to expect, and how to get going. Whatever survives my own lesson prep moves up there, with the numbers.",
+        "Each one aims at a part of a teacher's work around the lesson – preparing before it, marking and evaluating after it, or what to put in front of pupils. Each says how to start and what to use it for. My own verified write-ups, with the time they saved, will appear as I teach them.",
       labelNavod: "How to start",
       labelPouziti: "What you use it for",
       credit: "The categories follow the AI tool database at aidetem.cz.",

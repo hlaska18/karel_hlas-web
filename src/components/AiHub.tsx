@@ -252,14 +252,12 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
           <AiHubSouhvezdi />
         </div>
 
-        {vystupy.length === 0 ? (
-          <div className="povrch mt-6 rounded-karta p-6">
-            <p className="font-medium text-zinc-900 dark:text-white">{a.emptyTitle}</p>
-            <p className="mt-2 max-w-[46rem] text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
-              {sazba(a.emptyText, lang)}
-            </p>
-          </div>
-        ) : (
+        {/* Bez výstupů se nic nevypisuje a sekce pokračuje rovnou nástroji.
+            Dřív tu byl prázdný stav („Ověřené postupy tu zatím nejsou…"), ale
+            spolu s nadpisem a poznámkou u nástrojů to byly TŘI omluvy za sebou,
+            než se čtenář dostal k něčemu použitelnému. Slib o tom, co se sem
+            dostane, nese `intro`; ten platí s výstupy i bez nich. */}
+        {vystupy.length > 0 && (
           <>
             <p className="mt-6 text-sm font-medium text-zinc-700 dark:text-zinc-300">
               {vystupy.length} {pocetSlovy(vystupy.length, a)}
