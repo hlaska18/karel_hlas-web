@@ -681,8 +681,94 @@
    a cíl webu sahá až tam. */
 .osa {
   position: relative;
+}
+
+/* Odsazení nese telo, ne .osa – prepinac tak zustava zarovnany vlevo
+   a nesedi zbytecne odsunuty od kraje sloupce. */
+.osa__telo {
+  position: relative;
   /* Místo pro kolejnici a tečky vlevo. */
   padding-left: 1.75rem;
+}
+
+/* ── Střídání skupin ──
+   Základní stav je BEZ střídání: obě skupiny pod sebou, přepínač schovaný.
+   Tohle vidí server, prohlížeč bez JS i každý, kdo má v systému omezený
+   pohyb. Střídání se jen PŘIDÁVÁ – proto nevzniká přeskok při hydrataci. */
+.osa__prepinace {
+  display: none;
+}
+.osa__panel + .osa__panel {
+  margin-top: 1.75rem;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .osa__prepinace {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 1.1rem;
+  }
+
+  /* Oba panely leží v jedné bunce mrizky, takze telo ma vysku toho vyssiho
+     a pri prepnuti se NIC nepohne. Kdyby se prepinaly zobrazenim, stranka by
+     pod osou poskakovala. */
+  .osa__panely {
+    display: grid;
+  }
+  .osa__panel {
+    grid-area: 1 / 1;
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(0.4rem);
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s ease,
+      visibility 0s 0.55s;
+  }
+  .osa__panel + .osa__panel {
+    margin-top: 0;
+  }
+  .osa__panel--aktivni {
+    opacity: 1;
+    visibility: visible;
+    transform: none;
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s ease,
+      visibility 0s;
+  }
+}
+
+.osa__prepinac {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  padding: 0.3rem 0.65rem;
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  font: inherit;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(113 113 122);
+  cursor: pointer;
+}
+.dark .osa__prepinac {
+  color: rgb(161 161 170);
+}
+.osa__prepinac--aktivni {
+  background: rgb(16 185 129 / 0.12);
+  color: rgb(4 120 87);
+}
+.dark .osa__prepinac--aktivni {
+  background: rgb(52 211 153 / 0.14);
+  color: rgb(52 211 153);
+}
+.osa__prepinac:focus-visible {
+  outline: 2px solid rgb(16 185 129);
+  outline-offset: 2px;
 }
 
 /* ── Kolejnice ── */
@@ -739,10 +825,6 @@
 }
 
 /* ── Skupiny ── */
-.osa__strana--praxe {
-  margin-top: 1.75rem;
-}
-
 .osa__titul {
   display: flex;
   align-items: center;
@@ -756,6 +838,16 @@
 }
 .dark .osa__titul {
   color: rgb(52 211 153);
+}
+
+/* Nadpis uvnitř panelu je druhopis toho, co už říká přepínač – schová se
+   tedy všude, kde je přepínač vidět. Musí to stát AŽ tady: dřív v souboru
+   by ho přebilo základní `display: flex` výše, protože specificita je
+   stejná a rozhoduje pořadí. */
+@media (prefers-reduced-motion: no-preference) {
+  .osa__titul {
+    display: none;
+  }
 }
 
 /* ── Položky ── */
