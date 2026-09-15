@@ -666,9 +666,21 @@
 }
 
 /* ─────────────────────────── Časová osa (O mně) ───────────────────────────
-   Studium nad osou, praxe pod ní, šířka pruhu nese délku období. Nahradila
-   dvě svislé krabice, které schovávaly, že jde o TÝŽ čas – překryv studia
-   a práce od roku 2022 je teď vidět.
+   Dvě podoby téhož: na širokém displeji osa se dvěma stranami (vzdělání
+   vlevo, praxe vpravo), na úzkém jeden tekoucí sloupec.
+
+   PROČ DVĚ STRANY. Magistr i SPŠ Tábor začínají rokem 2024. V jednom sloupci
+   se takové dvě položky nemají kam vyhnout – jednostranná verze se přetiskla
+   o 2 px a na 375 px o 73 px. Rozdělením na strany ten problém zaniká.
+
+   PROČ ÚZKÝ DISPLEJ NEPOLOHUJE PODLE ROKU. Pod 1024 px na dvě strany místo
+   není, takže by obě spadly do jednoho sloupce a srážka by se vrátila.
+   Položky tam proto normálně tečou pod sebou a roky nese popisek období.
+   Kolejnice, světlo i značka „nyní" zůstávají – pohyb se neztrácí.
+
+   POLOHY CHODÍ JAKO CSS PROMĚNNÉ (`--y`, `--h`, `--osa-vyska`). Kdyby je
+   komponenta psala rovnou do `top`/`height`, nešly by tady na úzkém vypnout
+   jinak než přes `!important`.
 
    Pohyb se PŘIDÁVÁ až při `prefers-reduced-motion: no-preference`, stejně
    jako u souhvězdí v AI Hubu: bez něj osa zůstane celá a jen stojí. Hýbe se
@@ -678,159 +690,116 @@
    a cíl webu sahá až tam. */
 .osa {
   position: relative;
-  margin-top: 3rem;
+  margin-top: 3.5rem;
+  /* Místo pro kolejnici vlevo. */
+  padding-left: 4.5rem;
 }
 
-.osa__stopa {
-  position: relative;
+@media (min-width: 1024px) {
+  .osa {
+    display: grid;
+    grid-template-columns: 1fr 5rem 1fr;
+    height: var(--osa-vyska);
+    padding-left: 0;
+  }
 }
+
+/* ── Nadpisy stran ── */
 .osa__titul {
-  margin-top: 0.75rem;
+  margin-bottom: 0.9rem;
   font-size: 0.7rem;
   font-weight: 600;
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: rgb(4 120 87);
-  margin-bottom: 0.5rem;
 }
 .dark .osa__titul {
   color: rgb(52 211 153);
 }
-.osa__stopa--nahore .osa__titul {
-  margin-top: 0;
-}
 
-/* Pod 768 px seznam, nad ním osa.
-   Vodorovná osa potřebuje šířku: na 375 px měly pruhy 57 px a text z nich
-   lezl ven (změřeno – u tří ze čtyř). Osa i s pohybem ale na mobilu ZŮSTÁVÁ,
-   jen se z pruhů stane seznam; jinak by menší displej přišel přesně o to,
-   kvůli čemu se to předělávalo. */
-.osa__pruhy {
-  position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
-}
-
-.osa__pruh {
-  border-radius: 0.75rem;
-  padding: 0.6rem 0.75rem;
-  background: rgb(16 185 129 / 0.1);
-  border: 1px solid rgb(16 185 129 / 0.25);
-  transition: background 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
-}
-.dark .osa__pruh {
-  background: rgb(16 185 129 / 0.12);
-  border-color: rgb(52 211 153 / 0.3);
-}
-.osa__pruh:hover {
-  background: rgb(16 185 129 / 0.18);
-  border-color: rgb(16 185 129 / 0.5);
-  transform: translateY(-2px);
-}
-
-@media (min-width: 768px) {
-  .osa__pruhy {
-    display: block;
-    height: 5.5rem;
-  }
-  .osa__pruh {
+@media (min-width: 1024px) {
+  /* Nadpisy sedí nad svou stranou, ne nad seznamem. */
+  .osa__titul {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: var(--levy);
-    width: var(--sirka);
-    overflow: hidden;
+    top: -2rem;
+    margin-bottom: 0;
+  }
+  .osa__strana--vlevo .osa__titul {
+    right: 0;
+    text-align: right;
+  }
+  .osa__strana--vpravo .osa__titul {
+    left: 0;
   }
 }
 
-.osa__pruh-obsah {
-  display: block;
-  min-width: 0;
+/* ── Osa uprostřed ── */
+.osa__stred {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 3.5rem;
+  width: 2px;
 }
-
-/* Rozsah letopočtů. Nad zlomem ho nese osa pod pruhy, takže by se opakoval. */
-.osa__obdobi {
-  display: block;
-  font-size: 0.65rem;
-  font-weight: 600;
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.04em;
-  color: rgb(4 120 87);
-  margin-bottom: 0.1rem;
-}
-.dark .osa__obdobi {
-  color: rgb(52 211 153);
-}
-@media (min-width: 768px) {
-  .osa__obdobi {
-    display: none;
+@media (min-width: 1024px) {
+  .osa__stred {
+    position: relative;
+    top: auto;
+    bottom: auto;
+    left: auto;
+    width: auto;
+    justify-self: center;
   }
 }
-.osa__misto {
-  display: block;
-  font-size: 0.8rem;
-  font-weight: 600;
-  line-height: 1.25;
-  color: rgb(24 24 27);
-}
-.dark .osa__misto {
-  color: rgb(250 250 250);
-}
-.osa__detail {
-  display: block;
-  margin-top: 0.15rem;
-  font-size: 0.7rem;
-  line-height: 1.3;
-  color: rgb(82 82 91);
-}
-.dark .osa__detail {
-  color: rgb(161 161 170);
-}
 
-/* ── Vlastní osa ── */
 .osa__linka {
-  position: relative;
-  height: 2px;
-  margin: 0.75rem 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 2px;
+  height: 100%;
   background: rgb(16 185 129 / 0.25);
-  overflow: visible;
 }
 .dark .osa__linka {
   background: rgb(52 211 153 / 0.25);
 }
+@media (min-width: 1024px) {
+  .osa__linka {
+    left: 50%;
+    margin-left: -1px;
+  }
+}
 
+/* Zářezy let dávají smysl jen tam, kde se polohuje podle roku. */
 .osa__tik {
-  position: absolute;
-  top: -3px;
-  width: 1px;
-  height: 8px;
-  background: rgb(16 185 129 / 0.35);
+  display: none;
 }
-.osa__tik--velky {
-  top: -5px;
-  width: 2px;
-  height: 12px;
-  background: rgb(5 150 105 / 0.8);
-}
-.dark .osa__tik {
-  background: rgb(52 211 153 / 0.35);
-}
-.dark .osa__tik--velky {
-  background: rgb(52 211 153 / 0.9);
+@media (min-width: 1024px) {
+  .osa__tik {
+    display: block;
+    position: absolute;
+    top: var(--y);
+    left: -4px;
+    width: 10px;
+    height: 1px;
+    background: rgb(16 185 129 / 0.4);
+  }
+  .dark .osa__tik {
+    background: rgb(52 211 153 / 0.4);
+  }
 }
 
-/* Světlo plynoucí po ose. Průhledné okraje, takže na koncích nevzniká hrana. */
+/* Světlo stékající po ose. Průhledné konce, ať na okrajích nevzniká hrana. */
 .osa__svetlo {
   position: absolute;
-  top: -1px;
-  left: 0;
-  width: 22%;
-  height: 4px;
+  left: -1px;
+  top: 0;
+  width: 4px;
+  height: 20%;
   border-radius: 999px;
   opacity: 0;
   background: linear-gradient(
-    90deg,
+    180deg,
     rgb(16 185 129 / 0) 0%,
     rgb(16 185 129 / 0.9) 50%,
     rgb(16 185 129 / 0) 100%
@@ -838,56 +807,168 @@
 }
 .dark .osa__svetlo {
   background: linear-gradient(
-    90deg,
+    180deg,
     rgb(52 211 153 / 0) 0%,
     rgb(52 211 153 / 0.9) 50%,
     rgb(52 211 153 / 0) 100%
   );
 }
 
-/* Značka „nyní" – konec osy, který pokračuje dál. */
+/* Na úzkém sedí značka „nyní" na konci kolejnice, na širokém na letopočtu. */
 .osa__nyni {
   position: absolute;
-  top: -5px;
+  left: -5px;
+  bottom: 0;
+  margin-bottom: -6px;
   width: 12px;
   height: 12px;
-  margin-left: -5px;
   border-radius: 999px;
   background: rgb(5 150 105);
 }
 .dark .osa__nyni {
   background: rgb(52 211 153);
 }
-
-.osa__roky {
-  position: relative;
-  height: 1.1rem;
+@media (min-width: 1024px) {
+  .osa__nyni {
+    top: var(--y);
+    bottom: auto;
+    margin-top: -6px;
+    margin-bottom: 0;
+  }
 }
+
+/* ── Letopočty ── */
 .osa__rok {
-  position: absolute;
-  top: 0;
-  transform: translateX(-50%);
-  font-size: 0.65rem;
-  font-variant-numeric: tabular-nums;
-  color: rgb(113 113 122);
   display: none;
 }
-.dark .osa__rok {
-  color: rgb(113 113 122);
-}
-/* Na mobilu jen krajní roky – jedenáct letopočtů vedle sebe by se slilo. */
-.osa__rok--krajni {
-  display: block;
-  font-weight: 600;
-  color: rgb(63 63 70);
-}
-.dark .osa__rok--krajni {
-  color: rgb(212 212 216);
-}
-@media (min-width: 640px) {
+@media (min-width: 1024px) {
   .osa__rok {
     display: block;
+    position: absolute;
+    top: var(--y);
+    left: 50%;
+    margin-left: -1.6rem;
+    width: 3.2rem;
+    padding: 0.1rem 0;
+    transform: translateY(-50%);
+    background: var(--bg-soft);
+    font-size: 0.65rem;
+    font-variant-numeric: tabular-nums;
+    text-align: center;
+    color: rgb(113 113 122);
   }
+  .osa__rok--nyni {
+    font-weight: 600;
+    color: rgb(4 120 87);
+  }
+  .dark .osa__rok--nyni {
+    color: rgb(52 211 153);
+  }
+}
+
+/* ── Strany ── */
+.osa__strana {
+  position: relative;
+}
+/* Na úzkém jde praxe pod vzdělání, ne vedle něj. */
+.osa__strana--vpravo {
+  margin-top: 2.25rem;
+}
+@media (min-width: 1024px) {
+  .osa__strana--vpravo {
+    margin-top: 0;
+  }
+}
+
+.osa__polozka {
+  display: flex;
+  gap: 0.6rem;
+}
+.osa__polozka + .osa__polozka {
+  margin-top: 1.1rem;
+}
+@media (min-width: 1024px) {
+  .osa__polozka {
+    position: absolute;
+    top: var(--y);
+    left: 0;
+    right: 0;
+  }
+  .osa__polozka + .osa__polozka {
+    margin-top: 0;
+  }
+  /* Vlevo se řadí od osy doleva, takže pruh je vpravo a text zarovnaný
+     doprava – obě strany tak „ukazují" na osu. */
+  .osa__strana--vlevo .osa__polozka {
+    flex-direction: row-reverse;
+    text-align: right;
+  }
+}
+
+/* Studium má pruh světlejší než praxe – jsou to dva druhy období a mají se
+   dát rozeznat i bez čtení popisku. Světlejší ale neznamená neviditelný:
+   `0.4` na tmavém pozadí čte jako „pruh tu chybí", ne jako „pruh je jiný",
+   takže rozdíl nese `0.62` proti `0.85`.
+
+   Výšku dostane pruh jen tam, kde se polohuje podle roku; na úzkém se
+   roztáhne na výšku textu. */
+.osa__pruh {
+  flex-shrink: 0;
+  width: 0.3rem;
+  border-radius: 999px;
+  background: rgb(16 185 129 / 0.6);
+}
+.dark .osa__pruh {
+  background: rgb(52 211 153 / 0.62);
+}
+.osa__strana--vpravo .osa__pruh {
+  background: rgb(5 150 105 / 0.85);
+}
+.dark .osa__strana--vpravo .osa__pruh {
+  background: rgb(52 211 153 / 0.85);
+}
+@media (min-width: 1024px) {
+  .osa__pruh {
+    height: var(--h);
+  }
+}
+
+.osa__text {
+  display: block;
+  min-width: 0;
+  padding-top: 0.05rem;
+}
+.osa__obdobi {
+  display: block;
+  font-size: 0.65rem;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.04em;
+  color: rgb(4 120 87);
+}
+.dark .osa__obdobi {
+  color: rgb(52 211 153);
+}
+.osa__misto {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.9rem;
+  font-weight: 600;
+  line-height: 1.3;
+  color: rgb(24 24 27);
+}
+.dark .osa__misto {
+  color: rgb(250 250 250);
+}
+.osa__detail {
+  display: block;
+  margin-top: 0.1rem;
+  font-size: 0.78rem;
+  line-height: 1.35;
+  color: rgb(82 82 91);
+}
+.dark .osa__detail {
+  color: rgb(161 161 170);
 }
 
 @media (prefers-reduced-motion: no-preference) {
@@ -899,9 +980,19 @@
   }
 }
 
+/* Dráha je v procentech VLASTNÍ výšky světla, ne osy – a světlo je vysoké
+   20 % osy. Proto `0 %` = horní hrana světla na začátku osy a `400 %` =
+   dolní hrana na jejím konci: světlo je tak uvnitř osy v KAŽDÉM okamžiku
+   a nemůže na nic přetéct. Že se na koncích objeví a zmizí, obstará
+   `opacity`, ne vyjetí z osy.
+
+   Původní `-110 % → 600 %` bylo počítané špatně. Světlo vyjíždělo 52 px nad
+   osu (přes nadpisy VZDĚLÁNÍ/PRAXE) a při 88 % dráhy, kdy je ještě plně
+   vidět, leželo na 103 % její délky – zelená stopa pak vybíhala pod osu přes
+   nadpis „Certifikáty a odznaky". Změřeno, ne odhadnuto. */
 @keyframes osa-svetlo {
   0% {
-    transform: translateX(-110%);
+    transform: translateY(0);
     opacity: 0;
   }
   12% {
@@ -911,7 +1002,7 @@
     opacity: 1;
   }
   100% {
-    transform: translateX(560%);
+    transform: translateY(400%);
     opacity: 0;
   }
 }

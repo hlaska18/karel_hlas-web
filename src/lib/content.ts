@@ -1354,11 +1354,18 @@ export const t: Record<Lang, Dict> = {
           detail: "Technické lyceum – programování a robotika",
         },
         {
-          period: "2019–2026",
+          period: "2019–2022",
           od: 2019,
+          do: 2022,
+          place: "Pedagogická fakulta JČU",
+          detail: "Bc. – učitelství informatiky a angličtiny pro 2. stupeň",
+        },
+        {
+          period: "2024–2026",
+          od: 2024,
           do: 2026,
           place: "Pedagogická fakulta JČU",
-          detail: "Bc. i Mgr. – učitelství informatiky a angličtiny pro 2. stupeň",
+          detail: "Mgr. – učitelství informatiky a angličtiny pro 2. stupeň",
         },
       ],
       experience: [
@@ -1893,11 +1900,18 @@ export const t: Record<Lang, Dict> = {
           detail: "Technical Lyceum – programming & robotics",
         },
         {
-          period: "2019–2026",
+          period: "2019–2022",
           od: 2019,
+          do: 2022,
+          place: "Faculty of Education, University of South Bohemia",
+          detail: "Bachelor's – teaching Computer Science & English, lower secondary",
+        },
+        {
+          period: "2024–2026",
+          od: 2024,
           do: 2026,
           place: "Faculty of Education, University of South Bohemia",
-          detail: "Bachelor's & Master's – teaching Computer Science & English, lower secondary",
+          detail: "Master's – teaching Computer Science & English, lower secondary",
         },
       ],
       experience: [

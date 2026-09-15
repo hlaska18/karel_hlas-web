@@ -17,10 +17,9 @@ export function About() {
   return (
     <section id="about" className="sekce">
       <div className="container-page">
-        {/* Jeden sloupec. Dřív tu byla mřížka [1.45fr 0.55fr] s časovou osou
-            v tom úzkém pravém – jenže na 340 px se jedenáct let vodorovně
-            nevejde a sloupce se rozcházely (změřeno 2601 proti 572 px).
-            Osa je teď pod fotkou přes celou šířku. */}
+        {/* Jeden sloupec. Časová osa je dvoustranná (vzdělání vlevo, praxe
+            vpravo) a na to potřebuje celou šířku: v pravém sloupci mřížky měla
+            strana ~135 px, kdežto detail se na jeden řádek vejde od 296 px. */}
         <div>
           <div className="flex flex-col">
             <SectionHeader
