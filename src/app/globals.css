@@ -666,130 +666,39 @@
 }
 
 /* ─────────────────────────── Časová osa (O mně) ───────────────────────────
-   Dvě podoby téhož: na širokém displeji osa se dvěma stranami (vzdělání
-   vlevo, praxe vpravo), na úzkém jeden tekoucí sloupec.
-
-   PROČ DVĚ STRANY. Magistr i SPŠ Tábor začínají rokem 2024. V jednom sloupci
-   se takové dvě položky nemají kam vyhnout – jednostranná verze se přetiskla
-   o 2 px a na 375 px o 73 px. Rozdělením na strany ten problém zaniká.
-
-   PROČ ÚZKÝ DISPLEJ NEPOLOHUJE PODLE ROKU. Pod 1024 px na dvě strany místo
-   není, takže by obě spadly do jednoho sloupce a srážka by se vrátila.
-   Položky tam proto normálně tečou pod sebou a roky nese popisek období.
-   Kolejnice, světlo i značka „nyní" zůstávají – pohyb se neztrácí.
-
-   POLOHY CHODÍ JAKO CSS PROMĚNNÉ (`--y`, `--h`, `--osa-vyska`). Kdyby je
-   komponenta psala rovnou do `top`/`height`, nešly by tady na úzkém vypnout
-   jinak než přes `!important`.
+   Svislá kolejnice v úzkém pravém sloupci mřížky – přesně tam, kde byly
+   původní dlaždice Vzdělání/Praxe. Sloupec měří ~286 px, takže se tu nedá
+   dělit na dvě strany ani sázet položky podle letopočtu: magistr a SPŠ Tábor
+   začínají týmž rokem 2024 a v jednom sloupci na sebe vždycky nalezly
+   (změřeno -2 px, na úzkém displeji -73 px). Položky proto tečou pod sebou
+   a roky nese popisek období.
 
    Pohyb se PŘIDÁVÁ až při `prefers-reduced-motion: no-preference`, stejně
-   jako u souhvězdí v AI Hubu: bez něj osa zůstane celá a jen stojí. Hýbe se
-   výhradně `opacity` a `transform`, takže to jede na GPU.
+   jako u souhvězdí v AI Hubu: bez něj kolejnice zůstane celá a jen stojí.
+   Hýbe se výhradně `opacity` a `transform`, takže to jede na GPU.
 
    Bez `min()`/`clamp()` – matematické funkce neumí Chrome 64 ani Firefox 67,
    a cíl webu sahá až tam. */
 .osa {
   position: relative;
-  margin-top: 3.5rem;
-  /* Místo pro kolejnici vlevo. */
-  padding-left: 4.5rem;
+  /* Místo pro kolejnici a tečky vlevo. */
+  padding-left: 1.75rem;
 }
 
-@media (min-width: 1024px) {
-  .osa {
-    display: grid;
-    grid-template-columns: 1fr 5rem 1fr;
-    height: var(--osa-vyska);
-    padding-left: 0;
-  }
-}
-
-/* ── Nadpisy stran ── */
-.osa__titul {
-  margin-bottom: 0.9rem;
-  font-size: 0.7rem;
-  font-weight: 600;
-  letter-spacing: 0.12em;
-  text-transform: uppercase;
-  color: rgb(4 120 87);
-}
-.dark .osa__titul {
-  color: rgb(52 211 153);
-}
-
-@media (min-width: 1024px) {
-  /* Nadpisy sedí nad svou stranou, ne nad seznamem. */
-  .osa__titul {
-    position: absolute;
-    top: -2rem;
-    margin-bottom: 0;
-  }
-  .osa__strana--vlevo .osa__titul {
-    right: 0;
-    text-align: right;
-  }
-  .osa__strana--vpravo .osa__titul {
-    left: 0;
-  }
-}
-
-/* ── Osa uprostřed ── */
-.osa__stred {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 3.5rem;
-  width: 2px;
-}
-@media (min-width: 1024px) {
-  .osa__stred {
-    position: relative;
-    top: auto;
-    bottom: auto;
-    left: auto;
-    width: auto;
-    justify-self: center;
-  }
-}
-
+/* ── Kolejnice ── */
 .osa__linka {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0.4rem;
+  bottom: 0.4rem;
+  left: 0.375rem;
   width: 2px;
-  height: 100%;
   background: rgb(16 185 129 / 0.25);
 }
 .dark .osa__linka {
   background: rgb(52 211 153 / 0.25);
 }
-@media (min-width: 1024px) {
-  .osa__linka {
-    left: 50%;
-    margin-left: -1px;
-  }
-}
 
-/* Zářezy let dávají smysl jen tam, kde se polohuje podle roku. */
-.osa__tik {
-  display: none;
-}
-@media (min-width: 1024px) {
-  .osa__tik {
-    display: block;
-    position: absolute;
-    top: var(--y);
-    left: -4px;
-    width: 10px;
-    height: 1px;
-    background: rgb(16 185 129 / 0.4);
-  }
-  .dark .osa__tik {
-    background: rgb(52 211 153 / 0.4);
-  }
-}
-
-/* Světlo stékající po ose. Průhledné konce, ať na okrajích nevzniká hrana. */
+/* Světlo stékající po kolejnici. Průhledné konce, ať nevzniká hrana. */
 .osa__svetlo {
   position: absolute;
   left: -1px;
@@ -814,7 +723,7 @@
   );
 }
 
-/* Na úzkém sedí značka „nyní" na konci kolejnice, na širokém na letopočtu. */
+/* Značka „nyní" dosedá na konec kolejnice. */
 .osa__nyni {
   position: absolute;
   left: -5px;
@@ -828,116 +737,62 @@
 .dark .osa__nyni {
   background: rgb(52 211 153);
 }
-@media (min-width: 1024px) {
-  .osa__nyni {
-    top: var(--y);
-    bottom: auto;
-    margin-top: -6px;
-    margin-bottom: 0;
-  }
+
+/* ── Skupiny ── */
+.osa__strana--praxe {
+  margin-top: 1.75rem;
 }
 
-/* ── Letopočty ── */
-.osa__rok {
-  display: none;
-}
-@media (min-width: 1024px) {
-  .osa__rok {
-    display: block;
-    position: absolute;
-    top: var(--y);
-    left: 50%;
-    margin-left: -1.6rem;
-    width: 3.2rem;
-    padding: 0.1rem 0;
-    transform: translateY(-50%);
-    background: var(--bg-soft);
-    font-size: 0.65rem;
-    font-variant-numeric: tabular-nums;
-    text-align: center;
-    color: rgb(113 113 122);
-  }
-  .osa__rok--nyni {
-    font-weight: 600;
-    color: rgb(4 120 87);
-  }
-  .dark .osa__rok--nyni {
-    color: rgb(52 211 153);
-  }
-}
-
-/* ── Strany ── */
-.osa__strana {
-  position: relative;
-}
-/* Na úzkém jde praxe pod vzdělání, ne vedle něj. */
-.osa__strana--vpravo {
-  margin-top: 2.25rem;
-}
-@media (min-width: 1024px) {
-  .osa__strana--vpravo {
-    margin-top: 0;
-  }
-}
-
-.osa__polozka {
+.osa__titul {
   display: flex;
-  gap: 0.6rem;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgb(4 120 87);
+}
+.dark .osa__titul {
+  color: rgb(52 211 153);
+}
+
+/* ── Položky ── */
+.osa__polozka {
+  position: relative;
 }
 .osa__polozka + .osa__polozka {
   margin-top: 1.1rem;
 }
-@media (min-width: 1024px) {
-  .osa__polozka {
-    position: absolute;
-    top: var(--y);
-    left: 0;
-    right: 0;
-  }
-  .osa__polozka + .osa__polozka {
-    margin-top: 0;
-  }
-  /* Vlevo se řadí od osy doleva, takže pruh je vpravo a text zarovnaný
-     doprava – obě strany tak „ukazují" na osu. */
-  .osa__strana--vlevo .osa__polozka {
-    flex-direction: row-reverse;
-    text-align: right;
-  }
-}
 
-/* Studium má pruh světlejší než praxe – jsou to dva druhy období a mají se
-   dát rozeznat i bez čtení popisku. Světlejší ale neznamená neviditelný:
-   `0.4` na tmavém pozadí čte jako „pruh tu chybí", ne jako „pruh je jiný",
-   takže rozdíl nese `0.62` proti `0.85`.
-
-   Výšku dostane pruh jen tam, kde se polohuje podle roku; na úzkém se
-   roztáhne na výšku textu. */
-.osa__pruh {
-  flex-shrink: 0;
-  width: 0.3rem;
+/* Tečka sedí na kolejnici. Kroužek v barvě pozadí ji z kolejnice „vykousne",
+   takže čára tečkou neprosvítá – stejný trik měly původní dlaždice. */
+.osa__tecka {
+  position: absolute;
+  top: 0.3rem;
+  /* Aby střed tečky sedl na střed kolejnice: kolejnice má střed 7 px od
+     levého okraje osy, položka začíná na 28 px (padding), tečka je 9,6 px
+     široká → 7 - 4,8 - 28 = -25,8 px. Změřeno, ne odhadnuto. */
+  left: -1.6rem;
+  width: 0.6rem;
+  height: 0.6rem;
   border-radius: 999px;
-  background: rgb(16 185 129 / 0.6);
+  background: rgb(16 185 129);
+  box-shadow: 0 0 0 4px var(--bg-soft);
 }
-.dark .osa__pruh {
-  background: rgb(52 211 153 / 0.62);
+.dark .osa__tecka {
+  background: rgb(52 211 153);
 }
-.osa__strana--vpravo .osa__pruh {
-  background: rgb(5 150 105 / 0.85);
+/* Studium má tečku dutou, praxe plnou – rozdíl je vidět i bez čtení nadpisu. */
+.osa__strana--studium .osa__tecka {
+  background: var(--bg-soft);
+  border: 2px solid rgb(16 185 129);
 }
-.dark .osa__strana--vpravo .osa__pruh {
-  background: rgb(52 211 153 / 0.85);
-}
-@media (min-width: 1024px) {
-  .osa__pruh {
-    height: var(--h);
-  }
+.dark .osa__strana--studium .osa__tecka {
+  border-color: rgb(52 211 153);
 }
 
-.osa__text {
-  display: block;
-  min-width: 0;
-  padding-top: 0.05rem;
-}
 .osa__obdobi {
   display: block;
   font-size: 0.65rem;
@@ -962,9 +817,9 @@
 }
 .osa__detail {
   display: block;
-  margin-top: 0.1rem;
+  margin-top: 0.15rem;
   font-size: 0.78rem;
-  line-height: 1.35;
+  line-height: 1.4;
   color: rgb(82 82 91);
 }
 .dark .osa__detail {
@@ -980,16 +835,15 @@
   }
 }
 
-/* Dráha je v procentech VLASTNÍ výšky světla, ne osy – a světlo je vysoké
-   20 % osy. Proto `0 %` = horní hrana světla na začátku osy a `400 %` =
-   dolní hrana na jejím konci: světlo je tak uvnitř osy v KAŽDÉM okamžiku
+/* Dráha je v procentech VLASTNÍ výšky světla, ne kolejnice – a světlo je
+   vysoké 20 % kolejnice. Proto `0 %` = horní hrana světla na jejím začátku
+   a `400 %` = dolní hrana na jejím konci: světlo je uvnitř v KAŽDÉM okamžiku
    a nemůže na nic přetéct. Že se na koncích objeví a zmizí, obstará
-   `opacity`, ne vyjetí z osy.
+   `opacity`, ne vyjetí z kolejnice.
 
-   Původní `-110 % → 600 %` bylo počítané špatně. Světlo vyjíždělo 52 px nad
-   osu (přes nadpisy VZDĚLÁNÍ/PRAXE) a při 88 % dráhy, kdy je ještě plně
-   vidět, leželo na 103 % její délky – zelená stopa pak vybíhala pod osu přes
-   nadpis „Certifikáty a odznaky". Změřeno, ne odhadnuto. */
+   Původní `-110 % → 600 %` bylo počítané špatně: při 88 % dráhy, kdy je
+   světlo ještě plně vidět, leželo na 103 % délky, takže zelená stopa
+   vybíhala pod osu přes nadpis „Certifikáty a odznaky". Změřeno. */
 @keyframes osa-svetlo {
   0% {
     transform: translateY(0);

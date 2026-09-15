@@ -1,7 +1,6 @@
 "use client";
 
 import Image from "next/image";
-import { GraduationCap, Briefcase } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { BADGES, SITE } from "@/lib/content";
@@ -17,10 +16,10 @@ export function About() {
   return (
     <section id="about" className="sekce">
       <div className="container-page">
-        {/* Jeden sloupec. Časová osa je dvoustranná (vzdělání vlevo, praxe
-            vpravo) a na to potřebuje celou šířku: v pravém sloupci mřížky měla
-            strana ~135 px, kdežto detail se na jeden řádek vejde od 296 px. */}
-        <div>
+        {/* Nadpis je uvnitř levého sloupce, aby pravý sloupec mohl začít nahoře
+            u nadpisu a skončit dole u odznaků. Kdyby byl nad mřížkou, časová
+            osa by začínala až pod ním a na široké obrazovce by „ujížděla". */}
+        <div className="grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
           <div className="flex flex-col">
             <SectionHeader
               no="04"
@@ -49,11 +48,6 @@ export function About() {
                 ))}
               </Reveal>
             </div>
-
-            {/* Časová osa studia a praxe – přes celou šířku pod fotkou a bio. */}
-            <Reveal delay={0.12}>
-              <CasovaOsa />
-            </Reveal>
 
             {/* Certifikáty a odznaky – přes celou šířku pod fotkou a bio. */}
             {BADGES.length > 0 && (
@@ -100,6 +94,15 @@ export function About() {
                 </Reveal>
               </div>
             )}
+          </div>
+
+          {/* Časová osa lícuje nahoře s nadpisem. Dole ji NEROZTAHUJEME:
+              obsah obou sloupců je různě vysoký, takže vynucené zarovnání
+              spodků jen přesune prázdno jinam. Sloupec skončí, kde skončí. */}
+          <div className="lg:mt-9">
+            <Reveal delay={0.1}>
+              <CasovaOsa />
+            </Reveal>
           </div>
         </div>
 
