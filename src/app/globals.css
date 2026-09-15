@@ -762,10 +762,16 @@
 .js-reveal .osa__panely {
   display: grid;
 }
+/* Prolnutí zůstává i při omezeném pohybu – měknoucí průhlednost nic
+   neposouvá, a právě posun je to, co dělá lidem s vestibulárními potížemi
+   zle. Za `no-preference` je proto schované jen to POSOUVÁNÍ. */
 .js-reveal .osa__panel {
   grid-area: 1 / 1;
   opacity: 0;
   visibility: hidden;
+  transition:
+    opacity 0.55s ease,
+    visibility 0s 0.55s;
 }
 .js-reveal .osa__panel + .osa__panel {
   margin-top: 0;
@@ -773,9 +779,11 @@
 .js-reveal .osa__panel--aktivni {
   opacity: 1;
   visibility: visible;
+  transition:
+    opacity 0.55s ease,
+    visibility 0s;
 }
 
-/* Prolnutí je pohyb – bez něj se panely prostě prostřídají naráz. */
 @media (prefers-reduced-motion: no-preference) {
   .js-reveal .osa__panel {
     transform: translateY(0.4rem);

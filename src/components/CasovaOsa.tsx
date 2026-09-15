@@ -22,12 +22,17 @@ import { useLang } from "@/lib/i18n";
  * neřeší (změřeno -2 px, na úzkém displeji -73 px). Položky proto tečou pod
  * sebou a roky nese popisek období.
  *
- * ROZHODUJE CSS, NE JAVASCRIPT. Zda se střídá, určuje `@media
- * (prefers-reduced-motion: no-preference)` v `globals.css`, ne tenhle
- * soubor. Základní stav – tedy i to, co vyjde ze serveru a co uvidí někdo
- * s vypnutým pohybem nebo bez JS – jsou OBĚ skupiny pod sebou a přepínač
- * schovaný. Střídání se jen PŘIDÁVÁ. Díky tomu nevzniká ani přeskok při
- * hydrataci, ani nesoulad serveru s prohlížečem.
+ * CO SE VÁŽE NA CO. Přepínač a překrývání panelů se řídí třídou
+ * `.js-reveal` na `<html>`, tedy tím, jestli běží JavaScript – tu třídu
+ * nasazuje vložený skript v `layout.tsx` ještě před vykreslením, takže nic
+ * neposkočí a bez JS zůstanou obě skupiny čitelné pod sebou.
+ *
+ * Střídání běží i při omezeném pohybu a prolíná se průhledností; za
+ * `prefers-reduced-motion: no-preference` je schované jen POSOUVÁNÍ panelů
+ * (a v `globals.css` světlo po kolejnici s tepem značky „nyní"). Posun je
+ * to, co dělá lidem s vestibulárními potížemi zle, ne měknoucí
+ * průhlednost. Že se obsah mění sám, je v pořádku potud, pokud jde
+ * zastavit – a jde, viz níže.
  *
  * DÁ SE ZASTAVIT. Samo se to přepíná jen tak dlouho, dokud do toho někdo
  * nezasáhne: najetí myší nebo klávesnicí střídání pozastaví a kliknutí na
@@ -52,9 +57,6 @@ export function CasovaOsa() {
 
   useEffect(() => {
     if (vybral || pauza) return;
-    // Bez JS a při omezeném pohybu se stejně zobrazí obě skupiny, takže
-    // časovač by jen zbytečně tikal.
-    if (!window.matchMedia("(prefers-reduced-motion: no-preference)").matches) return;
     const id = window.setInterval(() => setAktivni((i) => (i + 1) % 2), STRIDANI_MS);
     return () => window.clearInterval(id);
   }, [vybral, pauza]);
