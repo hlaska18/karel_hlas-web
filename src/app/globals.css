@@ -723,7 +723,13 @@
    a nesedi zbytecne odsunuty od kraje sloupce. */
 .osa__telo {
   position: relative;
-  /* Místo pro kolejnici a tečky vlevo. */
+}
+
+/* Odsazení i kotva přímky sedí na PANELU, ne na těle ani na mřížce: přímka
+   má sahat jen tam, kam sahají body té které skupiny. */
+.osa__panel {
+  position: relative;
+  /* Místo pro přímku a body vlevo. */
   padding-left: 1.75rem;
 }
 
@@ -767,6 +773,10 @@
    zle. Za `no-preference` je proto schované jen to POSOUVÁNÍ. */
 .js-reveal .osa__panel {
   grid-area: 1 / 1;
+  /* Bez `start` by se panel roztáhl na výšku buňky (tedy té vyšší skupiny)
+     a přímka Praxe by přečnívala o 142 px. Buňka si výšku drží sama, takže
+     se tím nic neposune. */
+  align-self: start;
   opacity: 0;
   visibility: hidden;
   transition:
@@ -871,21 +881,6 @@
   );
 }
 
-/* Značka „nyní" dosedá na konec kolejnice. */
-.osa__nyni {
-  position: absolute;
-  left: -5px;
-  bottom: 0;
-  margin-bottom: -6px;
-  width: 12px;
-  height: 12px;
-  border-radius: 999px;
-  background: rgb(5 150 105);
-}
-.dark .osa__nyni {
-  background: rgb(52 211 153);
-}
-
 /* ── Skupiny ── */
 .osa__titul {
   display: flex;
@@ -981,9 +976,6 @@
   .osa__svetlo {
     animation: osa-svetlo 9s linear infinite;
   }
-  .osa__nyni {
-    animation: osa-tep 3.2s ease-in-out infinite;
-  }
 }
 
 /* Dráha je v procentech VLASTNÍ výšky světla, ne kolejnice – a světlo je
@@ -1009,17 +1001,5 @@
   100% {
     transform: translateY(400%);
     opacity: 0;
-  }
-}
-
-@keyframes osa-tep {
-  0%,
-  100% {
-    opacity: 0.55;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.25);
   }
 }

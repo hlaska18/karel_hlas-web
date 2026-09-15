@@ -111,12 +111,6 @@ export function CasovaOsa() {
       </div>
 
       <div className="osa__telo">
-        {/* Kolejnice vede přes celé tělo, aby to byl jeden čas, ne dva seznamy. */}
-        <div className="osa__linka">
-          <span className="osa__svetlo" />
-          <span className="osa__nyni" />
-        </div>
-
         <div className="osa__panely">
           {skupiny.map((s, i) => (
             <div
@@ -125,6 +119,20 @@ export function CasovaOsa() {
                 i === aktivni ? " osa__panel--aktivni" : ""
               }`}
             >
+              {/* Přímka má svou skupinu, ne celý blok: sahá přesně od prvního
+                  bodu k poslednímu. Když vedla přes celé tělo, zbývalo pod
+                  posledním bodem 148 px holé čáry, a u Praxe – která má jen
+                  dvě položky – dokonce 142 px. Přímka pak vypadala, že někam
+                  pokračuje a nedopadne.
+
+                  Na jejím konci sedělo ještě kolečko „nyní". To dávalo smysl,
+                  dokud se sázelo podle letopočtů a stál vedle něj popisek;
+                  v tekoucím seznamu z něj zbyl puntík, který neoznačoval nic.
+                  „Nyní" je dnes v popisku posledního období. */}
+              <div className="osa__linka">
+                <span className="osa__svetlo" />
+              </div>
+
               {/* Nadpis uvnitř panelu je pro případ, kdy se nestřídá a přepínač
                   je schovaný – jinak by skupiny nebyly rozlišené. */}
               <p className="osa__titul">
