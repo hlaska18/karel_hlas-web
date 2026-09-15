@@ -22,9 +22,16 @@
  * pro každou třídu vlastní vstup.
  */
 export const KODY: readonly string[] = [
+  // Společný kód. Zůstává – kdo ho zná, má dál vejít.
   "WIN11",
-  // "1A-2026",
-  // "2B-2026",
+
+  // Kódy tříd pro školní rok 2026/27. Značky oborů jsou tytéž, jaké používá
+  // banka materiálů (`public/materialy/1L`, `1S`, `1P`), takže je netřeba
+  // si pamatovat dvojí. Nová třída = jeden řádek sem a nahrát web.
+  "1LA-2026", // Technické lyceum A
+  "1LB-2026", // Technické lyceum B
+  "1S-2026", // Strojírenství
+  "1P-2026", // Pozemní stavitelství
 ];
 
 /**
