@@ -679,8 +679,44 @@
 
    Bez `min()`/`clamp()` – matematické funkce neumí Chrome 64 ani Firefox 67,
    a cíl webu sahá až tam. */
+/* Fotka v sekci O mně a časová osa vedle ní mají být stejně vysoké – Karel
+   je chce lícovat. Výška bydlí v jedné proměnné, kterou čtou obě, takže se
+   nemůžou rozejít. Vychází z fotky: 20rem (320 px) šířky krát poměr
+   733:1100 dá 480 px, tedy 30rem. */
+:root {
+  --foto-vyska: 30rem;
+}
+
+.foto-o-mne {
+  height: auto;
+}
+
 .osa {
   position: relative;
+}
+
+@media (min-width: 1024px) {
+  .foto-o-mne {
+    height: var(--foto-vyska);
+  }
+
+  /* `min-height`, ne `height`: při omezeném pohybu se ukazují OBĚ skupiny
+     pod sebou a ty jsou o kousek vyšší než fotka. S pevnou výškou by se
+     ořízly, takhle osa jen o ten kousek povyroste. */
+  .osa {
+    display: flex;
+    flex-direction: column;
+    min-height: var(--foto-vyska);
+  }
+  /* Tělo dobere zbytek výšky a obsah v něm sedí na střed – kolejnice tak
+     lícuje s fotkou po celé délce a prázdno se rozdělí nad a pod, místo aby
+     zůstalo jako pahýl dole. */
+  .osa__telo {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
 }
 
 /* Odsazení nese telo, ne .osa – prepinac tak zustava zarovnany vlevo

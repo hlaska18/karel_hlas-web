@@ -16,18 +16,22 @@ export function About() {
   return (
     <section id="about" className="sekce">
       <div className="container-page">
-        {/* Nadpis je uvnitř levého sloupce, aby pravý sloupec mohl začít nahoře
-            u nadpisu a skončit dole u odznaků. Kdyby byl nad mřížkou, časová
-            osa by začínala až pod ním a na široké obrazovce by „ujížděla". */}
+        {/* Nadpis je NAD mřížkou, ne uvnitř levého sloupce. Karel chce, aby
+            osa lícovala s fotkou – a to jde spolehlivě jen tehdy, když oba
+            sloupce začínají na stejné výšce a oba si od ní odsadí stejně
+            (`mt-12`). Dokud byl nadpis uvnitř levého sloupce, musel by se
+            pravý odsazovat o výšku nadpisu, která se mění s jazykem
+            i šířkou okna – tedy konstantou, která se dřív nebo později
+            rozejde. */}
+        <SectionHeader
+          no="04"
+          kicker={a.kicker}
+          heading={a.heading}
+          headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-nadpis text-balance sm:text-4xl"
+        />
+
         <div className="grid gap-12 lg:grid-cols-[1.45fr_0.55fr]">
           <div className="flex flex-col">
-            <SectionHeader
-              no="04"
-              kicker={a.kicker}
-              heading={a.heading}
-              headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-nadpis text-balance sm:text-4xl"
-            />
-
             {/* Fotka + bio vedle sebe (na mobilu pod sebou). */}
             <div className="mt-12 flex flex-col gap-7 sm:flex-row sm:items-center sm:gap-10">
               <Reveal delay={0.05} className="shrink-0">
@@ -36,7 +40,7 @@ export function About() {
                   alt={SITE.fullName}
                   width={733}
                   height={1100}
-                  className="h-auto w-56 rounded-karta object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-80"
+                  className="foto-o-mne w-56 rounded-karta object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-80"
                 />
               </Reveal>
               <Reveal
@@ -99,7 +103,7 @@ export function About() {
           {/* Časová osa lícuje nahoře s nadpisem. Dole ji NEROZTAHUJEME:
               obsah obou sloupců je různě vysoký, takže vynucené zarovnání
               spodků jen přesune prázdno jinam. Sloupec skončí, kde skončí. */}
-          <div className="lg:mt-9">
+          <div className="lg:mt-12">
             <Reveal delay={0.1}>
               <CasovaOsa />
             </Reveal>
