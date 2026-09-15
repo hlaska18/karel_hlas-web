@@ -728,9 +728,21 @@
 }
 
 /* ── Střídání skupin ──
-   Základní stav je BEZ střídání: obě skupiny pod sebou, přepínač schovaný.
-   Tohle vidí server, prohlížeč bez JS i každý, kdo má v systému omezený
-   pohyb. Střídání se jen PŘIDÁVÁ – proto nevzniká přeskok při hydrataci. */
+   Rozlišují se tu DVĚ různé věci, které jsem si zprvu spletl do jedné:
+
+     PŘEPÍNAČ je ovládací prvek, ne animace. Váže se na `.js-reveal`, tedy
+     na to, jestli vůbec běží JavaScript (třídu nasazuje vložený skript
+     v `layout.tsx` ještě před vykreslením, takže nic neposkočí). Kdo má
+     v systému omezený pohyb, si tedy pořád může přepnout sám – jen se mu
+     nic nehýbe. Schovat funkční tlačítko jen proto, že si někdo vypnul
+     animace, je chyba; přesně tohle Karel viděl na Windows.
+
+     SAMOČINNÉ STŘÍDÁNÍ a prolínání jsou pohyb, a ty se přidávají až při
+     `prefers-reduced-motion: no-preference` (časovač hlídá `CasovaOsa.tsx`,
+     prolnutí níže).
+
+   Bez JS zůstanou obě skupiny pod sebou a přepínač schovaný, takže se
+   k praxi dostane i prohlížeč, který si neumí kliknout. */
 .osa__prepinace {
   display: none;
 }
@@ -738,35 +750,41 @@
   margin-top: 1.75rem;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .osa__prepinace {
-    display: flex;
-    gap: 0.25rem;
-    margin-bottom: 1.1rem;
-  }
+.js-reveal .osa__prepinace {
+  display: flex;
+  gap: 0.25rem;
+  margin-bottom: 1.1rem;
+}
 
-  /* Oba panely leží v jedné bunce mrizky, takze telo ma vysku toho vyssiho
-     a pri prepnuti se NIC nepohne. Kdyby se prepinaly zobrazenim, stranka by
-     pod osou poskakovala. */
-  .osa__panely {
-    display: grid;
-  }
-  .osa__panel {
-    grid-area: 1 / 1;
-    opacity: 0;
-    visibility: hidden;
+/* Oba panely leží v jedné buňce mřížky, takže tělo má výšku toho vyššího
+   a při přepnutí se NIC nepohne. Kdyby se přepínaly zobrazením, stránka by
+   pod osou poskakovala. */
+.js-reveal .osa__panely {
+  display: grid;
+}
+.js-reveal .osa__panel {
+  grid-area: 1 / 1;
+  opacity: 0;
+  visibility: hidden;
+}
+.js-reveal .osa__panel + .osa__panel {
+  margin-top: 0;
+}
+.js-reveal .osa__panel--aktivni {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* Prolnutí je pohyb – bez něj se panely prostě prostřídají naráz. */
+@media (prefers-reduced-motion: no-preference) {
+  .js-reveal .osa__panel {
     transform: translateY(0.4rem);
     transition:
       opacity 0.55s ease,
       transform 0.55s ease,
       visibility 0s 0.55s;
   }
-  .osa__panel + .osa__panel {
-    margin-top: 0;
-  }
-  .osa__panel--aktivni {
-    opacity: 1;
-    visibility: visible;
+  .js-reveal .osa__panel--aktivni {
     transform: none;
     transition:
       opacity 0.55s ease,
@@ -877,13 +895,10 @@
 }
 
 /* Nadpis uvnitř panelu je druhopis toho, co už říká přepínač – schová se
-   tedy všude, kde je přepínač vidět. Musí to stát AŽ tady: dřív v souboru
-   by ho přebilo základní `display: flex` výše, protože specificita je
-   stejná a rozhoduje pořadí. */
-@media (prefers-reduced-motion: no-preference) {
-  .osa__titul {
-    display: none;
-  }
+   tedy všude, kde je přepínač vidět, což je všude s JS. Musí to stát AŽ
+   tady: dřív v souboru by ho přebilo základní `display: flex` výše. */
+.js-reveal .osa__titul {
+  display: none;
 }
 
 /* ── Položky ── */
