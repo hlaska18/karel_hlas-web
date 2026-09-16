@@ -7,18 +7,29 @@
  * jen ukazuje, co se povedlo, a odškrtne se sám ve chvíli, kdy je výsledek
  * na počítači vidět. Dá se zabalit do proužku, aby nepřekážel, a rozbalit
  * zpátky, když žák neví, co dál.
+ *
+ * ZABALIT SE DÁ, ZAVŘÍT NE. Dřív tu vedle šipky býval ještě křížek, který
+ * panel schoval do konce hodiny – a byla to past: žáci ho mačkali v dobré
+ * víře a pak neměli jak úkoly vrátit, museli načíst celý simulátor znovu
+ * a přišli o rozdělanou práci. Zbyla proto jediná ovládací věc, a ta vždycky
+ * jen zabalí do proužku, ze kterého se panel vrátí jedním kliknutím.
+ *
+ * KROKY JSOU SCHOVANÉ. Návod ke každému úkolu se rozbalí až po kliknutí.
+ * Kdyby byly kroky vidět pořád, je z panelu zeď textu, ve které se nedá
+ * najít, co ještě zbývá – a rozhled po tom, co všechno jde zkusit, je to
+ * hlavní, co má panel dávat.
  */
 
 import { useMemo, useState } from "react";
-import { Check, ChevronDown, ListChecks, X } from "lucide-react";
+import { Check, ChevronDown, ListChecks } from "lucide-react";
 import { useSystem } from "./system";
 import { SKUPINY, UKOLY, postup } from "@/lib/win/ukoly";
 
 export function PanelUkolu() {
   const { stav } = useSystem();
   const [otevreny, nastavOtevreny] = useState(false);
-  const [skryty, nastavSkryty] = useState(false);
   const [rozbaleneSkupiny, nastavSkupiny] = useState<string[]>([SKUPINY[0]]);
+  const [rozbaleneUkoly, nastavUkoly] = useState<string[]>([]);
 
   const { hotovo, celkem } = postup(stav.splneno);
   const podleSkupin = useMemo(
@@ -29,8 +40,6 @@ export function PanelUkolu() {
       })),
     [],
   );
-
-  if (skryty) return null;
 
   if (!otevreny) {
     return (
@@ -58,25 +67,15 @@ export function PanelUkolu() {
           <h2 className="flex items-center gap-2 text-[14px] font-semibold">
             <ListChecks className="h-4 w-4 text-win-akcent" /> Úkoly
           </h2>
-          <div className="flex items-center gap-1">
-            <button
-              type="button"
-              aria-label="Zabalit"
-              onClick={() => nastavOtevreny(false)}
-              className="flex h-7 w-7 items-center justify-center rounded hover:bg-win-zvyrazneny"
-            >
-              <ChevronDown className="h-4 w-4" />
-            </button>
-            <button
-              type="button"
-              aria-label="Skrýt úkoly do konce hodiny"
-              title="Skrýt do obnovení stránky"
-              onClick={() => nastavSkryty(true)}
-              className="flex h-7 w-7 items-center justify-center rounded hover:bg-win-zvyrazneny"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
+          <button
+            type="button"
+            aria-label="Zabalit úkoly"
+            title="Zabalit do proužku"
+            onClick={() => nastavOtevreny(false)}
+            className="flex h-7 w-7 items-center justify-center rounded hover:bg-win-zvyrazneny"
+          >
+            <ChevronDown className="h-4 w-4" />
+          </button>
         </div>
         <div className="mt-2 flex items-center gap-2">
           <div className="h-1.5 flex-1 overflow-hidden rounded-full bg-win-linka">
@@ -119,33 +118,63 @@ export function PanelUkolu() {
               {rozbalena &&
                 ukoly.map((u) => {
                   const splneno = stav.splneno.includes(u.id);
+                  const navod = rozbaleneUkoly.includes(u.id);
                   return (
-                    <div key={u.id} className="flex gap-2.5 rounded px-2 py-1.5 pl-7">
-                      <span
-                        className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
-                          splneno
-                            ? "border-win-akcent bg-win-akcent"
-                            : "border-win-slaby"
-                        }`}
+                    <div key={u.id}>
+                      <button
+                        type="button"
+                        aria-expanded={navod}
+                        onClick={() =>
+                          nastavUkoly((s) =>
+                            s.includes(u.id) ? s.filter((x) => x !== u.id) : [...s, u.id],
+                          )
+                        }
+                        className="flex w-full gap-2.5 rounded px-2 py-1.5 pl-7 text-left hover:bg-win-zvyrazneny"
                       >
-                        {splneno && (
-                          <Check className="h-2.5 w-2.5 text-win-akcent-text" strokeWidth={4} />
-                        )}
-                      </span>
-                      <div className="min-w-0">
-                        <div
-                          className={`text-[12px] leading-snug ${
-                            splneno ? "text-win-slaby line-through" : ""
+                        <span
+                          className={`mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border ${
+                            splneno
+                              ? "border-win-akcent bg-win-akcent"
+                              : "border-win-slaby"
                           }`}
                         >
-                          {u.nazev}
+                          {splneno && (
+                            <Check className="h-2.5 w-2.5 text-win-akcent-text" strokeWidth={4} />
+                          )}
+                        </span>
+                        <span className="min-w-0 flex-1">
+                          <span
+                            className={`block text-[12px] leading-snug ${
+                              splneno ? "text-win-slaby line-through" : ""
+                            }`}
+                          >
+                            {u.nazev}
+                          </span>
+                          {/* Věta pod názvem ustoupí, jakmile je rozbalený návod –
+                              stojí v něm rovnou nahoře a dvakrát být nemusí. */}
+                          {!splneno && !navod && (
+                            <span className="mt-0.5 block text-[11px] leading-snug text-win-slaby">
+                              {u.popis}
+                            </span>
+                          )}
+                        </span>
+                        <ChevronDown
+                          className={`mt-0.5 h-3.5 w-3.5 shrink-0 text-win-slaby transition-transform ${
+                            navod ? "" : "-rotate-90"
+                          }`}
+                        />
+                      </button>
+
+                      {navod && (
+                        <div className="mb-1.5 ml-[2.4rem] mr-2 border-l-2 border-win-akcent pl-3">
+                          <p className="text-[11px] leading-snug text-win-slaby">{u.popis}</p>
+                          <ol className="mt-1.5 list-decimal space-y-1.5 pl-4 text-[11px] leading-snug marker:text-win-slaby">
+                            {u.kroky.map((k, i) => (
+                              <li key={i}>{k}</li>
+                            ))}
+                          </ol>
                         </div>
-                        {!splneno && (
-                          <div className="mt-0.5 text-[11px] leading-snug text-win-slaby">
-                            {u.popis}
-                          </div>
-                        )}
-                      </div>
+                      )}
                     </div>
                   );
                 })}

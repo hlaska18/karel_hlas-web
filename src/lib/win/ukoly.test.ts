@@ -30,6 +30,31 @@ describe("seznam úkolů", () => {
       expect(u.popis.length).toBeGreaterThan(10);
     }
   });
+
+  it("každý úkol má postup aspoň o třech krocích", () => {
+    // Krok o dvou slovech je k ničemu; tenhle strop drží návody v použitelné
+    // podobě, i když je někdo bude později dopisovat ve spěchu.
+    for (const u of UKOLY) {
+      expect(u.kroky.length, u.id).toBeGreaterThanOrEqual(3);
+      for (const k of u.kroky) expect(k.length, `${u.id}: ${k}`).toBeGreaterThan(15);
+    }
+  });
+
+  it("delší úlohy v krocích neprozradí výsledek", () => {
+    // Smysl téhle skupiny je, že se nedá proklikat podle návodu. Kroky proto
+    // smějí vést metodou, ale odpověď, kterou kontroluje `hotovo`, v nich být
+    // nesmí – jinak z úlohy zbude opisování.
+    const odpovedi: Record<string, string> = {
+      "kolik-fotek": "436",
+      "dvojkova-2026": "11111101010",
+      "ipv4-posledni": "147",
+    };
+    for (const [id, odpoved] of Object.entries(odpovedi)) {
+      const ukol = UKOLY.find((u) => u.id === id);
+      expect(ukol, id).toBeDefined();
+      expect(ukol!.kroky.join(" "), id).not.toContain(odpoved);
+    }
+  });
 });
 
 describe("vyhodnocení", () => {
