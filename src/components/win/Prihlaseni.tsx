@@ -37,7 +37,22 @@ export function Prihlaseni({
   onHotovo: () => void;
 }) {
   const [faze, nastavFazi] = useState<Faze>("zamek");
-  const scenar = scenarPodleId(scenarZAdresy());
+  /**
+   * Který scénář si žádá adresa. Čte se AŽ PO PŘIPOJENÍ, ne při renderu.
+   *
+   * `scenarZAdresy()` sahá na adresu okna, kterou server nezná – stránka je
+   * předrenderovaná bez dotazu. Volání při renderu proto vracelo na serveru
+   * výchozí scénář a v prohlížeči ten z adresy, React hlásil neshodu při
+   * hydrataci a ZAHODIL celé serverem vykreslené HTML. Projevilo se to
+   * pokaždé, když učitel rozeslal odkaz se scénářem (`?scenar=poviru`),
+   * tedy přesně v té situaci, kvůli které scénáře existují.
+   *
+   * Stejný postup jako u hodin níž: první render je shodný se serverem
+   * a upraví se až potom.
+   */
+  const [scenarId, nastavScenarId] = useState(VYCHOZI_SCENAR);
+  useEffect(() => nastavScenarId(scenarZAdresy()), []);
+  const scenar = scenarPodleId(scenarId);
   const [chyba, nastavChybu] = useState(false);
   const [kod, nastavKod] = useState("");
   const [hlaska, nastavHlasku] = useState("");
@@ -189,6 +204,12 @@ export function Prihlaseni({
             Kód drží pohromadě třídu, nechrání žádné údaje – žádné se tu
             neukládají. Co v prostředí uděláš, zůstává v tomhle prohlížeči
             a na server se neodesílá nic.{" "}
+            {/* Druhá půlka téhož faktu, a pro žáka ta praktičtější: když
+                práce nikam neodchází, znamená to i to, že ji na jiném
+                počítači nenajde. Říct to AŽ POTOM, co o ni přijde, je pozdě. */}
+            <strong className="font-semibold text-white/80">
+              Na jiném počítači ani po vyčištění prohlížeče ji ale nenajdeš.
+            </strong>{" "}
             {/* Odkaz je tady schválně, ne až v patičce webu: tvrzení „nic se
                 neukládá" má být doložitelné právě ve chvíli, kdy ho žák čte
                 a rozhoduje se, jestli kód zadá. */}

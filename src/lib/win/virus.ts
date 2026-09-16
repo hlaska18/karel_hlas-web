@@ -33,7 +33,20 @@ export const NAVNADA = "Fotky_z_vyletu.jpg.exe";
 export const PROCES = "svhost.exe";
 
 /** Soubor s výzvou k výkupnému, který se objeví na ploše. */
-export const VYZVA = "!!! PRECTI SI ME !!!.txt";
+/**
+ * Název výzvy k výkupnému.
+ *
+ * „(CVICENI)" v názvu je tam kvůli SNÍMKU. Text výzvy říká hned prvním
+ * odstavcem, že je to cvičení – jenže na fotce plochy, která odejde
+ * kamarádovi a od něj někomu dospělému, není vidět text, jen ikona
+ * a název. Bez toho slova vypadá snímek jako ransomware ve školní učebně
+ * a vysvětluje se to až zpětně.
+ *
+ * Bez diakritiky schválně, stejně jako zbytek názvu: takhle by si ho
+ * pojmenoval skutečný škodlivý program a je to i jedna ze stop, které mají
+ * žákovi přijít divné.
+ */
+export const VYZVA = "!!! PRECTI SI ME !!! (CVICENI).txt";
 
 const DOMOV = "C:\\Users\\Zak";
 
@@ -51,7 +64,12 @@ const ZASAZENE: string[] = [
   `${DOMOV}\\Desktop\\Fotka z výletu.jpg`,
 ];
 
-export const VYZVA_TEXT = `TVOJE SOUBORY MAJÍ JINOU PŘÍPONU
+export const VYZVA_TEXT = `==================================================
+  CVIČENÍ · VÝUKOVÁ SIMULACE
+  SPŠ strojní a stavební, Tábor · hodina informatiky
+==================================================
+
+TVOJE SOUBORY MAJÍ JINOU PŘÍPONU
 
 Tohle je cvičný škodlivý program z výukového prostředí. Nic skutečného se
 nestalo — běží to jen v prohlížeči a vypnutím se všechno vrátí.

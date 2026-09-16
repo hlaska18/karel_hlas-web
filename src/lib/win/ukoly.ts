@@ -240,44 +240,28 @@ export const UKOLY: Ukol[] = [
   },
 
   /* ─────────── Nastavení systému ─────────── */
+  /* Tmavý režim, tapeta a zvýrazňovací barva bývaly tři úkoly. Byly to tři
+     řádky v panelu za dvě minuty klikání a žádný z nich nenesl pojem, který
+     by si žák odnesl – přizpůsobit si telefon umí každý z nich dávno.
+     Zůstala z nich jedna položka; ubraly se dvě, aby v hodině zbylo místo na
+     věci, které něco učí. */
   {
-    id: "tmavy",
+    id: "prizpusobeni",
     skupina: "Nastavení systému",
-    nazev: "Přepni na tmavý režim",
-    popis: "Nastavení → Přizpůsobení → Barvy → Zvolte režim.",
+    nazev: "Nastav si počítač po svém",
+    popis:
+      "V Nastavení → Přizpůsobení přepni tmavý režim, vyměň tapetu a změň zvýrazňovací barvu.",
     kroky: [
       "Otevři Start a klikni na Nastavení.",
       "V levém sloupci vyber Přizpůsobení.",
-      "V pravé části klikni na oddíl Barvy.",
-      "U položky Zvolte režim přepni na Tmavý.",
+      "V oddílu Barvy přepni Zvolte režim na Tmavý.",
+      "Tamtéž níž vyber jinou Zvýrazňovací barvu než modrou a všimni si, kde všude se projeví – tlačítka, označené položky i hlavní panel.",
+      "Vrať se zpět a v oddílu Pozadí vyber jinou tapetu. (Rychlejší cesta k témuž: pravým tlačítkem na plochu → Přizpůsobit.)",
     ],
-    hotovo: (s) => s.nastaveni.motiv === "tmavy",
-  },
-  {
-    id: "tapeta",
-    skupina: "Nastavení systému",
-    nazev: "Změň tapetu plochy",
-    popis: "Nastavení → Přizpůsobení → Pozadí. Nebo pravým tlačítkem na plochu → Přizpůsobit.",
-    kroky: [
-      "Nastavení → Přizpůsobení → Pozadí.",
-      "Vyber jiný obrázek, než je ten současný.",
-      "Zavři Nastavení a podívej se na plochu.",
-      "Rychlejší cesta: pravým tlačítkem na plochu → Přizpůsobit.",
-    ],
-    hotovo: (s) => s.nastaveni.tapeta !== "zavoj",
-  },
-  {
-    id: "akcent",
-    skupina: "Nastavení systému",
-    nazev: "Změň zvýrazňovací barvu",
-    popis: "Nastavení → Přizpůsobení → Barvy → Zvýrazňovací barva.",
-    kroky: [
-      "Nastavení → Přizpůsobení → Barvy.",
-      "Najdi oddíl Zvýrazňovací barva.",
-      "Vyber jinou barvu než modrou.",
-      "Všimni si, kde všude se projeví – tlačítka, označené položky i hlavní panel.",
-    ],
-    hotovo: (s) => s.nastaveni.akcent !== "modra",
+    hotovo: (s) =>
+      s.nastaveni.motiv === "tmavy" &&
+      s.nastaveni.tapeta !== "zavoj" &&
+      s.nastaveni.akcent !== "modra",
   },
   {
     id: "panel",

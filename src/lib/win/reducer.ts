@@ -45,6 +45,8 @@ export type Akce =
   | { typ: "ukoly/splneno"; ids: string[] }
   | { typ: "system/nacti"; stav: Stav }
   | { typ: "system/reset" }
+  /** Jako reset, ale zahodí i odškrtané úlohy – pro druhou hodinu nanečisto. */
+  | { typ: "system/reset-vcetne-postupu" }
   /** Cvičný škodlivý program – jen změna stavu simulace, nic se nespouští. */
   | { typ: "virus/spust" }
   | { typ: "virus/zastav" };
@@ -271,6 +273,14 @@ export function reducer(stav: Stav, akce: Akce): Stav {
       // ne z výchozího. Odškrtané úlohy zůstávají: úklid počítače není důvod
       // přijít o hodinu práce, a splněný úkol už je splněný.
       return { ...vychoziStav(stav.scenar), splneno: stav.splneno, stopy: stav.stopy };
+
+    case "system/reset-vcetne-postupu":
+      // Úplný začátek, včetně odškrtnutí. Je to pro druhou hodinu: kdo si
+      // minule prošel všechno, vrátí se k plnému panelu a nemá co dělat –
+      // a hlavně si znovu nespustí cvičný škodlivý program, protože úklid
+      // po něm má odškrtnuto. Bez téhle možnosti je jediná cesta zpátky
+      // vyčistit prohlížeč, což žák neudělá.
+      return vychoziStav(stav.scenar);
 
     default:
       return stav;

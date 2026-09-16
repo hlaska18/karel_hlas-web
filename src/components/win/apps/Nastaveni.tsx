@@ -370,19 +370,33 @@ function Obnoveni() {
       popis={`Disk se vrátí do podoby „${scenar.nazev}“. Splněné úlohy zůstanou zaškrtnuté.`}
     >
       {ptamSe ? (
-        <div className="flex flex-wrap items-center gap-3">
+        <div className="flex flex-col gap-3">
           <span className="text-[12px] text-win-slaby">
             Přijdeš o všechny soubory, které sis tady vytvořil. Opravdu?
           </span>
-          <Tlacitko
-            onClick={() => {
-              poslat({ typ: "system/reset" });
-              nastavPtamSe(false);
-            }}
-          >
-            Ano, vrátit
-          </Tlacitko>
-          <Tlacitko onClick={() => nastavPtamSe(false)}>Zpět</Tlacitko>
+          <div className="flex flex-wrap items-center gap-3">
+            <Tlacitko
+              onClick={() => {
+                poslat({ typ: "system/reset" });
+                nastavPtamSe(false);
+              }}
+            >
+              Ano, vrátit
+            </Tlacitko>
+            {/* Druhá hodina: kdo si minule prošel všechno, vrátí se k plnému
+                panelu a nemá co dělat – a hlavně si znovu nespustí cvičný
+                škodlivý program, protože úklid po něm má odškrtnutý. Bez téhle
+                možnosti je jediná cesta zpátky vyčistit celý prohlížeč. */}
+            <Tlacitko
+              onClick={() => {
+                poslat({ typ: "system/reset-vcetne-postupu" });
+                nastavPtamSe(false);
+              }}
+            >
+              Vrátit i odškrtané úlohy
+            </Tlacitko>
+            <Tlacitko onClick={() => nastavPtamSe(false)}>Zpět</Tlacitko>
+          </div>
         </div>
       ) : (
         <Tlacitko onClick={() => nastavPtamSe(true)}>Vrátit do výchozího stavu</Tlacitko>

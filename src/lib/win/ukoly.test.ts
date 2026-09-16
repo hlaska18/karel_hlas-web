@@ -98,9 +98,16 @@ describe("vyhodnocení", () => {
 
   it("nastavení se pozná podle stavu, ne podle cesty k němu", () => {
     const stav = cerstvy();
-    stav.nastaveni = { ...stav.nastaveni, motiv: "tmavy", pripony: true, zarovnaniPanelu: "vlevo" };
+    stav.nastaveni = {
+      ...stav.nastaveni,
+      motiv: "tmavy",
+      tapeta: "hory",
+      akcent: "zelena",
+      pripony: true,
+      zarovnaniPanelu: "vlevo",
+    };
     const hotove = vyhodnot(stav);
-    expect(hotove).toEqual(expect.arrayContaining(["tmavy", "pripony", "panel"]));
+    expect(hotove).toEqual(expect.arrayContaining(["prizpusobeni", "pripony", "panel"]));
   });
 
   it("stopa z terminálu splní úkol na příkaz", () => {

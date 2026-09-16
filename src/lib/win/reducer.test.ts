@@ -199,4 +199,21 @@ describe("stav prostředí", () => {
     expect(cisty.okna).toEqual([]);
     expect(cisty.nastaveni.motiv).toBe("svetly");
   });
+
+  it("obyčejný reset nechá odškrtané úlohy být", () => {
+    const stav = { ...vychoziStav(), splneno: ["pripony"], stopy: ["prikaz:dir"] };
+    const po = reducer(stav, { typ: "system/reset" });
+    expect(po.splneno).toEqual(["pripony"]);
+    expect(po.stopy).toEqual(["prikaz:dir"]);
+  });
+
+  it("reset včetně postupu odškrtnutí i stopy zahodí", () => {
+    // Pro druhou hodinu: bez tohohle se žák vrátí k plnému panelu a hlavně
+    // si znovu nespustí cvičný škodlivý program, protože úklid po něm má
+    // odškrtnutý.
+    const stav = { ...vychoziStav(), splneno: ["pripony"], stopy: ["prikaz:dir"] };
+    const po = reducer(stav, { typ: "system/reset-vcetne-postupu" });
+    expect(po.splneno).toEqual([]);
+    expect(po.stopy).toEqual([]);
+  });
 });
