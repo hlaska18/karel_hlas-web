@@ -36,6 +36,10 @@ export interface Ukol {
 }
 
 export const SKUPINY = [
+  /* Na prvním místě schválně. Panel otevírá první skupinu sám, takže tohle
+     je to, co žák uvidí hned – a u scénáře „Otravné okno" je to zároveň to
+     jediné, co mu v tu chvíli brání v práci. */
+  "Když něco nejde zavřít",
   "Soubory a složky",
   "Zobrazení a vlastnosti",
   "Nastavení systému",
@@ -79,6 +83,30 @@ const kolikSouboru = (stav: Stav, test: (jmeno: string) => boolean): number => {
 };
 
 export const UKOLY: Ukol[] = [
+  /* ─────────── Když něco nejde zavřít ───────────
+     Úkol dává smysl jen ve scénáři „Otravné okno" (`?scenar=reklama`); jinde
+     se okno neotevře a úkol se neodškrtne, protože chybí stopa. */
+  {
+    id: "vtirave-okno",
+    skupina: "Když něco nejde zavřít",
+    nazev: "Zbav se okna, které nejde zavřít",
+    popis:
+      "Hned po přihlášení vyskočilo okno, které se po zavření vrací. Zavřít ho nestačí – najdi a ukonči jeho proces.",
+    kroky: [
+      "Zkus okno zavřít křížkem. Za chvíli se vrátí – a to je celá lekce: křížek zavírá OKNO, ne program, který ho otevírá.",
+      "Klikni pravým tlačítkem na hlavní panel dole a vyber Správce úloh.",
+      "V seznamu procesů hledej něco, co tam nepatří. Nápověda: klikni na záhlaví sloupce Procesor – tenhle program si ho bere hodně, takže vyskočí nahoru.",
+      "Označ proces WinOptimizer.exe a klikni na Ukončit úlohu.",
+      "Teď okno zavři křížkem. Už se nevrátí.",
+      "Všimni si taky obou tlačítek v tom okně: ani jedno nic neudělá. S takovým oknem se nedá vyjednávat, dá se jen zastavit program, který ho otevírá.",
+    ],
+    // `spustil:reklama` zakládá samo otevření okna (viz `okno/otevri`
+    // v reduceru). Bez té podmínky by se úkol odškrtl každému, kdo si pustil
+    // simulaci BEZ tohohle scénáře: ptá se totiž, jestli proces UŽ NEBĚŽÍ,
+    // a jinde neběžel nikdy.
+    hotovo: (s) => s.stopy.includes("spustil:reklama") && !s.reklamaBezi,
+  },
+
   /* ─────────── Soubory a složky ─────────── */
   {
     id: "slozka-informatika",

@@ -339,6 +339,15 @@ function kresba(klic: KlicIkony, popisek?: string) {
         </>
       );
 
+    case "reklama":
+      /* Vykřičník v kolečku – žánrová značka „něco je špatně, klikni sem". */
+      return (
+        <>
+          <circle cx="24" cy="24" r="18" fill="#f0a020" />
+          <rect x="22" y="13" width="4" height="15" rx="2" fill="#fff" />
+          <circle cx="24" cy="33" r="2.6" fill="#fff" />
+        </>
+      );
     case "prohlizec":
       return (
         <>

@@ -15,7 +15,7 @@
  */
 
 import type { Slozka, Uzel } from "./fs";
-import { diskProScenar, VYCHOZI_SCENAR } from "./scenare";
+import { diskProScenar, scenarPodleId, VYCHOZI_SCENAR } from "./scenare";
 import type { AppId } from "./typy";
 
 /**
@@ -173,6 +173,8 @@ export interface Stav {
    * protože jsou na disku, a to je přesně ta lekce: restart problém nevyřeší.
    */
   virusBezi: boolean;
+  /** Běží vtíravé okno? Dokud ano, po zavření se vrací. */
+  reklamaBezi: boolean;
 }
 
 /** Výchozí velikost a poloha okna podle aplikace. */
@@ -186,11 +188,17 @@ export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
   "spravce-uloh": { w: 900, h: 600 },
   fotky: { w: 880, h: 620 },
   prohlizec: { w: 1060, h: 680 },
+  /* Malé schválně: vtíravá okna bývají malá, ať se dají naskládat přes sebe,
+     a menší okno taky líp ukáže, že se vrátilo na jiné místo. */
+  reklama: { w: 460, h: 272 },
 };
 
 export function vychoziStav(scenar: string = VYCHOZI_SCENAR): Stav {
   return {
     virusBezi: false,
+    // Scénář „Otravné okno" nastupuje rovnou s běžícím procesem. U ostatních
+    // je `false`, takže se nikde nic neotevře.
+    reklamaBezi: scenarPodleId(scenar).reklama === true,
     verze: VERZE_ULOZISTE,
     scenar,
     disk: diskProScenar(scenar),
@@ -206,8 +214,19 @@ export function vychoziStav(scenar: string = VYCHOZI_SCENAR): Stav {
 
 /* ───────────────────── Ukládání ───────────────────── */
 
-/** Co se ukládá. Otevřená okna schválně ne – po obnovení se startuje na ploše. */
-type Ulozeny = Pick<Stav, "verze" | "scenar" | "disk" | "kos" | "nastaveni" | "stopy" | "splneno">;
+/**
+ * Co se ukládá. Otevřená okna schválně ne – po obnovení se startuje na ploše.
+ *
+ * `reklamaBezi` se ukládá, `virusBezi` ne, a je v tom rozdíl. Po viru zůstane
+ * na disku vidět, co udělal (přejmenované soubory, výzva na ploše), takže se
+ * lekce obnovením stránky neztratí. Vtíravé okno po sobě nenechá nic – kdyby
+ * se neukládalo, vrátilo by se i tomu, kdo ho správně zastavil, a ten by měl
+ * za to, že to udělal špatně. F5 není restart počítače.
+ */
+type Ulozeny = Pick<
+  Stav,
+  "verze" | "scenar" | "disk" | "kos" | "nastaveni" | "stopy" | "splneno" | "reklamaBezi"
+>;
 
 export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
   if (typeof window === "undefined") return null;
@@ -222,6 +241,8 @@ export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
     // že mu učitel poslal odkaz na jiné cvičení.
     const ulozenyScenar = ulozeny.scenar ?? VYCHOZI_SCENAR;
     if (ulozenyScenar !== scenar) {
+      // Jiný scénář = jiná hodina, takže vtíravé okno se řídí NOVÝM scénářem,
+      // ne tím, jestli ho žák minule zastavil.
       return {
         ...vychoziStav(scenar),
         nastaveni: { ...VYCHOZI_NASTAVENI, ...ulozeny.nastaveni },
@@ -237,6 +258,8 @@ export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
       nastaveni: { ...VYCHOZI_NASTAVENI, ...ulozeny.nastaveni },
       stopy: ulozeny.stopy ?? [],
       splneno: ulozeny.splneno ?? [],
+      // `??` schválně: starší uložený stav tohle pole nemá a pak platí scénář.
+      reklamaBezi: ulozeny.reklamaBezi ?? vychoziStav(scenar).reklamaBezi,
     };
   } catch {
     // Rozbitý nebo cizí obsah v úložišti nesmí shodit celé prostředí.
@@ -254,6 +277,7 @@ export function uloz(stav: Stav): void {
     nastaveni: stav.nastaveni,
     stopy: stav.stopy,
     splneno: stav.splneno,
+    reklamaBezi: stav.reklamaBezi,
   };
   try {
     window.localStorage.setItem(KLIC_ULOZISTE, JSON.stringify(ulozeny));

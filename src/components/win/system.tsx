@@ -45,8 +45,13 @@ export function SystemProvider({ children }: { children: ReactNode }) {
   // předal druhý argument (`null`) jako scénář.
   const [stav, poslat] = useReducer(reducer, null, () => vychoziStav());
   const [plocha, nastavPlochu] = useState<Obdelnik>({ x: 0, y: 0, w: 1280, h: 720 });
-  // Než se přečte uložený stav, nemá cenu ho hned přepsat výchozím.
+  /**
+   * Stav, který jsme poslali z načtení. Ukládat se smí AŽ od chvíle, kdy se
+   * tenhle stav opravdu propíše do `stav` – viz ukládací efekt níž.
+   */
+  const cekaSeNa = useRef<Stav | null>(null);
   const nacteno = useRef(false);
+
   /**
    * Načtení stavu z místního úložiště. Postup nikam neodchází – účty žáků
    * na serveru byly zrušené, takže tohle je jediné místo, kde práce žije.
@@ -56,12 +61,32 @@ export function SystemProvider({ children }: { children: ReactNode }) {
     // jiný, `nacti` mu postaví nový disk a odškrtané úlohy nechá.
     const scenar = scenarZAdresy();
     const ulozeny = nacti(scenar) ?? vychoziStav(scenar);
+    cekaSeNa.current = ulozeny;
     poslat({ typ: "system/nacti", stav: ulozeny });
-    nacteno.current = true;
   }, []);
 
+  /**
+   * Ukládání. Pozor na pořadí – je v něm past, na kterou se dá snadno
+   * naletět podruhé:
+   *
+   * Tenhle efekt běží ve STEJNÉM commitu jako ten načítací výš, jenže `stav`
+   * v něm je pořád ten výchozí – dispatch se ještě nestihl propsat. Dokud se
+   * příznak nastavoval rovnou v načítacím efektu, uložil se tedy prázdný
+   * výchozí stav PŘES načtený postup. V produkci to samo od sebe zahojil
+   * další commit, který zapsal načtený stav zpátky; ve vývoji ne, protože
+   * React StrictMode efekty spouští dvakrát a druhé načtení už četlo
+   * přepsané úložiště. Změřeno: `splneno` se po obnovení stránky vyprázdnilo.
+   *
+   * Proto se ukládá až od chvíle, kdy TENHLE efekt uvidí přesně ten stav,
+   * který načítací efekt poslal. Do té doby se nezapisuje nic – a to je
+   * správně i mimo StrictMode: zavřít kartu v tom okamžiku znamenalo přijít
+   * o hodinu práce.
+   */
   useEffect(() => {
-    if (!nacteno.current) return;
+    if (!nacteno.current) {
+      if (cekaSeNa.current !== null && stav === cekaSeNa.current) nacteno.current = true;
+      return;
+    }
     uloz(stav);
   }, [stav]);
 

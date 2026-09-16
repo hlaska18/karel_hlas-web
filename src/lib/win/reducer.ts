@@ -49,7 +49,10 @@ export type Akce =
   | { typ: "system/reset-vcetne-postupu" }
   /** Cvičný škodlivý program – jen změna stavu simulace, nic se nespouští. */
   | { typ: "virus/spust" }
-  | { typ: "virus/zastav" };
+  | { typ: "virus/zastav" }
+  /** Vtíravé okno: dokud běží, po zavření se vrací. */
+  | { typ: "reklama/spust" }
+  | { typ: "reklama/zastav" };
 
 /**
  * Aplikace, které běží jen v jedné kopii. Spuštění „podruhé" jen přepne na
@@ -267,6 +270,21 @@ export function reducer(stav: Stav, akce: Akce): Stav {
     }
     case "virus/zastav":
       return stav.virusBezi ? { ...stav, virusBezi: false } : stav;
+
+    case "reklama/spust":
+      if (stav.reklamaBezi) return stav;
+      // Stopa je tu proto, aby šlo poznat, že vtíravé okno v tomhle počítači
+      // VŮBEC BĚŽELO. Bez ní by se úkol „zbav se ho" odškrtl každému, kdo si
+      // otevřel simulaci bez toho scénáře – `reklamaBezi` je tam totiž
+      // rovnou `false`, tedy stav, který úkol považuje za splněný.
+      return {
+        ...stav,
+        reklamaBezi: true,
+        stopy: pridejStopu(stav.stopy, "reklama:spustena"),
+      };
+
+    case "reklama/zastav":
+      return stav.reklamaBezi ? { ...stav, reklamaBezi: false } : stav;
 
     case "system/reset":
       // Vrátí disk do stavu, ve kterém hodina začínala – z TÉHOŽ scénáře,

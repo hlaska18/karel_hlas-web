@@ -38,7 +38,8 @@ export type AppId =
   | "terminal"
   | "spravce-uloh"
   | "fotky"
-  | "prohlizec";
+  | "prohlizec"
+  | "reklama";
 
 export interface TypSouboru {
   popis: string;
@@ -180,4 +181,11 @@ export const APLIKACE: Record<AppId, { nazev: string; ikona: AppId; popis: strin
   },
   fotky: { nazev: "Fotky", ikona: "fotky", popis: "Prohlížeč obrázků" },
   prohlizec: { nazev: "Microsoft Edge", ikona: "prohlizec", popis: "Webový prohlížeč" },
+  /* Vtíravé okno. V nabídce Start ho žák nenajde a nemá proč – nespouští se
+     ručně, spouští se samo ze scénáře. */
+  reklama: {
+    nazev: "WinOptimizer Pro",
+    ikona: "reklama",
+    popis: "Kontrola a zrychlení systému",
+  },
 };

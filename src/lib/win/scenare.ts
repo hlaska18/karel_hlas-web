@@ -30,6 +30,13 @@ export type Scenar = {
   /** Jedna věta pro učitele: na co je tahle hodina. */
   popis: string;
   uprav: (disk: Slozka) => Slozka;
+  /**
+   * Běží od začátku vtíravé okno? Scénář jinak sahá jen na disk – tohle je
+   * jediná vlastnost mimo něj, a je tu schválně jako prostý příznak, ne jako
+   * obecná úprava stavu: obecná úprava by svedla schovávat do scénářů
+   * cokoli a `vychoziStav` by přestal být čitelný.
+   */
+  reklama?: boolean;
 };
 
 export const VYCHOZI_SCENAR = "vychozi";
@@ -112,6 +119,16 @@ export const SCENARE: Scenar[] = [
       ]);
       return d;
     },
+  },
+  {
+    id: "reklama",
+    nazev: "Otravné okno",
+    popis:
+      "Hned po přihlášení vyskočí okno, které se po zavření vrací. Zavřít ho nestačí – žák musí najít a ukončit jeho proces ve Správci úloh.",
+    // Disk zůstává nedotčený: tahle hodina není o souborech. Jediné, co se
+    // mění, je že od začátku běží proces, který okno pořád otevírá.
+    uprav: (disk) => disk,
+    reklama: true,
   },
   {
     id: "poviru",

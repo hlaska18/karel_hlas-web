@@ -28,6 +28,7 @@ import { Terminal } from "./apps/Terminal";
 import { SpravceUloh } from "./apps/SpravceUloh";
 import { Fotky } from "./apps/Fotky";
 import { Prohlizec } from "./apps/Prohlizec";
+import { Reklama } from "./apps/Reklama";
 import { vybranyAkcent } from "@/lib/win/akcenty";
 import { MERITKO } from "@/lib/win/stav";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
@@ -110,6 +111,31 @@ function Obrazovka() {
     window.addEventListener("keydown", naKlavesu);
     return () => window.removeEventListener("keydown", naKlavesu);
   }, [faze, poslat]);
+
+  /**
+   * Vtíravé okno: dokud běží jeho proces, po zavření se vrátí.
+   *
+   * Jeden efekt dělá obojí – první otevření po přihlášení i každý návrat po
+   * zavření – protože je to táž podmínka: proces běží a okno nikde. Kdyby to
+   * byly dvě větve, rozešly by se.
+   *
+   * ZDRŽENÍ JE PODSTATA VĚCI, ne kosmetika. Kdyby se okno vracelo okamžitě,
+   * vypadá to, že křížek nefunguje, a žák hledá chybu v myši. S vteřinovou
+   * pauzou je vidět, co se doopravdy stalo: okno se ZAVŘELO a program si
+   * otevřel nové. To je přesně ten rozdíl, který má hodina naučit.
+   *
+   * Úklid časovače při odpojení: bez něj by po ukončení procesu doběhl
+   * poslední naplánovaný návrat a okno by vyskočilo ještě jednou – žák by
+   * měl pocit, že to neudělal správně.
+   */
+  useEffect(() => {
+    if (faze !== "bezi" || !stav.reklamaBezi) return;
+    if (stav.okna.some((o) => o.app === "reklama")) return;
+    const id = window.setTimeout(() => {
+      poslat({ typ: "okno/otevri", app: "reklama" });
+    }, 1000);
+    return () => window.clearTimeout(id);
+  }, [faze, stav.reklamaBezi, stav.okna, poslat]);
 
   useEffect(() => {
     const sleduj = () => nastavCelou(Boolean(document.fullscreenElement));
@@ -351,6 +377,8 @@ function Aplikace({ app }: { app: AppId }) {
       return <Fotky />;
     case "prohlizec":
       return <Prohlizec />;
+    case "reklama":
+      return <Reklama />;
     default:
       return null;
   }

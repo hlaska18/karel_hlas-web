@@ -15,6 +15,7 @@ import { Ikona } from "../Ikona";
 import { Prepinac, Tlacitko } from "../ui";
 import { useOkno, useSystem } from "../system";
 import { PROCES as PROCES_VIRU } from "@/lib/win/virus";
+import { CPU as CPU_REKLAMY, PROCES as PROCES_REKLAMY } from "@/lib/win/reklama";
 import { APLIKACE } from "@/lib/win/typy";
 import { cislo, velikostText } from "@/lib/win/format";
 
@@ -100,11 +101,31 @@ export function SpravceUloh() {
       ]
     : [];
 
+  /**
+   * Vtíravé okno. Na rozdíl od viru nic nerozbíjí – jen nejde zavřít, dokud
+   * tenhle proces běží. Schválně si bere hodně procesoru: seřazení podle
+   * sloupce Procesor je nejrychlejší cesta, jak ho v seznamu najít, a je to
+   * návyk, který se hodí i mimo cvičení.
+   */
+  const vtiravy: Proces[] = stav.reklamaBezi
+    ? [
+        {
+          id: "reklama",
+          nazev: PROCES_REKLAMY,
+          cpu: CPU_REKLAMY,
+          pamet: 268,
+          disk: 1.9,
+          sit: 4.6,
+          systemovy: false,
+        },
+      ]
+    : [];
+
   /** Kolísání kolem základu – deterministické podle tiku, ať to nepodivně skáče. */
   const kolisej = (zaklad: number, seminko: number) =>
     Math.max(0, zaklad * (0.75 + 0.5 * Math.abs(Math.sin(tik * 0.7 + seminko))));
 
-  const vsechny = [...skodlivy, ...aplikace, ...naPozadi];
+  const vsechny = [...skodlivy, ...vtiravy, ...aplikace, ...naPozadi];
   const soucetCpu = vsechny.reduce((s, p, i) => s + kolisej(p.cpu, i), 0);
   const soucetPamet = vsechny.reduce((s, p) => s + p.pamet, 0) + 3800;
   const soucetDisk = vsechny.reduce((s, p, i) => s + kolisej(p.disk, i), 0);
@@ -116,6 +137,10 @@ export function SpravceUloh() {
     // Ukončení cvičného škodlivého procesu zastaví jeho běh. Přejmenované
     // soubory zůstanou – uklidit po něm je druhá půlka lekce.
     if (proces?.id === "virus") poslat({ typ: "virus/zastav" });
+    // Ukončení vtíravého procesu je JEDINÉ, co ho zastaví. Okno se pak dá
+    // zavřít křížkem a už se nevrátí; zavřít ho tady rovnou by žákovi vzalo
+    // to potvrzení, že teď už křížek zabírá.
+    if (proces?.id === "reklama") poslat({ typ: "reklama/zastav" });
     nastavVybrany(null);
   };
 
@@ -149,13 +174,13 @@ export function SpravceUloh() {
             <div className="flex h-11 shrink-0 items-center justify-between px-3">
               <h1 className="text-[15px] font-semibold">Procesy</h1>
               <Tlacitko
-                // Ukončit jde okno aplikace a cvičný škodlivý proces. Systémové procesy
-                // zůstávají zašedlé – ve skutečném Windows to taky není nic, co by se
-                // mělo zkoušet.
+                // Ukončit jde okno aplikace a oba cvičné procesy – vir a vtíravé
+                // okno. Systémové procesy zůstávají zašedlé; ve skutečném Windows
+                // to taky není nic, co by se mělo zkoušet.
                 disabled={
                   !(() => {
                     const p = vsechny.find((x) => x.id === vybrany);
-                    return Boolean(p?.oknoId) || p?.id === "virus";
+                    return Boolean(p?.oknoId) || p?.id === "virus" || p?.id === "reklama";
                   })()
                 }
                 onClick={ukonci}
@@ -196,7 +221,7 @@ export function SpravceUloh() {
                   />
                   <SkupinaProcesu
                     nadpis="Procesy na pozadí"
-                    procesy={[...skodlivy, ...naPozadi]}
+                    procesy={[...skodlivy, ...vtiravy, ...naPozadi]}
                     vybrany={vybrany}
                     onVyber={nastavVybrany}
                     kolisej={kolisej}

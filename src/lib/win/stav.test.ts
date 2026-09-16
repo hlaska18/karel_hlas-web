@@ -34,6 +34,26 @@ describe("uložení a načtení", () => {
     expect(zpet?.stopy).toEqual(["prikaz:dir"]);
   });
 
+  it("zastavené vtíravé okno zůstane zastavené i po obnovení stránky", () => {
+    // F5 není restart počítače: kdo okno správně zastavil, nesmí ho po
+    // obnovení dostat zpátky – měl by za to, že to udělal špatně.
+    const stav = {
+      ...vychoziStav("reklama"),
+      reklamaBezi: false,
+      splneno: ["vtirave-okno"],
+      stopy: ["spustil:reklama"],
+    };
+    uloz(stav);
+    const zpet = nacti("reklama");
+    expect(zpet?.reklamaBezi).toBe(false);
+    expect(zpet?.splneno).toEqual(["vtirave-okno"]);
+  });
+
+  it("scénář s vtíravým oknem startuje s běžícím procesem", () => {
+    expect(vychoziStav("reklama").reklamaBezi).toBe(true);
+    expect(vychoziStav().reklamaBezi).toBe(false);
+  });
+
   it("poškozený obsah prostředí neshodí", () => {
     uloziste.set("win11-vyuka-stav", "{tohle není JSON");
     expect(nacti()).toBeNull();
