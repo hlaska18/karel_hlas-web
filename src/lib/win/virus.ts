@@ -68,7 +68,7 @@ CO SI Z TOHO ODNÉST
 3. Záloha je jediná věc, která tohle vrátí zpátky.
 
 CO TEĎ
-- Ve Správci úloh (Ctrl+Shift+Esc) najdi proces ${PROCES} a ukonči ho.
+- Ve Správci úloh (pravým tlačítkem na hlavní panel) najdi proces ${PROCES} a ukonči ho.
   Všimni si, jak se jmenuje — skutečný systémový proces je svchost.exe.
 - Pokud sis Dokumenty zazálohoval do archivu ZIP, rozbal ho a soubory máš.
 - Pokud ne, tak sis to zapamatoval líp než z jakéhokoli výkladu.

@@ -437,11 +437,12 @@ export const UKOLY: Ukol[] = [
     skupina: "Aplikace",
     nazev: "Podívej se do Správce úloh",
     popis:
-      "Ctrl+Shift+Esc nebo pravým tlačítkem na hlavní panel. Kolik procent procesoru se používá?",
+      "Otevři ho pravým tlačítkem na hlavní panel. Kolik procent procesoru se používá?",
     kroky: [
-      "Zmáčkni Ctrl+Shift+Esc. (Jde to i pravým tlačítkem na hlavní panel.)",
+      "Klikni pravým tlačítkem na hlavní panel dole a vyber Správce úloh.",
       "Prohlédni si seznam běžících programů.",
       "Najdi sloupec Procesor a přečti, kolik procent se zrovna používá.",
+      "Ve skutečných Windows ho otevře i zkratka Ctrl+Shift+Esc – tady ji ale nezkoušej. Tuhle zkratku si zabere skutečný systém dřív, než se klávesa dostane do prohlížeče, takže by ti vyskočil správce tvého VLASTNÍHO počítače.",
       "Tady se dá ukončit program, který přestal reagovat – a taky tady poznáš, co běží na pozadí, aniž bys to spustil.",
     ],
     hotovo: (s) => s.stopy.includes("spustil:spravce-uloh"),
@@ -584,7 +585,7 @@ export const UKOLY: Ukol[] = [
     popis:
       "Když jsi spustil ten podezřelý soubor: ukonči jeho proces ve Správci úloh, vrať souborům původní příponu a smaž výzvu k výkupnému i samotnou návnadu.",
     kroky: [
-      "Otevři Správce úloh (Ctrl+Shift+Esc) a ukonči proces toho podezřelého programu. Dokud běží, šifruje dál.",
+      "Pravým tlačítkem na hlavní panel → Správce úloh. Ukonči proces toho podezřelého programu – dokud běží, šifruje dál.",
       "V Průzkumníku najdi soubory, kterým na konci názvu přibyla cizí přípona.",
       "Každý přejmenuj tak, že tu přidanou příponu smažeš a necháš původní název.",
       "Smaž z plochy soubor s výzvou k výkupnému.",

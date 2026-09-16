@@ -28,7 +28,7 @@ import {
   ShieldCheck
 } from "lucide-react";
 import { Ikona } from "./Ikona";
-import { Posuvnik, useVenkovniKlik } from "./ui";
+import { KontextovaNabidka, Posuvnik, useNabidka, useVenkovniKlik } from "./ui";
 import { useSystem } from "./system";
 import { APLIKACE, type AppId } from "@/lib/win/typy";
 import { datum, datumSlovy, hodiny } from "@/lib/win/format";
@@ -53,7 +53,33 @@ export function HlavniPanel({
 }) {
   const { stav, poslat, spust } = useSystem();
   const [cas, nastavCas] = useState<Date | null>(null);
+  const nabidka = useNabidka();
   const n = stav.nastaveni;
+
+  /**
+   * Nabídka po kliknutí pravým tlačítkem na panel.
+   *
+   * Není to ozdoba. Správce úloh se dal do téhle chvíle otevřít jen zkratkou
+   * Ctrl+Shift+Esc nebo přes Start – jenže tu zkratku si na Windows zabere
+   * SKUTEČNÝ systém dřív, než se klávesa vůbec dostane do prohlížeče, takže
+   * žákovi vyskočil správce jeho vlastního počítače a ten ve virtuálním se
+   * ani neotevřel. Zabránit tomu ze stránky nejde. Zbývá dát tomu úkolu
+   * cestu, která funguje – a pravé tlačítko na panel je přesně ta, kterou
+   * Windows samy nabízejí.
+   */
+  const nabidkaPanelu = [
+    {
+      id: "spravce",
+      nazev: "Správce úloh",
+      akce: () => spust("spravce-uloh"),
+    },
+    { id: "cara", cara: true },
+    {
+      id: "nastaveni-panelu",
+      nazev: "Nastavení hlavního panelu",
+      akce: () => spust("nastaveni", "prizpusobeni"),
+    },
+  ];
 
   // Hodiny se rozběhnou až na klientovi – jinak by se serverem vykreslený
   // čas neshodoval s tím v prohlížeči a React by hlásil rozpor.
@@ -87,6 +113,15 @@ export function HlavniPanel({
         className={`win-sklo win-bezvyberu relative z-[600] flex h-12 shrink-0 items-center border-t border-win-linka/60 px-2 ${
           n.zarovnaniPanelu === "stred" ? "justify-center" : "justify-start"
         }`}
+        /* Nabídka se ukotví k HORNÍ hraně panelu, ne k bodu kliknutí – přesně
+           jako ve Windows. Sama se pak vyklopí nahoru (viz `KontextovaNabidka`),
+           takže vyjede nad panel a nepřekryje ho. Rámem je RODIČ panelu, aby
+           měla kam vyjet; panel sám je vysoký 48 px. */
+        onContextMenu={(e) => {
+          e.preventDefault();
+          const ram = e.currentTarget.getBoundingClientRect();
+          nabidka.otevriNa(e.clientX, ram.top, nabidkaPanelu, e.currentTarget.parentElement);
+        }}
       >
         <div className="flex items-center gap-1">
           <TlacitkoPanelu
@@ -201,6 +236,9 @@ export function HlavniPanel({
       {otevreny === "oznameni" && cas && (
         <PanelOznameni cas={cas} zavri={() => nastavOtevreny(null)} />
       )}
+
+      {/* Mimo panel schválně – viz poznámka u `onContextMenu` výše. */}
+      {nabidka.misto && <KontextovaNabidka misto={nabidka.misto} zavri={nabidka.zavri} />}
     </>
   );
 }

@@ -262,13 +262,26 @@ export function KontextovaNabidka({
   useLayoutEffect(() => {
     const prvek = obal.current;
     if (!prvek) return;
-    const { width, height } = prvek.getBoundingClientRect();
+    // `offsetWidth/offsetHeight`, ne `getBoundingClientRect()`: nabídka v tu
+    // chvíli běží animaci vyjetí (`win-vyjezd` posouvá o 12 px a zmenšuje na
+    // 0,98), takže by se změřila menší, než doopravdy je, a spočítané místo
+    // by nesedělo. Rozměr z layoutu je transformací nedotčený.
+    const width = prvek.offsetWidth;
+    const height = prvek.offsetHeight;
     const rodic = prvek.offsetParent as HTMLElement | null;
     const maxX = rodic?.clientWidth ?? window.innerWidth;
     const maxY = rodic?.clientHeight ?? window.innerHeight;
+
+    // Když se pod bodem kliknutí nevejde, VYKLOPÍ se nahoru – spodním okrajem
+    // na ten bod. Tím se u hlavního panelu chová jako ve Windows: nabídka
+    // vyjede nad panel, ne přes něj. Posunout ji jen tak, aby se vešla, by
+    // znamenalo, že se rozprostře přes místo, na které se kliklo.
+    const vejdeSeDolu = misto.y + height + 4 <= maxY;
+    const y = vejdeSeDolu ? misto.y : misto.y - height;
+
     nastavPolohu({
       x: Math.max(4, Math.min(misto.x, maxX - width - 4)),
-      y: Math.max(4, Math.min(misto.y, maxY - height - 4)),
+      y: Math.max(4, Math.min(y, maxY - height - 4)),
       pripraveno: true,
     });
   }, [misto.x, misto.y]);
@@ -361,21 +374,27 @@ export function KontextovaNabidka({
 /** Stav kontextové nabídky – otevřít pravým tlačítkem, zavřít kliknutím jinam. */
 export function useNabidka() {
   const [misto, nastavMisto] = useState<MistoNabidky | null>(null);
+
+  /** Otevře nabídku na zadaném bodě (v souřadnicích okna). */
+  const otevriNa = useCallback(
+    (x: number, y: number, polozky: PolozkaNabidky[], obal?: HTMLElement | null) => {
+      const ram = obal?.getBoundingClientRect();
+      nastavMisto({ x: x - (ram?.left ?? 0), y: y - (ram?.top ?? 0), polozky });
+    },
+    [],
+  );
+
   const otevri = useCallback(
     (e: React.MouseEvent, polozky: PolozkaNabidky[], obal?: HTMLElement | null) => {
       e.preventDefault();
       e.stopPropagation();
-      const ram = obal?.getBoundingClientRect();
-      nastavMisto({
-        x: e.clientX - (ram?.left ?? 0),
-        y: e.clientY - (ram?.top ?? 0),
-        polozky,
-      });
+      otevriNa(e.clientX, e.clientY, polozky, obal);
     },
-    [],
+    [otevriNa],
   );
+
   const zavri = useCallback(() => nastavMisto(null), []);
-  return { misto, otevri, zavri };
+  return { misto, otevri, otevriNa, zavri };
 }
 
 /* ───────────────────────── Dialog ───────────────────────── */
