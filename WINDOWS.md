@@ -1,8 +1,9 @@
 VIRTUÁLNÍ WINDOWS 11 (stránka /windows)
 
 Výuková simulace prostředí Windows 11 pro hodiny informatiky. Běží celá
-v prohlížeči žáka a nic se neinstaluje. Bez účtu se neodesílá nic; kdo si
-účet založí, posílá na server přezdívku a seznam splněných úloh – nic víc.
+v prohlížeči žáka, nic se neinstaluje a NIC SE NEODESÍLÁ – v celém simulátoru
+není jediné volání na server. Všechno, co žák vytvoří i co splní, zůstává
+v jeho prohlížeči.
 
 
 CO TO JE A CO TO NENÍ
@@ -23,26 +24,33 @@ nastavení systému, Malování ukládá skutečné PNG a prohlížeč vykreslí
 které si žák sám napíše v Poznámkovém bloku.
 
 
-ÚČET A POSTUP
--------------
-Cesta dovnitř: zamykací obrazovka → účet → plocha. Žádný přístupový kód se
-nezadává; dřív tu byl, ale kontroloval se jen v prohlížeči, takže nic
-nechránil, a byl z něj jen krok navíc na začátku hodiny.
+VSTUP A POSTUP
+--------------
+Cesta dovnitř: zamykací obrazovka → kód od vyučujícího → plocha.
 
-Účet je DOBROVOLNÝ. Žák si zvolí přezdívku a heslo a jeho splněné úlohy se
-k nim uloží, takže může pokračovat i na jiném počítači. Kdo nechce, klikne
-na „Přeskočit" a jede dál – postup mu zůstane jen v tomhle prohlížeči.
+Kód je ORGANIZAČNÍ ZÁVORA, NE ZABEZPEČENÍ, a je to tak i napsané na
+obrazovce. Ověřuje se v prohlížeči, takže si ho kdokoli přečte ve zdrojovém
+kódu stránky – smysl má jediný: držet pohromadě třídu a odradit náhodného
+kolemjdoucího. Nechrání žádné údaje, protože tu žádné nejsou.
 
-Na server jde POUZE přezdívka a seznam ID splněných úloh. Nic z toho, co žák
-v prostředí vytvoří – soubory, obrázky, texty, nastavení – server nikdy
-nevidí; to všechno zůstává v prohlížeči.
+Kódy jsou v `src/lib/win/pristup.ts`. Společný `WIN11` platí pořád; vedle něj
+je kód pro každou třídu (`1LA-2026`, `1LB-2026`, `1S-2026`, `1P-2026`).
+Značky oborů jsou tytéž, jaké používá banka materiálů, takže není potřeba
+pamatovat si dvojí. Nová třída = jeden řádek navíc a nahrát web. Zadávání
+odpouští mezery, pomlčky i velikost písmen.
 
-Přezdívku si žák vymýšlí, nemá to být jeho jméno; přihlašovací obrazovka na
-to upozorňuje. Heslo se ukládá zahashované (scrypt, vlastní sůl u každého
-účtu), takže z úložiště se přečíst nedá.
+POZOR: kód se ověřuje v prohlížeči, takže nový kód platí AŽ PO NASAZENÍ.
+Zapsat ho do souboru nestačí.
 
-Po přihlášení si karta prohlížeče pamatuje, že sezení běží, takže obnovení
-stránky nevyhodí žáka ven. Zavřením prohlížeče se zapomene.
+ÚČTY ŽÁKŮ TU NEJSOU. Dřív existovaly – žák si mohl založit přezdívku
+s heslem a jeho splněné úlohy se ukládaly na server, aby mohl pokračovat
+jinde. Zrušily se: kvůli pohodlí, které skoro nikdo nevyužil, se sbíraly
+údaje o nezletilých, a to je špatný obchod. Dnes v simulátoru není jediné
+volání na server.
+
+Postup i celý disk se ukládají do `localStorage` prohlížeče. Z toho plyne,
+co je potřeba žákům říct: na jiném počítači, v anonymním okně nebo po
+vyčištění prohlížeče je práce pryč.
 
 
 SCÉNÁŘE — S JAKÝM POČÍTAČEM ŽÁK NASTOUPÍ
