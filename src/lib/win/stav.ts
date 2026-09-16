@@ -190,7 +190,7 @@ export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
   prohlizec: { w: 1060, h: 680 },
   /* Malé schválně: vtíravá okna bývají malá, ať se dají naskládat přes sebe,
      a menší okno taky líp ukáže, že se vrátilo na jiné místo. */
-  reklama: { w: 460, h: 272 },
+  reklama: { w: 460, h: 292 },
 };
 
 export function vychoziStav(scenar: string = VYCHOZI_SCENAR): Stav {

@@ -135,7 +135,8 @@ export function Prihlaseni({
                 se strávila hádáním, jestli jsou to skutečné Windows. */}
             <p className="max-w-[340px] text-center text-[12px] leading-relaxed text-white/70 drop-shadow">
               Výuková simulace Windows 11 pro hodiny informatiky. Neběží tu
-              skutečný systém a nic se neinstaluje.
+              skutečný systém a nic se neinstaluje. Všechno, co se tu stane,
+              se děje jen v téhle záložce – tvého počítače se to nedotkne.
             </p>
             {/* Který scénář se otevřel. Ukazuje se jen u jiného než výchozího:
                 učitel i žák hned vidí, že odkaz vedl na konkrétní cvičení

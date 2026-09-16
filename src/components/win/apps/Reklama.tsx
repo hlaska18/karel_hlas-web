@@ -71,9 +71,10 @@ export function Reklama() {
           </button>
         </div>
 
-        <p className="mt-4 border-t border-win-linka pt-2 text-[10px] uppercase tracking-wide text-win-slaby">
-          {HLASKA.patka}
-        </p>
+        <div className="mt-4 border-t border-win-linka pt-2 text-win-slaby">
+          <p className="text-[10px] uppercase tracking-wide">{HLASKA.patka}</p>
+          <p className="mt-0.5 text-[10px] leading-snug">{HLASKA.patka2}</p>
+        </div>
       </div>
     </div>
   );

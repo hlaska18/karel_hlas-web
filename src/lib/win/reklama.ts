@@ -42,6 +42,8 @@ export const HLASKA = {
   /** Co se stane po kliknutí na kterékoli tlačítko – tedy nic. */
   poKliknuti: "Zkontrolujte připojení a zkuste to znovu.",
   /* Stejný důvod jako u výzvy k výkupnému: na fotce obrazovky není vidět
-     nic než tohle okno, a bez téhle řádky vypadá jako skutečná nákaza. */
+     nic než tohle okno, a bez téhle řádky vypadá jako skutečná nákaza.
+     Druhá řádka říká to, na co se ptal i Karel: děje se to jen tady. */
   patka: "CVIČENÍ · výuková simulace, SPŠ strojní a stavební Tábor",
+  patka2: "Běží jen v této záložce – tvého skutečného počítače se to netýká.",
 };

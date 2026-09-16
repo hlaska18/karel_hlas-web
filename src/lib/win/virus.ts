@@ -71,8 +71,13 @@ export const VYZVA_TEXT = `==================================================
 
 TVOJE SOUBORY MAJÍ JINOU PŘÍPONU
 
-Tohle je cvičný škodlivý program z výukového prostředí. Nic skutečného se
-nestalo — běží to jen v prohlížeči a vypnutím se všechno vrátí.
+Tohle je cvičný škodlivý program z výukového prostředí a stalo se to POUZE
+A JENOM UVNITŘ TÉHLE SIMULACE. Přejmenovaly se soubory, které existují jen
+v prohlížeči, na téhle jedné stránce.
+
+Tvůj skutečný počítač je nedotčený: na skutečné ploše se nic nezměnilo,
+žádný soubor se nestáhl a nikam se nic neodeslalo. Zavřením záložky nebo
+tlačítkem „Vrátit počítač do výchozího stavu" v Nastavení je po všem.
 
 CO SE PRÁVĚ STALO
 Spustil jsi soubor, který vypadal jako fotka. Ve skutečnosti měl příponu
