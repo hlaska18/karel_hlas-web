@@ -827,10 +827,11 @@ const LESSON_CONFIG: Record<string, LessonConfig> = {
     studentLabel: { cs: "Podklad", en: "Activity file" },
     teacherLabel: { cs: "Prezentace", en: "Slides" },
   },
-  // Power BI tu mělo skupiny „Úlohy" a „Řešení", které na disku neexistují –
-  // reálné jsou „PowerBI" a „Microsoft 365 pro školy". Konfigurace tedy nikdy
-  // nevytvořila jedinou kartu lekce a jen mátla. Téma dnes vede na cizí
-  // cvičebnici, karty lekcí by neměl z čeho postavit.
+  // Power BI tu mělo skupiny „Úlohy" a „Řešení", které na disku neexistovaly,
+  // takže konfigurace nikdy nevytvořila jedinou kartu lekce a jen mátla.
+  // Karty lekcí párují žákovský list s metodikou; cvičebnice má místo toho
+  // u každé úlohy zadání, pracovní soubor a řešení pohromadě ve složce,
+  // což dělá totéž a nepotřebuje to zvláštní konfiguraci.
   //
   // Grafika a multimédia tu není schválně: balíček je rozdělený rovnou do
   // složek hodin, takže si karty lekcí nemá z čeho stavět a nepotřebuje je –

@@ -124,7 +124,6 @@ const NAME_EN: Record<string, string> = {
   "Úlohy ve Wordu": "Word exercises",
   "Excel – materiály k úlohám": "Excel – exercise materials",
   "Word – materiály k úlohám": "Word – exercise materials",
-  "Návod na stažení Microsoft 365 aplikací": "How to install Microsoft 365 apps",
   PowerBI: "Power BI",
   "Pracovní listy": "Worksheets",
   "Plány hodin": "Lesson plans",
@@ -202,7 +201,6 @@ const NAME_EN: Record<string, string> = {
   "2025-26": "2025/26",
   "Zadání test Python A": "Python test A – assignment",
   "Zadání test Python B": "Python test B – assignment",
-  "Microsoft 365 pro školy": "Microsoft 365 for schools",
   "Začni tady": "Start here",
   // Laboratoř byla dřív jedna s pěti moduly. Po rozdělení balíčku do hodin má
   // každá hodina svou – žák tak nevidí moduly, které do jeho hodiny nepatří.
