@@ -4,7 +4,6 @@ import {
   TOOL_ICON,
   toolLabel,
   countMaterials,
-  materialTypeOf,
   fmtSize,
   tileSubtitle,
   countByKind,
@@ -87,57 +86,6 @@ describe("countMaterials", () => {
     expect(countMaterials(0, "cs")).toBe("0 materiálů");
     expect(countMaterials(5, "cs")).toBe("5 materiálů");
     expect(countMaterials(11, "cs")).toBe("11 materiálů");
-  });
-});
-
-describe("materialTypeOf", () => {
-  it("detects a test from the file label", () => {
-    expect(materialTypeOf(makeItem({ label: { cs: "Test z Pythonu", en: "" } }))).toEqual({
-      cs: "Test",
-      en: "Test",
-    });
-  });
-
-  it("detects a solution", () => {
-    expect(materialTypeOf(makeItem({ label: { cs: "Řešení úlohy", en: "" } }))).toEqual({
-      cs: "Řešení",
-      en: "Solution",
-    });
-  });
-
-  it("matches ascii-only spellings without diacritics", () => {
-    expect(materialTypeOf(makeItem({ label: { cs: "reseni bez diakritiky", en: "" } }))).toEqual({
-      cs: "Řešení",
-      en: "Solution",
-    });
-  });
-
-  it("returns null when nothing matches", () => {
-    expect(materialTypeOf(makeItem({ label: { cs: "Obyčejný soubor", en: "" } }))).toBeNull();
-  });
-
-  it("suppresses the badge when the group already conveys the type", () => {
-    expect(
-      materialTypeOf(
-        makeItem({
-          group: { cs: "Testy z minulých let", en: "" },
-          label: { cs: "Test 2023", en: "" },
-        }),
-      ),
-    ).toBeNull();
-  });
-
-  it("respects rule priority (test before exercise)", () => {
-    expect(materialTypeOf(makeItem({ label: { cs: "Test k úloze", en: "" } }))).toEqual({
-      cs: "Test",
-      en: "Test",
-    });
-  });
-
-  it("tolerates a missing group", () => {
-    expect(
-      materialTypeOf(makeItem({ group: undefined, label: { cs: "Metodika", en: "" } })),
-    ).toEqual({ cs: "Metodika", en: "Teaching notes" });
   });
 });
 

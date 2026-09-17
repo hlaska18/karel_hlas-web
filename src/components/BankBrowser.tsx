@@ -51,7 +51,6 @@ import {
   countLinks,
   countMaterials,
   fmtSize,
-  materialTypeOf,
   tileSubtitle,
   toolLabel,
 } from "@/lib/bankLabels";
@@ -658,7 +657,6 @@ function MaterialRow({
 
   const t = fileType(it.ext, lang);
   const previewable = canPreview(it.ext);
-  const materialType = materialTypeOf(it);
   const TypeIcon = typeIcon(t.key);
   return (
     /* Náhled otevře KLIK KAMKOLI do řádku, ne jen ikona oka. Karlova kolegyně
@@ -707,7 +705,7 @@ function MaterialRow({
             zbývá 204 px a celý se nevejde, takže by se uřízl přesně na počtu
             souborů („Ukázky do výkladu – 5 soubo…"). Drobečky se ořezávat
             smějí – tam je uříznutý konec cesty pořád k něčemu. */}
-        {(materialType || it.ukazky || !vKarte) && (
+        {(it.ukazky || !vKarte) && (
           <span
             className={`mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400 ${
               it.ukazky ? "" : "truncate"
@@ -717,12 +715,6 @@ function MaterialRow({
                 uvnitř – „ZIP · Obrázky · 1,5 MB" může být cokoli. Popisek
                 proto zůstává i v kartě lekce, kde se drobečky schovávají. */}
             {it.ukazky ? <span>{s.ukazkyNote(it.ukazky)}</span> : null}
-            {materialType && (
-              <span className="text-zinc-600 dark:text-zinc-400">
-                {materialType[lang]}
-                {vKarte ? "" : " · "}
-              </span>
-            )}
             {!vKarte && (
               <>
                 {L(it.topicLabel, lang)}
