@@ -1024,6 +1024,27 @@ function ToolFolders({
       map.set(klic, zaznam);
     }
 
+    // MEZIČLÁNKY. Mapa vzniká ze souborů, takže složka, která žádné soubory
+    // přímo nemá a jen sdružuje podsložky (`Word/Úlohy`), v ní chybí. Bez
+    // dodělání by si úlohy nenašly rodiče a vysypaly se na nejvyšší úroveň –
+    // tedy přesně ten seznam 32 karet, kvůli kterému se „Úlohy" zaváděly.
+    for (const u of [...map.values()]) {
+      const casti = u.cesta.split("/");
+      const nazvy = u.name.split(" › ");
+      for (let i = 1; i < casti.length; i += 1) {
+        const cesta = casti.slice(0, i).join("/");
+        const klic = `${cesta} ${u.ucitelska ? "u" : "z"}`;
+        if (map.has(klic)) continue;
+        map.set(klic, {
+          cesta,
+          name: nazvy.slice(0, i).join(" › "),
+          ucitelska: u.ucitelska,
+          items: [],
+          deti: [],
+        });
+      }
+    }
+
     // Vnoření: „1. Rastrová grafika/Obrázky" je dítě „1. Rastrová grafika".
     // Bez toho měla grafika devatenáct karet – každou lekci dvakrát, jednou ji
     // samotnou a jednou její přílohy – a největší kartou v celém tématu byla
@@ -1036,7 +1057,12 @@ function ToolFolders({
       if (rodic) {
         // Uvnitř stačí název samotné podsložky – nadřazenou lekci má člověk
         // před očima v hlavičce karty, ve které ten řádek stojí.
-        rodic.deti.push({ ...u, name: u.name.split(" › ").pop() ?? u.name });
+        //
+        // Věší se ODKAZEM, ne kopií (`{...u}`). U dvou úrovní na tom nezáleželo,
+        // u tří ano: „Úlohy" se pověsí pod „Word" dřív, než se pod ně samotné
+        // stihnou pověsit jednotlivé úlohy – a do kopie by se už nepropsaly.
+        u.name = u.name.split(" › ").pop() ?? u.name;
+        rodic.deti.push(u);
       } else {
         korenove.push(u);
       }
@@ -1050,16 +1076,28 @@ function ToolFolders({
       for (const b of korenove)
         if (a.name === b.name && a.ucitelska !== b.ucitelska) kolize.add(a.name);
 
-    const autor = (u: Uzel) => u.items.find((i) => i.groupAuthor)?.groupAuthor;
+    /**
+     * Autor složky. Hledá se i mezi potomky – složka „Úlohy" sama žádné
+     * soubory nemá, takže by u ní autor jinak chyběl.
+     */
+    const autor = (u: Uzel): string | undefined =>
+      u.items.find((i) => i.groupAuthor)?.groupAuthor ??
+      u.deti.map(autor).find((a) => a !== undefined);
+
+    // Rekurzivně, ne na dvě úrovně: hloubka je věc složek na disku, ne kódu.
+    const naKartu = (u: Uzel): Karta => ({
+      name: u.name,
+      items: u.items,
+      author: autor(u),
+      deti: u.deti.map(naKartu),
+    });
 
     return {
       rozcestniky: start,
       loose: rest,
       folders: korenove.map((f) => ({
+        ...naKartu(f),
         name: kolize.has(f.name) && f.ucitelska ? `${f.name} · ${s.teacherFolder}` : f.name,
-        items: f.items,
-        deti: f.deti.map((d) => ({ name: d.name, items: d.items, author: autor(d) })),
-        author: autor(f),
       })),
     };
   }, [items, lang, s.teacherFolder, s.studentFolder]);
@@ -1113,6 +1151,25 @@ function ToolFolders({
 }
 
 
+/**
+ * Kolik materiálů složka nese VČETNĚ všeho pod sebou.
+ *
+ * Musí to jít do hloubky. Dřív se sčítala jen složka a její přímí potomci,
+ * což u dvou úrovní vycházelo – jenže „Word" má dnes uvnitř „Úlohy" a v nich
+ * teprve soubory, takže v hlavičce svítilo „1 materiál" u složky se 74.
+ */
+function spocitejMaterialy(items: BankItem[], deti: Karta[]): number {
+  return items.length + deti.reduce((n, d) => n + spocitejMaterialy(d.items, d.deti), 0);
+}
+
+/** Složka tak, jak ji vykresluje banka. Zanořuje se do sebe – viz `naKartu`. */
+type Karta = {
+  name: string;
+  items: BankItem[];
+  author?: string;
+  deti: Karta[];
+};
+
 function FolderCard({
   name,
   author,
@@ -1127,7 +1184,7 @@ function FolderCard({
   author?: string;
   items: BankItem[];
   /** Podsložky – vykreslí se uvnitř, pod soubory samotné složky. */
-  deti?: { name: string; items: BankItem[]; author?: string }[];
+  deti?: Karta[];
   /**
    * Rozbalit rovnou. Používá se, když je složka v dlaždici jediná – pak je
    * zavřená karta jen víko přes celý obsah a kliknutí navíc pro nic.
@@ -1165,7 +1222,7 @@ function FolderCard({
           <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
             {/* Počet včetně podsložek – karta se tváří jako jeden celek,
                 takže by lhala, kdyby své přílohy nepočítala. */}
-            {countMaterials(items.length + deti.reduce((n, d) => n + d.items.length, 0), lang)}
+            {countMaterials(spocitejMaterialy(items, deti), lang)}
           </span>
         </span>
         {author && (
@@ -1203,6 +1260,7 @@ function FolderCard({
                   name={d.name}
                   author={d.author}
                   items={d.items}
+                  deti={d.deti}
                   lang={lang}
                   onPreview={onPreview}
                 />

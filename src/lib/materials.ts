@@ -96,6 +96,7 @@ const NAME_EN: Record<string, string> = {
   // ze 73 úloh, takže se vyplatí je přeložit. Názvy jednotlivých úloh
   // („01. Formát písma") přeložené nejsou a spadnou na češtinu – je to
   // dokumentované chování a u 73 položek to nestojí za údržbu.
+  "Úlohy": "Exercises",
   "Zadání": "Exercise",
   "Řešení": "Solution",
   "Řešení (PDF)": "Solution (PDF)",

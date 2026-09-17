@@ -234,7 +234,7 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     // souborem `_stejne.txt`. Bez toho by u nich svítilo jen „technické
     // lyceum" a kolega ze strojírenství by je přeskočil.
     const zadani = items.find(
-      (it) => it.group?.cs === "Excel › Tabulka" && it.label.cs === "Zadání",
+      (it) => it.group?.cs === "Excel › Úlohy › Tabulka" && it.label.cs === "Zadání",
     );
     expect(zadani).toBeDefined();
     expect(zadani!.courseIds).toEqual(expect.arrayContaining(["1L", "1S", "1P"]));
@@ -274,7 +274,7 @@ describe("cvičebnice 100 příkladů pro Office", () => {
   });
 
   it("autorem je tým cvičebnice, ne jeden člověk", () => {
-    const ukol = items.find((it) => it.group?.cs === "Word › Formát písma");
+    const ukol = items.find((it) => it.group?.cs === "Word › Úlohy › Formát písma");
     expect(ukol?.groupAuthor).toBe("Tým autorů a tým Microsoft pro školství");
   });
 
