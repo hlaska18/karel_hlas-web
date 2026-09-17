@@ -136,6 +136,7 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
         okna: stav.okna.map((o) =>
           o.id === akce.id ? { ...o, minimalizovane: false, z: nejvyssi + 1 } : o,
         ),
+        stopy: pridejStopu(stav.stopy, `vratil-z-docku:${okno.app}`),
       };
     }
 
@@ -170,8 +171,18 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
     case "disk/nastav":
       return { ...stav, disk: akce.disk };
 
-    case "nastaveni/zmen":
-      return { ...stav, nastaveni: { ...stav.nastaveni, ...akce.zmena } };
+    case "nastaveni/zmen": {
+      const nastaveni = { ...stav.nastaveni, ...akce.zmena };
+      // Stopa se zapisuje jen při ZAPNUTÍ. Kdyby ji nechalo i vypnutí, úkol
+      // „ukaž si položky s tečkou" by se odškrtl i tomu, kdo přepínač jen
+      // našel a hned vrátil zpátky.
+      const zapnul = akce.zmena.skrytePolozky === true && !stav.nastaveni.skrytePolozky;
+      return {
+        ...stav,
+        nastaveni,
+        stopy: zapnul ? pridejStopu(stav.stopy, "zapnul-tecky") : stav.stopy,
+      };
+    }
 
     case "stopa":
       if (stav.stopy.includes(akce.klic)) return stav;

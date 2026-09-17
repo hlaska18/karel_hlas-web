@@ -21,6 +21,7 @@ import {
   type ReactNode,
 } from "react";
 import { reducerMac, type AkceMac } from "@/lib/mac/reducer";
+import { vyhodnotMac } from "@/lib/mac/ukoly";
 import {
   nactiMac,
   ulozMac,
@@ -82,6 +83,13 @@ export function MacProvider({ children }: { children: ReactNode }) {
       return;
     }
     ulozMac(stav);
+  }, [stav]);
+
+  // Úkoly se vyhodnocují po každé změně stavu. Jednou splněné zůstávají.
+  useEffect(() => {
+    const hotove = vyhodnotMac(stav);
+    const nove = hotove.filter((id) => !stav.splneno.includes(id));
+    if (nove.length) poslat({ typ: "ukoly/splneno", ids: nove });
   }, [stav]);
 
   const spust = useCallback(

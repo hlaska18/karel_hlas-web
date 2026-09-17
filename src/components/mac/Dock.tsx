@@ -32,6 +32,40 @@ export function Dock() {
   const { stav, poslat, spust } = useMac();
   const schovana = stav.okna.filter((o) => o.minimalizovane);
 
+  /**
+   * Co udělá kliknutí na ikonu v Docku.
+   *
+   * Přesně jako na skutečném Macu, a to ve všech čtyřech případech:
+   *   neběží                → spustí se a otevře okno
+   *   běží a okno je vidět  → vytáhne se dopředu
+   *   běží a okno je v Docku→ vrátí se z Docku
+   *   běží a okno není      → otevře se NOVÉ okno
+   *
+   * Poslední případ se sem musel dodělat. Předtím se jen přepnula lišta
+   * nahoře a na obrazovce se nestalo nic – žák, který zavřel okno Finderu,
+   * neměl jak se dostat zpátky a vypadalo to jako rozbitá ikona. Lekci to
+   * nebere: tečka pod ikonou svítila celou dobu a nahoře stál Finder, což
+   * je přesně to, co má úloha ukázat.
+   */
+  const otevriZDocku = (app: AppId) => {
+    if (!stav.bezici.includes(app)) {
+      spust(app);
+      return;
+    }
+    const jehoOkna = stav.okna.filter((o) => o.app === app);
+    if (jehoOkna.length === 0) {
+      spust(app);
+      return;
+    }
+    const vidiSe = jehoOkna.filter((o) => !o.minimalizovane);
+    if (vidiSe.length === 0) {
+      const posledni = jehoOkna.reduce((a, b) => (a.z > b.z ? a : b));
+      poslat({ typ: "okno/obnov", id: posledni.id });
+      return;
+    }
+    poslat({ typ: "app/dopredu", app });
+  };
+
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[800] flex justify-center pb-2">
       <div className="mac-sklo mac-bezvyberu pointer-events-auto flex items-end gap-2 rounded-2xl border border-white/20 px-2 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
@@ -41,12 +75,7 @@ export function Dock() {
             popis={APLIKACE[app].nazev}
             vzhled={VZHLED[app]}
             bezi={stav.bezici.includes(app)}
-            onClick={() => {
-              // Běžící aplikace bez okna se jen vytáhne dopředu. Nové okno by
-              // zamlčelo, že program celou dobu běžel – a to je ta lekce.
-              if (stav.bezici.includes(app)) poslat({ typ: "app/dopredu", app });
-              else spust(app);
-            }}
+            onClick={() => otevriZDocku(app)}
           />
         ))}
 

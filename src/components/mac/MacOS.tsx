@@ -16,6 +16,7 @@ import { OknoRamMac } from "./OknoRam";
 import { HorniLista, type Nabidka } from "./HorniLista";
 import { Dock } from "./Dock";
 import { Plocha } from "./Plocha";
+import { PanelUkoluMac } from "./PanelUkolu";
 import { PrihlaseniMac } from "./Prihlaseni";
 import { Finder } from "./apps/Finder";
 import { Poznamky } from "./apps/Poznamky";
@@ -36,7 +37,7 @@ export function VirtualniMac() {
 }
 
 function Obrazovka() {
-  const { stav, poslat, spust, nastavPlochu } = useMac();
+  const { stav, poslat, spust, stopa, nastavPlochu } = useMac();
   const [faze, nastavFazi] = useState<Faze>("prihlaseni");
   const [panel, nastavPanel] = useState<Panel>(null);
   const [celaObrazovka, nastavCelou] = useState(false);
@@ -69,6 +70,13 @@ function Obrazovka() {
     };
   }, [faze, nastavPlochu]);
 
+  /* Jediné místo, kde se panel Vynutit ukončení otevírá. Cesty jsou tři
+     (jablko, zkratka, tlačítko), takže stopa patří sem, ne ke každé z nich. */
+  const otevriVynuceni = useCallback(() => {
+    stopa("otevrel-vynuceni");
+    nastavPanel("vynutit");
+  }, [stopa]);
+
   /**
    * Klávesové zkratky. Vybrané OPATRNĚ, protože žáci sedí u windowsových
    * strojů a v prohlížeči:
@@ -86,7 +94,7 @@ function Obrazovka() {
     const naKlavesu = (e: KeyboardEvent) => {
       if (e.ctrlKey && e.altKey && e.key === "Escape") {
         e.preventDefault();
-        nastavPanel("vynutit");
+        otevriVynuceni();
       } else if (e.ctrlKey && e.shiftKey && (e.key === "." || e.code === "Period")) {
         e.preventDefault();
         poslat({
@@ -99,7 +107,7 @@ function Obrazovka() {
     };
     window.addEventListener("keydown", naKlavesu);
     return () => window.removeEventListener("keydown", naKlavesu);
-  }, [faze, poslat, stav.nastaveni.skrytePolozky]);
+  }, [faze, poslat, otevriVynuceni, stav.nastaveni.skrytePolozky]);
 
   /**
    * První okno po přihlášení.
@@ -250,7 +258,7 @@ function Obrazovka() {
         <div className="absolute inset-0 flex flex-col">
           <HorniLista
             nabidky={nabidky}
-            onVynutitUkonceni={() => nastavPanel("vynutit")}
+            onVynutitUkonceni={otevriVynuceni}
             onOdhlasit={odhlasit}
             onOMacu={() => nastavPanel("oMacu")}
           />
@@ -261,6 +269,8 @@ function Obrazovka() {
             {stav.okna.map((okno) => (
               <OknoSAplikaci key={okno.id} okno={okno} aktivni={okno.z === nejvyssiZ} />
             ))}
+
+            <PanelUkoluMac />
 
             <Dock />
 
