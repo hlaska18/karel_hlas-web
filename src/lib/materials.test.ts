@@ -301,7 +301,7 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     );
     expect(cvicebnice?.popis?.cs).toContain("Celá cvičebnice");
     expect(cvicebnice?.popis?.en).toContain("whole Word workbook");
-    expect(cvicebnice?.groupPopis?.cs).toContain("navazují");
+    expect(cvicebnice?.groupPopis?.cs).toContain("rozbitý dokument");
   });
 
   it("popis složky se nedědí do úloh", () => {
