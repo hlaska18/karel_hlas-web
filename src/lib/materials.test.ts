@@ -158,10 +158,19 @@ describe("součet dlaždic proti číslu v hlavičce", () => {
 describe("cvičebnice 100 příkladů pro Office", () => {
   const items = getBankItems();
 
-  it("Word, Excel i Power BI mají hostované soubory, ne jen odkaz", () => {
-    for (const tool of ["Word", "Excel", "Power BI"]) {
-      const souboru = items.filter((it) => it.tool === tool && !it.external);
-      expect(souboru.length, tool).toBeGreaterThan(5);
+  it("Word, Excel i Power BI jsou soubory, ne odkazy ven", () => {
+    // Cvičebnice se na web nahrávala právě proto, že odkaz ven přestal
+    // fungovat. Kdyby se sem nějaký vrátil, je to krok zpátky k té chybě,
+    // kterou hlásili kolegové.
+    for (const skupina of ["Word", "Excel", "PowerBI"]) {
+      // Schválně podle SKUPINY, ne podle dlaždice: v dlaždici Power BI leží
+      // i rozcestník Microsoftu, odkud software vzít. To je odkaz, který tam
+      // patří – nic se odtud nestahuje a je to jejich vlastní stránka.
+      const vsechny = items.filter(
+        (it) => it.group?.cs === skupina || it.group?.cs.startsWith(`${skupina} › `),
+      );
+      expect(vsechny.length, skupina).toBeGreaterThan(5);
+      expect(vsechny.filter((it) => it.external), skupina).toHaveLength(0);
     }
   });
 
