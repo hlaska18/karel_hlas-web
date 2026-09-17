@@ -1098,6 +1098,10 @@ function ToolFolders({
           key={f.name}
           name={f.name}
           author={f.author}
+          // Jediná složka v dlaždici = otevřít. Když jich je víc (grafika má
+          // podklady, prezentace, pro učitele…), zůstávají zavřené – rozbalit
+          // je všechny by z přehledu udělalo zeď textu.
+          autoOpen={folders.length === 1}
           items={f.items}
           deti={f.deti}
           lang={lang}
@@ -1114,6 +1118,7 @@ function FolderCard({
   author,
   items,
   deti = [],
+  autoOpen = false,
   lang,
   onPreview,
 }: {
@@ -1123,11 +1128,18 @@ function FolderCard({
   items: BankItem[];
   /** Podsložky – vykreslí se uvnitř, pod soubory samotné složky. */
   deti?: { name: string; items: BankItem[]; author?: string }[];
+  /**
+   * Rozbalit rovnou. Používá se, když je složka v dlaždici jediná – pak je
+   * zavřená karta jen víko přes celý obsah a kliknutí navíc pro nic.
+   * Podsložky uvnitř zůstávají zavřené vždycky, jinak by se z Wordu
+   * vysypalo 74 řádků najednou.
+   */
+  autoOpen?: boolean;
   lang: Lang;
   onPreview: (it: BankItem) => void;
 }) {
   const s = STR[lang];
-  const [open, setOpen] = useState(false);
+  const [open, setOpen] = useState(autoOpen);
   const onlyTeacher = items.every((it) => it.audience === "teacher");
 
   return (
