@@ -29,7 +29,7 @@ function kindFromExt(ext: string): Material["kind"] {
 }
 
 function isHidden(name: string): boolean {
-  return name.startsWith(".") || /^_tema|^_autor|^_zdroje|^_stejne|^readme/i.test(name);
+  return name.startsWith(".") || /^_tema|^_autor|^_zdroje|^_stejne|^_popis|^readme/i.test(name);
 }
 
 /** Učitelská podsložka – její obsah se ukáže jen v učitelském pohledu. Konvence: „_ucitel". */
@@ -284,6 +284,17 @@ export type BankItem = {
   /** Autor celé skupiny ze souboru `_autor.txt` (např. převzatá cvičebnice). */
   groupAuthor?: string;
   /**
+   * Vlastní věta o souboru z `_popis.json` – co to je a k čemu to je.
+   *
+   * SCHVÁLNĚ NAPSANÁ, NE ODVOZENÁ. Dřív tu byl štítek, který typ materiálu
+   * hádal z názvu, a protože hádal z textu, který je vidět hned nad ním,
+   * uměl ho jen zopakovat („Řešení" a pod tím „Řešení"). Kde popis dává
+   * smysl, napíše se – jinde nic nesvítí.
+   */
+  popis?: { cs: string; en: string };
+  /** Popis celé složky z `_popis.json` (klíč `složka`). Nedědí se do podsložek. */
+  groupPopis?: { cs: string; en: string };
+  /**
    * Vlastní vysvětlivka u převzatého odkazu (z `note` v `_zdroj.json`).
    * Nahradí obecné „Převzatý materiál – otevři u zdroje“ tam, kde je potřeba
    * říct něco konkrétnějšího – třeba že učebnice bez cvičných souborů nefunguje.
@@ -482,6 +493,9 @@ function rolePoradi(label: string): number {
   return 2;
 }
 
+/** Dvojjazyčná věta v `_popis.json`. */
+type Popis = { cs: string; en: string };
+
 export function getBankItems(): BankItem[] {
   // Sloučení duplicit napříč obory (1L/1S/1P): klíč = nástroj+skupina+název+typ,
   // NE číslo tématu (Excel je v 1L téma 4, v 1S/1P téma 3). Soubory jsou
@@ -550,6 +564,29 @@ export function getBankItems(): BankItem[] {
         groupAuthor?: string,
         groupSort?: string,
       ) => {
+        /**
+         * `_popis.json` téhle složky. SCHVÁLNĚ SE NEDĚDÍ do podsložek:
+         * popis Wordu nemá co dělat u každé z 32 úloh. Každá složka, která
+         * chce něco říct, si to napíše sama.
+         *
+         * Tvar:
+         *   { "složka": {cs,en}, "soubory": { "Zadání.pdf": {cs,en} } }
+         */
+        let popisSlozky: Popis | undefined;
+        let popisySouboru: Record<string, Popis> = {};
+        try {
+          const raw = fs.readFileSync(path.join(absDir, "_popis.json"), "utf8");
+          const parsed = JSON.parse(raw) as { složka?: Popis; soubory?: Record<string, Popis> };
+          popisSlozky = parsed.složka;
+          popisySouboru = parsed.soubory ?? {};
+        } catch (err) {
+          // Chybějící soubor je běžný stav; poškozený ale ne – bez hlášky by
+          // Karel psal popis a divil se, že se nikde neukáže.
+          if ((err as NodeJS.ErrnoException).code !== "ENOENT") {
+            console.warn(`[materials] Neplatný _popis.json v ${absDir}:`, err);
+          }
+        }
+
         let ents: fs.Dirent[] = [];
         try {
           ents = fs.readdirSync(absDir, { withFileTypes: true }).filter((x) => !isHidden(x.name));
@@ -762,6 +799,8 @@ export function getBankItems(): BankItem[] {
               group,
               groupAuthor,
               groupSort,
+              popis: popisySouboru[file],
+              groupPopis: popisSlozky,
               courseIds: [courseId],
               coursesLabel: { cs: "", en: "" },
             });

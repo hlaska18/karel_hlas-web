@@ -705,16 +705,26 @@ function MaterialRow({
             zbývá 204 px a celý se nevejde, takže by se uřízl přesně na počtu
             souborů („Ukázky do výkladu – 5 soubo…"). Drobečky se ořezávat
             smějí – tam je uříznutý konec cesty pořád k něčemu. */}
-        {(it.ukazky || !vKarte) && (
+        {(it.popis || it.ukazky || !vKarte) && (
           <span
+            // Vlastní popis se zalamuje, ne ořezává – ze stejného důvodu jako
+            // popisek ukázek. Je to celá věta a uříznout jí konec znamená
+            // zahodit právě to, kvůli čemu se psala („…najdeš i zvlášť u každé
+            // úlohy" se ořízlo na „…najd"). Drobečky se ořezávat smějí.
             className={`mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400 ${
-              it.ukazky ? "" : "truncate"
+              it.ukazky || it.popis ? "" : "truncate"
             }`}
           >
             {/* Balík ukázek je jediný řádek, který sám o sobě neřekne, co je
                 uvnitř – „ZIP · Obrázky · 1,5 MB" může být cokoli. Popisek
                 proto zůstává i v kartě lekce, kde se drobečky schovávají. */}
             {it.ukazky ? <span>{s.ukazkyNote(it.ukazky)}</span> : null}
+            {it.popis && (
+              <span>
+                {it.popis[lang]}
+                {vKarte ? "" : " · "}
+              </span>
+            )}
             {!vKarte && (
               <>
                 {L(it.topicLabel, lang)}
@@ -1081,6 +1091,9 @@ function ToolFolders({
       name: u.name,
       items: u.items,
       author: autor(u),
+      // Jen z PŘÍMÝCH souborů složky: `_popis.json` se do podsložek nedědí,
+      // takže popis Wordu nesmí vyskočit i u každé jednotlivé úlohy.
+      popis: u.items.find((i) => i.groupPopis)?.groupPopis,
       deti: u.deti.map(naKartu),
     });
 
@@ -1128,6 +1141,7 @@ function ToolFolders({
           key={f.name}
           name={f.name}
           author={f.author}
+          popis={f.popis}
           // Jediná složka v dlaždici = otevřít. Když jich je víc (grafika má
           // podklady, prezentace, pro učitele…), zůstávají zavřené – rozbalit
           // je všechny by z přehledu udělalo zeď textu.
@@ -1159,12 +1173,15 @@ type Karta = {
   name: string;
   items: BankItem[];
   author?: string;
+  /** Vlastní věta o složce z `_popis.json`. */
+  popis?: { cs: string; en: string };
   deti: Karta[];
 };
 
 function FolderCard({
   name,
   author,
+  popis,
   items,
   deti = [],
   autoOpen = false,
@@ -1174,6 +1191,8 @@ function FolderCard({
   name: string;
   /** Autor celé složky (převzaté materiály) – ukáže se vedle šipky. */
   author?: string;
+  /** Věta o tom, co ve složce je a jak se s tím pracuje (`_popis.json`). */
+  popis?: { cs: string; en: string };
   items: BankItem[];
   /** Podsložky – vykreslí se uvnitř, pod soubory samotné složky. */
   deti?: Karta[];
@@ -1234,6 +1253,14 @@ function FolderCard({
         }`}
       >
         <div className="overflow-hidden">
+          {/* Věta o složce stojí NAD soubory, ne v hlavičce karty: v hlavičce
+              se text ořezává na jeden řádek a tohle jsou dvě tři věty o tom,
+              jak spolu úlohy souvisí. Zavřenou kartu to navíc nenafoukne. */}
+          {popis && (
+            <p className="mx-3 mb-2 rounded-karta bg-accent-500/[0.07] px-4 py-3 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+              {popis[lang]}
+            </p>
+          )}
           <ul className="space-y-2 px-3 pb-3">
             {items.map((it) => (
               <MaterialRow
@@ -1251,6 +1278,7 @@ function FolderCard({
                 <FolderCard
                   name={d.name}
                   author={d.author}
+                  popis={d.popis}
                   items={d.items}
                   deti={d.deti}
                   lang={lang}

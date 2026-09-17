@@ -245,7 +245,7 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     // souborem `_stejne.txt`. Bez toho by u nich svítilo jen „technické
     // lyceum" a kolega ze strojírenství by je přeskočil.
     const zadani = items.find(
-      (it) => it.group?.cs === "Excel › Úlohy › Tabulka" && it.label.cs === "Zadání",
+      (it) => it.group?.cs === "Excel › Úlohy › 01 – Tabulka" && it.label.cs === "Zadání",
     );
     expect(zadani).toBeDefined();
     expect(zadani!.courseIds).toEqual(expect.arrayContaining(["1L", "1S", "1P"]));
@@ -292,8 +292,41 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     expect(sCarkou.length).toBeGreaterThan(0);
   });
 
+  it("popis z _popis.json se dostane k souboru i ke složce", () => {
+    // Popis se PÍŠE, nehádá se z názvu (dřív tu byl štítek, který uměl jen
+    // zopakovat, co je vidět nad ním). Když se `_popis.json` rozbije, tenhle
+    // test to chytí — jinak by věta tiše zmizela a nikdo by si nevšiml.
+    const cvicebnice = items.find(
+      (it) => it.group?.cs === "Word" && it.label.cs === "Zadání úloh – cvičebnice",
+    );
+    expect(cvicebnice?.popis?.cs).toContain("Celá cvičebnice");
+    expect(cvicebnice?.popis?.en).toContain("whole Word workbook");
+    expect(cvicebnice?.groupPopis?.cs).toContain("navazují");
+  });
+
+  it("popis složky se nedědí do úloh", () => {
+    // Věta o tom, jak na sebe úlohy navazují, patří k Wordu jako celku.
+    // Kdyby se dědila, vyskočila by u každé z 32 úloh zvlášť.
+    const vUloze = items.filter((it) => /^Word › Úlohy › /.test(it.group?.cs ?? ""));
+    expect(vUloze.length).toBeGreaterThan(30);
+    expect(vUloze.filter((it) => it.groupPopis)).toHaveLength(0);
+  });
+
+  it("číslo úlohy je vidět v názvu", () => {
+    // Úlohy ve Wordu na sebe navazují, takže pořadí je informace. Předpona
+    // „01. " by se z popisku strhla, „01 – " zůstane.
+    const ulohy = new Set(
+      items
+        .map((it) => it.group?.cs ?? "")
+        .filter((g) => /^Word › Úlohy › /.test(g))
+        .map((g) => g.split(" › ")[2]),
+    );
+    expect(ulohy.size).toBe(32);
+    for (const u of ulohy) expect(u, u).toMatch(/^\d{2} – /);
+  });
+
   it("autorem je tým cvičebnice, ne jeden člověk", () => {
-    const ukol = items.find((it) => it.group?.cs === "Word › Úlohy › Formát písma");
+    const ukol = items.find((it) => it.group?.cs === "Word › Úlohy › 01 – Formát písma");
     expect(ukol?.groupAuthor).toBe("Tým autorů a tým Microsoft pro školství");
   });
 

@@ -1,0 +1,12 @@
+{
+ "složka": {
+  "cs": "Šest úloh, které projdou cestu od dat po hotovou vizualizaci: načtení dat z webu, grafy, mapa, podmíněné formátování a nakonec publikování na web. Každá má vlastní soubor .pbix, takže potřebuješ Power BI Desktop.",
+  "en": "Six exercises that walk the path from data to a finished visualisation: pulling data from the web, charts, a map, conditional formatting and finally publishing. Each has its own .pbix file, so you need Power BI Desktop."
+ },
+ "soubory": {
+  "Zadání úloh – cvičebnice.pdf": {
+   "cs": "Celá cvičebnice pro Power BI v jednom souboru, včetně předmluvy autorů. Zadání jednotlivých úloh najdeš i zvlášť u každé z nich ve složce Úlohy.",
+   "en": "The whole Power BI workbook in one file, including the authors' foreword. Each exercise also has its own assignment inside the Úlohy folder."
+  }
+ }
+}

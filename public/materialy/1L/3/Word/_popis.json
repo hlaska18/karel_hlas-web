@@ -1,0 +1,12 @@
+{
+ "složka": {
+  "cs": "Úlohy na sebe navazují a je to jejich hlavní myšlenka. V první dostaneš rozbitý dokument o olympijských hrách – bez stylů, bez obsahu, s chybami v mezerách – a každá další úloha mu vrátí kus správné podoby: nejdřív písmo a odstavce, pak styly a obsah, nakonec záhlaví, oddíly a rejstřík. Řešení jedné úlohy je pracovní soubor té další, takže se úlohy dělají po pořadí. Osm úloh z toho vybočuje a má vlastní dokument – diplom, pozvánka, hromadná korespondence, makro.",
+  "en": "The exercises build on each other, and that is the point. The first one hands you a broken document about the Olympic Games – no styles, no table of contents, spacing errors – and each exercise restores another part of it: first the font and paragraphs, then styles and the contents, finally headers, sections and the index. One exercise's solution is the next one's working file, so do them in order. Eight of them stand apart with their own document – a diploma, an invitation, a mail merge, a macro."
+ },
+ "soubory": {
+  "Zadání úloh – cvičebnice.pdf": {
+   "cs": "Celá cvičebnice pro Word v jednom souboru, včetně předmluvy autorů. Zadání jednotlivých úloh najdeš i zvlášť u každé z nich ve složce Úlohy.",
+   "en": "The whole Word workbook in one file, including the authors' foreword. Each exercise also has its own assignment inside the Úlohy folder."
+  }
+ }
+}

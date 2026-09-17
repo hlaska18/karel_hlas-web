@@ -1,0 +1,12 @@
+{
+ "složka": {
+  "cs": "Na rozdíl od Wordu je každá úloha samostatná – má vlastní sešit a dá se zařadit kamkoli do výuky. Pořadí přesto dává smysl: začíná se tabulkou a formátem, pokračuje adresováním a funkcemi a končí u kontingenčních tabulek, Power Query a makra.",
+  "en": "Unlike Word, each exercise stands on its own – it has its own workbook and fits anywhere in your teaching. The order still makes sense: it starts with tables and formatting, moves on to addressing and functions, and ends with pivot tables, Power Query and macros."
+ },
+ "soubory": {
+  "Zadání úloh – cvičebnice.pdf": {
+   "cs": "Celá cvičebnice pro Excel v jednom souboru, včetně předmluvy autorů. Zadání jednotlivých úloh najdeš i zvlášť u každé z nich ve složce Úlohy.",
+   "en": "The whole Excel workbook in one file, including the authors' foreword. Each exercise also has its own assignment inside the Úlohy folder."
+  }
+ }
+}
