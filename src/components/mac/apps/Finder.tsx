@@ -19,7 +19,19 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ChevronLeft, ChevronRight, Folder, FileText, HardDrive, Package, Usb } from "lucide-react";
+import { createPortal } from "react-dom";
+import {
+  ChevronLeft,
+  ChevronRight,
+  FileText,
+  Folder,
+  HardDrive,
+  LayoutGrid,
+  List,
+  Package,
+  Search,
+  Usb,
+} from "lucide-react";
 import { useMac, useOknoMac } from "../system";
 import { NabidkaMistni, PanelInformace, type PolozkaNabidky } from "../ui";
 import {
@@ -77,7 +89,7 @@ const jeProstaSlozka = (u: Uzel) => jeSlozka(u) && !jeBalicek(u.jmeno);
 
 export function Finder() {
   const { stav, poslat, stopa } = useMac();
-  const { arg, nastavTitul } = useOknoMac();
+  const { arg, nastavTitul, slotZahlavi } = useOknoMac();
 
   /** Historie chození tam a zpět. Index ukazuje, kde v ní právě stojíme. */
   const [historie, nastavHistorii] = useState<string[][]>([arg ? rozlozMac(arg) : PLOCHA]);
@@ -89,6 +101,7 @@ export function Finder() {
   const [informace, nastavInformace] = useState<string | null>(null);
   const [prejmenovavany, nastavPrejmenovavany] = useState<string | null>(null);
   const [novyNazev, nastavNovyNazev] = useState("");
+  const [hledani, nastavHledani] = useState("");
   const polePrejmenovani = useRef<HTMLInputElement>(null);
 
   const cesta = historie[kde];
@@ -148,14 +161,16 @@ export function Finder() {
     const vse = stav.nastaveni.skrytePolozky
       ? slozka.deti
       : slozka.deti.filter((d) => !jeSkryte(d.jmeno));
+    const h = hledani.trim().toLowerCase();
+    const filtrovane = h ? vse.filter((d) => d.jmeno.toLowerCase().includes(h)) : vse;
     // Složky napřed, pak podle abecedy – Finder to tak dělá ve výchozím stavu.
-    return [...vse].sort((a, b) => {
+    return [...filtrovane].sort((a, b) => {
       const as = jeProstaSlozka(a);
       const bs = jeProstaSlozka(b);
       if (as !== bs) return as ? -1 : 1;
       return a.jmeno.localeCompare(b.jmeno, "cs");
     });
-  }, [slozka, stav.nastaveni.skrytePolozky]);
+  }, [slozka, stav.nastaveni.skrytePolozky, hledani]);
 
   const otevri = (u: Uzel) => {
     // Balíček se chová jako jeden kus. Dovnitř se jde až přes pravé tlačítko –
@@ -274,8 +289,79 @@ export function Finder() {
 
   const uzelInformace = informace ? slozka?.deti.find((d) => d.jmeno === informace) : null;
 
+  /**
+   * Ovládání Finderu patří do TÉHOŽ pruhu jako semafor a název okna – tak to
+   * má skutečný Mac. Vykresluje se proto portálem do záhlaví, ne jako druhý
+   * proužek pod ním.
+   */
+  const naradi = slotZahlavi
+    ? createPortal(
+        <>
+          <div className="ml-2 flex items-center gap-1">
+            <button
+              type="button"
+              aria-label="Zpět"
+              disabled={kde === 0}
+              onClick={() => {
+                nastavKde((k) => k - 1);
+                nastavVybrano(null);
+              }}
+              className="rounded-md px-1.5 py-1 hover:bg-mac-zvyrazneny disabled:opacity-30"
+            >
+              <ChevronLeft className="h-4 w-4" />
+            </button>
+            <button
+              type="button"
+              aria-label="Vpřed"
+              disabled={kde >= historie.length - 1}
+              onClick={() => {
+                nastavKde((k) => k + 1);
+                nastavVybrano(null);
+              }}
+              className="rounded-md px-1.5 py-1 hover:bg-mac-zvyrazneny disabled:opacity-30"
+            >
+              <ChevronRight className="h-4 w-4" />
+            </button>
+          </div>
+
+          <div className="ml-auto flex items-center gap-2">
+            {/* Přepínání pohledů. Mřížkový zatím není udělaný, takže je
+                zešedlý – na Macu je to běžný stav, kdežto chybějící
+                přepínač by vypadal jako závada. */}
+            <div className="flex items-center rounded-md border border-mac-linka">
+              <span
+                title="Jako seznam"
+                className="rounded-l-md bg-mac-zvyrazneny px-2 py-1 text-mac-text"
+              >
+                <List className="h-3.5 w-3.5" />
+              </span>
+              <span
+                title="Jako ikony – v téhle simulaci není"
+                className="rounded-r-md px-2 py-1 text-mac-slaby/50"
+              >
+                <LayoutGrid className="h-3.5 w-3.5" />
+              </span>
+            </div>
+            <label className="flex items-center gap-1.5 rounded-md border border-mac-linka px-2 py-1">
+              <Search className="h-3.5 w-3.5 shrink-0 text-mac-slaby" />
+              <input
+                value={hledani}
+                onChange={(e) => nastavHledani(e.target.value)}
+                placeholder="Hledat"
+                aria-label="Hledat ve složce"
+                spellCheck={false}
+                className="w-[104px] min-w-0 bg-transparent text-[12px] text-mac-text outline-none placeholder:text-mac-slaby focus-visible:outline-none"
+              />
+            </label>
+          </div>
+        </>,
+        slotZahlavi,
+      )
+    : null;
+
   return (
     <div className="mac-bezvyberu flex h-full bg-mac-povrch text-[13px] text-mac-text">
+      {naradi}
       <aside className="mac-posuv w-[180px] shrink-0 overflow-y-auto border-r border-mac-linka bg-mac-postranni px-2 py-3">
         <Skupina nazev="Oblíbené" />
         {MISTA.map((m) => (
@@ -303,42 +389,6 @@ export function Finder() {
       </aside>
 
       <div className="flex min-w-0 flex-1 flex-col">
-        <div className="flex h-[40px] shrink-0 items-center gap-2 border-b border-mac-linka bg-mac-panel px-3">
-          <button
-            type="button"
-            aria-label="Zpět"
-            disabled={kde === 0}
-            onClick={() => {
-              nastavKde((k) => k - 1);
-              nastavVybrano(null);
-            }}
-            className="rounded p-1 hover:bg-mac-zvyrazneny disabled:opacity-30"
-          >
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <button
-            type="button"
-            aria-label="Vpřed"
-            disabled={kde >= historie.length - 1}
-            onClick={() => {
-              nastavKde((k) => k + 1);
-              nastavVybrano(null);
-            }}
-            className="rounded p-1 hover:bg-mac-zvyrazneny disabled:opacity-30"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-          <span className="ml-1 font-semibold">{jmenoMista}</span>
-
-          {/* Zaškrtávátko „Položky s tečkou" tu bývalo kvůli objevitelnosti,
-              jenže skutečný Finder ho v pruhu nástrojů nemá – přepíná se
-              v nabídce Zobrazení nebo zkratkou. Zůstal jen tichý údaj, že je
-              zapnuté, ať žák pozná, proč mu ve výpisu přibyly tečkové soubory. */}
-          {stav.nastaveni.skrytePolozky && (
-            <span className="ml-auto text-[11px] text-mac-slaby">položky s tečkou</span>
-          )}
-        </div>
-
         <div
           className="mac-posuv min-h-0 flex-1 overflow-y-auto"
           onContextMenu={(e) => {

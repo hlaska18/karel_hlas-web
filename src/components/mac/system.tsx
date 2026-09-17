@@ -125,6 +125,12 @@ interface KontextOkna {
   nastavTitul: (titul: string, arg?: string) => void;
   zavri: () => void;
   aktivni: boolean;
+  /**
+   * Prvek v záhlaví okna. Aplikace si do něj portálem vykreslí vlastní
+   * ovládání – na Macu sedí šipky, přepínání pohledů i hledání v TÉMŽE pruhu
+   * jako semafor a název, ne v druhém proužku pod ním.
+   */
+  slotZahlavi: HTMLDivElement | null;
 }
 
 const OknoContext = createContext<KontextOkna | null>(null);

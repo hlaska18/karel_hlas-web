@@ -14,7 +14,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { Apple, Search, SlidersHorizontal } from "lucide-react";
+import { Apple, BatteryMedium, Search, SlidersHorizontal, Wifi } from "lucide-react";
 import { useMac } from "./system";
 import { APLIKACE } from "@/lib/mac/stav";
 import { datumSlovy, hodiny } from "@/lib/win/format";
@@ -153,27 +153,30 @@ export function HorniLista({
         );
       })}
 
-      {/* Pravá strana lišty. Na Macu tu vedle hodin vždycky sedí lupa
-          Spotlightu a Ovládací centrum – jsou to dvě ikony, podle kterých se
-          horní lišta pozná na první pohled. Nic nedělají a je to přiznané
-          titulkem; předstírat vyhledávání, které nic nenajde, by bylo horší
-          než je tam nemít. */}
-      <div className="ml-auto flex items-center gap-3 pr-1">
-        <Search
-          className="h-[15px] w-[15px] opacity-70"
-          aria-hidden="true"
-          role="img"
-        >
-          <title>Spotlight – v téhle simulaci nefunguje</title>
-        </Search>
-        <SlidersHorizontal
-          className="h-[15px] w-[15px] opacity-70"
-          aria-hidden="true"
-          role="img"
-        >
-          <title>Ovládací centrum – v téhle simulaci nefunguje</title>
-        </SlidersHorizontal>
-        <span className="tabular-nums opacity-80">{cas ? datumSlovy(cas) : ""}</span>
+      {/*
+        Pravá strana lišty. Pořadí je to skutečné z macOS: baterie, Wi-Fi,
+        Ovládací centrum, Spotlight a nakonec datum s časem. Právě tahle
+        skupina ikon dělá z pruhu nahoře „lištu Macu“ – bez nich to byl jen
+        proužek s hodinami.
+
+        Nic z toho nic nedělá a je to přiznané v titulku. Předstírat Wi-Fi,
+        která se nepřipojí, nebo vyhledávání, které nic nenajde, by bylo horší
+        než je tam nemít.
+      */}
+      <div className="ml-auto flex items-center gap-[10px] pr-1">
+        <span title="Baterie – v téhle simulaci nefunguje" className="flex items-center">
+          <BatteryMedium className="h-[15px] w-[15px] opacity-75" aria-hidden="true" />
+        </span>
+        <span title="Wi-Fi – v téhle simulaci nefunguje" className="flex items-center">
+          <Wifi className="h-[14px] w-[14px] opacity-75" aria-hidden="true" />
+        </span>
+        <span title="Ovládací centrum – v téhle simulaci nefunguje" className="flex items-center">
+          <SlidersHorizontal className="h-[14px] w-[14px] opacity-75" aria-hidden="true" />
+        </span>
+        <span title="Spotlight – v téhle simulaci nefunguje" className="flex items-center">
+          <Search className="h-[14px] w-[14px] opacity-75" aria-hidden="true" />
+        </span>
+        <span className="tabular-nums opacity-85">{cas ? datumSlovy(cas) : ""}</span>
         <span className="tabular-nums">{cas ? hodiny(cas) : "--:--"}</span>
       </div>
     </div>

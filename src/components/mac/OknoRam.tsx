@@ -40,10 +40,26 @@ export function OknoRamMac({
 }: {
   okno: Okno;
   aktivni: boolean;
-  children: ReactNode;
+  /**
+   * Obsah okna. Dostane prvek uvnitř záhlaví, do kterého si aplikace portálem
+   * vykreslí vlastní ovládání.
+   *
+   * SKUTEČNÝ FINDER MÁ JEDEN PRUH, ne záhlaví a pod ním pruh nástrojů. Šipky
+   * zpět, přepínání pohledů i hledání sedí v témže řádku jako semafor a název.
+   * Tohle je ta nejnápadnější věc, podle které bylo poznat, že okno není
+   * z Macu – proto rám nabízí slot místo toho, aby si každá aplikace kreslila
+   * druhý proužek.
+   */
+  children: (slotZahlavi: HTMLDivElement | null) => ReactNode;
 }) {
   const { poslat } = useMac();
   const [tazeni, nastavTazeni] = useState(false);
+  /**
+   * Prvek v záhlaví pro ovládání aplikace. `useState` místo `useRef`, aby
+   * překreslení přišlo ve chvíli, kdy prvek vznikne – s refem by portál
+   * cílil na `null` a pruh by zůstal prázdný.
+   */
+  const [slot, nastavSlot] = useState<HTMLDivElement | null>(null);
 
   /**
    * Tažení a zvětšování myší.
@@ -117,10 +133,10 @@ export function OknoRamMac({
       onMouseDown={() => poslat({ typ: "okno/dopredu", id: okno.id })}
     >
       <div
-        className="relative flex h-[38px] shrink-0 items-center border-b border-mac-linka bg-mac-panel px-3"
+        className="relative flex h-[52px] shrink-0 items-center gap-3 border-b border-mac-linka bg-mac-panel px-3"
         onMouseDown={(e) => {
-          // Na semaforu se netáhne – tam se kliká.
-          if ((e.target as HTMLElement).closest("[data-semafor]")) return;
+          // Na semaforu ani na ovládání v pruhu se netáhne – tam se kliká.
+          if ((e.target as HTMLElement).closest("[data-semafor],[data-naradi]")) return;
           zacniTahat(e, null);
         }}
         onDoubleClick={() => poslat({ typ: "okno/zvetsi", id: okno.id })}
@@ -138,9 +154,14 @@ export function OknoRamMac({
             {okno.titul}
           </span>
         </div>
+        <div
+          data-naradi
+          ref={nastavSlot}
+          className="relative z-10 flex min-w-0 flex-1 items-center gap-2"
+        />
       </div>
 
-      <div className="relative min-h-0 flex-1 overflow-hidden">{children}</div>
+      <div className="relative min-h-0 flex-1 overflow-hidden">{children(slot)}</div>
 
       {!okno.zvetsene &&
         UCHYTY.map((u) => (

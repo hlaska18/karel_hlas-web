@@ -9,7 +9,7 @@
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { ArrowLeft, Maximize2, Minimize2 } from "lucide-react";
+import { ArrowLeft, Maximize2, Minimize2, Search } from "lucide-react";
 import Link from "next/link";
 import { MacProvider, OknoMacProvider, useMac } from "./system";
 import { najdiSlozku } from "@/lib/win/fs";
@@ -477,13 +477,20 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
  */
 function Launchpad({ zavri }: { zavri: () => void }) {
   const { stav, poslat, spust } = useMac();
+  const [hledani, nastavHledani] = useState("");
+  const pole = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     const klavesa = (e: KeyboardEvent) => {
       if (e.key === "Escape") zavri();
     };
     window.addEventListener("keydown", klavesa);
-    return () => window.removeEventListener("keydown", klavesa);
+    // Skutečný Launchpad má kurzor rovnou v hledání – stačí začít psát.
+    const id = window.setTimeout(() => pole.current?.focus(), 60);
+    return () => {
+      window.removeEventListener("keydown", klavesa);
+      window.clearTimeout(id);
+    };
   }, [zavri]);
 
   const otevri = (app: AppId) => {
@@ -492,38 +499,68 @@ function Launchpad({ zavri }: { zavri: () => void }) {
     zavri();
   };
 
+  // Bez diakritiky a bez ohledu na velikost písmen: „poznamky" má najít
+  // Poznámky, jinak by hledání bylo k ničemu na české klávesnici.
+  const bezDiakritiky = (t: string) =>
+    t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  const hledane = bezDiakritiky(hledani.trim());
+  const nalezene = (Object.keys(APLIKACE) as AppId[]).filter(
+    (app) => !hledane || bezDiakritiky(APLIKACE[app].nazev).includes(hledane),
+  );
+
   return (
     <div
-      className="mac-vjezd absolute inset-0 z-[870] flex items-start justify-center bg-black/45 pt-[16vh] backdrop-blur-2xl"
+      className="mac-vjezd absolute inset-0 z-[870] flex flex-col items-center bg-black/45 pt-[9vh] backdrop-blur-2xl"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) zavri();
       }}
     >
-      <div className="grid grid-cols-4 gap-x-10 gap-y-8">
-        {(Object.keys(APLIKACE) as AppId[]).map((app) => (
-          <button
-            key={app}
-            type="button"
-            onClick={() => otevri(app)}
-            className="flex w-[110px] flex-col items-center gap-2"
-          >
-            <span
-              className="flex h-[68px] w-[68px] items-center justify-center rounded-[16px] shadow-lg transition-transform hover:scale-105"
-              style={{ background: VZHLED_APLIKACI[app].pozadi }}
+      {/* Vyhledávací pole nahoře je to, podle čeho se Launchpad pozná –
+          je i na jeho ikoně v Docku. */}
+      <div className="flex w-[260px] items-center gap-2 rounded-full bg-white/25 px-3 py-1.5 backdrop-blur">
+        <Search className="h-4 w-4 shrink-0 text-white/80" />
+        <input
+          ref={pole}
+          value={hledani}
+          onChange={(e) => nastavHledani(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && nalezene.length > 0) otevri(nalezene[0]);
+          }}
+          placeholder="Hledat"
+          aria-label="Hledat aplikaci"
+          spellCheck={false}
+          className="min-w-0 flex-1 bg-transparent text-[13px] text-white outline-none placeholder:text-white/60 focus-visible:outline-none"
+        />
+      </div>
+
+      <div className="mt-12 grid grid-cols-4 gap-x-12 gap-y-9">
+        {nalezene.map((app) => {
+          const Z = VZHLED_APLIKACI[app].znak;
+          return (
+            <button
+              key={app}
+              type="button"
+              onClick={() => otevri(app)}
+              className="flex w-[110px] flex-col items-center gap-2"
             >
-              {(() => {
-                const Z = VZHLED_APLIKACI[app].znak;
-                return <Z style={{ color: VZHLED_APLIKACI[app].barva }} className="h-8 w-8" />;
-              })()}
-            </span>
-            <span
-              className="text-center text-[12px] leading-tight text-white"
-              style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
-            >
-              {APLIKACE[app].nazev}
-            </span>
-          </button>
-        ))}
+              <span
+                className="flex h-[70px] w-[70px] items-center justify-center rounded-[22%] shadow-lg transition-transform hover:scale-105"
+                style={{ background: VZHLED_APLIKACI[app].pozadi }}
+              >
+                <Z style={{ color: VZHLED_APLIKACI[app].barva }} className="h-9 w-9" />
+              </span>
+              <span
+                className="text-center text-[12px] leading-tight text-white"
+                style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
+              >
+                {APLIKACE[app].nazev}
+              </span>
+            </button>
+          );
+        })}
+        {nalezene.length === 0 && (
+          <p className="col-span-4 text-[13px] text-white/75">Žádná aplikace tomu neodpovídá.</p>
+        )}
       </div>
     </div>
   );
@@ -719,9 +756,11 @@ function OknoSAplikaci({
 
   return (
     <OknoRamMac okno={okno} aktivni={aktivni}>
-      <OknoMacProvider value={hodnota}>
-        <Aplikace app={okno.app} onZacitZnovu={onZacitZnovu} />
-      </OknoMacProvider>
+      {(slot) => (
+        <OknoMacProvider value={{ ...hodnota, slotZahlavi: slot }}>
+          <Aplikace app={okno.app} onZacitZnovu={onZacitZnovu} />
+        </OknoMacProvider>
+      )}
     </OknoRamMac>
   );
 }

@@ -15,15 +15,7 @@
  * takže jsou oba stavy vidět vedle sebe.
  */
 
-import {
-  Download,
-  FileText,
-  Folder,
-  LayoutGrid,
-  Settings,
-  TerminalSquare,
-  Trash2,
-} from "lucide-react";
+import { Download, FileText, Folder, Settings, TerminalSquare, Trash2 } from "lucide-react";
 import { useMac } from "./system";
 import { APLIKACE, type AppId } from "@/lib/mac/stav";
 import { KOS, STAZENE, slozMac } from "@/lib/mac/cesty";
@@ -31,8 +23,37 @@ import { jeSlozka, najdiSlozku } from "@/lib/win/fs";
 
 const PORADI: AppId[] = ["finder", "poznamky", "terminal", "nastaveni"];
 
+/**
+ * Ikona Launchpadu, kreslená podle té skutečné: nahoře vyhledávací pole,
+ * pod ním mřížka barevných dlaždic. Obecná mřížka z knihovny ikon se
+ * nepodobala ničemu a Karel ji v Docku nepoznal.
+ */
+function ZnakLaunchpad({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  const barvy = ["#f5a33c", "#e8607c", "#5ac2a0", "#c58cf0", "#6aa9f0", "#f0c44a", "#7fd08a", "#e87f7f", "#9aa0aa"];
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} aria-hidden="true">
+      <rect x="3" y="3.2" width="18" height="4" rx="2" fill="currentColor" opacity="0.28" />
+      <circle cx="6.4" cy="5.2" r="1.1" fill="currentColor" opacity="0.55" />
+      {barvy.map((b, i) => (
+        <rect
+          key={b + i}
+          x={3.4 + (i % 3) * 6.2}
+          y={9.6 + Math.floor(i / 3) * 4.6}
+          width="5.2"
+          height="3.6"
+          rx="1.2"
+          fill={b}
+        />
+      ))}
+    </svg>
+  );
+}
+
 /** Ikony jsou kreslené, ne obrázkové – prostředí se kvůli Docku nemá stahovat. */
-export const VZHLED_APLIKACI: Record<AppId, { pozadi: string; barva: string; znak: typeof Folder }> = {
+/** Ikona aplikace: buď z knihovny, nebo vlastní kresba. */
+type Znak = React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
+
+export const VZHLED_APLIKACI: Record<AppId, { pozadi: string; barva: string; znak: Znak }> = {
   finder: { pozadi: "linear-gradient(160deg,#4aa8ff,#0a6fd8)", barva: "#fff", znak: Folder },
   poznamky: { pozadi: "linear-gradient(160deg,#ffe27a,#f5c518)", barva: "#5a4300", znak: FileText },
   terminal: { pozadi: "linear-gradient(160deg,#4a4a4f,#1c1c1e)", barva: "#7dff9b", znak: TerminalSquare },
@@ -86,7 +107,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             kde žák uvidí všechny aplikace pohromadě. */}
         <Ikona
           popis="Launchpad"
-          vzhled={{ pozadi: "linear-gradient(160deg,#dfe3ea,#a8aeb8)", barva: "#3a3a3c", znak: LayoutGrid }}
+          vzhled={{ pozadi: "linear-gradient(165deg,#fbfbfd,#d6d8de)", barva: "#3a3a3c", znak: ZnakLaunchpad }}
           onClick={onLaunchpad}
         />
         {PORADI.map((app) => (
@@ -145,7 +166,7 @@ function Ikona({
   onClick,
 }: {
   popis: string;
-  vzhled: { pozadi: string; barva: string; znak: typeof Folder };
+  vzhled: { pozadi: string; barva: string; znak: Znak };
   bezi?: boolean;
   male?: boolean;
   onClick?: () => void;
