@@ -652,8 +652,14 @@ export function getBankItems(): BankItem[] {
               console.warn(`[materials] Neplatný _nastroj.json v ${absDir}:`, err);
               continue;
             }
+            // Pořadí v souboru rozhoduje, stejně jako u `_zdroj.json`. Bez toho
+            // řadila abeceda a „Virtuální macOS" předbíhal „Virtuální Windows 11"
+            // – přitom Windows jsou základ a macOS na ně navazuje.
+            let poradiNastroje = 0;
             for (const n of nastroje) {
               if (!n.cs || !n.url) continue;
+              const poradi = poradiNastroje;
+              poradiNastroje += 1;
               const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${n.cs}`, "", group?.cs);
               const key = [tool, audience, group?.cs ?? "", "__nastroj__", n.cs, "link"]
                 .join("|")
@@ -679,6 +685,7 @@ export function getBankItems(): BankItem[] {
                 groupSort,
                 interactive: true,
                 sourceNote: n.note,
+                sourceOrder: poradi,
                 courseIds: [courseId],
                 coursesLabel: { cs: "", en: "" },
               });

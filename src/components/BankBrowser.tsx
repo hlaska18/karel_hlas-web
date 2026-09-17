@@ -142,12 +142,14 @@ const STR: Record<
 const TOOL_POZNAMKA: Record<string, Record<Lang, string>> = {
   "Operační systémy": {
     cs:
-      "Virtuální počítač je tu nový a pořád se dolaďuje – když něco nefunguje, jak má, dej vědět. " +
-      "Vlastní pracovní listy k němu zatím nejsou; nejblíž má pracovní list \u201eOperační systém\u201c " +
+      "Virtuální počítače jsou tu nové a pořád se dolaďují – když něco nefunguje, jak má, dej vědět. " +
+      "Windows jsou na práci se soubory od základu, macOS navazuje a ukazuje jen to, čím se od nich liší. " +
+      "Vlastní pracovní listy k nim zatím nejsou; nejblíž má pracovní list \u201eOperační systém\u201c " +
       "v Digitální gramotnosti, který na simulaci odkazuje, ale metodika s ní ještě nepočítá.",
     en:
-      "The virtual computer is new here and still being polished – tell me if something misbehaves. " +
-      "It has no worksheets of its own yet; the closest is the \u201eOperating system\u201c worksheet under " +
+      "The virtual computers are new here and still being polished – tell me if something misbehaves. " +
+      "Windows covers working with files from the ground up; macOS follows on and shows only what differs. " +
+      "They have no worksheets of their own yet; the closest is the \u201eOperating system\u201c worksheet under " +
       "Digital literacy, which points at the simulation, though the methodology does not build on it yet.",
   },
 };
@@ -176,14 +178,9 @@ const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
     },
     cta: { cs: "Spustit kurz", en: "Start the course" },
   },
-  "Operační systémy": {
-    cesta: "/windows",
-    popis: {
-      cs: "Vyzkoušej si Windows 11 přímo v prohlížeči – nic se neinstaluje, vejdeš kódem od vyučujícího. Odškrtané úlohy zůstávají v tomhle prohlížeči.",
-      en: "Try Windows 11 right in your browser – nothing to install, you enter with a code from your teacher. Completed tasks stay in this browser. The environment is in Czech.",
-    },
-    cta: { cs: "Spustit prostředí", en: "Start the environment" },
-  },
+  // Operační systémy tu schválně NEJSOU. Pruh umí jen jeden odkaz, a od chvíle,
+  // kdy k Windows přibyl macOS, by jeden z nich zamlčel – přitom oba stojí
+  // hned pod ním ve výpisu, každý s vlastním popisem, co v něm žák najde.
 };
 
 /** Kurz je jen česky; z anglické verze se přidá `?z=en`, aby vedl odkaz zpět na /en. */

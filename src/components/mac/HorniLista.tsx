@@ -43,12 +43,14 @@ export function HorniLista({
   nabidky,
   onVynutitUkonceni,
   onOdhlasit,
+  onZacitZnovu,
   onOMacu,
 }: {
   /** Nabídky aplikace vpředu. Jablko a jméno aplikace si lišta doplní sama. */
   nabidky: Nabidka[];
   onVynutitUkonceni: () => void;
   onOdhlasit: () => void;
+  onZacitZnovu: () => void;
   onOMacu: () => void;
 }) {
   const { stav, poslat } = useMac();
@@ -87,7 +89,11 @@ export function HorniLista({
   const jablko: Polozka[] = [
     { text: "O tomto Macu", akce: onOMacu, oddelovac: true },
     { text: "Vynutit ukončení…", zkratka: "⌥⌘⎋", akce: onVynutitUkonceni, oddelovac: true },
-    { text: "Odhlásit se", zkratka: "⇧⌘Q", akce: onOdhlasit },
+    { text: "Odhlásit se", zkratka: "⇧⌘Q", akce: onOdhlasit, oddelovac: true },
+    // Ve skutečném macOS nic takového není. Je to učební pomůcka: žák si má
+    // moct prostředí vrátit do stavu, ve kterém ho dostal, aniž by čekal na
+    // vyučujícího. Bydlí u jablka, protože tam už je Odhlásit se.
+    { text: "Začít úplně od začátku…", akce: onZacitZnovu },
   ];
 
   /* Nabídka pojmenovaná po aplikaci. „Ukončit“ tu je pro všechny kromě

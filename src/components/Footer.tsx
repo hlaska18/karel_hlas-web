@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUp, Database, MonitorCog } from "lucide-react";
+import { Apple, ArrowUp, Database } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { Mark } from "@/components/Mark";
@@ -10,6 +10,27 @@ import { Mark } from "@/components/Mark";
 const ODKAZ_NASTROJE =
   "inline-flex items-center gap-2 text-sm font-semibold text-zinc-600 transition " +
   "hover:text-accent-700 dark:text-zinc-300 dark:hover:text-accent-300";
+
+/**
+ * Čtyři čtverce – táž značka, jakou má tlačítko Start uvnitř simulace.
+ * Obecná ikona monitoru tu dřív o prostředí neřekla nic; tohle člověk pozná.
+ */
+function IkonaWindows() {
+  return (
+    <svg
+      viewBox="0 0 20 20"
+      className="h-4 w-4 text-accent-700 dark:text-accent-400"
+      aria-hidden="true"
+    >
+      <g fill="currentColor">
+        <rect x="1" y="1" width="8" height="8" rx="1.2" />
+        <rect x="11" y="1" width="8" height="8" rx="1.2" />
+        <rect x="1" y="11" width="8" height="8" rx="1.2" />
+        <rect x="11" y="11" width="8" height="8" rx="1.2" />
+      </g>
+    </svg>
+  );
+}
 
 export function Footer() {
   const { tr, lang } = useLang();
@@ -37,8 +58,14 @@ export function Footer() {
             {tr.footer.sqlCourse}
           </Link>
           <Link href="/windows" className={ODKAZ_NASTROJE}>
-            <MonitorCog className="h-4 w-4 text-accent-700 dark:text-accent-400" />
+            <IkonaWindows />
             {tr.footer.windows}
+          </Link>
+          {/* macOS dosud nevedl odkaz odnikud – prostředí existovalo, ale
+              nedalo se k němu dostat jinak než ručně napsanou adresou. */}
+          <Link href="/macos" className={ODKAZ_NASTROJE}>
+            <Apple className="h-4 w-4 text-accent-700 dark:text-accent-400" fill="currentColor" />
+            {tr.footer.macos}
           </Link>
         </div>
 

@@ -33,5 +33,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      // Virtuální macOS. Dokud tu nebyl, nevedl na něj jediný odkaz na celém
+      // webu ani v sitemapě – prostředí existovalo, ale nedalo se k němu dostat.
+      url: `${SITE.url}/macos`,
+      lastModified,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 }

@@ -1311,6 +1311,7 @@ type Dict = {
     top: string;
     sqlCourse: string;
     windows: string;
+    macos: string;
   };
   ui: { theme: string };
 };
@@ -1858,6 +1859,7 @@ export const t: Record<Lang, Dict> = {
       // se k němu dá dojít jen přes dlaždici Databáze v bance.
       sqlCourse: "Kurz SQL v prohlížeči",
       windows: "Virtuální Windows 11",
+      macos: "Virtuální macOS",
     },
     ui: { theme: "Přepnout světlý/tmavý režim" },
   },
@@ -2393,6 +2395,7 @@ export const t: Record<Lang, Dict> = {
       // Kurz je jen česky – ať to Angličan pozná dřív, než klikne.
       sqlCourse: "SQL course in the browser (in Czech)",
       windows: "Virtual Windows 11 (in Czech)",
+      macos: "Virtual macOS (in Czech)",
     },
     ui: { theme: "Toggle light/dark mode" },
   },

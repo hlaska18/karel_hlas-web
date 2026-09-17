@@ -24,9 +24,10 @@ import { Terminal } from "./apps/Terminal";
 import { APLIKACE, type AppId, type Okno } from "@/lib/mac/stav";
 import { DOKUMENTY, PLOCHA, slozMac } from "@/lib/mac/cesty";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
+import { zapomenMac } from "@/lib/mac/stav";
 
 type Faze = "prihlaseni" | "bezi";
-type Panel = null | "vynutit" | "oMacu";
+type Panel = null | "vynutit" | "oMacu" | "znovu";
 
 export function VirtualniMac() {
   return (
@@ -139,6 +140,23 @@ function Obrazovka() {
     zapamatujPrihlaseni(false);
     nastavPanel(null);
     nastavFazi("prihlaseni");
+  };
+
+  /**
+   * Úplný reset: zapomenout disk, postup i přihlášení a načíst stránku znovu.
+   *
+   * Všechny tři věci v JEDNOM obslužném kroku a hned za nimi reload. Kdyby se
+   * mezi nimi stihl změnit stav, proběhne ukládací efekt v `system.tsx`
+   * a zapíše smazaný stav zpátky – přesně na tohle jsem naletěl ve Windows.
+   *
+   * Po načtení vrátí `nactiMac()` `null`, postaví se čerstvý výchozí stav
+   * a `jePrihlasen()` je `false`, takže prostředí naběhne na zamykací
+   * obrazovce. Akce `system/reset` v reduceru k tomu není potřeba.
+   */
+  const zacitZnovu = () => {
+    zapomenMac();
+    zapamatujPrihlaseni(false);
+    window.location.reload();
   };
 
   const nejvyssiZ = Math.max(0, ...stav.okna.map((o) => o.z));
@@ -260,6 +278,7 @@ function Obrazovka() {
             nabidky={nabidky}
             onVynutitUkonceni={otevriVynuceni}
             onOdhlasit={odhlasit}
+            onZacitZnovu={() => nastavPanel("znovu")}
             onOMacu={() => nastavPanel("oMacu")}
           />
 
@@ -276,6 +295,9 @@ function Obrazovka() {
 
             {panel === "vynutit" && <VynutitUkonceni zavri={() => nastavPanel(null)} />}
             {panel === "oMacu" && <OMacu zavri={() => nastavPanel(null)} />}
+            {panel === "znovu" && (
+              <ZacitZnovu zavri={() => nastavPanel(null)} potvrd={zacitZnovu} />
+            )}
           </div>
         </div>
       )}
@@ -349,6 +371,45 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
             className="rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90 disabled:opacity-40"
           >
             Vynutit ukončení
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Potvrzení úplného resetu.
+ *
+ * Text vyjmenovává, co se ztratí. Samotné „opravdu?“ nikdo nečte – a tohle
+ * je jediná věc v prostředí, která se nedá vzít zpět.
+ */
+function ZacitZnovu({ zavri, potvrd }: { zavri: () => void; potvrd: () => void }) {
+  return (
+    <div className="absolute inset-0 z-[860] flex items-start justify-center bg-black/25 pt-[14vh]">
+      <div className="mac-vjezd w-[400px] overflow-hidden rounded-xl bg-mac-povrch shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+        <div className="px-5 py-4">
+          <h2 className="text-[14px] font-semibold text-mac-text">Začít úplně od začátku?</h2>
+          <p className="mt-2 text-[12px] leading-relaxed text-mac-slaby">
+            Smažou se všechny soubory, které sis vytvořil, vrátí se nastavení
+            a vynulují se odškrtnuté úlohy. Budeš se muset znovu přihlásit kódem
+            od vyučujícího. Tohle se nedá vzít zpět.
+          </p>
+        </div>
+        <div className="flex justify-end gap-2 border-t border-mac-linka bg-mac-panel px-4 py-3">
+          <button
+            type="button"
+            onClick={zavri}
+            className="rounded-md border border-mac-linka bg-mac-povrch px-3 py-1.5 text-[13px] text-mac-text hover:bg-mac-zvyrazneny"
+          >
+            Ne
+          </button>
+          <button
+            type="button"
+            onClick={potvrd}
+            className="rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90"
+          >
+            Ano, začít od začátku
           </button>
         </div>
       </div>
