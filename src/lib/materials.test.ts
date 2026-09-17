@@ -300,7 +300,7 @@ describe("cvičebnice 100 příkladů pro Office", () => {
       (it) => it.group?.cs === "Word" && it.label.cs === "Zadání úloh – cvičebnice",
     );
     expect(cvicebnice?.popis?.cs).toContain("Celá cvičebnice");
-    expect(cvicebnice?.popis?.en).toContain("whole Word workbook");
+    expect(cvicebnice?.popis?.en).toContain("whole workbook");
     expect(cvicebnice?.groupPopis?.cs).toContain("rozbitý dokument");
   });
 

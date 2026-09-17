@@ -5,8 +5,8 @@
  },
  "soubory": {
   "Zadání úloh – cvičebnice.pdf": {
-   "cs": "Celá cvičebnice pro Excel v jednom souboru, včetně předmluvy autorů. Zadání jednotlivých úloh najdeš i zvlášť u každé z nich ve složce Úlohy.",
-   "en": "The whole Excel workbook in one file, including the authors' foreword. Each exercise also has its own assignment inside the Úlohy folder."
+   "cs": "Celá cvičebnice v jednom souboru, včetně předmluvy autorů. Zadání jednotlivých úloh najdeš i zvlášť u každé z nich ve složce Úlohy.",
+   "en": "The whole workbook in one file, including the authors' foreword. Each exercise also has its own assignment inside the Úlohy folder."
   }
  }
 }
