@@ -15,22 +15,35 @@
  * takže jsou oba stavy vidět vedle sebe.
  */
 
-import { FileText, Folder, TerminalSquare, Trash2 } from "lucide-react";
+import {
+  Download,
+  FileText,
+  Folder,
+  LayoutGrid,
+  Settings,
+  TerminalSquare,
+  Trash2,
+} from "lucide-react";
 import { useMac } from "./system";
 import { APLIKACE, type AppId } from "@/lib/mac/stav";
+import { KOS, STAZENE, slozMac } from "@/lib/mac/cesty";
+import { jeSlozka, najdiSlozku } from "@/lib/win/fs";
 
-const PORADI: AppId[] = ["finder", "poznamky", "terminal"];
+const PORADI: AppId[] = ["finder", "poznamky", "terminal", "nastaveni"];
 
 /** Ikony jsou kreslené, ne obrázkové – prostředí se kvůli Docku nemá stahovat. */
-const VZHLED: Record<AppId, { pozadi: string; barva: string; znak: typeof Folder }> = {
+export const VZHLED_APLIKACI: Record<AppId, { pozadi: string; barva: string; znak: typeof Folder }> = {
   finder: { pozadi: "linear-gradient(160deg,#4aa8ff,#0a6fd8)", barva: "#fff", znak: Folder },
   poznamky: { pozadi: "linear-gradient(160deg,#ffe27a,#f5c518)", barva: "#5a4300", znak: FileText },
   terminal: { pozadi: "linear-gradient(160deg,#4a4a4f,#1c1c1e)", barva: "#7dff9b", znak: TerminalSquare },
+  nastaveni: { pozadi: "linear-gradient(160deg,#c9ccd2,#8b9099)", barva: "#3a3a3c", znak: Settings },
 };
 
-export function Dock() {
+export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
   const { stav, poslat, spust } = useMac();
   const schovana = stav.okna.filter((o) => o.minimalizovane);
+  /** Kolik je v koši. Plný koš má na Macu jinou ikonu než prázdný. */
+  const vKosi = najdiSlozku(stav.disk, KOS)?.deti.length ?? 0;
 
   /**
    * Co udělá kliknutí na ikonu v Docku.
@@ -69,11 +82,18 @@ export function Dock() {
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[800] flex justify-center pb-2">
       <div className="mac-sklo mac-bezvyberu pointer-events-auto flex items-end gap-2 rounded-2xl border border-white/20 px-2 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
+        {/* Launchpad stojí na Macu hned vedle Finderu a je to jediné místo,
+            kde žák uvidí všechny aplikace pohromadě. */}
+        <Ikona
+          popis="Launchpad"
+          vzhled={{ pozadi: "linear-gradient(160deg,#dfe3ea,#a8aeb8)", barva: "#3a3a3c", znak: LayoutGrid }}
+          onClick={onLaunchpad}
+        />
         {PORADI.map((app) => (
           <Ikona
             key={app}
             popis={APLIKACE[app].nazev}
-            vzhled={VZHLED[app]}
+            vzhled={VZHLED_APLIKACI[app]}
             bezi={stav.bezici.includes(app)}
             onClick={() => otevriZDocku(app)}
           />
@@ -85,16 +105,32 @@ export function Dock() {
           <Ikona
             key={okno.id}
             popis={`${okno.titul || APLIKACE[okno.app].nazev} – schované okno`}
-            vzhled={VZHLED[okno.app]}
+            vzhled={VZHLED_APLIKACI[okno.app]}
             male
             onClick={() => poslat({ typ: "okno/obnov", id: okno.id })}
           />
         ))}
 
+        {/* Za čárou stojí na Macu zástupci složek a koš – ne aplikace.
+            Proto jsou tady, ne v řadě výš. */}
         <div className="mx-1 h-12 w-px self-center bg-white/25" />
         <Ikona
-          popis="Koš"
-          vzhled={{ pozadi: "linear-gradient(160deg,#d8d8dd,#a9a9b0)", barva: "#3a3a3c", znak: Trash2 }}
+          popis="Stažené"
+          vzhled={{ pozadi: "linear-gradient(160deg,#9fd6ff,#3f97e0)", barva: "#0b3c63", znak: Download }}
+          onClick={() => spust("finder", slozMac(STAZENE))}
+        />
+        <Ikona
+          popis={vKosi === 0 ? "Koš (prázdný)" : `Koš (${vKosi})`}
+          vzhled={{
+            pozadi: vKosi === 0
+              ? "linear-gradient(160deg,#d8d8dd,#a9a9b0)"
+              : "linear-gradient(160deg,#c3c7cf,#7f858f)",
+            barva: "#3a3a3c",
+            znak: Trash2,
+          }}
+          // Koš je na Macu složka, takže se otevře ve Finderu jako každá jiná.
+          // Tím se zároveň prozradí, že smazané soubory nezmizely.
+          onClick={() => spust("finder", slozMac(KOS))}
         />
       </div>
     </div>

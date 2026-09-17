@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { reducerMac } from "@/lib/mac/reducer";
 import { vychoziStavMac } from "@/lib/mac/stav";
 import { najdi } from "@/lib/win/fs";
-import { DOMOV, jeBalicek, jeSkryte, rozlozMac, slozMac, sVlnovkou } from "@/lib/mac/cesty";
+import { DOMOV, KOS, jeBalicek, jeSkryte, rozlozMac, slozMac, sVlnovkou } from "@/lib/mac/cesty";
 import { vytvorDiskMac } from "@/lib/mac/seed";
 
 describe("okno není program", () => {
@@ -85,6 +85,21 @@ describe("okno není program", () => {
     expect(stav.vpredu).toBe("terminal");
     stav = reducerMac(stav, { typ: "app/ukonci", app: "terminal" });
     expect(stav.vpredu).toBe("finder");
+  });
+});
+
+describe("koš", () => {
+  it("koš je skrytá složka v domovské složce", () => {
+    // Není to zvláštní místo v systému, ale obyčejná složka s tečkou –
+    // a právě proto se dá otevřít ve Finderu jako každá jiná.
+    expect(slozMac(KOS)).toBe("/Users/zak/.Trash");
+    expect(jeSkryte(".Trash")).toBe(true);
+    expect(najdi(vytvorDiskMac(), KOS)).not.toBeNull();
+  });
+
+  it("na čerstvém disku je koš prázdný", () => {
+    const kos = najdi(vytvorDiskMac(), KOS);
+    expect(kos && "deti" in kos ? kos.deti : null).toEqual([]);
   });
 });
 

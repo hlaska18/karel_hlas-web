@@ -47,6 +47,13 @@ export const STAZENE = [...DOMOV, "Downloads"];
 export const OBRAZKY = [...DOMOV, "Pictures"];
 export const KNIHOVNA = [...DOMOV, "Library"];
 
+/**
+ * Koš. Na Macu to není zvláštní místo v systému, ale obyčejná SKRYTÁ SLOŽKA
+ * v domovské složce – a to je samo o sobě úloha: po zapnutí položek s tečkou
+ * je vidět, kam smazané soubory doopravdy šly.
+ */
+export const KOS = [...DOMOV, ".Trash"];
+
 /** Aplikace nebydlí v domovské složce, ale rovnou v kořeni. */
 export const APLIKACE = [KOREN, "Applications"];
 

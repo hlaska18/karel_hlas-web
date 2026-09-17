@@ -15,13 +15,14 @@ import { MacProvider, OknoMacProvider, useMac } from "./system";
 import { najdiSlozku } from "@/lib/win/fs";
 import { OknoRamMac } from "./OknoRam";
 import { HorniLista, type Nabidka } from "./HorniLista";
-import { Dock } from "./Dock";
+import { Dock, VZHLED_APLIKACI } from "./Dock";
 import { Plocha } from "./Plocha";
 import { PanelUkoluMac } from "./PanelUkolu";
 import { PrihlaseniMac } from "./Prihlaseni";
 import { Finder } from "./apps/Finder";
 import { Poznamky } from "./apps/Poznamky";
 import { Terminal } from "./apps/Terminal";
+import { Nastaveni } from "./apps/Nastaveni";
 import { APLIKACE, type AppId, type Okno } from "@/lib/mac/stav";
 import {
   APLIKACE as SLOZKA_APLIKACI,
@@ -37,7 +38,7 @@ import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import { zapomenMac } from "@/lib/mac/stav";
 
 type Faze = "prihlaseni" | "bezi";
-type Panel = null | "vynutit" | "oMacu" | "znovu" | "jdi";
+type Panel = null | "vynutit" | "oMacu" | "znovu" | "jdi" | "launchpad";
 
 export function VirtualniMac() {
   return (
@@ -299,6 +300,12 @@ function Obrazovka() {
       ];
     }
 
+    if (vpredu === "nastaveni") {
+      // Nastavení systému nemá nabídku Soubor – není co zakládat ani ukládat.
+      // Propadávalo to sem na větev Terminálu, takže mu nahoře svítil „Shell“.
+      return [upravy, okno, napoveda];
+    }
+
     return [
       {
         // Terminál má první nabídku „Shell“, ne „Soubor“ – jedna z drobností,
@@ -362,12 +369,17 @@ function Obrazovka() {
             <Plocha />
 
             {stav.okna.map((okno) => (
-              <OknoSAplikaci key={okno.id} okno={okno} aktivni={okno.z === nejvyssiZ} />
+              <OknoSAplikaci
+                key={okno.id}
+                okno={okno}
+                aktivni={okno.z === nejvyssiZ}
+                onZacitZnovu={() => nastavPanel("znovu")}
+              />
             ))}
 
             <PanelUkoluMac />
 
-            <Dock />
+            <Dock onLaunchpad={() => nastavPanel("launchpad")} />
 
             {panel === "vynutit" && <VynutitUkonceni zavri={() => nastavPanel(null)} />}
             {panel === "oMacu" && <OMacu zavri={() => nastavPanel(null)} />}
@@ -375,6 +387,7 @@ function Obrazovka() {
               <ZacitZnovu zavri={() => nastavPanel(null)} potvrd={zacitZnovu} />
             )}
             {panel === "jdi" && <PrejitDoSlozky zavri={() => nastavPanel(null)} />}
+            {panel === "launchpad" && <Launchpad zavri={() => nastavPanel(null)} />}
           </div>
         </div>
       )}
@@ -450,6 +463,67 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
             Vynutit ukončení
           </button>
         </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * Launchpad – mřížka všech aplikací přes celou plochu.
+ *
+ * Na Macu je to jediné místo, kde jsou aplikace pohromadě, a nahrazuje to,
+ * co Windows řeší nabídkou Start. Zavírá se kliknutím kamkoli i Escapem,
+ * stejně jako ten skutečný.
+ */
+function Launchpad({ zavri }: { zavri: () => void }) {
+  const { stav, poslat, spust } = useMac();
+
+  useEffect(() => {
+    const klavesa = (e: KeyboardEvent) => {
+      if (e.key === "Escape") zavri();
+    };
+    window.addEventListener("keydown", klavesa);
+    return () => window.removeEventListener("keydown", klavesa);
+  }, [zavri]);
+
+  const otevri = (app: AppId) => {
+    if (stav.bezici.includes(app)) poslat({ typ: "app/dopredu", app });
+    else spust(app);
+    zavri();
+  };
+
+  return (
+    <div
+      className="mac-vjezd absolute inset-0 z-[870] flex items-start justify-center bg-black/45 pt-[16vh] backdrop-blur-2xl"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) zavri();
+      }}
+    >
+      <div className="grid grid-cols-4 gap-x-10 gap-y-8">
+        {(Object.keys(APLIKACE) as AppId[]).map((app) => (
+          <button
+            key={app}
+            type="button"
+            onClick={() => otevri(app)}
+            className="flex w-[110px] flex-col items-center gap-2"
+          >
+            <span
+              className="flex h-[68px] w-[68px] items-center justify-center rounded-[16px] shadow-lg transition-transform hover:scale-105"
+              style={{ background: VZHLED_APLIKACI[app].pozadi }}
+            >
+              {(() => {
+                const Z = VZHLED_APLIKACI[app].znak;
+                return <Z style={{ color: VZHLED_APLIKACI[app].barva }} className="h-8 w-8" />;
+              })()}
+            </span>
+            <span
+              className="text-center text-[12px] leading-tight text-white"
+              style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
+            >
+              {APLIKACE[app].nazev}
+            </span>
+          </button>
+        ))}
       </div>
     </div>
   );
@@ -619,7 +693,15 @@ function OMacu({ zavri }: { zavri: () => void }) {
  * `nastavTitul` při každém překreslení, spustil by se její efekt s titulkem
  * pořád dokola a prostředí by se zacyklilo. (Táž past jako ve Windows.)
  */
-function OknoSAplikaci({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
+function OknoSAplikaci({
+  okno,
+  aktivni,
+  onZacitZnovu,
+}: {
+  okno: Okno;
+  aktivni: boolean;
+  onZacitZnovu: () => void;
+}) {
   const { poslat } = useMac();
 
   const nastavTitul = useCallback(
@@ -638,13 +720,13 @@ function OknoSAplikaci({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
   return (
     <OknoRamMac okno={okno} aktivni={aktivni}>
       <OknoMacProvider value={hodnota}>
-        <Aplikace app={okno.app} />
+        <Aplikace app={okno.app} onZacitZnovu={onZacitZnovu} />
       </OknoMacProvider>
     </OknoRamMac>
   );
 }
 
-function Aplikace({ app }: { app: AppId }) {
+function Aplikace({ app, onZacitZnovu }: { app: AppId; onZacitZnovu: () => void }) {
   switch (app) {
     case "finder":
       return <Finder />;
@@ -652,6 +734,8 @@ function Aplikace({ app }: { app: AppId }) {
       return <Poznamky />;
     case "terminal":
       return <Terminal />;
+    case "nastaveni":
+      return <Nastaveni onZacitZnovu={onZacitZnovu} />;
     default:
       return null;
   }

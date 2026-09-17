@@ -30,6 +30,7 @@ import {
   PLOCHA,
   STAZENE,
   SVAZKY,
+  KOS,
   jeBalicek,
   jeSkryte,
   rozlozMac,
@@ -38,6 +39,8 @@ import {
 } from "@/lib/mac/cesty";
 import {
   jeSlozka,
+  kopie,
+  najdi,
   najdiSlozku,
   novaSlozka as vytvorSlozku,
   odeber,
@@ -186,14 +189,41 @@ export function Finder() {
     nastavPrejmenovavany(null);
   };
 
+  /**
+   * „Přesunout do koše" je na Macu doslova PŘESUN, ne smazání – soubor skončí
+   * ve skryté složce `~/.Trash` a je pořád na disku. Dokud ho žák nevysype,
+   * dá se vrátit. Přesně tenhle rozdíl proti „Odstranit" ve Windows má
+   * prostředí ukázat, takže se tu nic nemaže.
+   */
   const doKose = (jmeno: string) => {
-    poslat({ typ: "disk/nastav", disk: odeber(stav.disk, [...cesta, jmeno]) });
+    const uzel = najdi(stav.disk, [...cesta, jmeno]);
+    if (!uzel || uzel.zamceno) return;
+    const vKosi = najdiSlozku(stav.disk, KOS);
+    const noveJmeno = vKosi ? volneJmeno(vKosi, jmeno) : jmeno;
+    let disk = odeber(stav.disk, [...cesta, jmeno]);
+    disk = vloz(disk, KOS, { ...kopie(uzel), jmeno: noveJmeno });
+    poslat({ typ: "disk/nastav", disk });
+    stopa("presunul-do-kose");
     nastavVybrano(null);
   };
 
+  /** Vysypat koš. Teprve tohle soubory doopravdy smaže. */
+  const vysypKos = () => {
+    const vKosi = najdiSlozku(stav.disk, KOS);
+    if (!vKosi || vKosi.deti.length === 0) return;
+    let disk = stav.disk;
+    for (const d of vKosi.deti) disk = odeber(disk, [...KOS, d.jmeno]);
+    poslat({ typ: "disk/nastav", disk });
+    stopa("vysypal-kos");
+  };
+
+  const vKosi = slozMac(cesta) === slozMac(KOS);
+
   const polozkyNabidky = (jmeno: string | null): PolozkaNabidky[] => {
     if (!jmeno) {
-      return [{ text: "Nová složka", akce: zalozSlozku }];
+      return vKosi
+        ? [{ text: "Vysypat koš", akce: polozky.length ? vysypKos : undefined }]
+        : [{ text: "Nová složka", akce: zalozSlozku }];
     }
     const uzel = slozka?.deti.find((d) => d.jmeno === jmeno);
     if (!uzel) return [{ text: "Nová složka", akce: zalozSlozku }];

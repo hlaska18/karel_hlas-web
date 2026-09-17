@@ -147,6 +147,9 @@ export function vytvorDiskMac(): Slozka {
                 ],
                 3,
               ),
+              // Koš je prázdný a skrytý. Naplní se, až žák něco smaže –
+              // a tím se dozví, že „přesunout do koše" je doslova přesun.
+              slozka(".Trash", [], 0),
               soubor(".zshrc", ZSHRC, 30),
             ],
             0,

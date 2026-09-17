@@ -21,12 +21,13 @@ export const KLIC_ULOZISTE = "macos-vyuka-stav";
 export const VERZE_ULOZISTE = 1;
 
 /** Aplikace, které prostředí zná. Schválně málo – viz `ukoly.ts`. */
-export type AppId = "finder" | "terminal" | "poznamky";
+export type AppId = "finder" | "terminal" | "poznamky" | "nastaveni";
 
 export const APLIKACE: Record<AppId, { nazev: string; popis: string }> = {
   finder: { nazev: "Finder", popis: "Procházení souborů a složek" },
   terminal: { nazev: "Terminál", popis: "Příkazový řádek" },
   poznamky: { nazev: "Poznámky", popis: "Jednoduchý textový editor" },
+  nastaveni: { nazev: "Nastavení systému", popis: "Vzhled a obnovení" },
 };
 
 export interface Obdelnik {
@@ -90,6 +91,7 @@ export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
   finder: { w: 940, h: 580 },
   terminal: { w: 760, h: 460 },
   poznamky: { w: 640, h: 500 },
+  nastaveni: { w: 720, h: 480 },
 };
 
 export function vychoziStavMac(): StavMac {
