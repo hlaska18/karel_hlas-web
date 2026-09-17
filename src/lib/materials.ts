@@ -29,7 +29,7 @@ function kindFromExt(ext: string): Material["kind"] {
 }
 
 function isHidden(name: string): boolean {
-  return name.startsWith(".") || /^_tema|^_autor|^_zdroje|^readme/i.test(name);
+  return name.startsWith(".") || /^_tema|^_autor|^_zdroje|^_stejne|^readme/i.test(name);
 }
 
 /** Učitelská podsložka – její obsah se ukáže jen v učitelském pohledu. Konvence: „_ucitel". */
@@ -92,6 +92,33 @@ function cleanLabel(file: string): string {
  * Nový materiál → sem doplnit anglický název (jinak se v EN zobrazí česky).
  */
 const NAME_EN: Record<string, string> = {
+  // Cvičebnice „100 příkladů pro Office": tyhle popisky se opakují u každé
+  // ze 73 úloh, takže se vyplatí je přeložit. Názvy jednotlivých úloh
+  // („01. Formát písma") přeložené nejsou a spadnou na češtinu – je to
+  // dokumentované chování a u 73 položek to nestojí za údržbu.
+  "Zadání": "Exercise",
+  "Řešení": "Solution",
+  "Řešení (PDF)": "Solution (PDF)",
+  "Zadání úloh – cvičebnice": "Exercises – the workbook",
+  "Zdrojová data": "Source data",
+  "Zdrojová databáze": "Source database",
+  "Anotace k překladu": "Abstract for translation",
+  "Podklad k tisku": "Printing handout",
+  "Obrázek k vložení": "Image to insert",
+  "Obrázek – olympijská medaile": "Image – Olympic medal",
+  "Obrázek – slavnostní zahájení": "Image – opening ceremony",
+  "Zadání – původní dokument": "Exercise – original document",
+  "Zadání – verze od Aleše": "Exercise – Aleš's version",
+  "Řešení – porovnaný dokument": "Solution – merged document",
+  "Řešení – hotový tisk (PDF)": "Solution – finished print (PDF)",
+  "Zdroj dat – výsledky OH": "Data source – Olympic results",
+  "Podklad – kniha jízd (CSV)": "Handout – trip log (CSV)",
+  "Podklad – počasí (textový soubor)": "Handout – weather (text file)",
+  "Podklad – přehled prodeje (CSV)": "Handout – sales overview (CSV)",
+  "Podklad – přehled prodeje (XML)": "Handout – sales overview (XML)",
+  "Původní cvičebnice u autorů – Word": "The original workbook at the authors' site – Word",
+  "Původní cvičebnice u autorů – Excel": "The original workbook at the authors' site – Excel",
+  "Původní cvičebnice u autorů – Power BI": "The original workbook at the authors' site – Power BI",
   "Úlohy v Excelu": "Excel exercises",
   "Úlohy ve Wordu": "Word exercises",
   "Excel – materiály k úlohám": "Excel – exercise materials",
@@ -350,7 +377,34 @@ function topicLabelOf(topicIndex: number): { cs: string; en: string } {
  * tématu a názvu souboru. Pořadí pravidel je důležité (Databáze před Excelem
  * kvůli PowerQuery/Accessu).
  */
-function toolOf(hay: string, ext: string): string {
+/**
+ * Složky, jejichž název sám o sobě určuje dlaždici. Klíč = název složky
+ * malými písmeny, hodnota = dlaždice.
+ */
+const SLOZKA_NASTROJE: Record<string, string> = {
+  word: "Word",
+  excel: "Excel",
+  powerbi: "Power BI",
+  "power bi": "Power BI",
+};
+
+/**
+ * Do které dlaždice materiál patří.
+ *
+ * `groupCs` je název složky, ve které leží (u vnořených „Word › Tabulky").
+ * Když se PRVNÍ část jmenuje přesně podle nástroje, rozhoduje ona a přípona
+ * se neřeší. Bez toho spadl `.xlsx` se zdrojem dat pro hromadnou
+ * korespondenci z Wordu do Excelu – u úlohy, která ho potřebuje, by chyběl,
+ * a to je táž chyba jako ten rozbitý odkaz, kvůli kterému se cvičebnice na
+ * web nahrávala. Složek pojmenovaných přesně „Word"/„Excel"/„PowerBI" je
+ * v bance hrstka, takže se tím nic jiného nehne (ověřeno na počtech
+ * v `materials.test.ts`).
+ */
+function toolOf(hay: string, ext: string, groupCs?: string): string {
+  const prvni = (groupCs ?? "").split(" › ")[0].trim().toLowerCase();
+  const podleSlozky = SLOZKA_NASTROJE[prvni];
+  if (podleSlozky) return podleSlozky;
+
   const h = hay.toLowerCase();
   if (/internet, bezpečnost|internet a bezpe/.test(h)) return "Internet a bezpečnost";
   if (/umělá inteligence|ai fluency|práce s ai/.test(h)) return "Umělá inteligence";
@@ -392,11 +446,56 @@ function coursesLabelOf(courseIds: string[], total: number): { cs: string; en: s
   return { cs: `1. ročník · ${cs}`, en: `Year 1 · ${en}` };
 }
 
+/**
+ * Zakóduje jednu část cesty do adresy souboru.
+ *
+ * PROČ NE ROVNOU `encodeURIComponent`. Ten escapuje i ČÁRKU na `%2C` – a tu
+ * Next u statických souborů zpátky nedekóduje, takže adresa vede na 404.
+ * Tiše to lámalo stahování u každého materiálu s čárkou v názvu, například
+ * „Hodnocení, testy a řešení.docx“ nebo „4. Šifrování, HTTPS, hash a zálohy.pptx“.
+ * Čárka je přitom podle RFC 3986 v cestě povolená, takže se vrací zpátky.
+ *
+ * Diakritika a mezery se escapovat MUSÍ – ty Next dekóduje správně a bez
+ * escapování by adresa nebyla platná.
+ */
+function encodeSegment(s: string): string {
+  return encodeURIComponent(s).replace(/%2C/g, ",");
+}
+
+/**
+ * Pořadí materiálu uvnitř jedné úlohy: zadání → podklady → řešení.
+ *
+ * Bez tohohle o něm rozhodovala abeceda – a česky se Ř řadí PŘED Z, takže
+ * se v každé úloze cvičebnice nabídlo nejdřív řešení a teprve pod ním zadání.
+ * Přesně naopak, než se úloha dělá. Podklady (obrázky, zdrojová data, CSV)
+ * patří doprostřed: bez nich zadání nejde udělat, ale řešení je až za nimi.
+ */
+function rolePoradi(label: string): number {
+  if (/^zadání/i.test(label)) return 0;
+  if (/^řešení/i.test(label)) return 2;
+  return 1;
+}
+
 export function getBankItems(): BankItem[] {
   // Sloučení duplicit napříč obory (1L/1S/1P): klíč = nástroj+skupina+název+typ,
   // NE číslo tématu (Excel je v 1L téma 4, v 1S/1P téma 3). Soubory jsou
   // ve sdílených složkách byte-shodné, takže reprezentant = první výskyt.
   const seen = new Map<string, BankItem>();
+
+  /**
+   * Odkazy `_stejne.txt`: složka jiného oboru, která říká „tohle učíme taky",
+   * aniž by tytéž soubory ležely na disku podruhé.
+   *
+   * PROČ TO EXISTUJE. Obor se do `courseIds` dostane jen tím, že materiál
+   * fyzicky leží i v jeho složce – a u cvičebnice k Office je to 48 MB, které
+   * by se musely uložit třikrát. Bez toho by ale u Wordu a Excelu svítilo
+   * „1. ročník · technické lyceum", takže by kolega ze strojírenství nabyl
+   * dojmu, že to na něj neplatí. Jeden řádek v textovém souboru je levnější
+   * než 96 MB binárek v historii repozitáře navždy.
+   *
+   * Obsah souboru = značka oboru, ze kterého se materiály berou (např. `1L`).
+   */
+  const odkazy: { courseId: string; groupCs: string }[] = [];
 
   let courseDirs: string[];
   try {
@@ -481,6 +580,21 @@ export function getBankItems(): BankItem[] {
             } catch {
               /* složka autora nemá – dědíme z nadřazené */
             }
+            // Složka jen odkazuje na materiály jiného oboru – nesestupuje se
+            // do ní (stejně je prázdná), jen se poznamená, komu je přiznat.
+            let jeOdkaz = false;
+            try {
+              const cil = fs
+                .readFileSync(path.join(absDir, e.name, "_stejne.txt"), "utf8")
+                .trim();
+              if (cil && grp) {
+                odkazy.push({ courseId, groupCs: grp.cs });
+                jeOdkaz = true;
+              }
+            } catch {
+              /* běžná složka – jede se dál */
+            }
+            if (jeOdkaz) continue;
             walk(path.join(absDir, e.name), [...segs, e.name], aud, grp, author, grpSort);
           } else if (e.isFile() && e.name === "_nastroj.json") {
             // Nástroj, který běží tady na webu – ve složce tématu není soubor
@@ -500,7 +614,7 @@ export function getBankItems(): BankItem[] {
             }
             for (const n of nastroje) {
               if (!n.cs || !n.url) continue;
-              const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${n.cs}`, "");
+              const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${n.cs}`, "", group?.cs);
               const key = [tool, audience, group?.cs ?? "", "__nastroj__", n.cs, "link"]
                 .join("|")
                 .normalize("NFC")
@@ -547,7 +661,7 @@ export function getBankItems(): BankItem[] {
               // URL je volitelná: bez ní je to jen informační atribuce (materiál
               // třetí strany, který tu nehostujeme ani neodkazujeme).
               if (!src.cs) continue;
-              const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${src.cs}`, "");
+              const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${src.cs}`, "", group?.cs);
               const key = [tool, audience, group?.cs ?? "", "__zdroj__", src.cs, "link"]
                 .join("|")
                 .normalize("NFC")
@@ -581,7 +695,7 @@ export function getBankItems(): BankItem[] {
             const file = e.name;
             const ext = path.extname(file).slice(1).toLowerCase();
             const label = cleanLabel(file);
-            const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${label}`, ext);
+            const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${label}`, ext, group?.cs);
             const key = [tool, audience, group?.cs ?? "", label, ext]
               .join("|")
               .normalize("NFC")
@@ -617,7 +731,7 @@ export function getBankItems(): BankItem[] {
               }
             }
 
-            const parts = [courseId, ...segs, file].map((s) => encodeURIComponent(s));
+            const parts = [courseId, ...segs, file].map(encodeSegment);
             let sizeBytes = 0;
             try {
               sizeBytes = fs.statSync(path.join(absDir, file)).size;
@@ -654,6 +768,19 @@ export function getBankItems(): BankItem[] {
   }
 
   const items = [...seen.values()];
+
+  // Teprve tady, ne během procházení: `_stejne.txt` může ukazovat na obor,
+  // který se projde až po něm, a pořadí složek se nemá řešit.
+  for (const o of odkazy) {
+    for (const it of items) {
+      const g = it.group?.cs;
+      // Odkaz na `Word` platí i pro `Word › 01. Formát písma` – jinak by se
+      // přiznaly jen soubory ležící přímo v kořeni skupiny.
+      if (!g || (g !== o.groupCs && !g.startsWith(`${o.groupCs} › `))) continue;
+      if (!it.courseIds.includes(o.courseId)) it.courseIds.push(o.courseId);
+    }
+  }
+
   for (const it of items) it.coursesLabel = coursesLabelOf(it.courseIds, totalCourses);
 
   const order = (t: string) => {
@@ -676,6 +803,9 @@ export function getBankItems(): BankItem[] {
       // ne mezi ně. Taky ho jinak rozhazovala abeceda (v jedné lekci druhý,
       // ve druhé poslední).
       Number(Boolean(a.ukazky)) - Number(Boolean(b.ukazky)) ||
+      // Zadání → podklady → řešení. Musí být NAD abecedou, jinak si ji Ř a Z
+      // prohodí (viz `rolePoradi`).
+      rolePoradi(a.label.cs) - rolePoradi(b.label.cs) ||
       byName(a.label.cs, b.label.cs),
   );
   return items;

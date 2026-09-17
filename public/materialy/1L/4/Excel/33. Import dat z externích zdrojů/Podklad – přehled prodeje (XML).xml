@@ -1,0 +1,4494 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prehled_prodeje>
+  <zaznam>
+    <Datum>10.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>7 565 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 908 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 111 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 150 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 247 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 973 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 083 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 864 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 840 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 008 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 224 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 907 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 623 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 297 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 983 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 070 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 855 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 035 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 714 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 938 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 169 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 015 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 404 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 766 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 383 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 597 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 931 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 975 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 264 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>7 418 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 432 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 056 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 937 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 022 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 140 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 997 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 809 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 510 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 171 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 086 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 122 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>01.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 851 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 282 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 829 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 425 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 079 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 189 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 926 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 592 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 852 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 879 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Banány</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 579 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 516 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 413 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 115 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 754 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 492 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 018 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 938 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 540 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 185 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 493 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 232 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 676 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 605 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 423 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 005 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 530 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 303 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 136 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 862 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>23.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 916 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>23.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 310 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>23.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 554 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>23.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 398 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>23.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 469 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 651 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 956 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 749 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 424 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 930 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 005 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 565 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 318 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 367 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 136 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 275 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 982 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 462 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 147 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>01.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 155 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>01.04.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 398 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 681 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 204 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 520 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 719 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 235 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 225 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 711 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 864 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 449 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 093 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 705 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 505 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 961 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 291 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 515 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 325 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 757 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 736 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 889 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 101 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 082 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 068 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Celer</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 882 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 420 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 518 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 907 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 922 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 041 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 554 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>4 505 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 951 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 030 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 521 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 873 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 918 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 993 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 534 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 636 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 927 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 683 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 762 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 558 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 385 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 761 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 161 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>5 498 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>5 492 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 547 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 597 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 774 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 337 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 653 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 513 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 488 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 075 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 554 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 796 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 417 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>01.04.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 710 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 454 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 927 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 882 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 975 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 581 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>5 737 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 929 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 387 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 692 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 251 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 316 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 050 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 613 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 817 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>5 329 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 392 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 938 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 274 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 675 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Citron</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 535 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>6 798 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 473 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 357 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 168 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 029 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 959 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 112 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 760 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 555 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 945 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 567 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 063 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 028 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 416 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 703 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 653 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 427 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 577 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 955 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>5 635 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 554 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 707 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 162 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 914 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 846 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 709 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>5 205 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 679 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 784 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 461 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 469 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 036 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 275 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 136 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>01.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 637 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 103 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 883 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 337 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 553 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 537 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 194 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 980 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 214 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 213 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 729 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 336 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 816 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 067 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 497 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 211 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 093 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 600 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 401 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 191 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 160 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.04.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Jablka</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 568 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 055 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 271 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 136 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 174 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 519 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 186 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 818 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 064 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 475 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 430 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 309 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 557 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 232 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 280 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 507 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 604 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>7 580 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 771 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 091 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 828 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 900 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 509 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 210 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 458 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 580 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 122 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 883 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 153 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 828 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>7 449 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 282 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 420 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 442 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>8 981 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 500 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 702 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>01.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>12 030 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 852 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 505 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 170 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 803 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 006 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 603 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 849 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 492 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 272 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 015 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 077 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 185 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>10 400 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>11 098 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Melouny</Zboží>
+    <kategorie_zbozi>Tropické ovoce</kategorie_zbozi>
+    <Tržba>9 203 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 093 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 354 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 885 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 533 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 723 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 779 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 977 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 809 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 976 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 741 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 976 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 732 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 356 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 792 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 445 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 090 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 841 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 843 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 913 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 296 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 009 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 965 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>3 929 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 848 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 637 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 235 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 752 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 616 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 359 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 009 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 652 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 952 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 397 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 462 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 789 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 730 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 868 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 494 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 802 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 436 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 661 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 705 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 228 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 460 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 295 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 848 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 291 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 677 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 727 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 291 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 814 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 728 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 979 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 890 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 082 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 523 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>4 362 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 454 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 802 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Mrkev</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 986 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 902 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 926 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 935 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 418 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 583 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 768 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 755 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 466 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 469 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 416 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 254 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 579 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 339 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 713 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 030 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 221 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 050 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 220 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 697 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 401 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 635 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 390 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 362 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 423 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 607 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>23.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 960 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 408 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 698 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 206 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 194 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 503 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 639 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 751 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 449 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 452 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 617 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 271 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 956 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 611 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 528 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 605 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 415 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 907 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 809 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 238 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 950 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 531 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 950 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 374 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 242 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 843 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 684 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 414 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 957 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 808 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 942 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 578 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>07.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 594 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 729 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 769 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 014 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 833 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 396 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 047 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 082 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.04.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Papriky</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 233 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>14 637 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>12 441 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>12 013 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>12 541 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>12 201 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>11 510 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 027 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>11 957 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 587 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 968 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 047 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 589 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>13 023 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 733 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>11 854 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>14 282 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 019 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>13 447 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 323 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>22.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 309 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 529 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 004 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>14 284 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>13 374 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>15 028 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 042 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>26.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>13 044 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 808 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>7 683 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>14 889 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 829 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 151 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>29.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 011 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 104 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 303 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>10 755 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>30.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>13 271 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 063 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 882 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>13 116 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>13 432 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>04.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>12 867 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>12 043 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>8 065 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>12 198 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>11 170 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Pomeranče</Zboží>
+    <kategorie_zbozi>Ovoce</kategorie_zbozi>
+    <Tržba>9 252 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>6 266 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>11.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 143 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>12.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 092 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 953 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>13.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 576 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 880 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>14.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 408 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 214 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>15.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 916 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>16.03.2019</Datum>
+    <kod_zakaznika>GE002</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 417 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>17.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 764 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Dana</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 884 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 644 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>PO003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 304 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>18.03.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 760 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>19.03.2019</Datum>
+    <kod_zakaznika>SK002</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 159 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>20.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 644 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>21.03.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 723 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 350 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>24.03.2019</Datum>
+    <kod_zakaznika>PO001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 448 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>25.03.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 810 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 298 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>27.03.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 577 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 073 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 318 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>SK001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 465 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>28.03.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 002 Kč</Tržba>
+    <nazev_dne_tydne>čtvrtek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>31.03.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 212 Kč</Tržba>
+    <nazev_dne_tydne>neděle</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>01.04.2019</Datum>
+    <kod_zakaznika>CZ002</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 044 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>01.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 918 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 261 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 132 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 120 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>02.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 687 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>SK005</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 471 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>03.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>5 606 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>CZ001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 466 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 607 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>CZ004</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 514 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>GE001</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 727 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>05.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 548 Kč</Tržba>
+    <nazev_dne_tydne>pátek</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>SK003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 512 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>06.04.2019</Datum>
+    <kod_zakaznika>PO002</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>10 140 Kč</Tržba>
+    <nazev_dne_tydne>sobota</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Eva</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>08.04.2019</Datum>
+    <kod_zakaznika>CZ005</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>7 923 Kč</Tržba>
+    <nazev_dne_tydne>pondělí</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Adam</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>09.04.2019</Datum>
+    <kod_zakaznika>CZ003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 394 Kč</Tržba>
+    <nazev_dne_tydne>úterý</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>SK004</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>9 475 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Cyril</jmeno_prodavajiciho>
+  </zaznam>
+  <zaznam>
+    <Datum>10.04.2019</Datum>
+    <kod_zakaznika>GE003</kod_zakaznika>
+    <Zboží>Rajčata</Zboží>
+    <kategorie_zbozi>Zelenina</kategorie_zbozi>
+    <Tržba>8 224 Kč</Tržba>
+    <nazev_dne_tydne>středa</nazev_dne_tydne>
+    <jmeno_prodavajiciho>Beáta</jmeno_prodavajiciho>
+  </zaznam>
+</Prehled_prodeje>

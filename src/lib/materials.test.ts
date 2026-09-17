@@ -154,3 +154,126 @@ describe("součet dlaždic proti číslu v hlavičce", () => {
     expect(soucet).toBe(getBankStats(items).files);
   });
 });
+
+describe("cvičebnice 100 příkladů pro Office", () => {
+  const items = getBankItems();
+
+  it("Word, Excel i Power BI mají hostované soubory, ne jen odkaz", () => {
+    for (const tool of ["Word", "Excel", "Power BI"]) {
+      const souboru = items.filter((it) => it.tool === tool && !it.external);
+      expect(souboru.length, tool).toBeGreaterThan(5);
+    }
+  });
+
+  it("každá úloha má zadání i řešení tam, kde řešení existuje", () => {
+    // Zadání bez řešení je v cvičebnici legitimní (úloha 31 Šablony, 32 Office
+    // Store), řešení bez zadání ale znamená, že se něco při kopírování ztratilo.
+    const skupiny = new Map<string, Set<string>>();
+    for (const it of items) {
+      const g = it.group?.cs ?? "";
+      if (!/^(Word|Excel|PowerBI) › /.test(g)) continue;
+      if (!skupiny.has(g)) skupiny.set(g, new Set());
+      skupiny.get(g)!.add(it.label.cs);
+    }
+    expect(skupiny.size).toBeGreaterThan(60);
+    for (const [g, labels] of skupiny) {
+      if ([...labels].some((l) => l.startsWith("Řešení"))) {
+        expect([...labels].some((l) => l.startsWith("Zadání")), g).toBe(true);
+      }
+    }
+  });
+
+  it("soubor patří do dlaždice podle složky, ne podle přípony", () => {
+    // Zdroj dat pro hromadnou korespondenci je .xlsx, ale je to podklad
+    // k úloze ve Wordu. Kdyby spadl do Excelu, chybí přesně tam, kde ho
+    // učitel potřebuje – a to je táž chyba jako ten rozbitý odkaz, kvůli
+    // kterému se celá cvičebnice na web nahrávala.
+    const zdrojDat = items.find((it) => it.label.cs === "Zdroj dat – výsledky OH");
+    expect(zdrojDat).toBeDefined();
+    expect(zdrojDat!.tool).toBe("Word");
+
+    // Totéž z druhé strany: databáze k importu dat je .accdb, ale je to
+    // podklad k úloze v Excelu.
+    const databaze = items.find((it) => it.label.cs === "Zdrojová databáze");
+    expect(databaze).toBeDefined();
+    expect(databaze!.tool).toBe("Excel");
+  });
+
+  it("pravidlo o složce nepřetáhlo do dlaždic nic dalšího", () => {
+    // Pojistka k `SLOZKA_NASTROJE`: přepisuje se jen u složek pojmenovaných
+    // přesně podle nástroje. Kdyby se to pravidlo rozšířilo, tenhle test
+    // upozorní, že se z dlaždic začaly stěhovat i cizí materiály.
+    const cizi = items.filter(
+      (it) =>
+        ["Word", "Excel", "Power BI"].includes(it.tool) &&
+        !/^(Word|Excel|PowerBI)(\s›|$)/.test(it.group?.cs ?? ""),
+    );
+    for (const it of cizi) {
+      // Co do těchhle dlaždic patří odjinud, patří tam podle názvu nebo
+      // přípony – ne omylem přes složku.
+      expect(
+        /excel|word|power\s?bi|tabulkov|textov/i.test(
+          `${it.group?.cs ?? ""} ${it.topicLabel.cs} ${it.label.cs}`,
+        ) || ["xlsx", "xlsm", "xls", "csv", "docx", "docm", "pbix"].includes(it.ext),
+        `${it.tool}: ${it.group?.cs} › ${it.label.cs}`,
+      ).toBe(true);
+    }
+  });
+
+  it("materiály platí pro všechny obory, i když leží jen v 1L", () => {
+    // Soubory jsou na disku jednou (48 MB), obory 1S a 1P na ně ukazují
+    // souborem `_stejne.txt`. Bez toho by u nich svítilo jen „technické
+    // lyceum" a kolega ze strojírenství by je přeskočil.
+    const zadani = items.find(
+      (it) => it.group?.cs === "Excel › Tabulka" && it.label.cs === "Zadání",
+    );
+    expect(zadani).toBeDefined();
+    expect(zadani!.courseIds).toEqual(expect.arrayContaining(["1L", "1S", "1P"]));
+  });
+
+  it("v každé úloze stojí zadání před řešením", () => {
+    // Česká abeceda řadí Ř před Z, takže se v každé úloze samo nabídlo
+    // nejdřív řešení a teprve pak zadání – přesně naopak, než se učí.
+    // Podklady (obrázky, zdrojová data) patří doprostřed: bez nich zadání
+    // nejde udělat, ale řešení je až po nich.
+    const skupiny = new Map<string, string[]>();
+    for (const it of items) {
+      const g = it.group?.cs ?? "";
+      if (!/^(Word|Excel|PowerBI) › /.test(g)) continue;
+      if (!skupiny.has(g)) skupiny.set(g, []);
+      skupiny.get(g)!.push(it.label.cs);
+    }
+    expect(skupiny.size).toBeGreaterThan(60);
+    for (const [g, labels] of skupiny) {
+      const prvniReseni = labels.findIndex((l) => l.startsWith("Řešení"));
+      const posledniZadani = labels.map((l) => l.startsWith("Zadání")).lastIndexOf(true);
+      if (prvniReseni === -1 || posledniZadani === -1) continue;
+      expect(posledniZadani, `${g}: ${labels.join(", ")}`).toBeLessThan(prvniReseni);
+    }
+  });
+
+  it("adresa souboru s čárkou v názvu není rozbitá", () => {
+    // Next u statických souborů nedekóduje `%2C`, takže čárka zakódovaná
+    // přes `encodeURIComponent` vedla na 404. Lámalo to i materiály, které
+    // tu byly dávno před cvičebnicí („Hodnocení, testy a řešení.docx“).
+    for (const it of items) {
+      if (it.external || it.interactive) continue;
+      expect(it.href, it.label.cs).not.toContain("%2C");
+    }
+    const sCarkou = items.filter((it) => it.href.includes(","));
+    expect(sCarkou.length).toBeGreaterThan(0);
+  });
+
+  it("autorem je tým cvičebnice, ne jeden člověk", () => {
+    const ukol = items.find((it) => it.group?.cs === "Word › Formát písma");
+    expect(ukol?.groupAuthor).toBe("Tým autorů a tým Microsoft pro školství");
+  });
+
+  it("nezůstal odkaz, který vede na přihlášení osobním účtem Microsoft", () => {
+    // Přesně tohle kolegům hlásilo chybu: onedrive.live.com přesměruje na
+    // login.live.com a školní účet tam neprojde.
+    for (const it of items) {
+      expect(it.href, it.label.cs).not.toMatch(/onedrive\.live\.com/);
+    }
+  });
+});

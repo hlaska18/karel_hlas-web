@@ -1,20 +1,11 @@
 [
  {
-  "cs": "Úlohy v Power BI – cvičebnice Karla Klatovského",
-  "en": "Power BI exercises – workbook by Karel Klatovský",
-  "url": "https://onedrive.live.com/?ls=true&cid=D1EE7CF352204F63&id=D1EE7CF352204F63%2111203&parId=D1EE7CF352204F63%2111105&o=OneUp",
+  "cs": "Původní cvičebnice u autorů – Power BI",
+  "en": "The original workbook at the authors' site – Power BI",
+  "url": "https://aka.ms/cvicebnice",
   "note": {
-   "cs": "Zadání úloh (PDF „100 příkladů pro Office“). Samo o sobě nestačí – úlohy pracují se cvičnými soubory níže. Otevře se u autora na OneDrivu – vyžádá si přihlášení účtem Microsoft.",
-   "en": "The exercises (PDF “100 příkladů pro Office”). Not usable on its own – they work with the practice files below. It opens at the author's OneDrive and asks you to sign in with a Microsoft account."
-  }
- },
- {
-  "cs": "Cvičné soubory i řešení úloh",
-  "en": "Practice files & solutions",
-  "url": "https://modernizak-my.sharepoint.com/personal/karel_klatovsky_modernizak_cz/_layouts/15/onedrive.aspx?id=%2Fpersonal%2Fkarel%5Fklatovsky%5Fmodernizak%5Fcz%2FDocuments%2FCvicebnice&ga=1",
-  "note": {
-   "cs": "Soubory, se kterými se v úlohách pracuje, a jejich řešení. Patří k cvičebnici výše. Otevře se u autora na OneDrivu – vyžádá si přihlášení účtem Microsoft.",
-   "en": "The files the exercises work with, plus solutions. They belong with the workbook above. It opens at the author's OneDrive and asks you to sign in with a Microsoft account."
+   "cs": "Oficiální a vždy aktuální verze cvičných souborů od autorů. Zadání i soubory máš ale rovnou tady na webu – tohle je pro případ, že by vyšla novější verze.",
+   "en": "The authors' official, always-current copy of the practice files. The exercises and files are already here on this site – this link is for the case a newer edition appears."
   }
  }
 ]
