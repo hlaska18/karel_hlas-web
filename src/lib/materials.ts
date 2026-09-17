@@ -97,7 +97,10 @@ const NAME_EN: Record<string, string> = {
   // („01. Formát písma") přeložené nejsou a spadnou na češtinu – je to
   // dokumentované chování a u 73 položek to nestojí za údržbu.
   "Úlohy": "Exercises",
-  "Zadání": "Exercise",
+  // „Zadání" je list z cvičebnice, „Pracovní soubor" ten, ve kterém se podle
+  // něj pracuje. Dřív se obojí jmenovalo Zadání a pletlo se to.
+  "Zadání": "The exercise",
+  "Pracovní soubor": "Working file",
   "Řešení": "Solution",
   "Řešení (PDF)": "Solution (PDF)",
   "Zadání úloh – cvičebnice": "Exercises – the workbook",
@@ -108,8 +111,8 @@ const NAME_EN: Record<string, string> = {
   "Obrázek k vložení": "Image to insert",
   "Obrázek – olympijská medaile": "Image – Olympic medal",
   "Obrázek – slavnostní zahájení": "Image – opening ceremony",
-  "Zadání – původní dokument": "Exercise – original document",
-  "Zadání – verze od Aleše": "Exercise – Aleš's version",
+  "Pracovní soubor – původní dokument": "Working file – original document",
+  "Pracovní soubor – verze od Aleše": "Working file – Aleš's version",
   "Řešení – porovnaný dokument": "Solution – merged document",
   "Řešení – hotový tisk (PDF)": "Solution – finished print (PDF)",
   "Zdroj dat – výsledky OH": "Data source – Olympic results",
@@ -461,17 +464,22 @@ function encodeSegment(s: string): string {
 }
 
 /**
- * Pořadí materiálu uvnitř jedné úlohy: zadání → podklady → řešení.
+ * Pořadí materiálu uvnitř jedné úlohy, v tom sledu, v jakém se otevírají:
+ * zadání → pracovní soubor → podklady → řešení.
  *
  * Bez tohohle o něm rozhodovala abeceda – a česky se Ř řadí PŘED Z, takže
  * se v každé úloze cvičebnice nabídlo nejdřív řešení a teprve pod ním zadání.
- * Přesně naopak, než se úloha dělá. Podklady (obrázky, zdrojová data, CSV)
- * patří doprostřed: bez nich zadání nejde udělat, ale řešení je až za nimi.
+ * Přesně naopak, než se úloha dělá.
+ *
+ * Pracovní soubor stojí hned za zadáním, protože v něm žák začne. Podklady
+ * (obrázky, zdrojová data, CSV) jsou až za ním – sáhne po nich, až když je
+ * v úloze potřebuje.
  */
 function rolePoradi(label: string): number {
   if (/^zadání/i.test(label)) return 0;
-  if (/^řešení/i.test(label)) return 2;
-  return 1;
+  if (/^pracovní soubor/i.test(label)) return 1;
+  if (/^řešení/i.test(label)) return 3;
+  return 2;
 }
 
 export function getBankItems(): BankItem[] {

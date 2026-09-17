@@ -174,22 +174,33 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     }
   });
 
-  it("každá úloha má zadání i řešení tam, kde řešení existuje", () => {
-    // Zadání bez řešení je v cvičebnici legitimní (úloha 31 Šablony, 32 Office
-    // Store), řešení bez zadání ale znamená, že se něco při kopírování ztratilo.
+  it("každá úloha má svoje zadání jako PDF", () => {
+    // Cvičebnice má 73 úloh a ke každé je rozřezaný list ze zadání. Kdyby
+    // se rozřezání rozešlo s počtem složek, tenhle test to chytí – bez něj
+    // by úloha tiše zůstala bez zadání a poznalo by se to až v hodině.
     const skupiny = new Map<string, Set<string>>();
     for (const it of items) {
       const g = it.group?.cs ?? "";
-      if (!/^(Word|Excel|PowerBI) › /.test(g)) continue;
+      if (!/^(Word|Excel|PowerBI) › Úlohy › /.test(g)) continue;
       if (!skupiny.has(g)) skupiny.set(g, new Set());
       skupiny.get(g)!.add(it.label.cs);
     }
-    expect(skupiny.size).toBeGreaterThan(60);
+    expect(skupiny.size).toBe(73);
     for (const [g, labels] of skupiny) {
-      if ([...labels].some((l) => l.startsWith("Řešení"))) {
-        expect([...labels].some((l) => l.startsWith("Zadání")), g).toBe(true);
-      }
+      expect(labels.has("Zadání"), g).toBe(true);
     }
+  });
+
+  it("pracovní soubor se nejmenuje zadání", () => {
+    // Karel na to upozornil: v tom .docx žádné zadání není, je to soubor,
+    // ve kterém se podle zadání teprve pracuje. Zadání je ten list z PDF.
+    const spatne = items.filter(
+      (it) =>
+        /^(Word|Excel|PowerBI) › Úlohy › /.test(it.group?.cs ?? "") &&
+        it.label.cs.startsWith("Zadání") &&
+        it.ext !== "pdf",
+    );
+    expect(spatne.map((it) => `${it.group?.cs}: ${it.label.cs}.${it.ext}`)).toEqual([]);
   });
 
   it("soubor patří do dlaždice podle složky, ne podle přípony", () => {
@@ -243,8 +254,8 @@ describe("cvičebnice 100 příkladů pro Office", () => {
   it("v každé úloze stojí zadání před řešením", () => {
     // Česká abeceda řadí Ř před Z, takže se v každé úloze samo nabídlo
     // nejdřív řešení a teprve pak zadání – přesně naopak, než se učí.
-    // Podklady (obrázky, zdrojová data) patří doprostřed: bez nich zadání
-    // nejde udělat, ale řešení je až po nich.
+    // Pořadí má být to, ve kterém se soubory otevírají: zadání, pracovní
+    // soubor, podklady, řešení.
     const skupiny = new Map<string, string[]>();
     for (const it of items) {
       const g = it.group?.cs ?? "";
@@ -256,8 +267,16 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     for (const [g, labels] of skupiny) {
       const prvniReseni = labels.findIndex((l) => l.startsWith("Řešení"));
       const posledniZadani = labels.map((l) => l.startsWith("Zadání")).lastIndexOf(true);
-      if (prvniReseni === -1 || posledniZadani === -1) continue;
-      expect(posledniZadani, `${g}: ${labels.join(", ")}`).toBeLessThan(prvniReseni);
+      const prvniPracovni = labels.findIndex((l) => l.startsWith("Pracovní soubor"));
+      if (posledniZadani !== -1 && prvniReseni !== -1) {
+        expect(posledniZadani, `${g}: ${labels.join(", ")}`).toBeLessThan(prvniReseni);
+      }
+      if (posledniZadani !== -1 && prvniPracovni !== -1) {
+        expect(posledniZadani, `${g}: ${labels.join(", ")}`).toBeLessThan(prvniPracovni);
+      }
+      if (prvniPracovni !== -1 && prvniReseni !== -1) {
+        expect(prvniPracovni, `${g}: ${labels.join(", ")}`).toBeLessThan(prvniReseni);
+      }
     }
   });
 
