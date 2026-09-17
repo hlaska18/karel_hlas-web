@@ -48,7 +48,7 @@ import {
   volneJmeno,
   type Uzel,
 } from "@/lib/win/fs";
-import { datumCas, velikostPodrobne, velikostSloupec } from "@/lib/win/format";
+import { datumCas, velikostPodrobne, velikostSloupec, velikostText } from "@/lib/win/format";
 
 const MISTA = [
   { jmeno: "Plocha", cesta: PLOCHA },
@@ -57,6 +57,17 @@ const MISTA = [
   { jmeno: "Obrázky", cesta: OBRAZKY },
   { jmeno: "zak", cesta: DOMOV },
 ];
+
+/**
+ * České skloňování ve stavovém řádku: 1 položka, 2–4 položky, 5+ položek.
+ * Bez toho tam stálo „1 položek“, což je přesně ten druh drobnosti, podle
+ * které je poznat, že prostředí nikdo nedodělal.
+ */
+function polozekSlovy(n: number): string {
+  if (n === 1) return "1 položka";
+  if (n >= 2 && n <= 4) return `${n} položky`;
+  return `${n} položek`;
+}
 
 /** Je to složka, kterou Finder ukazuje jako složku? Balíček se počítá jinak. */
 const jeProstaSlozka = (u: Uzel) => jeSlozka(u) && !jeBalicek(u.jmeno);
@@ -79,11 +90,36 @@ export function Finder() {
 
   const cesta = historie[kde];
   const slozka = najdiSlozku(stav.disk, cesta);
+  /** Volné místo. Kapacita disku je 245 GB, obsazené se počítá ze stromu. */
+  const volneMisto = useMemo(() => {
+    const obsazeno = velikost(stav.disk) + 41_000_000_000;
+    // `velikostText`, ne `velikostSloupec`: ten druhý je windowsácký sloupec
+    // Velikost a hlásí VŽDYCKY kilobajty, takže dole svítilo
+    // „199 198 416 kB k dispozici“ místo „190,0 GB“.
+    return velikostText(245_000_000_000 - obsazeno);
+  }, [stav.disk]);
   const jmenoMista = cesta[cesta.length - 1] || "Macintosh HD";
 
   useEffect(() => {
     nastavTitul(jmenoMista);
   }, [jmenoMista, nastavTitul]);
+
+  /**
+   * Nabídka „Jít“ poslala okno jinam. Porovnává se s aktuální cestou, aby to
+   * nezacyklilo: `jdi` sáhne do historie, ta překreslí Finder a efekt by se
+   * spustil znovu.
+   */
+  useEffect(() => {
+    if (!arg) return;
+    const kam = rozlozMac(arg);
+    if (slozMac(kam) === slozMac(historie[kde])) return;
+    nastavHistorii((h) => [...h.slice(0, kde + 1), kam]);
+    nastavKde((k) => k + 1);
+    nastavVybrano(null);
+    // `historie` a `kde` schválně mimo závislosti: efekt reaguje na příkaz
+    // z nabídky, ne na vlastní chození uvnitř okna.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [arg]);
 
   /* Doklad, že žák našel připojený disk tam, kde na Macu je – bez písmene. */
   useEffect(() => {
@@ -264,16 +300,13 @@ export function Finder() {
           </button>
           <span className="ml-1 font-semibold">{jmenoMista}</span>
 
-          <label className="ml-auto flex cursor-pointer items-center gap-2 text-[12px] text-mac-slaby">
-            <input
-              type="checkbox"
-              checked={stav.nastaveni.skrytePolozky}
-              onChange={(e) =>
-                poslat({ typ: "nastaveni/zmen", zmena: { skrytePolozky: e.target.checked } })
-              }
-            />
-            Položky s tečkou
-          </label>
+          {/* Zaškrtávátko „Položky s tečkou" tu bývalo kvůli objevitelnosti,
+              jenže skutečný Finder ho v pruhu nástrojů nemá – přepíná se
+              v nabídce Zobrazení nebo zkratkou. Zůstal jen tichý údaj, že je
+              zapnuté, ať žák pozná, proč mu ve výpisu přibyly tečkové soubory. */}
+          {stav.nastaveni.skrytePolozky && (
+            <span className="ml-auto text-[11px] text-mac-slaby">položky s tečkou</span>
+          )}
         </div>
 
         <div
@@ -358,7 +391,12 @@ export function Finder() {
             tady je dole a jen ukazuje – a hlavně ukazuje unixovou cestu. */}
         <div className="flex h-[24px] shrink-0 items-center gap-2 border-t border-mac-linka bg-mac-panel px-3 text-[11px] text-mac-slaby">
           <span className="tabular-nums">{sVlnovkou(cesta)}</span>
-          <span className="ml-auto">{polozky.length} položek</span>
+          {/* Skutečný Finder píše dole počet položek a volné místo na disku.
+              Kapacita je vymyšlená, ale pevná – kdyby se dopočítávala z obsahu,
+              skákala by po každém uloženém souboru a vypadalo by to rozbitě. */}
+          <span className="ml-auto">
+            {polozekSlovy(polozky.length)}, {volneMisto} k dispozici
+          </span>
         </div>
       </div>
 

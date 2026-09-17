@@ -12,6 +12,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Maximize2, Minimize2 } from "lucide-react";
 import Link from "next/link";
 import { MacProvider, OknoMacProvider, useMac } from "./system";
+import { najdiSlozku } from "@/lib/win/fs";
 import { OknoRamMac } from "./OknoRam";
 import { HorniLista, type Nabidka } from "./HorniLista";
 import { Dock } from "./Dock";
@@ -22,12 +23,21 @@ import { Finder } from "./apps/Finder";
 import { Poznamky } from "./apps/Poznamky";
 import { Terminal } from "./apps/Terminal";
 import { APLIKACE, type AppId, type Okno } from "@/lib/mac/stav";
-import { DOKUMENTY, PLOCHA, slozMac } from "@/lib/mac/cesty";
+import {
+  APLIKACE as SLOZKA_APLIKACI,
+  DOKUMENTY,
+  DOMOV,
+  KOREN,
+  PLOCHA,
+  STAZENE,
+  rozlozMac,
+  slozMac,
+} from "@/lib/mac/cesty";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import { zapomenMac } from "@/lib/mac/stav";
 
 type Faze = "prihlaseni" | "bezi";
-type Panel = null | "vynutit" | "oMacu" | "znovu";
+type Panel = null | "vynutit" | "oMacu" | "znovu" | "jdi";
 
 export function VirtualniMac() {
   return (
@@ -164,39 +174,79 @@ function Obrazovka() {
 
   /* Nabídky aplikace vpředu. Krátké schválně – nemá to být kopie macOS,
      ale místo, kde je vidět, že nabídka patří PROGRAMU, ne oknu. */
+  /**
+   * Nabídky aplikace vpředu.
+   *
+   * Názvy i zkratky jsou ty SKUTEČNÉ z české lokalizace macOS, ne vymyšlené –
+   * žák, který si někdy sedne k opravdovému Macu, má najít totéž. Zkratky se
+   * ukazují, ale nemapují se na klávesy: viz komentář u klávesových zkratek výš.
+   *
+   * Položky, které prostředí neumí (schránka, zpět, jiné pohledy), jsou
+   * ZESEDLÉ, ne vynechané. Nabídka, ve které chybí půlka obvyklých položek,
+   * vypadá rozbitě; zešedlá položka je naopak běžný stav i na skutečném Macu.
+   */
   const nabidky: Nabidka[] = (() => {
-    const zavriOkno = () => {
-      const moje = stav.okna.filter((o) => o.app === vpredu && !o.minimalizovane);
-      const posledni = moje.length ? moje.reduce((a, b) => (a.z > b.z ? a : b)) : null;
-      if (posledni) poslat({ typ: "okno/zavri", id: posledni.id });
+    const mojeOkna = () => stav.okna.filter((o) => o.app === vpredu && !o.minimalizovane);
+    const posledniOkno = () => {
+      const moje = mojeOkna();
+      return moje.length ? moje.reduce((a, b) => (a.z > b.z ? a : b)) : null;
     };
-    const spolecne: Nabidka = {
+    const zavriOkno = () => {
+      const o = posledniOkno();
+      if (o) poslat({ typ: "okno/zavri", id: o.id });
+    };
+    const doDocku = () => {
+      const o = posledniOkno();
+      if (o) poslat({ typ: "okno/minimalizuj", id: o.id });
+    };
+
+    const okno: Nabidka = {
       titul: "Okno",
       polozky: [
+        { text: "Schovat do Docku", zkratka: "⌘M", akce: doDocku },
         { text: "Zavřít okno", zkratka: "⌘W", akce: zavriOkno },
-        {
-          text: "Schovat do Docku",
-          zkratka: "⌘M",
-          akce: () => {
-            const moje = stav.okna.filter((o) => o.app === vpredu && !o.minimalizovane);
-            const posledni = moje.length ? moje.reduce((a, b) => (a.z > b.z ? a : b)) : null;
-            if (posledni) poslat({ typ: "okno/minimalizuj", id: posledni.id });
-          },
-        },
+      ],
+    };
+    const napoveda: Nabidka = {
+      titul: "Nápověda",
+      polozky: [{ text: "Nápověda pro macOS", akce: () => nastavPanel("oMacu") }],
+    };
+    /* Schránka a Zpět tu nejsou udělané. Nabídka Úpravy ale na Macu je vždycky,
+       takže se ukáže zešedlá – chybějící nabídka by vypadala jako závada. */
+    const upravy: Nabidka = {
+      titul: "Úpravy",
+      polozky: [
+        { text: "Zpět", zkratka: "⌘Z", zesedle: true },
+        { text: "Vyjmout", zkratka: "⌘X", zesedle: true },
+        { text: "Kopírovat", zkratka: "⌘C", zesedle: true, oddelovac: true },
+        { text: "Vybrat vše", zkratka: "⌘A", zesedle: true },
       ],
     };
 
     if (vpredu === "finder") {
+      /* „Jít“ na Macu přepne SOUČASNÉ okno. Nové otevře jen tehdy, když žádné
+         není – to dělá skutečný Finder taky. */
+      const finderVpredu = mojeOkna().sort((a, b) => b.z - a.z)[0];
+      const jdi = (kam: string[]) => {
+        if (finderVpredu) poslat({ typ: "okno/arg", id: finderVpredu.id, arg: slozMac(kam) });
+        else spust("finder", slozMac(kam));
+      };
       return [
         {
           titul: "Soubor",
           polozky: [
             { text: "Nové okno Finderu", zkratka: "⌘N", akce: () => spust("finder", slozMac(PLOCHA)) },
+            { text: "Nová složka", zkratka: "⇧⌘N", zesedle: true, oddelovac: true },
+            { text: "Informace", zkratka: "⌘I", zesedle: true, oddelovac: true },
+            { text: "Zavřít okno", zkratka: "⌘W", akce: zavriOkno },
           ],
         },
+        upravy,
         {
           titul: "Zobrazení",
           polozky: [
+            { text: "Jako ikony", zkratka: "⌘1", zesedle: true },
+            { text: "Jako seznam", zkratka: "⌘2", zesedle: true, oddelovac: true },
             {
               text: stav.nastaveni.skrytePolozky
                 ? "Skrýt položky s tečkou"
@@ -210,7 +260,22 @@ function Obrazovka() {
             },
           ],
         },
-        spolecne,
+        {
+          // Tahle nabídka na Windows nemá obdobu a je to nejlepší místo, kde
+          // žák uvidí, že domovská složka, Plocha i Aplikace jsou jen cesty.
+          titul: "Jít",
+          polozky: [
+            { text: "Domů", zkratka: "⇧⌘H", akce: () => jdi(DOMOV) },
+            { text: "Plocha", zkratka: "⇧⌘D", akce: () => jdi(PLOCHA) },
+            { text: "Dokumenty", zkratka: "⇧⌘O", akce: () => jdi(DOKUMENTY) },
+            { text: "Stažené", zkratka: "⌥⌘L", akce: () => jdi(STAZENE) },
+            { text: "Aplikace", zkratka: "⇧⌘A", akce: () => jdi(SLOZKA_APLIKACI), oddelovac: true },
+            { text: "Počítač", zkratka: "⇧⌘C", akce: () => jdi([KOREN]), oddelovac: true },
+            { text: "Přejít do složky…", zkratka: "⇧⌘G", akce: () => nastavPanel("jdi") },
+          ],
+        },
+        okno,
+        napoveda,
       ];
     }
 
@@ -224,18 +289,29 @@ function Obrazovka() {
               zkratka: "⌘N",
               akce: () => spust("poznamky", slozMac([...DOKUMENTY, "Poznámka.txt"])),
             },
+            { text: "Uložit", zkratka: "⌘S", zesedle: true, oddelovac: true },
+            { text: "Zavřít okno", zkratka: "⌘W", akce: zavriOkno },
           ],
         },
-        spolecne,
+        upravy,
+        okno,
+        napoveda,
       ];
     }
 
     return [
       {
+        // Terminál má první nabídku „Shell“, ne „Soubor“ – jedna z drobností,
+        // podle kterých se pozná, že to není jen přebarvené okno.
         titul: "Shell",
-        polozky: [{ text: "Nové okno Terminálu", zkratka: "⌘N", akce: () => spust("terminal") }],
+        polozky: [
+          { text: "Nové okno", zkratka: "⌘N", akce: () => spust("terminal") },
+          { text: "Zavřít okno", zkratka: "⌘W", akce: zavriOkno },
+        ],
       },
-      spolecne,
+      upravy,
+      okno,
+      napoveda,
     ];
   })();
 
@@ -298,6 +374,7 @@ function Obrazovka() {
             {panel === "znovu" && (
               <ZacitZnovu zavri={() => nastavPanel(null)} potvrd={zacitZnovu} />
             )}
+            {panel === "jdi" && <PrejitDoSlozky zavri={() => nastavPanel(null)} />}
           </div>
         </div>
       )}
@@ -371,6 +448,88 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
             className="rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90 disabled:opacity-40"
           >
             Vynutit ukončení
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * „Přejít do složky…“ (⇧⌘G).
+ *
+ * Na Windows se cesta píše do adresního řádku nahoře v okně; na Macu do
+ * tohohle okénka. Je to nejpřímější způsob, jak si žák vyzkouší, že cesta
+ * je text — a že začíná lomítkem, ne písmenem disku. Proto tu není výběr
+ * ze seznamu: musí ji napsat.
+ */
+function PrejitDoSlozky({ zavri }: { zavri: () => void }) {
+  const { stav, poslat, spust, stopa } = useMac();
+  const [text, nastavText] = useState("/");
+  const [chyba, nastavChybu] = useState("");
+  const pole = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => pole.current?.select(), 40);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  const jdi = () => {
+    const zadano = text.trim();
+    // Vlnovka je na Macu domovská složka a žák ji vidí v Terminálu i dole
+    // ve Finderu, takže ji tohle okénko musí brát taky.
+    const casti = zadano === "~" || zadano.startsWith("~/")
+      ? [...DOMOV, ...rozlozMac(zadano.slice(1)).slice(1)]
+      : rozlozMac(zadano);
+    if (!najdiSlozku(stav.disk, casti)) {
+      nastavChybu("Složka s touhle cestou tu není.");
+      return;
+    }
+    stopa("prejit-do-slozky");
+    const finder = stav.okna
+      .filter((o) => o.app === "finder" && !o.minimalizovane)
+      .sort((a, b) => b.z - a.z)[0];
+    if (finder) poslat({ typ: "okno/arg", id: finder.id, arg: slozMac(casti) });
+    else spust("finder", slozMac(casti));
+    zavri();
+  };
+
+  return (
+    <div className="absolute inset-0 z-[860] flex items-start justify-center bg-black/20 pt-[16vh]">
+      <div className="mac-vjezd w-[460px] rounded-xl bg-mac-povrch p-5 shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+        <h2 className="text-[13px] font-semibold text-mac-text">Přejít do složky:</h2>
+        <input
+          ref={pole}
+          value={text}
+          onChange={(e) => {
+            nastavText(e.target.value);
+            nastavChybu("");
+          }}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") jdi();
+            if (e.key === "Escape") zavri();
+          }}
+          aria-label="Cesta ke složce"
+          spellCheck={false}
+          className="mt-3 w-full rounded-md border border-mac-linka bg-mac-povrch px-3 py-2 font-mono text-[13px] text-mac-text outline-none focus-visible:outline-none"
+        />
+        <p className={`mt-2 h-4 text-[11px] ${chyba ? "text-[#c0392b]" : "text-mac-slaby"}`}>
+          {chyba || "Například /Users/zak/Documents nebo /Volumes/FLASH"}
+        </p>
+        <div className="mt-3 flex justify-end gap-2">
+          <button
+            type="button"
+            onClick={zavri}
+            className="rounded-md border border-mac-linka bg-mac-povrch px-3 py-1.5 text-[13px] text-mac-text hover:bg-mac-zvyrazneny"
+          >
+            Zrušit
+          </button>
+          <button
+            type="button"
+            onClick={jdi}
+            className="rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90"
+          >
+            Jít
           </button>
         </div>
       </div>

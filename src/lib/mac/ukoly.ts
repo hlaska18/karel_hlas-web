@@ -202,7 +202,7 @@ export const UKOLY_MAC: UkolMac[] = [
     popis:
       "Ve Windows je skrytý soubor ten, který má zapnutý příznak skrytý – ten se dá odkliknout ve vlastnostech. Na Macu nic takového není. Rozhoduje JMÉNO.",
     kroky: [
-      "V okně Finderu je vpravo nahoře zaškrtávátko Položky s tečkou. Zaškrtni ho. (Jde to i přes Ctrl+Shift+tečka.)",
+      "Nahoře v liště klikni na Zobrazení a vyber Zobrazit položky s tečkou. (Jde to i zkratkou Ctrl+Shift+tečka.)",
       "V postranním panelu klikni na zak. To je tvoje domovská složka.",
       "Objevil se soubor .zshrc, který tam předtím nebyl.",
       "Klikni na něj pravým tlačítkem a vyber Informace. U Druhu je napsané, proč se běžně neukazuje.",
@@ -222,9 +222,9 @@ export const UKOLY_MAC: UkolMac[] = [
       "Klikni pravým tlačítkem do prázdného místa pod seznamem souborů.",
       "Vyber Nová složka. Objeví se s rozsvíceným názvem, který jde hned přepsat.",
       "Napiš název, který ZAČÍNÁ TEČKOU, třeba .pokus, a stiskni Enter.",
-      "Dokud máš zaškrtnuté Položky s tečkou, složku vidíš.",
-      "Zaškrtávátko vypni. Složka zmizela – a přitom nikam nezmizela, jen ji Finder neukazuje.",
-      "Zapni ho zpátky a je zase vidět.",
+      "Dokud máš zapnuté zobrazení položek s tečkou, složku vidíš.",
+      "V nabídce Zobrazení to zase vypni. Složka zmizela – a přitom nikam nezmizela, jen ji Finder neukazuje.",
+      "Zapni to zpátky a složka je zase vidět.",
     ],
     skupina: "Skrytý je tečka na začátku",
     hotovo: (s) => stopa(s, "zalozil-teckovou"),

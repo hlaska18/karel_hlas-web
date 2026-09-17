@@ -67,6 +67,19 @@ describe("okno není program", () => {
     expect(stav.okna[0].zvetsene).toBe(false);
   });
 
+  it("nabídka Jít přepne otevřené okno, neotevře nové", () => {
+    // Na Macu „Jít → Domů" nepřidá okno, jen pošle to současné jinam.
+    let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "finder" });
+    const id = stav.okna[0].id;
+    stav = reducerMac(stav, { typ: "okno/minimalizuj", id });
+
+    stav = reducerMac(stav, { typ: "okno/arg", id, arg: "/Users/zak/Documents" });
+    expect(stav.okna).toHaveLength(1);
+    expect(stav.okna[0].arg).toBe("/Users/zak/Documents");
+    // a zaroven se vrati z Docku dopredu, jinak by to nikam nevedlo
+    expect(stav.okna[0].minimalizovane).toBe(false);
+  });
+
   it("po ukončení aplikace patří lišta zase Finderu", () => {
     let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "terminal" });
     expect(stav.vpredu).toBe("terminal");

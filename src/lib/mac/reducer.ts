@@ -21,6 +21,12 @@ export type AkceMac =
   | { typ: "okno/posun"; id: number; ram: Obdelnik }
   /** Aplikace si přepisuje text v záhlaví (Finder cestou, Terminál složkou). */
   | { typ: "okno/titul"; id: number; titul: string; arg?: string }
+  /**
+   * Pošle otevřené okno jinam. Používá nabídka „Jít“ ve Finderu – na Macu
+   * přepne SOUČASNÉ okno, neotevře nové, a bez tohohle by to nešlo: cestu si
+   * Finder drží ve vlastním stavu, kam lišta nedosáhne.
+   */
+  | { typ: "okno/arg"; id: number; arg: string }
   /** Žlutý puntík: okno zmizí do Docku, ale nezaniká. */
   | { typ: "okno/minimalizuj"; id: number }
   /** Zpátky z Docku. */
@@ -110,6 +116,21 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
         ...stav,
         okna: stav.okna.map((o) =>
           o.id === akce.id ? { ...o, titul: akce.titul, arg: akce.arg ?? o.arg } : o,
+        ),
+      };
+    }
+
+    case "okno/arg": {
+      const okno = stav.okna.find((o) => o.id === akce.id);
+      if (!okno || okno.arg === akce.arg) return stav;
+      const nejvyssi = Math.max(0, ...stav.okna.map((o) => o.z));
+      return {
+        ...stav,
+        vpredu: okno.app,
+        okna: stav.okna.map((o) =>
+          // Okno se zároveň vytáhne dopředu a vrátí z Docku – „Jít“ na schované
+          // okno by jinak nikam viditelně nevedlo.
+          o.id === akce.id ? { ...o, arg: akce.arg, minimalizovane: false, z: nejvyssi + 1 } : o,
         ),
       };
     }
