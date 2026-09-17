@@ -1220,6 +1220,7 @@ type Karta = {
 function FolderCard({
   name,
   author,
+  zdedenyAutor,
   popis,
   items,
   deti = [],
@@ -1230,6 +1231,14 @@ function FolderCard({
   name: string;
   /** Autor celé složky (převzaté materiály) – ukáže se vedle šipky. */
   author?: string;
+  /**
+   * Autor, který je už napsaný na některé z nadřazených karet.
+   *
+   * `_autor.txt` se dědí do všech podsložek, takže u cvičebnice měl autora
+   * i každý z 32 úkolů – a to uvnitř karty, která ho má v hlavičce. Opakovat
+   * ho u každé položky je šum; ukáže se, jen když se od zděděného liší.
+   */
+  zdedenyAutor?: string;
   /** Věta o tom, co ve složce je a jak se s tím pracuje (`_popis.json`). */
   popis?: { cs: string; en: string };
   items: BankItem[];
@@ -1293,7 +1302,7 @@ function FolderCard({
             {countMaterials(spocitejMaterialy(items, deti), lang)}
           </span>
         </span>
-        {author && (
+        {author && author !== zdedenyAutor && (
           <span className="hidden shrink-0 text-sm text-zinc-600 dark:text-zinc-400 sm:block">
             {author}
           </span>
@@ -1339,6 +1348,9 @@ function FolderCard({
                 <FolderCard
                   name={d.name}
                   author={d.author}
+                  // Co už je napsané výš. Vlastní autor se ukáže, jen když se
+                  // od toho liší.
+                  zdedenyAutor={author ?? zdedenyAutor}
                   popis={d.popis}
                   items={d.items}
                   deti={d.deti}
