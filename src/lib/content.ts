@@ -131,6 +131,13 @@ export const SOCIALS: Social[] = [
 export type Badge = { src: string; alt: string; circle?: boolean; href?: string };
 
 export const BADGES: Badge[] = [
+  // Nejnovější nahoře – seznam se čte odshora a nejčerstvější odznak má být
+  // první, co člověk uvidí.
+  {
+    src: "/images/badges/microsoft-elevate-educator-explorer.png",
+    alt: "Microsoft Elevate: Educator – Explorer",
+    href: "https://www.credly.com/badges/7b2e8616-3d8c-4e39-98fb-20dce274ed54/public_url",
+  },
   {
     src: "/images/badges/anthropic-claude-code-101.png",
     alt: "Anthropic: Claude Code 101",
