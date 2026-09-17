@@ -49,15 +49,96 @@ function ZnakLaunchpad({ className, style }: { className?: string; style?: React
   );
 }
 
-/** Ikony jsou kreslené, ne obrázkové – prostředí se kvůli Docku nemá stahovat. */
 /** Ikona aplikace: buď z knihovny, nebo vlastní kresba. */
 type Znak = React.ComponentType<{ className?: string; style?: React.CSSProperties }>;
 
+/**
+ * Ikony jsou kreslené, ne obrázkové – prostředí se kvůli Docku nemá stahovat
+ * o megabajt navíc, a hlavně by staženými ikonami Applu předstíralo, že je to
+ * jejich aplikace.
+ *
+ * Každá je vlastní kresba, ne symbol z knihovny na barevném čtverci: Finder má
+ * dvoubarevný obličej, Terminál výzvu na černém, Poznámky linkovaný papír
+ * se žlutým pruhem. Na obecném symbolu nebylo poznat, která aplikace to je,
+ * a v Docku to byla ta nejnápadnější věc.
+ */
+function ZnakFinder({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} aria-hidden="true">
+      {/* Dvě poloviny obličeje, jak je má Finder: světlejší levá, sytější pravá */}
+      <path d="M2 4h10v16H2z" fill="#bfe3ff" />
+      <path d="M12 4h10v16H12z" fill="#1e88e5" />
+      <circle cx="7.4" cy="10" r="1.05" fill="#0b3c63" />
+      <circle cx="16.6" cy="10" r="1.05" fill="#ffffff" />
+      <path
+        d="M6.6 15.2c1.9 1.5 8.9 1.5 10.8 0"
+        fill="none"
+        stroke="#0b3c63"
+        strokeOpacity="0.85"
+        strokeWidth="1.3"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+function ZnakTerminal({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} aria-hidden="true">
+      <path
+        d="M4.5 7.5 9 11.5 4.5 15.5"
+        fill="none"
+        stroke="#7dff9b"
+        strokeWidth="1.9"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+      />
+      <path d="M11 16h8" stroke="#7dff9b" strokeWidth="1.9" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function ZnakPoznamky({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} aria-hidden="true">
+      <rect x="4" y="3.5" width="16" height="17" rx="2" fill="#fffaf0" />
+      <rect x="4" y="3.5" width="16" height="3.6" rx="2" fill="#f0b429" />
+      {[10.5, 13.4, 16.3].map((y) => (
+        <rect key={y} x="6.6" y={y} width="10.8" height="1.25" rx="0.62" fill="#c9a227" opacity="0.6" />
+      ))}
+    </svg>
+  );
+}
+
+function ZnakNastaveni({ className, style }: { className?: string; style?: React.CSSProperties }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} style={style} aria-hidden="true">
+      <circle cx="12" cy="12" r="8.2" fill="#8b9099" />
+      <circle cx="12" cy="12" r="3.1" fill="#f2f3f5" />
+      {Array.from({ length: 8 }).map((_, i) => {
+        const a = (i * Math.PI) / 4;
+        return (
+          <rect
+            key={i}
+            x="11.1"
+            y="1.9"
+            width="1.8"
+            height="3.4"
+            rx="0.9"
+            fill="#8b9099"
+            transform={`rotate(${(a * 180) / Math.PI} 12 12)`}
+          />
+        );
+      })}
+    </svg>
+  );
+}
+
 export const VZHLED_APLIKACI: Record<AppId, { pozadi: string; barva: string; znak: Znak }> = {
-  finder: { pozadi: "linear-gradient(160deg,#4aa8ff,#0a6fd8)", barva: "#fff", znak: Folder },
-  poznamky: { pozadi: "linear-gradient(160deg,#ffe27a,#f5c518)", barva: "#5a4300", znak: FileText },
-  terminal: { pozadi: "linear-gradient(160deg,#4a4a4f,#1c1c1e)", barva: "#7dff9b", znak: TerminalSquare },
-  nastaveni: { pozadi: "linear-gradient(160deg,#c9ccd2,#8b9099)", barva: "#3a3a3c", znak: Settings },
+  finder: { pozadi: "linear-gradient(165deg,#ffffff,#e6eef6)", barva: "#0b3c63", znak: ZnakFinder },
+  poznamky: { pozadi: "linear-gradient(165deg,#fff6dc,#f3d98a)", barva: "#5a4300", znak: ZnakPoznamky },
+  terminal: { pozadi: "linear-gradient(165deg,#3a3a3f,#141416)", barva: "#7dff9b", znak: ZnakTerminal },
+  nastaveni: { pozadi: "linear-gradient(165deg,#eceef2,#b9bec7)", barva: "#3a3a3c", znak: ZnakNastaveni },
 };
 
 export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
@@ -172,7 +253,7 @@ function Ikona({
   onClick?: () => void;
 }) {
   const Znak = vzhled.znak;
-  const strana = male ? 40 : 52;
+  const strana = male ? 42 : 58;
   return (
     <div className="group/dock relative flex flex-col items-center">
       {/* Popisek nad ikonou. V Docku je to jediné, co ikonu pojmenuje – bez
@@ -186,10 +267,17 @@ function Ikona({
         aria-label={popis}
         onClick={onClick}
         disabled={!onClick}
-        className="flex items-center justify-center rounded-[12px] shadow-md transition-transform hover:-translate-y-1 disabled:cursor-default"
-        style={{ width: strana, height: strana, background: vzhled.pozadi }}
+        // Zaoblení 22 % strany je macOS „squircle"; pevných 12 px vypadalo
+        // při větší ikoně jako obyčejný zaoblený čtverec.
+        className="flex items-center justify-center shadow-md transition-transform duration-150 hover:-translate-y-1.5 hover:scale-110 disabled:cursor-default"
+        style={{
+          width: strana,
+          height: strana,
+          background: vzhled.pozadi,
+          borderRadius: `${Math.round(strana * 0.22)}px`,
+        }}
       >
-        <Znak style={{ color: vzhled.barva }} className={male ? "h-5 w-5" : "h-7 w-7"} />
+        <Znak style={{ color: vzhled.barva }} className={male ? "h-6 w-6" : "h-8 w-8"} />
       </button>
       {/*
         Tečka běžícího programu.

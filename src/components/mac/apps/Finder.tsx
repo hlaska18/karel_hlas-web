@@ -23,13 +23,18 @@ import { createPortal } from "react-dom";
 import {
   ChevronLeft,
   ChevronRight,
+  Download,
   FileText,
   Folder,
   HardDrive,
+  House,
+  Image,
+  Monitor,
   LayoutGrid,
   List,
   Package,
   Search,
+  Trash2,
   Usb,
 } from "lucide-react";
 import { useMac, useOknoMac } from "../system";
@@ -66,11 +71,11 @@ import {
 import { datumCas, velikostPodrobne, velikostSloupec, velikostText } from "@/lib/win/format";
 
 const MISTA = [
-  { jmeno: "Plocha", cesta: PLOCHA },
-  { jmeno: "Dokumenty", cesta: DOKUMENTY },
-  { jmeno: "Stažené", cesta: STAZENE },
-  { jmeno: "Obrázky", cesta: OBRAZKY },
-  { jmeno: "zak", cesta: DOMOV },
+  { jmeno: "zak", cesta: DOMOV, znak: House },
+  { jmeno: "Plocha", cesta: PLOCHA, znak: Monitor },
+  { jmeno: "Dokumenty", cesta: DOKUMENTY, znak: FileText },
+  { jmeno: "Stažené", cesta: STAZENE, znak: Download },
+  { jmeno: "Obrázky", cesta: OBRAZKY, znak: Image },
 ];
 
 /**
@@ -368,7 +373,9 @@ export function Finder() {
           <PolozkaBoku
             key={m.jmeno}
             jmeno={m.jmeno}
-            znak={<Folder className="h-4 w-4 text-mac-akcent" />}
+            // Oblíbené složky mají na Macu vlastní ikonu podle toho, co v nich
+            // je – ne desetkrát tutéž složku.
+            znak={<m.znak className="h-[15px] w-[15px] text-[#3b82f6]" />}
             aktivni={slozMac(cesta) === slozMac(m.cesta)}
             onClick={() => jdi(m.cesta)}
           />
@@ -376,15 +383,23 @@ export function Finder() {
         <Skupina nazev="Umístění" />
         <PolozkaBoku
           jmeno="Macintosh HD"
-          znak={<HardDrive className="h-4 w-4 text-mac-slaby" />}
+          znak={<HardDrive className="h-[15px] w-[15px] text-mac-slaby" />}
           aktivni={cesta.length === 1}
           onClick={() => jdi([KOREN])}
         />
         <PolozkaBoku
           jmeno="FLASH"
-          znak={<Usb className="h-4 w-4 text-mac-slaby" />}
+          // Vyměnitelný disk je na Macu oranžový, pevný šedý – drobnost,
+          // ale je podle ní hned poznat, co je co.
+          znak={<Usb className="h-[15px] w-[15px] text-[#f59e0b]" />}
           aktivni={slozMac(cesta) === "/Volumes/FLASH"}
           onClick={() => jdi([...SVAZKY, "FLASH"])}
+        />
+        <PolozkaBoku
+          jmeno="Koš"
+          znak={<Trash2 className="h-[15px] w-[15px] text-mac-slaby" />}
+          aktivni={slozMac(cesta) === slozMac(KOS)}
+          onClick={() => jdi(KOS)}
         />
       </aside>
 
@@ -547,11 +562,14 @@ function IkonaPolozky({ uzel, barevne }: { uzel: Uzel; barevne: boolean }) {
   return <FileText className="h-4 w-4 opacity-70" />;
 }
 
+/**
+ * Nadpis sekce v postranním panelu. macOS je píše malými tučnými písmeny,
+ * NE verzálkami – verzálky s prostrkáním jsou windowsácký zvyk a byla to
+ * jedna z věcí, podle kterých panel nevypadal jako z Macu.
+ */
 function Skupina({ nazev }: { nazev: string }) {
   return (
-    <div className="px-2 pb-1 pt-3 text-[11px] font-semibold uppercase tracking-wide text-mac-slaby">
-      {nazev}
-    </div>
+    <div className="px-2 pb-1 pt-4 text-[11px] font-semibold text-mac-slaby">{nazev}</div>
   );
 }
 
@@ -570,8 +588,10 @@ function PolozkaBoku({
     <button
       type="button"
       onClick={onClick}
+      // Vybrané místo má na Macu jemný šedý oblázek, ne plnou modrou –
+      // ta patří vybranému SOUBORU ve výpisu, ne položce panelu.
       className={`flex w-full items-center gap-2 rounded-md px-2 py-[5px] text-left ${
-        aktivni ? "bg-mac-akcent text-mac-akcent-text" : "hover:bg-black/5"
+        aktivni ? "bg-mac-zvyrazneny font-medium text-mac-text" : "hover:bg-black/5"
       }`}
     >
       {znak}
