@@ -38,20 +38,25 @@ describe("uložení a načtení", () => {
     // F5 není restart počítače: kdo okno správně zastavil, nesmí ho po
     // obnovení dostat zpátky – měl by za to, že to udělal špatně.
     const stav = {
-      ...vychoziStav("reklama"),
+      ...vychoziStav(),
       reklamaBezi: false,
       splneno: ["vtirave-okno"],
       stopy: ["spustil:reklama"],
     };
     uloz(stav);
-    const zpet = nacti("reklama");
+    const zpet = nacti();
     expect(zpet?.reklamaBezi).toBe(false);
     expect(zpet?.splneno).toEqual(["vtirave-okno"]);
   });
 
-  it("scénář s vtíravým oknem startuje s běžícím procesem", () => {
-    expect(vychoziStav("reklama").reklamaBezi).toBe(true);
-    expect(vychoziStav().reklamaBezi).toBe(false);
+  it("výchozí scénář startuje s běžícím vtíravým oknem", () => {
+    // Ve VÝCHOZÍM schválně: Karel rozesílá `…/windows` bez parametru.
+    expect(vychoziStav().reklamaBezi).toBe(true);
+  });
+
+  it("scénáře s vlastním nepořádkem vtíravé okno nemají", () => {
+    expect(vychoziStav("uklid").reklamaBezi).toBe(false);
+    expect(vychoziStav("poviru").reklamaBezi).toBe(false);
   });
 
   it("poškozený obsah prostředí neshodí", () => {

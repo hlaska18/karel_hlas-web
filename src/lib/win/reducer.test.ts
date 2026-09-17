@@ -206,14 +206,4 @@ describe("stav prostředí", () => {
     expect(po.splneno).toEqual(["pripony"]);
     expect(po.stopy).toEqual(["prikaz:dir"]);
   });
-
-  it("reset včetně postupu odškrtnutí i stopy zahodí", () => {
-    // Pro druhou hodinu: bez tohohle se žák vrátí k plnému panelu a hlavně
-    // si znovu nespustí cvičný škodlivý program, protože úklid po něm má
-    // odškrtnutý.
-    const stav = { ...vychoziStav(), splneno: ["pripony"], stopy: ["prikaz:dir"] };
-    const po = reducer(stav, { typ: "system/reset-vcetne-postupu" });
-    expect(po.splneno).toEqual([]);
-    expect(po.stopy).toEqual([]);
-  });
 });

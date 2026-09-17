@@ -196,8 +196,8 @@ export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
 export function vychoziStav(scenar: string = VYCHOZI_SCENAR): Stav {
   return {
     virusBezi: false,
-    // Scénář „Otravné okno" nastupuje rovnou s běžícím procesem. U ostatních
-    // je `false`, takže se nikde nic neotevře.
+    // Výchozí scénář nastupuje rovnou s běžícím vtíravým oknem; `uklid`
+    // a `poviru` ne, tam by jen překáželo.
     reklamaBezi: scenarPodleId(scenar).reklama === true,
     verze: VERZE_ULOZISTE,
     scenar,

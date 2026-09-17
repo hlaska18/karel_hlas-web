@@ -26,7 +26,7 @@ import {
   User,
 } from "lucide-react";
 import { Ikona } from "../Ikona";
-import { Posuvnik, Prepinac, Rozbalovac, Tlacitko } from "../ui";
+import { Dialog, Posuvnik, Prepinac, Rozbalovac, Tlacitko } from "../ui";
 import { useOkno, useSystem } from "../system";
 import { scenarPodleId } from "@/lib/win/scenare";
 import { AKCENTY, barvaAkcentu } from "@/lib/win/akcenty";
@@ -36,7 +36,8 @@ import { datumSlovy, hodiny } from "@/lib/win/format";
 import { KAPACITA_DISKU, OBSAZENO_SYSTEMEM } from "@/lib/win/nazvy";
 import { velikost } from "@/lib/win/fs";
 import { APLIKACE, type AppId } from "@/lib/win/typy";
-import type { Nastaveni as TypNastaveni } from "@/lib/win/stav";
+import { zapomen, type Nastaveni as TypNastaveni } from "@/lib/win/stav";
+import { zapamatujPrihlaseni } from "@/lib/win/pristup";
 
 type Oddil =
   | "system"
@@ -349,59 +350,105 @@ function OddilSystem({
 }
 
 /**
- * Vrácení počítače do stavu, ve kterém hodina začínala.
+ * Dvě různě hrubá obnovení. Rozdíl mezi nimi je v tom, co si žák NECHÁ.
  *
- * Dřív se prostředí čistilo jedině smazáním dat webu v prohlížeči. Na
- * sdíleném školním počítači je to hrubý nástroj: smaže i disky ostatních
- * tříd, které na něm ten den pracovaly, a odhlásí je. Tohle tlačítko sáhne
- * jen na tenhle disk.
+ * VRÁTIT DO VÝCHOZÍHO STAVU je úklid: disk se vrátí do podoby, ve které
+ * hodina začínala, ale odškrtané úlohy zůstanou. Úklid počítače není důvod
+ * přijít o hodinu práce – a splněný úkol už je splněný.
  *
- * Odškrtané úlohy zůstávají. Úklid počítače není důvod přijít o hodinu
- * práce – a splněný úkol už je splněný.
+ * ZAČÍT ÚPLNĚ OD ZAČÁTKU je nová hodina nanečisto: nezůstane nic, ani postup,
+ * a prostředí naběhne na zamykací obrazovce, kde se žák znovu přihlásí kódem.
+ * Karel to chtěl přesně takhle – když si někdo projde celý panel, potřebuje
+ * mít možnost začít znovu, a ne se doprošovat vyčištění prohlížeče.
+ *
+ * Proč tu obě zůstávají: „uklidím si plochu, postup si nechám" a „chci znovu
+ * úplně všechno" jsou dvě různé potřeby, a slít je do jedné by znamenalo
+ * jednu z nich vzít.
  */
 function Obnoveni() {
   const { stav, poslat } = useSystem();
   const [ptamSe, nastavPtamSe] = useState(false);
+  const [znovuOdZacatku, nastavZnovuOdZacatku] = useState(false);
   const scenar = scenarPodleId(stav.scenar);
 
+  /**
+   * Úplný začátek.
+   *
+   * Všechny tři kroky musí být v JEDNOM obslužném handleru a bez čekání mezi
+   * nimi. Kdyby se mezitím změnil stav, stihne proběhnout ukládací efekt
+   * v `system.tsx` a zapíše smazaný stav zpátky.
+   *
+   * Načtení stránky pak udělá zbytek samo: `nacti()` vrátí `null`, postaví se
+   * čerstvý výchozí stav pro tentýž scénář (ten zůstává v adrese) a
+   * `jePrihlasen()` je `false`, takže prostředí naběhne na zamykací
+   * obrazovce. Proto tu není žádná nová akce v reduceru – nebyla by k čemu.
+   */
+  const zacniOdZacatku = () => {
+    zapomen();
+    zapamatujPrihlaseni(false);
+    window.location.reload();
+  };
+
   return (
-    <Karta
-      nadpis="Vrátit počítač do výchozího stavu"
-      popis={`Disk se vrátí do podoby „${scenar.nazev}“. Splněné úlohy zůstanou zaškrtnuté.`}
-    >
-      {ptamSe ? (
-        <div className="flex flex-col gap-3">
-          <span className="text-[12px] text-win-slaby">
-            Přijdeš o všechny soubory, které sis tady vytvořil. Opravdu?
-          </span>
-          <div className="flex flex-wrap items-center gap-3">
-            <Tlacitko
-              onClick={() => {
-                poslat({ typ: "system/reset" });
-                nastavPtamSe(false);
-              }}
-            >
-              Ano, vrátit
-            </Tlacitko>
-            {/* Druhá hodina: kdo si minule prošel všechno, vrátí se k plnému
-                panelu a nemá co dělat – a hlavně si znovu nespustí cvičný
-                škodlivý program, protože úklid po něm má odškrtnutý. Bez téhle
-                možnosti je jediná cesta zpátky vyčistit celý prohlížeč. */}
-            <Tlacitko
-              onClick={() => {
-                poslat({ typ: "system/reset-vcetne-postupu" });
-                nastavPtamSe(false);
-              }}
-            >
-              Vrátit i odškrtané úlohy
-            </Tlacitko>
-            <Tlacitko onClick={() => nastavPtamSe(false)}>Zpět</Tlacitko>
+    <>
+      <Karta
+        nadpis="Vrátit počítač do výchozího stavu"
+        popis={`Disk se vrátí do podoby „${scenar.nazev}“. Splněné úlohy zůstanou zaškrtnuté.`}
+      >
+        {ptamSe ? (
+          <div className="flex flex-col gap-3">
+            <span className="text-[12px] text-win-slaby">
+              Přijdeš o všechny soubory, které sis tady vytvořil. Opravdu?
+            </span>
+            <div className="flex flex-wrap items-center gap-3">
+              <Tlacitko
+                onClick={() => {
+                  poslat({ typ: "system/reset" });
+                  nastavPtamSe(false);
+                }}
+              >
+                Ano, vrátit
+              </Tlacitko>
+              <Tlacitko onClick={() => nastavPtamSe(false)}>Zpět</Tlacitko>
+            </div>
           </div>
-        </div>
-      ) : (
-        <Tlacitko onClick={() => nastavPtamSe(true)}>Vrátit do výchozího stavu</Tlacitko>
+        ) : (
+          <Tlacitko onClick={() => nastavPtamSe(true)}>Vrátit do výchozího stavu</Tlacitko>
+        )}
+      </Karta>
+
+      <Karta
+        nadpis="Začít úplně od začátku"
+        popis="Smaže i odškrtané úlohy a vrátí tě na přihlašovací obrazovku."
+      >
+        <Tlacitko onClick={() => nastavZnovuOdZacatku(true)}>Začít od začátku</Tlacitko>
+      </Karta>
+
+      {znovuOdZacatku && (
+        <Dialog
+          nadpis="Začít úplně od začátku?"
+          onZavrit={() => nastavZnovuOdZacatku(false)}
+          tlacitka={
+            <>
+              <Tlacitko onClick={() => nastavZnovuOdZacatku(false)}>Ne</Tlacitko>
+              <Tlacitko vzhled="akcent" onClick={zacniOdZacatku}>
+                Ano, začít od začátku
+              </Tlacitko>
+            </>
+          }
+        >
+          {/* Vyjmenovat, co se ztratí. Samotné „opravdu?" nikdo nečte. */}
+          <p>
+            Smažou se všechny soubory, které sis vytvořil, vrátí se nastavení systému
+            a vynulují se odškrtnuté úlohy.
+          </p>
+          <p className="mt-3">
+            Budeš se muset znovu přihlásit kódem od vyučujícího.{" "}
+            <strong>Tohle se nedá vzít zpět.</strong>
+          </p>
+        </Dialog>
       )}
-    </Karta>
+    </>
   );
 }
 

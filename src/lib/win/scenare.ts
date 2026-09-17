@@ -89,8 +89,21 @@ export const SCENARE: Scenar[] = [
   {
     id: VYCHOZI_SCENAR,
     nazev: "Výchozí",
-    popis: "Uklizený počítač. Pro běžnou hodinu o souborech, nastavení a příkazovém řádku.",
+    popis:
+      "Uklizený počítač a hned po přihlášení vtíravé okno, které nejde zavřít. Pro běžnou hodinu o souborech, nastavení a příkazovém řádku.",
     uprav: (disk) => disk,
+    /**
+     * Vtíravé okno je ve VÝCHOZÍM scénáři, ne ve vlastním.
+     *
+     * Karel rozesílá žákům prosté `…/windows` bez parametru – krátká adresa
+     * se cestou míň pokazí, což ho jednou stálo hodinu, když ji EduPage
+     * přepsala na odkaz relativní ke svému serveru.
+     *
+     * Námitka, že okno pak vyskočí i v hodině o zipech, platí jen jednou:
+     * `reklamaBezi` se ukládá, takže kdo ho zastaví, má od té chvíle pokoj.
+     * Kdo chce hodinu úplně bez něj, má `?scenar=uklid` a `?scenar=poviru`.
+     */
+    reklama: true,
   },
   {
     id: "uklid",
@@ -119,16 +132,6 @@ export const SCENARE: Scenar[] = [
       ]);
       return d;
     },
-  },
-  {
-    id: "reklama",
-    nazev: "Otravné okno",
-    popis:
-      "Hned po přihlášení vyskočí okno, které se po zavření vrací. Zavřít ho nestačí – žák musí najít a ukončit jeho proces ve Správci úloh.",
-    // Disk zůstává nedotčený: tahle hodina není o souborech. Jediné, co se
-    // mění, je že od začátku běží proces, který okno pořád otevírá.
-    uprav: (disk) => disk,
-    reklama: true,
   },
   {
     id: "poviru",

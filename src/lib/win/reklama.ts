@@ -15,9 +15,13 @@
  * Tohle je otravný software – nic nerozbije, jen nejde pryč. Proto vlastní
  * soubor a vlastní proces, ne přílepek k viru.
  *
- * SPOUŠTÍ HO SCÉNÁŘ, ne výchozí disk. Kdyby vyskakovalo pokaždé, vyskočí
- * i v hodině o zipech a o příkazové řádce, kde jen zdržuje – a podruhé už
- * neučí nic. Volí se adresou: `/windows?scenar=reklama`.
+ * JE VE VÝCHOZÍM SCÉNÁŘI, tedy na prostém `/windows`. Karel to tak chtěl:
+ * krátká adresa se cestou míň pokazí, což ho jednou stálo hodinu, když ji
+ * EduPage přepsala na odkaz relativní ke svému serveru.
+ *
+ * Že vyskočí i v hodině o zipech, vadí jen jednou – `reklamaBezi` se ukládá,
+ * takže kdo okno zastaví, má od té chvíle pokoj. Scénáře `?scenar=uklid`
+ * a `?scenar=poviru` ho nemají vůbec; tam by jen překáželo.
  */
 
 /**

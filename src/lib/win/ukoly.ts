@@ -37,8 +37,8 @@ export interface Ukol {
 
 export const SKUPINY = [
   /* Na prvním místě schválně. Panel otevírá první skupinu sám, takže tohle
-     je to, co žák uvidí hned – a u scénáře „Otravné okno" je to zároveň to
-     jediné, co mu v tu chvíli brání v práci. */
+     je to, co žák uvidí hned – a je to zároveň to jediné, co mu v tu chvíli
+     brání v práci. */
   "Když něco nejde zavřít",
   "Soubory a složky",
   "Zobrazení a vlastnosti",
@@ -84,8 +84,9 @@ const kolikSouboru = (stav: Stav, test: (jmeno: string) => boolean): number => {
 
 export const UKOLY: Ukol[] = [
   /* ─────────── Když něco nejde zavřít ───────────
-     Úkol dává smysl jen ve scénáři „Otravné okno" (`?scenar=reklama`); jinde
-     se okno neotevře a úkol se neodškrtne, protože chybí stopa. */
+     Vtíravé okno je ve výchozím scénáři, takže tenhle úkol platí pro prosté
+     `/windows`. Ve scénářích `uklid` a `poviru` se okno neotevře a úkol se
+     neodškrtne, protože chybí stopa. */
   {
     id: "vtirave-okno",
     skupina: "Když něco nejde zavřít",
