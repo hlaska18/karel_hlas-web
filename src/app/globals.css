@@ -1003,3 +1003,154 @@
     opacity: 0;
   }
 }
+
+/* ═══════════════════════════════════════════════════════════════════════
+   macOS — vlastní sada barev vedle windowsácké.
+
+   Schválně `.mac-*` a ne rozšíření `.win-*`: obě simulace běží ze stejného
+   webu a jedna se nesmí hnout, když se sahá na druhou. Zápis je ale stejný
+   (trojice kanálů kvůli `rgb(var(--x) / <alpha-value>)` v Tailwindu), aby
+   se nemuselo přepínat myšlení.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+.mac {
+  --mac-povrch: 255 255 255;
+  --mac-panel: 246 246 246;
+  --mac-postranni: 236 236 238;
+  --mac-zvyrazneny: 233 233 235;
+  --mac-text: 0 0 0;
+  --mac-slaby: 110 110 115;
+  --mac-linka: 214 214 216;
+  --mac-akcent: 0 122 255;
+  --mac-akcent-text: 255 255 255;
+  --mac-stin: 0 22px 60px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.14);
+
+  color: rgb(var(--mac-text));
+  /* Systémové písmo Applu. Na Macu se opravdu použije SF, jinde padne na
+     to, co je po ruce – prostředí tím nic neztratí. */
+  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
+    ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+.mac[data-motiv="tmavy"] {
+  --mac-povrch: 30 30 32;
+  --mac-panel: 42 42 45;
+  --mac-postranni: 38 38 41;
+  --mac-zvyrazneny: 58 58 62;
+  --mac-text: 255 255 255;
+  --mac-slaby: 152 152 158;
+  --mac-linka: 62 62 66;
+  --mac-akcent: 10 132 255;
+  --mac-akcent-text: 255 255 255;
+  --mac-stin: 0 22px 60px rgba(0, 0, 0, 0.6), 0 2px 8px rgba(0, 0, 0, 0.45);
+}
+
+.mac ::selection {
+  background-color: rgb(var(--mac-akcent) / 0.3);
+}
+
+/* Zaostření: macOS kreslí kolem prvku modrý prstenec ve zvýrazňovací barvě. */
+.mac :focus-visible {
+  outline: 3px solid rgb(var(--mac-akcent) / 0.55);
+  outline-offset: 1px;
+  border-radius: 6px;
+}
+
+/* Sklo horní lišty, Docku a rozbalených nabídek. Na Macu je průhlednost
+   výraznější než ve Windows a hodně sytí barvy pod sebou. */
+.mac-sklo {
+  background-color: rgb(var(--mac-panel) / 0.62);
+  backdrop-filter: blur(40px) saturate(180%);
+  -webkit-backdrop-filter: blur(40px) saturate(180%);
+}
+
+/* Tapeta. Schválně kreslená v CSS, ne obrázek: prostředí se nemá kvůli
+   pozadí stahovat o megabajt navíc a ve školní síti to je poznat. */
+.mac-tapeta {
+  background-color: #1b2a5e;
+  background-image:
+    radial-gradient(120% 80% at 18% 8%, rgba(255, 138, 190, 0.55) 0%, rgba(255, 138, 190, 0) 60%),
+    radial-gradient(100% 70% at 82% 18%, rgba(120, 190, 255, 0.5) 0%, rgba(120, 190, 255, 0) 62%),
+    radial-gradient(130% 90% at 50% 100%, rgba(90, 60, 180, 0.75) 0%, rgba(90, 60, 180, 0) 70%),
+    linear-gradient(160deg, #2b1f63 0%, #1b2a5e 45%, #0d1636 100%);
+}
+
+.mac[data-motiv="tmavy"] .mac-tapeta {
+  background-color: #0a0f24;
+  background-image:
+    radial-gradient(120% 80% at 18% 8%, rgba(190, 80, 140, 0.4) 0%, rgba(190, 80, 140, 0) 60%),
+    radial-gradient(100% 70% at 82% 18%, rgba(50, 110, 180, 0.4) 0%, rgba(50, 110, 180, 0) 62%),
+    radial-gradient(130% 90% at 50% 100%, rgba(50, 30, 110, 0.8) 0%, rgba(50, 30, 110, 0) 70%),
+    linear-gradient(160deg, #180f3a 0%, #0f1738 45%, #05091c 100%);
+}
+
+/* Posuvník: na Macu je tenký a bez podkladu. */
+.mac-posuv {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(140, 140, 145, 0.6) transparent;
+}
+
+.mac-posuv::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+.mac-posuv::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  background-color: rgba(140, 140, 145, 0.55);
+  border: 4px solid transparent;
+  border-radius: 10px;
+}
+
+.mac-posuv::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(120, 120, 125, 0.8);
+}
+
+.mac-posuv::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.mac-bezvyberu {
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+/* Okno vyjíždí z místa, kde se kliklo. Krátce – macOS je v tomhle svižnější
+   než Windows a delší animace působí, že prostředí zamrzlo. */
+@keyframes mac-okno-vjezd {
+  from {
+    opacity: 0;
+    transform: scale(0.94);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes mac-nabidka-vjezd {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.mac-vjezd {
+  animation: mac-okno-vjezd 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.mac-nabidka {
+  animation: mac-nabidka-vjezd 0.12s ease-out;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .mac-vjezd,
+  .mac-nabidka {
+    animation: none;
+  }
+}

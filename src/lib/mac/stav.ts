@@ -45,10 +45,15 @@ export interface Okno {
   ram: Obdelnik;
   z: number;
   /**
-   * Zavřené okno u aplikace, která BĚŽÍ DÁL. Na Macu je to běžný stav a je to
-   * jedna z úloh: červený puntík zavírá okno, ne program.
+   * Schované do Docku žlutým puntíkem. Okno pořád existuje, jen není vidět.
+   *
+   * Vedle zavření červeným puntíkem je to ta DRUHÁ půlka lekce: žlutá schová
+   * okno (aplikace běží, okno je), červená okno zruší (aplikace běží, okno
+   * není). Dokud žák neuvidí oba stavy vedle sebe, splývají mu.
    */
   minimalizovane?: boolean;
+  /** Zvětšené zeleným puntíkem přes celou plochu. */
+  zvetsene?: boolean;
 }
 
 export interface NastaveniMac {

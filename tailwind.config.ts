@@ -69,6 +69,20 @@ const config: Config = {
           akcent: "rgb(var(--win-akcent) / <alpha-value>)",
           "akcent-text": "rgb(var(--win-akcent-text) / <alpha-value>)",
         },
+        // Totéž pro simulaci macOS. Vlastní řada, ne sdílená s `win` – obě
+        // prostředí běží ze stejného webu a jedno se nesmí hnout, když se
+        // sahá na druhé.
+        mac: {
+          povrch: "rgb(var(--mac-povrch) / <alpha-value>)",
+          panel: "rgb(var(--mac-panel) / <alpha-value>)",
+          postranni: "rgb(var(--mac-postranni) / <alpha-value>)",
+          zvyrazneny: "rgb(var(--mac-zvyrazneny) / <alpha-value>)",
+          text: "rgb(var(--mac-text) / <alpha-value>)",
+          slaby: "rgb(var(--mac-slaby) / <alpha-value>)",
+          linka: "rgb(var(--mac-linka) / <alpha-value>)",
+          akcent: "rgb(var(--mac-akcent) / <alpha-value>)",
+          "akcent-text": "rgb(var(--mac-akcent-text) / <alpha-value>)",
+        },
         // Vlastní malachitová řada – vědomý posun od defaultní Tailwind
         // `emerald` (kterou má každý AI web), o pár stupňů k modrozelené.
         accent: {

@@ -19,6 +19,14 @@ export type AkceMac =
   | { typ: "okno/zavri"; id: number }
   | { typ: "okno/dopredu"; id: number }
   | { typ: "okno/posun"; id: number; ram: Obdelnik }
+  /** Aplikace si přepisuje text v záhlaví (Finder cestou, Terminál složkou). */
+  | { typ: "okno/titul"; id: number; titul: string; arg?: string }
+  /** Žlutý puntík: okno zmizí do Docku, ale nezaniká. */
+  | { typ: "okno/minimalizuj"; id: number }
+  /** Zpátky z Docku. */
+  | { typ: "okno/obnov"; id: number }
+  /** Zelený puntík: přes celou plochu a zpátky. */
+  | { typ: "okno/zvetsi"; id: number }
   /** Ukončí aplikaci včetně všech jejích oken – tedy „Ukončit“ nebo Force Quit. */
   | { typ: "app/ukonci"; app: AppId }
   | { typ: "app/dopredu"; app: AppId }
@@ -91,6 +99,50 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
       return {
         ...stav,
         okna: stav.okna.map((o) => (o.id === akce.id ? { ...o, ram: akce.ram } : o)),
+      };
+
+    case "okno/titul": {
+      const okno = stav.okna.find((o) => o.id === akce.id);
+      // Porovnání napřed: bez něj by se stav měnil při každém překreslení
+      // aplikace a prostředí by se zacyklilo přes ukládací efekt.
+      if (!okno || (okno.titul === akce.titul && okno.arg === (akce.arg ?? okno.arg))) return stav;
+      return {
+        ...stav,
+        okna: stav.okna.map((o) =>
+          o.id === akce.id ? { ...o, titul: akce.titul, arg: akce.arg ?? o.arg } : o,
+        ),
+      };
+    }
+
+    case "okno/minimalizuj": {
+      const okno = stav.okna.find((o) => o.id === akce.id);
+      if (!okno) return stav;
+      // Okno zůstává v seznamu. Rozdíl proti `okno/zavri` je celá pointa:
+      // tam okno zanikne, tady se jen schová. Aplikace běží v obou případech.
+      return {
+        ...stav,
+        okna: stav.okna.map((o) => (o.id === akce.id ? { ...o, minimalizovane: true } : o)),
+        stopy: pridejStopu(stav.stopy, `minimalizoval:${okno.app}`),
+      };
+    }
+
+    case "okno/obnov": {
+      const okno = stav.okna.find((o) => o.id === akce.id);
+      if (!okno) return stav;
+      const nejvyssi = Math.max(0, ...stav.okna.map((o) => o.z));
+      return {
+        ...stav,
+        vpredu: okno.app,
+        okna: stav.okna.map((o) =>
+          o.id === akce.id ? { ...o, minimalizovane: false, z: nejvyssi + 1 } : o,
+        ),
+      };
+    }
+
+    case "okno/zvetsi":
+      return {
+        ...stav,
+        okna: stav.okna.map((o) => (o.id === akce.id ? { ...o, zvetsene: !o.zvetsene } : o)),
       };
 
     case "app/ukonci": {

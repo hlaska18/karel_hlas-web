@@ -31,6 +31,42 @@ describe("okno není program", () => {
     expect(stav.bezici).toContain("finder");
   });
 
+  it("žlutý puntík okno schová, ale nezruší", () => {
+    // Rozdíl proti červenému puntíku je celá druhá půlka lekce. Kdyby se
+    // minimalizace „zjednodušila" na zavření, obě tlačítka by dělala totéž.
+    let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "poznamky" });
+    const id = stav.okna[0].id;
+
+    stav = reducerMac(stav, { typ: "okno/minimalizuj", id });
+    expect(stav.okna).toHaveLength(1);
+    expect(stav.okna[0].minimalizovane).toBe(true);
+
+    stav = reducerMac(stav, { typ: "okno/obnov", id });
+    expect(stav.okna[0].minimalizovane).toBe(false);
+    expect(stav.vpredu).toBe("poznamky");
+  });
+
+  it("obnovení z Docku vytáhne okno nad ostatní", () => {
+    let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "poznamky" });
+    const prvni = stav.okna[0].id;
+    stav = reducerMac(stav, { typ: "okno/minimalizuj", id: prvni });
+    stav = reducerMac(stav, { typ: "okno/otevri", app: "terminal" });
+
+    stav = reducerMac(stav, { typ: "okno/obnov", id: prvni });
+    const obnovene = stav.okna.find((o) => o.id === prvni)!;
+    const ostatni = stav.okna.filter((o) => o.id !== prvni);
+    expect(ostatni.every((o) => o.z < obnovene.z)).toBe(true);
+  });
+
+  it("zelený puntík přepíná zvětšení tam a zpět", () => {
+    let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "terminal" });
+    const id = stav.okna[0].id;
+    stav = reducerMac(stav, { typ: "okno/zvetsi", id });
+    expect(stav.okna[0].zvetsene).toBe(true);
+    stav = reducerMac(stav, { typ: "okno/zvetsi", id });
+    expect(stav.okna[0].zvetsene).toBe(false);
+  });
+
   it("po ukončení aplikace patří lišta zase Finderu", () => {
     let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "terminal" });
     expect(stav.vpredu).toBe("terminal");
