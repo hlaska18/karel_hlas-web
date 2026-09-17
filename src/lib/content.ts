@@ -1430,7 +1430,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Nejen do informatiky",
       badge: "Nová sekce",
       intro:
-        "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikni na svůj předmět – u většiny najdeš nástroje do hodiny, u češtiny a matematiky navíc celou cvičebnici k Wordu a Excelu i s řešeními ke stažení. U každého nástroje je napsané, jestli potřebuje účet, jestli je česky a co tě při první hodině zaskočí.",
+        "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikni na svůj předmět – najdeš u něj nástroje do hodiny a u každého je napsané, jestli potřebuje účet, jestli je česky a co tě při první hodině zaskočí. Cvičebnici k Wordu a Excelu najdeš v bance materiálů nahoře.",
       note:
         "Nástroje jsou ověřené k srpnu 2026 – u cloudových služeb se podmínky mění, před hodinou si je proklikni. Učíš jiný předmět a něco ve výuce používáš? Napiš mi, rád to sem doplním a uvedu tě jako autora.",
       inviteTitle: "Chybí tu tvůj předmět?",
@@ -1446,13 +1446,11 @@ export const t: Record<Lang, Dict> = {
           subject: "Český jazyk",
           icon: "cesky-jazyk",
           what: "Formátování, styly a dlouhý dokument – k seminární a ročníkové práci.",
-          tool: "Word",
         },
         {
           subject: "Matematika",
           icon: "matematika",
           what: "Tabulky, vzorce a grafy. Data, na kterých je vidět, k čemu funkce a procenta jsou.",
-          tool: "Excel",
           tools: [
             {
               name: "GeoGebra",
@@ -1978,7 +1976,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Not just for CS lessons",
       badge: "New section",
       intro:
-        "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject and you will find tools for the lesson; Czech and Maths also come with the full Word and Excel workbook, solutions included, ready to download. Each tool says whether it needs an account, whether it is in Czech, and what will catch you out the first time.",
+        "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject and you will find tools for the lesson, each with a note on whether it needs an account, whether it is in Czech, and what will catch you out the first time. The Word and Excel workbook lives in the materials bank above.",
       note:
         "Tools verified as of August 2026 – cloud services change their terms, so click through before the lesson. Teach another subject and use something good in class? Email me and I will add it here, credited to you.",
       inviteTitle: "Missing your subject?",
@@ -1992,13 +1990,11 @@ export const t: Record<Lang, Dict> = {
           subject: "Czech language",
           icon: "cesky-jazyk",
           what: "Formatting, styles and long documents – for term papers and essays.",
-          tool: "Word",
         },
         {
           subject: "Maths",
           icon: "matematika",
           what: "Tables, formulas and charts on data that actually mean something.",
-          tool: "Excel",
           tools: [
             {
               name: "GeoGebra",

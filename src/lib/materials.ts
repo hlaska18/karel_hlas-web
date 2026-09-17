@@ -129,7 +129,6 @@ const NAME_EN: Record<string, string> = {
   "Plány hodin": "Lesson plans",
   "Python – pracovní a metodické listy": "Python worksheets & teaching notes",
   "Python – testy z minulých let": "Python past tests",
-  "Python – řešení testů": "Python test solutions",
   "Řešení 1 – věk": "Solution 1 – age",
   "Řešení 2A – vlajka Lotyšska": "Solution 2A – flag of Latvia",
   "Řešení 2B – vlajka Finska": "Solution 2B – flag of Finland",

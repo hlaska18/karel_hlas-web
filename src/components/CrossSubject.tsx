@@ -137,15 +137,23 @@ function SubjectTile({
         .sort((a, b) => Number(a.external ?? false) - Number(b.external ?? false))
     : [];
 
+  /**
+   * Je co rozbalovat? Předmět, který nemá ani materiály, ani nástroje, se
+   * rozbalovat nesmí – šipka by otevřela prázdný panel. Stalo se to ve chvíli,
+   * kdy z češtiny odešla dlaždice Wordu a nic jiného v ní nezbylo.
+   */
+  const maObsah = files.length > 0 || (item.tools?.length ?? 0) > 0;
+
   // Stejné gesto jako u dlaždic témat v bance: nadzvednutí a smaragdová záře.
   // Karta se rozbaluje, takže nadzvednutí platí i otevřené – chová se pak jako
   // jeden kus, ne jako panel, co se rozjel.
+  const Zahlavi = maObsah ? "button" : "div";
   return (
     <div className="povrch flex w-full flex-col rounded-karta transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15">
-      <button
-        type="button"
-        onClick={onToggle}
-        aria-expanded={open}
+      <Zahlavi
+        {...(maObsah
+          ? { type: "button" as const, onClick: onToggle, "aria-expanded": open }
+          : {})}
         className="group flex w-full items-center gap-3 p-5 text-left transition active:scale-[0.99] active:duration-100"
       >
         <span className="flex h-14 w-14 shrink-0 items-center justify-center">
@@ -175,14 +183,16 @@ function SubjectTile({
             {item.what}
           </span>
         </span>
-        <ChevronDown
-          className={`h-5 w-5 shrink-0 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
+        {maObsah && (
+          <ChevronDown
+            className={`h-5 w-5 shrink-0 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        )}
+      </Zahlavi>
 
       <div
         className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-          open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
+          open && maObsah ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
         <div className="overflow-hidden">
