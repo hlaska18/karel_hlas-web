@@ -1143,10 +1143,11 @@ function ToolFolders({
           name={f.name}
           author={f.author}
           popis={f.popis}
-          // Jediná složka v dlaždici = otevřít. Když jich je víc (grafika má
-          // podklady, prezentace, pro učitele…), zůstávají zavřené – rozbalit
-          // je všechny by z přehledu udělalo zeď textu.
-          autoOpen={folders.length === 1}
+          // Jediná složka v dlaždici = víko přes celý obsah, takže se nezavírá
+          // vůbec. Když jich je víc (grafika má podklady, prezentace, pro
+          // učitele…), chovají se normálně a zůstávají zavřené – rozbalit je
+          // všechny by z přehledu udělalo zeď textu.
+          vzdyOtevrena={folders.length === 1}
           items={f.items}
           deti={f.deti}
           lang={lang}
@@ -1169,6 +1170,43 @@ function spocitejMaterialy(items: BankItem[], deti: Karta[]): number {
   return items.length + deti.reduce((n, d) => n + spocitejMaterialy(d.items, d.deti), 0);
 }
 
+/**
+ * Hlavička složky. Tlačítko jen tehdy, když se složka dá zavřít.
+ *
+ * Nezavíratelná karta nesmí být `<button>`: odečítač obrazovky by ji ohlásil
+ * jako ovládací prvek, klávesnice by na ni tabovala a nic by se nestalo.
+ * Stejné rozvržení, jiný prvek.
+ */
+function Hlavicka({
+  vzdyOtevrena,
+  open,
+  name,
+  s,
+  onClick,
+  children,
+}: {
+  vzdyOtevrena: boolean;
+  open: boolean;
+  name: string;
+  s: (typeof STR)[Lang];
+  onClick: () => void;
+  children: React.ReactNode;
+}) {
+  const trida = "flex w-full items-center gap-3 px-4 py-3 text-left";
+  if (vzdyOtevrena) return <div className={trida}>{children}</div>;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      aria-expanded={open}
+      aria-label={`${open ? s.collapseFolder : s.expandFolder}: ${name}`}
+      className={`transition active:scale-[0.99] active:duration-100 ${trida}`}
+    >
+      {children}
+    </button>
+  );
+}
+
 /** Složka tak, jak ji vykresluje banka. Zanořuje se do sebe – viz `naKartu`. */
 type Karta = {
   name: string;
@@ -1185,7 +1223,7 @@ function FolderCard({
   popis,
   items,
   deti = [],
-  autoOpen = false,
+  vzdyOtevrena = false,
   lang,
   onPreview,
 }: {
@@ -1198,27 +1236,45 @@ function FolderCard({
   /** Podsložky – vykreslí se uvnitř, pod soubory samotné složky. */
   deti?: Karta[];
   /**
-   * Rozbalit rovnou. Používá se, když je složka v dlaždici jediná – pak je
-   * zavřená karta jen víko přes celý obsah a kliknutí navíc pro nic.
-   * Podsložky uvnitř zůstávají zavřené vždycky, jinak by se z Wordu
-   * vysypalo 74 řádků najednou.
+   * Složka, která se ZAVŘÍT NEDÁ – je vždycky otevřená a nemá ani šipku.
+   *
+   * Používá se, když je složka v dlaždici jediná (Word, Excel, Power BI).
+   * Taková karta není složka mezi jinými, je to víko přes celý obsah
+   * dlaždice: zavřít ji znamená zůstat na prázdné obrazovce a pak ji zase
+   * otevřít. Tlačítko, které nikam nevede, radši nebýt.
+   *
+   * Podsložky uvnitř se zavírat dají a jsou zavřené – jinak by se z Wordu
+   * vysypalo sto řádků najednou.
    */
-  autoOpen?: boolean;
+  vzdyOtevrena?: boolean;
   lang: Lang;
   onPreview: (it: BankItem) => void;
 }) {
   const s = STR[lang];
-  const [open, setOpen] = useState(autoOpen);
-  const onlyTeacher = items.every((it) => it.audience === "teacher");
+  const [open, setOpen] = useState(vzdyOtevrena);
+  /**
+   * Jantarová barva = celá složka je pro učitele.
+   *
+   * Musí koukat i do podsložek a musí trvat na tom, že tam něco JE. Samotné
+   * `items.every(...)` totiž na prázdném poli vrací `true`, takže každá
+   * složka, která má jen podsložky a žádný vlastní soubor, se obarvila jako
+   * učitelská – „Úlohy" u cvičebnice i „Python – testy z minulých let",
+   * ačkoli v ani jedné nic učitelského není.
+   */
+  const vsechnyPolozky = (function sesbirej(i: BankItem[], d: Karta[]): BankItem[] {
+    return [...i, ...d.flatMap((k) => sesbirej(k.items, k.deti))];
+  })(items, deti);
+  const onlyTeacher =
+    vsechnyPolozky.length > 0 && vsechnyPolozky.every((it) => it.audience === "teacher");
 
   return (
     <div className="povrch rounded-karta">
-      <button
-        type="button"
+      <Hlavicka
+        vzdyOtevrena={vzdyOtevrena}
+        open={open}
+        name={name}
+        s={s}
         onClick={() => setOpen((o) => !o)}
-        aria-expanded={open}
-        aria-label={`${open ? s.collapseFolder : s.expandFolder}: ${name}`}
-        className="transition active:scale-[0.99] active:duration-100 flex w-full items-center gap-3 px-4 py-3 text-left"
       >
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-ovladac ${
@@ -1242,10 +1298,14 @@ function FolderCard({
             {author}
           </span>
         )}
-        <ChevronDown
-          className={`h-5 w-5 shrink-0 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`}
-        />
-      </button>
+        {/* Šipka jen tam, kde se opravdu dá klikat. U nezavíratelné karty
+            by slibovala akci, která se nestane. */}
+        {!vzdyOtevrena && (
+          <ChevronDown
+            className={`h-5 w-5 shrink-0 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`}
+          />
+        )}
+      </Hlavicka>
       {/* Výška se animuje přes grid-template-rows, obsah zůstává v DOM –
           jde to zavřít v půlce otevírání, na rozdíl od {open && …}. */}
       <div
