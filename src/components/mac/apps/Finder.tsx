@@ -38,6 +38,7 @@ import {
   Usb,
 } from "lucide-react";
 import { useMac, useOknoMac } from "../system";
+import type { AppId } from "@/lib/mac/stav";
 import { NabidkaMistni, PanelInformace, type PolozkaNabidky } from "../ui";
 import {
   DOKUMENTY,
@@ -89,11 +90,32 @@ function polozekSlovy(n: number): string {
   return `${n} položek`;
 }
 
+/**
+ * Které balíčky v /Applications spouštějí kterou aplikaci. Dvojklik na
+ * `Terminál.app` má spustit Terminál – jinak by `.app` nebyl program, ale
+ * jen podivná složka.
+ */
+const APLIKACE_BALICKU: Record<string, AppId | undefined> = {
+  "Finder.app": "finder",
+  "Terminál.app": "terminal",
+  "Poznámky.app": "poznamky",
+};
+
+/** Přípony, které Poznámky umí otevřít jako text. */
+const TEXTOVE = ["txt", "plist", "csv", "md", "xml", "json", "log", "zshrc"];
+
+function jeTextovy(jmeno: string): boolean {
+  const tecka = jmeno.lastIndexOf(".");
+  // Soubory jako `.zshrc` jsou celé jen přípona – tečka je na začátku.
+  const pripona = tecka <= 0 ? jmeno.slice(1) : jmeno.slice(tecka + 1);
+  return TEXTOVE.includes(pripona.toLowerCase());
+}
+
 /** Je to složka, kterou Finder ukazuje jako složku? Balíček se počítá jinak. */
 const jeProstaSlozka = (u: Uzel) => jeSlozka(u) && !jeBalicek(u.jmeno);
 
 export function Finder() {
-  const { stav, poslat, stopa } = useMac();
+  const { stav, poslat, spust, stopa } = useMac();
   const { arg, nastavTitul, slotZahlavi } = useOknoMac();
 
   /** Historie chození tam a zpět. Index ukazuje, kde v ní právě stojíme. */
@@ -107,6 +129,7 @@ export function Finder() {
   const [prejmenovavany, nastavPrejmenovavany] = useState<string | null>(null);
   const [novyNazev, nastavNovyNazev] = useState("");
   const [hledani, nastavHledani] = useState("");
+  const [hlaska, nastavHlasku] = useState<{ nadpis: string; text: string } | null>(null);
   const polePrejmenovani = useRef<HTMLInputElement>(null);
 
   const cesta = historie[kde];
@@ -177,10 +200,40 @@ export function Finder() {
     });
   }, [slozka, stav.nastaveni.skrytePolozky, hledani]);
 
+  /**
+   * Co udělá dvojklik. Na Macu udělá něco VŽDYCKY – složka se otevře, dokument
+   * se otevře v aplikaci, `.app` se spustí. Dřív se dvojklikem na soubor
+   * nestalo nic a vypadalo to jako závada.
+   */
   const otevri = (u: Uzel) => {
-    // Balíček se chová jako jeden kus. Dovnitř se jde až přes pravé tlačítko –
-    // dokud to žák neudělá, nemá poznat, že je to složka.
-    if (jeProstaSlozka(u)) jdi([...cesta, u.jmeno]);
+    if (jeProstaSlozka(u)) {
+      jdi([...cesta, u.jmeno]);
+      return;
+    }
+    // Balíček se chová jako JEDEN KUS: dvojklik ho spustí, dovnitř se jde až
+    // přes „Zobrazit obsah balíčku". Přesně tím se liší od obyčejné složky.
+    if (jeBalicek(u.jmeno)) {
+      const app = APLIKACE_BALICKU[u.jmeno];
+      if (app) {
+        stopa("spustil-z-balicku");
+        if (stav.bezici.includes(app)) poslat({ typ: "app/dopredu", app });
+        else spust(app);
+      } else {
+        nastavHlasku({
+          nadpis: `Aplikaci „${u.jmeno}" nelze otevřít`,
+          text: "V téhle simulaci není udělaná. Na skutečném Macu by se spustila – balíček totiž obsahuje celý program.",
+        });
+      }
+      return;
+    }
+    if (jeTextovy(u.jmeno)) {
+      spust("poznamky", slozMac([...cesta, u.jmeno]));
+      return;
+    }
+    nastavHlasku({
+      nadpis: `Dokument „${u.jmeno}" nelze otevřít`,
+      text: "Simulace umí otevřít jen textové soubory. Obrázky, archivy ani instalátory v ní aplikaci nemají.",
+    });
   };
 
   /* ───────── akce z pravého tlačítka ───────── */
@@ -299,10 +352,19 @@ export function Finder() {
    * má skutečný Mac. Vykresluje se proto portálem do záhlaví, ne jako druhý
    * proužek pod ním.
    */
+  /**
+   * Ovládání Finderu patří do TÉHOŽ pruhu jako semafor a název okna.
+   *
+   * Tvar je podle skutečného Finderu (snímek z české nápovědy Applu): každá
+   * skupina je BÍLÁ PILULKA se stínem, ne plochá ikona na pozadí. Právě ty
+   * pilulky dělají pruh macOSovým – ploché ikony vypadaly jako panel nástrojů
+   * z Windows.
+   */
   const naradi = slotZahlavi
     ? createPortal(
         <>
-          <div className="ml-2 flex items-center gap-1">
+          {/* Zpět a vpřed sdílejí jednu pilulku, jako na Macu. */}
+          <div className="ml-1 flex items-center rounded-full bg-mac-povrch shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
             <button
               type="button"
               aria-label="Zpět"
@@ -311,7 +373,7 @@ export function Finder() {
                 nastavKde((k) => k - 1);
                 nastavVybrano(null);
               }}
-              className="rounded-md px-1.5 py-1 hover:bg-mac-zvyrazneny disabled:opacity-30"
+              className="rounded-l-full px-2.5 py-1.5 text-mac-text disabled:opacity-30"
             >
               <ChevronLeft className="h-4 w-4" />
             </button>
@@ -323,31 +385,32 @@ export function Finder() {
                 nastavKde((k) => k + 1);
                 nastavVybrano(null);
               }}
-              className="rounded-md px-1.5 py-1 hover:bg-mac-zvyrazneny disabled:opacity-30"
+              className="rounded-r-full px-2.5 py-1.5 text-mac-text disabled:opacity-30"
             >
               <ChevronRight className="h-4 w-4" />
             </button>
           </div>
 
+          {/* Název složky: vlevo, tučně, větší. Ne vystředěný. */}
+          <span className="ml-1 truncate text-[15px] font-semibold text-mac-text">
+            {jmenoMista}
+          </span>
+
           <div className="ml-auto flex items-center gap-2">
-            {/* Přepínání pohledů. Mřížkový zatím není udělaný, takže je
-                zešedlý – na Macu je to běžný stav, kdežto chybějící
-                přepínač by vypadal jako závada. */}
-            <div className="flex items-center rounded-md border border-mac-linka">
-              <span
-                title="Jako seznam"
-                className="rounded-l-md bg-mac-zvyrazneny px-2 py-1 text-mac-text"
-              >
-                <List className="h-3.5 w-3.5" />
+            <div className="flex items-center rounded-full bg-mac-povrch shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
+              <span title="Jako seznam" className="rounded-l-full px-2.5 py-1.5 text-mac-akcent">
+                <List className="h-4 w-4" />
               </span>
+              {/* Mřížkový pohled udělaný není, takže je zešedlý – na Macu
+                  je zešedlá volba běžná, chybějící přepínač ne. */}
               <span
                 title="Jako ikony – v téhle simulaci není"
-                className="rounded-r-md px-2 py-1 text-mac-slaby/50"
+                className="rounded-r-full px-2.5 py-1.5 text-mac-slaby/40"
               >
-                <LayoutGrid className="h-3.5 w-3.5" />
+                <LayoutGrid className="h-4 w-4" />
               </span>
             </div>
-            <label className="flex items-center gap-1.5 rounded-md border border-mac-linka px-2 py-1">
+            <label className="flex items-center gap-1.5 rounded-full bg-mac-povrch px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
               <Search className="h-3.5 w-3.5 shrink-0 text-mac-slaby" />
               <input
                 value={hledani}
@@ -355,7 +418,7 @@ export function Finder() {
                 placeholder="Hledat"
                 aria-label="Hledat ve složce"
                 spellCheck={false}
-                className="w-[104px] min-w-0 bg-transparent text-[12px] text-mac-text outline-none placeholder:text-mac-slaby focus-visible:outline-none"
+                className="w-[92px] min-w-0 bg-transparent text-[12px] text-mac-text outline-none placeholder:text-mac-slaby focus-visible:outline-none"
               />
             </label>
           </div>
@@ -504,6 +567,10 @@ export function Finder() {
         />
       )}
 
+      {hlaska && (
+        <Hlaska nadpis={hlaska.nadpis} text={hlaska.text} zavri={() => nastavHlasku(null)} />
+      )}
+
       {uzelInformace && (
         <PanelInformace
           nadpis={uzelInformace.jmeno}
@@ -567,6 +634,44 @@ function IkonaPolozky({ uzel, barevne }: { uzel: Uzel; barevne: boolean }) {
  * NE verzálkami – verzálky s prostrkáním jsou windowsácký zvyk a byla to
  * jedna z věcí, podle kterých panel nevypadal jako z Macu.
  */
+/**
+ * Hláška „tohle otevřít nejde". Na Macu je to malé okénko uprostřed s tučným
+ * nadpisem a jedním tlačítkem – ne proužek nahoře ani nic, co samo zmizí.
+ */
+function Hlaska({
+  nadpis,
+  text,
+  zavri,
+}: {
+  nadpis: string;
+  text: string;
+  zavri: () => void;
+}) {
+  useEffect(() => {
+    const klavesa = (e: KeyboardEvent) => {
+      if (e.key === "Escape" || e.key === "Enter") zavri();
+    };
+    window.addEventListener("keydown", klavesa);
+    return () => window.removeEventListener("keydown", klavesa);
+  }, [zavri]);
+
+  return (
+    <div className="absolute inset-0 z-[80] flex items-center justify-center bg-black/20">
+      <div className="mac-vjezd w-[320px] rounded-xl bg-mac-povrch p-5 text-center shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+        <p className="text-[13px] font-semibold text-mac-text">{nadpis}</p>
+        <p className="mt-2 text-[12px] leading-relaxed text-mac-slaby">{text}</p>
+        <button
+          type="button"
+          onClick={zavri}
+          className="mt-4 w-full rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90"
+        >
+          OK
+        </button>
+      </div>
+    </div>
+  );
+}
+
 function Skupina({ nazev }: { nazev: string }) {
   return (
     <div className="px-2 pb-1 pt-4 text-[11px] font-semibold text-mac-slaby">{nazev}</div>

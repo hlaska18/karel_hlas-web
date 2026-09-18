@@ -121,7 +121,7 @@ export function OknoRamMac({
   return (
     <div
       className={`mac-vjezd absolute flex flex-col overflow-hidden bg-mac-povrch mac-bezvyberu ${
-        okno.zvetsene ? "rounded-none" : "rounded-[10px]"
+        okno.zvetsene ? "rounded-none" : "rounded-[16px]"
       }`}
       style={{
         ...poloha,
@@ -133,7 +133,7 @@ export function OknoRamMac({
       onMouseDown={() => poslat({ typ: "okno/dopredu", id: okno.id })}
     >
       <div
-        className="relative flex h-[52px] shrink-0 items-center gap-3 border-b border-mac-linka bg-mac-panel px-3"
+        className="relative flex h-[58px] shrink-0 items-center gap-3 border-b border-mac-linka bg-mac-panel px-4"
         onMouseDown={(e) => {
           // Na semaforu ani na ovládání v pruhu se netáhne – tam se kliká.
           if ((e.target as HTMLElement).closest("[data-semafor],[data-naradi]")) return;
@@ -142,18 +142,9 @@ export function OknoRamMac({
         onDoubleClick={() => poslat({ typ: "okno/zvetsi", id: okno.id })}
       >
         <Semafor okno={okno} aktivni={aktivni} />
-        {/* Titulek je uprostřed OKNA, ne uprostřed zbylého místa – proto
-            absolutně, ne flexem. Se `justify-center` by ho semafor odstrčil
-            doprava a u úzkého okna by to bylo hodně vidět. */}
-        <div className="pointer-events-none absolute inset-x-0 text-center">
-          <span
-            className={`text-[13px] font-semibold ${
-              aktivni ? "text-mac-text" : "text-mac-slaby"
-            }`}
-          >
-            {okno.titul}
-          </span>
-        </div>
+        {/* Název je VLEVO a tučný, ne na středu. Vystředěný titulek je starší
+            macOS; dnešní Finder ho má hned za šipkami zpět (ověřeno na snímku
+            z české nápovědy Applu). */}
         <div
           data-naradi
           ref={nastavSlot}
@@ -193,7 +184,7 @@ function Semafor({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
         e.stopPropagation();
         akce();
       }}
-      className="flex h-[12px] w-[12px] items-center justify-center rounded-full text-[9px] font-bold leading-none text-black/55 transition-colors"
+      className="flex h-[13px] w-[13px] items-center justify-center rounded-full text-[9px] font-bold leading-none text-black/55 transition-colors"
       style={{ backgroundColor: aktivni ? barva : "rgb(var(--mac-linka))" }}
     >
       {/* Symbol se ukáže až při najetí na semafor, přesně jako na Macu. */}
@@ -202,7 +193,7 @@ function Semafor({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
   );
 
   return (
-    <div data-semafor className="group/semafor z-10 flex items-center gap-[8px]">
+    <div data-semafor className="group/semafor z-10 flex items-center gap-[9px]">
       {puntik("#ff5f57", "Zavřít okno (aplikace poběží dál)", "✕", () =>
         poslat({ typ: "okno/zavri", id: okno.id }),
       )}
