@@ -38,6 +38,7 @@ import {
   Usb,
 } from "lucide-react";
 import { useMac, useOknoMac } from "../system";
+import { APLIKACE_BALICKU, VelkaIkona } from "../ikony";
 import type { AppId } from "@/lib/mac/stav";
 import { NabidkaMistni, PanelInformace, type PolozkaNabidky } from "../ui";
 import {
@@ -90,17 +91,6 @@ function polozekSlovy(n: number): string {
   return `${n} položek`;
 }
 
-/**
- * Které balíčky v /Applications spouštějí kterou aplikaci. Dvojklik na
- * `Terminál.app` má spustit Terminál – jinak by `.app` nebyl program, ale
- * jen podivná složka.
- */
-const APLIKACE_BALICKU: Record<string, AppId | undefined> = {
-  "Finder.app": "finder",
-  "Terminál.app": "terminal",
-  "Poznámky.app": "poznamky",
-};
-
 /** Přípony, které Poznámky umí otevřít jako text. */
 const TEXTOVE = ["txt", "plist", "csv", "md", "xml", "json", "log", "zshrc"];
 
@@ -130,6 +120,11 @@ export function Finder() {
   const [novyNazev, nastavNovyNazev] = useState("");
   const [hledani, nastavHledani] = useState("");
   const [hlaska, nastavHlasku] = useState<{ nadpis: string; text: string } | null>(null);
+  /**
+   * Finder ve skutecnosti startuje v zobrazeni IKON, ne v seznamu – proto je
+   * to vychozi i tady. Seznam je pak ta druha moznost, ne naopak.
+   */
+  const [zobrazeni, nastavZobrazeni] = useState<"ikony" | "seznam">("ikony");
   const polePrejmenovani = useRef<HTMLInputElement>(null);
 
   const cesta = historie[kde];
@@ -360,6 +355,35 @@ export function Finder() {
    * pilulky dělají pruh macOSovým – ploché ikony vypadaly jako panel nástrojů
    * z Windows.
    */
+  /**
+   * Jmeno polozky – nebo pole na prejmenovani, kdyz se zrovna prejmenovava.
+   * Je to stejne v seznamu i v ikonach, jen zarovnane jinak, proto to sedi
+   * na jednom miste.
+   *
+   * Tecka na zacatku se schvalne nezvyraznuje jinak – zak ji ma poznat sam
+   * podle jmena, protoze presne tak to na Macu funguje.
+   */
+  const jmenoNeboPole = (u: Uzel, nastred: boolean) =>
+    prejmenovavany === u.jmeno ? (
+      <input
+        ref={polePrejmenovani}
+        value={novyNazev}
+        onChange={(e) => nastavNovyNazev(e.target.value)}
+        onBlur={dokonciPrejmenovani}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") dokonciPrejmenovani();
+          if (e.key === "Escape") nastavPrejmenovavany(null);
+        }}
+        aria-label="Nový název"
+        spellCheck={false}
+        className={`min-w-0 rounded border border-mac-akcent bg-mac-povrch px-1 text-[13px] text-mac-text outline-none ${
+          nastred ? "w-full text-center" : "flex-1"
+        }`}
+      />
+    ) : (
+      <span className={nastred ? "line-clamp-2 break-words" : "truncate"}>{u.jmeno}</span>
+    );
+
   const naradi = slotZahlavi
     ? createPortal(
         <>
@@ -398,17 +422,28 @@ export function Finder() {
 
           <div className="ml-auto flex items-center gap-2">
             <div className="flex items-center rounded-full bg-mac-povrch shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
-              <span title="Jako seznam" className="rounded-l-full px-2.5 py-1.5 text-mac-akcent">
-                <List className="h-4 w-4" />
-              </span>
-              {/* Mřížkový pohled udělaný není, takže je zešedlý – na Macu
-                  je zešedlá volba běžná, chybějící přepínač ne. */}
-              <span
-                title="Jako ikony – v téhle simulaci není"
-                className="rounded-r-full px-2.5 py-1.5 text-mac-slaby/40"
+              <button
+                type="button"
+                title="Jako ikony"
+                aria-pressed={zobrazeni === "ikony"}
+                onClick={() => nastavZobrazeni("ikony")}
+                className={`rounded-l-full px-2.5 py-1.5 ${
+                  zobrazeni === "ikony" ? "text-mac-akcent" : "text-mac-slaby"
+                }`}
               >
                 <LayoutGrid className="h-4 w-4" />
-              </span>
+              </button>
+              <button
+                type="button"
+                title="Jako seznam"
+                aria-pressed={zobrazeni === "seznam"}
+                onClick={() => nastavZobrazeni("seznam")}
+                className={`rounded-r-full px-2.5 py-1.5 ${
+                  zobrazeni === "seznam" ? "text-mac-akcent" : "text-mac-slaby"
+                }`}
+              >
+                <List className="h-4 w-4" />
+              </button>
             </div>
             <label className="flex items-center gap-1.5 rounded-full bg-mac-povrch px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
               <Search className="h-3.5 w-3.5 shrink-0 text-mac-slaby" />
@@ -480,6 +515,37 @@ export function Finder() {
             <p className="p-6 text-mac-slaby">Tahle složka tu není.</p>
           ) : polozky.length === 0 ? (
             <p className="p-6 text-mac-slaby">Složka je prázdná.</p>
+          ) : zobrazeni === "ikony" ? (
+            /* Mřížka ikon. Na Macu se nevybírá pruh přes celý řádek jako
+               v seznamu – zvýrazní se JMÉNO modrou pilulkou pod ikonou. */
+            <div className="grid grid-cols-[repeat(auto-fill,minmax(116px,1fr))] items-start gap-y-4 p-4">
+              {polozky.map((u) => {
+                const vybrana = vybrano === u.jmeno;
+                return (
+                  <div
+                    key={u.jmeno}
+                    title={druh(u)}
+                    onClick={() => nastavVybrano(u.jmeno)}
+                    onDoubleClick={() => otevri(u)}
+                    onContextMenu={(e) => {
+                      e.preventDefault();
+                      nastavVybrano(u.jmeno);
+                      nastavNabidku({ x: e.clientX, y: e.clientY, jmeno: u.jmeno });
+                    }}
+                    className="flex cursor-default flex-col items-center gap-1 px-2"
+                  >
+                    <IkonaPolozky uzel={u} barevne velke />
+                    <span
+                      className={`max-w-full rounded-[7px] px-1.5 text-center text-[12px] leading-[15px] ${
+                        vybrana ? "bg-mac-akcent text-mac-akcent-text" : "text-mac-text"
+                      }`}
+                    >
+                      {jmenoNeboPole(u, true)}
+                    </span>
+                  </div>
+                );
+              })}
+            </div>
           ) : (
             <table className="w-full border-collapse">
               <thead className="sticky top-0 bg-mac-panel text-[11px] uppercase tracking-wide text-mac-slaby">
@@ -510,26 +576,7 @@ export function Finder() {
                     >
                       <td className="flex items-center gap-2 px-3 py-1.5">
                         <IkonaPolozky uzel={u} barevne={!vybranaRadka} />
-                        {prejmenovavany === u.jmeno ? (
-                          <input
-                            ref={polePrejmenovani}
-                            value={novyNazev}
-                            onChange={(e) => nastavNovyNazev(e.target.value)}
-                            onBlur={dokonciPrejmenovani}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter") dokonciPrejmenovani();
-                              if (e.key === "Escape") nastavPrejmenovavany(null);
-                            }}
-                            aria-label="Nový název"
-                            spellCheck={false}
-                            className="min-w-0 flex-1 rounded border border-mac-akcent bg-mac-povrch px-1 text-[13px] text-mac-text outline-none"
-                          />
-                        ) : (
-                          /* Tečka na začátku se schválně nezvýrazňuje jinak –
-                             žák ji má poznat sám podle jména, protože přesně
-                             tak to na Macu funguje. */
-                          <span className="truncate">{u.jmeno}</span>
-                        )}
+                        {jmenoNeboPole(u, false)}
                       </td>
                       <td className="px-3 py-1.5 tabular-nums opacity-80">
                         {datumCas(u.zmeneno)}
@@ -621,7 +668,16 @@ function druh(u: Uzel): string {
   return "Dokument";
 }
 
-function IkonaPolozky({ uzel, barevne }: { uzel: Uzel; barevne: boolean }) {
+function IkonaPolozky({
+  uzel,
+  barevne,
+  velke,
+}: {
+  uzel: Uzel;
+  barevne: boolean;
+  velke?: boolean;
+}) {
+  if (velke) return <VelkaIkona uzel={uzel} />;
   if (jeBalicek(uzel.jmeno)) {
     return <Package className={`h-4 w-4 ${barevne ? "text-mac-slaby" : ""}`} />;
   }

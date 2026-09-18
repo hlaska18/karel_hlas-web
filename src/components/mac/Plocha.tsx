@@ -12,8 +12,8 @@
  * a je to jeden z rozdílů, který si žáci všimnou dřív než čehokoli jiného.
  */
 
-import { FileText, Folder } from "lucide-react";
 import { useMac } from "./system";
+import { VelkaIkona } from "./ikony";
 import { PLOCHA, jeBalicek, jeSkryte, slozMac } from "@/lib/mac/cesty";
 import { jeSlozka, najdiSlozku } from "@/lib/win/fs";
 
@@ -38,15 +38,11 @@ export function Plocha() {
               if (slozkaNeBalicek) spust("finder", cesta);
               else spust("poznamky", cesta);
             }}
-            className="group flex w-[92px] flex-col items-center gap-1 rounded-lg p-2 text-center focus-visible:bg-white/20"
+            className="flex w-[92px] flex-col items-center gap-1 rounded-lg p-2 text-center hover:bg-white/10 focus-visible:bg-white/20"
           >
-            <span className="flex h-11 w-11 items-center justify-center rounded-lg bg-white/15 backdrop-blur-sm group-hover:bg-white/25">
-              {slozkaNeBalicek ? (
-                <Folder className="h-7 w-7 text-white" />
-              ) : (
-                <FileText className="h-7 w-7 text-white" />
-              )}
-            </span>
+            {/* Tytéž ikony jako ve Finderu. Mléčný čtvereček pod nimi je
+                pryč – na Macu leží ikona rovnou na tapetě. */}
+            <VelkaIkona uzel={u} />
             {/* Stín pod textem, ne podklad: na světlé tapetě by byl bílý text
                 nečitelný, a obdélník za každým názvem vypadá jako rozbité. */}
             <span

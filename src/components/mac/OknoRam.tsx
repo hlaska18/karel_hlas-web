@@ -116,7 +116,18 @@ export function OknoRamMac({
 
   const poloha = okno.zvetsene
     ? { left: 0, top: 0, width: "100%", height: "100%" }
-    : { left: okno.ram.x, top: okno.ram.y, width: okno.ram.w, height: okno.ram.h };
+    : {
+        left: okno.ram.x,
+        top: okno.ram.y,
+        width: okno.ram.w,
+        height: okno.ram.h,
+        // Okno nikdy nesmí přetéct za okraj plochy. Výchozí Finder je široký
+        // 940 px a na 1024px projektoru ve třídě mu vyjelo hledání mimo
+        // obrazovku. Skutečný Mac okno nikam mimo plochu neotevře, proto se
+        // tu radši zmenší. Počítá se to v CSS, aby se nemusela měřit plocha.
+        maxWidth: `calc(100% - ${okno.ram.x}px)`,
+        maxHeight: `calc(100% - ${okno.ram.y}px)`,
+      };
 
   return (
     <div
