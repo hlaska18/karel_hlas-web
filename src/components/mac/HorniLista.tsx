@@ -14,7 +14,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { Apple, BatteryMedium, Search, SlidersHorizontal, Wifi } from "lucide-react";
+import { BatteryMedium, Search, SlidersHorizontal, Wifi } from "lucide-react";
 import { useMac } from "./system";
 import { APLIKACE } from "@/lib/mac/stav";
 import { datumSlovy, hodiny } from "@/lib/win/format";
@@ -148,7 +148,7 @@ export function HorniLista({
               } ${n.tucne ? "font-semibold" : ""}`}
               aria-label={n.jablko ? "Nabídka systému" : undefined}
             >
-              {n.jablko ? <Apple className="h-[15px] w-[15px]" fill="currentColor" /> : n.titul}
+              {n.jablko ? <ZnakJablko /> : n.titul}
             </button>
             {aktivni && <Rozbaleno polozky={n.polozky} zavri={() => nastavOtevrenou(null)} />}
           </div>
@@ -222,5 +222,31 @@ function Rozbaleno({ polozky, zavri }: { polozky: Polozka[]; zavri: () => void }
         </div>
       ))}
     </div>
+  );
+}
+
+/**
+ * Jablko v horní liště.
+ *
+ * Kreslené vlastní, stejně jako všechny ostatní značky v téhle simulaci –
+ * Finder, složka, Launchpad. Do teď tu bylo obecné jablko z lucide, které má
+ * stopku a list, ale ne ten typický zářez vpravo, takže v liště nečetlo jako
+ * to, co na Macu vlevo nahoře doopravdy je.
+ *
+ * Kreslí se v soustavě 24×24 a používá se v 15 px; zkontrolováno, že tvar
+ * drží i v té velikosti, protože tam ho žák uvidí.
+ */
+function ZnakJablko() {
+  return (
+    <svg viewBox="0 0 24 24" className="h-[15px] w-[15px]" aria-hidden="true">
+      <path
+        d="M12.05 7.3c-1.5-1.3-4.1-1.35-5.75.3-2.45 2.45-2.1 7.5.2 11.1 1 1.55 2.15 3.1 3.6 3 1.15-.05 1.6-.75 3-.75s1.8.75 3 .7c1.45-.05 2.5-1.5 3.45-3.05.65-1.05 1-1.95 1.05-2.2-.05-.05-2.5-1.05-2.5-3.6 0-2.1 1.65-3.1 1.75-3.2-1.05-1.5-2.65-1.75-3.25-1.8-1.35-.1-2.65.85-3.55.85-.35 0-.65-.1-1-.35z"
+        fill="currentColor"
+      />
+      <path
+        d="M14.3 4.45c.8-.95 1.3-2.25 1.15-3.55-1.1.05-2.45.75-3.25 1.7-.7.85-1.35 2.2-1.15 3.45 1.25.1 2.45-.65 3.25-1.6z"
+        fill="currentColor"
+      />
+    </svg>
   );
 }

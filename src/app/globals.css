@@ -1232,3 +1232,17 @@
   background-image: linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)),
     url("/images/macos/tapeta-zare.jpg");
 }
+
+/* Nezaostřené okno.
+   Na Macu z něj zešedne celý chrom, ne jen semafor: název, nástroje v pruhu
+   i postranní panel. Obsah okna zůstává čitelný – tím se pozná, které okno
+   poslouchá klávesnici, a je to jeden z rozdílů proti Windows, kde je
+   nezaostřené okno skoro k nerozeznání od zaostřeného.
+   Semafor si šedne sám v `OknoRam.tsx`, ten tu proto není. */
+.mac-okno-neaktivni [data-naradi] {
+  opacity: 0.5;
+}
+
+.mac-okno-neaktivni [data-postranni] {
+  opacity: 0.6;
+}

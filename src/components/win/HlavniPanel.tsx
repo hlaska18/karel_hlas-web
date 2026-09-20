@@ -269,15 +269,22 @@ function TlacitkoPanelu({
   );
 }
 
-/** Čtyři tabulky – univerzální značka tlačítka Start, kreslená vlastní. */
+/**
+ * Čtyři tabulky – značka tlačítka Start, kreslená vlastní.
+ *
+ * Zakulacené jsou jen VNĚJŠÍ rohy, vnitřní zůstávají ostré. Díky tomu ty
+ * čtyři díly drží dohromady tvar jednoho zaobleného čtverce rozděleného na
+ * čtvrtiny; když měl každý díl zakulacené všechny čtyři rohy, rozpadalo se to
+ * na čtyři nesouvisející kostičky.
+ */
 function LogoStart() {
   return (
     <svg viewBox="0 0 20 20" className="h-5 w-5" aria-hidden="true">
       <g fill="currentColor">
-        <rect x="1" y="1" width="8" height="8" rx="1.2" />
-        <rect x="11" y="1" width="8" height="8" rx="1.2" />
-        <rect x="1" y="11" width="8" height="8" rx="1.2" />
-        <rect x="11" y="11" width="8" height="8" rx="1.2" />
+        <path d="M3.5 1H9v8H1V3.5A2.5 2.5 0 0 1 3.5 1Z" />
+        <path d="M11 1h5.5A2.5 2.5 0 0 1 19 3.5V9h-8V1Z" />
+        <path d="M1 11h8v8H3.5A2.5 2.5 0 0 1 1 16.5V11Z" />
+        <path d="M11 11h8v5.5a2.5 2.5 0 0 1-2.5 2.5H11v-8Z" />
       </g>
     </svg>
   );

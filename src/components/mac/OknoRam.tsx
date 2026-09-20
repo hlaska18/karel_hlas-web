@@ -137,9 +137,12 @@ export function OknoRamMac({
   return (
     <div
       data-okno={okno.id}
+      // Nezaostřené okno pozná CSS podle téhle třídy a ztlumí v něm chrom.
+      // Je to třídou, a ne propem, protože nástroje si do pruhu kreslí každá
+      // aplikace sama portálem – prop by se k nim nedostal.
       className={`mac-vjezd absolute flex flex-col overflow-hidden bg-mac-povrch mac-bezvyberu ${
         okno.zvetsene ? "rounded-none" : "rounded-[16px]"
-      }`}
+      } ${aktivni ? "" : "mac-okno-neaktivni"}`}
       style={{
         ...poloha,
         zIndex: 100 + okno.z,
