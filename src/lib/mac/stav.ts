@@ -62,7 +62,14 @@ export interface NastaveniMac {
   skrytePolozky: boolean;
   motiv: "svetly" | "tmavy";
   tapeta: string;
+  /** Strana ikony v Docku v pixelech. Mění se tažením za čárku v Docku. */
+  dockVelikost: number;
 }
+
+/** Meze velikosti Docku. Skutečný Mac má podobné – menší už není vidět,
+ *  větší zabere půl obrazovky. */
+export const DOCK_MIN = 34;
+export const DOCK_MAX = 82;
 
 /**
  * Tapety. Windows mají obrázky poskládané v SVG, tady jsou to dvě fotky
@@ -83,6 +90,7 @@ export const VYCHOZI_NASTAVENI: NastaveniMac = {
   skrytePolozky: false,
   motiv: "svetly",
   tapeta: "stuhy",
+  dockVelikost: 58,
 };
 
 export interface StavMac {

@@ -169,7 +169,7 @@ export const UKOLY_MAC: UkolMac[] = [
       "Ve Windows dostane flash disk písmeno, třeba D:. Tady žádné písmeno nedostane – musí se někam pověsit do téhož stromu. Zjisti kam.",
     kroky: [
       "Otevři okno Finderu (ikona v Docku vlevo).",
-      "V postranním panelu dole, pod nadpisem UMÍSTĚNÍ, je FLASH. Klikni na něj.",
+      "V postranním panelu dole, pod nadpisem Umístění, je FLASH. Klikni na něj.",
       "Podívej se na pruh úplně dole v okně – tam je napsaná cesta.",
       "Stojí tam /Volumes/FLASH — a nikde ani písmeno disku.",
       "Volumes znamená svazky. Každý připojený disk se objeví jako složka v ní.",

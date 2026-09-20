@@ -24,7 +24,7 @@ const CTI_ME = `Vítej na Macu.
 Tohle prostředí vypadá jinak než Windows, ale pod povrchem dělá totéž:
 skládá soubory do složek, spouští programy a hlídá, kdo smí co.
 
-Úkoly v panelu vpravo dole jsou schválně jen ty, které ve Windows nemají
+Úkoly v panelu vlevo dole jsou schválně jen ty, které ve Windows nemají
 obdobu. Nehledej tu podruhé to, co už umíš.
 `;
 

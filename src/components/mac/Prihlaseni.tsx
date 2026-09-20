@@ -153,7 +153,7 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
             </p>
 
             <p className="mt-6 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
-              Je to týž kód jako do virtuálních Windows. Drží pohromadě třídu,
+              Je to týž kód jako do virtuálních Windows – jeden platí do obou. Drží pohromadě třídu,
               nechrání žádné údaje – žádné se tu neukládají. Co tu uděláš,
               zůstává v tomhle prohlížeči.{" "}
               <strong className="font-semibold text-white/80">

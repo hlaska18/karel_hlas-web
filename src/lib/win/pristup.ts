@@ -17,12 +17,18 @@
 /**
  * Kódy, kterými se do prostředí vchází. Stačí, když sedí kterýkoli.
  *
- * `WIN11` je společný a zůstává. Kódy tříd se dopisují podle potřeby —
- * hodí se, když má učitel vědět, odkud kdo přišel, nebo když chce mít
- * pro každou třídu vlastní vstup.
+ * Kódy tříd se dopisují podle potřeby — hodí se, když má učitel vědět,
+ * odkud kdo přišel, nebo když chce mít pro každou třídu vlastní vstup.
  */
 export const KODY: readonly string[] = [
-  // Společný kód. Zůstává – kdo ho zná, má dál vejít.
+  /*
+   * Společný kód. Píše se na tabuli a platí do OBOU prostředí, do Windows
+   * i do macOS – proto není pojmenovaný po žádném z nich. `WIN11` tu
+   * zůstává, protože ho třídy znají a rozepsaný na tabuli ho mají i teď;
+   * odebrat ho by uprostřed pololetí zavřelo dveře lidem, kteří nic
+   * neudělali špatně.
+   */
+  "OS2026",
   "WIN11",
 
   // Kódy tříd pro školní rok 2026/27. Značky oborů jsou tytéž, jaké používá

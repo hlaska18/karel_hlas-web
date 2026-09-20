@@ -195,7 +195,7 @@ function Semafor({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
         e.stopPropagation();
         akce();
       }}
-      className="flex h-[13px] w-[13px] items-center justify-center rounded-full text-[9px] font-bold leading-none text-black/55 transition-colors"
+      className="flex h-[13px] w-[13px] items-center justify-center rounded-full text-black/60 transition-colors"
       style={{ backgroundColor: aktivni ? barva : "rgb(var(--mac-linka))" }}
     >
       {/* Symbol se ukáže až při najetí na semafor, přesně jako na Macu. */}
@@ -205,15 +205,73 @@ function Semafor({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
 
   return (
     <div data-semafor className="group/semafor z-10 flex items-center gap-[9px]">
-      {puntik("#ff5f57", "Zavřít okno (aplikace poběží dál)", "✕", () =>
+      {puntik("#ff5f57", "Zavřít okno (aplikace poběží dál)", <ZnakZavrit />, () =>
         poslat({ typ: "okno/zavri", id: okno.id }),
       )}
-      {puntik("#febc2e", "Schovat okno do Docku", "–", () =>
+      {puntik("#febc2e", "Schovat okno do Docku", <ZnakSchovat />, () =>
         poslat({ typ: "okno/minimalizuj", id: okno.id }),
       )}
-      {puntik("#28c840", okno.zvetsene ? "Zmenšit okno" : "Zvětšit okno", "⤢", () =>
-        poslat({ typ: "okno/zvetsi", id: okno.id }),
+      {puntik(
+        "#28c840",
+        okno.zvetsene ? "Zmenšit okno" : "Zvětšit okno",
+        <ZnakZvetsit zpet={okno.zvetsene} />,
+        () => poslat({ typ: "okno/zvetsi", id: okno.id }),
       )}
     </div>
+  );
+}
+
+/*
+ * Značky v semaforu.
+ *
+ * Bývaly to textové znaky („✕", „–", „⤢"). Vystředit je nešlo: každý znak má
+ * jinou výšku i jiné posazení k účaří, takže i ve vystředěném rámečku seděly
+ * pokaždé jinde a v puntíku to lítalo. Kreslené značky mají střed daný
+ * geometrií, ne fontem.
+ */
+
+const RAMEC = "h-[7px] w-[7px]";
+
+function ZnakZavrit() {
+  return (
+    <svg viewBox="0 0 10 10" className={RAMEC} aria-hidden="true">
+      <path
+        d="M2.6 2.6 L7.4 7.4 M7.4 2.6 L2.6 7.4"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        fill="none"
+      />
+    </svg>
+  );
+}
+
+function ZnakSchovat() {
+  return (
+    <svg viewBox="0 0 10 10" className={RAMEC} aria-hidden="true">
+      <path d="M2 5 H8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+    </svg>
+  );
+}
+
+/**
+ * Zelený puntík. Dvě trojúhelníčky: ven, když okno teprve půjde na celou
+ * obrazovku, dovnitř, když se z ní bude vracet. Tohle rozlišení má i Mac.
+ */
+function ZnakZvetsit({ zpet }: { zpet?: boolean }) {
+  return (
+    <svg viewBox="0 0 10 10" className={RAMEC} aria-hidden="true">
+      {zpet ? (
+        <>
+          <polygon points="2,6.4 6.4,6.4 6.4,2" fill="currentColor" />
+          <polygon points="8,3.6 3.6,3.6 3.6,8" fill="currentColor" />
+        </>
+      ) : (
+        <>
+          <polygon points="1.8,1.8 6.2,1.8 1.8,6.2" fill="currentColor" />
+          <polygon points="8.2,8.2 3.8,8.2 8.2,3.8" fill="currentColor" />
+        </>
+      )}
+    </svg>
   );
 }

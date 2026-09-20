@@ -15,9 +15,10 @@
  * takže jsou oba stavy vidět vedle sebe.
  */
 
+import { useState } from "react";
 import { Download, FileText, Folder, Settings, TerminalSquare, Trash2 } from "lucide-react";
 import { useMac } from "./system";
-import { APLIKACE, type AppId } from "@/lib/mac/stav";
+import { APLIKACE, DOCK_MAX, DOCK_MIN, type AppId } from "@/lib/mac/stav";
 import { KOS, STAZENE, slozMac } from "@/lib/mac/cesty";
 import { jeSlozka, najdiSlozku } from "@/lib/win/fs";
 
@@ -143,6 +144,40 @@ export const VZHLED_APLIKACI: Record<AppId, { pozadi: string; barva: string; zna
 
 export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
   const { stav, poslat, spust } = useMac();
+  /**
+   * Velikost během tažení. Do stavu se zapisuje až po puštění – kdyby se
+   * ukládalo při každém pohybu myši, psalo by se do úložiště stokrát za
+   * vteřinu kvůli jednomu tahu.
+   */
+  const [tazena, nastavTazenou] = useState<number | null>(null);
+  const velikost = tazena ?? stav.nastaveni.dockVelikost;
+
+  /**
+   * Tažení za čárku v Docku. Na Macu je ta čárka táhlo, ne ozdoba: chytne
+   * se a tahem nahoru se Dock zvětší, dolů zmenší. Tady to bylo jenom
+   * nakreslené, což vypadalo jako rozbité táhlo.
+   */
+  const zacniTahat = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const zacatekY = e.clientY;
+    const zacatekVelikost = stav.nastaveni.dockVelikost;
+    let posledni = zacatekVelikost;
+
+    const pohyb = (ev: MouseEvent) => {
+      // Nahoru je větší, proto zacatekY minus aktuální.
+      const nova = zacatekVelikost + (zacatekY - ev.clientY);
+      posledni = Math.max(DOCK_MIN, Math.min(DOCK_MAX, Math.round(nova)));
+      nastavTazenou(posledni);
+    };
+    const konec = () => {
+      window.removeEventListener("mousemove", pohyb);
+      window.removeEventListener("mouseup", konec);
+      nastavTazenou(null);
+      poslat({ typ: "nastaveni/zmen", zmena: { dockVelikost: posledni } });
+    };
+    window.addEventListener("mousemove", pohyb);
+    window.addEventListener("mouseup", konec);
+  };
   const schovana = stav.okna.filter((o) => o.minimalizovane);
   /** Kolik je v koši. Plný koš má na Macu jinou ikonu než prázdný. */
   const vKosi = najdiSlozku(stav.disk, KOS)?.deti.length ?? 0;
@@ -188,6 +223,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             kde žák uvidí všechny aplikace pohromadě. */}
         <Ikona
           popis="Launchpad"
+          strana={velikost}
           vzhled={{ pozadi: "linear-gradient(165deg,#fbfbfd,#d6d8de)", barva: "#3a3a3c", znak: ZnakLaunchpad }}
           onClick={onLaunchpad}
         />
@@ -195,34 +231,51 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
           <Ikona
             key={app}
             popis={APLIKACE[app].nazev}
+            strana={velikost}
             vzhled={VZHLED_APLIKACI[app]}
             bezi={stav.bezici.includes(app)}
             onClick={() => otevriZDocku(app)}
           />
         ))}
 
-        {schovana.length > 0 && <div className="mx-1 h-12 w-px self-center bg-white/25" />}
+        {schovana.length > 0 && (
+          <div
+            className="mx-1 w-px self-center bg-white/25"
+            style={{ height: Math.round(velikost * 0.8) }}
+          />
+        )}
 
         {schovana.map((okno) => (
           <Ikona
             key={okno.id}
             popis={`${okno.titul || APLIKACE[okno.app].nazev} – schované okno`}
+            strana={Math.round(velikost * 0.72)}
             vzhled={VZHLED_APLIKACI[okno.app]}
-            male
             onClick={() => poslat({ typ: "okno/obnov", id: okno.id })}
           />
         ))}
 
         {/* Za čárou stojí na Macu zástupci složek a koš – ne aplikace.
             Proto jsou tady, ne v řadě výš. */}
-        <div className="mx-1 h-12 w-px self-center bg-white/25" />
+        <div
+          onMouseDown={zacniTahat}
+          title="Táhni nahoru nebo dolů a změň velikost Docku"
+          className="mx-1 w-[7px] shrink-0 cursor-ns-resize self-center"
+          style={{ height: Math.round(velikost * 0.8) }}
+        >
+          {/* Čára je tenká, ale chytat se musí dát i vedle ní – proto je
+              kolem ní širší průhledný pruh. */}
+          <div className="mx-auto h-full w-px bg-white/25" />
+        </div>
         <Ikona
           popis="Stažené"
+          strana={velikost}
           vzhled={{ pozadi: "linear-gradient(160deg,#9fd6ff,#3f97e0)", barva: "#0b3c63", znak: Download }}
           onClick={() => spust("finder", slozMac(STAZENE))}
         />
         <Ikona
           popis={vKosi === 0 ? "Koš (prázdný)" : `Koš (${vKosi})`}
+          strana={velikost}
           vzhled={{
             pozadi: vKosi === 0
               ? "linear-gradient(160deg,#d8d8dd,#a9a9b0)"
@@ -243,17 +296,17 @@ function Ikona({
   popis,
   vzhled,
   bezi,
-  male,
+  strana,
   onClick,
 }: {
   popis: string;
   vzhled: { pozadi: string; barva: string; znak: Znak };
   bezi?: boolean;
-  male?: boolean;
+  /** Strana ikony v pixelech. Řídí ji tažení za čárku v Docku. */
+  strana: number;
   onClick?: () => void;
 }) {
   const Znak = vzhled.znak;
-  const strana = male ? 42 : 58;
   return (
     <div className="group/dock relative flex flex-col items-center">
       {/* Popisek nad ikonou. V Docku je to jediné, co ikonu pojmenuje – bez
@@ -277,7 +330,11 @@ function Ikona({
           borderRadius: `${Math.round(strana * 0.22)}px`,
         }}
       >
-        <Znak style={{ color: vzhled.barva }} className={male ? "h-6 w-6" : "h-8 w-8"} />
+        {/* Značka roste s ikonou – 55 % strany je poměr, na kterém to sedí
+            i na nejmenším i na největším Docku. */}
+        <Znak
+          style={{ color: vzhled.barva, width: Math.round(strana * 0.55), height: Math.round(strana * 0.55) }}
+        />
       </button>
       {/*
         Tečka běžícího programu.
