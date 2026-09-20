@@ -40,6 +40,7 @@ import {
 import { useMac, useOknoMac } from "../system";
 import { APLIKACE_BALICKU, VelkaIkona } from "../ikony";
 import type { AppId } from "@/lib/mac/stav";
+import { polozekSlovy } from "@/lib/mac/text";
 import { NabidkaMistni, PanelInformace, type PolozkaNabidky } from "../ui";
 import {
   DOKUMENTY,
@@ -85,12 +86,6 @@ const MISTA = [
  * Bez toho tam stálo „1 položek“, což je přesně ten druh drobnosti, podle
  * které je poznat, že prostředí nikdo nedodělal.
  */
-function polozekSlovy(n: number): string {
-  if (n === 1) return "1 položka";
-  if (n >= 2 && n <= 4) return `${n} položky`;
-  return `${n} položek`;
-}
-
 /** Přípony, které Poznámky umí otevřít jako text. */
 const TEXTOVE = ["txt", "plist", "csv", "md", "xml", "json", "log", "zshrc"];
 

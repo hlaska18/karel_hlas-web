@@ -365,7 +365,11 @@ function Obrazovka() {
             onOMacu={() => nastavPanel("oMacu")}
           />
 
-          <div ref={plochaRef} className="mac-tapeta relative min-h-0 flex-1">
+          <div
+            ref={plochaRef}
+            className="mac-tapeta relative min-h-0 flex-1"
+            data-tapeta={stav.nastaveni.tapeta}
+          >
             <Plocha />
 
             {stav.okna.map((okno) => (

@@ -12,6 +12,7 @@
 import { useEffect } from "react";
 import { Moon, RotateCcw, Sun } from "lucide-react";
 import { useMac, useOknoMac } from "../system";
+import { TAPETY_MAC } from "@/lib/mac/stav";
 
 export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
   const { stav, poslat } = useMac();
@@ -49,6 +50,43 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
               <Znak className="h-5 w-5" />
               {popis}
               {vybrany && <span className="ml-auto text-[11px] text-mac-akcent">zapnuto</span>}
+            </button>
+          );
+        })}
+      </div>
+
+      <div className="my-6 h-px bg-mac-linka" />
+
+      <h2 className="text-[15px] font-semibold">Pozadí plochy</h2>
+      <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
+        Tapeta platí pro celé prostředí. Na Macu se k ní dostaneš i pravým
+        tlačítkem rovnou na ploše – „Změnit pozadí plochy…“.
+      </p>
+      <div className="mt-3 flex gap-3">
+        {TAPETY_MAC.map((t) => {
+          const vybrana = stav.nastaveni.tapeta === t.id;
+          return (
+            <button
+              key={t.id}
+              type="button"
+              onClick={() => poslat({ typ: "nastaveni/zmen", zmena: { tapeta: t.id } })}
+              className={`flex-1 rounded-lg border p-1.5 text-left transition ${
+                vybrana
+                  ? "border-mac-akcent bg-mac-akcent/10"
+                  : "border-mac-linka hover:bg-mac-zvyrazneny"
+              }`}
+            >
+              {/* Náhled je tatáž třída jako plocha, takže ukazuje doopravdy
+                  to, co se zapne – ne domalovaný obrázek vedle. */}
+              <span
+                className="mac-tapeta block h-14 w-full rounded-md"
+                data-tapeta={t.id}
+                aria-hidden="true"
+              />
+              <span className="mt-1.5 flex items-center gap-1 px-0.5 text-[12px]">
+                {t.nazev}
+                {vybrana && <span className="ml-auto text-[11px] text-mac-akcent">zapnuto</span>}
+              </span>
             </button>
           );
         })}

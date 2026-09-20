@@ -15,6 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Loader2, User } from "lucide-react";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { kodSedi } from "@/lib/win/pristup";
+import { VYCHOZI_NASTAVENI } from "@/lib/mac/stav";
 
 type Faze = "zamek" | "kod" | "vitejte";
 
@@ -64,8 +65,14 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
     nastavFazi("vitejte");
   };
 
+  // Zamykací obrazovka ukazuje výchozí tapetu, ne vlastní pozadí – na Macu
+  // je to tatáž plocha, jen rozostřená.
   return (
-    <div className="mac mac-tapeta absolute inset-0 overflow-hidden" data-motiv="tmavy">
+    <div
+      className="mac mac-tapeta absolute inset-0 overflow-hidden"
+      data-motiv="tmavy"
+      data-tapeta={VYCHOZI_NASTAVENI.tapeta}
+    >
       <div
         className="absolute inset-0 transition-all duration-500"
         style={{

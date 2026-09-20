@@ -64,10 +64,25 @@ export interface NastaveniMac {
   tapeta: string;
 }
 
+/**
+ * Tapety. Windows mají obrázky poskládané v SVG, tady jsou to dvě fotky
+ * a jeden přechod v CSS. Fotky jsou JPEG schválně, ne WebP: cíl prohlížečů
+ * (`.browserslistrc`) sahá na Safari 12, které WebP ještě neumí, a tapeta,
+ * která se části třídy nenačte, je horší než o kus větší soubor.
+ *
+ * `id` je zároveň hodnota `data-tapeta` na ploše, podle které si CSS vybere
+ * pozadí.
+ */
+export const TAPETY_MAC = [
+  { id: "stuhy", nazev: "Stuhy" },
+  { id: "zare", nazev: "Záře" },
+  { id: "vrstvy", nazev: "Vrstvy" },
+] as const;
+
 export const VYCHOZI_NASTAVENI: NastaveniMac = {
   skrytePolozky: false,
   motiv: "svetly",
-  tapeta: "vrstvy",
+  tapeta: "stuhy",
 };
 
 export interface StavMac {

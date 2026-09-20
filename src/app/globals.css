@@ -1154,3 +1154,35 @@
     animation: none;
   }
 }
+
+/* Tapety macOS.
+   Základní `.mac-tapeta` výš zůstává jako přechod v CSS („Vrstvy") a slouží
+   i jako záloha, kdyby se obrázek nenačetl. Zbylé dvě jsou fotky, vybírané
+   atributem `data-tapeta`, který na plochu posílá nastavení.
+   V tmavém vzhledu se přes fotku položí ztmavení – tapeta sama se nemění,
+   ale plocha nesmí v noci svítit víc než okna. */
+.mac-tapeta[data-tapeta="stuhy"],
+.mac-tapeta[data-tapeta="zare"] {
+  background-color: #1a1030;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
+
+.mac-tapeta[data-tapeta="stuhy"] {
+  background-image: url("/images/macos/tapeta-stuhy.jpg");
+}
+
+.mac-tapeta[data-tapeta="zare"] {
+  background-image: url("/images/macos/tapeta-zare.jpg");
+}
+
+.mac[data-motiv="tmavy"] .mac-tapeta[data-tapeta="stuhy"] {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)),
+    url("/images/macos/tapeta-stuhy.jpg");
+}
+
+.mac[data-motiv="tmavy"] .mac-tapeta[data-tapeta="zare"] {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.42), rgba(0, 0, 0, 0.42)),
+    url("/images/macos/tapeta-zare.jpg");
+}
