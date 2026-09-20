@@ -12,11 +12,12 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Maximize2, Minimize2, Search } from "lucide-react";
 import Link from "next/link";
 import { MacProvider, OknoMacProvider, useMac } from "./system";
-import { najdiSlozku } from "@/lib/win/fs";
+import { jeSlozka, najdiSlozku } from "@/lib/win/fs";
 import { OknoRamMac } from "./OknoRam";
 import { HorniLista, type Nabidka } from "./HorniLista";
 import { Dock, VZHLED_APLIKACI } from "./Dock";
 import { Plocha } from "./Plocha";
+import { APLIKACE_BALICKU, VelkaIkona } from "./ikony";
 import { PanelUkoluMac } from "./PanelUkolu";
 import { PrihlaseniMac } from "./Prihlaseni";
 import { Finder } from "./apps/Finder";
@@ -31,14 +32,17 @@ import {
   KOREN,
   PLOCHA,
   STAZENE,
+  jeBalicek,
   rozlozMac,
+  sVlnovkou,
   slozMac,
 } from "@/lib/mac/cesty";
+import { type Nalez, prohledej } from "@/lib/mac/hledani";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import { zapomenMac } from "@/lib/mac/stav";
 
 type Faze = "prihlaseni" | "bezi";
-type Panel = null | "vynutit" | "oMacu" | "znovu" | "jdi" | "launchpad";
+type Panel = null | "vynutit" | "oMacu" | "znovu" | "jdi" | "launchpad" | "spotlight";
 
 export function VirtualniMac() {
   return (
@@ -363,6 +367,7 @@ function Obrazovka() {
             onOdhlasit={odhlasit}
             onZacitZnovu={() => nastavPanel("znovu")}
             onOMacu={() => nastavPanel("oMacu")}
+            onSpotlight={() => nastavPanel("spotlight")}
           />
 
           <div
@@ -392,6 +397,7 @@ function Obrazovka() {
             )}
             {panel === "jdi" && <PrejitDoSlozky zavri={() => nastavPanel(null)} />}
             {panel === "launchpad" && <Launchpad zavri={() => nastavPanel(null)} />}
+            {panel === "spotlight" && <Spotlight zavri={() => nastavPanel(null)} />}
           </div>
         </div>
       )}
@@ -783,3 +789,124 @@ function Aplikace({ app, onZacitZnovu }: { app: AppId; onZacitZnovu: () => void 
       return null;
   }
 }
+
+/**
+ * Spotlight.
+ *
+ * Na Macu se jím hledá úplně všechno a je to první věc, po které člověk
+ * sáhne, když neví, kde co leží. Proto hledá doopravdy – v celém disku,
+ * po skutečných jménech (viz `lib/mac/hledani.ts`).
+ *
+ * Co se najde, to se i otevře, a otevře se tím, čím se to otevřít má:
+ * složka ve Finderu, textový soubor v Poznámkách, balíček `.app` se rovnou
+ * spustí. U ostatních se otevře složka, ve které leží – tak to dělá i Mac,
+ * když dokumentu nerozumí.
+ */
+function Spotlight({ zavri }: { zavri: () => void }) {
+  const { stav, poslat, spust } = useMac();
+  const [dotaz, nastavDotaz] = useState("");
+  const [vybrany, nastavVybrany] = useState(0);
+  const pole = useRef<HTMLInputElement>(null);
+
+  const nalezy = useMemo(() => prohledej(stav.disk, dotaz), [stav.disk, dotaz]);
+
+  useEffect(() => {
+    const id = window.setTimeout(() => pole.current?.focus(), 60);
+    return () => window.clearTimeout(id);
+  }, []);
+
+  // Po každé změně dotazu se ukazovátko vrací na první nález – jinak by
+  // ukazovalo na řádek, který už dávno není ten, na který se žák dívá.
+  useEffect(() => {
+    nastavVybrany(0);
+  }, [dotaz]);
+
+  const otevri = (n: Nalez) => {
+    const cesta = slozMac(n.cesta);
+    const app = APLIKACE_BALICKU[n.uzel.jmeno];
+    if (app) {
+      if (stav.bezici.includes(app)) poslat({ typ: "app/dopredu", app });
+      else spust(app);
+    } else if (jeSlozka(n.uzel) && !jeBalicek(n.uzel.jmeno)) {
+      spust("finder", cesta);
+    } else if (JE_TEXT.test(n.uzel.jmeno)) {
+      spust("poznamky", cesta);
+    } else {
+      spust("finder", slozMac(n.cesta.slice(0, -1)));
+    }
+    zavri();
+  };
+
+  return (
+    <div
+      className="absolute inset-0 z-[880] flex flex-col items-center bg-black/25 pt-[14vh]"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) zavri();
+      }}
+    >
+      <div className="mac-vjezd w-[min(560px,86%)] overflow-hidden rounded-2xl bg-mac-panel/95 shadow-[0_24px_70px_rgba(0,0,0,0.45)] backdrop-blur-2xl">
+        <div className="flex items-center gap-3 px-4 py-3">
+          <Search className="h-5 w-5 shrink-0 text-mac-slaby" />
+          <input
+            ref={pole}
+            value={dotaz}
+            onChange={(e) => nastavDotaz(e.target.value)}
+            onKeyDown={(e) => {
+              if (e.key === "Escape") zavri();
+              if (e.key === "ArrowDown" && nalezy.length > 0) {
+                e.preventDefault();
+                nastavVybrany((v) => (v + 1) % nalezy.length);
+              }
+              if (e.key === "ArrowUp" && nalezy.length > 0) {
+                e.preventDefault();
+                nastavVybrany((v) => (v - 1 + nalezy.length) % nalezy.length);
+              }
+              if (e.key === "Enter" && nalezy[vybrany]) otevri(nalezy[vybrany]);
+            }}
+            placeholder="Hledat v celém disku"
+            aria-label="Hledat v celém disku"
+            spellCheck={false}
+            className="min-w-0 flex-1 bg-transparent text-[19px] text-mac-text outline-none placeholder:text-mac-slaby focus-visible:outline-none"
+          />
+        </div>
+
+        {dotaz.trim() !== "" && (
+          <div className="border-t border-mac-linka">
+            {nalezy.length === 0 ? (
+              <p className="px-4 py-3 text-[13px] text-mac-slaby">Nic takového tu není.</p>
+            ) : (
+              nalezy.map((n, i) => (
+                <button
+                  key={slozMac(n.cesta)}
+                  type="button"
+                  onMouseEnter={() => nastavVybrany(i)}
+                  onClick={() => otevri(n)}
+                  className={`flex w-full items-center gap-3 px-4 py-2 text-left ${
+                    i === vybrany ? "bg-mac-akcent text-mac-akcent-text" : "text-mac-text"
+                  }`}
+                >
+                  <VelkaIkona uzel={n.uzel} />
+                  <span className="min-w-0 flex-1">
+                    <span className="block truncate text-[13px]">{n.uzel.jmeno}</span>
+                    {/* Cesta pod jménem je tu schválně: Spotlight neříká jen
+                        CO našel, ale hlavně KDE to leží. */}
+                    <span
+                      className={`block truncate text-[11px] ${
+                        i === vybrany ? "opacity-80" : "text-mac-slaby"
+                      }`}
+                    >
+                      {sVlnovkou(n.cesta.slice(0, -1))}
+                    </span>
+                  </span>
+                </button>
+              ))
+            )}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
+/** Přípony, které umí otevřít Poznámky. Totéž co ve Finderu. */
+const JE_TEXT = /\.(txt|plist|csv|md|xml|json|log)$|^\.?zshrc$/i;

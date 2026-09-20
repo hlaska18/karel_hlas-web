@@ -45,6 +45,7 @@ export function HorniLista({
   onOdhlasit,
   onZacitZnovu,
   onOMacu,
+  onSpotlight,
 }: {
   /** Nabídky aplikace vpředu. Jablko a jméno aplikace si lišta doplní sama. */
   nabidky: Nabidka[];
@@ -52,6 +53,7 @@ export function HorniLista({
   onOdhlasit: () => void;
   onZacitZnovu: () => void;
   onOMacu: () => void;
+  onSpotlight: () => void;
 }) {
   const { stav, poslat } = useMac();
   const [otevrena, nastavOtevrenou] = useState<string | null>(null);
@@ -159,9 +161,11 @@ export function HorniLista({
         skupina ikon dělá z pruhu nahoře „lištu Macu“ – bez nich to byl jen
         proužek s hodinami.
 
-        Nic z toho nic nedělá a je to přiznané v titulku. Předstírat Wi-Fi,
-        která se nepřipojí, nebo vyhledávání, které nic nenajde, by bylo horší
-        než je tam nemít.
+        Baterie, Wi-Fi a ovládací centrum nedělají nic a je to přiznané
+        v titulku: Wi-Fi, která se nepřipojí, by byla horší než žádná.
+
+        SPOTLIGHT JE VÝJIMKA a přesně z téhož důvodu. Nemusí nic předstírat –
+        disk tu je, takže hledá doopravdy a co najde, to otevře.
       */}
       <div className="ml-auto flex items-center gap-[10px] pr-1">
         <span title="Baterie – v téhle simulaci nefunguje" className="flex items-center">
@@ -173,9 +177,15 @@ export function HorniLista({
         <span title="Ovládací centrum – v téhle simulaci nefunguje" className="flex items-center">
           <SlidersHorizontal className="h-[14px] w-[14px] opacity-75" aria-hidden="true" />
         </span>
-        <span title="Spotlight – v téhle simulaci nefunguje" className="flex items-center">
-          <Search className="h-[14px] w-[14px] opacity-75" aria-hidden="true" />
-        </span>
+        <button
+          type="button"
+          title="Spotlight – hledání v celém disku"
+          aria-label="Spotlight – hledání v celém disku"
+          onClick={onSpotlight}
+          className="flex items-center rounded px-0.5 opacity-75 hover:opacity-100"
+        >
+          <Search className="h-[14px] w-[14px]" aria-hidden="true" />
+        </button>
         <span className="tabular-nums opacity-85">{cas ? datumSlovy(cas) : ""}</span>
         <span className="tabular-nums">{cas ? hodiny(cas) : "--:--"}</span>
       </div>
