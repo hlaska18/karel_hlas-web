@@ -16,6 +16,7 @@
 
 import { useState, type ReactNode } from "react";
 import { useMac } from "./system";
+import { useDzin, zmerSchovani } from "./Dzin";
 import type { Okno } from "@/lib/mac/stav";
 
 const MIN_SIRKA = 380;
@@ -86,7 +87,11 @@ export function OknoRamMac({
       if (smer === null) {
         // Okno se nesmí zasunout pod horní lištu – tam už by se nedalo chytit.
         const y = Math.max(0, puvodni.y + dy);
-        poslat({ typ: "okno/posun", id: okno.id, ram: { ...puvodni, x: puvodni.x + dx, y } });
+        poslat({
+          typ: "okno/posun",
+          id: okno.id,
+          ram: { ...puvodni, x: puvodni.x + dx, y },
+        });
         return;
       }
       let { x, y, w, h } = puvodni;
@@ -131,6 +136,7 @@ export function OknoRamMac({
 
   return (
     <div
+      data-okno={okno.id}
       className={`mac-vjezd absolute flex flex-col overflow-hidden bg-mac-povrch mac-bezvyberu ${
         okno.zvetsene ? "rounded-none" : "rounded-[16px]"
       }`}
@@ -147,7 +153,8 @@ export function OknoRamMac({
         className="relative flex h-[58px] shrink-0 items-center gap-3 border-b border-mac-linka bg-mac-panel px-4"
         onMouseDown={(e) => {
           // Na semaforu ani na ovládání v pruhu se netáhne – tam se kliká.
-          if ((e.target as HTMLElement).closest("[data-semafor],[data-naradi]")) return;
+          if ((e.target as HTMLElement).closest("[data-semafor],[data-naradi]"))
+            return;
           zacniTahat(e, null);
         }}
         onDoubleClick={() => poslat({ typ: "okno/zvetsi", id: okno.id })}
@@ -163,7 +170,9 @@ export function OknoRamMac({
         />
       </div>
 
-      <div className="relative min-h-0 flex-1 overflow-hidden">{children(slot)}</div>
+      <div className="relative min-h-0 flex-1 overflow-hidden">
+        {children(slot)}
+      </div>
 
       {!okno.zvetsene &&
         UCHYTY.map((u) => (
@@ -180,12 +189,29 @@ export function OknoRamMac({
 /** Tři puntíky. Barvu mají jen tehdy, když je okno aktivní – jako ve skutečnosti. */
 function Semafor({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
   const { poslat } = useMac();
+  const dzin = useDzin();
+
+  /**
+   * Schování do Docku. Okno ze stavu zmizí hned – přesně jako na Macu – a to,
+   * co se vsává, je jeho obrys. Se Shiftem to jede zpomaleně; ten vtípek má
+   * Apple v systému od roku 2001 a Shift není ⌘, takže se vejde i sem.
+   */
+  const schovej = (e: React.MouseEvent) => {
+    const zmereno = zmerSchovani(okno.id, okno.app);
+    const doStavu = () => poslat({ typ: "okno/minimalizuj", id: okno.id });
+    if (!zmereno) {
+      doStavu();
+      return;
+    }
+    doStavu();
+    dzin({ ...zmereno, smer: 1, pomalu: e.shiftKey });
+  };
 
   const puntik = (
     barva: string,
     popis: string,
     znak: ReactNode,
-    akce: () => void,
+    akce: (e: React.MouseEvent) => void,
   ) => (
     <button
       type="button"
@@ -193,24 +219,30 @@ function Semafor({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
       aria-label={popis}
       onClick={(e) => {
         e.stopPropagation();
-        akce();
+        akce(e);
       }}
       className="flex h-[13px] w-[13px] items-center justify-center rounded-full text-black/60 transition-colors"
       style={{ backgroundColor: aktivni ? barva : "rgb(var(--mac-linka))" }}
     >
       {/* Symbol se ukáže až při najetí na semafor, přesně jako na Macu. */}
-      <span className="opacity-0 transition-opacity group-hover/semafor:opacity-100">{znak}</span>
+      <span className="opacity-0 transition-opacity group-hover/semafor:opacity-100">
+        {znak}
+      </span>
     </button>
   );
 
   return (
-    <div data-semafor className="group/semafor z-10 flex items-center gap-[9px]">
-      {puntik("#ff5f57", "Zavřít okno (aplikace poběží dál)", <ZnakZavrit />, () =>
-        poslat({ typ: "okno/zavri", id: okno.id }),
+    <div
+      data-semafor
+      className="group/semafor z-10 flex items-center gap-[9px]"
+    >
+      {puntik(
+        "#ff5f57",
+        "Zavřít okno (aplikace poběží dál)",
+        <ZnakZavrit />,
+        () => poslat({ typ: "okno/zavri", id: okno.id }),
       )}
-      {puntik("#febc2e", "Schovat okno do Docku", <ZnakSchovat />, () =>
-        poslat({ typ: "okno/minimalizuj", id: okno.id }),
-      )}
+      {puntik("#febc2e", "Schovat okno do Docku", <ZnakSchovat />, schovej)}
       {puntik(
         "#28c840",
         okno.zvetsene ? "Zmenšit okno" : "Zvětšit okno",
@@ -249,7 +281,13 @@ function ZnakZavrit() {
 function ZnakSchovat() {
   return (
     <svg viewBox="0 0 10 10" className={RAMEC} aria-hidden="true">
-      <path d="M2 5 H8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" fill="none" />
+      <path
+        d="M2 5 H8"
+        stroke="currentColor"
+        strokeWidth="1.6"
+        strokeLinecap="round"
+        fill="none"
+      />
     </svg>
   );
 }

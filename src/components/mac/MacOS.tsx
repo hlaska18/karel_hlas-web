@@ -17,6 +17,7 @@ import { OknoRamMac } from "./OknoRam";
 import { HorniLista, type Nabidka } from "./HorniLista";
 import { Dock, VZHLED_APLIKACI } from "./Dock";
 import { Plocha } from "./Plocha";
+import { DzinProvider } from "./Dzin";
 import { APLIKACE_BALICKU, VelkaIkona } from "./ikony";
 import { PanelUkoluMac } from "./PanelUkolu";
 import { PrihlaseniMac } from "./Prihlaseni";
@@ -42,7 +43,8 @@ import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import { zapomenMac } from "@/lib/mac/stav";
 
 type Faze = "prihlaseni" | "bezi";
-type Panel = null | "vynutit" | "oMacu" | "znovu" | "jdi" | "launchpad" | "spotlight";
+type Panel =
+  null | "vynutit" | "oMacu" | "znovu" | "jdi" | "launchpad" | "spotlight";
 
 export function VirtualniMac() {
   return (
@@ -77,7 +79,8 @@ function Obrazovka() {
     // `typeof`, ne rovnou `new`: ResizeObserver umí až Safari 13.1, ale cíl
     // webu sahá na Safari 12 (viz .browserslistrc). Bez téhle pojistky by
     // konstruktor vyhodil ReferenceError a shodil celé prostředí.
-    const sledovac = typeof ResizeObserver === "undefined" ? null : new ResizeObserver(zmer);
+    const sledovac =
+      typeof ResizeObserver === "undefined" ? null : new ResizeObserver(zmer);
     sledovac?.observe(prvek);
     window.addEventListener("resize", zmer);
     return () => {
@@ -111,7 +114,11 @@ function Obrazovka() {
       if (e.ctrlKey && e.altKey && e.key === "Escape") {
         e.preventDefault();
         otevriVynuceni();
-      } else if (e.ctrlKey && e.shiftKey && (e.key === "." || e.code === "Period")) {
+      } else if (
+        e.ctrlKey &&
+        e.shiftKey &&
+        (e.key === "." || e.code === "Period")
+      ) {
         e.preventDefault();
         poslat({
           typ: "nastaveni/zmen",
@@ -191,7 +198,8 @@ function Obrazovka() {
    * vypadá rozbitě; zešedlá položka je naopak běžný stav i na skutečném Macu.
    */
   const nabidky: Nabidka[] = (() => {
-    const mojeOkna = () => stav.okna.filter((o) => o.app === vpredu && !o.minimalizovane);
+    const mojeOkna = () =>
+      stav.okna.filter((o) => o.app === vpredu && !o.minimalizovane);
     const posledniOkno = () => {
       const moje = mojeOkna();
       return moje.length ? moje.reduce((a, b) => (a.z > b.z ? a : b)) : null;
@@ -214,7 +222,9 @@ function Obrazovka() {
     };
     const napoveda: Nabidka = {
       titul: "Nápověda",
-      polozky: [{ text: "Nápověda pro macOS", akce: () => nastavPanel("oMacu") }],
+      polozky: [
+        { text: "Nápověda pro macOS", akce: () => nastavPanel("oMacu") },
+      ],
     };
     /* Schránka a Zpět tu nejsou udělané. Nabídka Úpravy ale na Macu je vždycky,
        takže se ukáže zešedlá – chybějící nabídka by vypadala jako závada. */
@@ -233,16 +243,31 @@ function Obrazovka() {
          není – to dělá skutečný Finder taky. */
       const finderVpredu = mojeOkna().sort((a, b) => b.z - a.z)[0];
       const jdi = (kam: string[]) => {
-        if (finderVpredu) poslat({ typ: "okno/arg", id: finderVpredu.id, arg: slozMac(kam) });
+        if (finderVpredu)
+          poslat({ typ: "okno/arg", id: finderVpredu.id, arg: slozMac(kam) });
         else spust("finder", slozMac(kam));
       };
       return [
         {
           titul: "Soubor",
           polozky: [
-            { text: "Nové okno Finderu", zkratka: "⌘N", akce: () => spust("finder", slozMac(PLOCHA)) },
-            { text: "Nová složka", zkratka: "⇧⌘N", zesedle: true, oddelovac: true },
-            { text: "Informace", zkratka: "⌘I", zesedle: true, oddelovac: true },
+            {
+              text: "Nové okno Finderu",
+              zkratka: "⌘N",
+              akce: () => spust("finder", slozMac(PLOCHA)),
+            },
+            {
+              text: "Nová složka",
+              zkratka: "⇧⌘N",
+              zesedle: true,
+              oddelovac: true,
+            },
+            {
+              text: "Informace",
+              zkratka: "⌘I",
+              zesedle: true,
+              oddelovac: true,
+            },
             { text: "Zavřít okno", zkratka: "⌘W", akce: zavriOkno },
           ],
         },
@@ -251,7 +276,12 @@ function Obrazovka() {
           titul: "Zobrazení",
           polozky: [
             { text: "Jako ikony", zkratka: "⌘1", zesedle: true },
-            { text: "Jako seznam", zkratka: "⌘2", zesedle: true, oddelovac: true },
+            {
+              text: "Jako seznam",
+              zkratka: "⌘2",
+              zesedle: true,
+              oddelovac: true,
+            },
             {
               text: stav.nastaveni.skrytePolozky
                 ? "Skrýt položky s tečkou"
@@ -274,9 +304,23 @@ function Obrazovka() {
             { text: "Plocha", zkratka: "⇧⌘D", akce: () => jdi(PLOCHA) },
             { text: "Dokumenty", zkratka: "⇧⌘O", akce: () => jdi(DOKUMENTY) },
             { text: "Stažené", zkratka: "⌥⌘L", akce: () => jdi(STAZENE) },
-            { text: "Aplikace", zkratka: "⇧⌘A", akce: () => jdi(SLOZKA_APLIKACI), oddelovac: true },
-            { text: "Počítač", zkratka: "⇧⌘C", akce: () => jdi([KOREN]), oddelovac: true },
-            { text: "Přejít do složky…", zkratka: "⇧⌘G", akce: () => nastavPanel("jdi") },
+            {
+              text: "Aplikace",
+              zkratka: "⇧⌘A",
+              akce: () => jdi(SLOZKA_APLIKACI),
+              oddelovac: true,
+            },
+            {
+              text: "Počítač",
+              zkratka: "⇧⌘C",
+              akce: () => jdi([KOREN]),
+              oddelovac: true,
+            },
+            {
+              text: "Přejít do složky…",
+              zkratka: "⇧⌘G",
+              akce: () => nastavPanel("jdi"),
+            },
           ],
         },
         okno,
@@ -292,7 +336,8 @@ function Obrazovka() {
             {
               text: "Nová poznámka",
               zkratka: "⌘N",
-              akce: () => spust("poznamky", slozMac([...DOKUMENTY, "Poznámka.txt"])),
+              akce: () =>
+                spust("poznamky", slozMac([...DOKUMENTY, "Poznámka.txt"])),
             },
             { text: "Uložit", zkratka: "⌘S", zesedle: true, oddelovac: true },
             { text: "Zavřít okno", zkratka: "⌘W", akce: zavriOkno },
@@ -346,7 +391,11 @@ function Obrazovka() {
               onClick={prepniCelou}
               className="flex items-center gap-2 rounded-md bg-black/40 px-3 py-2 text-[12px] text-white backdrop-blur hover:bg-black/60"
             >
-              {celaObrazovka ? <Minimize2 className="h-4 w-4" /> : <Maximize2 className="h-4 w-4" />}
+              {celaObrazovka ? (
+                <Minimize2 className="h-4 w-4" />
+              ) : (
+                <Maximize2 className="h-4 w-4" />
+              )}
               {celaObrazovka ? "Zpět z celé obrazovky" : "Celá obrazovka"}
             </button>
             <Link
@@ -370,35 +419,48 @@ function Obrazovka() {
             onSpotlight={() => nastavPanel("spotlight")}
           />
 
-          <div
-            ref={plochaRef}
-            className="mac-tapeta relative min-h-0 flex-1"
-            data-tapeta={stav.nastaveni.tapeta}
-          >
-            <Plocha />
+          <DzinProvider>
+            <div
+              ref={plochaRef}
+              className="mac-tapeta relative min-h-0 flex-1"
+              data-tapeta={stav.nastaveni.tapeta}
+            >
+              <Plocha />
 
-            {stav.okna.map((okno) => (
-              <OknoSAplikaci
-                key={okno.id}
-                okno={okno}
-                aktivni={okno.z === nejvyssiZ}
-                onZacitZnovu={() => nastavPanel("znovu")}
-              />
-            ))}
+              {stav.okna.map((okno) => (
+                <OknoSAplikaci
+                  key={okno.id}
+                  okno={okno}
+                  aktivni={okno.z === nejvyssiZ}
+                  onZacitZnovu={() => nastavPanel("znovu")}
+                />
+              ))}
 
-            <PanelUkoluMac />
+              <PanelUkoluMac />
 
-            <Dock onLaunchpad={() => nastavPanel("launchpad")} />
+              <Dock onLaunchpad={() => nastavPanel("launchpad")} />
 
-            {panel === "vynutit" && <VynutitUkonceni zavri={() => nastavPanel(null)} />}
-            {panel === "oMacu" && <OMacu zavri={() => nastavPanel(null)} />}
-            {panel === "znovu" && (
-              <ZacitZnovu zavri={() => nastavPanel(null)} potvrd={zacitZnovu} />
-            )}
-            {panel === "jdi" && <PrejitDoSlozky zavri={() => nastavPanel(null)} />}
-            {panel === "launchpad" && <Launchpad zavri={() => nastavPanel(null)} />}
-            {panel === "spotlight" && <Spotlight zavri={() => nastavPanel(null)} />}
-          </div>
+              {panel === "vynutit" && (
+                <VynutitUkonceni zavri={() => nastavPanel(null)} />
+              )}
+              {panel === "oMacu" && <OMacu zavri={() => nastavPanel(null)} />}
+              {panel === "znovu" && (
+                <ZacitZnovu
+                  zavri={() => nastavPanel(null)}
+                  potvrd={zacitZnovu}
+                />
+              )}
+              {panel === "jdi" && (
+                <PrejitDoSlozky zavri={() => nastavPanel(null)} />
+              )}
+              {panel === "launchpad" && (
+                <Launchpad zavri={() => nastavPanel(null)} />
+              )}
+              {panel === "spotlight" && (
+                <Spotlight zavri={() => nastavPanel(null)} />
+              )}
+            </div>
+          </DzinProvider>
         </div>
       )}
     </div>
@@ -421,10 +483,12 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
     <div className="absolute inset-0 z-[850] flex items-start justify-center bg-black/25 pt-[12vh]">
       <div className="mac-vjezd w-[380px] overflow-hidden rounded-xl bg-mac-povrch shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
         <div className="border-b border-mac-linka bg-mac-panel px-4 py-3">
-          <h2 className="text-[13px] font-semibold text-mac-text">Vynutit ukončení aplikací</h2>
+          <h2 className="text-[13px] font-semibold text-mac-text">
+            Vynutit ukončení aplikací
+          </h2>
           <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
-            Tady je vidět, co běží. Zavřené okno program nezastaví – pokud je
-            v seznamu, běží dál.
+            Tady je vidět, co běží. Zavřené okno program nezastaví – pokud je v
+            seznamu, běží dál.
           </p>
         </div>
 
@@ -463,7 +527,11 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
           <button
             type="button"
             disabled={!vybrana || vybrana === "finder"}
-            title={vybrana === "finder" ? "Finder ukončit nejde, dá se jen znovu spustit." : undefined}
+            title={
+              vybrana === "finder"
+                ? "Finder ukončit nejde, dá se jen znovu spustit."
+                : undefined
+            }
             onClick={() => {
               if (vybrana) poslat({ typ: "app/ukonci", app: vybrana });
               zavri();
@@ -512,7 +580,10 @@ function Launchpad({ zavri }: { zavri: () => void }) {
   // Bez diakritiky a bez ohledu na velikost písmen: „poznamky" má najít
   // Poznámky, jinak by hledání bylo k ničemu na české klávesnici.
   const bezDiakritiky = (t: string) =>
-    t.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+    t
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
   const hledane = bezDiakritiky(hledani.trim());
   const nalezene = (Object.keys(APLIKACE) as AppId[]).filter(
     (app) => !hledane || bezDiakritiky(APLIKACE[app].nazev).includes(hledane),
@@ -557,7 +628,10 @@ function Launchpad({ zavri }: { zavri: () => void }) {
                 className="flex h-[70px] w-[70px] items-center justify-center rounded-[22%] shadow-lg transition-transform hover:scale-105"
                 style={{ background: VZHLED_APLIKACI[app].pozadi }}
               >
-                <Z style={{ color: VZHLED_APLIKACI[app].barva }} className="h-9 w-9" />
+                <Z
+                  style={{ color: VZHLED_APLIKACI[app].barva }}
+                  className="h-9 w-9"
+                />
               </span>
               <span
                 className="text-center text-[12px] leading-tight text-white"
@@ -569,7 +643,9 @@ function Launchpad({ zavri }: { zavri: () => void }) {
           );
         })}
         {nalezene.length === 0 && (
-          <p className="col-span-4 text-[13px] text-white/75">Žádná aplikace tomu neodpovídá.</p>
+          <p className="col-span-4 text-[13px] text-white/75">
+            Žádná aplikace tomu neodpovídá.
+          </p>
         )}
       </div>
     </div>
@@ -599,9 +675,10 @@ function PrejitDoSlozky({ zavri }: { zavri: () => void }) {
     const zadano = text.trim();
     // Vlnovka je na Macu domovská složka a žák ji vidí v Terminálu i dole
     // ve Finderu, takže ji tohle okénko musí brát taky.
-    const casti = zadano === "~" || zadano.startsWith("~/")
-      ? [...DOMOV, ...rozlozMac(zadano.slice(1)).slice(1)]
-      : rozlozMac(zadano);
+    const casti =
+      zadano === "~" || zadano.startsWith("~/")
+        ? [...DOMOV, ...rozlozMac(zadano.slice(1)).slice(1)]
+        : rozlozMac(zadano);
     if (!najdiSlozku(stav.disk, casti)) {
       nastavChybu("Složka s touhle cestou tu není.");
       return;
@@ -618,7 +695,9 @@ function PrejitDoSlozky({ zavri }: { zavri: () => void }) {
   return (
     <div className="absolute inset-0 z-[860] flex items-start justify-center bg-black/20 pt-[16vh]">
       <div className="mac-vjezd w-[460px] rounded-xl bg-mac-povrch p-5 shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
-        <h2 className="text-[13px] font-semibold text-mac-text">Přejít do složky:</h2>
+        <h2 className="text-[13px] font-semibold text-mac-text">
+          Přejít do složky:
+        </h2>
         <input
           ref={pole}
           value={text}
@@ -634,7 +713,9 @@ function PrejitDoSlozky({ zavri }: { zavri: () => void }) {
           spellCheck={false}
           className="mt-3 w-full rounded-md border border-mac-linka bg-mac-povrch px-3 py-2 font-mono text-[13px] text-mac-text outline-none focus-visible:outline-none"
         />
-        <p className={`mt-2 h-4 text-[11px] ${chyba ? "text-[#c0392b]" : "text-mac-slaby"}`}>
+        <p
+          className={`mt-2 h-4 text-[11px] ${chyba ? "text-[#c0392b]" : "text-mac-slaby"}`}
+        >
           {chyba || "Například /Users/zak/Documents nebo /Volumes/FLASH"}
         </p>
         <div className="mt-3 flex justify-end gap-2">
@@ -664,15 +745,23 @@ function PrejitDoSlozky({ zavri }: { zavri: () => void }) {
  * Text vyjmenovává, co se ztratí. Samotné „opravdu?“ nikdo nečte – a tohle
  * je jediná věc v prostředí, která se nedá vzít zpět.
  */
-function ZacitZnovu({ zavri, potvrd }: { zavri: () => void; potvrd: () => void }) {
+function ZacitZnovu({
+  zavri,
+  potvrd,
+}: {
+  zavri: () => void;
+  potvrd: () => void;
+}) {
   return (
     <div className="absolute inset-0 z-[860] flex items-start justify-center bg-black/25 pt-[14vh]">
       <div className="mac-vjezd w-[400px] overflow-hidden rounded-xl bg-mac-povrch shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
         <div className="px-5 py-4">
-          <h2 className="text-[14px] font-semibold text-mac-text">Začít úplně od začátku?</h2>
+          <h2 className="text-[14px] font-semibold text-mac-text">
+            Začít úplně od začátku?
+          </h2>
           <p className="mt-2 text-[12px] leading-relaxed text-mac-slaby">
-            Smažou se všechny soubory, které sis vytvořil, vrátí se nastavení
-            a vynulují se odškrtnuté úlohy. Budeš se muset znovu přihlásit kódem
+            Smažou se všechny soubory, které sis vytvořil, vrátí se nastavení a
+            vynulují se odškrtnuté úlohy. Budeš se muset znovu přihlásit kódem
             od vyučujícího. Tohle se nedá vzít zpět.
           </p>
         </div>
@@ -702,7 +791,9 @@ function OMacu({ zavri }: { zavri: () => void }) {
   return (
     <div className="absolute inset-0 z-[850] flex items-center justify-center bg-black/25">
       <div className="mac-vjezd w-[420px] rounded-xl bg-mac-povrch p-6 text-center shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
-        <h2 className="text-[17px] font-semibold text-mac-text">Výuková simulace macOS</h2>
+        <h2 className="text-[17px] font-semibold text-mac-text">
+          Výuková simulace macOS
+        </h2>
         <p className="mt-3 text-[13px] leading-relaxed text-mac-slaby">
           Neběží tu skutečný systém a nic se neinstaluje. Všechno, co tady
           uděláš, se děje jen v téhle záložce prohlížeče – tvého počítače se to
@@ -752,10 +843,14 @@ function OknoSAplikaci({
   const { poslat } = useMac();
 
   const nastavTitul = useCallback(
-    (titul: string, arg?: string) => poslat({ typ: "okno/titul", id: okno.id, titul, arg }),
+    (titul: string, arg?: string) =>
+      poslat({ typ: "okno/titul", id: okno.id, titul, arg }),
     [okno.id, poslat],
   );
-  const zavri = useCallback(() => poslat({ typ: "okno/zavri", id: okno.id }), [okno.id, poslat]);
+  const zavri = useCallback(
+    () => poslat({ typ: "okno/zavri", id: okno.id }),
+    [okno.id, poslat],
+  );
 
   // Bez `useMemo` by kontext dostal při každém překreslení novou referenci
   // a efekty uvnitř aplikace by se spouštěly pořád dokola.
@@ -775,7 +870,13 @@ function OknoSAplikaci({
   );
 }
 
-function Aplikace({ app, onZacitZnovu }: { app: AppId; onZacitZnovu: () => void }) {
+function Aplikace({
+  app,
+  onZacitZnovu,
+}: {
+  app: AppId;
+  onZacitZnovu: () => void;
+}) {
   switch (app) {
     case "finder":
       return <Finder />;
@@ -873,7 +974,9 @@ function Spotlight({ zavri }: { zavri: () => void }) {
         {dotaz.trim() !== "" && (
           <div className="border-t border-mac-linka">
             {nalezy.length === 0 ? (
-              <p className="px-4 py-3 text-[13px] text-mac-slaby">Nic takového tu není.</p>
+              <p className="px-4 py-3 text-[13px] text-mac-slaby">
+                Nic takového tu není.
+              </p>
             ) : (
               nalezy.map((n, i) => (
                 <button
@@ -882,12 +985,16 @@ function Spotlight({ zavri }: { zavri: () => void }) {
                   onMouseEnter={() => nastavVybrany(i)}
                   onClick={() => otevri(n)}
                   className={`flex w-full items-center gap-3 px-4 py-2 text-left ${
-                    i === vybrany ? "bg-mac-akcent text-mac-akcent-text" : "text-mac-text"
+                    i === vybrany
+                      ? "bg-mac-akcent text-mac-akcent-text"
+                      : "text-mac-text"
                   }`}
                 >
                   <VelkaIkona uzel={n.uzel} />
                   <span className="min-w-0 flex-1">
-                    <span className="block truncate text-[13px]">{n.uzel.jmeno}</span>
+                    <span className="block truncate text-[13px]">
+                      {n.uzel.jmeno}
+                    </span>
                     {/* Cesta pod jménem je tu schválně: Spotlight neříká jen
                         CO našel, ale hlavně KDE to leží. */}
                     <span

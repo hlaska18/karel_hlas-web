@@ -71,7 +71,12 @@ import {
   volneJmeno,
   type Uzel,
 } from "@/lib/win/fs";
-import { datumCas, velikostPodrobne, velikostSloupec, velikostText } from "@/lib/win/format";
+import {
+  datumCas,
+  velikostPodrobne,
+  velikostSloupec,
+  velikostText,
+} from "@/lib/win/format";
 
 const MISTA = [
   { jmeno: "zak", cesta: DOMOV, znak: House },
@@ -104,17 +109,24 @@ export function Finder() {
   const { arg, nastavTitul, slotZahlavi } = useOknoMac();
 
   /** Historie chození tam a zpět. Index ukazuje, kde v ní právě stojíme. */
-  const [historie, nastavHistorii] = useState<string[][]>([arg ? rozlozMac(arg) : PLOCHA]);
+  const [historie, nastavHistorii] = useState<string[][]>([
+    arg ? rozlozMac(arg) : PLOCHA,
+  ]);
   const [kde, nastavKde] = useState(0);
   const [vybrano, nastavVybrano] = useState<string | null>(null);
-  const [nabidka, nastavNabidku] = useState<{ x: number; y: number; jmeno: string | null } | null>(
-    null,
-  );
+  const [nabidka, nastavNabidku] = useState<{
+    x: number;
+    y: number;
+    jmeno: string | null;
+  } | null>(null);
   const [informace, nastavInformace] = useState<string | null>(null);
   const [prejmenovavany, nastavPrejmenovavany] = useState<string | null>(null);
   const [novyNazev, nastavNovyNazev] = useState("");
   const [hledani, nastavHledani] = useState("");
-  const [hlaska, nastavHlasku] = useState<{ nadpis: string; text: string } | null>(null);
+  const [hlaska, nastavHlasku] = useState<{
+    nadpis: string;
+    text: string;
+  } | null>(null);
   /**
    * Finder ve skutecnosti startuje v zobrazeni IKON, ne v seznamu – proto je
    * to vychozi i tady. Seznam je pak ta druha moznost, ne naopak.
@@ -161,7 +173,8 @@ export function Finder() {
   }, [cesta, stopa]);
 
   useEffect(() => {
-    if (prejmenovavany) window.setTimeout(() => polePrejmenovani.current?.select(), 30);
+    if (prejmenovavany)
+      window.setTimeout(() => polePrejmenovani.current?.select(), 30);
   }, [prejmenovavany]);
 
   const jdi = useCallback(
@@ -180,7 +193,9 @@ export function Finder() {
       ? slozka.deti
       : slozka.deti.filter((d) => !jeSkryte(d.jmeno));
     const h = hledani.trim().toLowerCase();
-    const filtrovane = h ? vse.filter((d) => d.jmeno.toLowerCase().includes(h)) : vse;
+    const filtrovane = h
+      ? vse.filter((d) => d.jmeno.toLowerCase().includes(h))
+      : vse;
     // Složky napřed, pak podle abecedy – Finder to tak dělá ve výchozím stavu.
     return [...filtrovane].sort((a, b) => {
       const as = jeProstaSlozka(a);
@@ -231,7 +246,10 @@ export function Finder() {
   const zalozSlozku = () => {
     if (!slozka) return;
     const jmeno = volneJmeno(slozka, "nová složka");
-    poslat({ typ: "disk/nastav", disk: vloz(stav.disk, cesta, vytvorSlozku(jmeno)) });
+    poslat({
+      typ: "disk/nastav",
+      disk: vloz(stav.disk, cesta, vytvorSlozku(jmeno)),
+    });
     nastavVybrano(jmeno);
     nastavNovyNazev(jmeno);
     nastavPrejmenovavany(jmeno);
@@ -335,7 +353,9 @@ export function Finder() {
     return seznam;
   };
 
-  const uzelInformace = informace ? slozka?.deti.find((d) => d.jmeno === informace) : null;
+  const uzelInformace = informace
+    ? slozka?.deti.find((d) => d.jmeno === informace)
+    : null;
 
   /**
    * Ovládání Finderu patří do TÉHOŽ pruhu jako semafor a název okna – tak to
@@ -376,7 +396,9 @@ export function Finder() {
         }`}
       />
     ) : (
-      <span className={nastred ? "line-clamp-2 break-words" : "truncate"}>{u.jmeno}</span>
+      <span className={nastred ? "line-clamp-2 break-words" : "truncate"}>
+        {u.jmeno}
+      </span>
     );
 
   const naradi = slotZahlavi
@@ -460,7 +482,10 @@ export function Finder() {
   return (
     <div className="mac-bezvyberu flex h-full bg-mac-povrch text-[13px] text-mac-text">
       {naradi}
-      <aside className="mac-posuv w-[180px] shrink-0 overflow-y-auto border-r border-mac-linka bg-mac-postranni px-2 py-3">
+      <aside
+        data-postranni
+        className="mac-posuv w-[180px] shrink-0 overflow-y-auto border-r border-mac-linka bg-mac-postranni px-2 py-3"
+      >
         <Skupina nazev="Oblíbené" />
         {MISTA.map((m) => (
           <PolozkaBoku
@@ -525,14 +550,20 @@ export function Finder() {
                     onContextMenu={(e) => {
                       e.preventDefault();
                       nastavVybrano(u.jmeno);
-                      nastavNabidku({ x: e.clientX, y: e.clientY, jmeno: u.jmeno });
+                      nastavNabidku({
+                        x: e.clientX,
+                        y: e.clientY,
+                        jmeno: u.jmeno,
+                      });
                     }}
                     className="flex cursor-default flex-col items-center gap-1 px-2"
                   >
                     <IkonaPolozky uzel={u} barevne velke />
                     <span
                       className={`max-w-full rounded-[7px] px-1.5 text-center text-[12px] leading-[15px] ${
-                        vybrana ? "bg-mac-akcent text-mac-akcent-text" : "text-mac-text"
+                        vybrana
+                          ? "bg-mac-akcent text-mac-akcent-text"
+                          : "text-mac-text"
                       }`}
                     >
                       {jmenoNeboPole(u, true)}
@@ -546,8 +577,12 @@ export function Finder() {
               <thead className="sticky top-0 bg-mac-panel text-[11px] uppercase tracking-wide text-mac-slaby">
                 <tr>
                   <th className="px-3 py-1.5 text-left font-medium">Název</th>
-                  <th className="w-[160px] px-3 py-1.5 text-left font-medium">Datum změny</th>
-                  <th className="w-[90px] px-3 py-1.5 text-right font-medium">Velikost</th>
+                  <th className="w-[160px] px-3 py-1.5 text-left font-medium">
+                    Datum změny
+                  </th>
+                  <th className="w-[90px] px-3 py-1.5 text-right font-medium">
+                    Velikost
+                  </th>
                 </tr>
               </thead>
               <tbody>
@@ -561,7 +596,11 @@ export function Finder() {
                       onContextMenu={(e) => {
                         e.preventDefault();
                         nastavVybrano(u.jmeno);
-                        nastavNabidku({ x: e.clientX, y: e.clientY, jmeno: u.jmeno });
+                        nastavNabidku({
+                          x: e.clientX,
+                          y: e.clientY,
+                          jmeno: u.jmeno,
+                        });
                       }}
                       className={`cursor-default ${
                         vybranaRadka
@@ -577,7 +616,9 @@ export function Finder() {
                         {datumCas(u.zmeneno)}
                       </td>
                       <td className="px-3 py-1.5 text-right tabular-nums opacity-80">
-                        {jeProstaSlozka(u) ? "--" : velikostSloupec(velikost(u))}
+                        {jeProstaSlozka(u)
+                          ? "--"
+                          : velikostSloupec(velikost(u))}
                       </td>
                     </tr>
                   );
@@ -610,7 +651,11 @@ export function Finder() {
       )}
 
       {hlaska && (
-        <Hlaska nadpis={hlaska.nadpis} text={hlaska.text} zavri={() => nastavHlasku(null)} />
+        <Hlaska
+          nadpis={hlaska.nadpis}
+          text={hlaska.text}
+          zavri={() => nastavHlasku(null)}
+        />
       )}
 
       {uzelInformace && (
@@ -659,7 +704,8 @@ export function Finder() {
 function druh(u: Uzel): string {
   if (jeBalicek(u.jmeno)) return "Balíček aplikace (je to složka)";
   if (jeSlozka(u)) return "Složka";
-  if (jeSkryte(u.jmeno)) return "Dokument (jméno začíná tečkou, proto se běžně neukazuje)";
+  if (jeSkryte(u.jmeno))
+    return "Dokument (jméno začíná tečkou, proto se běžně neukazuje)";
   return "Dokument";
 }
 
@@ -676,7 +722,8 @@ function IkonaPolozky({
   if (jeBalicek(uzel.jmeno)) {
     return <Package className={`h-4 w-4 ${barevne ? "text-mac-slaby" : ""}`} />;
   }
-  if (jeSlozka(uzel)) return <Folder className={`h-4 w-4 ${barevne ? "text-mac-akcent" : ""}`} />;
+  if (jeSlozka(uzel))
+    return <Folder className={`h-4 w-4 ${barevne ? "text-mac-akcent" : ""}`} />;
   return <FileText className="h-4 w-4 opacity-70" />;
 }
 
@@ -710,7 +757,9 @@ function Hlaska({
     <div className="absolute inset-0 z-[80] flex items-center justify-center bg-black/20">
       <div className="mac-vjezd w-[320px] rounded-xl bg-mac-povrch p-5 text-center shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
         <p className="text-[13px] font-semibold text-mac-text">{nadpis}</p>
-        <p className="mt-2 text-[12px] leading-relaxed text-mac-slaby">{text}</p>
+        <p className="mt-2 text-[12px] leading-relaxed text-mac-slaby">
+          {text}
+        </p>
         <button
           type="button"
           onClick={zavri}
@@ -725,7 +774,9 @@ function Hlaska({
 
 function Skupina({ nazev }: { nazev: string }) {
   return (
-    <div className="px-2 pb-1 pt-4 text-[11px] font-semibold text-mac-slaby">{nazev}</div>
+    <div className="px-2 pb-1 pt-4 text-[11px] font-semibold text-mac-slaby">
+      {nazev}
+    </div>
   );
 }
 
@@ -747,7 +798,9 @@ function PolozkaBoku({
       // Vybrané místo má na Macu jemný šedý oblázek, ne plnou modrou –
       // ta patří vybranému SOUBORU ve výpisu, ne položce panelu.
       className={`flex w-full items-center gap-2 rounded-md px-2 py-[5px] text-left ${
-        aktivni ? "bg-mac-zvyrazneny font-medium text-mac-text" : "hover:bg-black/5"
+        aktivni
+          ? "bg-mac-zvyrazneny font-medium text-mac-text"
+          : "hover:bg-black/5"
       }`}
     >
       {znak}
