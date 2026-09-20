@@ -1013,6 +1013,51 @@
    se nemuselo přepínat myšlení.
    ═══════════════════════════════════════════════════════════════════════ */
 
+/* Písmo pro macOS simulaci.
+
+   Applovo San Francisco se sem nahrát NESMÍ: Apple ho licencuje na vývoj
+   a návrh pro svoje platformy, ne na vložení do webu přes @font-face.
+   Inter je pod SIL Open Font License, je navržené pro rozhraní v malých
+   velikostech a proporcemi je SF blízké.
+
+   PROČ VLASTNÍ SOUBOR A NE SYSTÉMOVÁ PÍSMA. Dřív tu stálo
+   `-apple-system, BlinkMacSystemFont, …, system-ui, sans-serif` s poznámkou,
+   že „jinde padne na to, co je po ruce – prostředí tím nic neztratí".
+   Změřeno 20. 9. 2026, že to neplatí, a to hned dvakrát:
+
+     1. `system-ui` je na Windows Segoe UI – tedy TOTÉŽ písmo, kterým začíná
+        `.win` výš. Na školním počítači se obě simulace vykreslily stejným
+        písmem a rozdíl, kvůli kterému ta hodina je, zmizel. Autor to nemohl
+        poznat, protože sedí u Macu, kde se použije SF.
+     2. `BlinkMacSystemFont` se chová jako `system-ui` (oba 285,9 px na témže
+        textu, zatímco `-apple-system` dá 254,4 px), takže Segoe UI chytlo
+        dřív než cokoli applovského.
+
+   Jeden VARIABILNÍ soubor pokryje všechny řezy; prostředí používá 400, 500
+   a 600. Podmnožiny jsou dvě, protože česká diakritika je rozdělená: čárky
+   (á, í, é) jsou v `latin`, ale háčky a kroužek (č, ě, ř, š, ž, ů) až
+   v `latin-ext`. Bez té druhé by čeština vypadala rozsypaně.
+
+   Variabilní písma umí Safari 11+ a Chrome 62+, tedy celý cíl
+   z `.browserslistrc` (safari 12, chrome 64). */
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-latin.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url("/fonts/inter-latin-ext.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
 .mac {
   --mac-povrch: 255 255 255;
   --mac-panel: 246 246 246;
@@ -1026,10 +1071,11 @@
   --mac-stin: 0 22px 60px rgba(0, 0, 0, 0.28), 0 2px 8px rgba(0, 0, 0, 0.14);
 
   color: rgb(var(--mac-text));
-  /* Systémové písmo Applu. Na Macu se opravdu použije SF, jinde padne na
-     to, co je po ruce – prostředí tím nic neztratí. */
-  font-family: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue",
-    ui-sans-serif, system-ui, sans-serif;
+  /* Inter je vynucený, ne navrhovaný: má být stejný na Macu i na školním
+     Windows PC, jinak by učitel viděl něco jiného než třída. Záloha za ním
+     je pro případ, že se soubor nenačte – a schválně v ní NENÍ `system-ui`
+     ani `BlinkMacSystemFont`, aby to nespadlo na písmo Windows. */
+  font-family: "Inter", -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
