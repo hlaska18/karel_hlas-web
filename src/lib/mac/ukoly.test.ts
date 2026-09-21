@@ -68,6 +68,18 @@ describe("vyhodnocení", () => {
     expect(vyhodnotMac(vychoziStavMac())).toEqual([]);
   });
 
+  it("Enter ve Finderu odškrtne úkol o přejmenování", () => {
+    const stav = reducerMac(vychoziStavMac(), { typ: "stopa", klic: "prejmenoval-enterem" });
+    expect(vyhodnotMac(stav)).toContain("enter-prejmenuje");
+    expect(vyhodnotMac(stav)).not.toContain("mezernik-nahled");
+  });
+
+  it("mezerník ve Finderu odškrtne úkol o Rychlém náhledu", () => {
+    const stav = reducerMac(vychoziStavMac(), { typ: "stopa", klic: "nahled-mezernikem" });
+    expect(vyhodnotMac(stav)).toContain("mezernik-nahled");
+    expect(vyhodnotMac(stav)).not.toContain("enter-prejmenuje");
+  });
+
   it("zavření okna Finderu odškrtne první úkol", () => {
     let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "finder" });
     stav = reducerMac(stav, { typ: "okno/zavri", id: stav.okna[0].id });

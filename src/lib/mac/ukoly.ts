@@ -39,6 +39,9 @@ export const SKUPINY_MAC = [
   "Cesta bez písmene disku",
   "Skrytý je tečka na začátku",
   "Aplikace je složka",
+  /* Dvě klávesy, které žák mačká ze zvyku a na Macu dělají něco jiného.
+     Obě jsou bez ⌘, takže je žák na windowsové klávesnici doopravdy má. */
+  "Klávesy dělají něco jiného",
 ] as const;
 
 const stopa = (stav: StavMac, klic: string) => stav.stopy.includes(klic);
@@ -239,7 +242,7 @@ export const UKOLY_MAC: UkolMac[] = [
     kroky: [
       "V okně Finderu klikni v postranním panelu na Macintosh HD.",
       "Dvakrát klikni na složku Applications.",
-      "Je v ní Finder.app, Terminál.app a další. Zkus na některou dvakrát kliknout – nic se nestane, chová se jako jeden kus.",
+      "Je v ní Finder.app, Terminál.app a další. Zkus na Terminál.app dvakrát kliknout – spustí se, jako by to byl jeden soubor.",
       "Klikni na Finder.app pravým tlačítkem a vyber Informace. U Druhu stojí, že je to balíček aplikace.",
       "Zavři Informace a klikni na Finder.app pravým tlačítkem znovu. Tentokrát vyber Zobrazit obsah balíčku.",
       "Jsi uvnitř. Je tam složka Contents a v ní MacOS se spustitelným souborem a Resources s ikonou.",
@@ -247,6 +250,38 @@ export const UKOLY_MAC: UkolMac[] = [
     ],
     skupina: "Aplikace je složka",
     hotovo: (s) => stopa(s, "balicek:otevrel"),
+  },
+
+  /* ─────────── Klávesy dělají něco jiného ─────────── */
+  {
+    id: "enter-prejmenuje",
+    nazev: "Stiskni Enter a sleduj, co se stane",
+    popis:
+      "Ve Windows Enter vybraný soubor otevře. Na Macu ho přejmenuje – a přesně na tohle po přechodu narazí skoro každý.",
+    kroky: [
+      "Otevři okno Finderu a v postranním panelu klikni na Plocha.",
+      "Klikni jednou na soubor Přečti si mě.txt, ať je vybraný – jméno zmodrá.",
+      "Stiskni Enter. Ve Windows by se teď soubor otevřel.",
+      "Tady se jméno změnilo v pole, do kterého se dá psát. Enter na Macu přejmenovává.",
+      "Stiskni Escape, ať jméno zůstane, jak bylo. Otevírá se tu dvojklikem.",
+    ],
+    skupina: "Klávesy dělají něco jiného",
+    hotovo: (s) => stopa(s, "prejmenoval-enterem"),
+  },
+  {
+    id: "mezernik-nahled",
+    nazev: "Podívej se do souboru, aniž bys ho otevřel",
+    popis:
+      "Ve Windows se do souboru podíváš jedině tak, že ho otevřeš v nějakém programu. Na Macu stačí mezerník – ukáže obsah a nic nespustí.",
+    kroky: [
+      "V postranním panelu Finderu klikni na Plocha.",
+      "Klikni jednou na soubor Přečti si mě.txt, ať je vybraný.",
+      "Stiskni mezerník. Vyskočí okénko s obsahem souboru – tomu se říká Rychlý náhled.",
+      "Podívej se nahoru na lištu: pořád tam stojí Finder. Žádný program se nespustil.",
+      "Stiskni mezerník ještě jednou a náhled zase zmizí.",
+    ],
+    skupina: "Klávesy dělají něco jiného",
+    hotovo: (s) => stopa(s, "nahled-mezernikem"),
   },
 ];
 
