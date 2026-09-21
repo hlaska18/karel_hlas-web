@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { Apple, ArrowUp, Database } from "lucide-react";
+import { ArrowUp, Database } from "lucide-react";
+import { ZnakJablko } from "@/components/ZnakJablko";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { Mark } from "@/components/Mark";
@@ -22,11 +23,13 @@ function IkonaWindows() {
       className="h-4 w-4 text-accent-700 dark:text-accent-400"
       aria-hidden="true"
     >
+      {/* Stejný tvar jako Start ve windowsové simulaci: zakulacené jen
+          vnější rohy, takže čtyři díly drží jeden čtverec. */}
       <g fill="currentColor">
-        <rect x="1" y="1" width="8" height="8" rx="1.2" />
-        <rect x="11" y="1" width="8" height="8" rx="1.2" />
-        <rect x="1" y="11" width="8" height="8" rx="1.2" />
-        <rect x="11" y="11" width="8" height="8" rx="1.2" />
+        <path d="M3.5 1H9v8H1V3.5A2.5 2.5 0 0 1 3.5 1Z" />
+        <path d="M11 1h5.5A2.5 2.5 0 0 1 19 3.5V9h-8V1Z" />
+        <path d="M1 11h8v8H3.5A2.5 2.5 0 0 1 1 16.5V11Z" />
+        <path d="M11 11h8v5.5a2.5 2.5 0 0 1-2.5 2.5H11v-8Z" />
       </g>
     </svg>
   );
@@ -64,7 +67,7 @@ export function Footer() {
           {/* macOS dosud nevedl odkaz odnikud – prostředí existovalo, ale
               nedalo se k němu dostat jinak než ručně napsanou adresou. */}
           <Link href="/macos" className={ODKAZ_NASTROJE}>
-            <Apple className="h-4 w-4 text-accent-700 dark:text-accent-400" fill="currentColor" />
+            <ZnakJablko className="h-4 w-4 text-accent-700 dark:text-accent-400" />
             {tr.footer.macos}
           </Link>
         </div>
