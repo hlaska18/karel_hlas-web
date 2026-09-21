@@ -228,25 +228,29 @@ function Rozbaleno({ polozky, zavri }: { polozky: Polozka[]; zavri: () => void }
 /**
  * Jablko v horní liště.
  *
- * Kreslené vlastní, stejně jako všechny ostatní značky v téhle simulaci –
- * Finder, složka, Launchpad. Do teď tu bylo obecné jablko z lucide, které má
- * stopku a list, ale ne ten typický zářez vpravo, takže v liště nečetlo jako
- * to, co na Macu vlevo nahoře doopravdy je.
+ * OBRYSOVÉ, na Karlovo přání podle vzoru z itshover.com. Kreslené vlastní,
+ * stejně jako ostatní značky v simulaci.
  *
- * Kreslí se v soustavě 24×24 a používá se v 15 px; zkontrolováno, že tvar
- * drží i v té velikosti, protože tam ho žák uvidí.
+ * Poučení z první verze: obrysová ikona se musí kreslit jako obrysová od
+ * začátku. Zkusil jsem nejdřív obtáhnout čarou plné jablko, a jeho úzké
+ * zákruty čára ve 15 px ucpala, takže z něj byla skvrna. Tenhle tvar má
+ * zákruty dost široké, aby v nich zůstalo místo i při tloušťce čáry.
+ * Zářez je vpravo a lístek je odtržený, jako na skutečném logu.
  */
 function ZnakJablko() {
   return (
-    <svg viewBox="0 0 24 24" className="h-[15px] w-[15px]" aria-hidden="true">
-      <path
-        d="M12.05 7.3c-1.5-1.3-4.1-1.35-5.75.3-2.45 2.45-2.1 7.5.2 11.1 1 1.55 2.15 3.1 3.6 3 1.15-.05 1.6-.75 3-.75s1.8.75 3 .7c1.45-.05 2.5-1.5 3.45-3.05.65-1.05 1-1.95 1.05-2.2-.05-.05-2.5-1.05-2.5-3.6 0-2.1 1.65-3.1 1.75-3.2-1.05-1.5-2.65-1.75-3.25-1.8-1.35-.1-2.65.85-3.55.85-.35 0-.65-.1-1-.35z"
-        fill="currentColor"
-      />
-      <path
-        d="M14.3 4.45c.8-.95 1.3-2.25 1.15-3.55-1.1.05-2.45.75-3.25 1.7-.7.85-1.35 2.2-1.15 3.45 1.25.1 2.45-.65 3.25-1.6z"
-        fill="currentColor"
-      />
+    <svg
+      viewBox="0 0 24 24"
+      className="h-[15px] w-[15px]"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+    >
+      <path d="M12 7.4C10.9 6.4 9 5.9 7.3 6.4 4.6 7.2 3.3 10 3.8 13.4 4.3 16.9 6.4 20.4 8.9 20.9 10.1 21.1 10.9 20.4 12 20.4 13.1 20.4 13.9 21.1 15.1 20.9 17 20.5 18.7 18.2 19.6 15.9 17.8 15.1 16.6 13.6 16.6 11.8 16.6 10.1 17.6 8.8 18.9 8.2 17.7 6.6 15.9 6 14.5 6.3 13.6 6.5 12.7 7 12 7.4Z" />
+      <path d="M12.4 5.2C12.3 3.6 13.5 2.2 15.3 2 15.4 3.6 14.2 5 12.4 5.2Z" />
     </svg>
   );
 }
