@@ -64,6 +64,8 @@ export interface NastaveniMac {
   tapeta: string;
   /** Strana ikony v Docku v pixelech. Mění se tažením za čárku v Docku. */
   dockVelikost: number;
+  /** Zvětšovat ikonu pod kurzorem? macOS tomu říká Zvětšení. */
+  dockZvetseni: boolean;
 }
 
 /** Meze velikosti Docku. Skutečný Mac má podobné – menší už není vidět,
@@ -91,7 +93,18 @@ export const VYCHOZI_NASTAVENI: NastaveniMac = {
   motiv: "svetly",
   tapeta: "stuhy",
   dockVelikost: 58,
+  /*
+   * Skutečný Mac má Zvětšení ve výchozím stavu VYPNUTÉ. Tady je zapnuté
+   * schválně: je to nejnápadnější věc, kterou Dock dělá a hlavní panel
+   * Windows ne, a funkce, kterou nikdo nezapne, nenaučí nic. Vypnout jde
+   * v Nastavení, stejně jako na Macu.
+   */
+  dockZvetseni: true,
 };
+
+/** Nejvyšší zvětšení ikony pod kurzorem a dosah, na který ještě působí. */
+export const DOCK_ZVETSENI_MAX = 1.6;
+export const DOCK_ZVETSENI_DOSAH = 2.2;
 
 export interface StavMac {
   verze: number;

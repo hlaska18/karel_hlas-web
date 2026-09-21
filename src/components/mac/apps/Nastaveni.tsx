@@ -94,6 +94,35 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
 
       <div className="my-6 h-px bg-mac-linka" />
 
+      <h2 className="text-[15px] font-semibold">Dock</h2>
+      <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
+        Velikost Docku se mění tažením za svislou čárku v něm, hned vedle koše.
+        Zvětšení nafoukne ikonu pod kurzorem – na skutečném Macu je vypnuté,
+        tady zapnuté, protože je to nejnápadnější věc, kterou hlavní panel
+        Windows nedělá.
+      </p>
+      <button
+        type="button"
+        onClick={() =>
+          poslat({
+            typ: "nastaveni/zmen",
+            zmena: { dockZvetseni: !stav.nastaveni.dockZvetseni },
+          })
+        }
+        className="mt-3 flex w-full items-center gap-3 rounded-lg border border-mac-linka bg-mac-povrch px-4 py-3 text-left text-[13px] hover:bg-mac-zvyrazneny"
+      >
+        Zvětšení ikon v Docku
+        <span
+          className={`ml-auto text-[11px] ${
+            stav.nastaveni.dockZvetseni ? "text-mac-akcent" : "text-mac-slaby"
+          }`}
+        >
+          {stav.nastaveni.dockZvetseni ? "zapnuto" : "vypnuto"}
+        </span>
+      </button>
+
+      <div className="my-6 h-px bg-mac-linka" />
+
       <h2 className="text-[15px] font-semibold">Obnovení</h2>
       <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
         Vrátí prostředí do stavu, ve kterém jsi ho dostal. Smažou se soubory,

@@ -15,7 +15,7 @@
  * takže jsou oba stavy vidět vedle sebe.
  */
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import {
   Download,
   FileText,
@@ -30,6 +30,8 @@ import {
   APLIKACE,
   DOCK_MAX,
   DOCK_MIN,
+  DOCK_ZVETSENI_DOSAH,
+  DOCK_ZVETSENI_MAX,
   type AppId,
   type Obdelnik,
 } from "@/lib/mac/stav";
@@ -274,6 +276,86 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
    */
   const [tazena, nastavTazenou] = useState<number | null>(null);
   const dzin = useDzin();
+  const rada = useRef<HTMLDivElement>(null);
+  const zvetsovat = stav.nastaveni.dockZvetseni;
+
+  /**
+   * Zvětšení ikony pod kurzorem.
+   *
+   * Samotné zvětšení nestačí – ikony by se překryly. Skutečný Dock je od sebe
+   * zároveň ODSOUVÁ, takže se každá posune o to, oč vyrostly ikony mezi ní
+   * a kurzorem.
+   *
+   * Měří se `offsetLeft`, ne `getBoundingClientRect()`. Rámeček totiž vrací
+   * rozměry UŽ ZVĚTŠENÉ, takže by se střed ikony hýbal podle vlastního
+   * zvětšení a celé by se to rozkmitalo. `offsetLeft` je z rozvržení a žádná
+   * transformace s ním nehne.
+   */
+  const zvetsi = (e: React.MouseEvent) => {
+    const obal = rada.current;
+    if (!zvetsovat || !obal) return;
+    const prvky = Array.from(
+      obal.querySelectorAll<HTMLElement>("[data-dock-ikona]"),
+    );
+    const x = e.clientX - obal.getBoundingClientRect().left;
+
+    const merky = prvky.map((p) => ({
+      prvek: p,
+      stred: p.offsetLeft + p.offsetWidth / 2,
+      sirka: p.offsetWidth,
+    }));
+    const mira = merky.map((m) => {
+      const d = Math.abs(x - m.stred) / (velikost * DOCK_ZVETSENI_DOSAH);
+      const v = Math.max(0, 1 - d);
+      // Vyhlazení, ať zvětšení nepřechází do okolí lomeně.
+      return 1 + (DOCK_ZVETSENI_MAX - 1) * (v * v * (3 - 2 * v));
+    });
+
+    /*
+     * Rozestup. Ikona roste symetricky kolem svého středu, takže ta pod
+     * kurzorem zůstává na místě a ostatní se od ní odsouvají přesně o to,
+     * oč povyrostly ony a všechny mezi nimi.
+     *
+     * Počítá se to po sousedech od té pod kurzorem ven, ne vzorcem na každou
+     * zvlášť – původní rozestupy tím zůstanou zachované včetně mezery
+     * u svislé čárky, která mezi ikonami taky stojí, ale ikona to není.
+     */
+    let pod = 0;
+    for (let i = 1; i < merky.length; i++) {
+      if (Math.abs(merky[i].stred - x) < Math.abs(merky[pod].stred - x))
+        pod = i;
+    }
+    const nove = merky.map((m) => m.stred);
+    for (let i = pod + 1; i < merky.length; i++) {
+      nove[i] =
+        nove[i - 1] +
+        (merky[i].stred - merky[i - 1].stred) +
+        ((mira[i - 1] - 1) * merky[i - 1].sirka) / 2 +
+        ((mira[i] - 1) * merky[i].sirka) / 2;
+    }
+    for (let i = pod - 1; i >= 0; i--) {
+      nove[i] =
+        nove[i + 1] -
+        (merky[i + 1].stred - merky[i].stred) -
+        ((mira[i + 1] - 1) * merky[i + 1].sirka) / 2 -
+        ((mira[i] - 1) * merky[i].sirka) / 2;
+    }
+
+    merky.forEach((m, i) => {
+      const posun = nove[i] - m.stred;
+      m.prvek.style.transition = "none";
+      m.prvek.style.transform = `translateX(${posun.toFixed(1)}px) scale(${mira[i].toFixed(3)})`;
+    });
+  };
+
+  const sroveji = () => {
+    rada.current
+      ?.querySelectorAll<HTMLElement>("[data-dock-ikona]")
+      .forEach((p) => {
+        p.style.transition = "transform 180ms ease-out";
+        p.style.transform = "";
+      });
+  };
   const velikost = tazena ?? stav.nastaveni.dockVelikost;
 
   /**
@@ -360,12 +442,18 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
 
   return (
     <div className="pointer-events-none absolute inset-x-0 bottom-0 z-[800] flex justify-center pb-2">
-      <div className="mac-sklo mac-bezvyberu pointer-events-auto flex items-end gap-2 rounded-2xl border border-white/20 px-2 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)]">
+      <div
+        ref={rada}
+        onMouseMove={zvetsi}
+        onMouseLeave={sroveji}
+        className="mac-sklo mac-bezvyberu pointer-events-auto relative flex items-end gap-2 rounded-2xl border border-white/20 px-2 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+      >
         {/* Launchpad stojí na Macu hned vedle Finderu a je to jediné místo,
             kde žák uvidí všechny aplikace pohromadě. */}
         <Ikona
           popis="Launchpad"
           strana={velikost}
+          zvetsuje={zvetsovat}
           vzhled={{
             pozadi: "linear-gradient(165deg,#fbfbfd,#d6d8de)",
             barva: "#3a3a3c",
@@ -378,6 +466,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             key={app}
             popis={APLIKACE[app].nazev}
             strana={velikost}
+            zvetsuje={zvetsovat}
             znacka={{ "data-dock-app": app }}
             vzhled={VZHLED_APLIKACI[app]}
             bezi={stav.bezici.includes(app)}
@@ -397,6 +486,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             key={okno.id}
             popis={`${okno.titul || APLIKACE[okno.app].nazev} – schované okno`}
             strana={Math.round(velikost * 0.72)}
+            zvetsuje={zvetsovat}
             vzhled={VZHLED_APLIKACI[okno.app]}
             znacka={{ "data-dock-okno": String(okno.id) }}
             onClick={(e) => vratZDocku(okno, e)}
@@ -418,6 +508,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
         <Ikona
           popis="Stažené"
           strana={velikost}
+          zvetsuje={zvetsovat}
           vzhled={{
             pozadi: "linear-gradient(160deg,#9fd6ff,#3f97e0)",
             barva: "#0b3c63",
@@ -428,6 +519,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
         <Ikona
           popis={vKosi === 0 ? "Koš (prázdný)" : `Koš (${vKosi})`}
           strana={velikost}
+          zvetsuje={zvetsovat}
           vzhled={{
             pozadi:
               vKosi === 0
@@ -451,6 +543,7 @@ function Ikona({
   bezi,
   strana,
   znacka,
+  zvetsuje,
   onClick,
 }: {
   popis: string;
@@ -460,11 +553,18 @@ function Ikona({
   znacka?: Record<string, string>;
   /** Strana ikony v pixelech. Řídí ji tažení za čárku v Docku. */
   strana: number;
+  /** Zvětšuje se celý Dock pod kurzorem? Pak si ikona nepřidává vlastní skok. */
+  zvetsuje?: boolean;
   onClick?: (e: React.MouseEvent) => void;
 }) {
   const Znak = vzhled.znak;
   return (
-    <div className="group/dock relative flex flex-col items-center" {...znacka}>
+    <div
+      data-dock-ikona
+      // Roste se nahoru z Docku, ne do stran od středu – proto počátek dole.
+      className="group/dock relative flex origin-bottom flex-col items-center"
+      {...znacka}
+    >
       {/* Popisek nad ikonou. V Docku je to jediné, co ikonu pojmenuje – bez
           něj žák hádá podle obrázku, a u Terminálu to není poznat. */}
       <span className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md bg-black/75 px-2 py-1 text-[12px] text-white opacity-0 transition-opacity group-hover/dock:opacity-100">
@@ -478,7 +578,13 @@ function Ikona({
         disabled={!onClick}
         // Zaoblení 22 % strany je macOS „squircle"; pevných 12 px vypadalo
         // při větší ikoně jako obyčejný zaoblený čtverec.
-        className="flex items-center justify-center shadow-md transition-transform duration-150 hover:-translate-y-1.5 hover:scale-110 disabled:cursor-default"
+        className={`flex items-center justify-center shadow-md disabled:cursor-default ${
+          // Když se zvětšuje celý Dock, nesmí si ikona přidávat ještě vlastní
+          // skok při najetí – skládalo by se to a poskakovalo.
+          zvetsuje
+            ? ""
+            : "transition-transform duration-150 hover:-translate-y-1.5 hover:scale-110"
+        }`}
         style={{
           width: strana,
           height: strana,
