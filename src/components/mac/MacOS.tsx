@@ -12,7 +12,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { ArrowLeft, Maximize2, Minimize2, Search } from "lucide-react";
 import Link from "next/link";
 import { MacProvider, OknoMacProvider, useMac } from "./system";
-import { jeSlozka, najdiSlozku } from "@/lib/win/fs";
+import { jeSlozka, najdiSlozku, najdiSoubor } from "@/lib/win/fs";
 import { OknoRamMac } from "./OknoRam";
 import { HorniLista, type Nabidka } from "./HorniLista";
 import { Dock, VZHLED_APLIKACI } from "./Dock";
@@ -39,6 +39,7 @@ import {
   slozMac,
 } from "@/lib/mac/cesty";
 import { type Nalez, prohledej } from "@/lib/mac/hledani";
+import { UVITANI } from "@/lib/mac/seed";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import { zapomenMac } from "@/lib/mac/stav";
 
@@ -61,6 +62,29 @@ function Obrazovka() {
   const [celaObrazovka, nastavCelou] = useState(false);
   const obrazovka = useRef<HTMLDivElement>(null);
   const plochaRef = useRef<HTMLDivElement>(null);
+
+  /**
+   * Uvítání po přihlášení: otevře se Přečti si mě.txt z plochy.
+   *
+   * Bez toho žák po zadání kódu koukal na prázdnou plochu a nevěděl, kam
+   * klepnout. Teď ho první obrazovka přivítá a řekne, kde najde úkoly.
+   *
+   * Otevírá se jako okno „od systému" (`samo`), takže se nezapíše stopa
+   * o spuštění Poznámek – úloha „Lišta se mění" chce, aby je žák spustil
+   * sám. Zavřením tohohle okna ale žák přirozeně splní „Nech Poznámky běžet
+   * bez jediného okna", protože program po zavření okna běží dál; to je
+   * správně, to už je jeho vlastní krok a je to přesně ta lekce.
+   *
+   * Nic se neotevře, když žák soubor smazal nebo přejmenoval, ani když už
+   * otevřený je – po každém přihlášení by jinak přibylo další okno.
+   */
+  const otevriUvitani = () => {
+    const cesta = [...PLOCHA, UVITANI];
+    const arg = slozMac(cesta);
+    if (!najdiSoubor(stav.disk, cesta)) return;
+    if (stav.okna.some((o) => o.app === "poznamky" && o.arg === arg)) return;
+    poslat({ typ: "okno/otevri", app: "poznamky", arg, samo: true });
+  };
 
   /* Rozběhnuté sezení si pamatuje karta – obnovení stránky nevrací na zámek. */
   useEffect(() => {
@@ -384,6 +408,7 @@ function Obrazovka() {
             onHotovo={() => {
               zapamatujPrihlaseni(true);
               nastavFazi("bezi");
+              otevriUvitani();
             }}
           />
           <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">

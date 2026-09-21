@@ -15,7 +15,18 @@ import type { AppId, Obdelnik, Okno, StavMac } from "./stav";
 import { VYCHOZI_OKNO, vychoziStavMac } from "./stav";
 
 export type AkceMac =
-  | { typ: "okno/otevri"; app: AppId; arg?: string; titul?: string }
+  | {
+      typ: "okno/otevri";
+      app: AppId;
+      arg?: string;
+      titul?: string;
+      /**
+       * Okno otevřel SYSTÉM, ne žák – třeba uvítání po přihlášení. Pak se
+       * nezapíše stopa `spustil:…`, jinak by žák dostal kus úlohy zadarmo:
+       * „Lišta se mění" chce, aby Poznámky spustil sám.
+       */
+      samo?: boolean;
+    }
   | { typ: "okno/zavri"; id: number }
   | { typ: "okno/dopredu"; id: number }
   | { typ: "okno/posun"; id: number; ram: Obdelnik }
@@ -83,7 +94,7 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
         citac: id + 1,
         vpredu: akce.app,
         bezici: stav.bezici.includes(akce.app) ? stav.bezici : [...stav.bezici, akce.app],
-        stopy: pridejStopu(stav.stopy, `spustil:${akce.app}`),
+        stopy: akce.samo ? stav.stopy : pridejStopu(stav.stopy, `spustil:${akce.app}`),
       };
     }
 

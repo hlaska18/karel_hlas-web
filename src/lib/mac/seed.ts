@@ -19,6 +19,9 @@ import type { Slozka, Uzel } from "@/lib/win/fs";
 import { binarni, slozka, soubor } from "@/lib/win/seed";
 import { APLIKACE, DOKUMENTY, OBRAZKY, PLOCHA, STAZENE } from "./cesty";
 
+/** Uvítací soubor na ploše. Otevírá se sám po přihlášení (viz MacOS.tsx). */
+export const UVITANI = "Přečti si mě.txt";
+
 const CTI_ME = `Vítej na Macu.
 
 Tohle prostředí vypadá jinak než Windows, ale pod povrchem dělá totéž:
@@ -115,7 +118,7 @@ export function vytvorDiskMac(): Slozka {
               slozka(
                 "Desktop",
                 [
-                  soubor("Přečti si mě.txt", CTI_ME, 0),
+                  soubor(UVITANI, CTI_ME, 0),
                   soubor(".DS_Store", DS_STORE, 0),
                 ],
                 0,

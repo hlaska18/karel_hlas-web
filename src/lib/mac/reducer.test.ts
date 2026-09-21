@@ -154,3 +154,33 @@ describe("disk", () => {
     expect(plist?.druh).toBe("soubor");
   });
 });
+
+describe("uvítání po přihlášení", () => {
+  it("okno otevřené systémem nezapíše stopu o spuštění", () => {
+    // Úloha „Lišta se mění" chce, aby žák Poznámky spustil SÁM. Kdyby
+    // uvítací okno zapsalo `spustil:poznamky`, dostal by půlku úlohy zadarmo.
+    const stav = reducerMac(vychoziStavMac(), {
+      typ: "okno/otevri",
+      app: "poznamky",
+      arg: "/Users/zak/Desktop/Přečti si mě.txt",
+      samo: true,
+    });
+    expect(stav.stopy).not.toContain("spustil:poznamky");
+    // Okno ale opravdu je a aplikace běží vpředu.
+    expect(stav.okna.some((o) => o.app === "poznamky")).toBe(true);
+    expect(stav.bezici).toContain("poznamky");
+    expect(stav.vpredu).toBe("poznamky");
+  });
+
+  it("okno otevřené žákem stopu zapíše", () => {
+    const stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "poznamky" });
+    expect(stav.stopy).toContain("spustil:poznamky");
+  });
+
+  it("zavřením uvítacího okna Poznámky běží dál bez okna", () => {
+    let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "poznamky", samo: true });
+    stav = reducerMac(stav, { typ: "okno/zavri", id: stav.okna[0].id });
+    expect(stav.bezici).toContain("poznamky");
+    expect(stav.okna.some((o) => o.app === "poznamky")).toBe(false);
+  });
+});
