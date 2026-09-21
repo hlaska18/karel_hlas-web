@@ -16,22 +16,38 @@ import { useState } from "react";
 import { useMac } from "./system";
 import { VelkaIkona } from "./ikony";
 import { NabidkaMistni, PanelInformace, type PolozkaNabidky } from "./ui";
-import { PLOCHA, jeBalicek, jeSkryte, sVlnovkou, slozMac } from "@/lib/mac/cesty";
-import { jeSlozka, najdiSlozku, novaSlozka, vloz, volneJmeno } from "@/lib/win/fs";
+import {
+  PLOCHA,
+  jeBalicek,
+  jeSkryte,
+  sVlnovkou,
+  slozMac,
+} from "@/lib/mac/cesty";
+import {
+  jeSlozka,
+  najdiSlozku,
+  novaSlozka,
+  vloz,
+  volneJmeno,
+} from "@/lib/win/fs";
 import { polozekSlovy } from "@/lib/mac/text";
 
 export function Plocha() {
   const { stav, poslat, spust } = useMac();
   const slozka = najdiSlozku(stav.disk, PLOCHA);
   /** Kam se kliklo pravým a čeho se to týkalo (`null` = prázdná plocha). */
-  const [nabidka, nastavNabidku] = useState<{ x: number; y: number; jmeno: string | null } | null>(
-    null,
-  );
+  const [nabidka, nastavNabidku] = useState<{
+    x: number;
+    y: number;
+    jmeno: string | null;
+  } | null>(null);
   /**
    * Co se ukazuje v informacích. `null` je zavřeno, `{ jmeno: null }` je
    * Plocha sama – proto obálka, jinak by „zavřeno" a „Plocha" splynulo.
    */
-  const [informace, nastavInformace] = useState<{ jmeno: string | null } | null>(null);
+  const [informace, nastavInformace] = useState<{
+    jmeno: string | null;
+  } | null>(null);
 
   const polozky = (slozka?.deti ?? []).filter(
     (d) => stav.nastaveni.skrytePolozky || !jeSkryte(d.jmeno),
@@ -46,7 +62,11 @@ export function Plocha() {
     if (!slozka) return;
     poslat({
       typ: "disk/nastav",
-      disk: vloz(stav.disk, PLOCHA, novaSlozka(volneJmeno(slozka, "nová složka"))),
+      disk: vloz(
+        stav.disk,
+        PLOCHA,
+        novaSlozka(volneJmeno(slozka, "nová složka")),
+      ),
     });
   };
 
@@ -54,7 +74,10 @@ export function Plocha() {
     if (!jmeno) {
       return [
         { text: "Nová složka", akce: zalozSlozku, oddelovac: true },
-        { text: "Zobrazit informace o Ploše", akce: () => nastavInformace({ jmeno: null }) },
+        {
+          text: "Zobrazit informace o Ploše",
+          akce: () => nastavInformace({ jmeno: null }),
+        },
         { text: "Změnit pozadí plochy…", akce: () => spust("nastaveni") },
       ];
     }
@@ -87,38 +110,37 @@ export function Plocha() {
         }}
       />
 
-    <div className="mac-bezvyberu absolute right-4 top-4 flex flex-col flex-wrap-reverse content-end gap-1">
-      {polozky.map((u) => {
-        const slozkaNeBalicek = jeSlozka(u) && !jeBalicek(u.jmeno);
-        return (
-          <button
-            key={u.jmeno}
-            type="button"
-            onDoubleClick={() => {
-              const cesta = slozMac([...PLOCHA, u.jmeno]);
-              if (slozkaNeBalicek) spust("finder", cesta);
-              else spust("poznamky", cesta);
-            }}
-            onContextMenu={(e) => {
-              e.preventDefault();
-              nastavNabidku({ x: e.clientX, y: e.clientY, jmeno: u.jmeno });
-            }}
-            className="flex w-[92px] flex-col items-center gap-1 rounded-lg p-2 text-center hover:bg-white/10 focus-visible:bg-white/20"
-          >
-            {/* Tytéž ikony jako ve Finderu. Mléčný čtvereček pod nimi je
-                pryč – na Macu leží ikona rovnou na tapetě. */}
-            <VelkaIkona uzel={u} />
-            {/* Stín pod textem, ne podklad: na světlé tapetě by byl bílý text
-                nečitelný, a obdélník za každým názvem vypadá jako rozbité. */}
-            <span
-              className="w-full break-words text-[11px] leading-tight text-white"
-              style={{ textShadow: "0 1px 3px rgba(0,0,0,0.75)" }}
+      <div className="mac-bezvyberu absolute right-4 top-4 flex flex-col flex-wrap-reverse content-end gap-1">
+        {polozky.map((u) => {
+          const slozkaNeBalicek = jeSlozka(u) && !jeBalicek(u.jmeno);
+          return (
+            <button
+              key={u.jmeno}
+              type="button"
+              onDoubleClick={() => {
+                const cesta = slozMac([...PLOCHA, u.jmeno]);
+                if (slozkaNeBalicek) spust("finder", cesta);
+                else spust("poznamky", cesta);
+              }}
+              onContextMenu={(e) => {
+                e.preventDefault();
+                nastavNabidku({ x: e.clientX, y: e.clientY, jmeno: u.jmeno });
+              }}
+              className="flex w-[92px] flex-col items-center gap-1 rounded-lg p-2 text-center hover:bg-white/10 focus-visible:bg-white/20"
             >
-              {u.jmeno}
-            </span>
-          </button>
-        );
-      })}
+              {/* Tytéž ikony jako ve Finderu. Mléčný čtvereček pod nimi je
+                pryč – na Macu leží ikona rovnou na tapetě. */}
+              <VelkaIkona uzel={u} />
+              {/* Stín pod textem, ne podklad: obdélník za každým názvem vypadá
+                jako rozbité. Barvu a stín drží `.mac-popisek-plochy`
+                v globals.css – na světlé tapetě je písmo tmavé, na tmavé
+                bílé, a rozhoduje o tom tapeta, ne motiv. */}
+              <span className="mac-popisek-plochy w-full break-words text-[11px] leading-tight">
+                {u.jmeno}
+              </span>
+            </button>
+          );
+        })}
       </div>
 
       {nabidka && (
@@ -173,7 +195,8 @@ function Informace({
           { popisek: "Obsahuje", hodnota: polozekSlovy(pocet) },
           {
             popisek: "Poznámka",
-            hodnota: "Plocha není zvláštní místo v systému – je to obyčejná složka.",
+            hodnota:
+              "Plocha není zvláštní místo v systému – je to obyčejná složka.",
           },
         ]}
         zavri={zavri}

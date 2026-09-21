@@ -1233,6 +1233,61 @@
     url("/images/macos/tapeta-zare.jpg");
 }
 
+/* Hory v mlze – výchozí tapeta. Má dvě verze se stejnou kompozicí, světlou
+   (svítání) a tmavou (noc), a přepíná se s motivem sama, bez ztmavení navrch.
+   Soubory jsou dva v každé verzi: 2560 px pro běžný monitor, jaký je ve
+   škole, a 4K pro Retinu. Prohlížeč si podle hustoty displeje vezme jen
+   jeden. `-webkit-image-set` je pro Chrome 64 a Safari 12 z cíle prohlížečů,
+   ta bez něj by zůstala u prvního řádku. Barva pod obrázkem je jeho
+   průměrná, aby probliknutí při přepnutí motivu nebilo do očí. */
+.mac-tapeta[data-tapeta="hory"] {
+  background-color: #bab3c0;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-image: url("/images/macos/tapeta-hory-svetla-2560.jpg");
+  background-image: -webkit-image-set(
+    url("/images/macos/tapeta-hory-svetla-2560.jpg") 1x,
+    url("/images/macos/tapeta-hory-svetla-3840.jpg") 2x
+  );
+  background-image: image-set(
+    url("/images/macos/tapeta-hory-svetla-2560.jpg") 1x,
+    url("/images/macos/tapeta-hory-svetla-3840.jpg") 2x
+  );
+}
+
+/* Druhý selektor je zamykací obrazovka: je tmavá napevno (bílé hodiny), takže
+   dostane noční verzi i ve světlém motivu. Na svítání by hodiny zmizely. */
+.mac[data-motiv="tmavy"] .mac-tapeta[data-tapeta="hory"],
+.mac-tapeta[data-motiv="tmavy"][data-tapeta="hory"] {
+  background-color: #0b2749;
+  background-image: url("/images/macos/tapeta-hory-tmava-2560.jpg");
+  background-image: -webkit-image-set(
+    url("/images/macos/tapeta-hory-tmava-2560.jpg") 1x,
+    url("/images/macos/tapeta-hory-tmava-3840.jpg") 2x
+  );
+  background-image: image-set(
+    url("/images/macos/tapeta-hory-tmava-2560.jpg") 1x,
+    url("/images/macos/tapeta-hory-tmava-3840.jpg") 2x
+  );
+}
+
+/* Popisky ikon na ploše. Bílé se stínem sedí na tmavou tapetu; na světlé
+   verzi Hor v mlze byly skoro neviditelné, tak tam je písmo tmavé se
+   světlým lemem. Řídí se tapetou, ne motivem: Stuhy jsou tmavé i ve
+   světlém motivu a tmavé písmo by na nich zmizelo. */
+.mac-popisek-plochy {
+  color: #fff;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.75);
+}
+
+.mac:not([data-motiv="tmavy"]) .mac-tapeta[data-tapeta="hory"] .mac-popisek-plochy {
+  color: #1d1d1f;
+  text-shadow:
+    0 0 2px rgba(255, 255, 255, 0.9),
+    0 1px 4px rgba(255, 255, 255, 0.7);
+}
+
 /* Nezaostřené okno.
    Na Macu z něj zešedne celý chrom, ne jen semafor: název, nástroje v pruhu
    i postranní panel. Obsah okna zůstává čitelný – tím se pozná, které okno

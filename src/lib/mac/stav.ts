@@ -100,6 +100,10 @@ export const DOCK_MAX = 82;
  * pozadí.
  */
 export const TAPETY_MAC = [
+  /* Jediná se dvěma verzemi, světlou a tmavou, a přepíná se s motivem
+     sama – jako dynamické tapety na Macu. Vygenerovaná v Higgsfieldu
+     (Seedream 4.5, zvětšeno na 4K), Karel ji vybral z šesti návrhů. */
+  { id: "hory", nazev: "Hory v mlze" },
   { id: "stuhy", nazev: "Stuhy" },
   { id: "zare", nazev: "Záře" },
   { id: "vrstvy", nazev: "Vrstvy" },
@@ -108,7 +112,7 @@ export const TAPETY_MAC = [
 export const VYCHOZI_NASTAVENI: NastaveniMac = {
   skrytePolozky: false,
   motiv: "svetly",
-  tapeta: "stuhy",
+  tapeta: "hory",
   dockVelikost: 58,
   /*
    * Skutečný Mac má Zvětšení ve výchozím stavu VYPNUTÉ. Tady je zapnuté
