@@ -59,6 +59,7 @@ import {
 } from "@/lib/mac/cesty";
 import {
   jeSlozka,
+  jeUvnitr,
   kopie,
   najdi,
   najdiSlozku,
@@ -134,6 +135,13 @@ export function Finder() {
   const [zobrazeni, nastavZobrazeni] = useState<"ikony" | "seznam">("ikony");
   /** Jméno položky v Rychlém náhledu, nebo null, když je zavřený. */
   const [nahled, nastavNahled] = useState<string | null>(null);
+  /** Co se právě táhne myší (jméno v aktuální složce). */
+  const [tazeno, nastavTazeno] = useState<string | null>(null);
+  /** Nad kterým cílem je tažená položka – a co se stane, když ji pustíš. */
+  const [nadCilem, nastavNadCilem] = useState<{
+    klic: string;
+    akce: "presun" | "kopie";
+  } | null>(null);
   const polePrejmenovani = useRef<HTMLInputElement>(null);
 
   const cesta = historie[kde];
@@ -290,6 +298,88 @@ export function Finder() {
     nastavVybrano(null);
   };
 
+  /*
+   * Tažení myší.
+   *
+   * Pravidlo je stejné jako ve Windows a proto z něj NENÍ úloha: po
+   * stejném disku se položka PŘESUNE, na jiný disk (tady FLASH) se
+   * ZKOPÍRUJE. Finder, který tažení neumí, ale působí rozbitě – žák to
+   * zkusí jako první věc.
+   *
+   * Kopii poznáš podle zeleného plusu u kurzoru. Ten kreslí prohlížeč sám,
+   * když se nastaví `dropEffect = "copy"`, takže je stejný jako na skutečném
+   * Macu a nic se nepředstírá. Dole ve stavovém řádku se to navíc napíše.
+   */
+  const svazek = (c: string[]) =>
+    c[1] === "Volumes" && c[2] ? c[2] : "Macintosh HD";
+
+  const coUdela = (cil: string[]): "presun" | "kopie" | null => {
+    if (!tazeno) return null;
+    const zdroj = [...cesta, tazeno];
+    if (slozMac(cesta) === slozMac(cil)) return null; // do téže složky
+    if (!najdiSlozku(stav.disk, cil) || jeBalicek(cil[cil.length - 1]))
+      return null;
+    if (jeUvnitr(zdroj, cil)) return null; // složka sama do sebe
+    return svazek(zdroj) === svazek(cil) ? "presun" : "kopie";
+  };
+
+  const pust = (cil: string[]) => {
+    const akce = coUdela(cil);
+    if (!akce || !tazeno) return;
+    // Na koš se vždycky přesouvá – přesně tak, jako by se dalo Přesunout do koše.
+    if (slozMac(cil) === slozMac(KOS)) {
+      doKose(tazeno);
+      return;
+    }
+    const zdroj = [...cesta, tazeno];
+    const uzel = najdi(stav.disk, zdroj);
+    const cilova = najdiSlozku(stav.disk, cil);
+    if (!uzel || !cilova) return;
+    if (akce === "presun" && uzel.zamceno) return;
+    const jmeno = volneJmeno(cilova, uzel.jmeno);
+    let disk = stav.disk;
+    if (akce === "presun") disk = odeber(disk, zdroj);
+    disk = vloz(disk, cil, { ...kopie(uzel), jmeno });
+    poslat({ typ: "disk/nastav", disk });
+    stopa(akce === "kopie" ? "zkopiroval-na-jiny-svazek" : "presunul-tazenim");
+    nastavVybrano(null);
+  };
+
+  /** Obsluha cíle, na který jde položku pustit. `klic` jen pro zvýraznění. */
+  const cilTazeni = (cil: string[], klic: string) => ({
+    onDragOver: (e: React.DragEvent) => {
+      const akce = coUdela(cil);
+      if (!akce) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = akce === "kopie" ? "copy" : "move";
+      if (nadCilem?.klic !== klic) nastavNadCilem({ klic, akce });
+    },
+    onDragLeave: () => {
+      if (nadCilem?.klic === klic) nastavNadCilem(null);
+    },
+    onDrop: (e: React.DragEvent) => {
+      e.preventDefault();
+      pust(cil);
+      nastavNadCilem(null);
+      nastavTazeno(null);
+    },
+  });
+
+  /** Obsluha položky, kterou jde táhnout. */
+  const zdrojTazeni = (jmeno: string) => ({
+    draggable: true,
+    onDragStart: (e: React.DragEvent) => {
+      // Safari bez `setData` tažení vůbec nezačne.
+      e.dataTransfer.setData("text/plain", jmeno);
+      e.dataTransfer.effectAllowed = "copyMove";
+      nastavTazeno(jmeno);
+    },
+    onDragEnd: () => {
+      nastavTazeno(null);
+      nastavNadCilem(null);
+    },
+  });
+
   /** Vysypat koš. Teprve tohle soubory doopravdy smaže. */
   const vysypKos = () => {
     const vKosi = najdiSlozku(stav.disk, KOS);
@@ -319,7 +409,12 @@ export function Finder() {
     if (!aktivni) return;
     const klavesa = (e: KeyboardEvent) => {
       const cil = e.target as HTMLElement | null;
-      if (cil && (cil.tagName === "INPUT" || cil.tagName === "TEXTAREA" || cil.isContentEditable)) {
+      if (
+        cil &&
+        (cil.tagName === "INPUT" ||
+          cil.tagName === "TEXTAREA" ||
+          cil.isContentEditable)
+      ) {
         return;
       }
       if (prejmenovavany) return;
@@ -535,9 +630,13 @@ export function Finder() {
   // Rychlý náhled se vykresluje na PLOCHU, ne do okna: okno má při otevření
   // animaci s `transform`, a ta by fixně umístěný panel uvěznila uvnitř
   // okna místo nad celou obrazovkou, kde ho má Mac.
-  const uzelNahledu = nahled ? slozka?.deti.find((d) => d.jmeno === nahled) : undefined;
+  const uzelNahledu = nahled
+    ? slozka?.deti.find((d) => d.jmeno === nahled)
+    : undefined;
   const plochaProNahled =
-    typeof document !== "undefined" ? document.querySelector(".mac-tapeta") : null;
+    typeof document !== "undefined"
+      ? document.querySelector(".mac-tapeta")
+      : null;
   const panelNahledu =
     uzelNahledu && plochaProNahled
       ? createPortal(
@@ -570,6 +669,8 @@ export function Finder() {
             // je – ne desetkrát tutéž složku.
             znak={<m.znak className="h-[15px] w-[15px] text-[#3b82f6]" />}
             aktivni={slozMac(cesta) === slozMac(m.cesta)}
+            tazeni={cilTazeni(m.cesta, `b:${m.jmeno}`)}
+            zvyrazneno={nadCilem?.klic === `b:${m.jmeno}`}
             onClick={() => jdi(m.cesta)}
           />
         ))}
@@ -579,6 +680,8 @@ export function Finder() {
           znak={<HardDrive className="h-[15px] w-[15px] text-mac-slaby" />}
           aktivni={cesta.length === 1}
           onClick={() => jdi([KOREN])}
+          tazeni={cilTazeni([KOREN], "b:hd")}
+          zvyrazneno={nadCilem?.klic === "b:hd"}
         />
         <PolozkaBoku
           jmeno="FLASH"
@@ -587,12 +690,16 @@ export function Finder() {
           znak={<Usb className="h-[15px] w-[15px] text-[#f59e0b]" />}
           aktivni={slozMac(cesta) === "/Volumes/FLASH"}
           onClick={() => jdi([...SVAZKY, "FLASH"])}
+          tazeni={cilTazeni([...SVAZKY, "FLASH"], "b:flash")}
+          zvyrazneno={nadCilem?.klic === "b:flash"}
         />
         <PolozkaBoku
           jmeno="Koš"
           znak={<Trash2 className="h-[15px] w-[15px] text-mac-slaby" />}
           aktivni={slozMac(cesta) === slozMac(KOS)}
           onClick={() => jdi(KOS)}
+          tazeni={cilTazeni(KOS, "b:kos")}
+          zvyrazneno={nadCilem?.klic === "b:kos"}
         />
       </aside>
 
@@ -620,6 +727,10 @@ export function Finder() {
                   <div
                     key={u.jmeno}
                     title={druh(u)}
+                    {...zdrojTazeni(u.jmeno)}
+                    {...(jeProstaSlozka(u)
+                      ? cilTazeni([...cesta, u.jmeno], `m:${u.jmeno}`)
+                      : {})}
                     onClick={() => nastavVybrano(u.jmeno)}
                     onDoubleClick={() => otevri(u)}
                     onContextMenu={(e) => {
@@ -631,7 +742,11 @@ export function Finder() {
                         jmeno: u.jmeno,
                       });
                     }}
-                    className="flex cursor-default flex-col items-center gap-1 px-2"
+                    className={`flex cursor-default flex-col items-center gap-1 rounded-lg px-2 py-1 ${
+                      nadCilem?.klic === `m:${u.jmeno}`
+                        ? "bg-mac-akcent/15 ring-2 ring-mac-akcent"
+                        : ""
+                    } ${tazeno === u.jmeno ? "opacity-50" : ""}`}
                   >
                     <IkonaPolozky uzel={u} barevne velke />
                     <span
@@ -666,6 +781,10 @@ export function Finder() {
                   return (
                     <tr
                       key={u.jmeno}
+                      {...zdrojTazeni(u.jmeno)}
+                      {...(jeProstaSlozka(u)
+                        ? cilTazeni([...cesta, u.jmeno], `r:${u.jmeno}`)
+                        : {})}
                       onClick={() => nastavVybrano(u.jmeno)}
                       onDoubleClick={() => otevri(u)}
                       onContextMenu={(e) => {
@@ -678,10 +797,12 @@ export function Finder() {
                         });
                       }}
                       className={`cursor-default ${
-                        vybranaRadka
-                          ? "bg-mac-akcent text-mac-akcent-text"
-                          : "odd:bg-black/[0.02] hover:bg-mac-zvyrazneny"
-                      }`}
+                        nadCilem?.klic === `r:${u.jmeno}`
+                          ? "bg-mac-akcent/20 outline outline-2 outline-mac-akcent"
+                          : vybranaRadka
+                            ? "bg-mac-akcent text-mac-akcent-text"
+                            : "odd:bg-black/[0.02] hover:bg-mac-zvyrazneny"
+                      } ${tazeno === u.jmeno ? "opacity-50" : ""}`}
                     >
                       <td className="flex items-center gap-2 px-3 py-1.5">
                         <IkonaPolozky uzel={u} barevne={!vybranaRadka} />
@@ -706,7 +827,17 @@ export function Finder() {
         {/* Pruh s cestou. Ve Windows je adresní řádek nahoře a píše se do něj;
             tady je dole a jen ukazuje – a hlavně ukazuje unixovou cestu. */}
         <div className="flex h-[24px] shrink-0 items-center gap-2 border-t border-mac-linka bg-mac-panel px-3 text-[11px] text-mac-slaby">
-          <span className="tabular-nums">{sVlnovkou(cesta)}</span>
+          {/* Během tažení tu místo cesty stojí, co se stane. Je to jediné
+              místo, kde je pravidlo přesun/kopie napsané slovy. */}
+          {nadCilem ? (
+            <span className="font-medium text-mac-akcent">
+              {nadCilem.akce === "kopie"
+                ? "Pustíš-li to, zkopíruje se to – je to jiný disk"
+                : "Pustíš-li to, přesune se to"}
+            </span>
+          ) : (
+            <span className="tabular-nums">{sVlnovkou(cesta)}</span>
+          )}
           {/* Skutečný Finder píše dole počet položek a volné místo na disku.
               Kapacita je vymyšlená, ale pevná – kdyby se dopočítávala z obsahu,
               skákala by po každém uloženém souboru a vypadalo by to rozbitě. */}
@@ -860,22 +991,34 @@ function PolozkaBoku({
   znak,
   aktivni,
   onClick,
+  tazeni,
+  zvyrazneno,
 }: {
   jmeno: string;
   znak: React.ReactNode;
   aktivni: boolean;
   onClick: () => void;
+  /** Obsluha pro puštění tažené položky na tohle místo. */
+  tazeni?: {
+    onDragOver: (e: React.DragEvent) => void;
+    onDragLeave: () => void;
+    onDrop: (e: React.DragEvent) => void;
+  };
+  zvyrazneno?: boolean;
 }) {
   return (
     <button
       type="button"
       onClick={onClick}
+      {...tazeni}
       // Vybrané místo má na Macu jemný šedý oblázek, ne plnou modrou –
       // ta patří vybranému SOUBORU ve výpisu, ne položce panelu.
       className={`flex w-full items-center gap-2 rounded-md px-2 py-[5px] text-left ${
-        aktivni
-          ? "bg-mac-zvyrazneny font-medium text-mac-text"
-          : "hover:bg-black/5"
+        zvyrazneno
+          ? "bg-mac-akcent text-mac-akcent-text"
+          : aktivni
+            ? "bg-mac-zvyrazneny font-medium text-mac-text"
+            : "hover:bg-black/5"
       }`}
     >
       {znak}
@@ -912,14 +1055,20 @@ function RychlyNahled({
           <VelkaIkona uzel={uzel} />
         </span>
         <p className="mt-6 text-[13px] text-mac-slaby">
-          {jeBalicek(uzel.jmeno) ? "Aplikace (ve skutečnosti složka)" : polozekSlovy(uzel.deti.length)}
+          {jeBalicek(uzel.jmeno)
+            ? "Aplikace (ve skutečnosti složka)"
+            : polozekSlovy(uzel.deti.length)}
         </p>
       </div>
     );
   } else if (jeObrazek) {
     telo = (
       // eslint-disable-next-line @next/next/no-img-element
-      <img src={uzel.obsah} alt={uzel.jmeno} className="mx-auto max-h-[52vh] max-w-full object-contain" />
+      <img
+        src={uzel.obsah}
+        alt={uzel.jmeno}
+        className="mx-auto max-h-[52vh] max-w-full object-contain"
+      />
     );
   } else if (jeText) {
     telo = (
