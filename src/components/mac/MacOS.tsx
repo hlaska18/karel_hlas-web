@@ -22,7 +22,7 @@ import { APLIKACE_BALICKU, VelkaIkona } from "./ikony";
 import { PanelUkoluMac } from "./PanelUkolu";
 import { PrihlaseniMac } from "./Prihlaseni";
 import { Finder } from "./apps/Finder";
-import { Poznamky } from "./apps/Poznamky";
+import { Poznamky, UDALOST_ULOZIT } from "./apps/Poznamky";
 import { Terminal } from "./apps/Terminal";
 import { Nastaveni } from "./apps/Nastaveni";
 import { APLIKACE, type AppId, type Okno } from "@/lib/mac/stav";
@@ -85,19 +85,16 @@ function Obrazovka() {
    */
   const otevriUvitani = () => {
     if (stav.uvitano) return;
-    // Nejdřív okno Finderu, jako se otevíralo dřív – stojí na něm hned
-    // první úloha („V okně Finderu jsou vlevo nahoře tři puntíky…").
-    // Uvítání přes něj bez tohohle okno Finderu sebralo, protože efekt
-    // „první okno po přihlášení" níž se neotevře, když už nějaké okno je.
-    if (!stav.okna.some((o) => o.app === "finder"))
-      spust("finder", slozMac(PLOCHA));
+    // Jen tenhle soubor, bez okna Finderu – na ploše je pak jediná věc a je
+    // jasné, čím začít. Efekt „první okno po přihlášení" níž se tím pádem
+    // neozve (nějaké okno už je), a neozve se ani po zavření uvítání, protože
+    // zavření zapíše stopu. Finder si žák otevře v první úloze sám z Docku.
     const cesta = [...PLOCHA, UVITANI];
     const arg = slozMac(cesta);
     if (
       najdiSoubor(stav.disk, cesta) &&
       !stav.okna.some((o) => o.app === "poznamky" && o.arg === arg)
     ) {
-      // Až po Finderu, ať je uvítání navrchu.
       poslat({ typ: "okno/otevri", app: "poznamky", arg, samo: true });
     }
     poslat({ typ: "uvitani/ukazano" });
@@ -181,6 +178,10 @@ function Obrazovka() {
    * do chvíle, než se v prostředí cokoli stane. Kdyby se okno otevíralo
    * pokaždé, když plocha zůstane prázdná, rozbilo by to hned první úlohu –
    * tu, ve které má žák okno zavřít a vidět, že Finder běží dál.
+   *
+   * Při úvodním přihlášení se sem nedojde, plochu zaplní uvítání (viz
+   * `otevriUvitani`). Tohle je záloha pro případ, že uvítací soubor chybí
+   * nebo se stránka obnoví dřív, než žák cokoli udělá.
    */
   useEffect(() => {
     if (faze !== "bezi") return;
@@ -380,7 +381,20 @@ function Obrazovka() {
               akce: () =>
                 spust("poznamky", slozMac([...DOKUMENTY, "Poznámka.txt"])),
             },
-            { text: "Uložit", zkratka: "⌘S", zesedle: true, oddelovac: true },
+            {
+              // Dřív tu bylo jen zešedlé a ukládalo tlačítko v okně. Teď
+              // ukládá tohle – tlačítko v okně Mac nemá.
+              text: "Uložit",
+              zkratka: "⌘S",
+              oddelovac: true,
+              akce: () => {
+                const o = posledniOkno();
+                if (o)
+                  window.dispatchEvent(
+                    new CustomEvent(UDALOST_ULOZIT, { detail: o.id }),
+                  );
+              },
+            },
             { text: "Zavřít okno", zkratka: "⌘W", akce: zavriOkno },
           ],
         },
@@ -474,7 +488,10 @@ function Obrazovka() {
                 <OknoSAplikaci
                   key={okno.id}
                   okno={okno}
-                  aktivni={okno.z === nejvyssiZ}
+                  // Nestačí být nahoře, okno musí patřit programu vpředu. Po
+                  // zavření posledního okna Finderu je vpředu Finder bez okna
+                  // a okno Poznámek pod ním má zešednout, jako na Macu.
+                  aktivni={okno.z === nejvyssiZ && okno.app === stav.vpredu}
                   onZacitZnovu={() => nastavPanel("znovu")}
                 />
               ))}

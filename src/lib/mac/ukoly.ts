@@ -58,6 +58,7 @@ export const UKOLY_MAC: UkolMac[] = [
     popis:
       "Ve Windows zavřením posledního okna program většinou skončí. Tady ne. Zavři okno a dívej se přitom nahoru na lištu.",
     kroky: [
+      "Otevři okno Finderu: v Docku dole klikni na druhou ikonu zleva, hned za mřížkou Launchpadu. Když na ni najedeš myší, ukáže se nad ní Finder.",
       "V okně Finderu jsou vlevo nahoře tři puntíky: červený, žlutý, zelený.",
       "Najeď na ně myší – teprve tehdy se v nich ukážou značky.",
       "Klikni na červený. Okno zmizí.",
@@ -76,7 +77,7 @@ export const UKOLY_MAC: UkolMac[] = [
     kroky: [
       "V Docku klikni na žlutou ikonu Poznámek. Otevře se okno.",
       "Všimni si, že se nahoře v liště změnil název z Finder na Poznámky.",
-      "Napiš do okna pár slov a klikni na Uložit.",
+      "Napiš do okna pár slov a v horní liště vyber Soubor a v něm Uložit.",
       "Zavři okno červeným puntíkem.",
       "Na obrazovce po Poznámkách není ani stopa – a přesto pod jejich ikonou v Docku tečka zůstala.",
       "Program běží dál a drží si tvůj text. Tomu se říká, že aplikace běží bez okna.",
@@ -290,7 +291,10 @@ export function vyhodnotMac(stav: StavMac): string[] {
   return UKOLY_MAC.filter((u) => u.hotovo(stav)).map((u) => u.id);
 }
 
-export function postupMac(splneno: string[]): { hotovo: number; celkem: number } {
+export function postupMac(splneno: string[]): {
+  hotovo: number;
+  celkem: number;
+} {
   const platne = new Set(UKOLY_MAC.map((u) => u.id));
   return {
     hotovo: splneno.filter((id) => platne.has(id)).length,
