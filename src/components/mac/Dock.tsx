@@ -282,79 +282,104 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
   /**
    * Zvětšení ikony pod kurzorem.
    *
-   * Samotné zvětšení nestačí – ikony by se překryly. Skutečný Dock je od sebe
-   * zároveň ODSOUVÁ, takže se každá posune o to, oč vyrostly ikony mezi ní
-   * a kurzorem.
+   * Ikona roste TAK, ABY ZABRALA SKUTEČNÉ MÍSTO, ne jen přes `transform`.
+   * První verze ji zvětšovala čistě transformací, kterou rozvržení nevidí:
+   * Dock nevěděl, že má ikonu obsáhnout, takže přetékala ven ze skla
+   * a přes svislou čárku, za kterou se Dock zvětšuje. Teď si každá ikona
+   * řekne o širší místo a o místo nad sebou, Dock se podle toho sám
+   * roztáhne a čárka se posune s ostatními.
    *
-   * Měří se `offsetLeft`, ne `getBoundingClientRect()`. Rámeček totiž vrací
-   * rozměry UŽ ZVĚTŠENÉ, takže by se střed ikony hýbal podle vlastního
-   * zvětšení a celé by se to rozkmitalo. `offsetLeft` je z rozvržení a žádná
-   * transformace s ním nehne.
+   * Míra zvětšení se počítá z poloh ikon V KLIDU, změřených při vjezdu myši
+   * do Docku. Kdyby se měřilo za pohybu, střed ikony by se posouval podle
+   * jejího vlastního zvětšení a celé by se to rozkmitalo.
+   *
+   * A aby ikona pod kurzorem pod kurzorem i zůstala: Dock je vystředěný,
+   * takže by rostl do obou stran a ikona by kurzoru ujela. Celý se proto
+   * posune o to, oč vyrostl na jedné straně víc než na druhé.
    */
+  const vKlidu = useRef<
+    | {
+        prvek: HTMLElement;
+        tlacitko: HTMLElement;
+        stred: number;
+        zaklad: number;
+      }[]
+    | null
+  >(null);
+
+  const zmerKlid = () => {
+    const obal = rada.current;
+    if (!obal) return null;
+    const merky = Array.from(
+      obal.querySelectorAll<HTMLElement>("[data-dock-ikona]"),
+    ).flatMap((prvek) => {
+      const tlacitko = prvek.querySelector<HTMLElement>("button");
+      if (!tlacitko) return [];
+      const r = tlacitko.getBoundingClientRect();
+      return [
+        {
+          prvek,
+          tlacitko,
+          stred: r.left + r.width / 2,
+          zaklad: tlacitko.offsetWidth,
+        },
+      ];
+    });
+    vKlidu.current = merky;
+    return merky;
+  };
+
   const zvetsi = (e: React.MouseEvent) => {
     const obal = rada.current;
     if (!zvetsovat || !obal) return;
-    const prvky = Array.from(
-      obal.querySelectorAll<HTMLElement>("[data-dock-ikona]"),
-    );
-    const x = e.clientX - obal.getBoundingClientRect().left;
+    const merky = vKlidu.current ?? zmerKlid();
+    if (!merky) return;
+    const x = e.clientX;
 
-    const merky = prvky.map((p) => ({
-      prvek: p,
-      stred: p.offsetLeft + p.offsetWidth / 2,
-      sirka: p.offsetWidth,
-    }));
-    const mira = merky.map((m) => {
-      const d = Math.abs(x - m.stred) / (velikost * DOCK_ZVETSENI_DOSAH);
+    let vlevo = 0;
+    let vpravo = 0;
+    for (const m of merky) {
+      const d = Math.abs(x - m.stred) / (m.zaklad * DOCK_ZVETSENI_DOSAH);
       const v = Math.max(0, 1 - d);
       // Vyhlazení, ať zvětšení nepřechází do okolí lomeně.
-      return 1 + (DOCK_ZVETSENI_MAX - 1) * (v * v * (3 - 2 * v));
-    });
-
-    /*
-     * Rozestup. Ikona roste symetricky kolem svého středu, takže ta pod
-     * kurzorem zůstává na místě a ostatní se od ní odsouvají přesně o to,
-     * oč povyrostly ony a všechny mezi nimi.
-     *
-     * Počítá se to po sousedech od té pod kurzorem ven, ne vzorcem na každou
-     * zvlášť – původní rozestupy tím zůstanou zachované včetně mezery
-     * u svislé čárky, která mezi ikonami taky stojí, ale ikona to není.
-     */
-    let pod = 0;
-    for (let i = 1; i < merky.length; i++) {
-      if (Math.abs(merky[i].stred - x) < Math.abs(merky[pod].stred - x))
-        pod = i;
-    }
-    const nove = merky.map((m) => m.stred);
-    for (let i = pod + 1; i < merky.length; i++) {
-      nove[i] =
-        nove[i - 1] +
-        (merky[i].stred - merky[i - 1].stred) +
-        ((mira[i - 1] - 1) * merky[i - 1].sirka) / 2 +
-        ((mira[i] - 1) * merky[i].sirka) / 2;
-    }
-    for (let i = pod - 1; i >= 0; i--) {
-      nove[i] =
-        nove[i + 1] -
-        (merky[i + 1].stred - merky[i].stred) -
-        ((mira[i + 1] - 1) * merky[i + 1].sirka) / 2 -
-        ((mira[i] - 1) * merky[i].sirka) / 2;
-    }
-
-    merky.forEach((m, i) => {
-      const posun = nove[i] - m.stred;
+      const mira = 1 + (DOCK_ZVETSENI_MAX - 1) * (v * v * (3 - 2 * v));
+      const prirustek = (mira - 1) * m.zaklad;
+      // Kolik z přírůstku padne nalevo od kurzoru: podle toho, KDE v ikoně
+      // kurzor stojí, ne jen na kterou stranu od jejího středu. První verze
+      // přiřazovala přírůstek celý jedné straně a stačil zlomek pixelu přes
+      // střed ikony, aby Dock pod rukou poskočil o polovinu jejího růstu.
+      const levyOkraj = m.stred - m.zaklad / 2;
+      const podil = Math.max(0, Math.min(1, (x - levyOkraj) / m.zaklad));
+      vlevo += prirustek * podil;
+      vpravo += prirustek * (1 - podil);
       m.prvek.style.transition = "none";
-      m.prvek.style.transform = `translateX(${posun.toFixed(1)}px) scale(${mira[i].toFixed(3)})`;
-    });
+      m.tlacitko.style.transition = "none";
+      m.prvek.style.width = `${m.zaklad * mira}px`;
+      m.prvek.style.paddingTop = `${prirustek}px`;
+      m.tlacitko.style.transformOrigin = "bottom center";
+      m.tlacitko.style.transform = `scale(${mira.toFixed(3)})`;
+    }
+    obal.style.transition = "none";
+    obal.style.transform = `translateX(${((vpravo - vlevo) / 2).toFixed(1)}px)`;
   };
 
   const sroveji = () => {
-    rada.current
-      ?.querySelectorAll<HTMLElement>("[data-dock-ikona]")
-      .forEach((p) => {
-        p.style.transition = "transform 180ms ease-out";
-        p.style.transform = "";
-      });
+    const obal = rada.current;
+    const hladce = "180ms ease-out";
+    for (const m of vKlidu.current ?? []) {
+      m.prvek.style.transition = `width ${hladce}, padding-top ${hladce}`;
+      m.tlacitko.style.transition = `transform ${hladce}`;
+      m.prvek.style.width = "";
+      m.prvek.style.paddingTop = "";
+      m.tlacitko.style.transform = "";
+    }
+    if (obal) {
+      obal.style.transition = `transform ${hladce}`;
+      obal.style.transform = "";
+    }
+    // Při dalším vjezdu se klidové polohy změří znovu – mezitím se Dock
+    // mohl zvětšit tažením za čárku nebo přibyla schovaná okna.
+    vKlidu.current = null;
   };
   const velikost = tazena ?? stav.nastaveni.dockVelikost;
 
@@ -570,9 +595,11 @@ function Ikona({
       <span className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md bg-black/75 px-2 py-1 text-[12px] text-white opacity-0 transition-opacity group-hover/dock:opacity-100">
         {popis}
       </span>
+      {/* Bez `title`: prohlížeč by pod ikonu přidal ještě vlastní šedou
+          bublinu se jménem, takže by jméno viselo dvakrát – nad ikonou
+          i pod ní. Jméno pro čtečky obrazovky drží `aria-label`. */}
       <button
         type="button"
-        title={popis}
         aria-label={popis}
         onClick={onClick}
         disabled={!onClick}
