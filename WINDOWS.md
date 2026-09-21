@@ -33,11 +33,13 @@ obrazovce. Ověřuje se v prohlížeči, takže si ho kdokoli přečte ve zdrojo
 kódu stránky – smysl má jediný: držet pohromadě třídu a odradit náhodného
 kolemjdoucího. Nechrání žádné údaje, protože tu žádné nejsou.
 
-Kódy jsou v `src/lib/win/pristup.ts`. Společný `WIN11` platí pořád; vedle něj
+Kódy jsou v `src/lib/win/pristup.ts`. Společný je `SPSTABOR` a platí do Windows
+i do macOS (od 21. 9. 2026; dřívější `WIN11` a `OS2026` už neplatí). Vedle něj
 je kód pro každou třídu (`1LA-2026`, `1LB-2026`, `1S-2026`, `1P-2026`).
 Značky oborů jsou tytéž, jaké používá banka materiálů, takže není potřeba
 pamatovat si dvojí. Nová třída = jeden řádek navíc a nahrát web. Zadávání
-odpouští mezery, pomlčky i velikost písmen.
+odpouští mezery, pomlčky, velikost písmen i diakritiku, takže projde
+i „SPŠ Tábor".
 
 POZOR: kód se ověřuje v prohlížeči, takže nový kód platí AŽ PO NASAZENÍ.
 Zapsat ho do souboru nestačí.

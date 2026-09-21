@@ -23,13 +23,13 @@
 export const KODY: readonly string[] = [
   /*
    * Společný kód. Píše se na tabuli a platí do OBOU prostředí, do Windows
-   * i do macOS – proto není pojmenovaný po žádném z nich. `WIN11` tu
-   * zůstává, protože ho třídy znají a rozepsaný na tabuli ho mají i teď;
-   * odebrat ho by uprostřed pololetí zavřelo dveře lidem, kteří nic
-   * neudělali špatně.
+   * i do macOS – proto není pojmenovaný po žádném z nich.
+   *
+   * Od 21. 9. 2026 je to `SPSTABOR`, na Karlovo zadání. Předchozí společné
+   * kódy `WIN11` a `OS2026` tím přestaly platit. Kdo je zrovna přihlášený, toho to nevyhodí –
+   * přihlášení drží `sessionStorage` do zavření záložky.
    */
-  "OS2026",
-  "WIN11",
+  "SPSTABOR",
 
   // Kódy tříd pro školní rok 2026/27. Značky oborů jsou tytéž, jaké používá
   // banka materiálů (`public/materialy/1L`, `1S`, `1P`), takže je netřeba
@@ -41,10 +41,19 @@ export const KODY: readonly string[] = [
 ];
 
 /**
- * Mezery, pomlčky a velikost písmen se ignorují. Žák opisuje z tabule
- * a překlep ve „win 11" nemá být důvod, proč se nedostane do hodiny.
+ * Mezery, pomlčky, velikost písmen a DIAKRITIKA se ignorují. Žák opisuje
+ * z tabule a překlep nemá být důvod, proč se nedostane do hodiny.
+ *
+ * Diakritika kvůli společnému kódu: škola se jmenuje SPŠ Tábor a žák ho
+ * napíše přirozeně s háčkem a čárkou. „SPŠ Tábor", „sps tabor" i
+ * „spstabor" proto projdou všechny.
  */
-const normalizuj = (text: string) => text.replace(/[\s-]/g, "").toUpperCase();
+const normalizuj = (text: string) =>
+  text
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[\s-]/g, "")
+    .toUpperCase();
 
 export const kodSedi = (zadano: string): boolean => {
   const hledany = normalizuj(zadano);

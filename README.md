@@ -32,7 +32,7 @@ Kromě jednostránkového webu (`/` a `/en`) jsou tu dva nástroje do hodin:
 | Stránka | Co to je | Kde se upravuje |
 | --- | --- | --- |
 | `/sql` | Interaktivní kurz SQL v prohlížeči | `src/lib/sqlExercise.ts` |
-| `/windows` | Výuková simulace Windows 11 (vstup na kód, výchozí `WIN11`) | `src/lib/win/`, `src/components/win/` — podrobně v [`WINDOWS.md`](WINDOWS.md) |
+| `/windows` | Výuková simulace Windows 11 (vstup na kód, společný `SPSTABOR`) | `src/lib/win/`, `src/components/win/` — podrobně v [`WINDOWS.md`](WINDOWS.md) |
 
 ## Co kde upravit
 
