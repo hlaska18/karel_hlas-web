@@ -15,7 +15,7 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Loader2, User } from "lucide-react";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { kodSedi } from "@/lib/win/pristup";
-import { VYCHOZI_NASTAVENI } from "@/lib/mac/stav";
+import { VYCHOZI_NASTAVENI, zapomenMac } from "@/lib/mac/stav";
 
 type Faze = "zamek" | "kod" | "vitejte";
 
@@ -23,6 +23,8 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
   const [faze, nastavFazi] = useState<Faze>("zamek");
   const [kod, nastavKod] = useState("");
   const [hlaska, nastavHlasku] = useState("");
+  /** Ptá se na potvrzení úklidu po předchozím žákovi? */
+  const [ptaSeNaUklid, nastavPtaSeNaUklid] = useState(false);
   const [chyba, nastavChybu] = useState(false);
   const [cas, nastavCas] = useState<Date | null>(null);
   const pole = useRef<HTMLInputElement>(null);
@@ -76,7 +78,8 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
       <div
         className="absolute inset-0 transition-all duration-500"
         style={{
-          backgroundColor: faze === "zamek" ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.45)",
+          backgroundColor:
+            faze === "zamek" ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.45)",
           backdropFilter: faze === "zamek" ? "none" : "blur(30px)",
           WebkitBackdropFilter: faze === "zamek" ? "none" : "blur(30px)",
         }}
@@ -88,7 +91,9 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
           faze === "zamek" ? "pt-[14vh]" : "pt-[7vh]"
         }`}
       >
-        <div className="text-[18px] font-medium drop-shadow">{cas ? datumSlovy(cas) : ""}</div>
+        <div className="text-[18px] font-medium drop-shadow">
+          {cas ? datumSlovy(cas) : ""}
+        </div>
         <div
           className={`font-semibold leading-none tabular-nums drop-shadow-lg transition-all duration-500 ${
             faze === "zamek" ? "text-[112px]" : "text-[64px]"
@@ -122,7 +127,7 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
             </div>
             <h1 className="mt-3 text-[20px] font-medium drop-shadow">Žák</h1>
 
-            <div className="mt-5 flex w-[260px] items-center gap-2 rounded-full border border-white/40 bg-black/30 pl-4 pr-1 backdrop-blur">
+            <div className="mac-sklo-zaloha mt-5 flex w-[260px] items-center gap-2 rounded-full border border-white/40 bg-black/30 pl-4 pr-1 backdrop-blur">
               <input
                 ref={pole}
                 value={kod}
@@ -153,9 +158,9 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
             </p>
 
             <p className="mt-6 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
-              Je to týž kód jako do virtuálních Windows – jeden platí do obou. Drží pohromadě třídu,
-              nechrání žádné údaje – žádné se tu neukládají. Co tu uděláš,
-              zůstává v tomhle prohlížeči.{" "}
+              Je to týž kód jako do virtuálních Windows – jeden platí do obou.
+              Drží pohromadě třídu, nechrání žádné údaje – žádné se tu
+              neukládají. Co tu uděláš, zůstává v tomhle prohlížeči.{" "}
               <strong className="font-semibold text-white/80">
                 Na jiném počítači ani po vyčištění prohlížeče to nenajdeš.
               </strong>{" "}
@@ -168,6 +173,52 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
                 Co web ukládá
               </a>
             </p>
+
+            {/*
+              Začít načisto PATŘÍ SEM, ne jen do Nastavení.
+
+              Na školním počítači sedí za den několik žáků a stav je uložený
+              pod jedním klíčem v prohlížeči. Bez tohohle tlačítka sedne další
+              do cizí plochy a cizích odškrtnutých úloh a ani nepozná, že to
+              není jeho. V Nastavení to taky je, jenže tam se dostane až ten,
+              kdo je uvnitř – a to je pozdě.
+            */}
+            {!ptaSeNaUklid ? (
+              <button
+                type="button"
+                onClick={() => nastavPtaSeNaUklid(true)}
+                className="mt-4 text-[12px] text-white/45 underline decoration-dotted underline-offset-2 transition hover:text-white/80"
+              >
+                Sedí tu po někom jiném? Začít načisto
+              </button>
+            ) : (
+              <div className="mt-4 flex max-w-[340px] flex-col items-center gap-2 rounded-lg bg-black/40 px-4 py-3">
+                <p className="text-center text-[12px] leading-relaxed text-white/80">
+                  Smaže se plocha, soubory i odškrtnuté úlohy předchozího žáka.
+                  Tebe se to nijak nedotkne – ty ještě nic nemáš.
+                </p>
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => nastavPtaSeNaUklid(false)}
+                    className="rounded-md px-3 py-1.5 text-[12px] text-white/70 transition hover:text-white"
+                  >
+                    Nechat být
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      zapomenMac();
+                      nastavPtaSeNaUklid(false);
+                      nastavHlasku("Hotovo, prostředí je čisté.");
+                    }}
+                    className="rounded-md bg-white/85 px-3 py-1.5 text-[12px] font-semibold text-black transition hover:bg-white"
+                  >
+                    Začít načisto
+                  </button>
+                </div>
+              </div>
+            )}
           </form>
         )}
 

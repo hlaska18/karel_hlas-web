@@ -33,7 +33,7 @@ export default function StrankaWindows() {
         Radši to říct rovnou, než aby si učitel otevřel odkaz na tabletu
         a odnesl si dojem, že je něco rozbité.
       */}
-      <div className="flex h-[100dvh] w-full flex-col items-center justify-center gap-4 px-6 text-center lg:hidden">
+      <div className="flex vyska-obrazovky w-full flex-col items-center justify-center gap-4 px-6 text-center lg:hidden">
         <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální Windows 11</h1>
         <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
           Tohle prostředí je stavěné na počítač – okna Průzkumníka a Nastavení se na
@@ -44,7 +44,7 @@ export default function StrankaWindows() {
           Zpět na web
         </OdkazNaWeb>
       </div>
-      <main className="hidden h-[100dvh] w-full overflow-hidden lg:block">
+      <main className="hidden vyska-obrazovky w-full overflow-hidden lg:block">
         <VirtualniPocitac />
       </main>
       {/*

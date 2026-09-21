@@ -1246,3 +1246,25 @@
 .mac-okno-neaktivni [data-postranni] {
   opacity: 0.6;
 }
+
+/* Výška celé obrazovky, se zálohou.
+   Jednotku `dvh` neumí Chrome 64 ani Safari 12, tedy cíl z `.browserslistrc`.
+   Neznámá jednotka se v CSS zahodí, výška spadne na `auto` a simulace, která
+   uvnitř staví na `height: 100%`, by se složila do nuly – tedy černá stránka
+   místo hodiny. `100vh` se proto uvádí první; kde `dvh` prohlížeč zná, přepíše
+   ji, a to je lepší, protože počítá s mizící lištou mobilního prohlížeče.
+
+   Pozn.: totéž se týká i `/windows`, proto to používají obě stránky. */
+.vyska-obrazovky {
+  height: 100vh;
+  height: 100dvh;
+}
+
+/* Záloha pro prohlížeče bez `backdrop-filter` (Chrome ho má až od verze 76).
+   Bez rozostření je průsvitné pozadí jen díra do tapety a bílý text na ní
+   zmizí. Tyhle prvky proto v takovém prohlížeči zneprůhlední. */
+@supports not (backdrop-filter: blur(2px)) {
+  .mac-sklo-zaloha {
+    background-color: rgba(28, 28, 32, 0.88) !important;
+  }
+}

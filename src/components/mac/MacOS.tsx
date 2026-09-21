@@ -389,7 +389,7 @@ function Obrazovka() {
             <button
               type="button"
               onClick={prepniCelou}
-              className="flex items-center gap-2 rounded-md bg-black/40 px-3 py-2 text-[12px] text-white backdrop-blur hover:bg-black/60"
+              className="mac-sklo-zaloha flex items-center gap-2 rounded-md bg-black/40 px-3 py-2 text-[12px] text-white backdrop-blur hover:bg-black/60"
             >
               {celaObrazovka ? (
                 <Minimize2 className="h-4 w-4" />
@@ -400,7 +400,7 @@ function Obrazovka() {
             </button>
             <Link
               href="/"
-              className="flex items-center gap-2 rounded-md bg-black/40 px-3 py-2 text-[12px] text-white backdrop-blur hover:bg-black/60"
+              className="mac-sklo-zaloha flex items-center gap-2 rounded-md bg-black/40 px-3 py-2 text-[12px] text-white backdrop-blur hover:bg-black/60"
             >
               <ArrowLeft className="h-4 w-4" /> Zpět na web
             </Link>
@@ -598,7 +598,7 @@ function Launchpad({ zavri }: { zavri: () => void }) {
     >
       {/* Vyhledávací pole nahoře je to, podle čeho se Launchpad pozná –
           je i na jeho ikoně v Docku. */}
-      <div className="flex w-[260px] items-center gap-2 rounded-full bg-white/25 px-3 py-1.5 backdrop-blur">
+      <div className="mac-sklo-zaloha flex w-[260px] items-center gap-2 rounded-full bg-white/25 px-3 py-1.5 backdrop-blur">
         <Search className="h-4 w-4 shrink-0 text-white/80" />
         <input
           ref={pole}

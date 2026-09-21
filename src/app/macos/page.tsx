@@ -29,7 +29,7 @@ export default function StrankaMacOS() {
         je stejná jako u Windows (`lg`, 1024 px), ať si to učitel nemusí
         pamatovat dvakrát.
       */}
-      <div className="flex h-[100dvh] w-full flex-col items-center justify-center gap-4 px-6 text-center lg:hidden">
+      <div className="flex vyska-obrazovky w-full flex-col items-center justify-center gap-4 px-6 text-center lg:hidden">
         <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální macOS</h1>
         <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
           Tohle prostředí je stavěné na počítač – okno Finderu ani Dock se na
@@ -43,7 +43,7 @@ export default function StrankaMacOS() {
           Zpět na web
         </Link>
       </div>
-      <main className="hidden h-[100dvh] w-full overflow-hidden lg:block">
+      <main className="hidden vyska-obrazovky w-full overflow-hidden lg:block">
         <VirtualniMac />
       </main>
       {/*
