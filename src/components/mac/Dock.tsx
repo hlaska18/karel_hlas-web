@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { useMac } from "./system";
 import { useDzin, zmerVraceni } from "./Dzin";
+import { NabidkaMistni, type PolozkaNabidky } from "./ui";
 import {
   APLIKACE,
   DOCK_MAX,
@@ -35,8 +36,8 @@ import {
   type AppId,
   type Obdelnik,
 } from "@/lib/mac/stav";
-import { KOS, STAZENE, slozMac } from "@/lib/mac/cesty";
-import { jeSlozka, najdiSlozku } from "@/lib/win/fs";
+import { DOKUMENTY, KOS, PLOCHA, STAZENE, slozMac } from "@/lib/mac/cesty";
+import { jeSlozka, najdiSlozku, odeber } from "@/lib/win/fs";
 
 const PORADI: AppId[] = ["finder", "poznamky", "terminal", "nastaveni"];
 
@@ -268,7 +269,7 @@ export const VZHLED_APLIKACI: Record<
 };
 
 export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
-  const { stav, poslat, spust } = useMac();
+  const { stav, poslat, spust, stopa } = useMac();
   /**
    * Velikost během tažení. Do stavu se zapisuje až po puštění – kdyby se
    * ukládalo při každém pohybu myši, psalo by se do úložiště stokrát za
@@ -390,7 +391,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
    */
   const vratZDocku = (
     okno: { id: number; app: AppId; ram: Obdelnik },
-    e: React.MouseEvent,
+    pomalu = false,
   ) => {
     const doStavu = () => poslat({ typ: "okno/obnov", id: okno.id });
     const zmereno = zmerVraceni(okno.ram, okno.app, okno.id);
@@ -398,7 +399,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
       doStavu();
       return;
     }
-    dzin({ ...zmereno, smer: -1, pomalu: e.shiftKey, poDobehnuti: doStavu });
+    dzin({ ...zmereno, smer: -1, pomalu, poDobehnuti: doStavu });
   };
 
   /**
@@ -430,6 +431,108 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
   const schovana = stav.okna.filter((o) => o.minimalizovane);
   /** Kolik je v koši. Plný koš má na Macu jinou ikonu než prázdný. */
   const vKosi = najdiSlozku(stav.disk, KOS)?.deti.length ?? 0;
+
+  /**
+   * Nabídka po kliknutí pravým tlačítkem na ikonu.
+   *
+   * Dřív tu žádná nebyla, takže vyskočila nabídka prohlížeče („Znovu načíst
+   * stránku…") a iluze Macu se rozbila. Obsah se drží skutečného Docku:
+   * nahoře okna programu (✓ to vpředu, ◆ schované v Docku), pod nimi nové
+   * okno a nakonec Ukončit.
+   *
+   * U Finderu Ukončit CHYBÍ, stejně jako na Macu. Není to opomenutí, je to
+   * tatáž lekce jako úloha „Okno není program": Finder běží vždycky.
+   *
+   * Ve stavu se drží jen to, KTERÁ ikona to je; položky se skládají až při
+   * vykreslení, ať nikdy neukazují zastaralý seznam oken.
+   */
+  const [nabidka, nastavNabidku] = useState<{
+    x: number;
+    y: number;
+    co: AppId | "launchpad" | "stazene" | "kos";
+  } | null>(null);
+
+  const naPraveTlacitko =
+    (co: AppId | "launchpad" | "stazene" | "kos") => (e: React.MouseEvent) => {
+      e.preventDefault();
+      const ikona =
+        (e.currentTarget as HTMLElement).querySelector("button") ??
+        e.currentTarget;
+      const r = ikona.getBoundingClientRect();
+      nastavNabidku({ x: r.left + r.width / 2, y: r.top, co });
+    };
+
+  const vysypKos = () => {
+    const kos = najdiSlozku(stav.disk, KOS);
+    if (!kos || kos.deti.length === 0) return;
+    let disk = stav.disk;
+    for (const d of kos.deti) disk = odeber(disk, [...KOS, d.jmeno]);
+    poslat({ typ: "disk/nastav", disk });
+    stopa("vysypal-kos");
+  };
+
+  const polozkyAplikace = (app: AppId): PolozkaNabidky[] => {
+    if (!stav.bezici.includes(app))
+      return [{ text: "Otevřít", akce: () => otevriZDocku(app) }];
+    const okna = stav.okna
+      .filter((o) => o.app === app)
+      .sort((a, b) => a.id - b.id);
+    const viditelna = okna.filter((o) => !o.minimalizovane);
+    const nahore = viditelna.length
+      ? viditelna.reduce((a, b) => (a.z > b.z ? a : b))
+      : null;
+    const polozky: PolozkaNabidky[] = okna.map((o) => ({
+      text: o.titul || APLIKACE[app].nazev,
+      znak: o.minimalizovane ? "◆" : o.id === nahore?.id ? "✓" : undefined,
+      akce: () =>
+        o.minimalizovane
+          ? vratZDocku(o)
+          : poslat({ typ: "okno/dopredu", id: o.id }),
+    }));
+    if (polozky.length) polozky[polozky.length - 1].oddelovac = true;
+    const nove: Partial<Record<AppId, PolozkaNabidky>> = {
+      finder: {
+        text: "Nové okno Finderu",
+        akce: () => spust("finder", slozMac(PLOCHA)),
+      },
+      poznamky: {
+        text: "Nová poznámka",
+        akce: () => spust("poznamky", slozMac([...DOKUMENTY, "Poznámka.txt"])),
+      },
+      terminal: { text: "Nové okno", akce: () => spust("terminal") },
+    };
+    const noveOkno = nove[app];
+    if (noveOkno) polozky.push({ ...noveOkno, oddelovac: app !== "finder" });
+    if (app !== "finder")
+      polozky.push({
+        text: "Ukončit",
+        akce: () => poslat({ typ: "app/ukonci", app }),
+      });
+    return polozky;
+  };
+
+  const polozkyNabidky = (
+    co: AppId | "launchpad" | "stazene" | "kos",
+  ): PolozkaNabidky[] => {
+    if (co === "launchpad") return [{ text: "Otevřít", akce: onLaunchpad }];
+    if (co === "stazene")
+      return [
+        {
+          text: "Otevřít „Stažené“",
+          akce: () => spust("finder", slozMac(STAZENE)),
+        },
+      ];
+    if (co === "kos")
+      return [
+        {
+          text: "Otevřít",
+          akce: () => spust("finder", slozMac(KOS)),
+          oddelovac: true,
+        },
+        { text: "Vysypat koš", akce: vKosi ? vysypKos : undefined },
+      ];
+    return polozkyAplikace(co);
+  };
 
   /**
    * Co udělá kliknutí na ikonu v Docku.
@@ -485,6 +588,8 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             znak: ZnakLaunchpad,
           }}
           onClick={onLaunchpad}
+          onContextMenu={naPraveTlacitko("launchpad")}
+          bezPopisku={nabidka !== null}
         />
         {PORADI.map((app) => (
           <Ikona
@@ -496,6 +601,8 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             vzhled={VZHLED_APLIKACI[app]}
             bezi={stav.bezici.includes(app)}
             onClick={() => otevriZDocku(app)}
+            onContextMenu={naPraveTlacitko(app)}
+            bezPopisku={nabidka !== null}
           />
         ))}
 
@@ -514,7 +621,9 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             zvetsuje={zvetsovat}
             vzhled={VZHLED_APLIKACI[okno.app]}
             znacka={{ "data-dock-okno": String(okno.id) }}
-            onClick={(e) => vratZDocku(okno, e)}
+            onClick={(e) => vratZDocku(okno, e.shiftKey)}
+            // Nabídku tu skutečný Mac nemá; jen ať nevyskočí ta prohlížečová.
+            onContextMenu={(e) => e.preventDefault()}
           />
         ))}
 
@@ -540,6 +649,8 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             znak: Download,
           }}
           onClick={() => spust("finder", slozMac(STAZENE))}
+          onContextMenu={naPraveTlacitko("stazene")}
+          bezPopisku={nabidka !== null}
         />
         <Ikona
           popis={vKosi === 0 ? "Koš (prázdný)" : `Koš (${vKosi})`}
@@ -556,8 +667,20 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
           // Koš je na Macu složka, takže se otevře ve Finderu jako každá jiná.
           // Tím se zároveň prozradí, že smazané soubory nezmizely.
           onClick={() => spust("finder", slozMac(KOS))}
+          onContextMenu={naPraveTlacitko("kos")}
+          bezPopisku={nabidka !== null}
         />
       </div>
+
+      {nabidka && (
+        <NabidkaMistni
+          nad
+          x={nabidka.x}
+          y={nabidka.y}
+          polozky={polozkyNabidky(nabidka.co)}
+          zavri={() => nastavNabidku(null)}
+        />
+      )}
     </div>
   );
 }
@@ -570,6 +693,8 @@ function Ikona({
   znacka,
   zvetsuje,
   onClick,
+  onContextMenu,
+  bezPopisku,
 }: {
   popis: string;
   vzhled: { pozadi: string; barva: string; znak: Znak };
@@ -581,6 +706,9 @@ function Ikona({
   /** Zvětšuje se celý Dock pod kurzorem? Pak si ikona nepřidává vlastní skok. */
   zvetsuje?: boolean;
   onClick?: (e: React.MouseEvent) => void;
+  onContextMenu?: (e: React.MouseEvent) => void;
+  /** Když je otevřená nabídka, popisek nad ikonou se neukazuje – jako na Macu. */
+  bezPopisku?: boolean;
 }) {
   const Znak = vzhled.znak;
   return (
@@ -588,11 +716,16 @@ function Ikona({
       data-dock-ikona
       // Roste se nahoru z Docku, ne do stran od středu – proto počátek dole.
       className="group/dock relative flex origin-bottom flex-col items-center"
+      onContextMenu={onContextMenu}
       {...znacka}
     >
       {/* Popisek nad ikonou. V Docku je to jediné, co ikonu pojmenuje – bez
           něj žák hádá podle obrázku, a u Terminálu to není poznat. */}
-      <span className="pointer-events-none absolute -top-9 whitespace-nowrap rounded-md bg-black/75 px-2 py-1 text-[12px] text-white opacity-0 transition-opacity group-hover/dock:opacity-100">
+      <span
+        className={`pointer-events-none absolute -top-9 whitespace-nowrap rounded-md bg-black/75 px-2 py-1 text-[12px] text-white opacity-0 transition-opacity ${
+          bezPopisku ? "" : "group-hover/dock:opacity-100"
+        }`}
+      >
         {popis}
       </span>
       {/* Bez `title`: prohlížeč by pod ikonu přidal ještě vlastní šedou

@@ -15,6 +15,11 @@ export interface PolozkaNabidky {
   akce?: () => void;
   /** Vodorovná čára pod položkou. */
   oddelovac?: boolean;
+  /**
+   * Značka vlevo před textem. Dock ji dává k seznamu oken: ✓ u okna vpředu,
+   * ◆ u okna schovaného v Docku – přesně tak to kreslí macOS.
+   */
+  znak?: string;
 }
 
 /**
@@ -30,13 +35,21 @@ export function NabidkaMistni({
   y,
   polozky,
   zavri,
+  nad,
 }: {
   x: number;
   y: number;
   polozky: PolozkaNabidky[];
   zavri: () => void;
+  /**
+   * Nabídka z Docku neroste od kurzoru dolů, ale stojí NAD ikonou, vystředěná
+   * na ní. `x` je pak střed ikony a `y` její horní hrana.
+   */
+  nad?: boolean;
 }) {
   const ram = useRef<HTMLDivElement>(null);
+  /** Když má značku aspoň jedna položka, odsadí se všechny, ať texty lícují. */
+  const sloupecZnaku = polozky.some((p) => p.znak);
 
   useEffect(() => {
     const venku = (e: MouseEvent) => {
@@ -63,7 +76,15 @@ export function NabidkaMistni({
       ref={ram}
       role="menu"
       className="mac-nabidka fixed z-[950] min-w-[220px] rounded-lg border border-black/10 bg-mac-panel/95 p-1 shadow-[0_12px_40px_rgba(0,0,0,0.3)] backdrop-blur-xl"
-      style={{ left: x, top: y }}
+      style={
+        nad
+          ? {
+              left: x,
+              bottom: window.innerHeight - y + 10,
+              transform: "translateX(-50%)",
+            }
+          : { left: x, top: y }
+      }
     >
       {polozky.map((p, i) => (
         <div key={`${p.text}-${i}`}>
@@ -81,6 +102,9 @@ export function NabidkaMistni({
                 : "cursor-default text-mac-slaby/60"
             }`}
           >
+            {sloupecZnaku ? (
+              <span className="inline-block w-4 text-[11px]">{p.znak}</span>
+            ) : null}
             {p.text}
           </button>
           {p.oddelovac && <div className="my-1 h-px bg-mac-linka" />}
@@ -137,7 +161,9 @@ export function PanelInformace({
           {radky.map((r) => (
             <div key={r.popisek} className="flex gap-3 px-4 py-2 text-[12px]">
               <dt className="w-[92px] shrink-0 text-mac-slaby">{r.popisek}</dt>
-              <dd className="min-w-0 flex-1 break-words text-mac-text">{r.hodnota}</dd>
+              <dd className="min-w-0 flex-1 break-words text-mac-text">
+                {r.hodnota}
+              </dd>
             </div>
           ))}
         </dl>

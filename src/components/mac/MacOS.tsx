@@ -430,6 +430,14 @@ function Obrazovka() {
     <div
       ref={obrazovka}
       className="mac relative h-full w-full overflow-hidden bg-black"
+      // Nabídka prohlížeče („Znovu načíst stránku…") do Macu nepatří. Kde
+      // má prostředí vlastní nabídku, otevře ji samo; jinde se neukáže nic,
+      // jako na Macu. Textová pole si ji nechají – hodí se na vložení.
+      onContextMenu={(e) => {
+        const cil = e.target as HTMLElement;
+        if (cil.closest("input, textarea, [contenteditable='true']")) return;
+        e.preventDefault();
+      }}
       data-motiv={stav.nastaveni.motiv}
       data-efekty={stav.nastaveni.omezitEfekty ? "omezene" : undefined}
     >
