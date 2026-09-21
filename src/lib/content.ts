@@ -1454,6 +1454,22 @@ export const t: Record<Lang, Dict> = {
           subject: "Český jazyk",
           icon: "cesky-jazyk",
           what: "Formátování, styly a dlouhý dokument – k seminární a ročníkové práci.",
+          tools: [
+            {
+              name: "AgileFingers",
+              url: "https://agilefingers.com/cs",
+              why: "Psaní všemi deseti – kurz od základů, opisování textů, hry a test rychlosti.",
+              note: "Zdarma a bez přihlášení, celé česky. Na stránkách běží reklama. Učitelská zóna se třídami a zadáváním úkolů účet chce, samotné procvičování ne.",
+            },
+            {
+              name: "Subformer",
+              url: "https://subformer.com/cs-CZ",
+              why: "Dabing a titulky k videu do více než 130 jazyků, s klonováním hlasu.",
+              // Jediný placený nástroj v celé téhle sekci – ostatních
+              // sedmnáct je zdarma. Proto to stojí hned v první větě.
+              note: "Placené: plány od 5,49 $ měsíčně a nevyužité kredity na konci období propadají. Chce účet, rozhraní je česky. Je to jediný placený nástroj v téhle sekci, a pro hodinu to znamená, že video zpracuješ ty, ne žáci.",
+            },
+          ],
         },
         {
           subject: "Matematika",
@@ -1651,6 +1667,16 @@ export const t: Record<Lang, Dict> = {
               pouziti:
                 "Nejlíp poslouží na varianty: z hotového testu uděláš skupinu B, z jednoho zadání tři obtížnosti, z dlouhého textu verzi pro žáka, který čte pomaleji.",
               note: "Bez účtu jen omezeně, plné funkce chtějí registraci. Podmínky žádají věk 13+ a u nezletilých souhlas rodiče.",
+            },
+            {
+              name: "Prompts for Education",
+              url: "https://github.com/microsoft/prompts-for-edu",
+              why: "Není to chatbot, ale hotová sbírka zadání pro ně – od Microsoftu, rozdělená zvlášť pro učitele, žáky a vedení školy.",
+              navod:
+                "Otevři složku Educators a vybírej podle situace, ne podle předmětu. Prompty jsou šablony s hranatými závorkami, do kterých doplníš svůj předmět, ročník a délku hodiny – bez toho z nich vypadne obecná vata. Hotové zadání pak zkopíruj do Copilota nebo ChatGPT výš.",
+              pouziti:
+                "Když nevíš, jak se AI zeptat. Rychleji než vymýšlet vlastní zadání tu najdeš hotové na rubriku k hodnocení, na rozdělení úkolu do tří obtížností nebo na zpětnou vazbu k žákovské práci.",
+              note: "Zdarma, bez účtu, pod licencí MIT. Celé anglicky – prompt si musíš přeložit, nebo ho nechat přeložit rovnou tím chatem. Text odkazuje na Bing Chat, což je dnešní Copilot.",
             },
           ],
         },
@@ -1999,6 +2025,20 @@ export const t: Record<Lang, Dict> = {
           subject: "Czech language",
           icon: "cesky-jazyk",
           what: "Formatting, styles and long documents – for term papers and essays.",
+          tools: [
+            {
+              name: "AgileFingers",
+              url: "https://agilefingers.com/cs",
+              why: "Touch typing – a course from the basics, copy practice, games and a speed test.",
+              note: "Free and no sign-in, fully in Czech. The site runs ads. The teacher zone with classes and assignments needs an account; plain practice does not.",
+            },
+            {
+              name: "Subformer",
+              url: "https://subformer.com/cs-CZ",
+              why: "Dubbing and subtitles for video in over 130 languages, with voice cloning.",
+              note: "Paid: plans from $5.49 a month, and unused credits expire at the end of each period. Needs an account; the interface is in Czech. It is the only paid tool in this section, which in practice means you process the video, not your pupils.",
+            },
+          ],
         },
         {
           subject: "Maths",
@@ -2196,6 +2236,16 @@ export const t: Record<Lang, Dict> = {
               pouziti:
                 "It serves best for variants: turn a finished test into a group B, one task into three difficulty levels, a long text into a version for a pupil who reads more slowly.",
               note: "Limited without an account; full features need signing up. The terms require age 13+ and a parent's consent for minors.",
+            },
+            {
+              name: "Prompts for Education",
+              url: "https://github.com/microsoft/prompts-for-edu",
+              why: "Not a chatbot but a ready-made collection of prompts for one – from Microsoft, in separate folders for teachers, pupils and school leadership.",
+              navod:
+                "Open the Educators folder and pick by situation, not by subject. The prompts are templates with square brackets where you fill in your subject, year group and lesson length – leave those out and you get generic filler. Then paste the finished prompt into Copilot or ChatGPT above.",
+              pouziti:
+                "For when you do not know how to ask. Faster than writing your own, you will find ready prompts for a marking rubric, for splitting a task into three difficulty levels, or for feedback on a pupil's work.",
+              note: "Free, no account, MIT licence. English only – you will need to translate a prompt yourself, or have the chat tool translate it. The text refers to Bing Chat, which is today's Copilot.",
             },
           ],
         },
