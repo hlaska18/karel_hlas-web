@@ -128,6 +128,12 @@ export interface StavMac {
   nastaveni: NastaveniMac;
   stopy: string[];
   splneno: string[];
+  /**
+   * Už se po přihlášení ukázalo uvítání (Přečti si mě.txt)? Jen při ÚVODNÍM
+   * přihlášení, ne pokaždé. Ukládá se a přežije i měkký reset; smaže ho
+   * jen úplné „Začít načisto", což je skutečně nový začátek.
+   */
+  uvitano: boolean;
 }
 
 export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
@@ -150,12 +156,16 @@ export function vychoziStavMac(): StavMac {
     nastaveni: { ...VYCHOZI_NASTAVENI },
     stopy: [],
     splneno: [],
+    uvitano: false,
   };
 }
 
 /* ───────────────────── Ukládání ───────────────────── */
 
-type Ulozeny = Pick<StavMac, "verze" | "disk" | "nastaveni" | "stopy" | "splneno">;
+// `uvitano` je volitelné: stav uložený před jeho zavedením ho nemá.
+type Ulozeny = Pick<StavMac, "verze" | "disk" | "nastaveni" | "stopy" | "splneno"> & {
+  uvitano?: boolean;
+};
 
 export function nactiMac(): StavMac | null {
   if (typeof window === "undefined") return null;
@@ -170,6 +180,7 @@ export function nactiMac(): StavMac | null {
       nastaveni: { ...VYCHOZI_NASTAVENI, ...ulozeny.nastaveni },
       stopy: ulozeny.stopy ?? [],
       splneno: ulozeny.splneno ?? [],
+      uvitano: ulozeny.uvitano ?? false,
     };
   } catch {
     return null;
@@ -185,6 +196,7 @@ export function ulozMac(stav: StavMac): void {
       nastaveni: stav.nastaveni,
       stopy: stav.stopy,
       splneno: stav.splneno,
+      uvitano: stav.uvitano,
     };
     window.localStorage.setItem(KLIC_ULOZISTE, JSON.stringify(ulozeny));
   } catch {

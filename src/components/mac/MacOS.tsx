@@ -75,15 +75,32 @@ function Obrazovka() {
    * bez jediného okna", protože program po zavření okna běží dál; to je
    * správně, to už je jeho vlastní krok a je to přesně ta lekce.
    *
+   * JEN PŘI ÚVODNÍM PŘIHLÁŠENÍ (Karel: „pouze při úvodním přihlášení").
+   * Co se jednou ukázalo, si pamatuje `stav.uvitano` v uloženém stavu, takže
+   * to přežije zavření záložky i odhlášení. Znovu se ukáže až po úplném
+   * „Začít načisto", kdy je to skutečně nový začátek.
+   *
    * Nic se neotevře, když žák soubor smazal nebo přejmenoval, ani když už
-   * otevřený je – po každém přihlášení by jinak přibylo další okno.
+   * otevřený je.
    */
   const otevriUvitani = () => {
+    if (stav.uvitano) return;
+    // Nejdřív okno Finderu, jako se otevíralo dřív – stojí na něm hned
+    // první úloha („V okně Finderu jsou vlevo nahoře tři puntíky…").
+    // Uvítání přes něj bez tohohle okno Finderu sebralo, protože efekt
+    // „první okno po přihlášení" níž se neotevře, když už nějaké okno je.
+    if (!stav.okna.some((o) => o.app === "finder"))
+      spust("finder", slozMac(PLOCHA));
     const cesta = [...PLOCHA, UVITANI];
     const arg = slozMac(cesta);
-    if (!najdiSoubor(stav.disk, cesta)) return;
-    if (stav.okna.some((o) => o.app === "poznamky" && o.arg === arg)) return;
-    poslat({ typ: "okno/otevri", app: "poznamky", arg, samo: true });
+    if (
+      najdiSoubor(stav.disk, cesta) &&
+      !stav.okna.some((o) => o.app === "poznamky" && o.arg === arg)
+    ) {
+      // Až po Finderu, ať je uvítání navrchu.
+      poslat({ typ: "okno/otevri", app: "poznamky", arg, samo: true });
+    }
+    poslat({ typ: "uvitani/ukazano" });
   };
 
   /* Rozběhnuté sezení si pamatuje karta – obnovení stránky nevrací na zámek. */

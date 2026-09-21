@@ -15,11 +15,13 @@ import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Loader2, User } from "lucide-react";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { kodSedi } from "@/lib/win/pristup";
-import { VYCHOZI_NASTAVENI, zapomenMac } from "@/lib/mac/stav";
+import { VYCHOZI_NASTAVENI, vychoziStavMac, zapomenMac } from "@/lib/mac/stav";
+import { useMac } from "./system";
 
 type Faze = "zamek" | "kod" | "vitejte";
 
 export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
+  const { poslat } = useMac();
   const [faze, nastavFazi] = useState<Faze>("zamek");
   const [kod, nastavKod] = useState("");
   const [hlaska, nastavHlasku] = useState("");
@@ -209,6 +211,12 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
                     type="button"
                     onClick={() => {
                       zapomenMac();
+                      // Nestačí smazat uložený stav: prostředí běží v paměti
+                      // dál s plochou předchozího žáka a hned by ji zase
+                      // uložilo zpátky. První verze dělala jen tohle a úklid
+                      // tím ve skutečnosti neproběhl. Čistý stav se proto
+                      // nahraje i do paměti.
+                      poslat({ typ: "system/nacti", stav: vychoziStavMac() });
                       nastavPtaSeNaUklid(false);
                       nastavHlasku("Hotovo, prostředí je čisté.");
                     }}

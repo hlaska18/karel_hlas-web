@@ -52,7 +52,8 @@ export type AkceMac =
   | { typ: "stopa"; klic: string }
   | { typ: "ukoly/splneno"; ids: string[] }
   | { typ: "system/nacti"; stav: StavMac }
-  | { typ: "system/reset" };
+  | { typ: "system/reset" }
+  | { typ: "uvitani/ukazano" };
 
 /** Kaskáda, ať nová okna nepadají přesně na sebe. */
 const KASKADA = 26;
@@ -229,7 +230,17 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
       return akce.stav;
 
     case "system/reset":
-      return { ...vychoziStavMac(), splneno: stav.splneno, stopy: stav.stopy };
+      // Měkký reset uklidí plochu, ale postup i to, že uvítání už bylo,
+      // si nechá – žák tu není poprvé.
+      return {
+        ...vychoziStavMac(),
+        splneno: stav.splneno,
+        stopy: stav.stopy,
+        uvitano: stav.uvitano,
+      };
+
+    case "uvitani/ukazano":
+      return stav.uvitano ? stav : { ...stav, uvitano: true };
 
     default:
       return stav;

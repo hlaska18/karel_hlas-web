@@ -177,6 +177,21 @@ describe("uvítání po přihlášení", () => {
     expect(stav.stopy).toContain("spustil:poznamky");
   });
 
+  it("na čerstvém prostředí uvítání ještě neproběhlo", () => {
+    expect(vychoziStavMac().uvitano).toBe(false);
+  });
+
+  it("po ukázání si prostředí zapamatuje, že uvítání už bylo", () => {
+    const stav = reducerMac(vychoziStavMac(), { typ: "uvitani/ukazano" });
+    expect(stav.uvitano).toBe(true);
+  });
+
+  it("měkký reset si uvítání pamatuje – žák tu není poprvé", () => {
+    let stav = reducerMac(vychoziStavMac(), { typ: "uvitani/ukazano" });
+    stav = reducerMac(stav, { typ: "system/reset" });
+    expect(stav.uvitano).toBe(true);
+  });
+
   it("zavřením uvítacího okna Poznámky běží dál bez okna", () => {
     let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "poznamky", samo: true });
     stav = reducerMac(stav, { typ: "okno/zavri", id: stav.okna[0].id });
