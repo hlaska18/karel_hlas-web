@@ -376,6 +376,7 @@ function Obrazovka() {
       ref={obrazovka}
       className="mac relative h-full w-full overflow-hidden bg-black"
       data-motiv={stav.nastaveni.motiv}
+      data-efekty={stav.nastaveni.omezitEfekty ? "omezene" : undefined}
     >
       {faze === "prihlaseni" && (
         <>

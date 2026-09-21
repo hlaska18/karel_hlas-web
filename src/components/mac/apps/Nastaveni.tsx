@@ -123,6 +123,36 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
 
       <div className="my-6 h-px bg-mac-linka" />
 
+      <h2 className="text-[15px] font-semibold">Efekty</h2>
+      <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
+        Když to na počítači seká, efekty vypni. Okno se pak schová bez vsávání
+        do Docku, Dock se pod myší nezvětšuje, okna ani nabídky se nerozjíždějí
+        a zmizí průhledné sklo. Na skutečném Macu jsou to dva přepínače
+        v Zpřístupnění – Omezit pohyb a Omezit průhlednost.
+      </p>
+      <button
+        type="button"
+        onClick={() =>
+          poslat({
+            typ: "nastaveni/zmen",
+            zmena: { omezitEfekty: !stav.nastaveni.omezitEfekty },
+          })
+        }
+        aria-pressed={stav.nastaveni.omezitEfekty}
+        className="mt-3 flex w-full items-center gap-3 rounded-lg border border-mac-linka bg-mac-povrch px-4 py-3 text-left text-[13px] hover:bg-mac-zvyrazneny"
+      >
+        Omezit pohyb a průhlednost
+        <span
+          className={`ml-auto text-[11px] ${
+            stav.nastaveni.omezitEfekty ? "text-mac-akcent" : "text-mac-slaby"
+          }`}
+        >
+          {stav.nastaveni.omezitEfekty ? "zapnuto" : "vypnuto"}
+        </span>
+      </button>
+
+      <div className="my-6 h-px bg-mac-linka" />
+
       <h2 className="text-[15px] font-semibold">Obnovení</h2>
       <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
         Vrátí prostředí do stavu, ve kterém jsi ho dostal. Smažou se soubory,

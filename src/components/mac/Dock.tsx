@@ -277,7 +277,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
   const [tazena, nastavTazenou] = useState<number | null>(null);
   const dzin = useDzin();
   const rada = useRef<HTMLDivElement>(null);
-  const zvetsovat = stav.nastaveni.dockZvetseni;
+  const zvetsovat = stav.nastaveni.dockZvetseni && !stav.nastaveni.omezitEfekty;
 
   /**
    * Zvětšení ikony pod kurzorem.

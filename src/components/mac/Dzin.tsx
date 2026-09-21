@@ -41,6 +41,7 @@ import {
   okrajeProuzku,
   postupRezu,
 } from "@/lib/mac/dzin";
+import { useMac } from "./system";
 
 const mix = (a: number, b: number, t: number) => a + (b - a) * t;
 
@@ -69,18 +70,23 @@ export function DzinProvider({ children }: { children: ReactNode }) {
   const zahlavi = useRef<SVGPathElement>(null);
   const skupina = useRef<SVGGElement>(null);
 
+  const { stav } = useMac();
+  const omezeno = stav.nastaveni.omezitEfekty;
+
   const spust = useCallback((z: Zadani) => {
-    // Kdo si vypnul animace v systému, tomu se nic nehýbe – jen se to stane.
+    // Kdo si vypnul animace v systému nebo v Nastavení, tomu se nic nehýbe –
+    // okno se prostě schová.
     const nechce =
-      typeof window !== "undefined" &&
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      omezeno ||
+      (typeof window !== "undefined" &&
+        typeof window.matchMedia === "function" &&
+        window.matchMedia("(prefers-reduced-motion: reduce)").matches);
     if (nechce || z.okno.sirka <= 0 || z.okno.vyska <= 0) {
       z.poDobehnuti?.();
       return;
     }
     nastavZadani(z);
-  }, []);
+  }, [omezeno]);
 
   useEffect(() => {
     if (!zadani) return;

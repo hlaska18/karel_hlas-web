@@ -1268,3 +1268,36 @@
     background-color: rgba(28, 28, 32, 0.88) !important;
   }
 }
+
+/* Omezené efekty – nouzová brzda z Nastavení.
+   Když to na školním počítači seká, vypne se tím všechno, co stojí výkon:
+   animace oken a nabídek, přechody a rozostření skla. Džina a zvětšování
+   Docku vypíná přímo kód (Dzin.tsx, Dock.tsx), sem patří jen to, co jde
+   stylem. Na Macu jsou to dva přepínače ve Zpřístupnění, Omezit pohyb
+   a Omezit průhlednost; tady je z nich jeden, protože jde o jedno
+   rozhodnutí učitele, ne o dvě. */
+.mac[data-efekty="omezene"] .mac-vjezd,
+.mac[data-efekty="omezene"] .mac-nabidka {
+  animation: none;
+}
+
+.mac[data-efekty="omezene"] * {
+  transition-duration: 0s !important;
+}
+
+/* Bez rozostření musí být sklo neprůhledné, jinak by z něj byla díra do
+   tapety a text na něm by zmizel. */
+.mac[data-efekty="omezene"] .mac-sklo {
+  background-color: rgb(var(--mac-panel));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
+.mac[data-efekty="omezene"] [class*="backdrop-blur"] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.mac[data-efekty="omezene"] .mac-sklo-zaloha {
+  background-color: rgba(28, 28, 32, 0.88) !important;
+}

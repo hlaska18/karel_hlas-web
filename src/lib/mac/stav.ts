@@ -66,6 +66,12 @@ export interface NastaveniMac {
   dockVelikost: number;
   /** Zvětšovat ikonu pod kurzorem? macOS tomu říká Zvětšení. */
   dockZvetseni: boolean;
+  /**
+   * Nouzová brzda na slabý počítač: bez džina, bez zvětšování Docku, bez
+   * animací oken a nabídek a bez průhledného skla. Na Macu jsou to dva
+   * přepínače ve Zpřístupnění – Omezit pohyb a Omezit průhlednost.
+   */
+  omezitEfekty: boolean;
 }
 
 /** Meze velikosti Docku. Skutečný Mac má podobné – menší už není vidět,
@@ -100,6 +106,7 @@ export const VYCHOZI_NASTAVENI: NastaveniMac = {
    * v Nastavení, stejně jako na Macu.
    */
   dockZvetseni: true,
+  omezitEfekty: false,
 };
 
 /** Nejvyšší zvětšení ikony pod kurzorem a dosah, na který ještě působí. */
