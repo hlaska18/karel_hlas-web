@@ -106,7 +106,7 @@ const jeProstaSlozka = (u: Uzel) => jeSlozka(u) && !jeBalicek(u.jmeno);
 
 export function Finder() {
   const { stav, poslat, spust, stopa } = useMac();
-  const { arg, nastavTitul, slotZahlavi } = useOknoMac();
+  const { arg, nastavTitul, slotZahlavi, aktivni } = useOknoMac();
 
   /** Historie chození tam a zpět. Index ukazuje, kde v ní právě stojíme. */
   const [historie, nastavHistorii] = useState<string[][]>([
@@ -132,6 +132,8 @@ export function Finder() {
    * to vychozi i tady. Seznam je pak ta druha moznost, ne naopak.
    */
   const [zobrazeni, nastavZobrazeni] = useState<"ikony" | "seznam">("ikony");
+  /** Jméno položky v Rychlém náhledu, nebo null, když je zavřený. */
+  const [nahled, nastavNahled] = useState<string | null>(null);
   const polePrejmenovani = useRef<HTMLInputElement>(null);
 
   const cesta = historie[kde];
@@ -299,6 +301,57 @@ export function Finder() {
   };
 
   const vKosi = slozMac(cesta) === slozMac(KOS);
+
+  /*
+   * Dvě klávesy, které na Macu dělají něco jiného než ve Windows – a obě
+   * jsou bez ⌘, takže projdou i na windowsové klávesnici.
+   *
+   *   ENTER vybranou položku PŘEJMENUJE. Ve Windows by ji otevřel. Je to
+   *   jeden z nejčastějších omylů po přechodu a žák na něj narazí sám.
+   *   MEZERNÍK otevře Rychlý náhled – podívat se dovnitř souboru bez
+   *   spouštění aplikace. Ve Windows nic takového není. Další mezerník nebo
+   *   Escape náhled zavře.
+   *
+   * Poslouchá se jen ve Finderu, který je vpředu, a nikdy, když se zrovna
+   * píše do pole – jinak by mezera v hledání otevřela náhled.
+   */
+  useEffect(() => {
+    if (!aktivni) return;
+    const klavesa = (e: KeyboardEvent) => {
+      const cil = e.target as HTMLElement | null;
+      if (cil && (cil.tagName === "INPUT" || cil.tagName === "TEXTAREA" || cil.isContentEditable)) {
+        return;
+      }
+      if (prejmenovavany) return;
+
+      if (e.key === " " || e.code === "Space") {
+        e.preventDefault();
+        if (nahled) {
+          nastavNahled(null);
+        } else if (vybrano && slozka?.deti.some((d) => d.jmeno === vybrano)) {
+          nastavNahled(vybrano);
+          stopa("nahled-mezernikem");
+        }
+        return;
+      }
+      if (e.key === "Escape" && nahled) {
+        nastavNahled(null);
+        return;
+      }
+      if (e.key === "Enter" && vybrano && !nahled) {
+        const uzel = slozka?.deti.find((d) => d.jmeno === vybrano);
+        if (!uzel || uzel.zamceno) return;
+        e.preventDefault();
+        nastavNovyNazev(uzel.jmeno);
+        nastavPrejmenovavany(uzel.jmeno);
+        stopa("prejmenoval-enterem");
+      }
+    };
+    window.addEventListener("keydown", klavesa);
+    return () => {
+      window.removeEventListener("keydown", klavesa);
+    };
+  }, [aktivni, prejmenovavany, nahled, vybrano, slozka, stopa]);
 
   const polozkyNabidky = (jmeno: string | null): PolozkaNabidky[] => {
     if (!jmeno) {
@@ -479,9 +532,31 @@ export function Finder() {
       )
     : null;
 
+  // Rychlý náhled se vykresluje na PLOCHU, ne do okna: okno má při otevření
+  // animaci s `transform`, a ta by fixně umístěný panel uvěznila uvnitř
+  // okna místo nad celou obrazovkou, kde ho má Mac.
+  const uzelNahledu = nahled ? slozka?.deti.find((d) => d.jmeno === nahled) : undefined;
+  const plochaProNahled =
+    typeof document !== "undefined" ? document.querySelector(".mac-tapeta") : null;
+  const panelNahledu =
+    uzelNahledu && plochaProNahled
+      ? createPortal(
+          <RychlyNahled
+            uzel={uzelNahledu}
+            zavri={() => nastavNahled(null)}
+            otevri={() => {
+              nastavNahled(null);
+              otevri(uzelNahledu);
+            }}
+          />,
+          plochaProNahled,
+        )
+      : null;
+
   return (
     <div className="mac-bezvyberu flex h-full bg-mac-povrch text-[13px] text-mac-text">
       {naradi}
+      {panelNahledu}
       <aside
         data-postranni
         className="mac-posuv w-[180px] shrink-0 overflow-y-auto border-r border-mac-linka bg-mac-postranni px-2 py-3"
@@ -806,5 +881,101 @@ function PolozkaBoku({
       {znak}
       <span className="truncate">{jmeno}</span>
     </button>
+  );
+}
+
+/**
+ * Rychlý náhled (Quick Look).
+ *
+ * Na Macu se do souboru podíváš mezerníkem, aniž bys spouštěl aplikaci –
+ * a to je rozdíl proti Windows, kde nic takového není. Ukáže se to, co jde
+ * ukázat: text souboru, obrázek, u složky počet položek. U ostatního se
+ * poctivě řekne, že náhled v simulaci není; předstírat ho by bylo horší.
+ */
+function RychlyNahled({
+  uzel,
+  zavri,
+  otevri,
+}: {
+  uzel: Uzel;
+  zavri: () => void;
+  otevri: () => void;
+}) {
+  const jeObrazek = !jeSlozka(uzel) && uzel.obsah.startsWith("data:image");
+  const jeText = !jeSlozka(uzel) && !jeObrazek && jeTextovy(uzel.jmeno);
+
+  let telo: React.ReactNode;
+  if (jeSlozka(uzel)) {
+    telo = (
+      <div className="flex flex-col items-center gap-4 py-10">
+        <span className="scale-[2.4]">
+          <VelkaIkona uzel={uzel} />
+        </span>
+        <p className="mt-6 text-[13px] text-mac-slaby">
+          {jeBalicek(uzel.jmeno) ? "Aplikace (ve skutečnosti složka)" : polozekSlovy(uzel.deti.length)}
+        </p>
+      </div>
+    );
+  } else if (jeObrazek) {
+    telo = (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img src={uzel.obsah} alt={uzel.jmeno} className="mx-auto max-h-[52vh] max-w-full object-contain" />
+    );
+  } else if (jeText) {
+    telo = (
+      <pre className="mac-posuv max-h-[52vh] overflow-auto whitespace-pre-wrap break-words px-5 py-4 font-mono text-[12px] leading-relaxed text-mac-text">
+        {uzel.obsah || "(Soubor je prázdný.)"}
+      </pre>
+    );
+  } else {
+    telo = (
+      <div className="flex flex-col items-center gap-4 py-10">
+        <span className="scale-[2.4]">
+          <VelkaIkona uzel={uzel} />
+        </span>
+        <p className="mt-6 max-w-[300px] text-center text-[12px] leading-relaxed text-mac-slaby">
+          Náhled pro tenhle druh souboru v simulaci není. Na skutečném Macu by
+          se tu ukázal obsah.
+        </p>
+      </div>
+    );
+  }
+
+  return (
+    <div
+      className="absolute inset-0 z-[860] flex items-center justify-center bg-black/20"
+      onMouseDown={(e) => {
+        if (e.target === e.currentTarget) zavri();
+      }}
+    >
+      <div className="mac-vjezd flex max-h-[76vh] w-[min(620px,88%)] flex-col overflow-hidden rounded-xl bg-mac-povrch shadow-[var(--mac-stin)]">
+        <div className="relative flex h-[42px] shrink-0 items-center border-b border-mac-linka bg-mac-panel px-3">
+          <button
+            type="button"
+            onClick={zavri}
+            aria-label="Zavřít náhled"
+            title="Zavřít (mezerník nebo Escape)"
+            className="flex h-6 w-6 items-center justify-center rounded-md text-mac-slaby hover:bg-mac-zvyrazneny hover:text-mac-text"
+          >
+            ✕
+          </button>
+          <span className="pointer-events-none absolute inset-x-0 truncate px-24 text-center text-[13px] font-semibold text-mac-text">
+            {uzel.jmeno}
+          </span>
+          <button
+            type="button"
+            onClick={otevri}
+            className="ml-auto rounded-md border border-mac-linka px-2.5 py-1 text-[12px] text-mac-text hover:bg-mac-zvyrazneny"
+          >
+            Otevřít
+          </button>
+        </div>
+        <div className="min-h-0 flex-1 overflow-auto">{telo}</div>
+        <p className="shrink-0 border-t border-mac-linka px-4 py-2 text-[11px] text-mac-slaby">
+          Rychlý náhled: mezerník ho otevře i zavře. Soubor se nespouští, jen se
+          do něj díváš.
+        </p>
+      </div>
+    </div>
   );
 }
