@@ -72,11 +72,22 @@ export interface NastaveniMac {
    * přepínače ve Zpřístupnění – Omezit pohyb a Omezit průhlednost.
    */
   omezitEfekty: boolean;
+  /**
+   * Jas displeje z Ovládacího centra, 0,35 až 1. Tma se kreslí průhlednou
+   * černou vrstvou přes celou obrazovku; úplná tma by žáka ztratila, proto
+   * dolní mez.
+   */
+  jas: number;
+  /** Night Shift z Ovládacího centra: teplejší barvy obrazovky. */
+  nocniRezim: boolean;
 }
 
 /** Meze velikosti Docku. Skutečný Mac má podobné – menší už není vidět,
  *  větší zabere půl obrazovky. */
 export const DOCK_MIN = 34;
+
+/** Nejnižší jas. Pod tím už obrazovka splývá s vypnutou. */
+export const JAS_MIN = 0.35;
 export const DOCK_MAX = 82;
 
 /**
@@ -107,6 +118,8 @@ export const VYCHOZI_NASTAVENI: NastaveniMac = {
    */
   dockZvetseni: true,
   omezitEfekty: false,
+  jas: 1,
+  nocniRezim: false,
 };
 
 /** Nejvyšší zvětšení ikony pod kurzorem a dosah, na který ještě působí. */
@@ -163,7 +176,10 @@ export function vychoziStavMac(): StavMac {
 /* ───────────────────── Ukládání ───────────────────── */
 
 // `uvitano` je volitelné: stav uložený před jeho zavedením ho nemá.
-type Ulozeny = Pick<StavMac, "verze" | "disk" | "nastaveni" | "stopy" | "splneno"> & {
+type Ulozeny = Pick<
+  StavMac,
+  "verze" | "disk" | "nastaveni" | "stopy" | "splneno"
+> & {
   uvitano?: boolean;
 };
 

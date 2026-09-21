@@ -531,6 +531,30 @@ function Obrazovka() {
           </DzinProvider>
         </div>
       )}
+
+      {/*
+        Jas a Night Shift z Ovládacího centra. Obojí je vrstva PŘES celou
+        obrazovku, ne `filter` na ní: filtr na předkovi vypne sklo
+        (`backdrop-filter`) všem uvnitř. Myš vrstvami prochází. Jas platí
+        i pro zamykací obrazovku, stejně jako na skutečném displeji.
+      */}
+      {stav.nastaveni.nocniRezim && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[1000]"
+          style={{
+            background: "rgb(255 150 60 / 0.22)",
+            mixBlendMode: "multiply",
+          }}
+        />
+      )}
+      {stav.nastaveni.jas < 1 && (
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-0 z-[1000] bg-black"
+          style={{ opacity: 1 - stav.nastaveni.jas }}
+        />
+      )}
     </div>
   );
 }
