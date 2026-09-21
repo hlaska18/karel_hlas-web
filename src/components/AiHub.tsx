@@ -8,17 +8,33 @@
  * dozvědět, co nefungovalo, dřív než si to stáhne.
  */
 
-import { ExternalLink, Images, Info, MessageSquare, Sparkles } from "lucide-react";
+import {
+  ChevronDown,
+  ExternalLink,
+  Images,
+  Info,
+  MessageSquare,
+  Sparkles,
+} from "lucide-react";
+import { useState } from "react";
 
 import { AiHubSouhvezdi } from "@/components/AiHubSouhvezdi";
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionJump } from "@/components/SectionJump";
-import { FAZE, OZNACENI_VYSTUPU, type Faze, type Vystup } from "@/lib/aihubLabels";
+import {
+  FAZE,
+  OZNACENI_VYSTUPU,
+  type Faze,
+  type Vystup,
+} from "@/lib/aihubLabels";
 
 /** Český tvar podle počtu: 1 výstup, 2–4 výstupy, 5+ výstupů. */
-function pocetSlovy(n: number, a: { countOne: string; countFew: string; countMany: string }) {
+function pocetSlovy(
+  n: number,
+  a: { countOne: string; countFew: string; countMany: string },
+) {
   if (n === 1) return a.countOne;
   if (n >= 2 && n <= 4) return a.countFew;
   return a.countMany;
@@ -34,11 +50,12 @@ function Pole({ popisek, text }: { popisek: string; text: string }) {
       <dt className="text-xs font-semibold uppercase tracking-wide text-zinc-600 dark:text-zinc-400">
         {popisek}
       </dt>
-      <dd className="mt-1 text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">{text}</dd>
+      <dd className="mt-1 text-sm leading-relaxed text-zinc-800 dark:text-zinc-200">
+        {text}
+      </dd>
     </div>
   );
 }
-
 
 const IKONY = {
   chat: MessageSquare,
@@ -89,45 +106,18 @@ function Nastroje() {
                 </div>
               </div>
 
-              <ul className="mt-4 grid items-stretch gap-4 sm:grid-cols-2 lg:grid-cols-3">
+              {/* `items-start`, ne `stretch`: když si učitel jednu kartu
+                  rozbalí, nemají se kvůli ní natáhnout i sousední do prázdných
+                  krabic. */}
+              <ul className="mt-4 grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
                 {kat.tools.map((x) => (
                   <li key={x.name} className="flex">
-                    <a
-                      href={x.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="povrch group flex w-full flex-col rounded-karta p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
-                    >
-                      <span className="flex items-start justify-between gap-2">
-                        <span className="font-display text-base font-semibold tracking-podnadpis text-zinc-900 dark:text-zinc-50">
-                          {x.name}
-                        </span>
-                        <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-400 transition group-hover:text-accent-700 dark:group-hover:text-accent-300" />
-                      </span>
-                      <span className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-                        {sazba(x.why, lang)}
-                      </span>
-                      {/* Dva texty vedle sebe by splynuly v odstavec, proto
-                          popisky: „Jak začít" je první krok, „K čemu to
-                          použiješ" konkrétní situace z učitelova týdne. */}
-                      <span className="mt-3 rounded-ovladac bg-black/[0.03] p-3 dark:bg-white/[0.04]">
-                        <span className="block text-[0.65rem] font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-                          {n.labelNavod}
-                        </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
-                          {sazba(x.navod, lang)}
-                        </span>
-                        <span className="mt-3 block text-[0.65rem] font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
-                          {n.labelPouziti}
-                        </span>
-                        <span className="mt-1 block text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
-                          {sazba(x.pouziti, lang)}
-                        </span>
-                      </span>
-                      <span className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
-                        {sazba(x.note, lang)}
-                      </span>
-                    </a>
+                    <KartaNastroje
+                      nastroj={x}
+                      labelNavod={n.labelNavod}
+                      labelPouziti={n.labelPouziti}
+                      lang={lang}
+                    />
                   </li>
                 ))}
               </ul>
@@ -157,7 +147,9 @@ function Karta({ v, a }: { v: Vystup; a: Texty }) {
   return (
     <li className="povrch rounded-karta p-5">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">{v.nazev}</h3>
+        <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
+          {v.nazev}
+        </h3>
         {/* Vyplatilo se, nebo ne. Neúspěch je plnohodnotný záznam Hubu, ale
             nesmí vypadat jako doporučení – proto barva, ne jen slovo. */}
         <span
@@ -167,7 +159,9 @@ function Karta({ v, a }: { v: Vystup; a: Texty }) {
               : "rounded-stitek bg-amber-500/15 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-amber-700 dark:text-amber-300"
           }
         >
-          {v.vysledek === "vyplatilo" ? a.vysledekVyplatilo : a.vysledekNevyplatilo}
+          {v.vysledek === "vyplatilo"
+            ? a.vysledekVyplatilo
+            : a.vysledekNevyplatilo}
         </span>
         {/* Milník jen tehdy, když opravdu je – prázdný štítek by lhal. */}
         {v.milnik && (
@@ -216,7 +210,9 @@ function Karta({ v, a }: { v: Vystup; a: Texty }) {
         </div>
       )}
 
-      <p className="mt-4 text-xs text-zinc-600 dark:text-zinc-400">{v.publikovano}</p>
+      <p className="mt-4 text-xs text-zinc-600 dark:text-zinc-400">
+        {v.publikovano}
+      </p>
     </li>
   );
 }
@@ -294,5 +290,90 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
         <SectionJump href="#about" label={tr.nav.about} />
       </div>
     </section>
+  );
+}
+
+/**
+ * Karta nástroje v AI Hubu.
+ *
+ * Nahoře jen název a jedna věta, proč právě tenhle nástroj – podle toho se
+ * učitel rozhodne, jestli ho to zajímá. „Jak začít", „K čemu to použiješ"
+ * a poznámka o účtu jsou pod šipkou. Dřív byly všechny rozepsané najednou
+ * a stránka byla hradba textu, ve které se tři karty vedle sebe slévaly.
+ *
+ * Odkazem je NÁZEV, ne celá karta. Celá karta odkazem být nemůže, protože
+ * by tlačítko se šipkou uvnitř odkazu při kliknutí zároveň otevřelo web.
+ */
+function KartaNastroje({
+  nastroj,
+  labelNavod,
+  labelPouziti,
+  lang,
+}: {
+  nastroj: {
+    name: string;
+    url: string;
+    why: string;
+    navod: string;
+    pouziti: string;
+    note: string;
+  };
+  labelNavod: string;
+  labelPouziti: string;
+  lang: Parameters<typeof sazba>[1];
+}) {
+  const [otevrena, nastavOtevrenou] = useState(false);
+  const idPodrobnosti = `nastroj-${nastroj.name.replace(/\W+/g, "-").toLowerCase()}`;
+
+  return (
+    <div className="povrch flex w-full flex-col rounded-karta p-5">
+      <a
+        href={nastroj.url}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="group flex items-start justify-between gap-2"
+      >
+        <span className="font-display text-base font-semibold tracking-podnadpis text-zinc-900 transition group-hover:text-accent-700 dark:text-zinc-50 dark:group-hover:text-accent-300">
+          {nastroj.name}
+        </span>
+        <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-400 transition group-hover:text-accent-700 dark:group-hover:text-accent-300" />
+      </a>
+      <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+        {sazba(nastroj.why, lang)}
+      </p>
+
+      <button
+        type="button"
+        onClick={() => nastavOtevrenou((o) => !o)}
+        aria-expanded={otevrena}
+        aria-controls={idPodrobnosti}
+        className="mt-3 flex items-center gap-1.5 self-start rounded-ovladac text-[0.7rem] font-semibold uppercase tracking-wide text-accent-700 transition hover:text-accent-800 dark:text-accent-300 dark:hover:text-accent-200"
+      >
+        {labelNavod}
+        <ChevronDown
+          className={`h-3.5 w-3.5 transition-transform duration-200 ${otevrena ? "rotate-180" : ""}`}
+          aria-hidden="true"
+        />
+      </button>
+
+      {otevrena && (
+        <div id={idPodrobnosti} className="mt-3">
+          <div className="rounded-ovladac bg-black/[0.03] p-3 dark:bg-white/[0.04]">
+            <p className="text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+              {sazba(nastroj.navod, lang)}
+            </p>
+            <p className="mt-3 text-[0.65rem] font-semibold uppercase tracking-wide text-accent-700 dark:text-accent-300">
+              {labelPouziti}
+            </p>
+            <p className="mt-1 text-sm leading-relaxed text-zinc-700 dark:text-zinc-300">
+              {sazba(nastroj.pouziti, lang)}
+            </p>
+          </div>
+          <p className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
+            {sazba(nastroj.note, lang)}
+          </p>
+        </div>
+      )}
+    </div>
   );
 }
