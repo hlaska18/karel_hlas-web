@@ -40,6 +40,11 @@ import {
 } from "@/lib/mac/cesty";
 import { type Nalez, prohledej } from "@/lib/mac/hledani";
 import { UVITANI } from "@/lib/mac/seed";
+import {
+  rozlisWindows,
+  rozpoznejProhlizec,
+  rozpoznejSystem,
+} from "@/lib/mac/pocitac";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import { zapomenMac } from "@/lib/mac/stav";
 
@@ -883,11 +888,195 @@ function ZacitZnovu({
   );
 }
 
+/**
+ * Údaje o skutečném počítači pod simulací – systém, prohlížeč, obrazovka,
+ * sklo, animace a plynulost. Ve třídě se okno vyfotí (nebo údaje zkopírují)
+ * a je jasné, proč něco nejede. Zjišťuje se jen v prohlížeči, nikam se to
+ * neposílá. Pravidla rozpoznání jsou v `lib/mac/pocitac.ts`.
+ */
+function useUdajePocitace() {
+  const [udaje, nastavUdaje] = useState<[string, string][] | null>(null);
+  /** Snímky za sekundu; „skryto", dokud karta není vidět. */
+  const [fps, nastavFps] = useState<number | "skryto" | null>(null);
+
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    const prohlizec = rozpoznejProhlizec(ua);
+    const umi = (vlastnost: string, hodnota: string) =>
+      typeof CSS !== "undefined" &&
+      typeof CSS.supports === "function" &&
+      CSS.supports(vlastnost, hodnota);
+    const sklo =
+      umi("backdrop-filter", "blur(2px)") ||
+      umi("-webkit-backdrop-filter", "blur(2px)");
+    const bezAnimaci =
+      typeof window.matchMedia === "function" &&
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const nav = navigator as Navigator & {
+      deviceMemory?: number;
+      userAgentData?: {
+        getHighEntropyValues?: (
+          co: string[],
+        ) => Promise<{ platformVersion?: string }>;
+      };
+    };
+    // Prohlížeč paměť zaokrouhluje a nad 8 GB už víc neřekne.
+    const pamet = nav.deviceMemory
+      ? nav.deviceMemory >= 8
+        ? "8 GB a víc"
+        : `asi ${nav.deviceMemory} GB`
+      : null;
+
+    const radky = (system: string): [string, string][] => [
+      ["Systém", system],
+      [
+        "Prohlížeč",
+        prohlizec.verze
+          ? `${prohlizec.nazev} ${prohlizec.verze}`
+          : prohlizec.nazev,
+      ],
+      [
+        "Obrazovka",
+        `${screen.width} × ${screen.height}, hustota ${
+          Math.round(window.devicePixelRatio * 100) / 100
+        }×`,
+      ],
+      ["Okno prohlížeče", `${window.innerWidth} × ${window.innerHeight}`],
+      [
+        "Procesor",
+        navigator.hardwareConcurrency
+          ? `${navigator.hardwareConcurrency} vláken`
+          : "nezjištěno",
+      ],
+      ...(pamet ? ([["Paměť", pamet]] as [string, string][]) : []),
+      [
+        "Sklo (průhlednost)",
+        sklo ? "funguje" : "nefunguje – panely jsou ploché",
+      ],
+      ["Animace v systému", bezAnimaci ? "vypnuté" : "zapnuté"],
+    ];
+
+    let zije = true;
+    const system = rozpoznejSystem(ua);
+    nastavUdaje(radky(system));
+    // Windows 10 a 11 se v textu prohlížeče hlásí stejně. Chrome a Edge
+    // umějí říct víc, když se zeptá.
+    if (
+      system === "Windows 10 nebo 11" &&
+      nav.userAgentData?.getHighEntropyValues
+    ) {
+      nav.userAgentData
+        .getHighEntropyValues(["platformVersion"])
+        .then((h) => {
+          const presne = h.platformVersion
+            ? rozlisWindows(h.platformVersion)
+            : null;
+          if (presne && zije) nastavUdaje(radky(presne));
+        })
+        .catch(() => {});
+    }
+
+    // Plynulost: kolik snímků prohlížeč za sekundu doopravdy nakreslí.
+    // Pod 30 to na oko seká – a to je přesně to, co je potřeba vědět.
+    // Skrytá karta kreslí jen pár snímků za sekundu, takže se měří, až je
+    // vidět, a když se schová, začne se znovu. První čtvrtsekunda se
+    // nepočítá – to se okno teprve rozjíždí.
+    const ROZJEZD_MS = 250;
+    const MERENI_MS = 1500;
+    let ram = 0;
+    const zmer = () => {
+      cancelAnimationFrame(ram);
+      if (document.hidden) {
+        nastavFps("skryto");
+        return;
+      }
+      nastavFps(null);
+      const start = performance.now();
+      let snimku = 0;
+      let od = 0;
+      ram = requestAnimationFrame(function krok(ted) {
+        if (!zije) return;
+        if (ted - start < ROZJEZD_MS) {
+          ram = requestAnimationFrame(krok);
+          return;
+        }
+        if (od === 0) od = ted;
+        snimku++;
+        if (ted - od < MERENI_MS) ram = requestAnimationFrame(krok);
+        else nastavFps(Math.round(((snimku - 1) * 1000) / (ted - od)));
+      });
+    };
+    const priZmeneViditelnosti = () => zmer();
+    document.addEventListener("visibilitychange", priZmeneViditelnosti);
+    zmer();
+    return () => {
+      zije = false;
+      cancelAnimationFrame(ram);
+      document.removeEventListener("visibilitychange", priZmeneViditelnosti);
+    };
+  }, []);
+
+  return { udaje, fps };
+}
+
 /** „O tomto Macu“ – a hlavně poctivá věta o tom, co to je a co má žák za klávesnici. */
 function OMacu({ zavri }: { zavri: () => void }) {
+  const { udaje, fps } = useUdajePocitace();
+  const [zkopirovano, nastavZkopirovano] = useState<"ano" | "nejde" | null>(
+    null,
+  );
+
+  const vsechno: [string, string][] | null = udaje
+    ? [
+        ...udaje,
+        [
+          "Plynulost",
+          fps === null
+            ? "měří se…"
+            : fps === "skryto"
+              ? "změří se, až bude karta vidět"
+              : `${fps} snímků za sekundu – ${
+                  fps >= 50 ? "plynulé" : fps >= 30 ? "ujde" : "seká"
+                }`,
+        ],
+      ]
+    : null;
+
+  const zkopiruj = () => {
+    if (!vsechno) return;
+    const text = vsechno.map(([k, v]) => `${k}: ${v}`).join("\n");
+    // Starší cesta přes skryté pole. Projde i tam, kde nová schránka
+    // (navigator.clipboard) není, nebo ji prohlížeč nepustí.
+    const postaru = () => {
+      const pole = document.createElement("textarea");
+      pole.value = text;
+      pole.setAttribute("readonly", "");
+      pole.style.position = "fixed";
+      pole.style.opacity = "0";
+      document.body.appendChild(pole);
+      pole.select();
+      let povedlo = false;
+      try {
+        povedlo = document.execCommand("copy");
+      } catch {
+        povedlo = false;
+      }
+      pole.remove();
+      nastavZkopirovano(povedlo ? "ano" : "nejde");
+    };
+    if (!navigator.clipboard?.writeText) {
+      postaru();
+      return;
+    }
+    navigator.clipboard
+      .writeText(text)
+      .then(() => nastavZkopirovano("ano"))
+      .catch(postaru);
+  };
+
   return (
     <div className="absolute inset-0 z-[850] flex items-center justify-center bg-black/25">
-      <div className="mac-vjezd w-[420px] rounded-xl bg-mac-povrch p-6 text-center shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+      <div className="mac-vjezd mac-posuv max-h-[92%] w-[460px] overflow-y-auto rounded-xl bg-mac-povrch p-6 text-center shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
         <h2 className="text-[17px] font-semibold text-mac-text">
           Výuková simulace macOS
         </h2>
@@ -896,6 +1085,46 @@ function OMacu({ zavri }: { zavri: () => void }) {
           uděláš, se děje jen v téhle záložce prohlížeče – tvého počítače se to
           nedotkne a na server se neodesílá nic.
         </p>
+
+        {/* Na skutečném Macu tu je čip, paměť a verze systému. Tady je to
+            počítač, na kterém simulace doopravdy běží. */}
+        <div className="mt-4 rounded-lg border border-mac-linka p-3 text-left">
+          <p className="text-[12px] font-semibold text-mac-text">
+            Na čem to právě běží
+          </p>
+          <p className="mt-0.5 text-[11px] leading-snug text-mac-slaby">
+            Skutečný počítač pod simulací. Když něco nejede, pomůže to
+            vyučujícímu. Nic z toho se nikam neposílá.
+          </p>
+          {vsechno && (
+            <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 text-[12px]">
+              {vsechno.map(([k, v]) => (
+                <div key={k} className="contents">
+                  <dt className="text-mac-slaby">{k}</dt>
+                  <dd className="tabular-nums text-mac-text">{v}</dd>
+                </div>
+              ))}
+            </dl>
+          )}
+          <div className="mt-2 flex items-center gap-2">
+            <button
+              type="button"
+              onClick={zkopiruj}
+              disabled={!vsechno || typeof fps !== "number"}
+              className="rounded-md border border-mac-linka px-2.5 py-1 text-[12px] text-mac-text hover:bg-mac-zvyrazneny disabled:opacity-50"
+            >
+              Zkopírovat údaje
+            </button>
+            <span className="text-[11px] text-mac-slaby" aria-live="polite">
+              {zkopirovano === "ano"
+                ? "Zkopírováno – vlož to vyučujícímu."
+                : zkopirovano === "nejde"
+                  ? "Tady kopírovat nejde, okno vyfoť."
+                  : ""}
+            </span>
+          </div>
+        </div>
+
         <div className="mt-4 rounded-lg bg-mac-zvyrazneny p-3 text-left text-[12px] leading-relaxed text-mac-text">
           <p className="font-semibold">Klávesnice</p>
           <p className="mt-1 text-mac-slaby">
