@@ -151,6 +151,18 @@ export interface StavMac {
    * jen úplné „Začít načisto", což je skutečně nový začátek.
    */
   uvitano: boolean;
+  /**
+   * Kam žák ikony na ploše přetáhl. Klíčem je jméno položky, hodnota je levý
+   * horní roh ikony jako ZLOMEK šířky a výšky plochy – ikona tak zůstane na
+   * svém místě i po přepnutí na celou obrazovku nebo na menším monitoru.
+   * Co tu není, stojí v mřížce od pravého horního rohu jako dřív.
+   */
+  pozicePlochy: Record<string, PoziceIkony>;
+}
+
+export interface PoziceIkony {
+  x: number;
+  y: number;
 }
 
 export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
@@ -174,6 +186,7 @@ export function vychoziStavMac(): StavMac {
     stopy: [],
     splneno: [],
     uvitano: false,
+    pozicePlochy: {},
   };
 }
 
@@ -185,7 +198,25 @@ type Ulozeny = Pick<
   "verze" | "disk" | "nastaveni" | "stopy" | "splneno"
 > & {
   uvitano?: boolean;
+  pozicePlochy?: Record<string, PoziceIkony>;
 };
+
+/**
+ * Stuhy byly výchozí tapeta, než přišly Hory v mlze. Uložený stav je má
+ * zapsané, i když si je nikdo nevybral – ukládá se celé nastavení. Kdo by
+ * přišel se starým stavem, novou tapetu by neuviděl, dokud nezačne načisto.
+ *
+ * Stav uložený před výměnou se pozná podle toho, že nezná `jas` (přišel ve
+ * stejné verzi). U něj se Stuhy berou jako výchozí a vymění se. Kdo si
+ * Stuhy vybere teď, má `jas` zapsaný a volba mu zůstane.
+ */
+function staraVychoziTapeta(
+  nastaveni: Partial<NastaveniMac> | undefined,
+): Partial<NastaveniMac> {
+  if (nastaveni?.tapeta === "stuhy" && nastaveni.jas === undefined)
+    return { tapeta: VYCHOZI_NASTAVENI.tapeta };
+  return {};
+}
 
 export function nactiMac(): StavMac | null {
   if (typeof window === "undefined") return null;
@@ -197,10 +228,15 @@ export function nactiMac(): StavMac | null {
     return {
       ...vychoziStavMac(),
       disk: ulozeny.disk,
-      nastaveni: { ...VYCHOZI_NASTAVENI, ...ulozeny.nastaveni },
+      nastaveni: {
+        ...VYCHOZI_NASTAVENI,
+        ...ulozeny.nastaveni,
+        ...staraVychoziTapeta(ulozeny.nastaveni),
+      },
       stopy: ulozeny.stopy ?? [],
       splneno: ulozeny.splneno ?? [],
       uvitano: ulozeny.uvitano ?? false,
+      pozicePlochy: ulozeny.pozicePlochy ?? {},
     };
   } catch {
     return null;
@@ -217,6 +253,7 @@ export function ulozMac(stav: StavMac): void {
       stopy: stav.stopy,
       splneno: stav.splneno,
       uvitano: stav.uvitano,
+      pozicePlochy: stav.pozicePlochy,
     };
     window.localStorage.setItem(KLIC_ULOZISTE, JSON.stringify(ulozeny));
   } catch {

@@ -41,6 +41,15 @@ import { useMac, useOknoMac } from "../system";
 import { APLIKACE_BALICKU, VelkaIkona } from "../ikony";
 import type { AppId } from "@/lib/mac/stav";
 import { polozekSlovy } from "@/lib/mac/text";
+import {
+  coUdelaTazeni,
+  pustTazene,
+  skonciTazeni,
+  stopaTazeni,
+  tazenaPolozka,
+  zacniTazeni,
+  type AkceTazeni,
+} from "@/lib/mac/tazeni";
 import { NabidkaMistni, PanelInformace, type PolozkaNabidky } from "../ui";
 import {
   DOKUMENTY,
@@ -59,7 +68,6 @@ import {
 } from "@/lib/mac/cesty";
 import {
   jeSlozka,
-  jeUvnitr,
   kopie,
   najdi,
   najdiSlozku,
@@ -309,48 +317,36 @@ export function Finder() {
    * Kopii poznáš podle zeleného plusu u kurzoru. Ten kreslí prohlížeč sám,
    * když se nastaví `dropEffect = "copy"`, takže je stejný jako na skutečném
    * Macu a nic se nepředstírá. Dole ve stavovém řádku se to navíc napíše.
+   *
+   * Pravidla jsou v `lib/mac/tazeni.ts`, společná s plochou a Dockem – táhne
+   * se i mezi okny, z plochy do okna a z okna na plochu nebo na koš.
    */
-  const svazek = (c: string[]) =>
-    c[1] === "Volumes" && c[2] ? c[2] : "Macintosh HD";
-
-  const coUdela = (cil: string[]): "presun" | "kopie" | null => {
-    if (!tazeno) return null;
-    const zdroj = [...cesta, tazeno];
-    if (slozMac(cesta) === slozMac(cil)) return null; // do téže složky
-    if (!najdiSlozku(stav.disk, cil) || jeBalicek(cil[cil.length - 1]))
-      return null;
-    if (jeUvnitr(zdroj, cil)) return null; // složka sama do sebe
-    return svazek(zdroj) === svazek(cil) ? "presun" : "kopie";
+  const coUdela = (cil: string[]): AkceTazeni | null => {
+    const zdroj = tazenaPolozka();
+    return zdroj ? coUdelaTazeni(stav.disk, zdroj, cil) : null;
   };
 
   const pust = (cil: string[]) => {
-    const akce = coUdela(cil);
-    if (!akce || !tazeno) return;
-    // Na koš se vždycky přesouvá – přesně tak, jako by se dalo Přesunout do koše.
-    if (slozMac(cil) === slozMac(KOS)) {
-      doKose(tazeno);
-      return;
-    }
-    const zdroj = [...cesta, tazeno];
-    const uzel = najdi(stav.disk, zdroj);
-    const cilova = najdiSlozku(stav.disk, cil);
-    if (!uzel || !cilova) return;
-    if (akce === "presun" && uzel.zamceno) return;
-    const jmeno = volneJmeno(cilova, uzel.jmeno);
-    let disk = stav.disk;
-    if (akce === "presun") disk = odeber(disk, zdroj);
-    disk = vloz(disk, cil, { ...kopie(uzel), jmeno });
-    poslat({ typ: "disk/nastav", disk });
-    stopa(akce === "kopie" ? "zkopiroval-na-jiny-svazek" : "presunul-tazenim");
+    const zdroj = tazenaPolozka();
+    if (!zdroj) return;
+    const vysledek = pustTazene(stav.disk, zdroj, cil);
+    if (!vysledek) return;
+    poslat({ typ: "disk/nastav", disk: vysledek.disk });
+    stopa(stopaTazeni(cil, vysledek.akce));
     nastavVybrano(null);
   };
 
-  /** Obsluha cíle, na který jde položku pustit. `klic` jen pro zvýraznění. */
+  /**
+   * Obsluha cíle, na který jde položku pustit. `klic` jen pro zvýraznění.
+   * Cíl, který položku bere, zastaví probublání – jinak by složku v okně
+   * přebilo okno samo, které je cílem taky.
+   */
   const cilTazeni = (cil: string[], klic: string) => ({
     onDragOver: (e: React.DragEvent) => {
       const akce = coUdela(cil);
       if (!akce) return;
       e.preventDefault();
+      e.stopPropagation();
       e.dataTransfer.dropEffect = akce === "kopie" ? "copy" : "move";
       if (nadCilem?.klic !== klic) nastavNadCilem({ klic, akce });
     },
@@ -359,7 +355,9 @@ export function Finder() {
     },
     onDrop: (e: React.DragEvent) => {
       e.preventDefault();
+      e.stopPropagation();
       pust(cil);
+      skonciTazeni();
       nastavNadCilem(null);
       nastavTazeno(null);
     },
@@ -372,9 +370,11 @@ export function Finder() {
       // Safari bez `setData` tažení vůbec nezačne.
       e.dataTransfer.setData("text/plain", jmeno);
       e.dataTransfer.effectAllowed = "copyMove";
+      zacniTazeni([...cesta, jmeno]);
       nastavTazeno(jmeno);
     },
     onDragEnd: () => {
+      skonciTazeni();
       nastavTazeno(null);
       nastavNadCilem(null);
     },
@@ -705,7 +705,12 @@ export function Finder() {
 
       <div className="flex min-w-0 flex-1 flex-col">
         <div
-          className="mac-posuv min-h-0 flex-1 overflow-y-auto"
+          // Celé okno je cíl: sem se pouští z plochy nebo z jiného okna
+          // do složky, kterou okno ukazuje.
+          {...cilTazeni(cesta, "okno")}
+          className={`mac-posuv min-h-0 flex-1 overflow-y-auto ${
+            nadCilem?.klic === "okno" ? "ring-2 ring-inset ring-mac-akcent" : ""
+          }`}
           onContextMenu={(e) => {
             // Prázdné místo pod seznamem: nabídka jen s „Nová složka".
             if (e.target !== e.currentTarget) return;

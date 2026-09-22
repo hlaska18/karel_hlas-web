@@ -10,7 +10,8 @@
  * kůži osahat, že okno a program jsou dvě různé věci.
  */
 
-import type { Slozka } from "@/lib/win/fs";
+import { najdiSlozku, type Slozka } from "@/lib/win/fs";
+import { PLOCHA } from "./cesty";
 import type { AppId, Obdelnik, Okno, StavMac } from "./stav";
 import { VYCHOZI_OKNO, vychoziStavMac } from "./stav";
 
@@ -53,7 +54,11 @@ export type AkceMac =
   | { typ: "ukoly/splneno"; ids: string[] }
   | { typ: "system/nacti"; stav: StavMac }
   | { typ: "system/reset" }
-  | { typ: "uvitani/ukazano" };
+  | { typ: "uvitani/ukazano" }
+  /** Ikona přetažená na jiné místo plochy. `x`, `y` jsou zlomky plochy. */
+  | { typ: "plocha/umisti"; jmeno: string; x: number; y: number }
+  /** „Uklidit" z místní nabídky plochy: ikony zpátky do mřížky. */
+  | { typ: "plocha/uklid" };
 
 /** Kaskáda, ať nová okna nepadají přesně na sebe. */
 const KASKADA = 26;
@@ -94,8 +99,12 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
         okna: [...stav.okna, okno],
         citac: id + 1,
         vpredu: akce.app,
-        bezici: stav.bezici.includes(akce.app) ? stav.bezici : [...stav.bezici, akce.app],
-        stopy: akce.samo ? stav.stopy : pridejStopu(stav.stopy, `spustil:${akce.app}`),
+        bezici: stav.bezici.includes(akce.app)
+          ? stav.bezici
+          : [...stav.bezici, akce.app],
+        stopy: akce.samo
+          ? stav.stopy
+          : pridejStopu(stav.stopy, `spustil:${akce.app}`),
       };
     }
 
@@ -116,18 +125,26 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
     case "okno/posun":
       return {
         ...stav,
-        okna: stav.okna.map((o) => (o.id === akce.id ? { ...o, ram: akce.ram } : o)),
+        okna: stav.okna.map((o) =>
+          o.id === akce.id ? { ...o, ram: akce.ram } : o,
+        ),
       };
 
     case "okno/titul": {
       const okno = stav.okna.find((o) => o.id === akce.id);
       // Porovnání napřed: bez něj by se stav měnil při každém překreslení
       // aplikace a prostředí by se zacyklilo přes ukládací efekt.
-      if (!okno || (okno.titul === akce.titul && okno.arg === (akce.arg ?? okno.arg))) return stav;
+      if (
+        !okno ||
+        (okno.titul === akce.titul && okno.arg === (akce.arg ?? okno.arg))
+      )
+        return stav;
       return {
         ...stav,
         okna: stav.okna.map((o) =>
-          o.id === akce.id ? { ...o, titul: akce.titul, arg: akce.arg ?? o.arg } : o,
+          o.id === akce.id
+            ? { ...o, titul: akce.titul, arg: akce.arg ?? o.arg }
+            : o,
         ),
       };
     }
@@ -142,7 +159,9 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
         okna: stav.okna.map((o) =>
           // Okno se zároveň vytáhne dopředu a vrátí z Docku – „Jít“ na schované
           // okno by jinak nikam viditelně nevedlo.
-          o.id === akce.id ? { ...o, arg: akce.arg, minimalizovane: false, z: nejvyssi + 1 } : o,
+          o.id === akce.id
+            ? { ...o, arg: akce.arg, minimalizovane: false, z: nejvyssi + 1 }
+            : o,
         ),
       };
     }
@@ -154,7 +173,9 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
       // tam okno zanikne, tady se jen schová. Aplikace běží v obou případech.
       return {
         ...stav,
-        okna: stav.okna.map((o) => (o.id === akce.id ? { ...o, minimalizovane: true } : o)),
+        okna: stav.okna.map((o) =>
+          o.id === akce.id ? { ...o, minimalizovane: true } : o,
+        ),
         stopy: pridejStopu(stav.stopy, `minimalizoval:${okno.app}`),
       };
     }
@@ -167,7 +188,9 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
         ...stav,
         vpredu: okno.app,
         okna: stav.okna.map((o) =>
-          o.id === akce.id ? { ...o, minimalizovane: false, z: nejvyssi + 1 } : o,
+          o.id === akce.id
+            ? { ...o, minimalizovane: false, z: nejvyssi + 1 }
+            : o,
         ),
         stopy: pridejStopu(stav.stopy, `vratil-z-docku:${okno.app}`),
       };
@@ -176,7 +199,9 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
     case "okno/zvetsi":
       return {
         ...stav,
-        okna: stav.okna.map((o) => (o.id === akce.id ? { ...o, zvetsene: !o.zvetsene } : o)),
+        okna: stav.okna.map((o) =>
+          o.id === akce.id ? { ...o, zvetsene: !o.zvetsene } : o,
+        ),
       };
 
     case "app/ukonci": {
@@ -209,7 +234,8 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
       // Stopa se zapisuje jen při ZAPNUTÍ. Kdyby ji nechalo i vypnutí, úkol
       // „ukaž si položky s tečkou" by se odškrtl i tomu, kdo přepínač jen
       // našel a hned vrátil zpátky.
-      const zapnul = akce.zmena.skrytePolozky === true && !stav.nastaveni.skrytePolozky;
+      const zapnul =
+        akce.zmena.skrytePolozky === true && !stav.nastaveni.skrytePolozky;
       return {
         ...stav,
         nastaveni,
@@ -223,7 +249,9 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
 
     case "ukoly/splneno": {
       const nove = akce.ids.filter((id) => !stav.splneno.includes(id));
-      return nove.length ? { ...stav, splneno: [...stav.splneno, ...nove] } : stav;
+      return nove.length
+        ? { ...stav, splneno: [...stav.splneno, ...nove] }
+        : stav;
     }
 
     case "system/nacti":
@@ -241,6 +269,26 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
 
     case "uvitani/ukazano":
       return stav.uvitano ? stav : { ...stav, uvitano: true };
+
+    case "plocha/umisti": {
+      // Zároveň se vyhodí polohy věcí, které už na ploše nejsou, ať se
+      // nepřenesou na jinou položku, která by později dostala stejné jméno.
+      const naPlose = new Set(
+        (najdiSlozku(stav.disk, PLOCHA)?.deti ?? []).map((d) => d.jmeno),
+      );
+      const pozice: StavMac["pozicePlochy"] = {};
+      for (const [jmeno, p] of Object.entries(stav.pozicePlochy)) {
+        if (naPlose.has(jmeno)) pozice[jmeno] = p;
+      }
+      pozice[akce.jmeno] = {
+        x: Math.min(1, Math.max(0, akce.x)),
+        y: Math.min(1, Math.max(0, akce.y)),
+      };
+      return { ...stav, pozicePlochy: pozice };
+    }
+
+    case "plocha/uklid":
+      return { ...stav, pozicePlochy: {} };
 
     default:
       return stav;

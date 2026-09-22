@@ -28,6 +28,13 @@ import { useMac } from "./system";
 import { useDzin, zmerVraceni } from "./Dzin";
 import { NabidkaMistni, type PolozkaNabidky } from "./ui";
 import {
+  coUdelaTazeni,
+  pustTazene,
+  skonciTazeni,
+  stopaTazeni,
+  tazenaPolozka,
+} from "@/lib/mac/tazeni";
+import {
   APLIKACE,
   DOCK_MAX,
   DOCK_MIN,
@@ -462,6 +469,38 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
       nastavNabidku({ x: r.left + r.width / 2, y: r.top, co });
     };
 
+  /**
+   * Koš a Stažené jsou v Docku i cíle tažení: soubor přetažený na koš se
+   * do něj přesune, na Stažené se přesune do Stažených. Ikona pod taženým
+   * souborem ztmavne, jako na Macu. Pravidla jsou společná s Finderem
+   * a plochou (`lib/mac/tazeni.ts`).
+   */
+  const [nadIkonou, nastavNadIkonou] = useState<"kos" | "stazene" | null>(null);
+  const cilVDocku = (klic: "kos" | "stazene", cil: string[]) => ({
+    onDragOver: (e: React.DragEvent) => {
+      const zdroj = tazenaPolozka();
+      const akce = zdroj ? coUdelaTazeni(stav.disk, zdroj, cil) : null;
+      if (!akce) return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = akce === "kopie" ? "copy" : "move";
+      if (nadIkonou !== klic) nastavNadIkonou(klic);
+    },
+    onDragLeave: () => {
+      if (nadIkonou === klic) nastavNadIkonou(null);
+    },
+    onDrop: (e: React.DragEvent) => {
+      e.preventDefault();
+      const zdroj = tazenaPolozka();
+      const vysledek = zdroj ? pustTazene(stav.disk, zdroj, cil) : null;
+      if (vysledek) {
+        poslat({ typ: "disk/nastav", disk: vysledek.disk });
+        stopa(stopaTazeni(cil, vysledek.akce));
+      }
+      nastavNadIkonou(null);
+      skonciTazeni();
+    },
+  });
+
   const vysypKos = () => {
     const kos = najdiSlozku(stav.disk, KOS);
     if (!kos || kos.deti.length === 0) return;
@@ -651,6 +690,8 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
           onClick={() => spust("finder", slozMac(STAZENE))}
           onContextMenu={naPraveTlacitko("stazene")}
           bezPopisku={nabidka !== null}
+          tazeni={cilVDocku("stazene", STAZENE)}
+          ztmavena={nadIkonou === "stazene"}
         />
         <Ikona
           popis={vKosi === 0 ? "Koš (prázdný)" : `Koš (${vKosi})`}
@@ -669,6 +710,8 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
           onClick={() => spust("finder", slozMac(KOS))}
           onContextMenu={naPraveTlacitko("kos")}
           bezPopisku={nabidka !== null}
+          tazeni={cilVDocku("kos", KOS)}
+          ztmavena={nadIkonou === "kos"}
         />
       </div>
 
@@ -695,6 +738,8 @@ function Ikona({
   onClick,
   onContextMenu,
   bezPopisku,
+  tazeni,
+  ztmavena,
 }: {
   popis: string;
   vzhled: { pozadi: string; barva: string; znak: Znak };
@@ -709,6 +754,14 @@ function Ikona({
   onContextMenu?: (e: React.MouseEvent) => void;
   /** Když je otevřená nabídka, popisek nad ikonou se neukazuje – jako na Macu. */
   bezPopisku?: boolean;
+  /** Obsluha, když je ikona cílem tažení (Koš, Stažené). */
+  tazeni?: {
+    onDragOver: (e: React.DragEvent) => void;
+    onDragLeave: () => void;
+    onDrop: (e: React.DragEvent) => void;
+  };
+  /** Ztmavená – nad ikonou se právě vznáší tažený soubor. */
+  ztmavena?: boolean;
 }) {
   const Znak = vzhled.znak;
   return (
@@ -717,6 +770,7 @@ function Ikona({
       // Roste se nahoru z Docku, ne do stran od středu – proto počátek dole.
       className="group/dock relative flex origin-bottom flex-col items-center"
       onContextMenu={onContextMenu}
+      {...tazeni}
       {...znacka}
     >
       {/* Popisek nad ikonou. V Docku je to jediné, co ikonu pojmenuje – bez
@@ -739,6 +793,8 @@ function Ikona({
         // Zaoblení 22 % strany je macOS „squircle"; pevných 12 px vypadalo
         // při větší ikoně jako obyčejný zaoblený čtverec.
         className={`flex items-center justify-center shadow-md disabled:cursor-default ${
+          ztmavena ? "brightness-75" : ""
+        } ${
           // Když se zvětšuje celý Dock, nesmí si ikona přidávat ještě vlastní
           // skok při najetí – skládalo by se to a poskakovalo.
           zvetsuje
