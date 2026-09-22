@@ -75,8 +75,8 @@ export const UKOLY_MAC: UkolMac[] = [
     popis:
       "Na Finderu to nejde pořádně ukázat, protože ten běží vždycky. Zkus to tedy s programem, který jsi spustil sám.",
     kroky: [
-      "V Docku klikni na žlutou ikonu Poznámek. Otevře se okno.",
-      "Všimni si, že se nahoře v liště změnil název z Finder na Poznámky.",
+      "V Docku klikni na žlutou ikonu Poznámek. Když už je okno Poznámek na obrazovce (třeba uvítací Přečti si mě.txt), jen se vytáhne dopředu.",
+      "Podívej se nahoru na lištu: vedle jablka stojí Poznámky. Lišta patří programu, který je vpředu.",
       "Napiš do okna pár slov a v horní liště vyber Soubor a v něm Uložit.",
       "Zavři okno červeným puntíkem.",
       "Na obrazovce po Poznámkách není ani stopa – a přesto pod jejich ikonou v Docku tečka zůstala.",
