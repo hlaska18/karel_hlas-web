@@ -129,7 +129,9 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
             </div>
             <h1 className="mt-3 text-[20px] font-medium drop-shadow">Žák</h1>
 
-            <div className="mac-sklo-zaloha mt-5 flex w-[260px] items-center gap-2 rounded-full border border-white/40 bg-black/30 pl-4 pr-1 backdrop-blur">
+            <div // Zaostřené pole se jen prosvětlí, jako na zamykací obrazovce Macu.
+              className="mac-sklo-zaloha mt-5 flex w-[260px] items-center gap-2 rounded-full border border-white/40 bg-black/30 pl-4 pr-1 backdrop-blur transition-colors focus-within:border-white/75 focus-within:bg-black/40"
+            >
               <input
                 ref={pole}
                 value={kod}

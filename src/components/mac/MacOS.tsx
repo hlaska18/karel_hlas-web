@@ -808,7 +808,7 @@ function PrejitDoSlozky({ zavri }: { zavri: () => void }) {
           }}
           aria-label="Cesta ke složce"
           spellCheck={false}
-          className="mt-3 w-full rounded-md border border-mac-linka bg-mac-povrch px-3 py-2 font-mono text-[13px] text-mac-text outline-none focus-visible:outline-none"
+          className="mt-3 w-full rounded-md border border-mac-linka bg-mac-povrch px-3 py-2 font-mono text-[13px] text-mac-text outline-none focus:border-mac-akcent focus:ring-[3px] focus:ring-mac-akcent/35"
         />
         <p
           className={`mt-2 h-4 text-[11px] ${chyba ? "text-[#c0392b]" : "text-mac-slaby"}`}

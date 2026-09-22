@@ -610,7 +610,8 @@ export function Finder() {
                 <List className="h-4 w-4" />
               </button>
             </div>
-            <label className="flex items-center gap-1.5 rounded-full bg-mac-povrch px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
+            {/* Prstenec kolem celé pilulky, ne kolem pole uvnitř – tak ho kreslí Finder. */}
+            <label className="flex items-center gap-1.5 rounded-full bg-mac-povrch px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.18)] focus-within:ring-[3px] focus-within:ring-mac-akcent/55">
               <Search className="h-3.5 w-3.5 shrink-0 text-mac-slaby" />
               <input
                 value={hledani}

@@ -1103,6 +1103,26 @@
   border-radius: 6px;
 }
 
+/* Textová pole prstenec z pravidla výš nedostanou. Pole ho při kliknutí
+   dostane vždycky (psát se do něj dá jen zaostřené), a na zamykací obrazovce
+   pak uvnitř kulatého pole svítil hranatý modrý rámeček – ve třídě to
+   vypadalo jako chyba. Stejně tak kolem textu v Poznámkách nebo příkazové
+   řádky Terminálu, kde ho Mac nekreslí. Kde prstenec patří (hledání ve
+   Finderu, Přejít do složky), kreslí ho pole samo, kolem svého tvaru.
+   `focus-visible:outline-none` u polí nestačilo: tohle pravidlo má stejnou
+   váhu a stojí v souboru později. */
+.mac input:focus-visible,
+.mac textarea:focus-visible {
+  outline: none;
+}
+
+/* Posuvník jasu je ovládací prvek, ne pole – ten prstenec má mít. */
+.mac input[type="range"]:focus-visible {
+  outline: 3px solid rgb(var(--mac-akcent) / 0.55);
+  outline-offset: 1px;
+  border-radius: 6px;
+}
+
 /* Sklo horní lišty, Docku a rozbalených nabídek. Na Macu je průhlednost
    výraznější než ve Windows a hodně sytí barvy pod sebou. */
 .mac-sklo {
