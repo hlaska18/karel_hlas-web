@@ -75,7 +75,10 @@ export function NabidkaMistni({
     <div
       ref={ram}
       role="menu"
-      className="mac-nabidka fixed z-[950] min-w-[220px] rounded-lg border border-black/10 bg-mac-panel/95 p-1 shadow-[0_12px_40px_rgba(0,0,0,0.3)] backdrop-blur-xl"
+      // `pointer-events-auto`: Dock má `pointer-events-none` (myš jím
+      // prochází mimo ikony) a nabídka, která v něm leží, by to zdědila –
+      // otevřela by se, ale nešlo by na nic kliknout. Ve třídě se to stalo.
+      className="mac-nabidka pointer-events-auto fixed z-[950] min-w-[220px] rounded-lg border border-black/10 bg-mac-panel/95 p-1 shadow-[0_12px_40px_rgba(0,0,0,0.3)] backdrop-blur-xl"
       style={
         nad
           ? {

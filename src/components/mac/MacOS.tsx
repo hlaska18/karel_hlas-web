@@ -223,7 +223,12 @@ function Obrazovka() {
     window.location.reload();
   };
 
-  const nejvyssiZ = Math.max(0, ...stav.okna.map((o) => o.z));
+  // Jen z oken na obrazovce: schované v Docku má vrstvu nejvyšší (bylo
+  // vpředu, když se schovávalo), a okno pod ním by pak zůstalo šedé.
+  const nejvyssiZ = Math.max(
+    0,
+    ...stav.okna.filter((o) => !o.minimalizovane).map((o) => o.z),
+  );
   const vpredu = stav.vpredu ?? "finder";
 
   /* Nabídky aplikace vpředu. Krátké schválně – nemá to být kopie macOS,

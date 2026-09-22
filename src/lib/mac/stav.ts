@@ -80,6 +80,11 @@ export interface NastaveniMac {
   jas: number;
   /** Night Shift z Ovládacího centra: teplejší barvy obrazovky. */
   nocniRezim: boolean;
+  /**
+   * Čím se okno schovává do Docku. Na Macu je to v Nastavení → Plocha
+   * a Dock → Minimalizovat okna pomocí: džin, nebo prosté zmenšení.
+   */
+  efektMinimalizace: "dzin" | "zmenseni";
 }
 
 /** Meze velikosti Docku. Skutečný Mac má podobné – menší už není vidět,
@@ -124,6 +129,7 @@ export const VYCHOZI_NASTAVENI: NastaveniMac = {
   omezitEfekty: false,
   jas: 1,
   nocniRezim: false,
+  efektMinimalizace: "dzin",
 };
 
 /** Nejvyšší zvětšení ikony pod kurzorem a dosah, na který ještě působí. */

@@ -16,7 +16,8 @@
 
 import { useState, type ReactNode } from "react";
 import { useMac } from "./system";
-import { useDzin, zmerSchovani } from "./Dzin";
+import { flushSync } from "react-dom";
+import { useDzin, zmerCil, zmerSchovani } from "./Dzin";
 import type { Okno } from "@/lib/mac/stav";
 
 const MIN_SIRKA = 380;
@@ -206,8 +207,11 @@ function Semafor({ okno, aktivni }: { okno: Okno; aktivni: boolean }) {
       doStavu();
       return;
     }
-    doStavu();
-    dzin({ ...zmereno, smer: 1, pomalu: e.shiftKey });
+    // Stav hned a synchronně, ať v Docku vznikne dlaždice okna – teprve ta je
+    // cíl. Okno samo zmizí zároveň a na jeho místě začne džin, bez mezery.
+    flushSync(doStavu);
+    const cil = zmerCil(okno.app, okno.id) ?? zmereno.cil;
+    dzin({ ...zmereno, cil, smer: 1, pomalu: e.shiftKey });
   };
 
   const puntik = (

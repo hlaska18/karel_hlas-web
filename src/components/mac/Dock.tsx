@@ -645,27 +645,6 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
           />
         ))}
 
-        {schovana.length > 0 && (
-          <div
-            className="mx-1 w-px self-center bg-white/25"
-            style={{ height: Math.round(velikost * 0.8) }}
-          />
-        )}
-
-        {schovana.map((okno) => (
-          <Ikona
-            key={okno.id}
-            popis={`${okno.titul || APLIKACE[okno.app].nazev} – schované okno`}
-            strana={Math.round(velikost * 0.72)}
-            zvetsuje={zvetsovat}
-            vzhled={VZHLED_APLIKACI[okno.app]}
-            znacka={{ "data-dock-okno": String(okno.id) }}
-            onClick={(e) => vratZDocku(okno, e.shiftKey)}
-            // Nabídku tu skutečný Mac nemá; jen ať nevyskočí ta prohlížečová.
-            onContextMenu={(e) => e.preventDefault()}
-          />
-        ))}
-
         {/* Za čárou stojí na Macu zástupci složek a koš – ne aplikace.
             Proto jsou tady, ne v řadě výš. */}
         <div
@@ -693,6 +672,28 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
           tazeni={cilVDocku("stazene", STAZENE)}
           ztmavena={nadIkonou === "stazene"}
         />
+
+        {/*
+          Schovaná okna. Na Macu stojí v pravé části Docku hned před košem,
+          stejně velká jako ostatní ikony, a vypadají jako zmenšené okno
+          s ikonkou aplikace v rohu. Dřív tu byla vlevo za aplikacemi za
+          vlastní čárou, menší a s ikonou aplikace – vypadala jako „naposledy
+          otevřené aplikace" a ve třídě to tak i působilo.
+        */}
+        {schovana.map((okno) => (
+          <Ikona
+            key={okno.id}
+            popis={`${okno.titul || APLIKACE[okno.app].nazev} – schované okno`}
+            strana={velikost}
+            zvetsuje={zvetsovat}
+            vzhled={VZHLED_APLIKACI[okno.app]}
+            obsah={<MiniOkno app={okno.app} strana={velikost} />}
+            znacka={{ "data-dock-okno": String(okno.id) }}
+            onClick={(e) => vratZDocku(okno, e.shiftKey)}
+            // Nabídku tu skutečný Mac nemá; jen ať nevyskočí ta prohlížečová.
+            onContextMenu={(e) => e.preventDefault()}
+          />
+        ))}
         <Ikona
           popis={vKosi === 0 ? "Koš (prázdný)" : `Koš (${vKosi})`}
           strana={velikost}
@@ -740,6 +741,7 @@ function Ikona({
   bezPopisku,
   tazeni,
   ztmavena,
+  obsah,
 }: {
   popis: string;
   vzhled: { pozadi: string; barva: string; znak: Znak };
@@ -762,6 +764,8 @@ function Ikona({
   };
   /** Ztmavená – nad ikonou se právě vznáší tažený soubor. */
   ztmavena?: boolean;
+  /** Vlastní kresba místo značky na barevném čtverci (schované okno). */
+  obsah?: React.ReactNode;
 }) {
   const Znak = vzhled.znak;
   return (
@@ -792,9 +796,9 @@ function Ikona({
         disabled={!onClick}
         // Zaoblení 22 % strany je macOS „squircle"; pevných 12 px vypadalo
         // při větší ikoně jako obyčejný zaoblený čtverec.
-        className={`flex items-center justify-center shadow-md disabled:cursor-default ${
-          ztmavena ? "brightness-75" : ""
-        } ${
+        className={`flex items-center justify-center disabled:cursor-default ${
+          obsah ? "" : "shadow-md"
+        } ${ztmavena ? "brightness-75" : ""} ${
           // Když se zvětšuje celý Dock, nesmí si ikona přidávat ještě vlastní
           // skok při najetí – skládalo by se to a poskakovalo.
           zvetsuje
@@ -804,19 +808,21 @@ function Ikona({
         style={{
           width: strana,
           height: strana,
-          background: vzhled.pozadi,
+          background: obsah ? "transparent" : vzhled.pozadi,
           borderRadius: `${Math.round(strana * 0.22)}px`,
         }}
       >
         {/* Značka roste s ikonou – 55 % strany je poměr, na kterém to sedí
             i na nejmenším i na největším Docku. */}
-        <Znak
-          style={{
-            color: vzhled.barva,
-            width: Math.round(strana * 0.55),
-            height: Math.round(strana * 0.55),
-          }}
-        />
+        {obsah ?? (
+          <Znak
+            style={{
+              color: vzhled.barva,
+              width: Math.round(strana * 0.55),
+              height: Math.round(strana * 0.55),
+            }}
+          />
+        )}
       </button>
       {/*
         Tečka běžícího programu.
@@ -838,5 +844,74 @@ function Ikona({
         }`}
       />
     </div>
+  );
+}
+
+/**
+ * Schované okno v Docku: zmenšené okno se semaforem a ikonkou aplikace
+ * v rohu, jako náhled na Macu. Míry jsou v pixelech, ne v procentech
+ * s `aspect-ratio` – to Chrome 64 z cíle prohlížečů neumí.
+ */
+function MiniOkno({ app, strana }: { app: AppId; strana: number }) {
+  const v = VZHLED_APLIKACI[app];
+  const Znak = v.znak;
+  const pruh = Math.max(4, Math.round(strana * 0.15));
+  const puntik = Math.max(2, Math.round(strana * 0.06));
+  const odznak = Math.round(strana * 0.42);
+  return (
+    <span className="relative block" style={{ width: strana, height: strana }}>
+      <span
+        className="absolute overflow-hidden rounded-[3px] bg-mac-povrch shadow-md ring-1 ring-black/15"
+        style={{
+          left: Math.round(strana * 0.04),
+          right: Math.round(strana * 0.04),
+          top: Math.round(strana * 0.16),
+          bottom: Math.round(strana * 0.16),
+        }}
+      >
+        <span
+          className="flex items-center bg-mac-panel"
+          style={{ height: pruh, gap: puntik, paddingLeft: puntik * 1.5 }}
+        >
+          {["#ff5f57", "#febc2e", "#28c840"].map((b) => (
+            <span
+              key={b}
+              className="block rounded-full"
+              style={{ width: puntik, height: puntik, background: b }}
+            />
+          ))}
+        </span>
+        <span
+          className="block rounded-sm bg-mac-linka"
+          style={{
+            margin: `${puntik * 2}px ${puntik * 2}px 0`,
+            height: puntik,
+          }}
+        />
+        <span
+          className="block w-1/2 rounded-sm bg-mac-linka"
+          style={{ margin: `${puntik}px ${puntik * 2}px 0`, height: puntik }}
+        />
+      </span>
+      <span
+        className="absolute flex items-center justify-center shadow"
+        style={{
+          right: 0,
+          bottom: 0,
+          width: odznak,
+          height: odznak,
+          background: v.pozadi,
+          borderRadius: Math.round(odznak * 0.22),
+        }}
+      >
+        <Znak
+          style={{
+            color: v.barva,
+            width: Math.round(odznak * 0.6),
+            height: Math.round(odznak * 0.6),
+          }}
+        />
+      </span>
+    </span>
   );
 }

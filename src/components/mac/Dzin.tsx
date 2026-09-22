@@ -72,21 +72,31 @@ export function DzinProvider({ children }: { children: ReactNode }) {
 
   const { stav } = useMac();
   const omezeno = stav.nastaveni.omezitEfekty;
+  const zmenseni = stav.nastaveni.efektMinimalizace === "zmenseni";
 
-  const spust = useCallback((z: Zadani) => {
-    // Kdo si vypnul animace v systému nebo v Nastavení, tomu se nic nehýbe –
-    // okno se prostě schová.
-    const nechce =
-      omezeno ||
-      (typeof window !== "undefined" &&
-        typeof window.matchMedia === "function" &&
-        window.matchMedia("(prefers-reduced-motion: reduce)").matches);
-    if (nechce || z.okno.sirka <= 0 || z.okno.vyska <= 0) {
-      z.poDobehnuti?.();
-      return;
-    }
-    nastavZadani(z);
-  }, [omezeno]);
+  const spust = useCallback(
+    (z: Zadani) => {
+      /*
+       * Rozhoduje JEN nastavení prostředí, ne to, co hlásí počítač pod ním.
+       * Dřív se džin sám vypnul, když prohlížeč hlásil „nechci animace"
+       * (prefers-reduced-motion). Školní Windows to hlásí, kdykoli mají
+       * vypnuté efekty animace – kvůli výkonu, ne kvůli žákovi – a ve třídě
+       * pak džin prostě nebyl a nikde nešel zapnout. Tohle je Mac a Mac má
+       * vlastní přepínač: Omezit pohyb v Nastavení. Nastavení taky řekne,
+       * když počítač animace vypnuté má, takže kdo klid potřebuje, ví kde.
+       */
+      if (omezeno || z.okno.sirka <= 0 || z.okno.vyska <= 0) {
+        z.poDobehnuti?.();
+        return;
+      }
+      nastavZadani(z);
+    },
+    [omezeno],
+  );
+  // Efekt se čte při každém snímku z téhle proměnné, ať ho přepnutí
+  // v Nastavení nezmění uprostřed letu.
+  const zmenseniRef = useRef(zmenseni);
+  zmenseniRef.current = zmenseni;
 
   useEffect(() => {
     if (!zadani) return;
@@ -105,12 +115,40 @@ export function DzinProvider({ children }: { children: ReactNode }) {
      * 0 až 1, samotné záhlaví třeba 0 až 0,1. Díky tomu se stejným výpočtem
      * nakreslí i postranní panel a pruh záhlaví, a všechno se ohne stejně.
      */
+    /*
+     * Efekt zmenšení: okno se zmenšuje jako celek, drží poměr stran a jeho
+     * střed jede rovnou do dlaždice v Docku. Žádné ohýbání – proto je to
+     * ta klidnější z obou voleb, stejně jako na Macu.
+     */
+    const zmenseniNaZacatku = zmenseniRef.current;
+    const meritko = Math.min(cil.sirka / okno.sirka, cil.vyska / okno.vyska);
+    const obdelnik = (
+      postup: number,
+      odshora: number,
+      zdola: number,
+      podilVpravo: number,
+    ) => {
+      const e = nahladce(postup);
+      const k = mix(1, meritko, e);
+      const sirka = okno.sirka * k;
+      const vyska = okno.vyska * k;
+      const stredX = mix(okno.x + okno.sirka / 2, cil.x + cil.sirka / 2, e);
+      const stredY = mix(okno.y + okno.vyska / 2, cil.y + cil.vyska / 2, e);
+      const l = stredX - sirka / 2;
+      const r = l + sirka * podilVpravo;
+      const t = stredY - vyska / 2 + vyska * odshora;
+      const b = stredY - vyska / 2 + vyska * zdola;
+      return `M${l.toFixed(1)},${t.toFixed(1)}L${r.toFixed(1)},${t.toFixed(1)}L${r.toFixed(1)},${b.toFixed(1)}L${l.toFixed(1)},${b.toFixed(1)}Z`;
+    };
+
     const obrys = (
       postup: number,
       odshora: number,
       zdola: number,
       podilVpravo: number,
     ) => {
+      if (zmenseniNaZacatku)
+        return obdelnik(postup, odshora, zdola, podilVpravo);
       const levy: string[] = [];
       const pravy: string[] = [];
       for (let k = 0; k <= VZORKU; k++) {
@@ -189,6 +227,16 @@ function cilVDocku(app: string, oknoId: number): Element | null {
     document.querySelector(`[data-dock-okno="${oknoId}"]`) ??
     document.querySelector(`[data-dock-app="${app}"]`)
   );
+}
+
+/**
+ * Znovu změří jen cíl. Při schovávání dlaždice okna v Docku vznikne až se
+ * stavem, takže první měření trefí ikonu aplikace; po překreslení se změří
+ * znovu a okno letí tam, kde doopravdy skončí.
+ */
+export function zmerCil(app: string, oknoId: number) {
+  const cil = cilVDocku(app, oknoId);
+  return cil ? ram(cil) : null;
 }
 
 /** Změří živé okno a jeho cíl. `null`, když jedno z nich není na obrazovce. */

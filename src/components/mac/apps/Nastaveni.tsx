@@ -9,7 +9,7 @@
  * něco přepnou. Přepínač, po kterém se nic nestane, je horší než žádný.
  */
 
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Moon, RotateCcw, Sun } from "lucide-react";
 import { useMac, useOknoMac } from "../system";
 import { TAPETY_MAC } from "@/lib/mac/stav";
@@ -18,10 +18,24 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
   const { stav, poslat } = useMac();
   const { nastavTitul } = useOknoMac();
   const tmavy = stav.nastaveni.motiv === "tmavy";
+  /**
+   * Hlásí počítač pod prostředím, že nechce animace? Školní Windows to
+   * dělají, když mají vypnuté efekty animace. Prostředí se tím neřídí (má
+   * vlastní přepínač níž), ale řekne to – ať je jasné, proč by to jinak
+   * mohlo vypadat jinak než doma.
+   */
+  const [pocitacBezAnimaci, nastavPocitacBezAnimaci] = useState(false);
 
   useEffect(() => {
     nastavTitul("Nastavení systému");
   }, [nastavTitul]);
+
+  useEffect(() => {
+    if (typeof window.matchMedia !== "function") return;
+    nastavPocitacBezAnimaci(
+      window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    );
+  }, []);
 
   return (
     <div className="mac-posuv h-full overflow-y-auto bg-mac-povrch px-6 py-5 text-mac-text">
@@ -31,16 +45,20 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
         tomu říká vzhled a platí pro všechny aplikace naráz.
       </p>
       <div className="mt-3 flex gap-3">
-        {([
-          ["svetly", "Světlý", Sun],
-          ["tmavy", "Tmavý", Moon],
-        ] as const).map(([id, popis, Znak]) => {
+        {(
+          [
+            ["svetly", "Světlý", Sun],
+            ["tmavy", "Tmavý", Moon],
+          ] as const
+        ).map(([id, popis, Znak]) => {
           const vybrany = stav.nastaveni.motiv === id;
           return (
             <button
               key={id}
               type="button"
-              onClick={() => poslat({ typ: "nastaveni/zmen", zmena: { motiv: id } })}
+              onClick={() =>
+                poslat({ typ: "nastaveni/zmen", zmena: { motiv: id } })
+              }
               className={`flex flex-1 items-center gap-3 rounded-lg border px-4 py-3 text-left text-[13px] transition ${
                 vybrany
                   ? "border-mac-akcent bg-mac-akcent/10 text-mac-text"
@@ -49,7 +67,11 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
             >
               <Znak className="h-5 w-5" />
               {popis}
-              {vybrany && <span className="ml-auto text-[11px] text-mac-akcent">zapnuto</span>}
+              {vybrany && (
+                <span className="ml-auto text-[11px] text-mac-akcent">
+                  zapnuto
+                </span>
+              )}
             </button>
           );
         })}
@@ -69,7 +91,9 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
             <button
               key={t.id}
               type="button"
-              onClick={() => poslat({ typ: "nastaveni/zmen", zmena: { tapeta: t.id } })}
+              onClick={() =>
+                poslat({ typ: "nastaveni/zmen", zmena: { tapeta: t.id } })
+              }
               className={`flex-1 rounded-lg border p-1.5 text-left transition ${
                 vybrana
                   ? "border-mac-akcent bg-mac-akcent/10"
@@ -85,7 +109,11 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
               />
               <span className="mt-1.5 flex items-center gap-1 px-0.5 text-[12px]">
                 {t.nazev}
-                {vybrana && <span className="ml-auto text-[11px] text-mac-akcent">zapnuto</span>}
+                {vybrana && (
+                  <span className="ml-auto text-[11px] text-mac-akcent">
+                    zapnuto
+                  </span>
+                )}
               </span>
             </button>
           );
@@ -121,14 +149,60 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
         </span>
       </button>
 
+      <p className="mt-4 text-[13px]">Minimalizovat okna pomocí</p>
+      <div className="mt-2 flex gap-3">
+        {(
+          [
+            ["dzin", "Efekt džina", "okno se vsaje do Docku jako do lahve"],
+            ["zmenseni", "Efekt zmenšení", "okno se jen zmenší do Docku"],
+          ] as const
+        ).map(([id, popis, vysvetleni]) => {
+          const vybrany = stav.nastaveni.efektMinimalizace === id;
+          return (
+            <button
+              key={id}
+              type="button"
+              aria-pressed={vybrany}
+              onClick={() =>
+                poslat({
+                  typ: "nastaveni/zmen",
+                  zmena: { efektMinimalizace: id },
+                })
+              }
+              className={`flex flex-1 flex-col rounded-lg border px-4 py-2.5 text-left text-[13px] transition ${
+                vybrany
+                  ? "border-mac-akcent bg-mac-akcent/10 text-mac-text"
+                  : "border-mac-linka bg-mac-povrch text-mac-slaby hover:bg-mac-zvyrazneny"
+              }`}
+            >
+              <span className="flex items-center">
+                {popis}
+                {vybrany && (
+                  <span className="ml-auto text-[11px] text-mac-akcent">
+                    zapnuto
+                  </span>
+                )}
+              </span>
+              <span className="mt-0.5 text-[11px] text-mac-slaby">
+                {vysvetleni}
+              </span>
+            </button>
+          );
+        })}
+      </div>
+      <p className="mt-2 text-[11px] leading-relaxed text-mac-slaby">
+        Vyzkoušíš žlutým puntíkem v okně. Se stisknutým Shiftem se to přehraje
+        zpomaleně.
+      </p>
+
       <div className="my-6 h-px bg-mac-linka" />
 
       <h2 className="text-[15px] font-semibold">Efekty</h2>
       <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
         Když to na počítači seká, efekty vypni. Okno se pak schová bez vsávání
         do Docku, Dock se pod myší nezvětšuje, okna ani nabídky se nerozjíždějí
-        a zmizí průhledné sklo. Na skutečném Macu jsou to dva přepínače
-        v Zpřístupnění – Omezit pohyb a Omezit průhlednost.
+        a zmizí průhledné sklo. Na skutečném Macu jsou to dva přepínače v
+        Zpřístupnění – Omezit pohyb a Omezit průhlednost.
       </p>
       <button
         type="button"
@@ -150,6 +224,13 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
           {stav.nastaveni.omezitEfekty ? "zapnuto" : "vypnuto"}
         </span>
       </button>
+      {pocitacBezAnimaci && (
+        <p className="mt-2 rounded-lg bg-mac-zvyrazneny px-3 py-2 text-[12px] leading-relaxed text-mac-slaby">
+          Tenhle počítač má v systému vypnuté animace (ve Windows se tomu říká
+          efekty animace). Prostředí je přesto přehrává, protože je to Mac a ten
+          má vlastní přepínač – ten nad touhle poznámkou.
+        </p>
+      )}
 
       <div className="my-6 h-px bg-mac-linka" />
 
@@ -169,7 +250,9 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
       </button>
       {/* Řečeno nahlas i tady, ne jen v potvrzení: tohle je jediná věc
           v prostředí, která se nedá vzít zpět. */}
-      <p className="mt-2 text-[11px] text-mac-slaby">Tohle se nedá vzít zpět.</p>
+      <p className="mt-2 text-[11px] text-mac-slaby">
+        Tohle se nedá vzít zpět.
+      </p>
     </div>
   );
 }
