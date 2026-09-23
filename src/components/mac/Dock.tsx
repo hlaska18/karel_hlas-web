@@ -318,20 +318,25 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
   const zmerKlid = () => {
     const obal = rada.current;
     if (!obal) return null;
-    const merky = Array.from(
-      obal.querySelectorAll<HTMLElement>("[data-dock-ikona]"),
-    ).flatMap((prvek) => {
+    // Obyčejný cyklus, ne `flatMap`: ten umí Chrome až od 69 a v cíli
+    // prohlížečů je 64 (a Opera 51, což je totéž). Neznámá metoda by
+    // neshodila jen zvětšování Docku, ale celé prostředí.
+    const merky: {
+      prvek: HTMLElement;
+      tlacitko: HTMLElement;
+      stred: number;
+      zaklad: number;
+    }[] = [];
+    obal.querySelectorAll<HTMLElement>("[data-dock-ikona]").forEach((prvek) => {
       const tlacitko = prvek.querySelector<HTMLElement>("button");
-      if (!tlacitko) return [];
+      if (!tlacitko) return;
       const r = tlacitko.getBoundingClientRect();
-      return [
-        {
-          prvek,
-          tlacitko,
-          stred: r.left + r.width / 2,
-          zaklad: tlacitko.offsetWidth,
-        },
-      ];
+      merky.push({
+        prvek,
+        tlacitko,
+        stred: r.left + r.width / 2,
+        zaklad: tlacitko.offsetWidth,
+      });
     });
     vKlidu.current = merky;
     return merky;

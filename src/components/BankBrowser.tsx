@@ -125,7 +125,8 @@ const STR: Record<
     sourceBadge: "source",
     toolBadge: "web",
     openTool: "Open",
-    ukazkyNote: (p) => `Examples for the lesson – ${p} file${p === 1 ? "" : "s"} to compare`,
+    ukazkyNote: (p) =>
+      `Examples for the lesson – ${p} file${p === 1 ? "" : "s"} to compare`,
     sourceNote: "Third-party material – open at the original source",
     sourceNoteOffline: "Third-party material – not available here",
     openSource: "Open at source",
@@ -193,7 +194,6 @@ function L(field: { cs: string; en: string } | undefined, lang: Lang): string {
   return field ? field[lang] : "";
 }
 
-
 /** Sloučí přípony do přátelské kategorie (odznak typu u řádku). */
 function fileType(ext: string, lang: Lang): { key: string; label: string } {
   const cs: Record<string, string> = {
@@ -229,14 +229,32 @@ function fileType(ext: string, lang: Lang): { key: string; label: string } {
   else if (["pptx", "ppt", "odp"].includes(ext)) key = "ppt";
   else if (ext === "pbix") key = "powerbi";
   else if (ext === "zip") key = "zip";
-  else if (["py", "ipynb", "js", "ts", "html", "css", "json", "sql", "java", "c", "cpp"].includes(ext))
+  else if (
+    [
+      "py",
+      "ipynb",
+      "js",
+      "ts",
+      "html",
+      "css",
+      "json",
+      "sql",
+      "java",
+      "c",
+      "cpp",
+    ].includes(ext)
+  )
     key = "code";
   else if (["mp4", "mov", "webm", "m4v", "avi"].includes(ext)) key = "video";
   else if (["png", "jpg", "jpeg", "gif", "svg"].includes(ext)) key = "image";
   else if (ext === "accdb") key = "access";
   else if (ext === "txt") key = "text";
   const table = lang === "en" ? en : cs;
-  return { key, label: table[key] ?? (ext || (lang === "en" ? "file" : "soubor")).toUpperCase() };
+  return {
+    key,
+    label:
+      table[key] ?? (ext || (lang === "en" ? "file" : "soubor")).toUpperCase(),
+  };
 }
 
 /** Ikona ke štítku typu souboru (klíč z `fileType`). */
@@ -287,7 +305,13 @@ function toolIcon(tool: string) {
 const stripDia = (s: string) =>
   s.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
 
-export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) {
+export function BankBrowser({
+  items,
+  lang,
+}: {
+  items: BankItem[];
+  lang: Lang;
+}) {
   const s = STR[lang];
   const [q, setQ] = useState("");
   const [tool, setTool] = useState<string | null>(null);
@@ -333,7 +357,10 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
       if (!cfg) return 0;
       const nos = new Set<number>();
       for (const it of its) {
-        if ((isStudentSlot(it, cfg) || isTeacherSlot(it, cfg)) && it.lessonNo != null) {
+        if (
+          (isStudentSlot(it, cfg) || isTeacherSlot(it, cfg)) &&
+          it.lessonNo != null
+        ) {
           nos.add(it.lessonNo);
         }
       }
@@ -447,7 +474,10 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
                   {/* Velká „plovoucí" ikona: na mobilu nahoře menší, na desktopu vyplní pravou část */}
                   <span className="order-1 flex aspect-square w-20 shrink-0 items-center justify-center sm:order-2 sm:w-[46%] sm:max-w-[9.5rem]">
                     {hasToolGlassIcon(t.name) ? (
-                      <ToolGlassIcon tool={t.name} className="h-full w-full object-contain" />
+                      <ToolGlassIcon
+                        tool={t.name}
+                        className="h-full w-full object-contain"
+                      />
                     ) : (
                       <Icon className="h-12 w-12 text-accent-700 dark:text-accent-400 transition group-hover:scale-105 sm:h-14 sm:w-14" />
                     )}
@@ -473,7 +503,11 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
               </button>
             )}
             <p className="text-sm text-zinc-600 dark:text-zinc-400">
-              {needle ? s.searchResults : tool ? `${toolLabel(tool, lang)}: ` : ""}
+              {needle
+                ? s.searchResults
+                : tool
+                  ? `${toolLabel(tool, lang)}: `
+                  : ""}
               {countMaterials(results.length, lang)}
             </p>
           </div>
@@ -525,18 +559,31 @@ export function BankBrowser({ items, lang }: { items: BankItem[]; lang: Lang }) 
           ) : (
             <ul className="mt-4 space-y-2.5">
               {results.map((it) => (
-                <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={setPreview} />
+                <MaterialRow
+                  key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`}
+                  it={it}
+                  lang={lang}
+                  onPreview={setPreview}
+                />
               ))}
             </ul>
           )}
 
           {results.length === 0 && (
-            <p className="mt-10 text-center text-zinc-600 dark:text-zinc-400">{s.empty}</p>
+            <p className="mt-10 text-center text-zinc-600 dark:text-zinc-400">
+              {s.empty}
+            </p>
           )}
         </>
       )}
 
-      {preview && <PreviewModal item={preview} lang={lang} onClose={() => setPreview(null)} />}
+      {preview && (
+        <PreviewModal
+          item={preview}
+          lang={lang}
+          onClose={() => setPreview(null)}
+        />
+      )}
     </div>
   );
 }
@@ -577,7 +624,9 @@ function MaterialRow({
           // Hotová stránka z `public/` (laboratoř) na `?z=en` nereaguje a jde
           // do nové karty, ať učiteli zůstane rozescrollovaný seznam.
           href={it.novaKarta ? it.href : interaktivniOdkaz(it.href, lang)}
-          {...(it.novaKarta ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+          {...(it.novaKarta
+            ? { target: "_blank", rel: "noopener noreferrer" }
+            : {})}
           className="povrch group flex items-start gap-3 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:items-center sm:gap-4 sm:py-3.5"
         >
           <span className="flex shrink-0 sm:w-[5.25rem]">
@@ -587,7 +636,9 @@ function MaterialRow({
             </span>
           </span>
           <span className="min-w-0 flex-1">
-            <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
+            <span className="block truncate font-medium text-zinc-900 dark:text-white">
+              {label}
+            </span>
             {it.sourceNote && (
               <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
                 {L(it.sourceNote, lang)}
@@ -618,7 +669,9 @@ function MaterialRow({
           </span>
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
+          <span className="block truncate font-medium text-zinc-900 dark:text-white">
+            {label}
+          </span>
           {/* Vlastní vysvětlivka ze `_zdroj.json` má přednost před obecnou větou –
               u dvojice učebnice + cvičné soubory je potřeba říct, že patří k sobě. */}
           <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
@@ -638,11 +691,18 @@ function MaterialRow({
     );
     const cls =
       "povrch flex items-start gap-3 rounded-karta px-4 py-3 sm:items-center sm:gap-4 sm:py-3.5" +
-      (hasLink ? " group transition hover:shadow-lg hover:shadow-accent-600/15" : "");
+      (hasLink
+        ? " group transition hover:shadow-lg hover:shadow-accent-600/15"
+        : "");
     return (
       <li>
         {hasLink ? (
-          <a href={it.href} target="_blank" rel="noopener noreferrer" className={cls}>
+          <a
+            href={it.href}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={cls}
+          >
             {inner}
           </a>
         ) : (
@@ -682,7 +742,9 @@ function MaterialRow({
           }
         : {})}
       className={`povrch group/radek flex flex-wrap items-center gap-x-3 gap-y-1 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5 ${
-        previewable ? "cursor-pointer hover:border-accent-500/40 dark:hover:border-accent-500/40" : ""
+        previewable
+          ? "cursor-pointer hover:border-accent-500/40 dark:hover:border-accent-500/40"
+          : ""
       }`}
     >
       <span className="flex shrink-0 sm:w-[5.25rem]">
@@ -697,7 +759,9 @@ function MaterialRow({
       {/* Na mobilu si text vezme skoro celý řádek, takže tlačítka spadnou pod něj.
           Jinak by dva dotykové cíle po 44 px ukrojily z názvu skoro všechno. */}
       <span className="min-w-0 flex-1 basis-[calc(100%-5rem)] sm:basis-auto">
-        <span className="block truncate font-medium text-zinc-900 dark:text-white">{label}</span>
+        <span className="block truncate font-medium text-zinc-900 dark:text-white">
+          {label}
+        </span>
         {/* Popisek ukázek se schválně zalamuje místo ořezávání: na 375 px
             zbývá 204 px a celý se nevejde, takže by se uřízl přesně na počtu
             souborů („Ukázky do výkladu – 5 soubo…"). Drobečky se ořezávat
@@ -860,7 +924,9 @@ function SlotTag({
       ? "bg-amber-500/15 text-amber-700 dark:text-amber-300"
       : "bg-accent-500/10 text-accent-700 dark:text-accent-300";
   return (
-    <span className={`inline-flex items-center gap-1 rounded-stitek px-2 py-0.5 text-[11px] font-medium ${cls}`}>
+    <span
+      className={`inline-flex items-center gap-1 rounded-stitek px-2 py-0.5 text-[11px] font-medium ${cls}`}
+    >
       {children}
     </span>
   );
@@ -885,7 +951,10 @@ function ToolLessons({
     const map = new Map<number, BankItem[]>();
     const rest: BankItem[] = [];
     for (const it of items) {
-      if ((isStudentSlot(it, cfg) || isTeacherSlot(it, cfg)) && it.lessonNo != null) {
+      if (
+        (isStudentSlot(it, cfg) || isTeacherSlot(it, cfg)) &&
+        it.lessonNo != null
+      ) {
         const arr = map.get(it.lessonNo) ?? [];
         arr.push(it);
         map.set(it.lessonNo, arr);
@@ -906,8 +975,12 @@ function ToolLessons({
     // „Začni zde" jako poslední položka.
     return {
       lessons: lessonsArr,
-      intro: rest.filter((it) => it.rozcestnik || (!it.group && it.audience === "both")),
-      extras: rest.filter((it) => !it.rozcestnik && (it.group || it.audience !== "both")),
+      intro: rest.filter(
+        (it) => it.rozcestnik || (!it.group && it.audience === "both"),
+      ),
+      extras: rest.filter(
+        (it) => !it.rozcestnik && (it.group || it.audience !== "both"),
+      ),
     };
   }, [items, cfg]);
 
@@ -943,7 +1016,12 @@ function ToolLessons({
         ) : (
           <ul className="space-y-2.5 pt-1">
             {extras.map((it) => (
-              <MaterialRow key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`} it={it} lang={lang} onPreview={onPreview} />
+              <MaterialRow
+                key={`${it.href}|${it.audience}|${it.group?.cs ?? ""}`}
+                it={it}
+                lang={lang}
+                onPreview={onPreview}
+              />
             ))}
           </ul>
         ))}
@@ -966,7 +1044,10 @@ function ToolLessons({
 /** Grupovat do složek má smysl, jakmile je co grupovat (aspoň jedna složka). */
 function foldersWorthIt(items: BankItem[]): boolean {
   const names = new Set(
-    items.map((it) => it.group?.cs ?? (it.audience === "both" ? "" : `\u0000${it.audience}`)),
+    items.map(
+      (it) =>
+        it.group?.cs ?? (it.audience === "both" ? "" : `\u0000${it.audience}`),
+    ),
   );
   names.delete("");
   return items.length >= 2 && names.size >= 1;
@@ -1019,7 +1100,13 @@ function ToolFolders({
       const ucitelska = it.audience === "teacher";
       const cesta = it.groupSort ?? name;
       const klic = `${cesta} ${ucitelska ? "u" : "z"}`;
-      const zaznam = map.get(klic) ?? { cesta, name, ucitelska, items: [], deti: [] };
+      const zaznam = map.get(klic) ?? {
+        cesta,
+        name,
+        ucitelska,
+        items: [],
+        deti: [],
+      };
       zaznam.items.push(it);
       map.set(klic, zaznam);
     }
@@ -1053,7 +1140,9 @@ function ToolFolders({
     for (const u of map.values()) {
       const lom = u.cesta.lastIndexOf("/");
       const rodic =
-        lom > 0 ? map.get(`${u.cesta.slice(0, lom)} ${u.ucitelska ? "u" : "z"}`) : undefined;
+        lom > 0
+          ? map.get(`${u.cesta.slice(0, lom)} ${u.ucitelska ? "u" : "z"}`)
+          : undefined;
       if (rodic) {
         // Uvnitř stačí název samotné podsložky – nadřazenou lekci má člověk
         // před očima v hlavičce karty, ve které ten řádek stojí.
@@ -1074,7 +1163,8 @@ function ToolFolders({
     const kolize = new Set<string>();
     for (const a of korenove)
       for (const b of korenove)
-        if (a.name === b.name && a.ucitelska !== b.ucitelska) kolize.add(a.name);
+        if (a.name === b.name && a.ucitelska !== b.ucitelska)
+          kolize.add(a.name);
 
     /**
      * Autor složky. Hledá se i mezi potomky – složka „Úlohy" sama žádné
@@ -1100,7 +1190,10 @@ function ToolFolders({
       loose: rest,
       folders: korenove.map((f) => ({
         ...naKartu(f),
-        name: kolize.has(f.name) && f.ucitelska ? `${f.name} · ${s.teacherFolder}` : f.name,
+        name:
+          kolize.has(f.name) && f.ucitelska
+            ? `${f.name} · ${s.teacherFolder}`
+            : f.name,
       })),
     };
   }, [items, lang, s.teacherFolder, s.studentFolder]);
@@ -1155,7 +1248,6 @@ function ToolFolders({
   );
 }
 
-
 /**
  * Kolik materiálů složka nese VČETNĚ všeho pod sebou.
  *
@@ -1164,7 +1256,10 @@ function ToolFolders({
  * teprve soubory, takže v hlavičce svítilo „1 materiál" u složky se 74.
  */
 function spocitejMaterialy(items: BankItem[], deti: Karta[]): number {
-  return items.length + deti.reduce((n, d) => n + spocitejMaterialy(d.items, d.deti), 0);
+  return (
+    items.length +
+    deti.reduce((n, d) => n + spocitejMaterialy(d.items, d.deti), 0)
+  );
 }
 
 /**
@@ -1267,11 +1362,20 @@ function FolderCard({
    * učitelská – „Úlohy" u cvičebnice i „Python – testy z minulých let",
    * ačkoli v ani jedné nic učitelského není.
    */
-  const vsechnyPolozky = (function sesbirej(i: BankItem[], d: Karta[]): BankItem[] {
-    return [...i, ...d.flatMap((k) => sesbirej(k.items, k.deti))];
+  const vsechnyPolozky = (function sesbirej(
+    i: BankItem[],
+    d: Karta[],
+  ): BankItem[] {
+    // Obyčejný cyklus, ne `flatMap`: ten umí Chrome až od 69 a cíl
+    // prohlížečů (.browserslistrc) sahá na 64. Neznámá metoda neshodí jen
+    // tenhle výpočet, ale celý balík – a to je právě balík banky.
+    const ze = [...i];
+    for (const k of d) ze.push(...sesbirej(k.items, k.deti));
+    return ze;
   })(items, deti);
   const onlyTeacher =
-    vsechnyPolozky.length > 0 && vsechnyPolozky.every((it) => it.audience === "teacher");
+    vsechnyPolozky.length > 0 &&
+    vsechnyPolozky.every((it) => it.audience === "teacher");
 
   return (
     <div className="povrch rounded-karta">
@@ -1289,10 +1393,16 @@ function FolderCard({
               : "bg-accent-500/15 text-accent-700 dark:text-accent-300"
           }`}
         >
-          {open ? <FolderOpen className="h-5 w-5" /> : <Folder className="h-5 w-5" />}
+          {open ? (
+            <FolderOpen className="h-5 w-5" />
+          ) : (
+            <Folder className="h-5 w-5" />
+          )}
         </span>
         <span className="min-w-0 flex-1">
-          <span className="block truncate font-medium text-zinc-900 dark:text-white">{name}</span>
+          <span className="block truncate font-medium text-zinc-900 dark:text-white">
+            {name}
+          </span>
           <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
             {/* Počet včetně podsložek – karta se tváří jako jeden celek,
                 takže by lhala, kdyby své přílohy nepočítala. */}
@@ -1366,9 +1476,15 @@ function FolderCard({
 /** Odstraní kódové prefixy („PracL01 - ", „01_") a slovní přípony (plán hodiny, řešení…). */
 function cleanTitle(raw: string): string {
   let s = raw;
-  s = s.replace(/\s*[-–]?\s*(plán hodiny|metodika|řešení|reseni|lesson plan|worksheet|solution)\s*$/i, "");
+  s = s.replace(
+    /\s*[-–]?\s*(plán hodiny|metodika|řešení|reseni|lesson plan|worksheet|solution)\s*$/i,
+    "",
+  );
   s = s.replace(/^[A-Za-zÁ-Žá-ž]*\d+\s*[-–_]?\s*/, "");
-  s = s.replace(/_/g, " ").replace(/\s{2,}/g, " ").trim();
+  s = s
+    .replace(/_/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
   return s;
 }
 
@@ -1430,7 +1546,8 @@ function LessonCard({
 
   // Otevření ze sdíleného odkazu (?tema=...&lekce=N) – odscroluj k ní jednou po načtení.
   useEffect(() => {
-    if (autoOpen) ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+    if (autoOpen)
+      ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1466,9 +1583,13 @@ function LessonCard({
               {title ? ` · ${title}` : ""}
             </span>
             <span className="mt-1 flex flex-wrap gap-1.5">
-              {hasStudent && <SlotTag kind="student">{L(cfg.studentLabel, lang)}</SlotTag>}
+              {hasStudent && (
+                <SlotTag kind="student">{L(cfg.studentLabel, lang)}</SlotTag>
+              )}
               {hasTeacher && (
-                <SlotTag kind={cfg.teacherTone === "neutral" ? "neutral" : "teacher"}>
+                <SlotTag
+                  kind={cfg.teacherTone === "neutral" ? "neutral" : "teacher"}
+                >
                   {L(cfg.teacherLabel, lang)}
                 </SlotTag>
               )}
@@ -1482,7 +1603,11 @@ function LessonCard({
           aria-label={`${s.shareLesson} ${num}`}
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
         >
-          {copied ? <Check className="h-4 w-4 text-accent-700 dark:text-accent-400" /> : <Link2 className="h-4 w-4" />}
+          {copied ? (
+            <Check className="h-4 w-4 text-accent-700 dark:text-accent-400" />
+          ) : (
+            <Link2 className="h-4 w-4" />
+          )}
         </button>
         <button
           type="button"
@@ -1490,7 +1615,9 @@ function LessonCard({
           aria-label={open ? s.collapseLesson : s.expandLesson}
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
         >
-          <ChevronDown className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`} />
+          <ChevronDown
+            className={`h-5 w-5 transition-transform ${open ? "rotate-180" : ""}`}
+          />
         </button>
       </div>
       <div
@@ -1535,7 +1662,8 @@ function DocxView({
     setState("loading");
     import("@/lib/docxPreview")
       .then((m) => {
-        if (!ref.current) throw new Error("Náhled byl zavřen před dokončením načítání");
+        if (!ref.current)
+          throw new Error("Náhled byl zavřen před dokončením načítání");
         return m.renderDocx(href, ref.current);
       })
       .then((cleanup) => {
@@ -1548,7 +1676,10 @@ function DocxView({
       })
       .catch((err) => {
         if (!alive) return;
-        console.error(`Náhled dokumentu se nepodařilo vykreslit (${href}):`, err);
+        console.error(
+          `Náhled dokumentu se nepodařilo vykreslit (${href}):`,
+          err,
+        );
         setState("error");
       });
     return () => {
@@ -1592,7 +1723,9 @@ function PptxView({
 }) {
   const s = STR[lang];
   const n = NAHLED_STR[lang];
-  const [slides, setSlides] = useState<import("@/lib/pptxPreview").Slide[] | null>(null);
+  const [slides, setSlides] = useState<
+    import("@/lib/pptxPreview").Slide[] | null
+  >(null);
   const [state, setState] = useState<"loading" | "ready" | "error">("loading");
 
   useEffect(() => {
@@ -1623,12 +1756,18 @@ function PptxView({
     );
   }
   if (state === "error" || !slides) {
-    return <p className="px-6 py-10 text-center text-sm text-zinc-600 dark:text-zinc-300">{errorText}</p>;
+    return (
+      <p className="px-6 py-10 text-center text-sm text-zinc-600 dark:text-zinc-300">
+        {errorText}
+      </p>
+    );
   }
 
   return (
     <div className="h-[78vh] w-full overflow-auto">
-      <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400">{n.pptxNote}</p>
+      <p className="mb-3 text-xs text-zinc-600 dark:text-zinc-400">
+        {n.pptxNote}
+      </p>
       <ol className="space-y-3">
         {slides.map((sl) => (
           <li key={sl.no} className="povrch rounded-karta p-4">
@@ -1687,7 +1826,8 @@ function TextView({
     setState("loading");
     fetch(href)
       .then((res) => {
-        if (!res.ok) throw new Error(`Soubor se nepodařilo stáhnout (${res.status})`);
+        if (!res.ok)
+          throw new Error(`Soubor se nepodařilo stáhnout (${res.status})`);
         return res.text();
       })
       .then((t) => {
@@ -1714,7 +1854,9 @@ function TextView({
     );
   if (state === "error")
     return (
-      <p className="px-6 py-16 text-center text-sm text-zinc-600 dark:text-zinc-300">{errorText}</p>
+      <p className="px-6 py-16 text-center text-sm text-zinc-600 dark:text-zinc-300">
+        {errorText}
+      </p>
     );
   return (
     <div className="h-[78vh] w-full overflow-auto rounded-ovladac bg-white dark:bg-zinc-900">
@@ -1775,12 +1917,17 @@ function CodeView({
     );
   if (state === "error")
     return (
-      <p className="px-6 py-16 text-center text-sm text-zinc-600 dark:text-zinc-300">{errorText}</p>
+      <p className="px-6 py-16 text-center text-sm text-zinc-600 dark:text-zinc-300">
+        {errorText}
+      </p>
     );
   return (
     <div className="h-[78vh] w-full overflow-auto rounded-ovladac bg-white dark:bg-zinc-900">
       <pre className="p-5 font-mono text-xs leading-relaxed text-zinc-800 dark:text-zinc-100 sm:text-sm">
-        <code className="hljs bg-transparent" dangerouslySetInnerHTML={{ __html: html }} />
+        <code
+          className="hljs bg-transparent"
+          dangerouslySetInnerHTML={{ __html: html }}
+        />
       </pre>
     </div>
   );
@@ -1876,7 +2023,9 @@ export function PreviewModal({
         className="glass flex max-h-[90vh] w-full max-w-4xl flex-col overflow-hidden rounded-panel outline-none"
       >
         <div className="flex items-center gap-3 border-b border-black/10 px-5 py-3.5 dark:border-white/10">
-          <p className="min-w-0 flex-1 truncate font-medium text-zinc-900 dark:text-white">{label}</p>
+          <p className="min-w-0 flex-1 truncate font-medium text-zinc-900 dark:text-white">
+            {label}
+          </p>
           {opensInBrowser(item.ext) && (
             <a
               href={item.href}
@@ -1910,11 +2059,23 @@ export function PreviewModal({
         <div className="flex min-h-0 flex-1 items-center justify-center overflow-auto bg-white/40 p-3 dark:bg-black/20">
           {isImg ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={item.href} alt={label} className="max-h-[78vh] max-w-full object-contain" />
+            <img
+              src={item.href}
+              alt={label}
+              className="max-h-[78vh] max-w-full object-contain"
+            />
           ) : isDocx ? (
-            <DocxView href={item.href} loadingText={n.docxLoading} errorText={n.docxError} />
+            <DocxView
+              href={item.href}
+              loadingText={n.docxLoading}
+              errorText={n.docxError}
+            />
           ) : isText ? (
-            <TextView href={item.href} loadingText={n.docxLoading} errorText={n.docxError} />
+            <TextView
+              href={item.href}
+              loadingText={n.docxLoading}
+              errorText={n.docxError}
+            />
           ) : isPptx ? (
             <PptxView
               href={item.href}
@@ -1930,7 +2091,11 @@ export function PreviewModal({
               errorText={n.codeError}
             />
           ) : (
-            <iframe src={item.href} title={label} className="h-[78vh] w-full rounded-ovladac border-0 bg-white" />
+            <iframe
+              src={item.href}
+              title={label}
+              className="h-[78vh] w-full rounded-ovladac border-0 bg-white"
+            />
           )}
         </div>
       </div>

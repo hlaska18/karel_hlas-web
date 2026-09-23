@@ -8,7 +8,14 @@
  * Windows nemuselo sahat.
  */
 
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  Fragment,
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { ArrowLeft, Maximize2, Minimize2, Search } from "lucide-react";
 import Link from "next/link";
 import { MacProvider, OknoMacProvider, useMac } from "./system";
@@ -909,9 +916,23 @@ function useUdajePocitace() {
     const sklo =
       umi("backdrop-filter", "blur(2px)") ||
       umi("-webkit-backdrop-filter", "blur(2px)");
-    const bezAnimaci =
-      typeof window.matchMedia === "function" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    /*
+     * Dotaz na animace umí Chrome až od 74, v cíli je 64. Starší prohlížeč
+     * na neznámý dotaz odpoví „neplatí" – a to není totéž jako „animace
+     * jsou zapnuté". Pozná se to podle `media`: neznámý dotaz se vrátí jako
+     * „not all“. Radši se přizná, že to neví, než aby tvrdil nepravdu.
+     */
+    const dotazNaAnimace =
+      typeof window.matchMedia === "function"
+        ? window.matchMedia("(prefers-reduced-motion: reduce)")
+        : null;
+    const animace = !dotazNaAnimace
+      ? "prohlížeč to neřekne"
+      : dotazNaAnimace.media === "not all"
+        ? "prohlížeč to neřekne (starší verze)"
+        : dotazNaAnimace.matches
+          ? "vypnuté"
+          : "zapnuté";
     const nav = navigator as Navigator & {
       deviceMemory?: number;
       userAgentData?: {
@@ -953,7 +974,7 @@ function useUdajePocitace() {
         "Sklo (průhlednost)",
         sklo ? "funguje" : "nefunguje – panely jsou ploché",
       ],
-      ["Animace v systému", bezAnimaci ? "vypnuté" : "zapnuté"],
+      ["Animace v systému", animace],
     ];
 
     let zije = true;
@@ -1099,10 +1120,12 @@ function OMacu({ zavri }: { zavri: () => void }) {
           {vsechno && (
             <dl className="mt-2 grid grid-cols-[auto_1fr] gap-x-4 gap-y-0.5 text-[12px]">
               {vsechno.map(([k, v]) => (
-                <div key={k} className="contents">
+                // `Fragment`, ne obal s `display: contents` – ten umí Chrome
+                // až od 65 a v cíli je 64. Tabulka by se rozsypala.
+                <Fragment key={k}>
                   <dt className="text-mac-slaby">{k}</dt>
                   <dd className="tabular-nums text-mac-text">{v}</dd>
-                </div>
+                </Fragment>
               ))}
             </dl>
           )}
