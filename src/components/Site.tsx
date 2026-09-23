@@ -10,7 +10,9 @@ import { Footer } from "@/components/Footer";
 import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
 import type { Vystup } from "@/lib/aihubLabels";
-import { getBankStats, getHeroPool } from "@/lib/heroPick";
+import { getBankStats } from "@/lib/heroPick";
+import { UKOLY } from "@/lib/win/ukoly";
+import { UKOLY_MAC } from "@/lib/mac/ukoly";
 import { t } from "@/lib/content";
 
 /** Celý web na jedné stránce (one-page). Jazyk přichází z adresy (/ nebo /en). */
@@ -41,7 +43,12 @@ export function Site({
       />
       <Header />
       <main id="main">
-        <Hero pool={getHeroPool(items)} stats={getBankStats(items)} />
+        {/* Počty úloh se berou ze skutečných seznamů úloh tady na serveru,
+            ať se do prohlížeče nemusí posílat celé simulace. */}
+        <Hero
+          ulohy={{ windows: UKOLY.length, macos: UKOLY_MAC.length }}
+          stats={getBankStats(items)}
+        />
         <BankSection items={items} />
         <CrossSubject items={items.filter((i) => crossTools.has(i.tool))} />
         <AiHub vystupy={vystupy} />

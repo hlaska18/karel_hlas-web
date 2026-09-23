@@ -4,17 +4,16 @@ import { ArrowDown, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
 import { Typewriter } from "@/components/Typewriter";
-import { HeroPreview } from "@/components/HeroPreview";
+import { HeroSimulatory, type PoctyUloh } from "@/components/HeroSimulatory";
 import { Ctenie } from "@/components/Ctenie";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
-import type { BankItem } from "@/lib/materials";
 
 export function Hero({
-  pool = [],
+  ulohy,
   stats,
 }: {
-  /** Kandidáti do stohu karet vedle nadpisu (losuje se z nich v prohlížeči). */
-  pool?: BankItem[];
+  /** Kolik úloh mají simulátory – na tlačítka vedle nadpisu. */
+  ulohy: PoctyUloh;
   /** Reálná čísla z banky pro důkazní řádek. */
   stats?: { files: number; topics: number };
 }) {
@@ -97,11 +96,11 @@ export function Hero({
             </p>
           </div>
 
-          {/* Pravý sloupec: ukázkové karty a pod nimi odkazy na čtení.
+          {/* Pravý sloupec: tlačítka na simulátory a pod nimi odkazy na čtení.
               Na mobilu se celý skrývá – tam se počítá každý pixel nad ohybem
               a tlačítko k materiálům musí zůstat vidět bez scrollování. */}
           <div className="hidden w-[22rem] shrink-0 flex-col gap-5 lg:flex">
-            <HeroPreview pool={pool} />
+            <HeroSimulatory ulohy={ulohy} />
             <Ctenie />
           </div>
         </div>

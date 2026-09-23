@@ -4,9 +4,9 @@ import { useLang } from "@/lib/i18n";
 import { CLANKY } from "@/lib/content";
 
 /**
- * Zajímavé články k digitálním technologiím – pod ukázkovými kartami v úvodu.
+ * Zajímavé články k digitálním technologiím – pod tlačítky simulátorů v úvodu.
  *
- * Design i chování se drží stohu ukázkových karet nad tím: stejná karta, stejný
+ * Design i chování se drží stohu karet nad tím (`HeroSimulatory`): stejná karta, stejný
  * čtverec s ikonou vlevo, stejný štítek vpravo a stejné natočení, které se při
  * najetí myší srovná. `group` je na celé sekci, takže se – jako u stohu –
  * narovnají všechny karty naráz, ne jen ta pod kurzorem.
@@ -15,7 +15,7 @@ import { CLANKY } from "@/lib/content";
  * u článku, jestli ho čtenář vůbec přečte. Zdroj je vedle v podtitulku, kde se
  * smí ořezat – jazyk na pevném místě vpravo se ořezat nemůže.
  *
- * Barevně zůstávají šedé: zelený akcent nesou karty nad nimi a nástroje níž,
+ * Barevně zůstávají šedé: zelený akcent nesou simulátory nad nimi a nástroje níž,
  * dvě zvýrazněné sekce vedle sebe by soupeřily o stejnou pozornost.
  *
  * Tři vědomá rozhodnutí, protože rada tuhle rubriku odmítala právě kvůli nim:

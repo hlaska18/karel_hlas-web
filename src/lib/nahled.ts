@@ -8,8 +8,7 @@ import type { Lang } from "@/lib/content";
  * místo drželo vlastní seznam přípon, rozešly by se — a rozejít se můžou
  * TIŠE: karta by šla otevřít, ale modal by neuměl nic vykreslit.
  *
- * Soubor je schválně bez Reactu a bez `fs`, aby šel importovat i z knihovny
- * (`heroPick.ts` ho potřebuje při filtrování nabídky do hlavičky).
+ * Soubor je schválně bez Reactu a bez `fs`, aby šel importovat i z knihovny.
  */
 
 /** Typy, které umíme spolehlivě zobrazit přímo (bez cizí služby). */

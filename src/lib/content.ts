@@ -63,8 +63,8 @@ export type Clanek = {
   title: string;
   source: string;
   url: string;
-  /** Jazyk článku. Ukazuje se jako štítek vpravo – protějšek přípony
-   *  u ukázkových karet. Čtenář tak na první pohled pozná, do čeho jde. */
+  /** Jazyk článku. Ukazuje se jako štítek vpravo – jako štítek u karet
+   *  simulátorů nad články. Čtenář tak na první pohled pozná, do čeho jde. */
   jazyk: Lang;
   pozor?: { cs: string; en: string };
   /**
@@ -1118,7 +1118,14 @@ type Dict = {
     byline: string;
     /** Důkazní řádek. `{files}` a `{topics}` se nahradí reálnými čísly. */
     stats: string;
-    sample: string;
+    /** Popisek nad tlačítky simulátorů (komponenta `HeroSimulatory`). */
+    simulators: string;
+    simWindows: string;
+    simMacos: string;
+    /** Řádek pod názvem simulátoru. `{tasks}` je počet úloh i se slovem, `{code}` kód pro vstup. */
+    simNote: string;
+    /** Štítek vpravo na tlačítku simulátoru. */
+    simOpen: string;
     /** Popisek nad odkazy na čtení (komponenta `Ctenie`). */
     reading: string;
     ctaLessons: string;
@@ -1334,7 +1341,11 @@ export const t: Record<Lang, Dict> = {
         "Pro střední školy. Moje soubory si stáhneš i upravíš zdarma; kurz SQL a virtuální Windows běží rovnou v prohlížeči. Cvičebnice k Office je tu celá i s řešeními a autoři jsou u ní uvedení.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · všechny ročníky SŠ",
-      sample: "Ukázka materiálů",
+      simulators: "Simulátory v prohlížeči",
+      simWindows: "Virtuální Windows 11",
+      simMacos: "Virtuální macOS",
+      simNote: "{tasks} · kód {code}",
+      simOpen: "Spustit",
       reading: "Zajímavé články",
       ctaLessons: "Procházet materiály",
       ctaContact: "O mně",
@@ -1907,7 +1918,11 @@ export const t: Record<Lang, Dict> = {
         "For secondary schools. My own files are free to download and edit; the SQL course and virtual Windows run right in the browser. The Office workbook is here in full, solutions included, with its authors credited.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · all secondary years",
-      sample: "Sample materials",
+      simulators: "Simulators in the browser",
+      simWindows: "Virtual Windows 11",
+      simMacos: "Virtual macOS",
+      simNote: "{tasks} in Czech · code {code}",
+      simOpen: "Open",
       reading: "Interesting articles",
       ctaLessons: "Browse the materials",
       ctaContact: "About me",

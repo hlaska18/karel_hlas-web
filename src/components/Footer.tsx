@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { ArrowUp, Database } from "lucide-react";
 import { ZnakJablko } from "@/components/ZnakJablko";
+import { ZnakWindows } from "@/components/ZnakWindows";
 import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { Mark } from "@/components/Mark";
@@ -11,29 +12,6 @@ import { Mark } from "@/components/Mark";
 const ODKAZ_NASTROJE =
   "inline-flex items-center gap-2 text-sm font-semibold text-zinc-600 transition " +
   "hover:text-accent-700 dark:text-zinc-300 dark:hover:text-accent-300";
-
-/**
- * Čtyři čtverce – táž značka, jakou má tlačítko Start uvnitř simulace.
- * Obecná ikona monitoru tu dřív o prostředí neřekla nic; tohle člověk pozná.
- */
-function IkonaWindows() {
-  return (
-    <svg
-      viewBox="0 0 20 20"
-      className="h-4 w-4 text-accent-700 dark:text-accent-400"
-      aria-hidden="true"
-    >
-      {/* Stejný tvar jako Start ve windowsové simulaci: zakulacené jen
-          vnější rohy, takže čtyři díly drží jeden čtverec. */}
-      <g fill="currentColor">
-        <path d="M3.5 1H9v8H1V3.5A2.5 2.5 0 0 1 3.5 1Z" />
-        <path d="M11 1h5.5A2.5 2.5 0 0 1 19 3.5V9h-8V1Z" />
-        <path d="M1 11h8v8H3.5A2.5 2.5 0 0 1 1 16.5V11Z" />
-        <path d="M11 11h8v5.5a2.5 2.5 0 0 1-2.5 2.5H11v-8Z" />
-      </g>
-    </svg>
-  );
-}
 
 export function Footer() {
   const { tr, lang } = useLang();
@@ -61,7 +39,7 @@ export function Footer() {
             {tr.footer.sqlCourse}
           </Link>
           <Link href="/windows" className={ODKAZ_NASTROJE}>
-            <IkonaWindows />
+            <ZnakWindows className="h-4 w-4 text-accent-700 dark:text-accent-400" />
             {tr.footer.windows}
           </Link>
           {/* macOS dosud nevedl odkaz odnikud – prostředí existovalo, ale

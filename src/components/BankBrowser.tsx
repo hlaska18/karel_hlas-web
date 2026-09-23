@@ -1950,9 +1950,9 @@ function CodeView({
 /**
  * Modální náhled materiálu.
  *
- * Exportovaný, protože ho otevírá i stoh ukázek v hlavičce webu
- * (`HeroPreview`) – aby karta v hlavičce ukázala materiál na místě
- * a neposílala učitele o tři obrazovky níž do banky.
+ * Exportovaný kvůli stohu ukázek v hlavičce webu, který materiál ukazoval
+ * na místě. Stoh nahradila tlačítka na simulátory; export zůstal pro
+ * případ, že by se ukázka vracela.
  */
 export function PreviewModal({
   item,
