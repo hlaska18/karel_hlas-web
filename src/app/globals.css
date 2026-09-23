@@ -1221,6 +1221,22 @@
   }
 }
 
+/* Simulace Macu se řídí VLASTNÍM přepínačem pohybu (Nastavení → Omezit pohyb
+   a průhlednost, tedy `data-efekty`), ne systémem pod ní – stejně jako džin
+   (viz Dzin.tsx). Školní Windows mají efekty animace vypnuté kvůli výkonu
+   (změřeno 23. 9. 2026 oknem O tomto Macu: 60 snímků/s, animace vypnuté)
+   a okna ani nabídky se tam kvůli pravidlu výš nerozjížděly. Tady je uvnitř
+   `.mac` vyšší váha vrací; vypne je až přepínač v simulaci.
+   Hodnoty animací musí sedět s `.mac-vjezd` a `.mac-nabidka` výš. */
+@media (prefers-reduced-motion: reduce) {
+  .mac:not([data-efekty="omezene"]) .mac-vjezd {
+    animation: mac-okno-vjezd 0.14s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+  .mac:not([data-efekty="omezene"]) .mac-nabidka {
+    animation: mac-nabidka-vjezd 0.12s ease-out;
+  }
+}
+
 /* Tapety macOS.
    Základní `.mac-tapeta` výš zůstává jako přechod v CSS („Vrstvy") a slouží
    i jako záloha, kdyby se obrázek nenačetl. Zbylé dvě jsou fotky, vybírané
