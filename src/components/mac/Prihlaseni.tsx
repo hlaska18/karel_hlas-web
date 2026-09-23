@@ -59,7 +59,7 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
 
   const odesli = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!kodSedi(kod)) {
+    if (!kodSedi(kod, "macos")) {
       nastavHlasku("Tenhle kód nesedí. Zeptej se vyučujícího.");
       nastavChybu(true);
       window.setTimeout(() => nastavChybu(false), 700);
@@ -162,9 +162,11 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
             </p>
 
             <p className="mt-6 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
-              Je to týž kód jako do virtuálních Windows – jeden platí do obou.
-              Drží pohromadě třídu, nechrání žádné údaje – žádné se tu
-              neukládají. Co tu uděláš, zůstává v tomhle prohlížeči.{" "}
+              {/* Jen „školní": veřejný kód MACOS pro cizí učitele do Windows
+                  neplatí, takže „jeden platí do obou" by pro ně nebyla pravda. */}
+              Školní kód platí i do virtuálních Windows. Drží pohromadě třídu,
+              nechrání žádné údaje – žádné se tu neukládají. Co tu uděláš,
+              zůstává v tomhle prohlížeči.{" "}
               <strong className="font-semibold text-white/80">
                 Na jiném počítači ani po vyčištění prohlížeče to nenajdeš.
               </strong>{" "}

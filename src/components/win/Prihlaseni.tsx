@@ -92,7 +92,7 @@ export function Prihlaseni({
   /** Ověření kódu. Běží celé v prohlížeči – nic se neodesílá. */
   const odesliKod = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!kodSedi(kod)) {
+    if (!kodSedi(kod, "windows")) {
       nastavHlasku("Tenhle kód nesedí. Zeptej se vyučujícího.");
       nastavChybu(true);
       window.setTimeout(() => nastavChybu(false), 700);

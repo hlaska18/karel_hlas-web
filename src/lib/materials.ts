@@ -325,6 +325,8 @@ export type BankItem = {
    * a hero by ho započítal mezi soubory ke stažení, což není.
    */
   interactive?: boolean;
+  /** Vstupní kód nástroje pro učitele z jiných škol (simulátory). */
+  kod?: string;
   /**
    * Otevřít do nové karty místo do stejné. Nesou to laboratoře a podobné
    * stránky z `public/` – je to samostatná stránka, ne část banky, a učitel
@@ -643,7 +645,9 @@ export function getBankItems(): BankItem[] {
             // Schválně vedle `_zdroj.json`, ne uvnitř něj: `_zdroj.json` je pro
             // CIZÍ materiál, který nehostujeme, a nese s sebou atribuci
             // původnímu autorovi. Tohle je naše a žádnou atribuci nechce.
-            type Nastroj = { cs?: string; en?: string; url?: string; note?: { cs: string; en: string } };
+            // `kod` = veřejný vstupní kód pro učitele z jiných škol; musí sedět
+            // s `VEREJNE_KODY` v src/lib/win/pristup.ts.
+            type Nastroj = { cs?: string; en?: string; url?: string; kod?: string; note?: { cs: string; en: string } };
             let nastroje: Nastroj[];
             try {
               const parsed = JSON.parse(fs.readFileSync(path.join(absDir, e.name), "utf8"));
@@ -684,6 +688,7 @@ export function getBankItems(): BankItem[] {
                 groupAuthor,
                 groupSort,
                 interactive: true,
+                kod: n.kod,
                 sourceNote: n.note,
                 sourceOrder: poradi,
                 courseIds: [courseId],

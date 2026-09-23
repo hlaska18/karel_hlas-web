@@ -6,9 +6,11 @@
  * stránky, najde ho. Nevadí to: po zrušení účtů žáků tu není co chránit,
  * na server nejde nic. Kód drží pohromadě třídu a otevírá hodinu.
  *
- * ŽÁDNÁ NÁPOVĚDA. Dřívější podoba kódu nabízela výchozí hodnotu tlačítkem,
- * které ji po kliknutí vyplnilo — závora, kterou obsluha otevírá
- * návštěvníkovi. Přesně kvůli tomu se rušila (`de570c6`) a nevrací se.
+ * ŽÁDNÁ NÁPOVĚDA NA ZAMYKACÍ OBRAZOVCE. Dřívější podoba kódu nabízela
+ * výchozí hodnotu tlačítkem, které ji po kliknutí vyplnilo — závora, kterou
+ * obsluha otevírá návštěvníkovi. Přesně kvůli tomu se rušila (`de570c6`)
+ * a nevrací se. Veřejné kódy pro učitele z jiných škol (`VEREJNE_KODY`)
+ * stojí jinde: na dlaždici simulátoru v bance, kterou čte učitel, ne žák.
  *
  * PŘIDÁNÍ KÓDU PRO TŘÍDU: dopiš řádek do `KODY` níž a nahraj web. Nic
  * jiného měnit netřeba.
@@ -26,8 +28,10 @@ export const KODY: readonly string[] = [
    * i do macOS – proto není pojmenovaný po žádném z nich.
    *
    * Od 21. 9. 2026 je to `SPSTABOR`, na Karlovo zadání. Předchozí společné
-   * kódy `WIN11` a `OS2026` tím přestaly platit. Kdo je zrovna přihlášený, toho to nevyhodí –
-   * přihlášení drží `sessionStorage` do zavření záložky.
+   * kódy `WIN11` a `OS2026` tím přestaly platit (`WIN11` se 23. 9. vrátil,
+   * ale jen jako veřejný kód do Windows – viz `VEREJNE_KODY`). Kdo je zrovna
+   * přihlášený, toho to nevyhodí – přihlášení drží `sessionStorage` do
+   * zavření záložky.
    */
   "SPSTABOR",
 
@@ -39,6 +43,23 @@ export const KODY: readonly string[] = [
   "1S-2026", // Strojírenství
   "1P-2026", // Pozemní stavitelství
 ];
+
+/** Které prostředí se odemyká. Veřejné kódy platí každý jen do svého. */
+export type Prostredi = "windows" | "macos";
+
+/**
+ * Veřejné kódy pro učitele z jiných škol – od 23. 9. 2026, na Karlovo
+ * rozhodnutí po radě o distribuci. Dřív se cizí učitel do simulátorů
+ * nedostal vůbec: kód nebyl napsaný nikde na webu. Teď je vypsaný na
+ * dlaždici simulátoru v bance (`public/materialy/1L/11/_nastroj.json`,
+ * pole `kod`) – kdo ho mění tady, musí ho změnit i tam.
+ *
+ * Na rozdíl od školních kódů výš platí každý JEN DO SVÉHO prostředí.
+ */
+export const VEREJNE_KODY: Record<Prostredi, string> = {
+  windows: "WIN11",
+  macos: "MACOS",
+};
 
 /**
  * Mezery, pomlčky, velikost písmen a DIAKRITIKA se ignorují. Žák opisuje
@@ -55,9 +76,11 @@ const normalizuj = (text: string) =>
     .replace(/[\s-]/g, "")
     .toUpperCase();
 
-export const kodSedi = (zadano: string): boolean => {
+export const kodSedi = (zadano: string, prostredi: Prostredi): boolean => {
   const hledany = normalizuj(zadano);
-  return hledany.length > 0 && KODY.some((k) => normalizuj(k) === hledany);
+  if (hledany.length === 0) return false;
+  if (KODY.some((k) => normalizuj(k) === hledany)) return true;
+  return normalizuj(VEREJNE_KODY[prostredi]) === hledany;
 };
 
 /** Klíč v `sessionStorage`: po obnovení stránky se kód nezadává znovu. */

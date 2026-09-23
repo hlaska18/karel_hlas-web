@@ -3,6 +3,7 @@
     "cs": "Virtuální Windows 11",
     "en": "Virtual Windows 11",
     "url": "/windows",
+    "kod": "WIN11",
     "note": {
       "cs": "Průzkumník, Poznámkový blok, Malování, Terminál a další. 34 úloh od zobrazení přípon přes zálohu do ZIPu až po cvičný škodlivý program.",
       "en": "File Explorer, Notepad, Paint, Terminal and more. 34 exercises, from showing file extensions through ZIP backups to a mock malware lesson. The environment is in Czech."
@@ -12,6 +13,7 @@
     "cs": "Virtuální macOS",
     "en": "Virtual macOS",
     "url": "/macos",
+    "kod": "MACOS",
     "note": {
       "cs": "Finder, Terminál, Dock a horní lišta. 14 úloh jen na to, čím se Mac liší od Windows: zavřené okno program nezastaví, cesta nemá písmeno disku, skrytý soubor pozná podle tečky, aplikace je ve skutečnosti složka a Enter soubor neotevře, ale přejmenuje.",
       "en": "Finder, Terminal, the Dock and the menu bar. 14 exercises on what makes a Mac different from Windows: closing a window does not quit the program, paths have no drive letter, a hidden file is known by its leading dot, an application is really a folder, and Enter renames a file instead of opening it. The environment is in Czech."
