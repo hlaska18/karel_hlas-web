@@ -156,12 +156,13 @@ export function OknoRamMac({
       <div
         className="relative flex h-[58px] shrink-0 items-center gap-3 border-b border-mac-linka bg-mac-panel px-4"
         onMouseDown={(e) => {
-          // Na semaforu ani na ovládání v pruhu se netáhne – tam se kliká.
-          if ((e.target as HTMLElement).closest("[data-semafor],[data-naradi]"))
-            return;
+          if (jeOvladani(e.target)) return;
           zacniTahat(e, null);
         }}
-        onDoubleClick={() => poslat({ typ: "okno/zvetsi", id: okno.id })}
+        onDoubleClick={(e) => {
+          if (jeOvladani(e.target)) return;
+          poslat({ typ: "okno/zvetsi", id: okno.id });
+        }}
       >
         <Semafor okno={okno} aktivni={aktivni} />
         {/* Název je VLEVO a tučný, ne na středu. Vystředěný titulek je starší
@@ -187,6 +188,25 @@ export function OknoRamMac({
           />
         ))}
     </div>
+  );
+}
+
+/**
+ * Leží kliknutí na něčem, co se ovládá (tlačítko, pole, odkaz)? Tam se okno
+ * netáhne ani nezvětšuje dvojklikem – kliká se.
+ *
+ * Dřív se netáhlo za NIC v pruhu nástrojů: slot pro nástroje aplikace
+ * (`data-naradi`) zabírá celou šířku od semaforu doprava, a tak ve Finderu
+ * nešlo okno chytit ani za prázdné místo mezi nadpisem a přepínačem
+ * zobrazení. Na Macu se okno táhne za jakékoli prázdné místo v liště
+ * i za nadpis. Ve třídě to bylo první, co žák zkusil.
+ */
+function jeOvladani(cil: EventTarget) {
+  return (
+    cil instanceof Element &&
+    cil.closest(
+      "[data-semafor],button,input,textarea,select,a,label,[role='button'],[data-netahat]",
+    ) !== null
   );
 }
 

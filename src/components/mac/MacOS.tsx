@@ -498,7 +498,10 @@ function Obrazovka() {
             onOdhlasit={odhlasit}
             onZacitZnovu={() => nastavPanel("znovu")}
             onOMacu={() => nastavPanel("oMacu")}
-            onSpotlight={() => nastavPanel("spotlight")}
+            // Lupa je přepínač: druhé kliknutí hledání zavře, jako na Macu.
+            onSpotlight={() =>
+              nastavPanel((p) => (p === "spotlight" ? null : "spotlight"))
+            }
           />
 
           <DzinProvider>
