@@ -1338,7 +1338,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Hotové přípravy a materiály nejen do informatiky",
       role: "Učitel informatiky a angličtiny",
       tagline:
-        "Pro střední školy. Moje soubory si stáhneš i upravíš zdarma; kurz SQL a virtuální Windows běží rovnou v prohlížeči. Cvičebnice k Office je tu celá i s řešeními a autoři jsou u ní uvedení.",
+        "Pro střední školy. Moje soubory si stáhneš i upravíš zdarma; virtuální Windows a macOS běží rovnou v prohlížeči. Cvičebnice k Office je tu celá i s řešeními a autoři jsou u ní uvedení.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · všechny ročníky SŠ",
       simulators: "Simulátory v prohlížeči",
@@ -1915,7 +1915,7 @@ export const t: Record<Lang, Dict> = {
       headline: "Ready-made lesson plans and materials, not just for CS",
       role: "Computer Science & English teacher",
       tagline:
-        "For secondary schools. My own files are free to download and edit; the SQL course and virtual Windows run right in the browser. The Office workbook is here in full, solutions included, with its authors credited.",
+        "For secondary schools. My own files are free to download and edit; virtual Windows and macOS run right in the browser. The Office workbook is here in full, solutions included, with its authors credited.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · all secondary years",
       simulators: "Simulators in the browser",
