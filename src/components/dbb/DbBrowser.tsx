@@ -59,6 +59,7 @@ import { vyhodnotDotaz, type SpusteniKontroly } from "@/lib/dbb/kontrola";
 import { dekodujUlohu, lekceZOdkazu, ID_ULOHY } from "@/lib/dbb/odkazUlohy";
 import { t, jeAnglicky, adresaVJazyce } from "@/lib/dbb/jazyk";
 import { dekodujText, sqlVytvoreni, sqlVlozeni, type PripravenaTabulka } from "@/lib/dbb/csv";
+import { sqlSkript } from "@/lib/dbb/export";
 import {
   DbbKontext,
   useDbb,
@@ -547,6 +548,21 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     },
     [nahrajSoubor],
   );
+
+  /** Otevřená databáze jako skript SQL (i s nezapsanými změnami, jak ji program právě ukazuje). */
+  const exportujSql = useCallback(() => {
+    const o = otevrenaRef.current;
+    if (!o) return;
+    const nazev = `${o.nazev.replace(/\.[^.]*$/, "")}.sql`;
+    stahni(nazev, new TextEncoder().encode(sqlSkript(o.db)), "application/sql");
+    udalost(`export:sql:${o.nazev}`);
+    status(
+      t(
+        `Soubor ${nazev} je ve složce Stažené soubory tvého počítače. Zpátky ho nahraješ přes Soubor → Importovat databázi ze SQL.`,
+        `The file ${nazev} is in your computer's Downloads folder. Upload it back with File → Import Database from SQL File.`,
+      ),
+    );
+  }, [udalost, status]);
 
   const souborRef = useRef<HTMLInputElement>(null);
   const ucelRef = useRef<"db" | "csv" | "sql">("db");
@@ -1221,13 +1237,14 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       vyberSoubor,
       importujTabulku,
       importujSql,
+      exportujSql,
       predvadeni,
       meritko,
     }),
     [otevrena, verze, zmeneno, disk, karta, dokKarta, editor, nastavEditor, vystup, spustit, log, udalost,
       hlasProhlizeni, provedAplikaci, status, zapsat, vratit, lekceId, splneno, opsano, pokusy, odezva,
       vyberLekci, vlozReseni, novyZak, obnovDatabazi, predvadeni, meritko, vsechnyLekce, vyberSoubor, importujTabulku,
-      importujSql],
+      importujSql, exportujSql],
   );
 
   if (engine === "nacita") {

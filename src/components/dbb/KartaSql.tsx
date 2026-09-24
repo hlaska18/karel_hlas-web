@@ -9,7 +9,7 @@
  */
 
 import { useRef, type ReactNode } from "react";
-import { Play, StepForward, Square, Printer, FolderOpen, Save } from "lucide-react";
+import { Play, StepForward, Square, Printer, FolderOpen, Save, FileDown } from "lucide-react";
 import { useDbb } from "@/components/dbb/kontext";
 import { Mrizka } from "@/components/dbb/Mrizka";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
@@ -157,6 +157,18 @@ export function KartaSql() {
               `Náhled tabulky ${v.nahled} – po spuštění dotazu se tu objeví jeho výsledek.`,
               `Preview of the ${v.nahled} table – the result of your query will appear here once you run it.`,
             )}
+          </div>
+        )}
+        {v && v.vysledek && !v.nahled && (
+          <div className="flex h-[24px] shrink-0 items-center justify-end border-b border-dbb-mrizka bg-dbb-okno px-1">
+            <button
+              type="button"
+              onClick={() => api.otevritDialog({ druh: "exportCsv", zdroj: "vysledek" })}
+              className="flex h-[20px] items-center rounded-[3px] px-1.5 text-[11px] hover:bg-dbb-hover"
+            >
+              <FileDown className="mr-1 h-3.5 w-3.5 text-[#2e75b6]" />
+              {t("Uložit výsledek do CSV", "Save the Results to CSV")}
+            </button>
           </div>
         )}
         {v && v.vysledek ? (

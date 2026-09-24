@@ -153,7 +153,12 @@ export function NabidkaOkna({
         "-",
         { text: t("Importovat tabulku z CSV…", "Import Table from CSV File…"), akce: () => api.vyberSoubor("csv"), zakazano: bezDb },
         { text: t("Importovat databázi ze SQL…", "Import Database from SQL File…"), akce: () => api.vyberSoubor("sql") },
-        { text: "Export", zakazano: true },
+        {
+          text: t("Exportovat tabulku do CSV…", "Export Table to CSV File…"),
+          akce: () => api.otevritDialog({ druh: "exportCsv" }),
+          zakazano: bezDb,
+        },
+        { text: t("Exportovat databázi do SQL…", "Export Database to SQL File…"), akce: api.exportujSql, zakazano: bezDb },
         "-",
         { text: t("Konec", "Exit"), akce: konec },
       ],

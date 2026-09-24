@@ -45,6 +45,8 @@ export type Dialog =
   | { druh: "importCsv"; soubor: string; bajty: Uint8Array }
   /** Databáze ze souboru SQL ze skutečného počítače. */
   | { druh: "importSql"; soubor: string; text: string }
+  /** Export tabulky nebo výsledku posledního dotazu do CSV. */
+  | { druh: "exportCsv"; zdroj?: string }
   | {
       druh: "potvrdit";
       titulek: string;
@@ -107,6 +109,8 @@ export type DbbApi = {
   importujTabulku: (nazev: string, tabulka: PripravenaTabulka) => string | null;
   /** Založí novou databázi ze skriptu SQL a otevře ji. Vrací chybu, nebo null. */
   importujSql: (nazevDb: string, text: string) => string | null;
+  /** Stáhne otevřenou databázi jako skript SQL. */
+  exportujSql: () => void;
   /** Režim předvádění pro projektor: postup zvlášť, program zvětšený, řešení bez pokusu. */
   predvadeni: boolean;
   /** Zvětšení programu v režimu předvádění (1 = bez zvětšení). */

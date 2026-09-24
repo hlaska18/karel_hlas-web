@@ -12,6 +12,7 @@ import { IkonaProgramu } from "@/components/dbb/Okno";
 import { MojeVysledky, PrehledTridy } from "@/components/dbb/Vysledky";
 import { UlohaOdkazem } from "@/components/dbb/UlohaOdkazem";
 import { ImportCsv, ImportSql } from "@/components/dbb/Import";
+import { ExportCsv } from "@/components/dbb/Export";
 import { Okno, Tlacitko, Paticka, Zprava } from "@/components/dbb/okna";
 import { KNIHOVNA, MAX_SOUBORU, upravNazev, velikost } from "@/lib/dbb/soubory";
 import { tabulky } from "@/lib/dbb/prikazy";
@@ -545,7 +546,8 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
           <b>Vlastní data.</b> Soubor → Importovat tabulku z CSV přidá do otevřené databáze tabulku z Excelu (Uložit
           jako → CSV; český Excel se středníkem a Windows-1250 zvládne). Importovat databázi ze SQL založí databázi ze
           skriptu – třeba z knihovna.sql v bance. Databázi .db nahraješ přes Soubor → Nahrát databázi z počítače.
-          Soubor jde do programu i přetáhnout myší.
+          Soubor jde do programu i přetáhnout myší. Zpátky do Excelu: Soubor → Exportovat tabulku do CSV, nebo tlačítko
+          Uložit výsledek do CSV nad výsledkem dotazu.
         </p>
         <p className={odst}>
           <b>U projektoru.</b> <i>Nápověda → Režim předvádění</i> program zvětší, řešení jde ukázat hned a tvoje
@@ -618,7 +620,8 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
           <b>Your own data.</b> File → Import Table from CSV File adds a table from Excel (Save As → CSV) to the open
           database. Import Database from SQL File creates a database from a script – for example knihovna.sql from the
           bank. Upload a .db database with File → Upload Database from Computer. You can also drag a file onto the
-          program.
+          program. Back to Excel: File → Export Table to CSV File, or the Save the Results to CSV button above a query
+          result.
         </p>
         <p className={odst}>
           <b>At the projector.</b> <i>Help → Presentation Mode</i> enlarges the program, lets you show solutions straight
@@ -752,6 +755,8 @@ export function Dialogy({
       return <ImportCsv soubor={dialog.soubor} bajty={dialog.bajty} zavrit={zavrit} />;
     case "importSql":
       return <ImportSql soubor={dialog.soubor} text={dialog.text} zavrit={zavrit} />;
+    case "exportCsv":
+      return <ExportCsv zdroj={dialog.zdroj} zavrit={zavrit} />;
     case "potvrdit":
       return (
         <Okno titulek={dialog.titulek} zavrit={zavrit}>

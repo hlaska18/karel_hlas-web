@@ -213,7 +213,7 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
       .map((r) => r.map((b) => `"${b.replace(/"/g, '""')}"`).join(";"))
       .join("\r\n");
     // BOM, ať Excel pozná češtinu.
-    stahni(t("prehled-tridy-sql.csv", "class-overview-sql.csv"), new Uint8Array(new TextEncoder().encode("﻿" + obsah)), "text/csv");
+    stahni(t("prehled-tridy-sql.csv", "class-overview-sql.csv"), new Uint8Array(new TextEncoder().encode("\uFEFF" + obsah)), "text/csv");
   };
 
   return (

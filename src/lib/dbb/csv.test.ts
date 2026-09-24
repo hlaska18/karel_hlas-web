@@ -24,7 +24,7 @@ describe("CSV z Excelu", () => {
     const cp = dekodujText(vCp1250("Jméno;Známka\nŠárka;1\n"));
     expect(cp.kodovani).toBe("Windows-1250");
     expect(cp.text).toBe("Jméno;Známka\nŠárka;1\n");
-    const utf = dekodujText(new TextEncoder().encode("﻿Jméno;Známka"));
+    const utf = dekodujText(new TextEncoder().encode("\uFEFFJméno;Známka"));
     expect(utf).toEqual({ text: "Jméno;Známka", kodovani: "UTF-8" });
   });
 
@@ -87,5 +87,56 @@ describe("CSV z Excelu", () => {
       ["Petr", 8],
     ]);
     db.close();
+  });
+});
+
+describe("export do CSV a SQL", () => {
+  it("pro český Excel: středník, desetinná čárka, uvozovky jen kde je třeba", async () => {
+    const { doCsv, EXPORT_PRO_EXCEL } = await import("@/lib/dbb/csv");
+    const text = doCsv(
+      ["jmeno", "body", "poznamka"],
+      [
+        ["Šárka", 18.5, "řekla \"ahoj\""],
+        ["Petr", 11, null],
+        ["Nováková; Eva", 0.05, "dva\nřádky"],
+      ],
+      EXPORT_PRO_EXCEL,
+    );
+    expect(text).toBe(
+      'jmeno;body;poznamka\r\nŠárka;18,5;"řekla ""ahoj"""\r\nPetr;11;\r\n"Nováková; Eva";0,05;"dva\nřádky"\r\n',
+    );
+    // A zpátky se to přečte stejně (import z téhož souboru).
+    const r = parsujCsv(text, ";");
+    expect(r[3]).toEqual(["Nováková; Eva", "0,05", "dva\nřádky"]);
+  });
+
+  it("s čárkou a bez hlavičky nechá desetinnou tečku", async () => {
+    const { doCsv } = await import("@/lib/dbb/csv");
+    expect(doCsv(["a", "b"], [[1.5, "x,y"]], { oddelovac: ",", desetinnaCarka: false, hlavicka: false })).toBe('1.5,"x,y"\r\n');
+  });
+
+  it("CSV ke stažení začíná BOM, aby Excel poznal češtinu", async () => {
+    const { csvKeStazeni } = await import("@/lib/dbb/csv");
+    const b = csvKeStazeni("Š");
+    expect(Array.from(b.slice(0, 3))).toEqual([0xef, 0xbb, 0xbf]);
+  });
+
+  it("skript SQL se přečte zpátky na stejnou databázi", async () => {
+    const { sqlSkript } = await import("@/lib/dbb/export");
+    const { otisk } = await import("@/lib/dbb/otisk");
+    const { SCHEMA } = await import("@/lib/sqlExercise");
+    const SQL = await initSqlJs();
+    const puvodni = new SQL.Database();
+    puvodni.run(SCHEMA);
+    puvodni.run("CREATE TABLE hodnoceni (id INTEGER PRIMARY KEY, kniha_id INTEGER REFERENCES knihy(id), hvezdy REAL, text TEXT)");
+    puvodni.run("INSERT INTO hodnoceni (kniha_id, hvezdy, text) VALUES (1, 4.5, 'Babička – „krásná“, it''s fine'), (4, NULL, NULL)");
+    puvodni.run("CREATE INDEX idx_autor ON knihy(autor)");
+    const skript = sqlSkript(puvodni);
+    const kopie = new SQL.Database();
+    kopie.exec(skript);
+    expect(otisk(kopie)).toBe(otisk(puvodni));
+    expect(kopie.exec("SELECT name FROM sqlite_master WHERE type = 'index' AND name = 'idx_autor'")[0].values).toEqual([["idx_autor"]]);
+    puvodni.close();
+    kopie.close();
   });
 });

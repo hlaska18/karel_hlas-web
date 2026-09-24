@@ -27,7 +27,7 @@ export function dekodujText(bajty: Uint8Array): { text: string; kodovani: "UTF-8
       text = Array.prototype.map.call(bajty, (b: number) => String.fromCharCode(b)).join("");
     }
   }
-  return { text: text.replace(/^﻿/, ""), kodovani };
+  return { text: text.replace(/^\uFEFF/, ""), kodovani };
 }
 
 /** Oddělovač podle prvního řádku (mimo uvozovky). */
@@ -82,7 +82,7 @@ export function parsujCsv(text: string, oddelovac: Oddelovac): string[][] {
   return radky.filter((r) => r.some((b) => b.trim() !== ""));
 }
 
-const bezDiakritiky = (s: string) => s.normalize("NFD").replace(/[̀-ͯ]/g, "");
+const bezDiakritiky = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
 /** Název pro SQL: bez háčků, mezer a zvláštních znaků – „Známka z testu“ → znamka_z_testu. */
 export function nazevProSql(text: string, nahradni: string): string {
@@ -152,3 +152,34 @@ export function sqlVlozeni(nazev: string, t: PripravenaTabulka): string {
 
 /** Nejvíc řádků z jednoho CSV – víc se do prohlížeče stejně nevejde. */
 export const MAX_RADKU_CSV = 5000;
+
+/* ─────────────────────────────── export ─────────────────────────────── */
+
+export type NastaveniExportu = {
+  oddelovac: Oddelovac;
+  /** Desetinná čárka místo tečky – český Excel jinak čísla nepozná. */
+  desetinnaCarka: boolean;
+  /** První řádek s názvy sloupců. */
+  hlavicka: boolean;
+};
+
+/** Výchozí nastavení pro český Excel: středník, desetinná čárka, hlavička. */
+export const EXPORT_PRO_EXCEL: NastaveniExportu = { oddelovac: ";", desetinnaCarka: true, hlavicka: true };
+
+/** Tabulka nebo výsledek dotazu jako text CSV (řádky končí CRLF jako z Excelu). */
+export function doCsv(sloupce: string[], radky: unknown[][], n: NastaveniExportu): string {
+  const bunka = (h: unknown): string => {
+    if (h === null || h === undefined || h instanceof Uint8Array) return "";
+    const s =
+      typeof h === "number" && n.desetinnaCarka && !Number.isInteger(h) ? String(h).replace(".", ",") : String(h);
+    const uvozovky = /["\r\n]/.test(s) || s.indexOf(n.oddelovac) !== -1 || /^\s|\s$/.test(s);
+    return uvozovky ? `"${s.replace(/"/g, '""')}"` : s;
+  };
+  const vse: unknown[][] = n.hlavicka ? [sloupce as unknown[]].concat(radky) : radky;
+  return vse.map((r) => r.map(bunka).join(n.oddelovac)).join("\r\n") + "\r\n";
+}
+
+/** Bajty souboru CSV: UTF-8 s BOM – podle něj Excel pozná češtinu. */
+export function csvKeStazeni(text: string): Uint8Array {
+  return new TextEncoder().encode(`\uFEFF${text}`);
+}
