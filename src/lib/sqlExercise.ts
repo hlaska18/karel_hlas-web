@@ -1,8 +1,8 @@
 /**
  * Data pro interaktivní SQL KURZ (běží client-side přes sql.js / SQLite WASM).
  * Každá lekce = krátký výklad (teach) + příklad + úkol s referenčním dotazem.
- * SCHEMA je shodné s public/materialy/1L/8/3. Práce v DB Browseru/knihovna.sql,
- * aby výsledky ve webové appce i ve staženém .db byly stejné.
+ * SCHEMA je knihovna.db virtuálního DB Browseru (lekce 1–19) i webového
+ * kurzu – výsledky dotazů jsou v obou stejné.
  */
 
 export const SCHEMA = `

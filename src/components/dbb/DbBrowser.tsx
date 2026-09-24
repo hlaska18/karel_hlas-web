@@ -452,7 +452,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     [pridejLog, zmenaVerze, udalost, status],
   );
 
-  /** Nová databáze ze skriptu SQL (třeba knihovna.sql z banky) – vytvoří soubor a otevře ho. */
+  /** Nová databáze ze skriptu SQL (třeba dřív vyexportovaného) – vytvoří soubor a otevře ho. */
   const importujSql = useCallback(
     (nazevDb: string, text: string): string | null => {
       if (nazevDb.toLowerCase() === KNIHOVNA) {

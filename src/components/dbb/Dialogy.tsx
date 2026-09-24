@@ -545,7 +545,7 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
         <p className={odst}>
           <b>Vlastní data.</b> Soubor → Importovat tabulku z CSV přidá do otevřené databáze tabulku z Excelu (Uložit
           jako → CSV; český Excel se středníkem a Windows-1250 zvládne). Importovat databázi ze SQL založí databázi ze
-          skriptu – třeba z knihovna.sql v bance. Databázi .db nahraješ přes Soubor → Nahrát databázi z počítače.
+          skriptu, třeba dřív vyexportovaného. Databázi .db nahraješ přes Soubor → Nahrát databázi z počítače.
           Soubor jde do programu i přetáhnout myší. Zpátky do Excelu: Soubor → Exportovat tabulku do CSV, nebo tlačítko
           Uložit výsledek do CSV nad výsledkem dotazu.
         </p>
@@ -618,8 +618,8 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
         </p>
         <p className={odst}>
           <b>Your own data.</b> File → Import Table from CSV File adds a table from Excel (Save As → CSV) to the open
-          database. Import Database from SQL File creates a database from a script – for example knihovna.sql from the
-          bank. Upload a .db database with File → Upload Database from Computer. You can also drag a file onto the
+          database. Import Database from SQL File creates a database from a script, for example one you exported
+          earlier. Upload a .db database with File → Upload Database from Computer. You can also drag a file onto the
           program. Back to Excel: File → Export Table to CSV File, or the Save the Results to CSV button above a query
           result.
         </p>

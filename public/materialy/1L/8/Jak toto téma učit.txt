@@ -45,7 +45,7 @@ Zbytek je dobrý domácí úkol.
 
 
 -----------------------------------------------------------
-SLOŽKA 3 – PRÁCE V PROGRAMU: LEKCE 14–19    (45 min, počítače)
+LEKCE 14–19 – PRÁCE V PROGRAMU             (45 min, počítače)
 -----------------------------------------------------------
 Druhá hodina u počítačů, pořád v kurzu na /sql – NIC SE
 NEINSTALUJE. Pozor, tady NEJDE o to naučit další SQL příkazy,
@@ -61,24 +61,11 @@ je to domácí úkol nebo práce pro rychlé. Končí stažením
 souboru .db, který žák odevzdá (Teams, e-mail) a který jde
 otevřít i ve skutečném programu.
 
-Skutečný DB Browser for SQLite (zdarma) je teď NEPOVINNÝ
-přenos: doma, nebo na škole, kde jde instalovat. Žák si
-z kurzu stáhne svůj soubor (Soubor → Uložit kopii do
-počítače) a pokračuje podle Návodu a Úloh – DB Browser.
-
-Pro žáky:   Návod – DB Browser, Úlohy – DB Browser (nepovinné)
-Pro učitele: Řešení – úlohy
-
-
------------------------------------------------------------
-SLOŽKA 4 – DATABÁZE KNIHOVNY                (sdílený soubor)
------------------------------------------------------------
-knihovna.db  – hotová databáze pro skutečný DB Browser
-knihovna.sql – ta samá jako textový zápis, když si chceš
-               ukázat, jak se tabulky vytvářejí a plní
-
-Je to přesně ta databáze, se kterou pracuje kurz. Dotaz
-napsaný v kurzu vyjde ve skutečném DB Browseru stejně.
+Skutečný DB Browser for SQLite (zdarma, sqlitebrowser.org)
+není potřeba. Kdo ho chce zkusit, stáhne si z kurzu svou
+databázi (Soubor → Uložit kopii do počítače) nebo knihovnu
+(Nápověda → Stáhnout knihovna.db) – otevřou se v něm beze
+změny a dotazy z kurzu fungují stejně.
 
 
 -----------------------------------------------------------
@@ -95,7 +82,7 @@ Obě mají 16 úloh poskládaných stejně (SELECT až DELETE a dvě
 ve dvou skupinách.
 
 Moje výsledky (odkaz nahoře v panelu kurzu): velké
-„Splněno X/19“ a dlaždice lekcí, šedá = splněno s pomocí
+„Dotazy X/13 · Program X/6“ a dlaždice lekcí, šedá = s pomocí
 vloženého řešení. Stačí obejít třídu, nebo ať pošlou fotku.
 Kód postupu z téhož okna žák pošle do Teams; ty kódy vložíš
 do Nápověda → Přehled třídy a dostaneš tabulku (i do Excelu).
@@ -110,7 +97,7 @@ v odkazu jen zakódovaný – na procvičení ano, na test ne.
 Vlastní data: Soubor → Importovat tabulku z CSV přidá do
 otevřené databáze tabulku z Excelu (Uložit jako → CSV).
 Importovat databázi ze SQL založí databázi ze skriptu
-(třeba knihovna.sql ze složky 4). Soubor .db nahraješ přes
+(třeba dřív vyexportovaného). Soubor .db nahraješ přes
 Soubor → Nahrát databázi z počítače. Soubor jde do programu
 i přetáhnout myší. Zpátky do Excelu: Soubor → Exportovat
 tabulku do CSV, nebo tlačítko Uložit výsledek do CSV nad

@@ -10,12 +10,9 @@ Tam si je můžeš rovnou vyzkoušet, hned uvidíš výsledek a
 kontrola ti řekne, co máš špatně. Nic se neinstaluje. Na
 počítači se kurz otevře ve virtuálním programu DB Browser.
 
-Soubory k tomuto tématu:
-  • knihovna.db   – hotová databáze (složka „Databáze knihovny“;
-                    otevírá se ve skutečném DB Browser for SQLite)
-  • knihovna.sql  – ta samá databáze jako textový zápis
-  • Návod – DB Browser a Úlohy – DB Browser
-                  – nepovinné pokračování v opravdovém programu
+Databázi knihovny si stáhneš i přímo z kurzu (Nápověda →
+Stáhnout knihovna.db) – otevře se ve skutečném programu
+DB Browser for SQLite (zdarma, sqlitebrowser.org).
 
 
 -----------------------------------------------------------

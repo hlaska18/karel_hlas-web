@@ -2,11 +2,8 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import {
   ArrowLeft,
-  Download,
   ExternalLink,
-  FileText,
   GraduationCap,
-  MonitorDown,
 } from "lucide-react";
 import { SITE } from "@/lib/content";
 import { LanguageProvider } from "@/lib/i18n";
@@ -23,11 +20,6 @@ import {
   TlacitkoDoProgramu,
   UlohaVeWebu,
 } from "@/components/dbb/PodleSirky";
-
-/** Cesty na soubory v bance (téma 8 – Základy databází). */
-const TEMA = "/materialy/1L/8";
-const DB = encodeURI(`${TEMA}/4. Databáze knihovny`);
-const BROWSER = encodeURI(`${TEMA}/3. Vlastní databáze v DB Browseru`);
 
 export const metadata: Metadata = {
   title: "Kurz SQL ve virtuálním DB Browseru",
@@ -93,9 +85,9 @@ export default function SqlPage({
             Třináct lekcí od úplného začátku po zápis vlastních dat. Každá lekce tě nejdřív krátce
             naučí nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny. Napiš dotaz, klikni na{" "}
             <b>Spustit</b> a hned vidíš výsledek; <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
-            Nic se neinstaluje a tvůj postup se pamatuje. Na závěr přejdeš do praxe v opravdovém
-            programu. Na počítači se kurz otevře rovnou ve virtuálním programu DB Browser – se šesti
-            lekcemi navíc o práci se souborem a vlastní tabulce.
+            Nic se neinstaluje a tvůj postup se pamatuje. Na počítači se kurz otevře rovnou ve
+            virtuálním programu DB Browser – se šesti lekcemi navíc o práci se souborem a vlastní
+            tabulce.
           </Proza>
         </p>
         <TlacitkoDoProgramu />
@@ -163,62 +155,10 @@ export default function SqlPage({
           </JenVeWebu>
         </div>
 
-        {/* Závěrečná lekce kurzu: stejná databáze, opravdový program (DB Browser). */}
-        <section id="praxe" className="povrch mt-14 max-w-3xl scroll-mt-24 rounded-panel p-6 sm:p-8">
-          <p className="text-sm font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
-            Závěrečná lekce – do praxe
-          </p>
-          <h2 className="mt-2 font-display text-2xl font-bold tracking-nadpis">
-            Stejná databáze, opravdový program
-          </h2>
-          <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">
-            <Proza>
-              Zvládáš úlohy v prohlížeči? Stáhni si <b>stejnou databázi</b> a otevři ji v programu{" "}
-              <a
-                href="https://sqlitebrowser.org/dl/"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-700 dark:text-accent-300"
-              >
-                DB Browser for SQLite
-              </a>{" "}
-              (zdarma). Všechny dotazy, které už umíš, fungují beze změny. Nové je prostředí:
-              pracuješ se skutečným souborem na disku. A přibude jeden příkaz navíc – v poslední
-              úloze si založíš vlastní tabulku pomocí <b>CREATE TABLE</b>. Navazuje na to šest úloh
-              v bance.
-            </Proza>
-          </p>
-          <div className="mt-5 flex flex-wrap gap-2.5">
-            <a
-              href={`${DB}/knihovna.db`}
-              download
-              className="inline-flex items-center gap-2 rounded-full bg-accent-700 px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-accent-800"
-            >
-              <Download className="h-4 w-4" /> Stáhnout knihovna.db
-            </a>
-            <a
-              href={`${BROWSER}/${encodeURIComponent("Návod - DB Browser.txt")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200"
-            >
-              <MonitorDown className="h-4 w-4" /> Návod na DB Browser
-            </a>
-            <a
-              href={`${BROWSER}/${encodeURIComponent("Úlohy - DB Browser.txt")}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="glass-soft inline-flex items-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200"
-            >
-              <FileText className="h-4 w-4" /> Úlohy do DB Browseru
-            </a>
-          </div>
-        </section>
-
-        {/* Volitelné pokračování. Schválně AŽ ZA závěrečnou lekcí a decentně:
-            je to cizí kurz a je anglicky, takže patří na konec cesty, ne na
-            začátek – tenhle kurz zůstává hlavní. */}
-        <section className="povrch mt-8 max-w-3xl rounded-karta p-5 sm:p-6">
+        {/* Volitelné pokračování. Schválně až na konci a decentně: je to cizí
+            kurz a je anglicky, takže patří na konec cesty, ne na začátek –
+            tenhle kurz zůstává hlavní. */}
+        <section className="povrch mt-14 max-w-3xl rounded-karta p-5 sm:p-6">
           <h2 className="font-display text-lg font-semibold tracking-podnadpis">
             Chceš toho ještě víc?
           </h2>

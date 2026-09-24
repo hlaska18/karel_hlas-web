@@ -148,8 +148,8 @@ export function ImportSql({ soubor, text, zavrit }: { soubor: string; text: stri
       <div className="dbb-posuv min-h-0 flex-1 overflow-auto px-4 py-3 text-[12px]">
         <p>
           {t(
-            `Příkazy ze souboru ${soubor} se spustí v nové databázi – třeba knihovna.sql z banky materiálů vyrobí knihovnu znovu.`,
-            `The commands from ${soubor} will run in a new database – for example, knihovna.sql from the materials bank rebuilds the library.`,
+            `Příkazy ze souboru ${soubor} se spustí v nové databázi – třeba ze souboru, který jsi dřív uložil(a) přes Soubor → Exportovat databázi do SQL.`,
+            `The commands from ${soubor} will run in a new database – for example a file you saved earlier with File → Export Database to SQL File.`,
           )}
         </p>
         <label className="mt-3 flex items-center">
