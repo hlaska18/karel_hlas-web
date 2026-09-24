@@ -14,6 +14,14 @@ import { useDbb } from "@/components/dbb/kontext";
 import { Mrizka } from "@/components/dbb/Mrizka";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
 import { t } from "@/lib/dbb/jazyk";
+import { opravUvozovky } from "@/lib/dbb/chyby";
+import { pisemka } from "@/lib/dbb/pisemka";
+
+/**
+ * V písemce žák dostane jen hlášku programu – vysvětlení po česku je nápověda.
+ * Výjimka je ´ místo apostrofu: to je klávesnice, ne SQL.
+ */
+const PISEMKA = pisemka();
 
 const TRIDA: Record<string, string> = {
   slovo: "dbb-slovo",
@@ -45,6 +53,49 @@ function Ikona({
     >
       {children}
     </button>
+  );
+}
+
+/**
+ * Znaky, které žáci na české klávesnici hledají nejdéle (rada 24. 9. 2026).
+ * Klepnutí vloží znak na místo kurzoru, jako by ho žák napsal.
+ */
+const SYMBOLY = ["'", "*", ";", "=", "<", ">", "(", ")", "%"];
+
+function ListaSymbolu() {
+  const api = useDbb();
+  const vloz = (znak: string) => {
+    const ta = api.editorRef.current;
+    const text = api.editor;
+    const od = ta ? ta.selectionStart : text.length;
+    const po = ta ? ta.selectionEnd : text.length;
+    api.nastavEditor(text.slice(0, od) + znak + text.slice(po));
+    // Kurzor za vložený znak až po překreslení editoru.
+    setTimeout(() => {
+      const e = api.editorRef.current;
+      if (!e) return;
+      e.focus();
+      e.setSelectionRange(od + znak.length, od + znak.length);
+    }, 0);
+  };
+  return (
+    <div className="ml-auto flex items-center pb-[2px]" aria-label={t("Vložit znak", "Insert character")} role="group">
+      <span className="mr-1 text-[11px] text-dbb-slaby">{t("Vložit:", "Insert:")}</span>
+      {SYMBOLY.map((z) => (
+        <button
+          key={z}
+          type="button"
+          // mousedown by editoru vzal kurzor – výběr musí zůstat, kde byl.
+          onMouseDown={(e) => e.preventDefault()}
+          onClick={() => vloz(z)}
+          title={z === "'" ? t("Apostrof – text v SQL patří mezi dva", "Single quote – text in SQL goes between two") : undefined}
+          aria-label={z === "'" ? t("apostrof", "single quote") : z}
+          className="dbb-kod ml-[2px] h-[20px] min-w-[22px] rounded-[3px] border border-dbb-linka bg-dbb-povrch px-1 text-[13px] leading-none hover:bg-dbb-hover"
+        >
+          {z}
+        </button>
+      ))}
+    </div>
   );
 }
 
@@ -142,8 +193,9 @@ export function KartaSql() {
       </div>
 
       {/* Záložka editoru – program jich umí víc, kurzu stačí jedna. */}
-      <div className="flex h-[22px] shrink-0 items-end">
+      <div className="flex h-[24px] shrink-0 items-end">
         <span className="-mb-px border border-b-0 border-dbb-linka bg-dbb-povrch px-3 py-[2px] text-[12px]">SQL 1</span>
+        <ListaSymbolu />
       </div>
 
       <div className="flex min-h-0 flex-[4] flex-col">
@@ -195,9 +247,22 @@ export function KartaSql() {
             <b>{t("Pozn.:", "Note:")}</b> {v.poznamka}
           </div>
         )}
-        {v && v.cesky && (
+        {v && v.cesky && (!PISEMKA || v.opravaUvozovek) && (
           <div className="mt-1.5 border-l-[3px] border-[#e8a33d] bg-[#fff8e1] px-2 py-1 text-[#4a3500]">
             <b>{t("Po česku:", "In plain words:")}</b> {v.cesky}
+            {v.opravaUvozovek && (
+              <button
+                type="button"
+                onClick={() => {
+                  api.nastavEditor(opravUvozovky(api.editor));
+                  api.status(t("Znaky jsou nahrazené apostrofem – spusť dotaz znovu (F5).", "Characters replaced with single quotes – run the query again (F5)."));
+                  setTimeout(() => api.editorRef.current && api.editorRef.current.focus(), 0);
+                }}
+                className="ml-2 inline-flex h-[20px] items-center border border-[#c98a1b] bg-dbb-povrch px-2 text-[11px] text-dbb-text hover:bg-dbb-hover"
+              >
+                {t("Nahradit apostrofem", "Replace with single quotes")}
+              </button>
+            )}
           </div>
         )}
       </div>

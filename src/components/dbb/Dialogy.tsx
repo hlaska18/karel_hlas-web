@@ -205,6 +205,20 @@ function DialogSouboru({
             />
           </label>
         )}
+        {rezim === "otevrit" && soubory.length > 0 && (
+          // Kolik místa soubory v prohlížeči zabírají – strop úložiště se liší
+          // podle prohlížeče a změřit ho jde jen zápisem (rada 24. 9. 2026).
+          <p className="mt-2 text-dbb-slaby">
+            {t(
+              `V tomhle prohlížeči: ${soubory.length} z ${MAX_SOUBORU} databází, dohromady ${velikost(
+                soubory.reduce((s, n) => s + (api.disk[n] ? api.disk[n].bajty.length : 0), 0),
+              )}.`,
+              `In this browser: ${soubory.length} of ${MAX_SOUBORU} databases, ${velikost(
+                soubory.reduce((s, n) => s + (api.disk[n] ? api.disk[n].bajty.length : 0), 0),
+              )} in total.`,
+            )}
+          </p>
+        )}
         {chyba && <p className="mt-2 text-[#a4262c]">{chyba}</p>}
         {nahradit && (
           <p className="mt-2">
@@ -527,17 +541,38 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
           se odškrtávají samy, jakmile výsledek sedí.
         </p>
         <p className={odst}>
-          <b>Kolik hodin.</b> Lekce 1–13 jsou jedna hodina u počítačů – průměrná třída 1. ročníku dojde za 45 minut
-          do lekce 8 až 10, zbytek je dobrý domácí úkol. Lekce 14–19 jsou druhá hodina. Stačí prohlížeč, nic se
+          <b>Kolik hodin.</b> Lekce 1–13 jsou jedna hodina u počítačů, co třída nestihne, je dobrý domácí úkol.
+          Lekce 14–19 jsou druhá hodina. Stačí prohlížeč, nic se
           neinstaluje.
         </p>
         <p className={odst}>
-          <b>Jak poznáš, že to umí.</b> Žák otevře <i>Moje výsledky</i> (odkaz nahoře v panelu Kurz SQL): velké
-          „Dotazy X/13 · Program X/6“ a dlaždice lekcí – šedá znamená splněno s pomocí vloženého řešení. Stačí obejít třídu, nebo
-          ať pošlou fotku. Kód postupu z téhož okna vlož do <i>Nápověda → Přehled třídy</i> a dostaneš tabulku
+          <b>Jak poznáš, že to umí.</b> Žák otevře <i>Moje výsledky</i> (tlačítko nahoře v panelu Kurz SQL): velké
+          „Dotazy X/13 · Program X/6“ a dlaždice lekcí – šedá znamená, že si žák zobrazil řešení. U procvičování se
+          úlohy splněné po zobrazení řešení počítají zvlášť („12/16 (3 s řešením)“). Stačí obejít třídu, nebo
+          ať pošlou fotku. Kopírovat zkopíruje jméno, skóre i kód najednou. Kód postupu z téhož okna vlož do <i>Nápověda → Přehled třídy</i> a dostaneš tabulku
           (i do Excelu) – kódy téhož žáka se sčítají a pod tabulkou vidíš, kolik žáků má kterou lekci. Na jiném
           počítači žák kód vloží v <i>Moje výsledky → Pokračovat z kódu</i>. Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je soubor z lekce 19, který si žák
           stáhne. A spolehlivá je pořád otázka: „Přečti nahlas, co tvůj dotaz dělá.“
+        </p>
+        <p className={odst}>
+          <b>Během hodiny.</b> Nahoře v panelu je velký štítek „Lekce 6 · úkol 3/4“, přečteš ho z uličky. Kdo uvízne,
+          zapne <i>Potřebuji pomoc</i> – horní lišta mu zčervená, dokud ji nevypne. V Přehledu třídy je červeně
+          orámovaná první lekce, kterou má hotovou méně než polovina třídy: tam příště začni.
+        </p>
+        <p className={odst}>
+          <b>Písemka.</b> Procvičování A a B mají úlohy postavené stejně a řešení v nich program neukazuje nikdy. Na
+          písemku pošli do Teams odkaz{" "}
+          <a href="/sql?pisemka=A" target="_blank" rel="noopener noreferrer" className="text-dbb-akcent underline">
+            karelhlas.vercel.app/sql?pisemka=A
+          </a>{" "}
+          (druhé skupině{" "}
+          <a href="/sql?pisemka=B" target="_blank" rel="noopener noreferrer" className="text-dbb-akcent underline">
+            ?pisemka=B
+          </a>
+          ). Program otevře jen tu variantu: žák u úlohy, která sedí, vidí fajfku, ale nápovědu, řešení, „Ještě ne“
+          ani vysvětlení chyb nedostane a postup z kódu nepřenese. Písemka se ukládá zvlášť od kurzu. Na konci žák
+          zkopíruje kód z Moje výsledky; v Přehledu třídy má písemka vlastní tabulku. Jen na počítači – na telefonu
+          písemka neběží.
         </p>
         <p className={odst}>
           <b>Vlastní úloha.</b> <i>Nápověda → Vytvořit úlohu pro třídu</i>: napíšeš zadání a správný SELECT, program
@@ -563,12 +598,14 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
           <b>Před první hodinou.</b> Na jednom školním počítači pod žákovským účtem: (1) otevři kurz a spusť dotaz
           v lekci 1 – SQL engine se stahuje z tohoto webu, záložně z cdn.jsdelivr.net; (2) splň úkol a přihlas se na
           jiném počítači v učebně – když tam postup není, žáci si na konci hodiny zkopírují kód postupu do Teams
-          a příště ho vloží v Moje výsledky → Pokračovat z kódu; (3) na školní klávesnici napiš &apos; * ; &lt; &gt; = – prváci je hledají;
+          a příště ho vloží v Moje výsledky → Pokračovat z kódu; (3) na školní klávesnici napiš &apos; * ; &lt; &gt; = – prváci je
+          hledají (nad editorem je jde i naklikat). Klávesa vedle = píše ´ a s tím dotaz neprojde – program to pozná
+          a nabídne Nahradit apostrofem;
           (4) zkus promítnout v režimu předvádění, jestli je písmo čitelné ze zadní lavice. Odkaz do Teams posílej
           bez www (karelhlas.vercel.app/sql), s www prohlížeč hlásí chybu certifikátu.
         </p>
         <p className={odst}>
-          <b>Konec hodiny.</b> Ve 40. minutě: Nápověda → Moje výsledky → napsat jméno → Kopírovat → vložit do Teams.
+          <b>Konec hodiny.</b> Ve 40. minutě: Moje výsledky → napsat jméno → Kopírovat → vložit do Teams.
           Ukaž to jednou v režimu předvádění, jinak to půlka třídy nestihne.
         </p>
         <p className={odst}>
@@ -607,13 +644,35 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
           lesson that is vocabulary work for free.
         </p>
         <p className={odst}>
-          <b>Checking progress.</b> Pupils open <i>My Results</i> (the link at the top of the SQL Course panel): a big
-          “Queries X/13 · Program X/6” and lesson tiles – grey means completed with the help of an inserted solution.
-          Walk round the class, or ask for a photo. Paste the progress codes into <i>Help → Class Overview</i> to get a
+          <b>Checking progress.</b> Pupils open <i>My Results</i> (the button at the top of the SQL Course panel): a big
+          “Queries X/13 · Program X/6” and lesson tiles – grey means the pupil looked at the solution. In the practice
+          sets, tasks completed after seeing the solution are counted separately (“12/16 (3 with the solution)”).
+          Walk round the class, or ask for a photo. Copy copies the name, the score and the code in one go. Paste the progress codes into <i>Help → Class Overview</i> to get a
           table (for Excel too) – codes from the same pupil are added up, and below the table you see how many pupils
           have each lesson. On another computer, a pupil pastes the code in <i>My Results → Continue from a code</i>. A
           code is a summary, not proof – it can be edited. The proof of work is the file from lesson 19,
           which the pupil downloads. And the old question still works best: “Read out what your query does.”
+        </p>
+        <p className={odst}>
+          <b>During the lesson.</b> A big label at the top of the panel, “Lesson 6 · task 3/4”, is readable from the
+          aisle. Pupils who get stuck switch on <i>I need help</i> – their top bar turns red until they switch it off.
+          In Class Overview, the first lesson that fewer than half the class has done is outlined in red: start there
+          next time.
+        </p>
+        <p className={odst}>
+          <b>Tests.</b> Practice A and B have their tasks built the same way and never show solutions. For a test, send
+          the link{" "}
+          <a href="/sql?pisemka=A&z=en" target="_blank" rel="noopener noreferrer" className="text-dbb-akcent underline">
+            karelhlas.vercel.app/sql?pisemka=A&amp;z=en
+          </a>{" "}
+          to Teams (and{" "}
+          <a href="/sql?pisemka=B&z=en" target="_blank" rel="noopener noreferrer" className="text-dbb-akcent underline">
+            ?pisemka=B
+          </a>{" "}
+          to the other group). The program opens only that version: pupils see a tick next to a task that is right, but
+          no hints, solutions, “Not yet” or plain-language error explanations, and they can&apos;t bring progress from a
+          code. The test is saved separately from the course. At the end, pupils copy the code from My Results; Class
+          Overview shows tests in a table of their own. Computers only – tests don&apos;t run on phones.
         </p>
         <p className={odst}>
           <b>Your own task.</b> <i>Help → Create a Task for the Class</i>: write the task and the correct SELECT, and the
@@ -641,12 +700,13 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
           (2) complete a task and log in on another computer in the room – if the progress isn&apos;t there, pupils
           copy their progress code into Teams at the end of the lesson and paste it next time in My Results → Continue
           from a code; (3) type &apos; * ; &lt; &gt; = on
-          the school keyboard – first-years look for them; (4) try Presentation Mode on the projector to see whether the
+          the school keyboard – first-years look for them (they can also be clicked above the editor); a curly or
+          accent quote won&apos;t work in SQL – the program spots it and offers Replace with single quotes; (4) try Presentation Mode on the projector to see whether the
           text is readable from the back row. Send the link without www (karelhlas.vercel.app/sql?z=en) – with www the
           browser reports a certificate error.
         </p>
         <p className={odst}>
-          <b>End of the lesson.</b> At minute 40: Help → My Results → type your name → Copy → paste into Teams. Show it
+          <b>End of the lesson.</b> At minute 40: My Results → type your name → Copy → paste into Teams. Show it
           once in Presentation Mode, otherwise half the class won&apos;t make it.
         </p>
       </div>
@@ -776,7 +836,7 @@ export function Dialogy({
               {dialog.tlacitko}
             </Tlacitko>
             <Tlacitko
-              prvni
+              prvni={!dialog.bezVychoziho}
               akce={() => {
                 zavrit();
                 if (dialog.priZruseni) dialog.priZruseni();

@@ -30,6 +30,8 @@ export type Vystup = {
   poznamka?: string;
   /** Výsledek je jen náhled tabulky lekce, ne dotaz žáka. */
   nahled?: string;
+  /** V dotazu je ´ nebo uvozovka z Wordu místo apostrofu – nabídne opravu jedním klepnutím. */
+  opravaUvozovek?: boolean;
 };
 
 export type Dialog =
@@ -57,6 +59,8 @@ export type Dialog =
       /** Popisek druhého tlačítka (výchozí „Zrušit“) a co udělá. */
       zrusit?: string;
       priZruseni?: () => void;
+      /** Žádné tlačítko není výchozí – Enter nic neudělá, žák musí vybrat. */
+      bezVychoziho?: boolean;
     }
   | { druh: "zprava"; titulek: string; text: string }
   /** Zápis do úložiště prohlížeče se nepovedl – nabídne stažení souboru. */
@@ -77,6 +81,12 @@ export type KurzStav = {
   obnovDatabazi: (d: Databaze, otevritPotom: boolean) => void;
   /** Pokračovat z kódu: přidá postup z kódu SQLKURZ1-… k tomu, co je v prohlížeči. */
   obnovZKodu: (p: Postup) => void;
+  /** Žák si zobrazil řešení úkolu – po splnění bude fajfka šedá. */
+  ukazReseni: (klic: string) => void;
+  /** Lekce 18: založí tabulku hodnoceni znovu (řešení 17a a 17b) a zapíše ji. */
+  zalozHodnoceni: () => void;
+  /** Otevřená knihovna se liší od původní (lekce 1–13 se kontrolují nad původní). */
+  knihovnaZmenena: boolean;
 };
 
 export type DbbApi = {
@@ -118,6 +128,9 @@ export type DbbApi = {
   predvadeni: boolean;
   /** Zvětšení programu v režimu předvádění (1 = bez zvětšení). */
   meritko: number;
+  /** Žák zapnul Potřebuji pomoc – horní lišta je červená. */
+  pomoc: boolean;
+  prepniPomoc: () => void;
 };
 
 export const DbbKontext = createContext<DbbApi | null>(null);

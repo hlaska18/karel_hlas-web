@@ -43,12 +43,14 @@ import {
   type Prikaz,
 } from "@/lib/dbb/prikazy";
 import { otisk } from "@/lib/dbb/otisk";
-import { chybaCesky, TRANSAKCE_ZAKAZANE, type KontextChyby } from "@/lib/dbb/chyby";
+import { chybaCesky, spatneUvozovky, TRANSAKCE_ZAKAZANE, type KontextChyby } from "@/lib/dbb/chyby";
 import {
   KURZ,
+  SADY,
   VSECHNY_LEKCE,
   lekceHotova,
   souborLekce,
+  rozdelSkore,
   udalostiPoZnovuotevreni,
   coSKnihovnou,
   type Databaze,
@@ -60,6 +62,7 @@ import { dekodujUlohu, lekceZOdkazu, ID_ULOHY } from "@/lib/dbb/odkazUlohy";
 import { splnenoZKodu, KLIC_NAZVY_ULOH } from "@/lib/dbb/obnovaPostupu";
 import type { Postup } from "@/lib/dbb/kodPostupu";
 import { t, jeAnglicky, adresaVJazyce } from "@/lib/dbb/jazyk";
+import { pisemka, lekcePisemky } from "@/lib/dbb/pisemka";
 import { dekodujText, sqlVytvoreni, sqlVlozeni, type PripravenaTabulka } from "@/lib/dbb/csv";
 import { sqlSkript } from "@/lib/dbb/export";
 import {
@@ -100,6 +103,16 @@ const KLIC_RELACE_KNIHOVNA = "dbb-knihovna-vyreseno";
 const KLIC_RELACE_SADA = "dbb-sada-vyreseno";
 /** Karta prohlížeče už byla otevřená – nová relace = možná nový žák u počítače. */
 const KLIC_RELACE = "dbb-relace";
+/** Kdy žák v kurzu naposledy něco dělal (ms) – do otázky „Kdo sedí u počítače?“. */
+const KLIC_NAPOSLEDY = "dbb-naposledy";
+
+/** „23. 9. v 10:40“ – kdy žák v kurzu naposledy pracoval. */
+function kdyNaposledy(ms: number): string {
+  const d = new Date(ms);
+  const hm = `${d.getHours()}:${d.getMinutes() < 10 ? "0" : ""}${d.getMinutes()}`;
+  const mesice = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  return t(`${d.getDate()}. ${d.getMonth() + 1}. v ${hm}`, `${d.getDate()} ${mesice[d.getMonth()]} at ${hm}`);
+}
 
 function relace(klic: string): boolean {
   try {
@@ -222,6 +235,15 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const [lekceId, nastavLekceId] = useState(1);
   const [splneno, nastavSplneno] = useState<Set<string>>(new Set());
   const [opsano, nastavOpsano] = useState<Set<string>>(new Set());
+  /**
+   * Úkoly, u kterých si žák zobrazil řešení. Po splnění z nich bude šedá
+   * fajfka – zelená má znamenat „zvládl(a) sám/sama“ (rada 24. 9. 2026).
+   */
+  const [videno, nastavVideno] = useState<Set<string>>(new Set());
+  const videnoRef = useRef(videno);
+  videnoRef.current = videno;
+  /** Žák zapnul Potřebuji pomoc – horní lišta zčervená, učitel to vidí z uličky. */
+  const [pomoc, nastavPomoc] = useState(false);
   const [pokusy, nastavPokusy] = useState<Set<string>>(new Set());
   const [odezva, nastavOdezvu] = useState<{ klic: string; text: string } | null>(null);
   const vlozenoRef = useRef<Set<string>>(new Set());
@@ -651,7 +673,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
    * a kdy nechat být, rozhoduje `coSKnihovnou` (kurz.ts).
    */
   const zkontrolujVychozi = useCallback(
-    (id: number) => {
+    (id: number, prechod = false) => {
       const lekce = najdiLekci(id);
       // Procvičování s vlastní databází: když soubor nebyl původní už při
       // načtení (z minulé hodiny, po předchozí skupině), nabídne obnovení.
@@ -681,8 +703,24 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         return;
       }
       const lekce16 = najdiLekci(16);
+      // Přechod z lekcí 1–13 do 14+: do souboru se mohly zapsat změny (Ctrl+S)
+      // z lekcí o INSERT, UPDATE a DELETE – pak se ptá jako po minulé hodině.
+      let zmenena = otiskPriNacteniRef.current;
+      let zeZapisu = false;
+      if (prechod && !zmenena && diskRef.current[KNIHOVNA]) {
+        const d = otevriDb(diskRef.current[KNIHOVNA].bajty);
+        try {
+          const o = otisk(d);
+          if (o !== cistyOtiskRef.current) {
+            zmenena = o;
+            zeZapisu = true;
+          }
+        } finally {
+          d.close();
+        }
+      }
       const rozhodnuti = coSKnihovnou(id, {
-        zmenenaPriNacteni: otiskPriNacteniRef.current,
+        zmenenaPriNacteni: zmenena,
         vyresenoVRelaci: relace(KLIC_RELACE_KNIHOVNA),
         odmitnutyOtisk: prectiText(KLIC_ODMITNUTO),
         temnoVSouboru: id === 16 ? temnoVSouboru() : null,
@@ -700,14 +738,19 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         return;
       }
       if (rozhodnuti !== "zeptat") return;
-      const otiskPriNacteni = otiskPriNacteniRef.current;
+      const otiskPriNacteni = zmenena;
       otevritDialog({
         druh: "potvrdit",
         titulek: t("Knihovna není v původním stavu", "The library is not in its original state"),
-        text: t(
-          "Soubor knihovna.db nebyl v původním stavu už při otevření kurzu – nejspíš z minulé hodiny, nebo po někom, kdo u počítače seděl před tebou. Některé úkoly by se pak mohly odškrtnout samy, nebo by nešly splnit. Obnovit původní knihovnu? Tvůj postup v kurzu zůstane.",
-          "The knihovna.db file was not in its original state when you opened the course – probably from a previous lesson, or from someone who sat at this computer before you. Some tasks could then tick themselves off, or be impossible to complete. Restore the original library? Your progress in the course stays.",
-        ),
+        text: zeZapisu
+          ? t(
+              "V souboru knihovna.db jsou zapsané změny z lekcí 1–13 (INSERT, UPDATE nebo DELETE a Ctrl+S). Lekce o programu počítají s původní knihovnou – některé úkoly by se jinak odškrtly samy, nebo by nešly splnit. Obnovit původní knihovnu? Tvůj postup v kurzu zůstane.",
+              "The knihovna.db file has changes written from lessons 1–13 (INSERT, UPDATE or DELETE and Ctrl+S). The lessons about the program count on the original library – otherwise some tasks could tick themselves off, or be impossible to complete. Restore the original library? Your progress in the course stays.",
+            )
+          : t(
+              "Soubor knihovna.db nebyl v původním stavu už při otevření kurzu – nejspíš z minulé hodiny, nebo po někom, kdo u počítače seděl před tebou. Některé úkoly by se pak mohly odškrtnout samy, nebo by nešly splnit. Obnovit původní knihovnu? Tvůj postup v kurzu zůstane.",
+              "The knihovna.db file was not in its original state when you opened the course – probably from a previous lesson, or from someone who sat at this computer before you. Some tasks could then tick themselves off, or be impossible to complete. Restore the original library? Your progress in the course stays.",
+            ),
         tlacitko: t("Obnovit", "Restore"),
         akce: () => {
           oznacRelaci(KLIC_RELACE_KNIHOVNA);
@@ -728,7 +771,9 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   useEffect(() => {
     let zije = true;
     // Postup v kurzu – nový i ten z webového kurzu.
-    let ulozeny: { splneno?: string[]; opsano?: string[]; lekce?: number } = {};
+    let ulozeny: { splneno?: string[]; opsano?: string[]; videno?: string[]; lekce?: number } = {};
+    // Čas poslední práce se musí přečíst dřív, než ho kurz přepíše.
+    const naposledy = Number(prectiText(KLIC_NAPOSLEDY) || 0);
     try {
       ulozeny = JSON.parse(prectiText(KLIC_KURZ) || "{}");
     } catch {
@@ -743,11 +788,13 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     nactiCisla(KLIC_OPSANO).forEach((id) => o.add(String(id)));
     nastavSplneno(s);
     nastavOpsano(o);
+    nastavVideno(new Set<string>(ulozeny.videno || []));
     const prvniNehotova = KURZ.find((l) => !lekceHotova(l, s));
     // Odkaz s úlohou od učitele má přednost před lekcí, kde žák skončil.
+    // V písemce se úloha z odkazu nebere – písemka je jen jedna lekce.
     let odkaz: LekceKurzu | null = null;
     try {
-      const u = dekodujUlohu(new URLSearchParams(window.location.search).get("ukol"));
+      const u = pisemka() ? null : dekodujUlohu(new URLSearchParams(window.location.search).get("ukol"));
       odkaz = u ? lekceZOdkazu(u) : null;
     } catch {
       odkaz = null;
@@ -765,13 +812,15 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       }
     }
     nastavLekceId(
-      odkaz
-        ? ID_ULOHY
-        : ulozeny.lekce && VSECHNY_LEKCE.some((l) => l.id === ulozeny.lekce)
-          ? ulozeny.lekce
-          : prvniNehotova
-            ? prvniNehotova.id
-            : 1,
+      lekcePisemky()
+        ? (lekcePisemky() as number)
+        : odkaz
+          ? ID_ULOHY
+          : ulozeny.lekce && VSECHNY_LEKCE.some((l) => l.id === ulozeny.lekce)
+            ? ulozeny.lekce
+            : prvniNehotova
+              ? prvniNehotova.id
+              : 1,
     );
     nastavEditorStav(prectiText(KLIC_EDITOR) || "");
     nastavNacteno(true);
@@ -825,25 +874,51 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         nastavEngine("hotovo");
         const posledni = prectiText(KLIC_POSLEDNI);
         const souborUlohy = odkaz ? souborLekce(odkaz) : null;
-        otevri(souborUlohy || (posledni && d[posledni] ? posledni : KNIHOVNA));
-        // Nová karta a v kurzu je jméno: sedí tu pořád týž žák? Jinak by kód
-        // postupu odešel do Teams pod cizím jménem (rada 24. 9. 2026).
+        // Písemka otevře svou databázi – a když ještě není, založí ji.
+        const lp = lekcePisemky();
+        const dbPisemky = lp ? (VSECHNY_LEKCE.filter((l) => l.id === lp)[0] || KURZ[0]).databaze : undefined;
+        if (dbPisemky && !d[dbPisemky.soubor]) {
+          const db = otevriDb();
+          db.exec(dbPisemky.schema);
+          d[dbPisemky.soubor] = { bajty: db.export(), zmeneno: Date.now() };
+          db.close();
+          ulozDisk(d);
+        }
+        otevri(dbPisemky ? dbPisemky.soubor : souborUlohy || (posledni && d[posledni] ? posledni : KNIHOVNA));
+        // Nová karta a v kurzu je rozdělaná práce: sedí tu pořád týž žák? Jinak
+        // by kód postupu odešel do Teams pod cizím jménem. Ptá se i bez
+        // jména – to se ukládá až v Moje výsledky (rada 24. 9. 2026).
         const jmeno = (prectiText("dbb-jmeno") || "").trim().slice(0, 40);
         const novaRelace = !relace(KLIC_RELACE);
         oznacRelaci(KLIC_RELACE);
-        if (novaRelace && jmeno && !predvadeni) {
+        if (novaRelace && (jmeno || s.size > 0) && !predvadeni) {
+          const lp2 = lekcePisemky();
+          const sada = lp2 ? SADY.filter((x) => x.lekce.id === lp2)[0] : undefined;
+          const skore = rozdelSkore(KURZ.filter((l) => lekceHotova(l, s)).map((l) => l.id));
+          const co = sada
+            ? t(
+                `písemka ${pisemka()} – splněno ${sada.lekce.ukoly.filter((u) => s.has(u.klic)).length} z ${sada.lekce.ukoly.length} úloh`,
+                `test ${pisemka()} – ${sada.lekce.ukoly.filter((u) => s.has(u.klic)).length} of ${sada.lekce.ukoly.length} tasks done`,
+              )
+            : t(
+                `Dotazy ${skore.dotazy[0]}/${skore.dotazy[1]} · Program ${skore.program[0]}/${skore.program[1]}`,
+                `Queries ${skore.dotazy[0]}/${skore.dotazy[1]} · Program ${skore.program[0]}/${skore.program[1]}`,
+              );
+          const dnes = !!naposledy && new Date(naposledy).toDateString() === new Date().toDateString();
           otevritDialog({
             druh: "potvrdit",
             titulek: t("Kdo sedí u počítače?", "Who is at this computer?"),
             text: t(
-              `Naposledy tu v kurzu pracoval(a) ${jmeno}. Jsi to ty? Když ne, postup předchozího žáka se na tomhle počítači smaže a začneš od lekce 1.`,
-              `${jmeno} was the last to work on the course here. Is that you? If not, the previous pupil's progress on this computer is deleted and you start from lesson 1.`,
+              `Na tomhle počítači je rozdělaná práce${jmeno ? ` – ${jmeno}` : ""}: ${co}${naposledy ? `, naposledy ${kdyNaposledy(naposledy)}` : ""}.\n\nJe tvoje? Když ne, smaže se a začneš od začátku.`,
+              `There is unfinished work on this computer${jmeno ? ` – ${jmeno}` : ""}: ${co}${naposledy ? `, last time on ${kdyNaposledy(naposledy)}` : ""}.\n\nIs it yours? If not, it is deleted and you start from the beginning.`,
             ),
-            // Výchozí (zaměřené) tlačítko je to bezpečné – Enter nic nesmaže.
             tlacitko: t("Ne, jsem nový žák", "No, I'm a New Pupil"),
             akce: () => provedNovyZakRef.current(),
-            zrusit: t(`Ano, jsem ${jmeno}`, `Yes, I'm ${jmeno}`),
+            zrusit: jmeno ? t(`Ano, jsem ${jmeno}`, `Yes, I'm ${jmeno}`) : t("Ano, je moje", "Yes, It's Mine"),
             priZruseni: () => zkontrolujVychozi(lekceIdRef.current),
+            // Enter nesmí potichu pokračovat pod cizím jménem: výchozí „Ano“
+            // jen tehdy, když se tu pracovalo dnes (nejspíš týž žák po obnovení).
+            bezVychoziho: !dnes,
           });
         } else {
           zkontrolujVychozi(lekceIdRef.current);
@@ -866,7 +941,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   // Postup se ukládá po každé změně – nový klíč i ty staré pro webový kurz.
   useEffect(() => {
     if (!nacteno) return;
-    uloz(KLIC_KURZ, { splneno: Array.from(splneno), opsano: Array.from(opsano), lekce: lekceId });
+    uloz(KLIC_KURZ, { splneno: Array.from(splneno), opsano: Array.from(opsano), videno: Array.from(videno), lekce: lekceId });
     const hotove: number[] = [];
     const navic: number[] = [];
     const opsane: number[] = [];
@@ -878,7 +953,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     uloz(KLIC_HOTOVO, hotove);
     uloz(KLIC_NAVIC, navic);
     uloz(KLIC_OPSANO, opsane);
-  }, [nacteno, splneno, opsano, lekceId]);
+  }, [nacteno, splneno, opsano, videno, lekceId]);
 
   const nastavEditor = useCallback((text: string) => {
     nastavEditorStav(text);
@@ -894,8 +969,10 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       klice.forEach((k) => n.add(k));
       return n;
     });
+    uloz(KLIC_NAPOSLEDY, String(Date.now()));
     nastavOpsano((o) => {
-      const vlozene = klice.filter((k) => vlozenoRef.current.has(k));
+      // Šedá: řešení žák vložil do editoru, nebo si ho aspoň zobrazil.
+      const vlozene = klice.filter((k) => vlozenoRef.current.has(k) || videnoRef.current.has(k));
       if (!vlozene.length) return o;
       const n = new Set(o);
       vlozene.forEach((k) => n.add(k));
@@ -916,12 +993,37 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
 
   const vyberLekci = useCallback(
     (id: number) => {
+      // Písemka je jediná lekce – jinam se z ní nejde.
+      const lp = lekcePisemky();
+      if (lp && id !== lp) return;
+      // Z lekcí 1–13 do lekcí o programu: nezapsané INSERTy a DELETE z hodiny
+      // o SQL se potichu zahodí, jinak by třeba úkol 15a stál nad prázdnou
+      // knihovnou a žák by nevěděl proč (rada 24. 9. 2026).
+      const prechod = lekceIdRef.current <= 13 && id >= 14 && id <= 18;
+      const hlasky: string[] = [];
+      if (prechod && otevrenaRef.current && otevrenaRef.current.nazev === KNIHOVNA && zmenenoRef.current) {
+        zavriInterne();
+        otevri(KNIHOVNA);
+        pridejLog(
+          "aplikace",
+          t(
+            "-- Nezapsané změny z lekcí 1–13 zahozeny – lekce o programu začínají s knihovnou, jak je zapsaná v souboru.",
+            "-- Unwritten changes from lessons 1–13 discarded – the lessons about the program start with the library as written in the file.",
+          ),
+        );
+        hlasky.push(
+          t(
+            "Nezapsané změny z lekcí 1–13 jsou zahozené – knihovna je, jak je zapsaná v souboru.",
+            "Unwritten changes from lessons 1–13 are discarded – the library is as written in the file.",
+          ),
+        );
+      }
       // Příkazy, které měnily data, se v nové lekci nesmí spustit znovu.
       if (id !== lekceIdRef.current) {
         const z = zakomentujZmeny(editorTextRef.current);
         if (z.pocet) {
           nastavEditor(z.text);
-          status(
+          hlasky.push(
             t(
               "Příkazy, které měnily data, jsou v editoru zakomentované (--), ať se v nové lekci nespustí znovu.",
               "Commands that changed data are commented out (--) in the editor so they don't run again in the new lesson.",
@@ -929,6 +1031,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
           );
         }
       }
+      if (hlasky.length) status(hlasky.join(" "));
       nastavLekceId(id);
       nastavOdezvu(null);
       // Úkoly typu „rozbal tabulku“ nebo „vyzkoušej Vrátit změny“ se mají
@@ -949,22 +1052,24 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         // se nesmí přepsat dialogem o původním stavu.
         zavriDatabazi(() => {
           otevri(soubor);
-          zkontrolujVychozi(id);
+          zkontrolujVychozi(id, prechod);
         });
       } else {
-        zkontrolujVychozi(id);
+        zkontrolujVychozi(id, prechod);
       }
     },
-    [zkontrolujVychozi, obnovDatabazi, zavriDatabazi, otevri, najdiLekci, nastavEditor, status],
+    [zkontrolujVychozi, obnovDatabazi, zavriDatabazi, zavriInterne, otevri, najdiLekci, nastavEditor, pridejLog, status],
   );
 
   /** Nový žák: smaže postup, rozepsaný dotaz, jméno i všechny soubory a vrátí původní knihovnu. */
   const provedNovyZak = useCallback(() => {
     nastavSplneno(new Set());
     nastavOpsano(new Set());
+    nastavVideno(new Set());
     nastavPokusy(new Set());
     nastavUdalosti(new Set());
-    nastavLekceId(1);
+    nastavPomoc(false);
+    nastavLekceId(lekcePisemky() || 1);
     nastavOdezvu(null);
     nastavEditor("");
     nastavLog([]);
@@ -982,11 +1087,20 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     smazatKlic("dbb-jmeno");
     otiskPriNacteniRef.current = null;
     smazatKlic(KLIC_POSLEDNI);
+    smazatKlic(KLIC_NAPOSLEDY);
     smazatKlic("sql-kurz-dotazy");
     nastavKartu("sql");
+    const lp = lekcePisemky();
+    const lekcePis = lp ? VSECHNY_LEKCE.filter((l) => l.id === lp)[0] : undefined;
+    if (lekcePis && lekcePis.databaze) {
+      // Písemka začíná znovu nad původními daty.
+      obnovDatabazi(lekcePis.databaze, true);
+      status(t("Začínáš písemku znovu jako nový žák.", "You are starting the test again as a new pupil."));
+      return;
+    }
     otevri(KNIHOVNA);
     status(t("Začínáš jako nový žák – lekce 1.", "You are starting as a new pupil – lesson 1."));
-  }, [nastavEditor, zavriInterne, ulozNaDisk, otevri, status]);
+  }, [nastavEditor, zavriInterne, ulozNaDisk, otevri, obnovDatabazi, status]);
   const provedNovyZakRef = useRef(provedNovyZak);
   provedNovyZakRef.current = provedNovyZak;
 
@@ -1006,6 +1120,8 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
    */
   const obnovZKodu = useCallback(
     (p: Postup) => {
+      // V písemce se postup odjinud nepřenáší – ani sousedův.
+      if (pisemka()) return;
       const { splneno: s, opsano: o } = splnenoZKodu(p);
       const predtim = splnenoRef.current;
       const nove = new Set(Array.from(predtim).concat(s));
@@ -1063,6 +1179,52 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     window.addEventListener("beforeunload", priOdchodu);
     return () => window.removeEventListener("beforeunload", priOdchodu);
   }, []);
+
+  /** Žák si zobrazil řešení – úkol pak po splnění dostane šedou fajfku. */
+  const ukazReseni = useCallback((klic: string) => {
+    if (splnenoRef.current.has(klic)) return;
+    nastavVideno((v) => {
+      if (v.has(klic)) return v;
+      const n = new Set(v);
+      n.add(klic);
+      return n;
+    });
+  }, []);
+
+  /**
+   * Lekce 18 bez tabulky hodnoceni (zavřeno bez zápisu, smazaný profil, jiný
+   * počítač a postup z kódu): založí ji znovu řešením úkolů 17a a 17b
+   * a zapíše do souboru (rada 24. 9. 2026).
+   */
+  const zalozHodnoceni = useCallback(() => {
+    const l17 = najdiLekci(17);
+    const sql = l17 ? l17.ukoly.filter((u) => u.klic === "17a" || u.klic === "17b").map((u) => u.reseni).join("\n") : "";
+    const provest = () => {
+      const o = otevrenaRef.current;
+      if (!o || o.nazev !== KNIHOVNA || !sql) return;
+      try {
+        if (tabulky(o.db).indexOf("hodnoceni") === -1) o.db.exec(sql);
+      } catch (e) {
+        status(chybaCesky(e instanceof Error ? e.message : String(e), tabulky(o.db)));
+        return;
+      }
+      pridejLog("aplikace", sql);
+      nastavZmeneno(true);
+      zapsat();
+      status(
+        t(
+          "Tabulka hodnoceni je zpátky i se třemi hodnoceními z lekce 17 a je zapsaná v souboru.",
+          "The hodnoceni table is back with the three ratings from lesson 17, and it is written to the file.",
+        ),
+      );
+    };
+    if (otevrenaRef.current && otevrenaRef.current.nazev === KNIHOVNA) provest();
+    else
+      zavriDatabazi(() => {
+        otevri(KNIHOVNA);
+        provest();
+      });
+  }, [najdiLekci, pridejLog, zapsat, status, zavriDatabazi, otevri]);
 
   const vlozReseni = useCallback(
     (klic: string) => {
@@ -1155,6 +1317,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         });
         return;
       }
+      uloz(KLIC_NAPOSLEDY, String(Date.now()));
       const ta = editorRef.current;
       const text = editor;
       let prikazy: Prikaz[];
@@ -1204,7 +1367,9 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
             : cesky(beh.chyba || "", tabulky(o.db), {
                 sloupce: sloupceDb(o.db),
                 sql: beh.posledni ? beh.posledni.text : undefined,
+                lekce: lekce.id,
               }),
+          opravaUvozovek: !beh.zakazano && !!beh.posledni && !!spatneUvozovky(beh.posledni.text),
         });
         status(t("Provádění skončilo s chybou.", "Execution finished with errors."));
       } else {
@@ -1293,6 +1458,24 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     );
   }, []);
 
+  /**
+   * Je otevřená knihovna jiná než původní? Lekce 1–13 se kontrolují nad
+   * původní knihovnou – panel pak žákovi řekne, proč jeho výsledek může
+   * vypadat jinak než ten, podle kterého se úkol odškrtne.
+   */
+  const knihovnaZmenena = useMemo(() => {
+    const o = otevrenaRef.current;
+    if (engine !== "hotovo" || !o || o.nazev !== KNIHOVNA || lekceId > 13 || !cistyOtiskRef.current) return false;
+    try {
+      return otisk(o.db) !== cistyOtiskRef.current;
+    } catch {
+      return false;
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [engine, verze, otevrena, lekceId]);
+
+  const prepniPomoc = useCallback(() => nastavPomoc((p) => !p), []);
+
   /* ─────────────────────────── klávesové zkratky ─────────────────────────── */
 
   const zkratky = useRef<(e: KeyboardEvent) => void>(() => undefined);
@@ -1360,6 +1543,9 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         novyZak,
         obnovDatabazi,
         obnovZKodu,
+        ukazReseni,
+        zalozHodnoceni,
+        knihovnaZmenena,
       },
       vyberSoubor,
       importujTabulku,
@@ -1367,11 +1553,13 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       exportujSql,
       predvadeni,
       meritko,
+      pomoc,
+      prepniPomoc,
     }),
     [otevrena, verze, zmeneno, disk, karta, dokKarta, editor, nastavEditor, vystup, spustit, log, udalost,
       hlasProhlizeni, provedAplikaci, status, zapsat, vratit, lekceId, splneno, opsano, pokusy, odezva,
-      vyberLekci, vlozReseni, novyZak, obnovDatabazi, obnovZKodu, predvadeni, meritko, vsechnyLekce, vyberSoubor, importujTabulku,
-      importujSql, exportujSql],
+      vyberLekci, vlozReseni, novyZak, obnovDatabazi, obnovZKodu, ukazReseni, zalozHodnoceni, knihovnaZmenena,
+      predvadeni, meritko, pomoc, prepniPomoc, vsechnyLekce, vyberSoubor, importujTabulku, importujSql, exportujSql],
   );
 
   if (engine === "nacita") {
@@ -1448,16 +1636,18 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
                     "The window is too narrow for the program. Make it wider, or switch to the web version of the course (lessons 1–13, in Czech).",
                   )}
                 </span>
-                <button
-                  type="button"
-                  onClick={() => zavriDatabazi(() => prepniPodobu("web"))}
-                  className="ml-3 border border-[#c9a227] bg-white px-2.5 py-0.5 hover:bg-[#fff8e1]"
-                >
-                  {t("Přepnout na webovou podobu", "Switch to the Web Version")}
-                </button>
+                {!pisemka() && (
+                  <button
+                    type="button"
+                    onClick={() => zavriDatabazi(() => prepniPodobu("web"))}
+                    className="ml-3 border border-[#c9a227] bg-white px-2.5 py-0.5 hover:bg-[#fff8e1]"
+                  >
+                    {t("Přepnout na webovou podobu", "Switch to the Web Version")}
+                  </button>
+                )}
               </div>
             )}
-            <Hlavicka soubor={otevrena} zpet={zpetNaWeb} />
+            <Hlavicka soubor={otevrena} zpet={zpetNaWeb} pomoc={pomoc} vypnoutPomoc={() => nastavPomoc(false)} />
             <NabidkaOkna
               novaDatabaze={() => zavriDatabazi(() => otevritDialog({ druh: "nova" }))}
               otevritDatabazi={() => otevritDialog({ druh: "otevrit" })}

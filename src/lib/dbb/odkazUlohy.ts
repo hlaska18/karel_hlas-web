@@ -65,6 +65,18 @@ export function chybaDotazu(sql: string): string | null {
   return null;
 }
 
+/**
+ * Dotaz s LIKE, LOWER nebo UPPER a textem s háčky a čárkami. SQLite srovnává
+ * velká a malá písmena jen u písmen bez diakritiky: LIKE '%čapek%' nenajde
+ * „Čapek“ a LOWER('Č') zůstane 'Č'. Žák, který to napíše jinak než učitel,
+ * pak neprojde, i když dotaz „dělá totéž“ (rada 24. 9. 2026).
+ */
+export function varovaniDiakritiky(sql: string): boolean {
+  if (!/\b(like|lower|upper)\b/i.test(sql)) return false;
+  const retezce = sql.match(/'(?:[^']|'')*'/g) || [];
+  return retezce.some((r) => /[^\x00-\x7f]/.test(r));
+}
+
 export function zakodujUlohu(u: UlohaOdkazu): string {
   return naBase64Url(JSON.stringify({ z: u.zadani, n: u.napoveda || undefined, s: u.soubor, r: u.reference }));
 }

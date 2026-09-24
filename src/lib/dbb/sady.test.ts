@@ -304,7 +304,8 @@ describe("přehled třídy a pokračování z kódu", () => {
     // 3 je šedá jen v jednom kódu, v jiném zelená → zelená; 12 je šedá tam, kde je hotová.
     expect(z.sede).toEqual([12]);
     expect(z.navic).toBe(2);
-    expect(z.sady).toEqual({ dilna: [9, 16] });
+    // Starší kódy nemají třetí číslo (úlohy s řešením) – doplní se nula.
+    expect(z.sady).toEqual({ dilna: [9, 16, 0] });
     expect(z.nazvyUloh).toEqual({ "u-1": "Čapek" });
   });
 
@@ -314,7 +315,9 @@ describe("přehled třídy a pokračování z kódu", () => {
   });
 
   it("pokračování z kódu odškrtne hotové lekce, šedou nechá šedou a vrátí úlohy navíc", () => {
-    const { splneno, opsano } = splnenoZKodu(kod("Eva", "1", [1, 3, 17], [3], { klice: ["3b", "A1"], ulohy: ["u-9"] }));
+    const { splneno, opsano } = splnenoZKodu(
+      kod("Eva", "1", [1, 3, 17], [3], { klice: ["3b", "A1", "B16", "20a"], ulohy: ["u-9"] }),
+    );
     const s = new Set(splneno);
     const l = (id: number) => KURZ.filter((x) => x.id === id)[0];
     expect(lekceHotova(l(1), s)).toBe(true);
@@ -322,7 +325,9 @@ describe("přehled třídy a pokračování z kódu", () => {
     expect(lekceHotova(l(17), s)).toBe(true);
     expect(lekceHotova(l(2), s)).toBe(false);
     expect(opsano).toEqual(["3"]);
-    expect(s.has("3b") && s.has("A1") && s.has("u-9")).toBe(true);
+    expect(s.has("3b") && s.has("20a") && s.has("u-9")).toBe(true);
+    // Procvičování A a B slouží jako písemka – sousedův kód body nepřenese.
+    expect(s.has("A1") || s.has("B16")).toBe(false);
     // Klíče navíc nejsou mezi povinnými – jinak by se v kódu posílaly dvakrát.
     expect(POVINNE_KLICE.indexOf("3b")).toBe(-1);
     expect(POVINNE_KLICE.indexOf("17a")).not.toBe(-1);

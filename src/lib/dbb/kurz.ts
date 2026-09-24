@@ -291,7 +291,17 @@ const NOVE: LekceKurzu[] = [
             if (!k.prohlizeni || k.prohlizeni.tabulka !== "knihy") return { ok: false };
             const ocekavane = hodnoty(k.dotazZive("SELECT id FROM knihy WHERE rok > 1900 ORDER BY id")).map((r) => r[0]);
             const videt = k.prohlizeni.id.slice().sort((a, b) => Number(a) - Number(b));
-            return { ok: ocekavane.length > 0 && stejne([videt], [ocekavane]) };
+            if (!ocekavane.length) {
+              // Po DELETE z lekcí 1–13 bez WHERE není co filtrovat (rada 24. 9. 2026).
+              return {
+                ok: false,
+                proc: t(
+                  "V otevřené knihovně teď není žádná kniha vydaná po roce 1900 – nejspíš zmizely nějakým DELETE. Vrať ji do původního stavu: Nápověda → Obnovit původní knihovna.db.",
+                  "The open library has no books published after 1900 right now – a DELETE probably removed them. Restore it: Help → Restore Original knihovna.db.",
+                ),
+              };
+            }
+            return { ok: stejne([videt], [ocekavane]) };
           },
         },
       },
@@ -423,9 +433,10 @@ const NOVE: LekceKurzu[] = [
             if (r.length > 3) {
               return {
                 ok: false,
+                // Vrátit změny by zahodilo i nezapsanou tabulku z úkolu 17a (rada 24. 9. 2026).
                 proc: t(
-                  `V tabulce je ${r.length} hodnocení, mají být přesně tři. Přebytečná smaž, nebo použij Vrátit změny.`,
-                  `There are ${r.length} ratings in the table; there should be exactly three. Delete the extra ones, or use Revert Changes.`,
+                  `V tabulce je ${r.length} hodnocení, mají být přesně tři – INSERT nejspíš proběhl víckrát. Přebytečná smaž příkazem DELETE FROM hodnoceni WHERE id > 3; (Vrátit změny nepoužívej, zahodilo by i tabulku).`,
+                  `There are ${r.length} ratings in the table; there should be exactly three – the INSERT probably ran more than once. Delete the extra ones with DELETE FROM hodnoceni WHERE id > 3; (don't use Revert Changes, it would throw away the table too).`,
                 ),
               };
             }
@@ -552,7 +563,7 @@ const NOVE: LekceKurzu[] = [
       {
         klic: "19e",
         zadani:
-          "Stáhni svou databázi do počítače (Soubor → Uložit kopii do počítače) a odevzdej soubor podle pokynů učitele – třeba do Teams.",
+          "Stáhni svou databázi do počítače (Soubor → Uložit kopii do počítače) a hned ji odevzdej podle pokynů učitele – třeba do zadání v Teams. Nečekej na konec hodiny: po odhlášení může soubor ze Stažených souborů zmizet.",
         hint: "Stažený soubor najdeš ve složce Stažené soubory svého počítače. Otevřít ho jde i ve skutečném programu DB Browser for SQLite.",
         reseni: "Otevři svou databázi → Soubor → Uložit kopii do počítače",
         reseniJeSql: false,

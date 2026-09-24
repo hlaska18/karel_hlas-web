@@ -17,11 +17,13 @@ import {
   Link2,
   XCircle,
   ArrowLeft,
+  Hand,
 } from "lucide-react";
 import { useDbb, precti, type Karta } from "@/components/dbb/kontext";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
 import { stahni } from "@/lib/dbb/stahni";
 import { t } from "@/lib/dbb/jazyk";
+import { pisemka } from "@/lib/dbb/pisemka";
 
 /** Ikona programu: databázový válec. Vlastní kresba, ne logo programu. */
 export function IkonaProgramu({ className = "h-4 w-4" }: { className?: string }) {
@@ -42,8 +44,36 @@ export function IkonaProgramu({ className = "h-4 w-4" }: { className?: string })
  * a po zavření plocha; Karel chtěl kurz jako webovou aplikaci bez Windows
  * (24. 9. 2026). Rozložení programu pod ní zůstává – na něj navazují
  * lekce 14–19 i materiály v bance.
+ *
+ * Když žák zapne Potřebuji pomoc (v panelu kurzu), hlavička zčervená –
+ * učitel to vidí z uličky i přes dvě řady (rada 24. 9. 2026).
  */
-export function Hlavicka({ soubor, zpet }: { soubor: string | null; zpet: () => void }) {
+export function Hlavicka({
+  soubor,
+  zpet,
+  pomoc = false,
+  vypnoutPomoc,
+}: {
+  soubor: string | null;
+  zpet: () => void;
+  pomoc?: boolean;
+  vypnoutPomoc?: () => void;
+}) {
+  if (pomoc) {
+    return (
+      <div className="flex h-[34px] shrink-0 items-center border-b border-[#8f1d14] bg-[#c42b1c] px-3 text-white">
+        <Hand className="mr-2 h-5 w-5 shrink-0" aria-hidden="true" />
+        <b className="flex-1 truncate text-[15px] font-semibold">{t("Potřebuji pomoc", "I need help")}</b>
+        <button
+          type="button"
+          onClick={vypnoutPomoc}
+          className="flex h-[24px] shrink-0 items-center rounded-[3px] border border-white/70 px-2.5 text-[12px] hover:bg-white/15"
+        >
+          {t("Už je to dobré – vypnout", "I'm fine now – turn off")}
+        </button>
+      </div>
+    );
+  }
   return (
     <div className="flex h-[34px] shrink-0 items-center border-b border-dbb-linka bg-dbb-povrch px-3">
       <IkonaProgramu className="mr-2 h-4 w-4 shrink-0" />
@@ -208,21 +238,29 @@ export function NabidkaOkna({
           },
         },
         { text: t("Obnovit původní knihovna.db…", "Restore Original knihovna.db…"), akce: obnovitKnihovnu },
-        { text: t("Nový žák…", "New Pupil…"), akce: novyZak },
         "-",
         { text: t("O kurzu a pro učitele…", "About the Course / For Teachers…"), akce: () => api.otevritDialog({ druh: "okurzu" }) },
         { text: t("Přehled třídy (pro učitele)…", "Class Overview (for Teachers)…"), akce: () => api.otevritDialog({ druh: "prehled" }) },
         { text: t("Vytvořit úlohu pro třídu…", "Create a Task for the Class…"), akce: () => api.otevritDialog({ druh: "uloha" }) },
-        {
-          text: api.predvadeni ? t("Ukončit režim předvádění", "End Presentation Mode") : t("Režim předvádění (projektor)…", "Presentation Mode (Projector)…"),
-          akce: predvadeni,
-        },
+        // V písemce předvádění nejde (písemka má vlastní úložiště).
+        ...(pisemka()
+          ? []
+          : [
+              {
+                text: api.predvadeni ? t("Ukončit režim předvádění", "End Presentation Mode") : t("Režim předvádění (projektor)…", "Presentation Mode (Projector)…"),
+                akce: predvadeni,
+              },
+            ]),
         "-",
         { text: t("O programu DB Browser for SQLite…", "About DB Browser for SQLite…"), akce: () => api.otevritDialog({ druh: "oprogramu" }) },
         "-",
         { text: t("English version", "Česká verze (Czech version)"), akce: jazyk },
-        { text: t("Přepnout na webovou podobu kurzu", "Switch to the Web Version (in Czech)"), akce: webovaPodoba },
+        // Webová podoba má jen lekce 1–13 – písemka v ní neběží.
+        ...(pisemka() ? [] : [{ text: t("Přepnout na webovou podobu kurzu", "Switch to the Web Version (in Czech)"), akce: webovaPodoba }]),
         { text: t("Zpět na web", "Back to the Website"), akce: zpetNaWeb },
+        "-",
+        // Schválně až na konci a za čarou – ať se nesplete s „Obnovit původní knihovna.db“.
+        { text: t("Nový žák (smaže postup)…", "New Pupil (Deletes Progress)…"), akce: novyZak },
       ],
     },
   ];

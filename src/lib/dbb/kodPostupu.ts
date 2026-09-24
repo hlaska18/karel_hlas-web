@@ -7,6 +7,15 @@
  * Důkazem práce je stažený soubor .db z lekce 19.
  */
 
+import type { Varianta } from "@/lib/dbb/pisemka";
+
+/**
+ * Skóre sady (detektivka, procvičování): [samostatně, celkem, s řešením].
+ * Úlohy splněné po zobrazení řešení se do prvního čísla nepočítají
+ * (rada 24. 9. 2026) – starší kódy třetí číslo nemají.
+ */
+export type SkoreSady = [number, number, number?];
+
 export type Postup = {
   /** Jméno, které žák napsal. */
   jmeno: string;
@@ -18,14 +27,16 @@ export type Postup = {
   sede: number[];
   /** Splněné úlohy navíc. */
   navic: number;
-  /** Procvičování a detektivka: splněno / celkem. */
-  sady?: Record<string, [number, number]>;
+  /** Procvičování a detektivka: [samostatně, celkem, s řešením]. */
+  sady?: Record<string, SkoreSady>;
   /** Splněné úlohy od učitele z odkazu (jejich kódy „u-…“). */
   ulohy?: string[];
   /** Splněné úlohy navíc a úkoly detektivky a procvičování – aby šly obnovit. */
   klice?: string[];
   /** Začátky zadání úloh od učitele podle kódu – do Přehledu třídy místo „u-…“. */
   nazvyUloh?: Record<string, string>;
+  /** Kód vznikl v písemce (/sql?pisemka=A|B) – Přehled třídy ho ukáže zvlášť. */
+  pisemka?: Varianta;
 };
 
 const PREDPONA = "SQLKURZ1-";
@@ -56,6 +67,7 @@ export function zakoduj(p: Postup): string {
         u: p.ulohy || [],
         k: p.klice || [],
         v: p.nazvyUloh || {},
+        ...(p.pisemka ? { p: p.pisemka } : {}),
       }),
     )
   );
@@ -74,10 +86,11 @@ export function dekoduj(kod: string): Postup | null {
       h: number[];
       s: number[];
       n: number;
-      x?: Record<string, [number, number]>;
+      x?: Record<string, unknown>;
       u?: string[];
       k?: string[];
       v?: Record<string, unknown>;
+      p?: string;
     };
     if (typeof d.j !== "string" || !Array.isArray(d.h)) return null;
     return {
@@ -86,14 +99,32 @@ export function dekoduj(kod: string): Postup | null {
       hotove: d.h.map(Number),
       sede: (d.s || []).map(Number),
       navic: Number(d.n || 0),
-      sady: d.x || {},
+      sady: skoreSad(d.x),
       ulohy: Array.isArray(d.u) ? d.u.map(String) : [],
       klice: Array.isArray(d.k) ? d.k.map(String).slice(0, 200) : [],
       nazvyUloh: nazvy(d.v),
+      ...(d.p === "A" || d.p === "B" ? { pisemka: d.p as Varianta } : {}),
     };
   } catch {
     return null;
   }
+}
+
+/** Skóre sad z kódu – jen dvojice a trojice čísel. */
+function skoreSad(x: unknown): Record<string, SkoreSady> {
+  const vysledek: Record<string, SkoreSady> = {};
+  if (!x || typeof x !== "object") return vysledek;
+  Object.keys(x as object).forEach((id) => {
+    const s = (x as Record<string, unknown>)[id];
+    if (!Array.isArray(s) || s.length < 2) return;
+    vysledek[id] = s.length > 2 ? [Number(s[0]) || 0, Number(s[1]) || 0, Number(s[2]) || 0] : [Number(s[0]) || 0, Number(s[1]) || 0];
+  });
+  return vysledek;
+}
+
+/** Skóre sady k přečtení: „12/16“, nebo „12/16 (3 s řešením)“. */
+export function skoreSadyText(s: SkoreSady, sReseni: string): string {
+  return `${s[0]}/${s[1]}${s[2] ? ` (${s[2]} ${sReseni})` : ""}`;
 }
 
 /** Názvy úloh z kódu – jen krátké texty, cokoli jiného se zahodí. */
@@ -146,7 +177,8 @@ function sjednot<T>(a: T[], b: T[]): T[] {
 export function sloucitPostupy(postupy: Postup[]): Postup[] {
   const podleJmena: Record<string, Postup[]> = {};
   postupy.forEach((p) => {
-    const k = normalizujJmeno(p.jmeno);
+    // Písemka se se zbytkem kurzu nesčítá – má svůj řádek.
+    const k = normalizujJmeno(p.jmeno) + (p.pisemka ? `|${p.pisemka}` : "");
     (podleJmena[k] = podleJmena[k] || []).push(p);
   });
   return Object.keys(podleJmena)
@@ -156,7 +188,7 @@ export function sloucitPostupy(postupy: Postup[]): Postup[] {
       let hotove: number[] = [];
       let sede: number[] = [];
       const zelene: number[] = [];
-      const sady: Record<string, [number, number]> = {};
+      const sady: Record<string, SkoreSady> = {};
       let ulohy: string[] = [];
       let klice: string[] = [];
       const nazvyUloh: Record<string, string> = {};
@@ -167,8 +199,8 @@ export function sloucitPostupy(postupy: Postup[]): Postup[] {
         p.hotove.forEach((id) => p.sede.indexOf(id) === -1 && zelene.indexOf(id) === -1 && zelene.push(id));
         navic = Math.max(navic, p.navic);
         Object.keys(p.sady || {}).forEach((id) => {
-          const [n, celkem] = (p.sady || {})[id];
-          if (!sady[id] || sady[id][0] < n) sady[id] = [n, celkem];
+          const s = (p.sady || {})[id];
+          if (!sady[id] || sady[id][0] < s[0]) sady[id] = [s[0], s[1], s[2] || 0];
         });
         ulohy = sjednot(ulohy, p.ulohy || []);
         klice = sjednot(klice, p.klice || []);
@@ -184,6 +216,7 @@ export function sloucitPostupy(postupy: Postup[]): Postup[] {
         ulohy,
         klice,
         nazvyUloh,
+        ...(posledni.pisemka ? { pisemka: posledni.pisemka } : {}),
       };
     })
     .sort((a, b) => a.jmeno.localeCompare(b.jmeno, "cs"));
@@ -192,4 +225,14 @@ export function sloucitPostupy(postupy: Postup[]): Postup[] {
 /** Kolik žáků má kterou lekci hotovou (zelenou i šedou) – kde třída skončila. */
 export function souhrnTridy(zaci: Postup[], lekce: number[]): number[] {
   return lekce.map((id) => zaci.filter((z) => z.hotove.indexOf(id) !== -1).length);
+}
+
+/**
+ * První lekce, kterou má hotovou méně než polovina třídy – tam příště začít
+ * (rada 24. 9. 2026). Vrací index do seznamu lekcí, nebo -1.
+ */
+export function kdeZacit(souhrn: number[], pocetZaku: number): number {
+  if (!pocetZaku) return -1;
+  for (let i = 0; i < souhrn.length; i++) if (souhrn[i] * 2 < pocetZaku) return i;
+  return -1;
 }

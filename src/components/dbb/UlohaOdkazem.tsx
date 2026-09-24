@@ -21,6 +21,7 @@ import {
   chybaDotazu,
   zakodujUlohu,
   klicUlohy,
+  varovaniDiakritiky,
   type UlohaOdkazu,
 } from "@/lib/dbb/odkazUlohy";
 
@@ -161,6 +162,14 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
 
         {zkouska && !zkouska.ok && (
           <p className="mt-2 border-l-2 border-[#c42b1c] bg-[#fdecea] px-2 py-1 text-[#6b1109]">{zkouska.chyba}</p>
+        )}
+        {zkouska && zkouska.ok && varovaniDiakritiky(uloha.reference) && (
+          <p className="mt-2 border-l-2 border-[#e8a33d] bg-[#fff8e1] px-2 py-1 text-[#4a3500]">
+            {t(
+              "Pozor na háčky a čárky: LIKE, LOWER a UPPER v SQLite nerozlišují velká a malá písmena jen u písmen bez diakritiky. LIKE '%čapek%' nenajde „Čapek“. Napiš text v dotazu přesně jako v datech a v zadání žákům řekni, jak ho mají psát.",
+              "Watch out for accented letters: in SQLite, LIKE, LOWER and UPPER ignore case only for letters without accents. LIKE '%čapek%' doesn't find “Čapek”. Write the text in the query exactly as it is in the data, and tell the pupils in the task how to write it.",
+            )}
+          </p>
         )}
         {zkouska && zkouska.ok && (
           <div className="mt-2">

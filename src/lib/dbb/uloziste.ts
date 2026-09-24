@@ -5,7 +5,12 @@
  * předvádění dostanou všechny klíče předponu, takže učitelova ukázka
  * nesmíchá postup ani soubory žáka. Režim platí jen do zavření karty
  * (sessionStorage) – další žák u počítače ho nezdědí.
+ *
+ * Písemka (`?pisemka=A|B`) má svou vlastní předponu a má přednost před
+ * předváděním: postup písemky se nesmíchá s kurzem ani s druhou variantou.
  */
+
+import { pisemka } from "@/lib/dbb/pisemka";
 
 const PREDVADENI = "dbb-predvadeni";
 const PREDPONA = "predvadeni:";
@@ -19,7 +24,8 @@ function zjistiRezim(): boolean {
   }
 }
 
-let predvadeni = zjistiRezim();
+const varianta = pisemka();
+let predvadeni = !varianta && zjistiRezim();
 
 export function jePredvadeni(): boolean {
   return predvadeni;
@@ -36,7 +42,7 @@ export function nastavPredvadeni(zapnout: boolean): void {
   }
 }
 
-export const klic = (k: string) => (predvadeni ? PREDPONA + k : k);
+export const klic = (k: string) => (varianta ? `pisemka-${varianta}:${k}` : predvadeni ? PREDPONA + k : k);
 
 export function cist(k: string): string | null {
   try {

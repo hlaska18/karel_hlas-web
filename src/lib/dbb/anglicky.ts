@@ -277,7 +277,7 @@ export const EN_UKOLY: Record<string, Ukol> = {
   },
   "19e": {
     zadani:
-      "Download your database to your computer (File → Save a Copy to This Computer) and hand the file in the way your teacher tells you – in Teams, for example.",
+      "Download your database to your computer (File → Save a Copy to This Computer) and hand it in straight away the way your teacher tells you – in a Teams assignment, for example. Don't wait for the end of the lesson: after logging off, the file may disappear from Downloads.",
     hint: "The downloaded file is in your computer's Downloads folder. You can open it in the real DB Browser for SQLite too.",
     reseni: "Open your database → File → Save a Copy to This Computer",
     ceka: "Waiting for you to download your database to your computer.",

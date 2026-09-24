@@ -26,18 +26,27 @@ export function zvladneProgram(): boolean {
   return obrazovka && mys;
 }
 
-/** Otevřel žák odkaz s úlohou od učitele (/sql?ukol=…)? */
+/** Otevřel žák odkaz s úlohou od učitele (/sql?ukol=…) nebo písemku (/sql?pisemka=A)? */
 function maUlohu(): boolean {
   try {
-    return !!new URLSearchParams(window.location.search).get("ukol");
+    const p = new URLSearchParams(window.location.search);
+    return !!p.get("ukol") || !!p.get("pisemka");
+  } catch {
+    return false;
+  }
+}
+
+function jePisemka(): boolean {
+  try {
+    return !!new URLSearchParams(window.location.search).get("pisemka");
   } catch {
     return false;
   }
 }
 
 function vychozi(): Podoba {
-  // Úloha od učitele běží jen v programu – kdo ho zvládne, dostane ho i přes
-  // uloženou volbu webové podoby (volba se tím nepřepíše).
+  // Úloha od učitele a písemka běží jen v programu – kdo ho zvládne, dostane
+  // ho i přes uloženou volbu webové podoby (volba se tím nepřepíše).
   if (maUlohu() && zvladneProgram()) return "program";
   try {
     const ulozena = localStorage.getItem(KLIC);
@@ -117,25 +126,31 @@ export function TlacitkoDoProgramu() {
   );
 }
 
-/** Ve webové podobě: odkaz s úlohou od učitele se otevře jen v programu. */
+/** Ve webové podobě: odkaz s úlohou od učitele nebo písemka se otevře jen v programu. */
 export function UlohaVeWebu() {
   const { podoba, prepni } = usePodoba();
   const [stav, nastavStav] = useState<"ne" | "muze" | "nemuze">("ne");
-  useEffect(() => nastavStav(maUlohu() ? (zvladneProgram() ? "muze" : "nemuze") : "ne"), []);
+  const [pisemka, nastavPisemku] = useState(false);
+  useEffect(() => {
+    nastavStav(maUlohu() ? (zvladneProgram() ? "muze" : "nemuze") : "ne");
+    nastavPisemku(jePisemka());
+  }, []);
   if (podoba !== "web" || stav === "ne") return null;
   return (
     <div className="povrch mt-6 max-w-2xl rounded-karta border-l-4 border-accent-600 px-5 py-4 text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">
-      <b>Máš úlohu od učitele.</b>{" "}
+      <b>{pisemka ? "Tohle je odkaz na písemku." : "Máš úlohu od učitele."}</b>{" "}
       {stav === "muze"
         ? "Otevře se v programu DB Browser – přepni do něj."
-        : "Otevře se jen v programu DB Browser na počítači s myší. Otevři stejný odkaz na počítači; tady mezitím můžeš procvičovat lekce kurzu."}
+        : pisemka
+          ? "Písemka běží jen v programu DB Browser na počítači s myší – na telefonu ani tabletu ji psát nejde. Otevři stejný odkaz na počítači."
+          : "Otevře se jen v programu DB Browser na počítači s myší. Otevři stejný odkaz na počítači; tady mezitím můžeš procvičovat lekce kurzu."}
       {stav === "muze" && (
         <button
           type="button"
           onClick={() => prepni("program")}
           className="ml-2 inline-flex items-center rounded-full bg-accent-700 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-accent-800"
         >
-          Otevřít úlohu v programu
+          {pisemka ? "Otevřít písemku v programu" : "Otevřít úlohu v programu"}
         </button>
       )}
     </div>

@@ -106,9 +106,8 @@ export default function SqlPage({
           <div className="mt-3 space-y-2.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
             <p>
               <Proza>
-                <b>Kolik hodin.</b> Jedna vyučovací hodina u počítačů. Průměrná třída 1. ročníku dojde
-                za 45 minut do lekce 8 až 10. Lekce 11–13 (zápis, změna a mazání dat) jsou dobrý
-                domácí úkol. Na druhou hodinu navazuje DB Browser – tam už nejde o nové příkazy, ale
+                <b>Kolik hodin.</b> Jedna vyučovací hodina u počítačů. Co třída nestihne – typicky lekce
+                11–13 (zápis, změna a mazání dat) – je dobrý domácí úkol. Na druhou hodinu navazuje DB Browser – tam už nejde o nové příkazy, ale
                 o práci se souborem a o vlastní tabulku.
               </Proza>
             </p>
@@ -136,7 +135,7 @@ export default function SqlPage({
             </p>
             <p>
               <Proza>
-                Plán hodin, pracovní list, řešení i databáze ke stažení jsou v bance u tématu{" "}
+                Plán hodin, pracovní list a řešení jsou v bance u tématu{" "}
                 <Link
                   href="/?tema=Datab%C3%A1ze#banka"
                   className="font-semibold text-accent-700 underline decoration-accent-400/50 underline-offset-2 hover:text-accent-700 dark:text-accent-300"

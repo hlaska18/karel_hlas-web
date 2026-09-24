@@ -40,8 +40,8 @@ Potřebuješ: počítače s internetem. Nic víc.
 Pro žáky:   Pracovní list – SQL (tištěná verze týchž úloh)
 Pro učitele: Plán hodin – Kurz SQL, Řešení – pracovní list
 
-Průměrná třída 1. ročníku dojde za 45 minut do lekce 8 až 10.
-Zbytek je dobrý domácí úkol.
+Co třída za 45 minut nestihne (typicky lekce 11–13), je dobrý
+domácí úkol.
 
 
 -----------------------------------------------------------
@@ -59,7 +59,8 @@ ty už žák umí. Nové je:
 Lekce 19 (vlastní databáze od nuly) se do hodiny nevejde –
 je to domácí úkol nebo práce pro rychlé. Končí stažením
 souboru .db, který žák odevzdá (Teams, e-mail) a který jde
-otevřít i ve skutečném programu.
+otevřít i ve skutečném programu. Ať ho nahraje do zadání
+v Teams HNED – po odhlášení může ze Stažených souborů zmizet.
 
 Skutečný DB Browser for SQLite (zdarma, sqlitebrowser.org)
 není potřeba. Kdo ho chce zkusit, stáhne si z kurzu svou
@@ -79,17 +80,35 @@ prázdninami.
 Lekce 21 a 22 – Procvičování A (Dílna) a B (Stavebniny).
 Obě mají 16 úloh poskládaných stejně (SELECT až DELETE a dvě
 úlohy v programu), jen nad jinými daty – hodí se na písemku
-ve dvou skupinách. Když soubor dílny nebo stavebnin zůstal
-změněný z minulé hodiny, program při vstupu do lekce nabídne
-jeho obnovení.
+ve dvou skupinách. Řešení v nich program neukazuje, jen
+nápovědu. Když soubor dílny nebo stavebnin zůstal změněný
+z minulé hodiny, program při vstupu do lekce nabídne jeho
+obnovení.
 
-Moje výsledky (odkaz nahoře v panelu kurzu): velké
-„Dotazy X/13 · Program X/6“ a dlaždice lekcí, šedá = s pomocí
-vloženého řešení. Stačí obejít třídu, nebo ať pošlou fotku.
-Kód postupu z téhož okna žák pošle do Teams; ty kódy vložíš
+Písemka: pošli do Teams odkaz karelhlas.vercel.app/sql?pisemka=A
+(druhé skupině ?pisemka=B). Program otevře jen tu variantu.
+Žák u úlohy, která sedí, vidí fajfku, ale nápovědu, řešení,
+„Ještě ne“ ani vysvětlení chyb nedostane a postup z kódu
+nepřenese. Písemka se ukládá zvlášť od kurzu. Na konci žák
+zkopíruje kód z Moje výsledky a Přehled třídy ukáže písemky
+ve vlastní tabulce. Jen na počítači – na telefonu neběží.
+
+Během hodiny: nahoře v panelu kurzu je velký štítek
+„Lekce 6 · úkol 3/4“, přečteš ho z uličky. Kdo uvízne, zapne
+tlačítko Potřebuji pomoc – horní lišta mu zčervená, dokud ji
+nevypne.
+
+Moje výsledky (tlačítko nahoře v panelu kurzu): velké
+„Dotazy X/13 · Program X/6“ a dlaždice lekcí, šedá = žák si
+zobrazil řešení. U procvičování se úlohy splněné po zobrazení
+řešení počítají zvlášť: „12/16 (3 s řešením)“. Stačí obejít
+třídu, nebo ať pošlou fotku. Kopírovat zkopíruje jméno, skóre
+i kód postupu najednou – žák to vloží do Teams; kódy vložíš
 do Nápověda → Přehled třídy a dostaneš tabulku (i do Excelu).
 Kódy téhož žáka (z domu i ze školy) se sčítají a pod tabulkou
 vidíš, kolik žáků má kterou lekci – kde třída skončila.
+Červeně orámovaná je první lekce, kterou má méně než polovina
+třídy: tam příště začni.
 Na jiném počítači žák svůj kód vloží v Moje výsledky →
 Pokračovat z kódu a lekce se mu odškrtnou i tam.
 Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je
@@ -109,7 +128,10 @@ i přetáhnout myší. Zpátky do Excelu: Soubor → Exportovat
 tabulku do CSV, nebo tlačítko Uložit výsledek do CSV nad
 výsledkem dotazu (středník a desetinná čárka pro český Excel).
 
-Anglická verze: karelhlas.vercel.app/sql?z=en. Program,
+Anglická verze: karelhlas.vercel.app/sql?z=en. Hodí se i do
+hodiny angličtiny (CLIL) – odborná slovní zásoba se učí na
+něčem, co žáci právě dělají, a slovníček v panelu je hotový
+seznam slovíček. Program,
 lekce i hlášky jsou anglicky, data zůstávají česká
 a v panelu je slovníček. Přepíná se i v nabídce Nápověda.
 
@@ -126,7 +148,11 @@ u projektoru vyzkoušej:
     kód postupu do Teams a příště ho vloží v Moje výsledky
     → Pokračovat z kódu,
   • na školní klávesnici napiš ' * ; < > = – prváci je
-    hledají; ukaž jim, kde jsou,
+    hledají; ukaž jim, kde jsou (nad editorem jdou
+    i naklikat). Klávesa vedle = píše ´ a s tím dotaz
+    neprojde – program to pozná a nabídne Nahradit
+    apostrofem. Zjisti, kde je apostrof na školní
+    klávesnici (česká: Shift + klávesa ¨ vlevo od Enteru),
   • F5 v editoru spustí dotaz (a nenačte stránku znovu),
   • Ctrl+S zapíše změny, Ctrl+O otevře soubor,
   • dvojklik do buňky na kartě Prohlížet data ji přepíše,
@@ -139,11 +165,15 @@ u projektoru vyzkoušej:
 Odkaz do Teams posílej bez www: karelhlas.vercel.app/sql
 (s www prohlížeč hlásí chybu certifikátu).
 
-Konec hodiny: ve 40. minutě Nápověda → Moje výsledky →
-napsat jméno → Kopírovat → vložit do Teams. Ukaž to jednou
+Konec hodiny: ve 40. minutě Moje výsledky (tlačítko nahoře
+v panelu kurzu) → napsat jméno → Kopírovat → vložit do Teams. Ukaž to jednou
 na projektoru, jinak to půlka třídy nestihne. Na začátku
 další hodiny se program na počítači, kde seděl někdo jiný,
-sám zeptá „Jsi to ty?“.
+sám zeptá, jestli je rozdělaná práce jeho.
+
+Když se kurz ve škole nenačte (síť, filtr): plán B je
+pracovní list na papíře, nebo kurz v telefonu přes mobilní
+data – lekce 1–13 jdou i tam.
 
 Když na projektoru potřebuješ větší písmo, zapni
 Nápověda → Režim předvádění: má vlastní postup, takže ti
@@ -161,6 +191,8 @@ kódování.
 „Proč mi to hlásí, že sloupec neexistuje, když ho vidím?“ –
 skoro vždycky chybí apostrofy kolem textu: zanr = poezie
 hledá SLOUPEC toho jména, zanr = 'poezie' hledá HODNOTU.
+Nebo je místo apostrofu ´ (klávesa vedle =) či uvozovka
+z Wordu – to kurz pozná a opraví jedním tlačítkem.
 
 „Proč LIKE 'č%' nenajde Čapka?“ a „Proč je Č až za Z?“ –
 SQLite bere velká a malá písmena jako stejná jen u písmen

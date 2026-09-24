@@ -17,6 +17,9 @@ export const KLIC_NAZVY_ULOH = "dbb-ulohy";
 /** Klíče povinných úkolů kurzu – co je mimo ně, patří do `klice` v kódu. */
 export const POVINNE_KLICE = KURZ.reduce<string[]>((a, l) => a.concat(povinne(l).map((u) => u.klic)), []);
 
+/** Klíče úkolů Procvičování A a B (A1…A16, B1…B16). */
+const JE_UKOL_SADY_AB = /^[AB]\d+$/;
+
 export function splnenoZKodu(p: Postup): { splneno: string[]; opsano: string[] } {
   const splneno: string[] = [];
   const opsano: string[] = [];
@@ -27,7 +30,9 @@ export function splnenoZKodu(p: Postup): { splneno: string[]; opsano: string[] }
     // Šedá lekce: stačí jeden úkol splněný vloženým řešením.
     if (p.sede.indexOf(l.id) !== -1 && ukoly[0]) opsano.push(ukoly[0].klic);
   });
-  (p.klice || []).forEach((k) => splneno.indexOf(k) === -1 && splneno.push(k));
+  // Procvičování A a B se z kódu neobnovuje: slouží jako písemka a sousedův
+  // kód by jinak přenesl i jeho body (rada 24. 9. 2026).
+  (p.klice || []).forEach((k) => !JE_UKOL_SADY_AB.test(k) && splneno.indexOf(k) === -1 && splneno.push(k));
   (p.ulohy || []).forEach((k) => splneno.indexOf(k) === -1 && splneno.push(k));
   return { splneno, opsano };
 }
