@@ -1,12 +1,16 @@
 ===========================================================
- ÚLOHY – DB Browser for SQLite (navazují na /sql)
+ ÚLOHY – skutečný DB Browser for SQLite (navazují na /sql)
 ===========================================================
-Pracuj s databází knihovna.db v programu DB Browser for
-SQLite (viz „Návod - DB Browser“).
+NEPOVINNÉ. V hodině se tohle všechno dělá v kurzu (lekce
+14–19 ve virtuálním DB Browseru). Tyhle úlohy jsou přenos
+do skutečného programu – doma, nebo kde jde nainstalovat.
 
-Samotné SQL příkazy už znáš z kurzu v prohlížeči. Nové je
-tady něco jiného: pracuješ se skutečným souborem na disku,
-změny se musí zapsat – a nakonec si postavíš vlastní tabulku.
+Pracuj s databází knihovna.db v programu DB Browser for
+SQLite (viz „Návod - DB Browser“). Soubor si stáhni z kurzu
+(Soubor → Uložit kopii do počítače), nebo původní z banky.
+
+Úlohy 3–6 odpovídají lekcím 16–19 kurzu. Úlohy 1–2 ti ukážou,
+že dotaz z kurzu funguje beze změny i v opravdovém programu.
 
 Dotazy piš na kartě „Spustit SQL“ (Execute SQL).
 
@@ -14,7 +18,7 @@ Dotazy piš na kartě „Spustit SQL“ (Execute SQL).
 1) STEJNÝ DOTAZ, JINÝ PROGRAM
 -----------------------------------------------------------
 Vypiš název a rok knih vydaných po roce 1900.
-Ověř: má vyjít 6 knih – přesně jako v prohlížeči.
+Ověř: má vyjít 6 knih – přesně jako v kurzu.
 To je celá pointa: je to pořád stejné SQLite.
 
 -----------------------------------------------------------

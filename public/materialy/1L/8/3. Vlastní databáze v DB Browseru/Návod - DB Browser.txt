@@ -1,14 +1,17 @@
 ===========================================================
- Z PROHLÍŽEČE DO PRAXE – návod na DB Browser for SQLite
+ Z KURZU DO SKUTEČNÉHO PROGRAMU – DB Browser for SQLite
 ===========================================================
-V prohlížeči (karelhlas.vercel.app/sql) sis vyzkoušel(a) psát
-SQL dotazy. Teď TU SAMOU databázi otevřeš v opravdovém
-programu. Dobrá zpráva: je to pořád stejné SQLite – všechny
-dotazy, které umíš z prohlížeče, fungují beze změny.
+NEPOVINNÉ – doma, nebo na počítači, kde jde program
+nainstalovat.
 
-Nové tu nejsou příkazy, ale dvě věci: pracuješ se souborem
-na disku (a změny se do něj musí zapsat) a můžeš si postavit
-vlastní tabulku, ne jen psát dotazy do hotové.
+V kurzu (karelhlas.vercel.app/sql) jsi pracoval(a) v napodo-
+benině programu DB Browser. Teď TU SAMOU databázi otevřeš
+v opravdovém programu. Dobrá zpráva: je to pořád stejné
+SQLite a program vypadá skoro stejně – všechny dotazy
+z kurzu fungují beze změny.
+
+Nové tu je jen to, že soubor leží na skutečném disku tvého
+počítače, ne v prohlížeči.
 
 -----------------------------------------------------------
 1) INSTALACE (jednorázově, zdarma)
@@ -25,8 +28,10 @@ vlastní tabulku, ne jen psát dotazy do hotové.
 -----------------------------------------------------------
 2) OTEVŘI DATABÁZI (6 kroků)
 -----------------------------------------------------------
-1. Stáhni si soubor knihovna.db (je u tohoto návodu v bance,
-   nebo tlačítkem na stránce /sql).
+1. Stáhni si soubor knihovna.db. V kurzu přes Soubor →
+   Uložit kopii do počítače – i s tím, co jsi do něj zapsal(a),
+   třeba s tabulkou hodnoceni. Nebo původní z banky (složka
+   „Databáze knihovny“).
 2. Spusť DB Browser for SQLite.
 3. Klikni „Otevřít databázi“ (Open Database) a vyber
    stažený soubor knihovna.db.
@@ -37,26 +42,24 @@ vlastní tabulku, ne jen psát dotazy do hotové.
 
       SELECT nazev, autor FROM knihy;
 
-   Vyjde ti STEJNÁ tabulka jako v prohlížeči. To je celé
+   Vyjde ti STEJNÁ tabulka jako v kurzu. To je celé
    kouzlo – už umíš pracovat s opravdovou databází.
 
 -----------------------------------------------------------
-3) CO UMÍ DB BROWSER NAVÍC OPROTI PROHLÍŽEČI
+3) CO JE STEJNÉ JAKO V KURZU
 -----------------------------------------------------------
 • „Prohlížet data“ (Browse Data) – listování tabulkou
   a úprava hodnot klikáním, jako v Excelu.
-• Práci se souborem: změny se ukládají na disk příkazem
+• Práce se souborem: změny se ukládají příkazem
   Soubor → Zapsat změny (Write Changes). Dokud je nezapíšeš,
   v souboru nejsou a po zavření programu zmizí. Zpátky se
   dostaneš přes Soubor → Vrátit změny (Revert Changes).
 • Vytváření vlastních tabulek a celých databází (CREATE TABLE).
-• „Prohlížet data“ (Browse Data) – listování tabulkou a úprava
-  hodnot klikáním, jako v Excelu.
 
-INSERT, UPDATE i DELETE fungují stejně jako v kurzu – ty už
-umíš. Rozdíl je jen v tom, že tady se zapisují do souboru.
+Program umí ještě víc (grafy, import a export tabulek, další
+nastavení), kurz z něj napodobuje jen to, co potřebuješ.
 
 Pokračuj souborem „Úlohy - DB Browser“ – 6 úloh: první dvě si
-ověříš, že dotaz z prohlížeče funguje i tady, zbytek už je
-o vlastní tabulce a o práci se souborem.
+ověříš, že dotaz z kurzu funguje i tady, zbytek jsou lekce
+16–19 kurzu, tentokrát ve skutečném programu.
 ===========================================================

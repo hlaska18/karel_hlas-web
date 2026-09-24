@@ -7,14 +7,15 @@ dotazy v jazyce SQL – od výběru dat po jejich změnu.
 Úlohy odpovídají 1:1 lekcím interaktivního kurzu:
      karelhlas.vercel.app/sql
 Tam si je můžeš rovnou vyzkoušet, hned uvidíš výsledek a
-kontrola ti řekne, co máš špatně. Nic se neinstaluje.
+kontrola ti řekne, co máš špatně. Nic se neinstaluje. Na
+počítači se kurz otevře ve virtuálním programu DB Browser.
 
 Soubory k tomuto tématu:
   • knihovna.db   – hotová databáze (složka „Databáze knihovny“;
-                    otevírá se v programu DB Browser for SQLite)
+                    otevírá se ve skutečném DB Browser for SQLite)
   • knihovna.sql  – ta samá databáze jako textový zápis
   • Návod – DB Browser a Úlohy – DB Browser
-                  – pokračování v opravdovém programu
+                  – nepovinné pokračování v opravdovém programu
 
 
 -----------------------------------------------------------
@@ -96,8 +97,9 @@ Příkazy, které se hodí:
   DELETE FROM ... WHERE      smazání řádku
 
 POZOR u úloh 12 a 13: bez WHERE zasáhne příkaz CELOU tabulku.
-V kurzu to nevadí (je tam tlačítko Obnovit databázi), v praxi
-je to nejdražší chyba v SQL.
+V kurzu to nevadí (dokud změnu nezapíšeš, vrátí ji tlačítko
+Vrátit změny; na telefonu Obnovit databázi), v praxi je to
+nejdražší chyba v SQL.
 
 Řešení má tvůj vyučující (soubor „Řešení - pracovní list“).
 ===========================================================

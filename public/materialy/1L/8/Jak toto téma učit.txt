@@ -22,12 +22,18 @@ Když máš na téma jen dvě hodiny, tuhle část zkrať na
 
 
 -----------------------------------------------------------
-SLOŽKA 2 – KURZ SQL V PROHLÍŽEČI            (45 min, počítače)
+SLOŽKA 2 – KURZ SQL: LEKCE 1–13             (45 min, počítače)
 -----------------------------------------------------------
-Interaktivní kurz na karelhlas.vercel.app/sql: 13 lekcí od
-prvního SELECTu po mazání dat. Žák píše dotazy, hned vidí
-výsledek a appka mu řekne, co má špatně. Nic se neinstaluje,
-postup se ukládá v prohlížeči, takže se dá dokončit doma.
+Interaktivní kurz na karelhlas.vercel.app/sql. Na počítači
+se otevře jako napodobenina programu DB Browser for SQLite
+(celý kurz má 19 lekcí), na telefonu a tabletu jako webová
+stránka (lekce 1–13). Postup se v obou sčítá.
+
+Lekce 1–13 vedou od prvního SELECTu po mazání dat. Žák píše
+dotazy, spustí je klávesou F5 a úkol se odškrtne sám, jakmile
+výsledek sedí; když nesedí, kurz česky řekne proč. Nic se
+neinstaluje, postup se ukládá v prohlížeči, takže se dá
+dokončit doma.
 
 Potřebuješ: počítače s internetem. Nic víc.
 
@@ -39,34 +45,94 @@ Zbytek je dobrý domácí úkol.
 
 
 -----------------------------------------------------------
-SLOŽKA 3 – VLASTNÍ DATABÁZE V DB BROWSERU   (45 min, počítače)
+SLOŽKA 3 – PRÁCE V PROGRAMU: LEKCE 14–19    (45 min, počítače)
 -----------------------------------------------------------
-Druhá hodina u počítačů. Pozor, tady NEJDE o to naučit další
-SQL příkazy – ty už žák umí z kurzu. Nové je:
-  • že se pracuje se skutečným souborem na disku
-    (a že se změny musí zapsat, jinak se ztratí),
+Druhá hodina u počítačů, pořád v kurzu na /sql – NIC SE
+NEINSTALUJE. Pozor, tady NEJDE o to naučit další SQL příkazy,
+ty už žák umí. Nové je:
+  • karty programu: Struktura databáze a Prohlížet data,
+  • že databáze je soubor a změny se musí zapsat, jinak
+    se po zavření ztratí (lekce 16),
   • že si žák postaví vlastní tabulku, ne jen píše dotazy
-    do hotové.
+    do hotové (lekce 17–19).
 
-Potřebuješ: program DB Browser for SQLite. Zdarma, ale
-INSTALUJE SE. Když na školních počítačích instalovat nelze,
-existuje portable verze – a když ani ta ne, dá se tahle
-hodina vynechat, aniž by tématu něco zásadního chybělo.
+Lekce 19 (vlastní databáze od nuly) se do hodiny nevejde –
+je to domácí úkol nebo práce pro rychlé. Končí stažením
+souboru .db, který žák odevzdá (Teams, e-mail) a který jde
+otevřít i ve skutečném programu.
 
-Pro žáky:   Návod – DB Browser, Úlohy – DB Browser
+Skutečný DB Browser for SQLite (zdarma) je teď NEPOVINNÝ
+přenos: doma, nebo na škole, kde jde instalovat. Žák si
+z kurzu stáhne svůj soubor (Soubor → Uložit kopii do
+počítače) a pokračuje podle Návodu a Úloh – DB Browser.
+
+Pro žáky:   Návod – DB Browser, Úlohy – DB Browser (nepovinné)
 Pro učitele: Řešení – úlohy
 
 
 -----------------------------------------------------------
 SLOŽKA 4 – DATABÁZE KNIHOVNY                (sdílený soubor)
 -----------------------------------------------------------
-knihovna.db  – hotová databáze pro DB Browser
+knihovna.db  – hotová databáze pro skutečný DB Browser
 knihovna.sql – ta samá jako textový zápis, když si chceš
                ukázat, jak se tabulky vytvářejí a plní
 
-Je to přesně ta databáze, se kterou pracuje kurz v prohlížeči.
-Dotaz napsaný v kurzu vyjde v DB Browseru stejně – na tom
-stojí celá pointa druhé hodiny u počítačů.
+Je to přesně ta databáze, se kterou pracuje kurz. Dotaz
+napsaný v kurzu vyjde ve skutečném DB Browseru stejně.
+
+
+-----------------------------------------------------------
+V KURZU NAVÍC
+-----------------------------------------------------------
+Lekce 20 – detektivka: kdo odnesl Krakatit. Stejné příkazy
+jako v lekcích 1–13, jen každý dotaz posune pátrání dál.
+Hodí se pro rychlé žáky nebo na poslední hodinu před
+prázdninami.
+
+Lekce 21 a 22 – Procvičování A (Dílna) a B (Stavebniny).
+Obě mají 16 úloh poskládaných stejně (SELECT až DELETE a dvě
+úlohy v programu), jen nad jinými daty – hodí se na písemku
+ve dvou skupinách.
+
+Moje výsledky (odkaz nahoře v panelu kurzu): velké
+„Splněno X/19“ a dlaždice lekcí, šedá = splněno s pomocí
+vloženého řešení. Stačí obejít třídu, nebo ať pošlou fotku.
+Kód postupu z téhož okna žák pošle do Teams; ty kódy vložíš
+do Nápověda → Přehled třídy a dostaneš tabulku (i do Excelu).
+Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je
+soubor z lekce 19.
+
+Nápověda → Vytvořit úlohu pro třídu: napíšeš zadání
+a správný SELECT, program z toho udělá odkaz. Žák ho otevře
+a dostane úlohu, která se kontroluje sama. Správný dotaz je
+v odkazu jen zakódovaný – na procvičení ano, na test ne.
+
+Anglická verze: karelhlas.vercel.app/sql?z=en. Program,
+lekce i hlášky jsou anglicky, data zůstávají česká
+a v panelu je slovníček. Přepíná se i v nabídce Nápověda.
+
+
+-----------------------------------------------------------
+PŘED PRVNÍ HODINOU (10 minut na školním PC)
+-----------------------------------------------------------
+Na počítači v učebně a na počítači u projektoru vyzkoušej:
+  • dotaz v lekci 1 se spustí – SQL engine se stahuje
+    z internetu, školní síť ho nesmí blokovat,
+  • splň úkol, odhlas se a přihlas znovu – když postup
+    zmizí, profil se maže a žáci si na konci hodiny musí
+    opsat kód postupu nebo stáhnout soubor,
+  • F5 v editoru spustí dotaz (a nenačte stránku znovu),
+  • Ctrl+S zapíše změny, Ctrl+O otevře soubor,
+  • dvojklik do buňky na kartě Prohlížet data ji přepíše,
+  • křížek programu vpravo nahoře zavře program; z plochy
+    se spustí dvojklikem na ikonu,
+  • zavření karty prohlížeče s nezapsanými změnami se
+    zeptá, jestli odejít,
+  • okno přichycené k polovině obrazovky (Win+←) a zvětšení
+    stránky (Ctrl+plus) kurz nepřepnou – jen nabídnou lištu.
+Když na projektoru potřebuješ větší písmo, zapni
+Nápověda → Režim předvádění: má vlastní postup, takže ti
+nesmíchá ukázku s tvým vlastním postupem v kurzu.
 
 
 -----------------------------------------------------------
@@ -81,6 +147,17 @@ kódování.
 skoro vždycky chybí apostrofy kolem textu: zanr = poezie
 hledá SLOUPEC toho jména, zanr = 'poezie' hledá HODNOTU.
 
-„Smazal jsem si to.“ – v kurzu je tlačítko Obnovit databázi,
-v DB Browseru Soubor → Vrátit změny (Revert Changes).
+„Proč LIKE 'č%' nenajde Čapka?“ a „Proč je Č až za Z?“ –
+SQLite bere velká a malá písmena jako stejná jen u písmen
+bez háčků a čárek a texty řadí podle kódu znaků. Skutečný
+DB Browser to dělá stejně; kurz to žákovi vysvětlí.
+
+„Smazal jsem si to.“ – dokud změnu nezapsal, stačí
+Soubor → Vrátit změny. Když už je zapsaná, Nápověda →
+Obnovit původní knihovna.db. Na telefonu (webová podoba)
+je tlačítko Obnovit databázi.
+
+„U počítače před námi seděl někdo jiný.“ – Nápověda →
+Nový žák smaže postup i soubory. Kurz se navíc sám zeptá,
+když je knihovna při vstupu do lekce změněná z minula.
 ===========================================================
