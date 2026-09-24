@@ -15,7 +15,7 @@
  * takže jsou oba stavy vidět vedle sebe.
  */
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import {
   Download,
   FileText,
@@ -49,13 +49,13 @@ import {
   DOCK_MIN,
   DOCK_ZVETSENI_DOSAH,
   DOCK_ZVETSENI_MAX,
+  PORADI_DOCKU,
   type AppId,
   type Obdelnik,
 } from "@/lib/mac/stav";
 import { DOKUMENTY, KOS, PLOCHA, STAZENE, slozMac } from "@/lib/mac/cesty";
 import { jeSlozka, najdiSlozku, odeber } from "@/lib/win/fs";
 
-const PORADI: AppId[] = ["finder", "poznamky", "terminal", "nastaveni"];
 
 /**
  * Ikona Launchpadu, kreslená podle té skutečné: nahoře vyhledávací pole,
@@ -142,17 +142,17 @@ function ZnakFinder({
       style={style}
       aria-hidden="true"
     >
-      {/* Dvě poloviny obličeje, jak je má Finder: světlejší levá, sytější pravá */}
-      <path d="M2 4h10v16H2z" fill="#bfe3ff" />
-      <path d="M12 4h10v16H12z" fill="#1e88e5" />
-      <circle cx="7.4" cy="10" r="1.05" fill="#0b3c63" />
-      <circle cx="16.6" cy="10" r="1.05" fill="#ffffff" />
+      {/* Modrý obličej se světlým profilem vpravo, jak ho má Finder
+          (celá ikona je v ikonyAplikaci.tsx, tohle je malá záloha). */}
+      <path d="M2 4h20v16H2z" fill="#1e8ff0" />
+      <path d="M12.5 4H22v16h-9.2v-4.4l-1.3-.4 1.3-4.4z" fill="#eaf5ff" />
+      <circle cx="7.2" cy="9.6" r="1" fill="#1c1c20" />
+      <circle cx="16.8" cy="9.6" r="1" fill="#1c1c20" />
       <path
-        d="M6.6 15.2c1.9 1.5 8.9 1.5 10.8 0"
+        d="M6.4 14.8c2 1.7 9.2 1.7 11.2 0"
         fill="none"
-        stroke="#0b3c63"
-        strokeOpacity="0.85"
-        strokeWidth="1.3"
+        stroke="#1c1c20"
+        strokeWidth="1.2"
         strokeLinecap="round"
       />
     </svg>
@@ -267,8 +267,8 @@ export type VzhledAplikace = { pozadi: string; barva: string; znak: Znak; plna?:
 
 export const VZHLED_APLIKACI: Record<AppId, VzhledAplikace> = {
   finder: {
-    pozadi: "linear-gradient(165deg,#ffffff,#e6eef6)",
-    barva: "#0b3c63",
+    pozadi: "linear-gradient(165deg,#35c6ff,#1683ee)",
+    barva: "#1c1c20",
     znak: ZnakFinder,
     plna: IkonaFinder,
   },
@@ -297,8 +297,12 @@ function IkonaKosPlny(p: { className?: string; style?: React.CSSProperties }) {
   return <IkonaKos {...p} plny />;
 }
 
-/** Stín pod celou ikonou. Sleduje její tvar – i Koš a složku bez podkladu. */
-const STIN_IKONY = "drop-shadow(0 1px 1.5px rgba(0,0,0,0.28)) drop-shadow(0 2px 5px rgba(0,0,0,0.12))";
+/**
+ * Stín pod celou ikonou. Sleduje její tvar – i Koš a složku bez podkladu.
+ * Jen jeden `drop-shadow`: každý filtr se při zvětšování Docku přepočítává
+ * s každým pohybem myši (rada 24. 9. 2026, výkon ve třídě s Netopem).
+ */
+const STIN_IKONY = "drop-shadow(0 1.5px 2.5px rgba(0,0,0,0.3))";
 
 export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
   const { stav, poslat, spust, stopa } = useMac();
@@ -645,37 +649,42 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
         onMouseLeave={sroveji}
         className="mac-dock mac-bezvyberu pointer-events-auto relative flex items-end gap-2 rounded-2xl px-2 py-2"
       >
-        {/* Aplikace (dřív Launchpad) stojí na Macu hned vedle Finderu a je to
-            jediné místo, kde žák uvidí všechny aplikace pohromadě. V macOS 26
-            se tak jmenují a mají ikonu s mřížkou barevných dlaždic. */}
-        <Ikona
-          popis="Aplikace"
-          strana={velikost}
-          zvetsuje={zvetsovat}
-          vzhled={{
-            pozadi: "linear-gradient(165deg,#fbfbfd,#d6d8de)",
-            barva: "#3a3a3c",
-            znak: ZnakLaunchpad,
-            plna: IkonaAplikace,
-          }}
-          onClick={onLaunchpad}
-          onContextMenu={naPraveTlacitko("launchpad")}
-          bezPopisku={nabidka !== null}
-        />
-        {PORADI.map((app) => (
-          <Ikona
-            key={app}
-            popis={APLIKACE[app].nazev}
-            strana={velikost}
-            zvetsuje={zvetsovat}
-            znacka={{ "data-dock-app": app }}
-            vzhled={VZHLED_APLIKACI[app]}
-            bezi={stav.bezici.includes(app)}
-            onClick={() => otevriZDocku(app)}
-            onContextMenu={naPraveTlacitko(app)}
-            bezPopisku={nabidka !== null}
-          />
-        ))}
+        {/* Finder úplně vlevo, hned za ním Aplikace (dřív Launchpad) – jediné
+            místo, kde žák uvidí všechny aplikace pohromadě. Pořadí je
+            v `PORADI_DOCKU` a stojí na něm texty úloh. */}
+        {PORADI_DOCKU.map((app) =>
+          app === "aplikace" ? (
+            <Ikona
+              key={app}
+              popis="Aplikace"
+              strana={velikost}
+              zvetsuje={zvetsovat}
+              vzhled={{
+                pozadi: "linear-gradient(165deg,#fbfbfd,#d6d8de)",
+                barva: "#3a3a3c",
+                znak: ZnakLaunchpad,
+                plna: IkonaAplikace,
+              }}
+              onClick={onLaunchpad}
+              onContextMenu={naPraveTlacitko("launchpad")}
+              bezPopisku={nabidka !== null}
+            />
+          ) : (
+            <Ikona
+              key={app}
+              popis={APLIKACE[app].nazev}
+              strana={velikost}
+              zvetsuje={zvetsovat}
+              znacka={{ "data-dock-app": app }}
+              vzhled={VZHLED_APLIKACI[app]}
+              bezi={stav.bezici.includes(app)}
+              skakat={!stav.nastaveni.omezitEfekty}
+              onClick={() => otevriZDocku(app)}
+              onContextMenu={naPraveTlacitko(app)}
+              bezPopisku={nabidka !== null}
+            />
+          ),
+        )}
 
         {/* Za čárou stojí na Macu zástupci složek a koš – ne aplikace.
             Proto jsou tady, ne v řadě výš. */}
@@ -686,8 +695,11 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
           style={{ height: Math.round(velikost * 0.8) }}
         >
           {/* Čára je tenká, ale chytat se musí dát i vedle ní – proto je
-              kolem ní širší průhledný pruh. */}
-          <div className="mx-auto h-full w-px bg-white/25" />
+              kolem ní širší průhledný pruh. Barva jde z barvy textu: tmavá
+              na světlém skle, světlá na tmavém. Bílá napevno na světlém
+              Docku nebyla vidět, a úloha se žlutým puntíkem podle ní
+              naviguje (rada 24. 9. 2026). */}
+          <div className="mx-auto h-full w-px bg-mac-text/20" />
         </div>
         <Ikona
           popis="Stažené"
@@ -767,6 +779,7 @@ function Ikona({
   popis,
   vzhled,
   bezi,
+  skakat,
   strana,
   znacka,
   zvetsuje,
@@ -780,6 +793,8 @@ function Ikona({
   popis: string;
   vzhled: VzhledAplikace;
   bezi?: boolean;
+  /** Poskočit, když se program spustí? Vypíná to Omezit efekty. */
+  skakat?: boolean;
   /** Značka do DOMu, aby efekt džina našel, kam okno letí. */
   znacka?: Record<string, string>;
   /** Strana ikony v pixelech. Řídí ji tažení za čárku v Docku. */
@@ -803,6 +818,28 @@ function Ikona({
 }) {
   const Znak = vzhled.znak;
   const Plna = obsah ? undefined : vzhled.plna;
+
+  /*
+   * Skok při spuštění. Na Macu ikona poskočí ve chvíli, kdy se pod ní
+   * rozsvítí tečka, a pohyb stáhne pohled dolů do Docku. Jen při změně
+   * z „neběží“ na „běží“ – Finder, který běží od začátku, neskáče.
+   */
+  const [skace, nastavSkace] = useState(false);
+  const beziDriv = useRef(bezi);
+  const skakatRef = useRef(skakat);
+  skakatRef.current = skakat;
+  useEffect(() => {
+    const driv = beziDriv.current;
+    beziDriv.current = bezi;
+    if (!bezi || driv || !skakatRef.current) return;
+    nastavSkace(true);
+    const id = window.setTimeout(() => nastavSkace(false), 1000);
+    return () => {
+      window.clearTimeout(id);
+      nastavSkace(false);
+    };
+  }, [bezi]);
+
   return (
     <div
       data-dock-ikona
@@ -814,8 +851,11 @@ function Ikona({
     >
       {/* Popisek nad ikonou. V Docku je to jediné, co ikonu pojmenuje – bez
           něj žák hádá podle obrázku, a u Terminálu to není poznat. */}
+      {/* Bublina jde s motivem: světlá s tmavým textem ve světlém, tmavá
+          v tmavém. Černá napevno působila na světlém Docku jako popisek
+          z Windows (rada 24. 9. 2026). */}
       <span
-        className={`pointer-events-none absolute -top-9 whitespace-nowrap rounded-md bg-black/75 px-2 py-1 text-[12px] text-white opacity-0 transition-opacity ${
+        className={`pointer-events-none absolute -top-9 whitespace-nowrap rounded-md bg-mac-panel/95 px-2 py-1 text-[12px] text-mac-text opacity-0 shadow-[0_2px_8px_rgba(0,0,0,0.18)] ring-1 ring-black/10 transition-opacity ${
           bezPopisku ? "" : "group-hover/dock:opacity-100"
         }`}
       >
@@ -826,14 +866,15 @@ function Ikona({
           i pod ní. Jméno pro čtečky obrazovky drží `aria-label`. */}
       <button
         type="button"
-        aria-label={popis}
+        // Čtečka obrazovky tečku nevidí – „běží“ jí to řekne slovy.
+        aria-label={bezi ? `${popis}, běží` : popis}
         onClick={onClick}
         disabled={!onClick}
         // Zaoblení 22 % strany je macOS „squircle"; pevných 12 px vypadalo
         // při větší ikoně jako obyčejný zaoblený čtverec.
         className={`flex items-center justify-center disabled:cursor-default ${
           obsah || Plna ? "" : "shadow-md"
-        } ${ztmavena ? "brightness-75" : ""} ${
+        } ${ztmavena ? "brightness-75" : ""} ${skace ? "mac-skok" : ""} ${
           // Když se zvětšuje celý Dock, nesmí si ikona přidávat ještě vlastní
           // skok při najetí – skládalo by se to a poskakovalo.
           zvetsuje

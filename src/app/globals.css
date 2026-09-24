@@ -1548,6 +1548,34 @@
   backdrop-filter: none;
 }
 
+/* Skok ikony v Docku při spuštění programu. Na Macu ikona poskočí ve
+   chvíli, kdy se pod ní rozsvítí tečka, a stáhne tím pohled dolů k Docku.
+   Řídí se přepínačem Omezit efekty, ne tím, co hlásí systém – školní Windows
+   hlásí „méně animací“ vždycky (viz džin). Posun v procentech je z výšky
+   ikony, takže skok roste s velikostí Docku. */
+@keyframes mac-skok {
+  0%,
+  36%,
+  72%,
+  100% {
+    transform: translateY(0);
+  }
+  18% {
+    transform: translateY(-42%);
+  }
+  54% {
+    transform: translateY(-22%);
+  }
+}
+
+.mac-skok {
+  animation: mac-skok 0.95s cubic-bezier(0.3, 0, 0.3, 1);
+}
+
+.mac[data-efekty="omezene"] .mac-skok {
+  animation: none;
+}
+
 /* ───────────────────── Virtuální DB Browser (kurz SQL) ─────────────────────
    Napodobenina programu DB Browser for SQLite, jak vypadá ve Windows 11 –
    tam ho žáci uvidí doopravdy. Vlastní proměnné jako `.win` a `.mac`, ať se

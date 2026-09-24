@@ -13,12 +13,13 @@ export function polozekSlovy(n: number): string {
   return `${n} položek`;
 }
 
-const DNY_MAC = ["Ne", "Po", "Út", "St", "Čt", "Pá", "So"];
+const DNY_MAC = ["ne", "po", "út", "st", "čt", "pá", "so"];
 
 /**
- * Datum v horní liště Macu: „Čt 24. 9.“ – krátce, jak ho píše skutečná
+ * Datum v horní liště Macu: „čt 24. 9.“ – krátce, jak ho píše skutečná
  * lišta. Celé „čtvrtek 24. září 2026“ z ní dělalo webovou hlavičku
- * (Karlovy návrhy 24. 9. 2026). Dlouhé datum zůstává v Centru oznámení.
+ * (Karlovy návrhy 24. 9. 2026). Den malým písmenem, tak ho píše český
+ * macOS i `Intl` (rada 24. 9. 2026). Dlouhé datum zůstává v Centru oznámení.
  */
 export function datumMenuMac(d: Date): string {
   return `${DNY_MAC[d.getDay()]} ${d.getDate()}. ${d.getMonth() + 1}.`;

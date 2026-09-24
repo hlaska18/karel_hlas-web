@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { SKUPINY_MAC, UKOLY_MAC, postupMac, vyhodnotMac } from "@/lib/mac/ukoly";
 import { reducerMac } from "@/lib/mac/reducer";
-import { vychoziStavMac } from "@/lib/mac/stav";
+import { PORADI_DOCKU, vychoziStavMac } from "@/lib/mac/stav";
 
 describe("seznam úkolů", () => {
   it("má jedinečná id", () => {
@@ -137,5 +137,27 @@ describe("postup", () => {
     const { hotovo, celkem } = postupMac(["zavri-okno-finderu", "vymysleny-ukol"]);
     expect(hotovo).toBe(1);
     expect(celkem).toBe(UKOLY_MAC.length);
+  });
+});
+
+describe("texty úloh sedí na Dock", () => {
+  // Kroky popisují Dock napevno („první ikona zleva“, „pod Terminálem tečka
+  // není“). Když se změní pořadí nebo výchozí stav, musí to spadnout tady,
+  // ne potichu lhát žákovi (rada 24. 9. 2026).
+  const prvni = UKOLY_MAC.find((u) => u.id === "zavri-okno-finderu");
+
+  it("Finder je v Docku první, jak říká úloha 1", () => {
+    expect(PORADI_DOCKU[0]).toBe("finder");
+    expect(prvni && prvni.kroky.join(" ")).toMatch(/první ikonu zleva/);
+  });
+
+  it("Terminál na začátku neběží – úloha 1 ho dává jako ikonu bez tečky", () => {
+    expect(prvni && prvni.kroky.join(" ")).toMatch(/Terminál/);
+    expect(vychoziStavMac().bezici).not.toContain("terminal");
+    expect(vychoziStavMac().bezici).toContain("finder");
+  });
+
+  it("výchozí Dock nezvětšuje ikony – jinak by „první ikona zleva“ uhýbala", () => {
+    expect(vychoziStavMac().nastaveni.dockZvetseni).toBe(false);
   });
 });

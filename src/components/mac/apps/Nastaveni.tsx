@@ -125,9 +125,8 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
       <h2 className="text-[15px] font-semibold">Dock</h2>
       <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
         Velikost Docku se mění tažením za svislou čárku v něm, hned vedle koše.
-        Zvětšení nafoukne ikonu pod kurzorem – na skutečném Macu je vypnuté,
-        tady zapnuté, protože je to nejnápadnější věc, kterou hlavní panel
-        Windows nedělá.
+        Zvětšení nafoukne ikonu pod kurzorem. Na Macu je ve výchozím stavu
+        vypnuté – zkus si ho zapnout, hlavní panel Windows nic takového neumí.
       </p>
       <button
         type="button"

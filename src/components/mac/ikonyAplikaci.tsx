@@ -47,41 +47,44 @@ function Odlesk({ id }: { id: (n: string) => string }) {
   );
 }
 
-/** Finder: dvoubarevný obličej přes celou ikonu, světlá levá a sytá pravá půlka. */
+/**
+ * Finder: celý čtverec modrý, vpravo světlý profil hlavy s nosem vybíhajícím
+ * doleva, obě oči a úsměv tmavé. Podle skutečné ikony z macOS 26/27 – první
+ * verze měla barvy obráceně (světlá půlka vlevo), rada 24. 9. 2026 to
+ * porovnala se systémovou ikonou.
+ */
 export function IkonaFinder({ className, style }: Vlastnosti) {
   const id = useIdIkony();
   return (
     <svg viewBox="0 0 64 64" className={className} style={style} aria-hidden="true">
       <defs>
-        <clipPath id={id("tvar")}>
-          <rect {...SQUIRCLE} />
-        </clipPath>
-        <linearGradient id={id("leva")} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#f2f9ff" />
-          <stop offset="1" stopColor="#a9d8fb" />
+        <linearGradient id={id("pod")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#35c6ff" />
+          <stop offset="1" stopColor="#1683ee" />
         </linearGradient>
-        <linearGradient id={id("prava")} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#5ab4fb" />
-          <stop offset="1" stopColor="#0b63cf" />
+        <linearGradient id={id("profil")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#ffffff" />
+          <stop offset="1" stopColor="#dcefff" />
         </linearGradient>
       </defs>
-      <g clipPath={`url(#${id("tvar")})`}>
-        <rect x="0" y="0" width="64" height="64" fill={`url(#${id("leva")})`} />
-        {/* Profil: čelo, nos vybíhající doleva, ústa a brada. */}
-        <path
-          d="M35 0 C33.5 9 32.5 17 30.5 25 C29.8 28 28 31 25.5 34 L31 35.5 C30.5 44 32 54 34.5 64 L64 64 L64 0 Z"
-          fill={`url(#${id("prava")})`}
-        />
-        <rect x="17" y="17" width="4.6" height="11" rx="2.3" fill="#0d2d4f" />
-        <rect x="43" y="17" width="4.6" height="11" rx="2.3" fill="#0d2d4f" />
-        <path
-          d="M13 43.5 C22 51.5 42 51.5 51 43.5"
-          fill="none"
-          stroke="#0d2d4f"
-          strokeWidth="2.8"
-          strokeLinecap="round"
-        />
-      </g>
+      <rect {...SQUIRCLE} fill={`url(#${id("pod")})`} />
+      {/* Profil: temeno, zadní strana hlavy, brada, ústa, nos a čelo. */}
+      <path
+        d="M31 7 C36 5 50 5 53.5 9 C55.5 11.5 55.5 16 55.5 20 L55.5 52 C55.5 56.5 53 59 48.5 59 L36 59 C33 59 31.5 57.5 31.5 55 L31.5 44 C31.5 41.5 30.5 40.5 28 40 L26 39.6 C24.3 39.2 24 38 24.7 36.5 L28.5 26 C29.8 22 30 17 30 12 C30 9.5 30.3 7.6 31 7 Z"
+        fill={`url(#${id("profil")})`}
+        stroke="#ffffff"
+        strokeOpacity="0.6"
+        strokeWidth="0.6"
+      />
+      <rect x="15.6" y="19.5" width="2.8" height="7.5" rx="1.4" fill="#1c1c20" />
+      <rect x="42" y="19.5" width="2.8" height="7.5" rx="1.4" fill="#1c1c20" />
+      <path
+        d="M13.5 41.8 C22 52 42 52.5 51.5 41.5"
+        fill="none"
+        stroke="#1c1c20"
+        strokeWidth="2.5"
+        strokeLinecap="round"
+      />
       <Odlesk id={id} />
     </svg>
   );

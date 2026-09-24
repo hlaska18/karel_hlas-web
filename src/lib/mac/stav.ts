@@ -23,6 +23,14 @@ export const VERZE_ULOZISTE = 1;
 /** Aplikace, které prostředí zná. Schválně málo – viz `ukoly.ts`. */
 export type AppId = "finder" | "terminal" | "poznamky" | "nastaveni";
 
+/**
+ * Pořadí ikon v Docku vlevo od čáry. Finder je na Macu vždycky úplně vlevo,
+ * hned za ním Aplikace (dřív Launchpad) – rada 24. 9. 2026 zjistila, že tu
+ * byly obráceně. Na tomhle pořadí stojí texty úloh („první ikona zleva“),
+ * a proto ho hlídá test v `ukoly.test.ts`.
+ */
+export const PORADI_DOCKU: (AppId | "aplikace")[] = ["finder", "aplikace", "poznamky", "terminal", "nastaveni"];
+
 export const APLIKACE: Record<AppId, { nazev: string; popis: string }> = {
   finder: { nazev: "Finder", popis: "Procházení souborů a složek" },
   terminal: { nazev: "Terminál", popis: "Příkazový řádek" },
@@ -120,12 +128,13 @@ export const VYCHOZI_NASTAVENI: NastaveniMac = {
   tapeta: "hory",
   dockVelikost: 58,
   /*
-   * Skutečný Mac má Zvětšení ve výchozím stavu VYPNUTÉ. Tady je zapnuté
-   * schválně: je to nejnápadnější věc, kterou Dock dělá a hlavní panel
-   * Windows ne, a funkce, kterou nikdo nezapne, nenaučí nic. Vypnout jde
-   * v Nastavení, stejně jako na Macu.
+   * Skutečný Mac má Zvětšení ve výchozím stavu VYPNUTÉ, a tady taky. Dřív
+   * bylo zapnuté jako „nejnápadnější věc, kterou hlavní panel Windows
+   * nedělá“, jenže ikony pod kurzorem uhýbaly a pokyn „první ikona zleva“
+   * pak nesedil (rada 24. 9. 2026). Zapnout jde v Nastavení, jako na Macu.
+   * Kdo má nastavení uložené z dřívějška, má ho, jak si ho nechal.
    */
-  dockZvetseni: true,
+  dockZvetseni: false,
   omezitEfekty: false,
   jas: 1,
   nocniRezim: false,

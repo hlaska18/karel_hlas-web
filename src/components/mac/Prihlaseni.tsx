@@ -176,7 +176,9 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
               <button
                 type="button"
                 onClick={() => nastavPtaSeNaUklid(true)}
-                className="mt-4 text-[12px] text-white/45 underline decoration-dotted underline-offset-2 transition hover:text-white/80"
+                // 60 % bílé: přes tapetu ho musí najít žák, který si přesedl
+                // (rada 24. 9. 2026 – na 45 % byl skoro schovaný).
+                className="mt-4 text-[12px] text-white/60 underline decoration-dotted underline-offset-2 transition hover:text-white/85"
               >
                 Sedí tu po někom jiném? Začít načisto
               </button>

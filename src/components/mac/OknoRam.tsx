@@ -21,6 +21,12 @@ import { useDzin, zmerCil, zmerSchovani } from "./Dzin";
 import type { Okno } from "@/lib/mac/stav";
 
 const MIN_SIRKA = 380;
+/**
+ * Finder potřebuje víc: bok má 196 px a nástroje za ním (zpět a vpřed,
+ * zobrazení, hledání) asi 232 px. Při 380 px se hledání ořízlo
+ * (rada 24. 9. 2026).
+ */
+const MIN_SIRKA_FINDERU = 460;
 const MIN_VYSKA = 240;
 
 /** Osm úchytů pro změnu velikosti: čtyři strany a čtyři rohy. */
@@ -80,6 +86,7 @@ export function OknoRamMac({
 
     const start = { x: e.clientX, y: e.clientY };
     const puvodni = { ...okno.ram };
+    const minSirka = okno.app === "finder" ? MIN_SIRKA_FINDERU : MIN_SIRKA;
     nastavTazeni(true);
 
     const pohyb = (ev: MouseEvent) => {
@@ -96,10 +103,10 @@ export function OknoRamMac({
         return;
       }
       let { x, y, w, h } = puvodni;
-      if (smer.includes("e")) w = Math.max(MIN_SIRKA, puvodni.w + dx);
+      if (smer.includes("e")) w = Math.max(minSirka, puvodni.w + dx);
       if (smer.includes("s")) h = Math.max(MIN_VYSKA, puvodni.h + dy);
       if (smer.includes("w")) {
-        w = Math.max(MIN_SIRKA, puvodni.w - dx);
+        w = Math.max(minSirka, puvodni.w - dx);
         x = puvodni.x + (puvodni.w - w);
       }
       if (smer.includes("n")) {
