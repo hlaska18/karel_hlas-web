@@ -16,7 +16,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
-import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky, sqlErrorCs } from "@/lib/sqlExercise";
+import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky, sameResult, sqlErrorCs } from "@/lib/sqlExercise";
 import { createDb, forkDb, type SqlDb, type SqlResult } from "@/lib/sqljs";
 import { sazba } from "@/lib/sazba";
 
@@ -34,21 +34,6 @@ const BONUS_KEY = "sql-kurz-navic";
  * ani učiteli, který obchází třídu.
  */
 const COPIED_KEY = "sql-kurz-opsano";
-
-/** Porovná dva výsledky. Když má reference ORDER BY, záleží i na pořadí. */
-function sameResult(a: SqlResult | null, b: SqlResult | null, ordered: boolean): boolean {
-  const av = a?.values ?? [];
-  const bv = b?.values ?? [];
-  if (av.length !== bv.length) return false;
-  const key = (rows: unknown[][]) => rows.map((r) => JSON.stringify(r.map((c) => String(c))));
-  let ka = key(av);
-  let kb = key(bv);
-  if (!ordered) {
-    ka = [...ka].sort();
-    kb = [...kb].sort();
-  }
-  return ka.every((x, i) => x === kb[i]);
-}
 
 function loadSet(key: string): Set<number> {
   try {
@@ -101,7 +86,11 @@ export function SqlPlayground() {
   const lesson = LESSONS.find((l) => l.id === lessonId)!;
   const bonus = mode === "bonus" ? lesson.bonus : undefined;
   const task = bonus ?? lesson;
-  const allDone = done.size === LESSONS.length;
+  /* Počítají se jen lekce tohohle kurzu. Virtuální DB Browser na počítači
+     zapisuje do stejného úložiště i své lekce 14–19 – bez filtru by tu svítilo
+     „Hotovo 19/13“. */
+  const hotovo = LESSONS.filter((l) => done.has(l.id)).length;
+  const allDone = hotovo === LESSONS.length;
   const draftKey = bonus ? `${lessonId}b` : String(lessonId);
   const sql = drafts[draftKey] ?? "";
 
@@ -288,13 +277,13 @@ export function SqlPlayground() {
             Lekce {lesson.id} z {LESSONS.length}
           </p>
           <p className="text-zinc-600 dark:text-zinc-400">
-            Hotovo {done.size}/{LESSONS.length}
+            Hotovo {hotovo}/{LESSONS.length}
           </p>
         </div>
         <div className="h-1.5 overflow-hidden rounded-full bg-black/10 dark:bg-white/10">
           <div
             className="h-full rounded-full bg-accent-500 transition-all duration-500"
-            style={{ width: `${(done.size / LESSONS.length) * 100}%` }}
+            style={{ width: `${(hotovo / LESSONS.length) * 100}%` }}
           />
         </div>
         <div className="mt-3 flex flex-wrap gap-2">

@@ -72,3 +72,36 @@ export function forkDb(schema: string): SqlDb {
   db.run(schema);
   return db as SqlDb;
 }
+
+/* ───────────── Pro virtuální DB Browser: databáze jako soubor ─────────────
+ * Kurz výš drží databázi jen v paměti. DB Browser potřebuje navíc soubor:
+ * otevřít databázi z bajtů a změny do bajtů zase „zapsat“. */
+
+/** Připravený příkaz sql.js – krokování vrací i názvy sloupců prázdného výsledku. */
+export type SqlPrikaz = {
+  getColumnNames(): string[];
+  step(): boolean;
+  get(): unknown[];
+  free(): boolean;
+};
+
+export type SqlDbSoubor = SqlDb & {
+  prepare(sql: string): SqlPrikaz;
+  /** Příkaz s parametry (? v textu) – úprava buňky v mřížce Prohlížet data. */
+  run(sql: string, params?: unknown[]): unknown;
+  /** Obsah databáze jako bajty souboru .db. */
+  export(): Uint8Array;
+};
+
+/** Načte engine bez vytváření databáze (DB Browser si je otevírá sám). */
+export async function nactiEngine(): Promise<void> {
+  if (engine) return;
+  const initSqlJs = await loadScript();
+  engine = await initSqlJs({ locateFile: (f: string) => `${CDN}${f}` });
+}
+
+/** Otevře databázi z bajtů souboru, bez bajtů prázdnou. Až po `nactiEngine`. */
+export function otevriDb(bajty?: Uint8Array): SqlDbSoubor {
+  if (!engine) throw new Error("SQL engine ještě není načtený");
+  return new engine.Database(bajty) as SqlDbSoubor;
+}

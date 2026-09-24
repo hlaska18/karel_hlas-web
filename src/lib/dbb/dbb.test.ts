@@ -1,0 +1,177 @@
+import { describe, expect, it } from "vitest";
+import { rozdelPrikazy, druhPrikazu, prikazNaPozici, pocetRadku } from "@/lib/dbb/prikazy";
+import { KURZ, hlavniTabulka, lekceHotova, povinne } from "@/lib/dbb/kurz";
+import { LESSONS } from "@/lib/sqlExercise";
+import { naBase64, zBase64, upravNazev, velikost } from "@/lib/dbb/soubory";
+import { zvyrazni } from "@/lib/dbb/zvyrazneni";
+import { chybaCesky } from "@/lib/dbb/chyby";
+import { podminkaFiltru } from "@/components/dbb/KartaData";
+import { sqlTabulky } from "@/components/dbb/Dialogy";
+
+describe("rozdelPrikazy", () => {
+  it("dělí podle středníků a čísluje řádky od začátku editoru", () => {
+    const p = rozdelPrikazy("SELECT 1;\nSELECT 2;\n\n  UPDATE knihy SET rok = 1;");
+    expect(p.map((x) => x.text)).toEqual(["SELECT 1;", "SELECT 2;", "UPDATE knihy SET rok = 1;"]);
+    expect(p.map((x) => x.radek)).toEqual([1, 2, 4]);
+  });
+
+  it("středník v textu ani v komentáři příkaz nekončí", () => {
+    const p = rozdelPrikazy("SELECT 'a;b';\n-- komentář; pořád komentář\nSELECT 2 /* ; */;");
+    expect(p.map((x) => x.text)).toEqual(["SELECT 'a;b';", "SELECT 2 /* ; */;"]);
+    expect(p[1].radek).toBe(3);
+  });
+
+  it("zdvojený apostrof text nekončí", () => {
+    expect(rozdelPrikazy("SELECT 'Rock''n''roll;'; SELECT 3").length).toBe(2);
+  });
+
+  it("prázdný editor nebo samý komentář nedá žádný příkaz", () => {
+    expect(rozdelPrikazy("")).toEqual([]);
+    expect(rozdelPrikazy("  -- jen poznámka\n")).toEqual([]);
+  });
+
+  it("najde příkaz pod kurzorem", () => {
+    const text = "SELECT 1;\nSELECT 2;";
+    const p = rozdelPrikazy(text);
+    expect(prikazNaPozici(p, 2)!.text).toBe("SELECT 1;");
+    expect(prikazNaPozici(p, text.length)!.text).toBe("SELECT 2;");
+  });
+});
+
+describe("druhPrikazu", () => {
+  it("rozliší čtení, změnu dat, změnu struktury a transakce", () => {
+    expect(druhPrikazu("select * from knihy")).toBe("cteni");
+    expect(druhPrikazu("INSERT INTO t VALUES (1)")).toBe("data");
+    expect(druhPrikazu("CREATE TABLE t (a)")).toBe("struktura");
+    expect(druhPrikazu("COMMIT")).toBe("transakce");
+  });
+});
+
+describe("pocetRadku", () => {
+  it("drží českou shodu", () => {
+    expect(pocetRadku(1, "vrácen")).toBe("1 řádek vrácen");
+    expect(pocetRadku(3, "vrácen")).toBe("3 řádky vráceny");
+    expect(pocetRadku(10, "vrácen")).toBe("10 řádků vráceno");
+    expect(pocetRadku(0, "ovlivněn")).toBe("0 řádků ovlivněno");
+  });
+});
+
+describe("KURZ", () => {
+  it("má lekce 1–19 v pořadí a jedinečné klíče úkolů", () => {
+    expect(KURZ.map((l) => l.id)).toEqual(Array.from({ length: 19 }, (_, i) => i + 1));
+    const klice = KURZ.reduce<string[]>((a, l) => a.concat(l.ukoly.map((u) => u.klic)), []);
+    expect(new Set(klice).size).toBe(klice.length);
+  });
+
+  it("každá lekce má aspoň jeden povinný úkol", () => {
+    for (const l of KURZ) expect(povinne(l).length).toBeGreaterThan(0);
+  });
+
+  it("lekce 1–13 se shodují s kurzem na webu – na něj navazuje pracovní list", () => {
+    for (const puvodni of LESSONS) {
+      const l = KURZ.find((x) => x.id === puvodni.id)!;
+      expect(l.title).toBe(puvodni.title);
+      expect(l.ukoly[0].zadani).toBe(puvodni.zadani);
+      expect(l.ukoly[0].reseni).toBe(puvodni.reference);
+      if (puvodni.bonus) {
+        expect(l.ukoly[1].zadani).toBe(puvodni.bonus.zadani);
+        expect(l.ukoly[1].navic).toBe(true);
+      }
+    }
+  });
+
+  it("lekce 13 mluví o Vrátit změny, ne o tlačítku webového kurzu", () => {
+    const l = KURZ.find((x) => x.id === 13)!;
+    expect(l.teach).toContain("Vrátit změny");
+    expect(l.teach).not.toContain("tenhle kurz tlačítko");
+  });
+
+  it("hotová lekce = všechny povinné úkoly, úloha navíc se nepočítá", () => {
+    const l = KURZ.find((x) => x.id === 3)!;
+    expect(lekceHotova(l, new Set(["3"]))).toBe(true);
+    expect(lekceHotova(l, new Set(["3b"]))).toBe(false);
+  });
+
+  it("u lekcí z kurzu pozná tabulku pro náhled", () => {
+    expect(hlavniTabulka("SELECT nazev FROM knihy WHERE rok > 1900")).toBe("knihy");
+    expect(hlavniTabulka("INSERT INTO ctenari VALUES (1)")).toBe("ctenari");
+    expect(hlavniTabulka("UPDATE vypujcky SET x = 1")).toBe("vypujcky");
+  });
+});
+
+describe("soubory", () => {
+  it("base64 převede bajty tam i zpátky beze ztráty", () => {
+    const bajty = new Uint8Array(70000);
+    for (let i = 0; i < bajty.length; i++) bajty[i] = (i * 7) % 256;
+    expect(Array.from(zBase64(naBase64(bajty)))).toEqual(Array.from(bajty));
+  });
+
+  it("doplní .db a odmítne znaky, které Windows nedovolí", () => {
+    expect(upravNazev("hry")).toEqual({ nazev: "hry.db" });
+    expect(upravNazev("moje.sqlite")).toEqual({ nazev: "moje.sqlite" });
+    expect("chyba" in upravNazev("a/b")).toBe(true);
+    expect("chyba" in upravNazev("   ")).toBe(true);
+  });
+
+  it("velikost ukazuje v kB, jako dialog Windows", () => {
+    expect(velikost(16384)).toBe("16 kB");
+    expect(velikost(10)).toBe("1 kB");
+  });
+});
+
+describe("zvyrazni", () => {
+  it("obarví klíčová slova, text, čísla a komentáře a nic neztratí", () => {
+    const sql = "SELECT nazev FROM knihy WHERE rok > 1900 AND zanr = 'román'; -- poznámka";
+    const kusy = zvyrazni(sql);
+    expect(kusy.map((k) => k.text).join("")).toBe(sql);
+    expect(kusy.find((k) => k.text === "SELECT")!.trida).toBe("slovo");
+    expect(kusy.find((k) => k.text === "'román'")!.trida).toBe("text");
+    expect(kusy.find((k) => k.text === "1900")!.trida).toBe("cislo");
+    expect(kusy.find((k) => k.text === "-- poznámka")!.trida).toBe("komentar");
+  });
+
+  it("číslo uvnitř názvu sloupce není číslo", () => {
+    expect(zvyrazni("rok2").every((k) => k.trida !== "cislo")).toBe(true);
+  });
+});
+
+describe("chybaCesky", () => {
+  it("vyjmenuje tabulky otevřené databáze, ne tři tabulky knihovny", () => {
+    expect(chybaCesky("no such table: hry", ["hraci", "turnaje"])).toContain("hraci, turnaje");
+  });
+
+  it("u chybějící tabulky hodnoceni pošle zpátky k lekci 17", () => {
+    expect(chybaCesky("no such table: hodnoceni", ["ctenari", "knihy", "vypujcky"])).toContain("lekci 17");
+  });
+
+  it("radí Vrátit změny místo tlačítka webového kurzu", () => {
+    expect(chybaCesky("UNIQUE constraint failed: knihy.id", [])).toContain("Vrátit změny");
+  });
+});
+
+describe("filtr na kartě Prohlížet data", () => {
+  it("kus textu hledá obsažený text", () => {
+    expect(podminkaFiltru("autor", "Čapek")).toEqual(['"autor" LIKE ?', "%Čapek%"]);
+  });
+
+  it("podmínka porovnává, číslo jako číslo", () => {
+    expect(podminkaFiltru("rok", ">1900")).toEqual(['"rok" > ?', 1900]);
+    expect(podminkaFiltru("rok", "<= 1900")).toEqual(['"rok" <= ?', 1900]);
+    expect(podminkaFiltru("zanr", "=drama")).toEqual(['"zanr" = ?', "drama"]);
+    expect(podminkaFiltru("rok", "")).toBeNull();
+  });
+});
+
+describe("sqlTabulky (okno Upravit definici tabulky)", () => {
+  it("píše CREATE TABLE jako program, s primárním i cizím klíčem", () => {
+    const sql = sqlTabulky("hodnoceni", [
+      { nazev: "id", typ: "INTEGER", nn: false, pk: true, ai: false, u: false, vychozi: "", odkaz: "" },
+      { nazev: "kniha_id", typ: "INTEGER", nn: false, pk: false, ai: false, u: false, vychozi: "", odkaz: "knihy(id)" },
+      { nazev: "hvezdy", typ: "INTEGER", nn: true, pk: false, ai: false, u: false, vychozi: "5", odkaz: "" },
+    ]);
+    expect(sql).toContain('CREATE TABLE "hodnoceni" (');
+    expect(sql).toContain('"hvezdy"\tINTEGER NOT NULL DEFAULT 5');
+    expect(sql).toContain('PRIMARY KEY("id")');
+    expect(sql).toContain('FOREIGN KEY("kniha_id") REFERENCES "knihy"("id")');
+  });
+});

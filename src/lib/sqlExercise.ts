@@ -93,6 +93,23 @@ function sloupce(n: number): string {
 
 type Rows = { columns: string[]; values: unknown[][] };
 
+/**
+ * Porovná dva výsledky. Když má reference ORDER BY, záleží i na pořadí.
+ * Sdílí ho kurz na webu i virtuální DB Browser.
+ */
+export function sameResult(a: Rows | null, b: Rows | null, ordered: boolean): boolean {
+  const av = a?.values ?? [];
+  const bv = b?.values ?? [];
+  if (av.length !== bv.length) return false;
+  let ka = asKeys(av);
+  let kb = asKeys(bv);
+  if (!ordered) {
+    ka = [...ka].sort();
+    kb = [...kb].sort();
+  }
+  return ka.every((x, i) => x === kb[i]);
+}
+
 const asKeys = (rows: unknown[][]) => rows.map((r) => JSON.stringify(r.map((c) => String(c))));
 
 /**

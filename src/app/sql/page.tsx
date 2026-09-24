@@ -14,6 +14,8 @@ import { ThemeToggle } from "@/components/ThemeToggle";
 import { Mark } from "@/components/Mark";
 import { SqlPlayground } from "@/components/SqlPlayground";
 import { Proza } from "@/components/Proza";
+import { VirtualniDbBrowser } from "@/components/dbb/DbBrowser";
+import { JenNaPocitaci, JenNaMaleObrazovce } from "@/components/dbb/PodleSirky";
 
 /** Cesty na soubory v bance (téma 8 – Základy databází). */
 const TEMA = "/materialy/1L/8";
@@ -21,13 +23,19 @@ const DB = encodeURI(`${TEMA}/4. Databáze knihovny`);
 const BROWSER = encodeURI(`${TEMA}/3. Vlastní databáze v DB Browseru`);
 
 export const metadata: Metadata = {
-  title: "Kurz SQL v prohlížeči",
+  title: "Kurz SQL ve virtuálním DB Browseru",
   description:
-    "Interaktivní kurz základů databází a SQL: 13 lekcí od SELECTu po zápis dat, s výkladem, úkolem a okamžitou kontrolou – přímo v prohlížeči, nic se neinstaluje. Na závěr přechod do praxe v DB Browseru.",
+    "Interaktivní kurz základů databází a SQL uvnitř napodobeniny programu DB Browser for SQLite: 13 lekcí od SELECTu po zápis dat a 6 lekcí o práci s programem – soubor, zápis změn, vlastní tabulka. Úkoly se kontrolují samy, přímo v prohlížeči, nic se neinstaluje.",
   alternates: { canonical: "/sql" },
 };
 
 /**
+ * Na počítači (od 1024 px) se kurz otevře ve virtuálním DB Browseru přes
+ * celou obrazovku, jako simulátory Windows a macOS. Na telefonu a tabletu se
+ * program nevejde, tak tam zůstává webová podoba kurzu (lekce 1–13) – obě
+ * ukládají postup do stejných klíčů, takže se sčítá. Webová podoba zůstává
+ * v HTML i na počítači (jen skrytá), aby stránku našly vyhledávače.
+ *
  * Kurz je zatím jen česky. Kdo sem přijde z anglické verze, musí se mít jak
  * vrátit – proto `?z=en`: odkaz zpět i značka pak míří na /en místo na /.
  * Obsah kurzu zůstává český, to je slíbené předem u obou odkazů, které sem
@@ -42,6 +50,12 @@ export default function SqlPage({
   const domu = zEn ? "/en" : "/";
   return (
     <LanguageProvider lang="cs">
+      <div className="hidden vyska-obrazovky w-full overflow-hidden lg:block">
+        <JenNaPocitaci>
+          <VirtualniDbBrowser domu={domu} />
+        </JenNaPocitaci>
+      </div>
+      <div className="lg:hidden">
       <header className="glass-bar sticky top-0 z-40">
         <nav className="container-page flex h-16 items-center justify-between gap-4">
           <Link href={domu} className="group flex items-center gap-2.5" aria-label={SITE.name}>
@@ -75,7 +89,8 @@ export default function SqlPage({
             naučí nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny. Napiš dotaz, klikni na{" "}
             <b>Spustit</b> a hned vidíš výsledek; <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
             Nic se neinstaluje a tvůj postup se pamatuje. Na závěr přejdeš do praxe v opravdovém
-            programu.
+            programu. Na počítači se kurz otevře rovnou ve virtuálním programu DB Browser – se šesti
+            lekcemi navíc o práci se souborem a vlastní tabulce.
           </Proza>
         </p>
 
@@ -136,7 +151,9 @@ export default function SqlPage({
         </details>
 
         <div className="mt-8 max-w-3xl">
-          <SqlPlayground />
+          <JenNaMaleObrazovce>
+            <SqlPlayground />
+          </JenNaMaleObrazovce>
         </div>
 
         {/* Závěrečná lekce kurzu: stejná databáze, opravdový program (DB Browser). */}
@@ -216,6 +233,7 @@ export default function SqlPage({
           </a>
         </section>
       </main>
+      </div>
     </LanguageProvider>
   );
 }

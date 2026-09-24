@@ -83,6 +83,22 @@ const config: Config = {
           akcent: "rgb(var(--mac-akcent) / <alpha-value>)",
           "akcent-text": "rgb(var(--mac-akcent-text) / <alpha-value>)",
         },
+        // Virtuální DB Browser (kurz SQL). Taky vlastní řada – třetí prostředí
+        // se nesmí hnout, když se sahá na Windows nebo macOS.
+        dbb: {
+          okno: "rgb(var(--dbb-okno) / <alpha-value>)",
+          povrch: "rgb(var(--dbb-povrch) / <alpha-value>)",
+          lista: "rgb(var(--dbb-lista) / <alpha-value>)",
+          linka: "rgb(var(--dbb-linka) / <alpha-value>)",
+          mrizka: "rgb(var(--dbb-mrizka) / <alpha-value>)",
+          hlavicka: "rgb(var(--dbb-hlavicka) / <alpha-value>)",
+          text: "rgb(var(--dbb-text) / <alpha-value>)",
+          slaby: "rgb(var(--dbb-slaby) / <alpha-value>)",
+          akcent: "rgb(var(--dbb-akcent) / <alpha-value>)",
+          "akcent-text": "rgb(var(--dbb-akcent-text) / <alpha-value>)",
+          vyber: "rgb(var(--dbb-vyber) / <alpha-value>)",
+          hover: "rgb(var(--dbb-hover) / <alpha-value>)",
+        },
         // Vlastní malachitová řada – vědomý posun od defaultní Tailwind
         // `emerald` (kterou má každý AI web), o pár stupňů k modrozelené.
         accent: {

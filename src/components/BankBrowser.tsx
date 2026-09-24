@@ -177,8 +177,8 @@ const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
   Databáze: {
     cesta: "/sql",
     popis: {
-      cs: "Projdi si interaktivní kurz SQL přímo v prohlížeči – nic se neinstaluje.",
-      en: "Take the interactive SQL course right in your browser – nothing to install. The course itself is in Czech.",
+      cs: "Projdi si interaktivní kurz SQL ve virtuálním programu DB Browser – přímo v prohlížeči, nic se neinstaluje.",
+      en: "Take the interactive SQL course inside a virtual DB Browser – right in your browser, nothing to install. The course itself is in Czech.",
     },
     cta: { cs: "Spustit kurz", en: "Start the course" },
   },

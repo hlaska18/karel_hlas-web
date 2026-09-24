@@ -1392,3 +1392,93 @@
 .mac[data-efekty="omezene"] .mac-sklo-zaloha {
   background-color: rgba(28, 28, 32, 0.88) !important;
 }
+
+/* ───────────────────── Virtuální DB Browser (kurz SQL) ─────────────────────
+   Napodobenina programu DB Browser for SQLite, jak vypadá ve Windows 11 –
+   tam ho žáci uvidí doopravdy. Vlastní proměnné jako `.win` a `.mac`, ať se
+   tři prostředí navzájem nehýbou. */
+.dbb {
+  --dbb-okno: 240 240 240;
+  --dbb-povrch: 255 255 255;
+  --dbb-lista: 249 249 249;
+  --dbb-linka: 213 213 213;
+  --dbb-mrizka: 229 229 229;
+  --dbb-hlavicka: 245 245 245;
+  --dbb-text: 26 26 26;
+  --dbb-slaby: 104 104 104;
+  --dbb-akcent: 0 103 192;
+  --dbb-akcent-text: 255 255 255;
+  --dbb-vyber: 204 232 255;
+  --dbb-hover: 229 243 255;
+
+  color: rgb(var(--dbb-text));
+  background-color: rgb(var(--dbb-okno));
+  font-family: "Segoe UI Variable Text", "Segoe UI", ui-sans-serif, system-ui, sans-serif;
+  font-size: 12px;
+  line-height: 1.35;
+  -webkit-font-smoothing: antialiased;
+}
+
+.dbb ::selection {
+  background: rgb(var(--dbb-akcent));
+  color: rgb(var(--dbb-akcent-text));
+}
+
+/* Program kreslí vlastní rámeček zaměření, ne webový prstenec. */
+.dbb :focus {
+  outline: none;
+}
+
+.dbb button:focus-visible,
+.dbb [role="tab"]:focus-visible,
+.dbb [role="menuitem"]:focus-visible {
+  outline: 1px dotted rgb(var(--dbb-text));
+  outline-offset: -2px;
+}
+
+/* Editor SQL: průhledná textarea nad obarveným textem. Obě vrstvy musí mít
+   stejné písmo, velikost, řádkování i odsazení, jinak se text rozjede
+   s kurzorem. */
+.dbb-kod {
+  font-family: Consolas, "Cascadia Mono", "SF Mono", Menlo, "DejaVu Sans Mono", monospace;
+  font-size: 13px;
+  line-height: 18px;
+  tab-size: 4;
+  -moz-tab-size: 4;
+  white-space: pre;
+  word-wrap: normal;
+}
+
+.dbb-editor-vstup {
+  color: transparent;
+  caret-color: rgb(var(--dbb-text));
+  background: transparent;
+  resize: none;
+  overflow: auto;
+}
+
+.dbb-editor-vstup::selection {
+  background: rgb(var(--dbb-vyber));
+  color: transparent;
+}
+
+.dbb-slovo { color: #00008b; font-weight: 700; }
+.dbb-text-hodnota { color: #a31515; }
+.dbb-cislo { color: #098658; }
+.dbb-komentar { color: #6a737d; font-style: italic; }
+.dbb-funkce { color: #795e26; }
+
+.dbb-posuv::-webkit-scrollbar {
+  width: 12px;
+  height: 12px;
+}
+
+.dbb-posuv::-webkit-scrollbar-thumb {
+  background: rgb(var(--dbb-linka));
+  border: 3px solid rgb(var(--dbb-povrch));
+  border-radius: 6px;
+}
+
+.dbb-posuv::-webkit-scrollbar-track {
+  background: rgb(var(--dbb-povrch));
+}
