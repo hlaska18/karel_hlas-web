@@ -58,12 +58,12 @@ export const UKOLY_MAC: UkolMac[] = [
     popis:
       "Ve Windows zavřením posledního okna program většinou skončí. Tady ne. Zavři okno a dívej se přitom nahoru na lištu.",
     kroky: [
-      "Otevři okno Finderu: v Docku dole klikni na druhou ikonu zleva, hned za mřížkou Launchpadu. Když na ni najedeš myší, ukáže se nad ní Finder.",
+      "Otevři okno Finderu: v Docku dole klikni na druhou ikonu zleva (modrobílý obličej), hned za ikonou Aplikace s barevnými čtverečky. Když na ni najedeš myší, ukáže se nad ní Finder.",
       "V okně Finderu jsou vlevo nahoře tři puntíky: červený, žlutý, zelený.",
       "Najeď na ně myší – teprve tehdy se v nich ukážou značky.",
       "Klikni na červený. Okno zmizí.",
       "Teď se podívej nahoru na lištu úplně u horního okraje obrazovky. Pořád tam stojí Finder.",
-      "Podívej se i dolů do Docku pod ikonu Finderu. Je pod ní tečka.",
+      "Podívej se i dolů do Docku pod ikonu Finderu. Je pod ní malá tečka – na Macu je schválně nenápadná, tak se podívej pozorně.",
       "Ta tečka znamená, že program běží. Zavřel jsi okno, ne program.",
     ],
     skupina: "Okno není program",
@@ -75,7 +75,7 @@ export const UKOLY_MAC: UkolMac[] = [
     popis:
       "Na Finderu to nejde pořádně ukázat, protože ten běží vždycky. Zkus to tedy s programem, který jsi spustil sám.",
     kroky: [
-      "V Docku klikni na žlutou ikonu Poznámek. Když už je okno Poznámek na obrazovce (třeba uvítací Přečti si mě.txt), jen se vytáhne dopředu.",
+      "V Docku klikni na ikonu Poznámek – linkovaný papír se žlutým pruhem nahoře. Když už je okno Poznámek na obrazovce (třeba uvítací Přečti si mě.txt), jen se vytáhne dopředu.",
       "Podívej se nahoru na lištu: vedle jablka stojí Poznámky. Lišta patří programu, který je vpředu.",
       "Napiš do okna pár slov a v horní liště vyber Soubor a v něm Uložit.",
       "Zavři okno červeným puntíkem.",
@@ -156,7 +156,7 @@ export const UKOLY_MAC: UkolMac[] = [
     popis:
       "Ve Windows každá cesta začíná písmenem disku, třeba C:\\. Na Macu žádná písmena nejsou. Podívej se, jak cesta vypadá tady.",
     kroky: [
-      "Spusť z Docku Terminál (černá ikona).",
+      "Spusť z Docku Terminál (černá obrazovka se znaky >_).",
       "Kurzor v řádku už bliká, rovnou piš.",
       "Napiš pwd a stiskni Enter. Zkratka znamená print working directory.",
       "Vypíše se /Users/zak — tvoje domovská složka.",

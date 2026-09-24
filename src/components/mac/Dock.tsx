@@ -26,6 +26,15 @@ import {
 } from "lucide-react";
 import { useMac } from "./system";
 import { useDzin, zmerVraceni } from "./Dzin";
+import {
+  IkonaAplikace,
+  IkonaFinder,
+  IkonaKos,
+  IkonaNastaveni,
+  IkonaPoznamky,
+  IkonaStazene,
+  IkonaTerminal,
+} from "./ikonyAplikaci";
 import { NabidkaMistni, type PolozkaNabidky } from "./ui";
 import {
   coUdelaTazeni,
@@ -249,31 +258,47 @@ function ZnakNastaveni({
   );
 }
 
-export const VZHLED_APLIKACI: Record<
-  AppId,
-  { pozadi: string; barva: string; znak: Znak }
-> = {
+/**
+ * Vzhled ikony. `plna` je celá ikona přes celou plochu (Karlovy návrhy
+ * 24. 9. 2026) – kde je, kreslí se místo značky na barevném podkladu.
+ * `pozadi`, `barva` a `znak` zůstávají pro malé odznaky a jako záloha.
+ */
+export type VzhledAplikace = { pozadi: string; barva: string; znak: Znak; plna?: Znak };
+
+export const VZHLED_APLIKACI: Record<AppId, VzhledAplikace> = {
   finder: {
     pozadi: "linear-gradient(165deg,#ffffff,#e6eef6)",
     barva: "#0b3c63",
     znak: ZnakFinder,
+    plna: IkonaFinder,
   },
   poznamky: {
     pozadi: "linear-gradient(165deg,#fff6dc,#f3d98a)",
     barva: "#5a4300",
     znak: ZnakPoznamky,
+    plna: IkonaPoznamky,
   },
   terminal: {
     pozadi: "linear-gradient(165deg,#3a3a3f,#141416)",
     barva: "#7dff9b",
     znak: ZnakTerminal,
+    plna: IkonaTerminal,
   },
   nastaveni: {
     pozadi: "linear-gradient(165deg,#eceef2,#b9bec7)",
     barva: "#3a3a3c",
     znak: ZnakNastaveni,
+    plna: IkonaNastaveni,
   },
 };
+
+/** Plný Koš – stejná kresba, jen se zmačkanými papíry nahoře. */
+function IkonaKosPlny(p: { className?: string; style?: React.CSSProperties }) {
+  return <IkonaKos {...p} plny />;
+}
+
+/** Stín pod celou ikonou. Sleduje její tvar – i Koš a složku bez podkladu. */
+const STIN_IKONY = "drop-shadow(0 1px 1.5px rgba(0,0,0,0.28)) drop-shadow(0 2px 5px rgba(0,0,0,0.12))";
 
 export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
   const { stav, poslat, spust, stopa } = useMac();
@@ -618,18 +643,20 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
         ref={rada}
         onMouseMove={zvetsi}
         onMouseLeave={sroveji}
-        className="mac-sklo mac-bezvyberu pointer-events-auto relative flex items-end gap-2 rounded-2xl border border-white/20 px-2 py-2 shadow-[0_12px_40px_rgba(0,0,0,0.35)]"
+        className="mac-dock mac-bezvyberu pointer-events-auto relative flex items-end gap-2 rounded-2xl px-2 py-2"
       >
-        {/* Launchpad stojí na Macu hned vedle Finderu a je to jediné místo,
-            kde žák uvidí všechny aplikace pohromadě. */}
+        {/* Aplikace (dřív Launchpad) stojí na Macu hned vedle Finderu a je to
+            jediné místo, kde žák uvidí všechny aplikace pohromadě. V macOS 26
+            se tak jmenují a mají ikonu s mřížkou barevných dlaždic. */}
         <Ikona
-          popis="Launchpad"
+          popis="Aplikace"
           strana={velikost}
           zvetsuje={zvetsovat}
           vzhled={{
             pozadi: "linear-gradient(165deg,#fbfbfd,#d6d8de)",
             barva: "#3a3a3c",
             znak: ZnakLaunchpad,
+            plna: IkonaAplikace,
           }}
           onClick={onLaunchpad}
           onContextMenu={naPraveTlacitko("launchpad")}
@@ -670,6 +697,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
             pozadi: "linear-gradient(160deg,#9fd6ff,#3f97e0)",
             barva: "#0b3c63",
             znak: Download,
+            plna: IkonaStazene,
           }}
           onClick={() => spust("finder", slozMac(STAZENE))}
           onContextMenu={naPraveTlacitko("stazene")}
@@ -710,6 +738,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
                 : "linear-gradient(160deg,#c3c7cf,#7f858f)",
             barva: "#3a3a3c",
             znak: Trash2,
+            plna: vKosi === 0 ? IkonaKos : IkonaKosPlny,
           }}
           // Koš je na Macu složka, takže se otevře ve Finderu jako každá jiná.
           // Tím se zároveň prozradí, že smazané soubory nezmizely.
@@ -749,7 +778,7 @@ function Ikona({
   obsah,
 }: {
   popis: string;
-  vzhled: { pozadi: string; barva: string; znak: Znak };
+  vzhled: VzhledAplikace;
   bezi?: boolean;
   /** Značka do DOMu, aby efekt džina našel, kam okno letí. */
   znacka?: Record<string, string>;
@@ -773,6 +802,7 @@ function Ikona({
   obsah?: React.ReactNode;
 }) {
   const Znak = vzhled.znak;
+  const Plna = obsah ? undefined : vzhled.plna;
   return (
     <div
       data-dock-ikona
@@ -802,7 +832,7 @@ function Ikona({
         // Zaoblení 22 % strany je macOS „squircle"; pevných 12 px vypadalo
         // při větší ikoně jako obyčejný zaoblený čtverec.
         className={`flex items-center justify-center disabled:cursor-default ${
-          obsah ? "" : "shadow-md"
+          obsah || Plna ? "" : "shadow-md"
         } ${ztmavena ? "brightness-75" : ""} ${
           // Když se zvětšuje celý Dock, nesmí si ikona přidávat ještě vlastní
           // skok při najetí – skládalo by se to a poskakovalo.
@@ -813,29 +843,33 @@ function Ikona({
         style={{
           width: strana,
           height: strana,
-          background: obsah ? "transparent" : vzhled.pozadi,
+          background: obsah || Plna ? "transparent" : vzhled.pozadi,
           borderRadius: `${Math.round(strana * 0.22)}px`,
         }}
       >
-        {/* Značka roste s ikonou – 55 % strany je poměr, na kterém to sedí
-            i na nejmenším i na největším Docku. */}
-        {obsah ?? (
-          <Znak
-            style={{
-              color: vzhled.barva,
-              width: Math.round(strana * 0.55),
-              height: Math.round(strana * 0.55),
-            }}
-          />
-        )}
+        {/* Celá ikona vyplní plochu. Značka na podkladu (záloha) roste
+            s ikonou – 55 % strany sedí na nejmenším i největším Docku. */}
+        {obsah ??
+          (Plna ? (
+            <Plna style={{ width: strana, height: strana, filter: STIN_IKONY }} />
+          ) : (
+            <Znak
+              style={{
+                color: vzhled.barva,
+                width: Math.round(strana * 0.55),
+                height: Math.round(strana * 0.55),
+              }}
+            />
+          ))}
       </button>
       {/*
         Tečka běžícího programu.
 
         Je to jediné místo na obrazovce, kde je vidět program bez okna, takže
-        na ni ukazuje zadání první úlohy – a proto je schválně o kus větší, než
-        má skutečný macOS. Změřeno na 4 px přes světlé sklo Docku: byla sotva
-        znát a úloha, která na ni odkazuje, by nedávala smysl.
+        na ni ukazuje zadání první úlohy. Dřív byla schválně větší (6 px), protože
+        4 px přes světlé sklo byly sotva znát. 24. 9. 2026 Karel rozhodl „co bude
+        nejvíc Apple“ – má tedy 4 px jako skutečný macOS a zadání úlohy žáka
+        upozorní, že je malá a má se podívat pozorně.
 
         Barva jde z `--mac-text`, takže je tmavá ve světlém motivu a světlá
         v tmavém. Bílá napevno by v tmavém motivu zmizela úplně.
@@ -844,8 +878,8 @@ function Ikona({
         nahoru a dolů podle toho, co zrovna běží.
       */}
       <span
-        className={`mt-1 h-[6px] w-[6px] rounded-full ${
-          bezi ? "bg-mac-text/75" : "bg-transparent"
+        className={`mt-[3px] h-[4px] w-[4px] rounded-full ${
+          bezi ? "bg-mac-text/70" : "bg-transparent"
         }`}
       />
     </div>
@@ -860,6 +894,7 @@ function Ikona({
 function MiniOkno({ app, strana }: { app: AppId; strana: number }) {
   const v = VZHLED_APLIKACI[app];
   const Znak = v.znak;
+  const Plna = v.plna;
   const pruh = Math.max(4, Math.round(strana * 0.15));
   const puntik = Math.max(2, Math.round(strana * 0.06));
   const odznak = Math.round(strana * 0.42);
@@ -899,23 +934,27 @@ function MiniOkno({ app, strana }: { app: AppId; strana: number }) {
         />
       </span>
       <span
-        className="absolute flex items-center justify-center shadow"
+        className={`absolute flex items-center justify-center ${Plna ? "" : "shadow"}`}
         style={{
           right: 0,
           bottom: 0,
           width: odznak,
           height: odznak,
-          background: v.pozadi,
+          background: Plna ? "transparent" : v.pozadi,
           borderRadius: Math.round(odznak * 0.22),
         }}
       >
-        <Znak
-          style={{
-            color: v.barva,
-            width: Math.round(odznak * 0.6),
-            height: Math.round(odznak * 0.6),
-          }}
-        />
+        {Plna ? (
+          <Plna style={{ width: odznak, height: odznak, filter: STIN_IKONY }} />
+        ) : (
+          <Znak
+            style={{
+              color: v.barva,
+              width: Math.round(odznak * 0.6),
+              height: Math.round(odznak * 0.6),
+            }}
+          />
+        )}
       </span>
     </span>
   );

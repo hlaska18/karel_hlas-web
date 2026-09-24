@@ -61,7 +61,12 @@ const mix = (a: number, b: number, t: number) => a + (b - a) * t;
  * a ne jako obyčejné zmenšení.
  */
 export function vyboul(t: number): number {
-  return Math.pow(Math.sin(t * Math.PI) * VYBOULENI, MOCNINA);
+  // `t` se skládá sčítáním podílů a u posledního řezu vyjde třeba
+  // 1,0000000000000002 nebo −2e-16. Sinus je pak nepatrně záporný, mocnina
+  // ze záporného čísla je NaN a kus obrysu se nevykreslí (projevilo se to
+  // po snížení pruhu okna na 52 px). Proto se `t` drží v intervalu 0 až 1.
+  const u = Math.max(0, Math.min(1, t));
+  return Math.pow(Math.max(0, Math.sin(u * Math.PI)) * VYBOULENI, MOCNINA);
 }
 
 /**

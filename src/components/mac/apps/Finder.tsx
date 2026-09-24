@@ -552,8 +552,9 @@ export function Finder() {
   const naradi = slotZahlavi
     ? createPortal(
         <>
-          {/* Zpět a vpřed sdílejí jednu pilulku, jako na Macu. */}
-          <div className="ml-1 flex items-center rounded-full bg-mac-povrch shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
+          {/* Zpět a vpřed sdílejí jednu kapsli, jako na Macu. Plocha tlačítka
+              se ukáže až při najetí – ne řada bílých pilulek se stínem. */}
+          <div className="mac-toolbar-group ml-1 flex shrink-0 items-center overflow-hidden">
             <button
               type="button"
               aria-label="Zpět"
@@ -562,9 +563,9 @@ export function Finder() {
                 nastavKde((k) => k - 1);
                 nastavVybrano(null);
               }}
-              className="rounded-l-full px-2.5 py-1.5 text-mac-text disabled:opacity-30"
+              className="mac-toolbar-button pl-1 text-mac-text disabled:opacity-30"
             >
-              <ChevronLeft className="h-4 w-4" />
+              <ChevronLeft className="h-[15px] w-[15px]" />
             </button>
             <button
               type="button"
@@ -574,44 +575,46 @@ export function Finder() {
                 nastavKde((k) => k + 1);
                 nastavVybrano(null);
               }}
-              className="rounded-r-full px-2.5 py-1.5 text-mac-text disabled:opacity-30"
+              className="mac-toolbar-button pr-1 text-mac-text disabled:opacity-30"
             >
-              <ChevronRight className="h-4 w-4" />
+              <ChevronRight className="h-[15px] w-[15px]" />
             </button>
           </div>
 
           {/* Název složky: vlevo, tučně, větší. Ne vystředěný. */}
-          <span className="ml-1 truncate text-[15px] font-semibold text-mac-text">
+          <span className="ml-1 min-w-0 truncate text-[15px] font-semibold text-mac-text">
             {jmenoMista}
           </span>
 
-          <div className="ml-auto flex items-center gap-2">
-            <div className="flex items-center rounded-full bg-mac-povrch shadow-[0_1px_2px_rgba(0,0,0,0.18)]">
+          <div className="ml-auto flex min-w-0 items-center gap-2">
+            <div className="mac-toolbar-group flex shrink-0 items-center overflow-hidden">
               <button
                 type="button"
                 title="Jako ikony"
                 aria-pressed={zobrazeni === "ikony"}
                 onClick={() => nastavZobrazeni("ikony")}
-                className={`rounded-l-full px-2.5 py-1.5 ${
-                  zobrazeni === "ikony" ? "text-mac-akcent" : "text-mac-slaby"
+                className={`mac-toolbar-button pl-1 ${
+                  zobrazeni === "ikony" ? "text-mac-text" : "text-mac-slaby"
                 }`}
               >
-                <LayoutGrid className="h-4 w-4" />
+                <LayoutGrid className="h-[15px] w-[15px]" />
               </button>
               <button
                 type="button"
                 title="Jako seznam"
                 aria-pressed={zobrazeni === "seznam"}
                 onClick={() => nastavZobrazeni("seznam")}
-                className={`rounded-r-full px-2.5 py-1.5 ${
-                  zobrazeni === "seznam" ? "text-mac-akcent" : "text-mac-slaby"
+                className={`mac-toolbar-button pr-1 ${
+                  zobrazeni === "seznam" ? "text-mac-text" : "text-mac-slaby"
                 }`}
               >
-                <List className="h-4 w-4" />
+                <List className="h-[15px] w-[15px]" />
               </button>
             </div>
-            {/* Prstenec kolem celé pilulky, ne kolem pole uvnitř – tak ho kreslí Finder. */}
-            <label className="flex items-center gap-1.5 rounded-full bg-mac-povrch px-3 py-1.5 shadow-[0_1px_2px_rgba(0,0,0,0.18)] focus-within:ring-[3px] focus-within:ring-mac-akcent/55">
+            {/* Prstenec kolem celé kapsle, ne kolem pole uvnitř – tak ho kreslí
+                Finder. Pole je širší než dřív (až 150 px), v úzkém okně se
+                zúží, ale nezmizí. */}
+            <label className="mac-toolbar-group flex h-[30px] min-w-[76px] max-w-[160px] flex-1 items-center gap-1.5 px-2.5 focus-within:ring-[3px] focus-within:ring-mac-akcent/55">
               <Search className="h-3.5 w-3.5 shrink-0 text-mac-slaby" />
               <input
                 value={hledani}
@@ -619,7 +622,7 @@ export function Finder() {
                 placeholder="Hledat"
                 aria-label="Hledat ve složce"
                 spellCheck={false}
-                className="w-[92px] min-w-0 bg-transparent text-[12px] text-mac-text outline-none placeholder:text-mac-slaby focus-visible:outline-none"
+                className="w-full min-w-0 bg-transparent text-[12px] text-mac-text outline-none placeholder:text-mac-slaby focus-visible:outline-none"
               />
             </label>
           </div>
@@ -657,9 +660,11 @@ export function Finder() {
     <div className="mac-bezvyberu flex h-full bg-mac-povrch text-[13px] text-mac-text">
       {naradi}
       {panelNahledu}
+      {/* Bok je široký jako jeho kus v pruhu okna (`--mac-bok-sirka`),
+          takže opticky sahá až k semaforu. */}
       <aside
         data-postranni
-        className="mac-posuv w-[180px] shrink-0 overflow-y-auto border-r border-mac-linka bg-mac-postranni px-2 py-3"
+        className="mac-sidebar mac-posuv w-[var(--mac-bok-sirka)] shrink-0 overflow-y-auto px-2 py-3"
       >
         <Skupina nazev="Oblíbené" />
         {MISTA.map((m) => (
@@ -667,8 +672,9 @@ export function Finder() {
             key={m.jmeno}
             jmeno={m.jmeno}
             // Oblíbené složky mají na Macu vlastní ikonu podle toho, co v nich
-            // je – ne desetkrát tutéž složku.
-            znak={<m.znak className="h-[15px] w-[15px] text-[#3b82f6]" />}
+            // je – ne desetkrát tutéž složku. Barvu mají všechny zvýrazňovací,
+            // jako na Macu, ne pevnou modrou.
+            znak={<m.znak className="h-[15px] w-[15px] text-mac-akcent" />}
             aktivni={slozMac(cesta) === slozMac(m.cesta)}
             tazeni={cilTazeni(m.cesta, `b:${m.jmeno}`)}
             zvyrazneno={nadCilem?.klic === `b:${m.jmeno}`}
@@ -678,7 +684,7 @@ export function Finder() {
         <Skupina nazev="Umístění" />
         <PolozkaBoku
           jmeno="Macintosh HD"
-          znak={<HardDrive className="h-[15px] w-[15px] text-mac-slaby" />}
+          znak={<HardDrive className="h-[15px] w-[15px] text-mac-akcent" />}
           aktivni={cesta.length === 1}
           onClick={() => jdi([KOREN])}
           tazeni={cilTazeni([KOREN], "b:hd")}
@@ -696,7 +702,7 @@ export function Finder() {
         />
         <PolozkaBoku
           jmeno="Koš"
-          znak={<Trash2 className="h-[15px] w-[15px] text-mac-slaby" />}
+          znak={<Trash2 className="h-[15px] w-[15px] text-mac-akcent" />}
           aktivni={slozMac(cesta) === slozMac(KOS)}
           onClick={() => jdi(KOS)}
           tazeni={cilTazeni(KOS, "b:kos")}
@@ -770,13 +776,15 @@ export function Finder() {
             </div>
           ) : (
             <table className="w-full border-collapse">
-              <thead className="sticky top-0 bg-mac-panel text-[11px] uppercase tracking-wide text-mac-slaby">
+              {/* Záhlaví bez verzálek a prostrkání – to je webová tabulka,
+                  ne Finder. Průsvitné, ať řádky pod ním při posouvání prosvítají. */}
+              <thead className="sticky top-0 bg-mac-povrch/90 text-[11px] text-mac-slaby shadow-[inset_0_-1px_0_rgb(var(--mac-linka))] backdrop-blur-xl">
                 <tr>
-                  <th className="px-3 py-1.5 text-left font-medium">Název</th>
-                  <th className="w-[160px] px-3 py-1.5 text-left font-medium">
+                  <th className="px-3 py-1.5 text-left font-normal">Název</th>
+                  <th className="w-[160px] px-3 py-1.5 text-left font-normal">
                     Datum změny
                   </th>
-                  <th className="w-[90px] px-3 py-1.5 text-right font-medium">
+                  <th className="w-[90px] px-3 py-1.5 text-right font-normal">
                     Velikost
                   </th>
                 </tr>
@@ -1023,8 +1031,10 @@ function PolozkaBoku({
         zvyrazneno
           ? "bg-mac-akcent text-mac-akcent-text"
           : aktivni
-            ? "bg-mac-zvyrazneny font-medium text-mac-text"
-            : "hover:bg-black/5"
+            ? // Průsvitný oblázek (8 % barvy textu), ať sedí na barvu boku
+              // ve světlém i tmavém motivu.
+              "bg-mac-text/[0.08] font-medium text-mac-text"
+            : "hover:bg-mac-text/[0.05]"
       }`}
     >
       {znak}

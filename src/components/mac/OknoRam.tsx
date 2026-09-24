@@ -147,14 +147,21 @@ export function OknoRamMac({
       style={{
         ...poloha,
         zIndex: 100 + okno.z,
-        boxShadow: aktivni ? "var(--mac-stin)" : "0 8px 24px rgba(0,0,0,0.18)",
+        // Tenká hrana a měkký stín (globals.css). Zaoblení zůstává 16 px:
+        // macOS 26 má okna s nástroji spíš oblejší, ne ostřejší.
+        boxShadow: aktivni ? "var(--mac-stin-okno)" : "var(--mac-stin-okno-neaktivni)",
         // Během tažení se text uvnitř nemá označovat ani probublávat kurzor.
         cursor: tazeni ? "grabbing" : undefined,
       }}
       onMouseDown={() => poslat({ typ: "okno/dopredu", id: okno.id })}
     >
+      {/* Pruh je o něco nižší než dřív (52 px místo 58) a navazuje na obsah
+          tenkou linkou. U Finderu má levá část barvu boku, takže bok sahá
+          až nahoru k semaforu – jako na Macu (Karlovy návrhy 24. 9. 2026). */}
       <div
-        className="relative flex h-[58px] shrink-0 items-center gap-3 border-b border-mac-linka bg-mac-panel px-4"
+        className={`mac-toolbar relative flex h-[52px] shrink-0 items-center gap-3 px-[14px] ${
+          okno.app === "finder" ? "mac-toolbar-s-bokem" : ""
+        }`}
         onMouseDown={(e) => {
           if (jeOvladani(e.target)) return;
           zacniTahat(e, null);
@@ -164,7 +171,14 @@ export function OknoRamMac({
           poslat({ typ: "okno/zvetsi", id: okno.id });
         }}
       >
-        <Semafor okno={okno} aktivni={aktivni} />
+        {okno.app === "finder" ? (
+          // Semafor stojí nad bokem; nástroje Finderu začínají až za ním.
+          <div className="z-10 flex shrink-0 items-center" style={{ width: "calc(var(--mac-bok-sirka) - 14px)" }}>
+            <Semafor okno={okno} aktivni={aktivni} />
+          </div>
+        ) : (
+          <Semafor okno={okno} aktivni={aktivni} />
+        )}
         {/* Název je VLEVO a tučný, ne na středu. Vystředěný titulek je starší
             macOS; dnešní Finder ho má hned za šipkami zpět (ověřeno na snímku
             z české nápovědy Applu). */}

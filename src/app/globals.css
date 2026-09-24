@@ -1393,6 +1393,161 @@
   background-color: rgba(28, 28, 32, 0.88) !important;
 }
 
+/* ───────────────────── macOS: materiály oken a Docku ─────────────────────
+   Karlovy návrhy z 24. 9. 2026. Dřív měl pruh okna, bok Finderu i Dock
+   jedno univerzální šedé sklo (`.mac-sklo`) a okno působilo jako webová
+   aplikace. Teď má každá plocha svůj materiál: pruh okna navazuje na obsah,
+   bok Finderu sahá až nahoru k semaforu a Dock je světlejší sklo s linkou.
+
+   Pruh a bok leží na neprůhledném okně, takže rozostření by tam nebylo
+   vidět – mají jen barvu. Rozostření má Dock, pod kterým je tapeta.
+   Barvy literálů jsou `rgba(…, …)` s čárkami: zápis s lomítkem neumí
+   Chrome 64 z `.browserslistrc`. */
+.mac {
+  --mac-bok: 242 242 245;
+  --mac-bok-sirka: 196px;
+  --mac-bok-linka: rgba(0, 0, 0, 0.055);
+  --mac-pruh-1: 255 255 255;
+  --mac-pruh-2: 249 249 250;
+  --mac-pruh-linka: rgba(0, 0, 0, 0.065);
+  /* Okno: tenká hrana a měkčí stín ve dvou vrstvách. Hrana je stín, ne
+     `border` – rámeček by okno zvětšil o dva pixely a posunul obsah. */
+  --mac-stin-okno: 0 0 0 1px rgba(0, 0, 0, 0.08), 0 26px 70px rgba(0, 0, 0, 0.25), 0 5px 16px rgba(0, 0, 0, 0.12);
+  --mac-stin-okno-neaktivni: 0 0 0 1px rgba(0, 0, 0, 0.07), 0 10px 28px rgba(0, 0, 0, 0.16);
+}
+
+.mac[data-motiv="tmavy"] {
+  --mac-bok: 38 38 42;
+  --mac-bok-linka: rgba(0, 0, 0, 0.45);
+  --mac-pruh-1: 47 47 50;
+  --mac-pruh-2: 34 34 37;
+  --mac-pruh-linka: rgba(0, 0, 0, 0.5);
+  /* V tmavém motivu má okno na Macu světlou vnitřní hranu, jinak by
+     splynulo s tmavou tapetou. */
+  --mac-stin-okno: 0 0 0 1px rgba(0, 0, 0, 0.6), inset 0 0 0 1px rgba(255, 255, 255, 0.1), 0 26px 70px rgba(0, 0, 0, 0.55), 0 5px 16px rgba(0, 0, 0, 0.35);
+  --mac-stin-okno-neaktivni: 0 0 0 1px rgba(0, 0, 0, 0.55), inset 0 0 0 1px rgba(255, 255, 255, 0.07), 0 10px 28px rgba(0, 0, 0, 0.4);
+}
+
+/* Pruh okna (titulek a nástroje v jednom řádku). */
+.mac-toolbar {
+  background-image: linear-gradient(180deg, rgb(var(--mac-pruh-1)), rgb(var(--mac-pruh-2)));
+  border-bottom: 1px solid var(--mac-pruh-linka);
+}
+
+/* Finder: levá část pruhu má barvu boku, takže bok opticky sahá až
+   k semaforu. Spodní linka pruhu je jen nad obsahem, svislá linka boku
+   pokračuje až nahoru. */
+.mac-toolbar-s-bokem {
+  background-image:
+    linear-gradient(90deg, rgb(var(--mac-bok)) var(--mac-bok-sirka), transparent var(--mac-bok-sirka)),
+    linear-gradient(180deg, rgb(var(--mac-pruh-1)), rgb(var(--mac-pruh-2)));
+  border-bottom-color: transparent;
+}
+
+.mac-toolbar-s-bokem::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: -1px;
+  left: calc(var(--mac-bok-sirka) - 1px);
+  width: 1px;
+  background: var(--mac-bok-linka);
+}
+
+.mac-toolbar-s-bokem::after {
+  content: "";
+  position: absolute;
+  left: var(--mac-bok-sirka);
+  right: 0;
+  bottom: -1px;
+  height: 1px;
+  background: var(--mac-pruh-linka);
+}
+
+/* Bok okna (Finder). */
+.mac-sidebar {
+  background-color: rgb(var(--mac-bok));
+  border-right: 1px solid var(--mac-bok-linka);
+}
+
+/* Nezaostřené okno ztlumí obsah boku, ne jeho barvu – jinak by bok pod
+   pruhem zesvětlal a přestal navazovat na svůj kus v pruhu. */
+.mac-okno-neaktivni [data-postranni].mac-sidebar {
+  opacity: 1;
+}
+
+.mac-okno-neaktivni [data-postranni].mac-sidebar > * {
+  opacity: 0.6;
+}
+
+/* Ovládání v pruhu: jemná skupina místo samostatných bílých pilulek se
+   stínem. Plocha tlačítka se ukáže až při najetí nebo ve zvoleném stavu.
+   Tvar je kapsle, jak ho mají nástroje ve Finderu v macOS 26. */
+.mac-toolbar-group {
+  background-color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(0, 0, 0, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.6), 0 1px 1px rgba(0, 0, 0, 0.04);
+  border-radius: 999px;
+}
+
+.mac[data-motiv="tmavy"] .mac-toolbar-group {
+  background-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.1);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+.mac-toolbar-button {
+  display: flex;
+  height: 28px;
+  min-width: 30px;
+  align-items: center;
+  justify-content: center;
+}
+
+.mac-toolbar-button:hover:not(:disabled),
+.mac-toolbar-button[aria-pressed="true"] {
+  background-color: rgba(0, 0, 0, 0.06);
+}
+
+.mac[data-motiv="tmavy"] .mac-toolbar-button:hover:not(:disabled),
+.mac[data-motiv="tmavy"] .mac-toolbar-button[aria-pressed="true"] {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+/* Dock: světlejší sklo s linkou a vnitřním odleskem nahoře. */
+.mac-dock {
+  background-image: linear-gradient(180deg, rgba(255, 255, 255, 0.4), rgba(255, 255, 255, 0.22));
+  -webkit-backdrop-filter: blur(24px) saturate(175%);
+  backdrop-filter: blur(24px) saturate(175%);
+  border: 1px solid rgba(255, 255, 255, 0.42);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.48), 0 14px 36px rgba(0, 0, 0, 0.26);
+}
+
+.mac[data-motiv="tmavy"] .mac-dock {
+  background-image: linear-gradient(180deg, rgba(65, 65, 70, 0.48), rgba(28, 28, 32, 0.38));
+  border-color: rgba(255, 255, 255, 0.16);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1), 0 14px 36px rgba(0, 0, 0, 0.4);
+}
+
+/* Bez rozostření by byl Dock skoro průhledný a ikony by splývaly s tapetou. */
+@supports not (backdrop-filter: blur(2px)) {
+  .mac-dock {
+    background-image: none;
+    background-color: rgba(236, 236, 240, 0.9);
+  }
+
+  .mac[data-motiv="tmavy"] .mac-dock {
+    background-color: rgba(40, 40, 44, 0.92);
+  }
+}
+
+.mac[data-efekty="omezene"] .mac-dock {
+  background-image: none;
+  background-color: rgb(var(--mac-panel));
+  -webkit-backdrop-filter: none;
+  backdrop-filter: none;
+}
+
 /* ───────────────────── Virtuální DB Browser (kurz SQL) ─────────────────────
    Napodobenina programu DB Browser for SQLite, jak vypadá ve Windows 11 –
    tam ho žáci uvidí doopravdy. Vlastní proměnné jako `.win` a `.mac`, ať se

@@ -2,6 +2,17 @@ import { describe, expect, it } from "vitest";
 import { nahladce, okrajeProuzku, postupRezu, vyboul } from "./dzin";
 
 describe("vyboul", () => {
+  it("snese t kousek za okrajem – u posledniho rezu ho posune zaokrouhleni", () => {
+    // 52/577 + (1 - 52/577) vyjde v plovouci carce nad 1 -> drive NaN v obrysu.
+    const podil = 52 / 577;
+    const s = podil + (1 - podil);
+    for (const t of [1 - s, -2e-16, 1 + 2e-16, 0, 1]) {
+      expect(Number.isFinite(vyboul(t))).toBe(true);
+      const o = okrajeProuzku(t, 0.5, 0.1);
+      expect(Number.isFinite(o.levy) && Number.isFinite(o.pravy)).toBe(true);
+    }
+  });
+
   it("je nulove na obou koncich, aby trychtyr nikde neodskocil", () => {
     expect(vyboul(0)).toBeCloseTo(0, 5);
     expect(vyboul(1)).toBeCloseTo(0, 5);

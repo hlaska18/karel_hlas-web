@@ -12,7 +12,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, Loader2, User } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { kodSedi } from "@/lib/win/pristup";
 import { VYCHOZI_NASTAVENI, vychoziStavMac, zapomenMac } from "@/lib/mac/stav";
@@ -28,6 +28,8 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
   /** Ptá se na potvrzení úklidu po předchozím žákovi? */
   const [ptaSeNaUklid, nastavPtaSeNaUklid] = useState(false);
   const [chyba, nastavChybu] = useState(false);
+  /** Je otevřené vysvětlení simulace (odkaz Informace dole)? */
+  const [info, nastavInfo] = useState(false);
   const [cas, nastavCas] = useState<Date | null>(null);
   const pole = useRef<HTMLInputElement>(null);
 
@@ -48,6 +50,10 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
       window.removeEventListener("mousedown", dal);
     };
   }, [faze]);
+
+  // Informace se při přechodu ze zámku k poli na kód zavřou – na nízké
+  // obrazovce by jinak zakryly odkaz Začít načisto.
+  useEffect(() => nastavInfo(false), [faze]);
 
   useEffect(() => {
     if (faze === "kod") window.setTimeout(() => pole.current?.focus(), 60);
@@ -104,13 +110,11 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
           {cas ? hodiny(cas) : "--:--"}
         </div>
 
+        {/* Zámek ukazuje jen to, co ukazuje zámek Macu: čas, datum a výzvu.
+            Vysvětlení simulace je pod odkazem Informace dole (Karlovy
+            návrhy 24. 9. 2026). */}
         {faze === "zamek" && (
           <div className="mt-16 flex flex-col items-center gap-3">
-            <p className="max-w-[360px] text-center text-[12px] leading-relaxed text-white/70 drop-shadow">
-              Výuková simulace macOS pro hodiny informatiky. Neběží tu skutečný
-              systém a nic se neinstaluje. Všechno, co se tu stane, se děje jen
-              v téhle záložce – tvého počítače se to nedotkne.
-            </p>
             <p className="animate-pulse text-[14px] text-white/85 drop-shadow">
               Klikni nebo stiskni libovolnou klávesu
             </p>
@@ -124,9 +128,7 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
               chyba ? "animate-[zatreseni_0.45s]" : ""
             }`}
           >
-            <div className="flex h-[96px] w-[96px] items-center justify-center rounded-full bg-white/20 backdrop-blur">
-              <User className="h-12 w-12 text-white/90" />
-            </div>
+            <AvatarZak />
             <h1 className="mt-3 text-[20px] font-medium drop-shadow">Žák</h1>
 
             <div // Zaostřené pole se jen prosvětlí, jako na zamykací obrazovce Macu.
@@ -159,25 +161,6 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
               }`}
             >
               {hlaska || " "}
-            </p>
-
-            <p className="mt-6 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
-              {/* Jen „školní": veřejný kód MACOS pro cizí učitele do Windows
-                  neplatí, takže „jeden platí do obou" by pro ně nebyla pravda. */}
-              Školní kód platí i do virtuálních Windows. Drží pohromadě třídu,
-              nechrání žádné údaje – žádné se tu neukládají. Co tu uděláš,
-              zůstává v tomhle prohlížeči.{" "}
-              <strong className="font-semibold text-white/80">
-                Na jiném počítači ani po vyčištění prohlížeče to nenajdeš.
-              </strong>{" "}
-              <a
-                href="/soukromi"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="underline decoration-dotted underline-offset-2 transition hover:text-white"
-              >
-                Co web ukládá
-              </a>
             </p>
 
             {/*
@@ -236,13 +219,73 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
 
         {faze === "vitejte" && (
           <div className="mt-20 flex flex-col items-center gap-4">
-            <div className="flex h-[96px] w-[96px] items-center justify-center rounded-full bg-white/20 backdrop-blur">
-              <User className="h-12 w-12 text-white/90" />
-            </div>
+            <AvatarZak />
             <Loader2 className="h-5 w-5 animate-spin" />
           </div>
         )}
       </div>
+
+      {/*
+        Vysvětlení simulace a toho, co se ukládá. Dřív stálo přímo na zámku
+        a pod polem na kód a rušilo dojem systému; teď je pod odkazem dole.
+        Odkaz na /soukromi je pořád hned za větou „nic se neukládá“.
+        Kliknutí na odkaz nesmí zámek odemknout – proto `stopPropagation`.
+      */}
+      {faze !== "vitejte" && (
+        <div
+          className="absolute bottom-5 left-1/2 z-20 flex -translate-x-1/2 flex-col items-center"
+          onMouseDown={(e) => e.stopPropagation()}
+        >
+          {info && (
+            <div className="mac-sklo-zaloha mb-3 w-[380px] max-w-[88vw] rounded-xl bg-black/45 px-4 py-3 text-[12px] leading-relaxed text-white/80 backdrop-blur-xl">
+              <p>
+                Výuková simulace macOS pro hodiny informatiky. Neběží tu skutečný
+                systém a nic se neinstaluje. Všechno, co se tu stane, se děje jen
+                v téhle záložce – tvého počítače se to nedotkne.
+              </p>
+              <p className="mt-2">
+                {/* Jen „školní": veřejný kód MACOS pro cizí učitele do Windows
+                    neplatí, takže „jeden platí do obou" by pro ně nebyla pravda. */}
+                Školní kód platí i do virtuálních Windows. Drží pohromadě třídu,
+                nechrání žádné údaje – žádné se tu neukládají. Co tu uděláš,
+                zůstává v tomhle prohlížeči.{" "}
+                <strong className="font-semibold text-white/90">
+                  Na jiném počítači ani po vyčištění prohlížeče to nenajdeš.
+                </strong>{" "}
+                <a
+                  href="/soukromi"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="underline decoration-dotted underline-offset-2 transition hover:text-white"
+                >
+                  Co web ukládá
+                </a>
+              </p>
+            </div>
+          )}
+          <button
+            type="button"
+            aria-expanded={info}
+            onClick={() => nastavInfo((i) => !i)}
+            onKeyDown={(e) => e.stopPropagation()}
+            className="rounded-full px-3 py-1 text-[12px] text-white/60 drop-shadow transition hover:text-white/90"
+          >
+            Výuková simulace · Informace
+          </button>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/**
+ * Avatar s iniciálou. Obecná ikona postavičky z knihovny působila jako
+ * webový formulář; Mac ukazuje u účtu bez fotky iniciálu na barevném kruhu.
+ */
+function AvatarZak() {
+  return (
+    <div className="flex h-[96px] w-[96px] items-center justify-center rounded-full bg-gradient-to-br from-[#8ab4ff] via-[#7867e6] to-[#44309a] text-[40px] font-medium text-white shadow-lg">
+      Ž
     </div>
   );
 }

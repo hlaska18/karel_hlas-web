@@ -204,8 +204,9 @@ export function DzinProvider({ children }: { children: ReactNode }) {
         <svg className="pointer-events-none fixed inset-0 z-[790] h-full w-full">
           <g ref={skupina}>
             <path ref={plocha} fill="rgb(var(--mac-povrch))" />
-            <path ref={panel} fill="rgb(var(--mac-postranni))" />
-            <path ref={zahlavi} fill="rgb(var(--mac-panel))" />
+            {/* Barvy boku a pruhu jako u skutečného okna (globals.css). */}
+            <path ref={panel} fill="rgb(var(--mac-bok))" />
+            <path ref={zahlavi} fill="rgb(var(--mac-pruh-2))" />
           </g>
         </svg>
       )}
@@ -213,8 +214,8 @@ export function DzinProvider({ children }: { children: ReactNode }) {
   );
 }
 
-/** Výška pruhu okna. Drží se s `h-[58px]` v OknoRam. */
-const ZAHLAVI = 58;
+/** Výška pruhu okna. Drží se s `h-[52px]` v OknoRam. */
+const ZAHLAVI = 52;
 
 const ram = (e: Element) => {
   const r = e.getBoundingClientRect();

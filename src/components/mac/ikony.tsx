@@ -44,6 +44,16 @@ export function VelkaIkona({ uzel }: { uzel: Uzel }) {
   if (app) {
     const vzhled = VZHLED_APLIKACI[app];
     const Znak = vzhled.znak;
+    const Plna = vzhled.plna;
+    // Celá ikona, přesně ta z Docku.
+    if (Plna) {
+      return (
+        <Plna
+          className="h-10 w-10 shrink-0"
+          style={{ filter: "drop-shadow(0 1px 1.5px rgba(0,0,0,0.25))" }}
+        />
+      );
+    }
     return (
       <span
         className="flex h-10 w-10 shrink-0 items-center justify-center shadow-sm"

@@ -17,7 +17,6 @@ import { useEffect, useRef, useState } from "react";
 import {
   Moon,
   Search,
-  SlidersHorizontal,
   Sun,
   Sunset,
   type LucideIcon,
@@ -25,7 +24,8 @@ import {
 import { ZnakJablko } from "@/components/ZnakJablko";
 import { useMac } from "./system";
 import { APLIKACE, JAS_MIN, type NastaveniMac } from "@/lib/mac/stav";
-import { datumSlovy, hodiny } from "@/lib/win/format";
+import { hodiny } from "@/lib/win/format";
+import { datumMenuMac } from "@/lib/mac/text";
 
 export interface Polozka {
   text: string;
@@ -211,10 +211,7 @@ export function HorniLista({
               otevrena === "cc" ? "bg-black/15" : "hover:bg-black/10"
             }`}
           >
-            <SlidersHorizontal
-              className="h-[14px] w-[14px] opacity-75"
-              aria-hidden="true"
-            />
+            <IkonaOvladaciCentrum />
           </button>
           <button
             type="button"
@@ -230,13 +227,12 @@ export function HorniLista({
             aria-label="Centrum oznámení"
             aria-expanded={otevrena === "nc"}
             onClick={() => nastavOtevrenou(otevrena === "nc" ? null : "nc")}
-            className={`flex h-[22px] items-center gap-[10px] rounded px-1.5 ${
+            className={`flex h-[22px] items-center gap-[6px] rounded px-1.5 ${
               otevrena === "nc" ? "bg-black/15" : "hover:bg-black/10"
             }`}
           >
-            <span className="tabular-nums opacity-85">
-              {cas ? datumSlovy(cas) : ""}
-            </span>
+            {/* Krátké datum a čas jako na Macu; celé datum je v Centru oznámení. */}
+            <span className="tabular-nums">{cas ? datumMenuMac(cas) : ""}</span>
             <span className="tabular-nums">{cas ? hodiny(cas) : "--:--"}</span>
           </button>
         </div>
@@ -245,6 +241,22 @@ export function HorniLista({
       {otevrena === "cc" && <OvladaciCentrum />}
       {otevrena === "nc" && cas && <CentrumOznameni cas={cas} />}
     </div>
+  );
+}
+
+/**
+ * Ikona Ovládacího centra: dva přepínače nad sebou. Vlastní malá kresba
+ * místo obecných posuvníků z knihovny ikon, které byly na první pohled
+ * poznat jako webové (Karlovy návrhy 24. 9. 2026).
+ */
+function IkonaOvladaciCentrum() {
+  return (
+    <svg viewBox="0 0 18 18" width="15" height="15" aria-hidden="true" className="opacity-85">
+      <rect x="2" y="3" width="14" height="5" rx="2.5" fill="currentColor" />
+      <circle cx="6" cy="5.5" r="1.6" fill="rgb(var(--mac-panel))" />
+      <rect x="2" y="10" width="14" height="5" rx="2.5" fill="currentColor" />
+      <circle cx="12" cy="12.5" r="1.6" fill="rgb(var(--mac-panel))" />
+    </svg>
   );
 }
 

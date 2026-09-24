@@ -467,24 +467,26 @@ function Obrazovka() {
               otevriUvitani();
             }}
           />
-          <div className="absolute bottom-4 right-4 z-20 flex items-center gap-2">
+          {/* Menší a tlumenější než dřív, ať nepřebíjejí zámek – ale pořád
+              vidět a na jedno kliknutí (Karlovy návrhy 24. 9. 2026). */}
+          <div className="absolute bottom-4 right-4 z-20 flex items-center gap-1.5">
             <button
               type="button"
               onClick={prepniCelou}
-              className="mac-sklo-zaloha flex items-center gap-2 rounded-md bg-black/40 px-3 py-2 text-[12px] text-white backdrop-blur hover:bg-black/60"
+              className="mac-sklo-zaloha flex items-center gap-1.5 rounded-full bg-black/25 px-2.5 py-1.5 text-[11px] text-white/75 backdrop-blur transition hover:bg-black/50 hover:text-white"
             >
               {celaObrazovka ? (
-                <Minimize2 className="h-4 w-4" />
+                <Minimize2 className="h-3.5 w-3.5" />
               ) : (
-                <Maximize2 className="h-4 w-4" />
+                <Maximize2 className="h-3.5 w-3.5" />
               )}
               {celaObrazovka ? "Zpět z celé obrazovky" : "Celá obrazovka"}
             </button>
             <Link
               href="/"
-              className="mac-sklo-zaloha flex items-center gap-2 rounded-md bg-black/40 px-3 py-2 text-[12px] text-white backdrop-blur hover:bg-black/60"
+              className="mac-sklo-zaloha flex items-center gap-1.5 rounded-full bg-black/25 px-2.5 py-1.5 text-[11px] text-white/75 backdrop-blur transition hover:bg-black/50 hover:text-white"
             >
-              <ArrowLeft className="h-4 w-4" /> Zpět na web
+              <ArrowLeft className="h-3.5 w-3.5" /> Zpět na web
             </Link>
           </div>
         </>
@@ -659,11 +661,13 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
 }
 
 /**
- * Launchpad – mřížka všech aplikací přes celou plochu.
+ * Aplikace (dřív Launchpad) – mřížka všech aplikací přes celou plochu.
  *
  * Na Macu je to jediné místo, kde jsou aplikace pohromadě, a nahrazuje to,
  * co Windows řeší nabídkou Start. Zavírá se kliknutím kamkoli i Escapem,
- * stejně jako ten skutečný.
+ * stejně jako ten skutečný. V macOS 26 se tomu říká Aplikace, a tak se to
+ * jmenuje i v Docku a v zadání úloh (Karlovy návrhy 24. 9. 2026). Vnitřně
+ * zůstává „launchpad“.
  */
 function Launchpad({ zavri }: { zavri: () => void }) {
   const { stav, poslat, spust } = useMac();
@@ -703,6 +707,8 @@ function Launchpad({ zavri }: { zavri: () => void }) {
 
   return (
     <div
+      role="dialog"
+      aria-label="Aplikace"
       className="mac-vjezd absolute inset-0 z-[870] flex flex-col items-center bg-black/45 pt-[9vh] backdrop-blur-2xl"
       onMouseDown={(e) => {
         if (e.target === e.currentTarget) zavri();
@@ -729,6 +735,7 @@ function Launchpad({ zavri }: { zavri: () => void }) {
       <div className="mt-12 grid grid-cols-4 gap-x-12 gap-y-9">
         {nalezene.map((app) => {
           const Z = VZHLED_APLIKACI[app].znak;
+          const Plna = VZHLED_APLIKACI[app].plna;
           return (
             <button
               key={app}
@@ -736,15 +743,22 @@ function Launchpad({ zavri }: { zavri: () => void }) {
               onClick={() => otevri(app)}
               className="flex w-[110px] flex-col items-center gap-2"
             >
-              <span
-                className="flex h-[70px] w-[70px] items-center justify-center rounded-[22%] shadow-lg transition-transform hover:scale-105"
-                style={{ background: VZHLED_APLIKACI[app].pozadi }}
-              >
-                <Z
-                  style={{ color: VZHLED_APLIKACI[app].barva }}
-                  className="h-9 w-9"
+              {Plna ? (
+                <Plna
+                  className="h-[70px] w-[70px] transition-transform hover:scale-105"
+                  style={{ filter: "drop-shadow(0 4px 10px rgba(0,0,0,0.35))" }}
                 />
-              </span>
+              ) : (
+                <span
+                  className="flex h-[70px] w-[70px] items-center justify-center rounded-[22%] shadow-lg transition-transform hover:scale-105"
+                  style={{ background: VZHLED_APLIKACI[app].pozadi }}
+                >
+                  <Z
+                    style={{ color: VZHLED_APLIKACI[app].barva }}
+                    className="h-9 w-9"
+                  />
+                </span>
+              )}
               <span
                 className="text-center text-[12px] leading-tight text-white"
                 style={{ textShadow: "0 1px 3px rgba(0,0,0,0.8)" }}
