@@ -12,6 +12,7 @@
 import { SCHEMA, diffMessage, sameResult } from "@/lib/sqlExercise";
 import type { SqlDb, SqlResult } from "@/lib/sqljs";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
+import { jeAnglicky, t } from "@/lib/dbb/jazyk";
 import type { Hodnoceni, UkolKurzu } from "@/lib/dbb/kurz";
 
 export type SpusteniKontroly = {
@@ -46,7 +47,13 @@ export function vyhodnotDotaz(ukol: UkolKurzu, beh: SpusteniKontroly, p: Prostre
   if (k.druh === "stav") return null;
   const db = k.databaze || { soubor: KNIHOVNA, schema: SCHEMA };
   if (beh.soubor !== db.soubor) {
-    return { ok: false, proc: `Úkol pracuje s databází ${db.soubor} – otevři ji přes Soubor → Otevřít databázi.` };
+    return {
+      ok: false,
+      proc: t(
+        `Úkol pracuje s databází ${db.soubor} – otevři ji přes Soubor → Otevřít databázi.`,
+        `This task works with the ${db.soubor} database – open it with File → Open Database.`,
+      ),
+    };
   }
 
   if (k.druh === "zmena") {
@@ -60,7 +67,7 @@ export function vyhodnotDotaz(ukol: UkolKurzu, beh: SpusteniKontroly, p: Prostre
       const ref = posledni(vzor.exec(k.check));
       const ordered = /order\s+by/i.test(k.check);
       if (sameResult(mine, ref, ordered)) return { ok: true };
-      return { ok: false, proc: diffMessage(mine, ref, ordered, true, { zak: beh.text, ref: k.reference }) };
+      return { ok: false, proc: diffMessage(mine, ref, ordered, true, { zak: beh.text, ref: k.reference }, jeAnglicky()) };
     } catch {
       return null;
     } finally {
@@ -100,5 +107,5 @@ export function vyhodnotDotaz(ukol: UkolKurzu, beh: SpusteniKontroly, p: Prostre
     // sameResult odhalí sám – porovnává celé řádky.
     return { ok: true };
   }
-  return { ok: false, proc: diffMessage(mine, ref, ordered, false, { zak: beh.text, ref: k.reference }) };
+  return { ok: false, proc: diffMessage(mine, ref, ordered, false, { zak: beh.text, ref: k.reference }, jeAnglicky()) };
 }

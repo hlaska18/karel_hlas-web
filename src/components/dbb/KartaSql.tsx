@@ -13,6 +13,7 @@ import { Play, StepForward, Square, Printer, FolderOpen, Save } from "lucide-rea
 import { useDbb } from "@/components/dbb/kontext";
 import { Mrizka } from "@/components/dbb/Mrizka";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
+import { t } from "@/lib/dbb/jazyk";
 
 const TRIDA: Record<string, string> = {
   slovo: "dbb-slovo",
@@ -102,8 +103,8 @@ function Editor() {
           spellCheck={false}
           autoCapitalize="off"
           autoComplete="off"
-          aria-label="Editor SQL"
-          placeholder="Sem napiš dotaz SQL a spusť ho klávesou F5 (nebo Ctrl+Enter)."
+          aria-label={t("Editor SQL", "SQL editor")}
+          placeholder={t("Sem napiš dotaz SQL a spusť ho klávesou F5 (nebo Ctrl+Enter).", "Type an SQL query here and run it with F5 (or Ctrl+Enter).")}
           className="dbb-kod dbb-editor-vstup absolute left-0 top-0 m-0 h-full w-full select-text border-0 py-1 pl-2 pr-4 placeholder:text-dbb-slaby/70"
         />
       </div>
@@ -118,26 +119,26 @@ export function KartaSql() {
   return (
     <div className="flex h-full flex-col p-1.5">
       <div className="flex h-[28px] shrink-0 items-center">
-        <Ikona titulek="Otevřít soubor SQL" zakazano>
+        <Ikona titulek={t("Otevřít soubor SQL", "Open SQL file")} zakazano>
           <FolderOpen className="h-4 w-4 text-[#c9901a]" />
         </Ikona>
-        <Ikona titulek="Uložit soubor SQL" zakazano>
+        <Ikona titulek={t("Uložit soubor SQL", "Save SQL file")} zakazano>
           <Save className="h-4 w-4 text-[#2e75b6]" />
         </Ikona>
-        <Ikona titulek="Tisk" zakazano>
+        <Ikona titulek={t("Tisk", "Print")} zakazano>
           <Printer className="h-4 w-4" />
         </Ikona>
         <span className="mx-1 h-5 w-px bg-dbb-linka" aria-hidden="true" />
-        <Ikona titulek="Spustit vše / vybrané SQL (F5, Ctrl+Enter)" akce={() => api.spustit("vse")}>
+        <Ikona titulek={t("Spustit vše / vybrané SQL (F5, Ctrl+Enter)", "Execute all/selected SQL (F5, Ctrl+Enter)")} akce={() => api.spustit("vse")}>
           <Play className="h-4 w-4 fill-[#2e9d4f] text-[#2e9d4f]" />
         </Ikona>
-        <Ikona titulek="Spustit aktuální řádek (Shift+F5)" akce={() => api.spustit("radek")}>
+        <Ikona titulek={t("Spustit aktuální řádek (Shift+F5)", "Execute current line (Shift+F5)")} akce={() => api.spustit("radek")}>
           <StepForward className="h-4 w-4 text-[#2e9d4f]" />
         </Ikona>
-        <Ikona titulek="Zastavit provádění SQL" zakazano>
+        <Ikona titulek={t("Zastavit provádění SQL", "Stop SQL execution")} zakazano>
           <Square className="h-3.5 w-3.5 fill-[#c42b1c] text-[#c42b1c]" />
         </Ikona>
-        <span className="ml-3 text-[11px] text-dbb-slaby">F5 spustí vše, Shift+F5 jen řádek s kurzorem</span>
+        <span className="ml-3 text-[11px] text-dbb-slaby">{t("F5 spustí vše, Shift+F5 jen řádek s kurzorem", "F5 runs everything, Shift+F5 only the line with the cursor")}</span>
       </div>
 
       {/* Záložka editoru – program jich umí víc, kurzu stačí jedna. */}
@@ -152,7 +153,10 @@ export function KartaSql() {
       <div className="mt-1.5 flex min-h-0 flex-[5] flex-col border border-dbb-linka">
         {v && v.nahled && (
           <div className="shrink-0 border-b border-dbb-mrizka bg-[#fff8e1] px-2 py-1 text-[11px] text-[#6b5000]">
-            Náhled tabulky {v.nahled} – po spuštění dotazu se tu objeví jeho výsledek.
+            {t(
+              `Náhled tabulky ${v.nahled} – po spuštění dotazu se tu objeví jeho výsledek.`,
+              `Preview of the ${v.nahled} table – the result of your query will appear here once you run it.`,
+            )}
           </div>
         )}
         {v && v.vysledek ? (
@@ -176,12 +180,12 @@ export function KartaSql() {
         {v && v.nahled && <div className="text-dbb-slaby">{v.zprava[0]}</div>}
         {v && v.poznamka && (
           <div className="mt-1.5 border-l-[3px] border-dbb-akcent bg-dbb-hover px-2 py-1 text-dbb-text">
-            <b>Pozn.:</b> {v.poznamka}
+            <b>{t("Pozn.:", "Note:")}</b> {v.poznamka}
           </div>
         )}
         {v && v.cesky && (
           <div className="mt-1.5 border-l-[3px] border-[#e8a33d] bg-[#fff8e1] px-2 py-1 text-[#4a3500]">
-            <b>Po česku:</b> {v.cesky}
+            <b>{t("Po česku:", "In plain words:")}</b> {v.cesky}
           </div>
         )}
       </div>

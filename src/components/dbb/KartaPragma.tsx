@@ -7,17 +7,18 @@
 
 import { useMemo } from "react";
 import { useDbb, precti } from "@/components/dbb/kontext";
+import { t } from "@/lib/dbb/jazyk";
 
 const POLOZKY: { nazev: string; pragma: string; popis?: (v: string) => string }[] = [
-  { nazev: "Automatický úklid", pragma: "auto_vacuum", popis: (v) => ["Žádný", "Plný", "Postupný"][Number(v)] || v },
-  { nazev: "Automatický index", pragma: "automatic_index", popis: (v) => (v === "1" ? "ano" : "ne") },
-  { nazev: "Kontrolovat cizí klíče", pragma: "foreign_keys", popis: (v) => (v === "1" ? "ano" : "ne") },
-  { nazev: "Kódování", pragma: "encoding" },
-  { nazev: "Režim žurnálu", pragma: "journal_mode" },
-  { nazev: "Velikost stránky", pragma: "page_size" },
-  { nazev: "Počet stránek", pragma: "page_count" },
-  { nazev: "Rekurzivní spouštěče", pragma: "recursive_triggers", popis: (v) => (v === "1" ? "ano" : "ne") },
-  { nazev: "Verze uživatele", pragma: "user_version" },
+  { nazev: t("Automatický úklid", "Auto Vacuum"), pragma: "auto_vacuum", popis: (v) => [t("Žádný", "None"), t("Plný", "Full"), t("Postupný", "Incremental")][Number(v)] || v },
+  { nazev: t("Automatický index", "Automatic Index"), pragma: "automatic_index", popis: (v) => (v === "1" ? t("ano", "yes") : t("ne", "no")) },
+  { nazev: t("Kontrolovat cizí klíče", "Foreign Keys"), pragma: "foreign_keys", popis: (v) => (v === "1" ? t("ano", "yes") : t("ne", "no")) },
+  { nazev: t("Kódování", "Encoding"), pragma: "encoding" },
+  { nazev: t("Režim žurnálu", "Journal Mode"), pragma: "journal_mode" },
+  { nazev: t("Velikost stránky", "Page Size"), pragma: "page_size" },
+  { nazev: t("Počet stránek", "Page Count"), pragma: "page_count" },
+  { nazev: t("Rekurzivní spouštěče", "Recursive Triggers"), pragma: "recursive_triggers", popis: (v) => (v === "1" ? t("ano", "yes") : t("ne", "no")) },
+  { nazev: t("Verze uživatele", "User Version"), pragma: "user_version" },
 ];
 
 export function KartaPragma() {
@@ -37,8 +38,9 @@ export function KartaPragma() {
   return (
     <div className="dbb-posuv h-full overflow-auto p-3">
       <p className="mb-3 border-l-[3px] border-dbb-akcent bg-dbb-hover px-2 py-1 text-[12px]">
-        Pokročilé nastavení databáze. <b>V kurzu tu nic neměň</b> – hodnoty tu jsou, jen aby karta vypadala
-        jako v programu.
+        {t("Pokročilé nastavení databáze. ", "Advanced database settings. ")}
+        <b>{t("V kurzu tu nic neměň", "Don't change anything here during the course")}</b>
+        {t(" – hodnoty tu jsou, jen aby karta vypadala jako v programu.", " – the values are here only so the tab looks like the real program.")}
       </p>
       <table className="text-[12px]">
         <tbody>

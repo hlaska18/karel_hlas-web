@@ -15,6 +15,7 @@ import { rozdelPrikazy, druhPrikazu, tabulkyDotazu } from "@/lib/dbb/prikazy";
 import { hashRetezce } from "@/lib/dbb/otisk";
 import { DILNA, STAVEBNINY, DETEKTIVKA } from "@/lib/dbb/sady";
 import type { Databaze, LekceKurzu } from "@/lib/dbb/kurz";
+import { t } from "@/lib/dbb/jazyk";
 
 export type UlohaOdkazu = {
   zadani: string;
@@ -47,11 +48,19 @@ function zBase64Url(text: string): string {
 /** Je dotaz jediný příkaz na čtení? Vrací chybu po česku, nebo null. */
 export function chybaDotazu(sql: string): string | null {
   const prikazy = rozdelPrikazy(sql);
-  if (!prikazy.length) return "Napiš správný dotaz SELECT.";
-  if (prikazy.length > 1) return "Správné řešení musí být jeden dotaz – bez dalších příkazů za středníkem.";
+  if (!prikazy.length) return t("Napiš správný dotaz SELECT.", "Write the correct SELECT query.");
+  if (prikazy.length > 1) {
+    return t(
+      "Správné řešení musí být jeden dotaz – bez dalších příkazů za středníkem.",
+      "The correct solution must be a single query – no further commands after a semicolon.",
+    );
+  }
   const slovo = (prikazy[0].text.match(/^[A-Za-z]+/) || [""])[0].toUpperCase();
   if (druhPrikazu(prikazy[0].text) !== "cteni" || (slovo !== "SELECT" && slovo !== "WITH")) {
-    return "Úloha z odkazu umí jen dotazy SELECT – změny dat se v ní kontrolovat nedají.";
+    return t(
+      "Úloha z odkazu umí jen dotazy SELECT – změny dat se v ní kontrolovat nedají.",
+      "A task from a link can only use SELECT queries – changes to data can't be checked in it.",
+    );
   }
   return null;
 }
@@ -86,8 +95,11 @@ export function lekceZOdkazu(u: UlohaOdkazu): LekceKurzu {
   const knihovna = u.soubor === KNIHOVNA;
   return {
     id: ID_ULOHY,
-    title: "Úloha od učitele",
-    teach: `Tuhle úlohu ti poslal(a) učitel(ka) odkazem. Pracuje s databází ${u.soubor} – program ji otevřel sám. Kontroluje se nad původními daty, takže nevadí, co sis v souboru předtím změnil(a). Až úlohu splníš, ukáže se v Moje výsledky a v kódu postupu.`,
+    title: t("Úloha od učitele", "Task from your teacher"),
+    teach: t(
+      `Tuhle úlohu ti poslal(a) učitel(ka) odkazem. Pracuje s databází ${u.soubor} – program ji otevřel sám. Kontroluje se nad původními daty, takže nevadí, co sis v souboru předtím změnil(a). Až úlohu splníš, ukáže se v Moje výsledky a v kódu postupu.`,
+      `Your teacher sent you this task as a link. It works with the ${u.soubor} database – the program has opened it for you. It is checked against the original data, so it doesn't matter what you changed in the file before. Once you solve it, it shows up in My Results and in your progress code.`,
+    ),
     tabulka: tabulkyDotazu(u.reference)[0],
     knihovna,
     databaze: knihovna ? undefined : databaze,
@@ -95,7 +107,12 @@ export function lekceZOdkazu(u: UlohaOdkazu): LekceKurzu {
       {
         klic: klicUlohy(u),
         zadani: u.zadani,
-        hint: u.napoveda || "K téhle úloze učitel nápovědu nenapsal. Podívej se na kartu Struktura databáze, jaké tabulky a sloupce máš k dispozici.",
+        hint:
+          u.napoveda ||
+          t(
+            "K téhle úloze učitel nápovědu nenapsal. Podívej se na kartu Struktura databáze, jaké tabulky a sloupce máš k dispozici.",
+            "Your teacher didn't write a hint for this task. Look at the Database Structure tab to see which tables and columns you have.",
+          ),
         // Řešení se neukazuje – úlohu zadal učitel.
         reseni: "",
         reseniJeSql: true,

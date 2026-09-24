@@ -16,6 +16,7 @@ import { KNIHOVNA, MAX_SOUBORU, upravNazev, velikost } from "@/lib/dbb/soubory";
 import { tabulky } from "@/lib/dbb/prikazy";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
 import { stahni } from "@/lib/dbb/stahni";
+import { t, jeAnglicky } from "@/lib/dbb/jazyk";
 
 /* ─────────────────────────── soubory ─────────────────────────── */
 
@@ -57,7 +58,7 @@ function DialogSouboru({
       const chybaNahrani = nahrat(soubor.name, new Uint8Array(cteni.result as ArrayBuffer));
       if (chybaNahrani) nastavChybu(chybaNahrani);
     };
-    cteni.onerror = () => nastavChybu("Soubor se nepodařilo přečíst.");
+    cteni.onerror = () => nastavChybu(t("Soubor se nepodařilo přečíst.", "The file could not be read."));
     cteni.readAsArrayBuffer(soubor);
   };
 
@@ -66,22 +67,22 @@ function DialogSouboru({
     nastavChybu(null);
     if (rezim === "otevrit") {
       const n = text.trim();
-      if (!n) return nastavChybu("Vyber soubor, který chceš otevřít.");
-      if (!api.disk[n]) return nastavChybu(`Soubor „${n}“ ve složce není. Zkontroluj název.`);
+      if (!n) return nastavChybu(t("Vyber soubor, který chceš otevřít.", "Choose the file you want to open."));
+      if (!api.disk[n]) return nastavChybu(t(`Soubor „${n}“ ve složce není. Zkontroluj název.`, `There is no file “${n}” in the folder. Check the name.`));
       otevrit(n);
       return;
     }
     const u = upravNazev(text);
     if ("chyba" in u) return nastavChybu(u.chyba);
     if (u.nazev.toLowerCase() === KNIHOVNA) {
-      return nastavChybu("Soubor knihovna.db potřebuje kurz – zvol pro svou databázi jiný název.");
+      return nastavChybu(t("Soubor knihovna.db potřebuje kurz – zvol pro svou databázi jiný název.", "The course needs the knihovna.db file – choose a different name for your database."));
     }
     if (api.disk[u.nazev]) {
       nastavNahradit(u.nazev);
       return;
     }
     if (soubory.length >= MAX_SOUBORU) {
-      return nastavChybu("Ve složce je moc souborů. Nějaký starý smaž (pravým tlačítkem → Odstranit).");
+      return nastavChybu(t("Ve složce je moc souborů. Nějaký starý smaž (pravým tlačítkem → Odstranit).", "There are too many files in the folder. Delete an old one (right-click → Delete)."));
     }
     vytvorit(u.nazev);
   };
@@ -95,33 +96,34 @@ function DialogSouboru({
 
   return (
     <Okno
-      titulek={rezim === "otevrit" ? "Vyberte soubor databáze" : "Vyberte název souboru pro novou databázi"}
+      titulek={rezim === "otevrit" ? t("Vyberte soubor databáze", "Choose a database file") : t("Vyberte název souboru pro novou databázi", "Choose a file name for the new database")}
       zavrit={zavrit}
       sirka={720}
     >
       <div className="flex shrink-0 items-center border-b border-dbb-linka px-3 py-2 text-[12px]">
         <div className="flex h-[26px] flex-1 items-center border border-dbb-linka px-2">
-          <Monitor className="mr-1.5 h-3.5 w-3.5 text-dbb-slaby" /> Tento počítač <span className="mx-1.5 text-dbb-slaby">›</span>
-          Stažené soubory
+          <Monitor className="mr-1.5 h-3.5 w-3.5 text-dbb-slaby" /> {t("Tento počítač", "This PC")}{" "}
+          <span className="mx-1.5 text-dbb-slaby">›</span>
+          {t("Stažené soubory", "Downloads")}
         </div>
-        <div className="ml-2 flex h-[26px] w-[180px] items-center border border-dbb-linka px-2 text-dbb-slaby">Hledat: Stažené soubory</div>
+        <div className="ml-2 flex h-[26px] w-[180px] items-center border border-dbb-linka px-2 text-dbb-slaby">{t("Hledat: Stažené soubory", "Search Downloads")}</div>
       </div>
       <div className="flex min-h-[250px] flex-1">
         <div className="w-[170px] shrink-0 border-r border-dbb-linka py-1">
-          {nav(<Monitor className="h-3.5 w-3.5" />, "Plocha")}
-          {nav(<Download className="h-3.5 w-3.5 text-[#2e75b6]" />, "Stažené soubory", true)}
-          {nav(<Folder className="h-3.5 w-3.5 text-[#c9901a]" />, "Dokumenty")}
-          {nav(<Folder className="h-3.5 w-3.5 text-[#c9901a]" />, "Obrázky")}
-          {nav(<HardDrive className="h-3.5 w-3.5" />, "Tento počítač")}
+          {nav(<Monitor className="h-3.5 w-3.5" />, t("Plocha", "Desktop"))}
+          {nav(<Download className="h-3.5 w-3.5 text-[#2e75b6]" />, t("Stažené soubory", "Downloads"), true)}
+          {nav(<Folder className="h-3.5 w-3.5 text-[#c9901a]" />, t("Dokumenty", "Documents"))}
+          {nav(<Folder className="h-3.5 w-3.5 text-[#c9901a]" />, t("Obrázky", "Pictures"))}
+          {nav(<HardDrive className="h-3.5 w-3.5" />, t("Tento počítač", "This PC"))}
         </div>
         <div className="dbb-posuv min-w-0 flex-1 overflow-auto">
           <table className="w-full text-[12px]" style={{ borderSpacing: 0 }}>
             <thead>
               <tr className="text-left text-dbb-slaby">
-                <th className="h-[24px] border-b border-dbb-mrizka px-3 font-normal">Název</th>
-                <th className="border-b border-dbb-mrizka px-3 font-normal">Datum změny</th>
-                <th className="border-b border-dbb-mrizka px-3 font-normal">Typ</th>
-                <th className="border-b border-dbb-mrizka px-3 text-right font-normal">Velikost</th>
+                <th className="h-[24px] border-b border-dbb-mrizka px-3 font-normal">{t("Název", "Name")}</th>
+                <th className="border-b border-dbb-mrizka px-3 font-normal">{t("Datum změny", "Date modified")}</th>
+                <th className="border-b border-dbb-mrizka px-3 font-normal">{t("Typ", "Type")}</th>
+                <th className="border-b border-dbb-mrizka px-3 text-right font-normal">{t("Velikost", "Size")}</th>
               </tr>
             </thead>
             <tbody>
@@ -149,7 +151,7 @@ function DialogSouboru({
                     </span>
                   </td>
                   <td className="whitespace-nowrap px-3 text-dbb-slaby">{datum(api.disk[s].zmeneno)}</td>
-                  <td className="whitespace-nowrap px-3 text-dbb-slaby">Soubor DB</td>
+                  <td className="whitespace-nowrap px-3 text-dbb-slaby">{t("Soubor DB", "DB File")}</td>
                   <td className="whitespace-nowrap px-3 text-right text-dbb-slaby">{velikost(api.disk[s].bajty.length)}</td>
                 </tr>
               ))}
@@ -157,12 +159,13 @@ function DialogSouboru({
           </table>
           {mazani && (
             <div className="m-3 border border-dbb-linka bg-dbb-okno px-3 py-2 text-[12px]">
-              Odstranit soubor <b>{mazani}</b>? Zpátky nepůjde vrátit.
+              {t("Odstranit soubor", "Delete the file")} <b>{mazani}</b>?{" "}
+              {t("Zpátky nepůjde vrátit.", "It can't be undone.")}
               <span className="ml-2 inline-flex">
                 <Tlacitko
                   akce={() => {
                     if (api.otevrena === mazani) {
-                      nastavChybu("Otevřený soubor nejde odstranit – nejdřív ho zavři.");
+                      nastavChybu(t("Otevřený soubor nejde odstranit – nejdřív ho zavři.", "An open file can't be deleted – close it first."));
                     } else {
                       smazat(mazani);
                       nastavVybrany(null);
@@ -171,9 +174,9 @@ function DialogSouboru({
                     nastavMazani(null);
                   }}
                 >
-                  Odstranit
+                  {t("Odstranit", "Delete")}
                 </Tlacitko>
-                <Tlacitko akce={() => nastavMazani(null)}>Ne</Tlacitko>
+                <Tlacitko akce={() => nastavMazani(null)}>{t("Ne", "No")}</Tlacitko>
               </span>
             </div>
           )}
@@ -182,7 +185,7 @@ function DialogSouboru({
       <div className="shrink-0 border-t border-dbb-linka bg-dbb-okno px-4 py-3 text-[12px]">
         <div className="flex items-center">
           <label htmlFor="dbb-nazev-souboru" className="w-[110px] shrink-0 text-right pr-2">
-            Název souboru:
+            {t("Název souboru:", "File name:")}
           </label>
           <input
             id="dbb-nazev-souboru"
@@ -202,19 +205,20 @@ function DialogSouboru({
             className="h-[24px] flex-1 border border-dbb-linka bg-dbb-povrch px-1.5 text-[12px] focus:border-dbb-akcent"
           />
           <select
-            aria-label="Typ souboru"
+            aria-label={t("Typ souboru", "File type")}
             className="ml-2 h-[24px] w-[230px] border border-dbb-linka bg-dbb-povrch px-1 text-[12px]"
           >
-            <option>Soubory databáze SQLite (*.db *.sqlite)</option>
+            <option>{t("Soubory databáze SQLite (*.db *.sqlite)", "SQLite database files (*.db *.sqlite)")}</option>
           </select>
         </div>
         {chyba && <p className="mt-2 pl-[110px] text-[#a4262c]">{chyba}</p>}
         {nahradit && (
           <p className="mt-2 pl-[110px]">
-            Soubor <b>{nahradit}</b> už existuje. Chceš ho nahradit prázdnou databází?
+            {t("Soubor", "The file")} <b>{nahradit}</b>{" "}
+            {t("už existuje. Chceš ho nahradit prázdnou databází?", "already exists. Do you want to replace it with an empty database?")}
             <span className="ml-2 inline-flex">
-              <Tlacitko akce={() => vytvorit(nahradit)}>Ano</Tlacitko>
-              <Tlacitko akce={() => nastavNahradit(null)}>Ne</Tlacitko>
+              <Tlacitko akce={() => vytvorit(nahradit)}>{t("Ano", "Yes")}</Tlacitko>
+              <Tlacitko akce={() => nastavNahradit(null)}>{t("Ne", "No")}</Tlacitko>
             </span>
           </p>
         )}
@@ -237,14 +241,14 @@ function DialogSouboru({
                 onClick={() => vyberRef.current && vyberRef.current.click()}
                 className="h-[28px] rounded-[4px] border border-dbb-linka bg-dbb-povrch px-3 hover:bg-dbb-hover"
               >
-                Z tohoto počítače…
+                {t("Z tohoto počítače…", "From This Computer…")}
               </button>
             </span>
           )}
           <Tlacitko primarni akce={() => potvrdit()}>
-            {rezim === "otevrit" ? "Otevřít" : "Uložit"}
+            {rezim === "otevrit" ? t("Otevřít", "Open") : t("Uložit", "Save")}
           </Tlacitko>
-          <Tlacitko akce={zavrit}>Zrušit</Tlacitko>
+          <Tlacitko akce={zavrit}>{t("Zrušit", "Cancel")}</Tlacitko>
         </div>
       </div>
     </Okno>
@@ -316,33 +320,33 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
 
   const ok = () => {
     const n = nazev.trim();
-    if (!n) return nastavChybu("Napiš název tabulky.");
-    if (!pole.length) return nastavChybu("Tabulka musí mít aspoň jedno pole – přidej ho tlačítkem Přidat.");
+    if (!n) return nastavChybu(t("Napiš název tabulky.", "Type a table name."));
+    if (!pole.length) return nastavChybu(t("Tabulka musí mít aspoň jedno pole – přidej ho tlačítkem Přidat.", "The table needs at least one field – add one with the Add button."));
     const nazvy = pole.map((p) => p.nazev.trim().toLowerCase());
-    if (nazvy.some((x) => !x)) return nastavChybu("Každé pole musí mít název.");
-    if (nazvy.some((x, i) => nazvy.indexOf(x) !== i)) return nastavChybu("Dvě pole nesmí mít stejný název.");
+    if (nazvy.some((x) => !x)) return nastavChybu(t("Každé pole musí mít název.", "Every field needs a name."));
+    if (nazvy.some((x, i) => nazvy.indexOf(x) !== i)) return nastavChybu(t("Dvě pole nesmí mít stejný název.", "Two fields can't have the same name."));
     const c = api.provedAplikaci(sql);
     if (c) return nastavChybu(c);
     api.udalost("tabulka-z-dialogu");
-    api.status(`Tabulka ${n} byla vytvořena. Nezapomeň změny zapsat.`);
+    api.status(t(`Tabulka ${n} byla vytvořena. Nezapomeň změny zapsat.`, `The table ${n} has been created. Don't forget to write the changes.`));
     zavrit();
   };
 
   const bunka = "border-b border-r border-dbb-mrizka px-1";
   return (
-    <Okno titulek="Upravit definici tabulky" zavrit={zavrit} sirka={820}>
+    <Okno titulek={t("Upravit definici tabulky", "Edit table definition")} zavrit={zavrit} sirka={820}>
       <div className="min-h-0 flex-1 overflow-auto px-4 py-3 text-[12px]">
         <label className="flex items-center">
-          <span className="mr-2 w-[60px]">Tabulka</span>
+          <span className="mr-2 w-[60px]">{t("Tabulka", "Table")}</span>
           <input
             value={nazev}
             onChange={(e) => nastavNazev(e.target.value)}
             spellCheck={false}
-            placeholder="název tabulky"
+            placeholder={t("název tabulky", "table name")}
             className="h-[24px] flex-1 border border-dbb-linka px-1.5 focus:border-dbb-akcent"
           />
         </label>
-        <p className="mt-3 font-semibold">Pole</p>
+        <p className="mt-3 font-semibold">{t("Pole", "Fields")}</p>
         <div className="mt-1 flex items-center">
           <button
             type="button"
@@ -354,7 +358,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
             }}
             className="mr-1 flex h-[24px] items-center rounded-[3px] px-1.5 hover:bg-dbb-hover"
           >
-            <Plus className="mr-1 h-3.5 w-3.5 text-[#2e9d4f]" /> Přidat
+            <Plus className="mr-1 h-3.5 w-3.5 text-[#2e9d4f]" /> {t("Přidat", "Add")}
           </button>
           <button
             type="button"
@@ -366,7 +370,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
             }}
             className="mr-1 flex h-[24px] items-center rounded-[3px] px-1.5 enabled:hover:bg-dbb-hover disabled:opacity-45"
           >
-            <Minus className="mr-1 h-3.5 w-3.5 text-[#c42b1c]" /> Odebrat
+            <Minus className="mr-1 h-3.5 w-3.5 text-[#c42b1c]" /> {t("Odebrat", "Remove")}
           </button>
           <button
             type="button"
@@ -384,7 +388,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
             }}
             className="mr-1 flex h-[24px] items-center rounded-[3px] px-1.5 enabled:hover:bg-dbb-hover disabled:opacity-45"
           >
-            <ArrowUp className="mr-1 h-3.5 w-3.5" /> Nahoru
+            <ArrowUp className="mr-1 h-3.5 w-3.5" /> {t("Nahoru", "Move Up")}
           </button>
           <button
             type="button"
@@ -402,21 +406,21 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
             }}
             className="flex h-[24px] items-center rounded-[3px] px-1.5 enabled:hover:bg-dbb-hover disabled:opacity-45"
           >
-            <ArrowDown className="mr-1 h-3.5 w-3.5" /> Dolů
+            <ArrowDown className="mr-1 h-3.5 w-3.5" /> {t("Dolů", "Move Down")}
           </button>
         </div>
         <div className="dbb-posuv mt-1 max-h-[210px] min-h-[120px] overflow-auto border border-dbb-linka">
           <table className="w-full" style={{ borderSpacing: 0 }}>
             <thead>
               <tr className="bg-dbb-hlavicka text-left">
-                <th className={`${bunka} h-[22px] font-normal`}>Název</th>
-                <th className={`${bunka} font-normal`}>Typ</th>
-                <th className={`${bunka} text-center font-normal`} title="Nesmí být prázdné (NOT NULL)">NN</th>
-                <th className={`${bunka} text-center font-normal`} title="Primární klíč (PRIMARY KEY)">PK</th>
-                <th className={`${bunka} text-center font-normal`} title="Automatické číslování (AUTOINCREMENT)">AI</th>
-                <th className={`${bunka} text-center font-normal`} title="Jedinečné (UNIQUE)">U</th>
-                <th className={`${bunka} font-normal`}>Výchozí</th>
-                <th className={`${bunka} font-normal`}>Cizí klíč</th>
+                <th className={`${bunka} h-[22px] font-normal`}>{t("Název", "Name")}</th>
+                <th className={`${bunka} font-normal`}>{t("Typ", "Type")}</th>
+                <th className={`${bunka} text-center font-normal`} title={t("Nesmí být prázdné (NOT NULL)", "Not null (NOT NULL)")}>NN</th>
+                <th className={`${bunka} text-center font-normal`} title={t("Primární klíč (PRIMARY KEY)", "Primary key (PRIMARY KEY)")}>PK</th>
+                <th className={`${bunka} text-center font-normal`} title={t("Automatické číslování (AUTOINCREMENT)", "Autoincrement (AUTOINCREMENT)")}>AI</th>
+                <th className={`${bunka} text-center font-normal`} title={t("Jedinečné (UNIQUE)", "Unique (UNIQUE)")}>U</th>
+                <th className={`${bunka} font-normal`}>{t("Výchozí", "Default")}</th>
+                <th className={`${bunka} font-normal`}>{t("Cizí klíč", "Foreign Key")}</th>
               </tr>
             </thead>
             <tbody>
@@ -427,7 +431,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
                       value={p.nazev}
                       onChange={(e) => zmen(i, { nazev: e.target.value })}
                       spellCheck={false}
-                      aria-label="Název pole"
+                      aria-label={t("Název pole", "Field name")}
                       className="h-[22px] w-full min-w-[110px] bg-transparent px-1"
                     />
                   </td>
@@ -435,7 +439,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
                     <select
                       value={p.typ}
                       onChange={(e) => zmen(i, { typ: e.target.value })}
-                      aria-label="Typ pole"
+                      aria-label={t("Typ pole", "Field type")}
                       className="h-[22px] bg-transparent"
                     >
                       {TYPY.map((t) => (
@@ -457,7 +461,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
                     <input
                       value={p.vychozi}
                       onChange={(e) => zmen(i, { vychozi: e.target.value })}
-                      aria-label="Výchozí hodnota"
+                      aria-label={t("Výchozí hodnota", "Default value")}
                       className="h-[22px] w-full min-w-[70px] bg-transparent px-1"
                     />
                   </td>
@@ -465,7 +469,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
                     <select
                       value={p.odkaz}
                       onChange={(e) => zmen(i, { odkaz: e.target.value })}
-                      aria-label="Cizí klíč"
+                      aria-label={t("Cizí klíč", "Foreign key")}
                       className="h-[22px] max-w-[160px] bg-transparent"
                     >
                       <option value="">—</option>
@@ -480,7 +484,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
               ))}
             </tbody>
           </table>
-          {!pole.length && <p className="px-2 py-3 text-dbb-slaby">Zatím žádné pole. Přidej první tlačítkem Přidat.</p>}
+          {!pole.length && <p className="px-2 py-3 text-dbb-slaby">{t("Zatím žádné pole. Přidej první tlačítkem Přidat.", "No fields yet. Add the first one with the Add button.")}</p>}
         </div>
         <pre className="dbb-kod dbb-posuv mt-3 max-h-[140px] overflow-auto border border-dbb-linka bg-dbb-okno px-2 py-1.5">
           {zvyrazni(sql).map((k, i) => (
@@ -502,7 +506,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
         <Tlacitko primarni akce={ok}>
           OK
         </Tlacitko>
-        <Tlacitko akce={zavrit}>Zrušit</Tlacitko>
+        <Tlacitko akce={zavrit}>{t("Zrušit", "Cancel")}</Tlacitko>
       </Paticka>
     </Okno>
   );
@@ -511,6 +515,7 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
 /* ─────────────────────── informace ─────────────────────── */
 
 function OKurzu({ zavrit }: { zavrit: () => void }) {
+  if (jeAnglicky()) return <OKurzuAnglicky zavrit={zavrit} />;
   const odst = "mt-2.5";
   return (
     <Okno titulek="O kurzu a pro učitele" zavrit={zavrit} sirka={640}>
@@ -572,20 +577,78 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
   );
 }
 
+function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
+  const odst = "mt-2.5";
+  return (
+    <Okno titulek="About the course / for teachers" zavrit={zavrit} sirka={640}>
+      <div className="dbb-posuv min-h-0 flex-1 overflow-auto px-5 py-4 text-[12px] leading-relaxed">
+        <p className="text-[14px] font-semibold">SQL course in a virtual DB Browser</p>
+        <p className={odst}>
+          <b>What it is.</b> A replica of DB Browser for SQLite with an SQL course inside. Lessons 1–13 teach SQL
+          from SELECT to changing data, lessons 14–19 teach the program itself: the database structure, editing data in
+          the grid, writing changes to the file and a table of your own. On top of that there is a detective story
+          (lesson 20) and Practice A and B (21 and 22) on different data – both variants have their tasks built the
+          same way, so they work for a test. Tasks tick themselves off as soon as the result is right.
+        </p>
+        <p className={odst}>
+          <b>English version.</b> The program, the lessons and the feedback are in English; the practice data stay in
+          Czech (a Czech school library), and the panel shows a glossary of the table and column names. For a CLIL
+          lesson that is vocabulary work for free.
+        </p>
+        <p className={odst}>
+          <b>Checking progress.</b> Pupils open <i>My Results</i> (the link at the top of the SQL Course panel): a big
+          “Completed X/19” and lesson tiles – grey means completed with the help of an inserted solution. Walk round the
+          class, or ask for a photo. Paste the progress codes into <i>Help → Class Overview</i> to get a table (for
+          Excel too). A code is a summary, not proof – it can be edited. The proof of work is the file from lesson 19,
+          which the pupil downloads. And the old question still works best: “Read out what your query does.”
+        </p>
+        <p className={odst}>
+          <b>Your own task.</b> <i>Help → Create a Task for the Class</i>: write the task and the correct SELECT, and the
+          program turns it into a link for Teams. Pupils see it as “Task from your teacher” and it checks itself.
+        </p>
+        <p className={odst}>
+          <b>At the projector.</b> <i>Help → Presentation Mode</i> enlarges the program, lets you show solutions straight
+          away and saves your demonstration separately from the progress of the pupil who uses the computer.
+        </p>
+        <p className={odst}>
+          <b>If they break something.</b> Revert Changes throws away everything since the last write. <i>Help → Restore
+          Original knihovna.db</i> returns the file to its state at the start of the course; the practice lessons have
+          a “Restore original…” link of their own. <i>New Pupil</i> deletes the progress and the files.
+        </p>
+        <p className={odst}>
+          <b>Before the first lesson.</b> On one school computer, in the browser the pupils use: (1) open the course and
+          run a query in lesson 1 – the SQL engine is downloaded from the internet, so the school network must not block
+          it; (2) complete a task, log out and log in again – if the progress is gone, profiles are wiped and pupils need
+          to copy their progress code or download their file at the end of the lesson; (3) try Presentation Mode on the
+          projector to see whether the text is readable from the back row.
+        </p>
+      </div>
+      <Paticka>
+        <Tlacitko primarni prvni akce={zavrit}>
+          OK
+        </Tlacitko>
+      </Paticka>
+    </Okno>
+  );
+}
+
 function OProgramu({ zavrit }: { zavrit: () => void }) {
   return (
-    <Okno titulek="O programu DB Browser for SQLite" zavrit={zavrit} sirka={480}>
+    <Okno titulek={t("O programu DB Browser for SQLite", "About DB Browser for SQLite")} zavrit={zavrit} sirka={480}>
       <div className="flex items-start px-5 py-5 text-[12px] leading-relaxed">
         <IkonaProgramu className="mr-4 h-12 w-12 shrink-0" />
         <div>
-          <p className="text-[14px] font-semibold">DB Browser for SQLite – výuková napodobenina</p>
-          <p className="mt-2">
-            Tohle není skutečný program. Rozložení oken a názvy odpovídají programu DB Browser for SQLite, pod
-            napodobeninou ale běží opravdové SQLite přímo v prohlížeči. Nic se neinstaluje a databáze ani postup
-            v kurzu se nikam neodesílají – zůstávají v tomhle prohlížeči.
+          <p className="text-[14px] font-semibold">
+            {t("DB Browser for SQLite – výuková napodobenina", "DB Browser for SQLite – a replica for learning")}
           </p>
           <p className="mt-2">
-            Skutečný program je zdarma a open source:{" "}
+            {t(
+              "Tohle není skutečný program. Rozložení oken a názvy odpovídají programu DB Browser for SQLite, pod napodobeninou ale běží opravdové SQLite přímo v prohlížeči. Nic se neinstaluje a databáze ani postup v kurzu se nikam neodesílají – zůstávají v tomhle prohlížeči.",
+              "This is not the real program. The window layout and names match DB Browser for SQLite, but underneath the replica runs real SQLite right in your browser. Nothing gets installed, and neither the databases nor your progress are sent anywhere – they stay in this browser.",
+            )}
+          </p>
+          <p className="mt-2">
+            {t("Skutečný program je zdarma a open source:", "The real program is free and open source:")}{" "}
             <a href="https://sqlitebrowser.org" target="_blank" rel="noopener noreferrer" className="text-dbb-akcent underline">
               sqlitebrowser.org <ExternalLink className="inline h-3 w-3" />
             </a>
@@ -626,16 +689,18 @@ export function Dialogy({
       return (
         <Okno titulek="DB Browser for SQLite" zavrit={() => rozhodnutiUlozit("zrusit", dialog.potom)}>
           <Zprava ikona={<HelpCircle className="h-8 w-8 text-dbb-akcent" />}>
-            Chcete uložit změny provedené v souboru databáze „{dialog.nazev}“?
+            {t(`Chcete uložit změny provedené v souboru databáze „${dialog.nazev}“?`, `Do you want to save the changes made to the database file “${dialog.nazev}”?`)}
             {"\n"}
-            <span className="text-[11px] text-dbb-slaby">Uložit udělá totéž co Soubor → Zapsat změny.</span>
+            <span className="text-[11px] text-dbb-slaby">
+              {t("Uložit udělá totéž co Soubor → Zapsat změny.", "Save does the same as File → Write Changes.")}
+            </span>
           </Zprava>
           <Paticka>
             <Tlacitko primarni prvni akce={() => rozhodnutiUlozit("ulozit", dialog.potom)}>
-              Uložit
+              {t("Uložit", "Save")}
             </Tlacitko>
-            <Tlacitko akce={() => rozhodnutiUlozit("neukladat", dialog.potom)}>Neukládat</Tlacitko>
-            <Tlacitko akce={() => rozhodnutiUlozit("zrusit", dialog.potom)}>Zrušit</Tlacitko>
+            <Tlacitko akce={() => rozhodnutiUlozit("neukladat", dialog.potom)}>{t("Neukládat", "Discard")}</Tlacitko>
+            <Tlacitko akce={() => rozhodnutiUlozit("zrusit", dialog.potom)}>{t("Zrušit", "Cancel")}</Tlacitko>
           </Paticka>
         </Okno>
       );
@@ -684,24 +749,25 @@ export function Dialogy({
                 if (dialog.priZruseni) dialog.priZruseni();
               }}
             >
-              {dialog.zrusit || "Zrušit"}
+              {dialog.zrusit || t("Zrušit", "Cancel")}
             </Tlacitko>
           </Paticka>
         </Okno>
       );
     case "chybaZapisu":
       return (
-        <Okno titulek="Změny se nepodařilo uložit" zavrit={zavrit}>
+        <Okno titulek={t("Změny se nepodařilo uložit", "The changes could not be saved")} zavrit={zavrit}>
           <Zprava ikona={<Info className="h-8 w-8 text-[#c42b1c]" />}>
-            Soubor {dialog.nazev} se nepodařilo uložit v prohlížeči – úložiště je plné, nebo ho prohlížeč nedovolí
-            (třeba v anonymním okně). Změny v programu zůstanou, dokud stránku nezavřeš. Stáhni si soubor do
-            počítače, ať o ně nepřijdeš.
+            {t(
+              `Soubor ${dialog.nazev} se nepodařilo uložit v prohlížeči – úložiště je plné, nebo ho prohlížeč nedovolí (třeba v anonymním okně). Změny v programu zůstanou, dokud stránku nezavřeš. Stáhni si soubor do počítače, ať o ně nepřijdeš.`,
+              `The file ${dialog.nazev} could not be saved in the browser – the storage is full, or the browser doesn't allow it (in a private window, for example). The changes stay in the program until you close the page. Download the file to your computer so you don't lose them.`,
+            )}
           </Zprava>
           <Paticka>
             <Tlacitko primarni prvni akce={() => stahni(dialog.nazev, dialog.bajty)}>
-              Stáhnout soubor
+              {t("Stáhnout soubor", "Download the File")}
             </Tlacitko>
-            <Tlacitko akce={zavrit}>Zavřít</Tlacitko>
+            <Tlacitko akce={zavrit}>{t("Zavřít", "Close")}</Tlacitko>
           </Paticka>
         </Okno>
       );

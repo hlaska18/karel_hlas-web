@@ -12,11 +12,12 @@ import { Table2, KeyRound, Columns3 } from "lucide-react";
 import { useDbb, type DokKarta } from "@/components/dbb/kontext";
 import { nactiStrukturu, schemaSloupce } from "@/components/dbb/KartaStruktura";
 import { PanelKurzu } from "@/components/dbb/PanelKurzu";
+import { t } from "@/lib/dbb/jazyk";
 
 const NAZVY: { id: DokKarta; text: string }[] = [
-  { id: "kurz", text: "Kurz SQL" },
-  { id: "schema", text: "Schéma DB" },
-  { id: "log", text: "Log SQL" },
+  { id: "kurz", text: t("Kurz SQL", "SQL Course") },
+  { id: "schema", text: t("Schéma DB", "DB Schema") },
+  { id: "log", text: t("Log SQL", "SQL Log") },
 ];
 
 function Schema() {
@@ -24,11 +25,11 @@ function Schema() {
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const s = useMemo(() => nactiStrukturu(api.db()), [api.verze, api.otevrena]);
   if (!api.otevrena) {
-    return <p className="p-3 text-[12px] text-dbb-slaby">Není otevřená žádná databáze.</p>;
+    return <p className="p-3 text-[12px] text-dbb-slaby">{t("Není otevřená žádná databáze.", "No database is open.")}</p>;
   }
   return (
     <div className="dbb-posuv h-full select-text overflow-auto bg-dbb-povrch py-1 text-[12px]">
-      {s.tabulky.length === 0 && <p className="px-3 py-2 text-dbb-slaby">Databáze zatím nemá žádnou tabulku.</p>}
+      {s.tabulky.length === 0 && <p className="px-3 py-2 text-dbb-slaby">{t("Databáze zatím nemá žádnou tabulku.", "The database has no tables yet.")}</p>}
       {s.tabulky.map((t) => (
         <div key={t.nazev} className="mb-1">
           <div className="flex h-[20px] items-center px-2 font-semibold">
@@ -63,18 +64,18 @@ function Log() {
     <div className="flex h-full flex-col">
       <div className="flex h-[30px] shrink-0 items-center px-2 text-[12px]">
         <label className="flex flex-1 items-center">
-          <span className="mr-1.5">Zobrazit SQL odeslané:</span>
+          <span className="mr-1.5">{t("Zobrazit SQL odeslané:", "Show SQL submitted by")}</span>
           <select
             value={kdo}
             onChange={(e) => nastavKdo(e.target.value as "uzivatel" | "aplikace")}
             className="h-[22px] border border-dbb-linka bg-dbb-povrch px-1 text-[12px]"
           >
-            <option value="uzivatel">uživatelem</option>
-            <option value="aplikace">aplikací</option>
+            <option value="uzivatel">{t("uživatelem", "User")}</option>
+            <option value="aplikace">{t("aplikací", "Application")}</option>
           </select>
         </label>
         <button type="button" onClick={api.vymazLog} className="h-[22px] border border-dbb-linka bg-dbb-povrch px-2.5 hover:bg-dbb-hover">
-          Vymazat
+          {t("Vymazat", "Clear")}
         </button>
       </div>
       <div className="dbb-posuv dbb-kod min-h-0 flex-1 select-text overflow-auto border-t border-dbb-linka bg-dbb-povrch py-1 text-[12px]">

@@ -13,6 +13,7 @@ export const SLOZKA = "C:\\Users\\zak\\Downloads";
 export const MAX_SOUBORU = 12;
 
 import { cist, zapsat } from "@/lib/dbb/uloziste";
+import { t } from "@/lib/dbb/jazyk";
 
 const KLIC = "dbb-soubory";
 
@@ -75,12 +76,17 @@ export function ulozDisk(disk: Disk): boolean {
 /** Název souboru, jak ho zadá žák: doplní .db a odmítne znaky, které Windows nedovolí. */
 export function upravNazev(zadano: string): { nazev: string } | { chyba: string } {
   let n = zadano.trim();
-  if (!n) return { chyba: "Napiš název souboru." };
+  if (!n) return { chyba: t("Napiš název souboru.", "Type a file name.") };
   if (/[\\/:*?"<>|]/.test(n)) {
-    return { chyba: "Název souboru nesmí obsahovat žádný z těchto znaků: \\ / : * ? \" < > |" };
+    return {
+      chyba: t(
+        "Název souboru nesmí obsahovat žádný z těchto znaků: \\ / : * ? \" < > |",
+        "A file name can't contain any of these characters: \\ / : * ? \" < > |",
+      ),
+    };
   }
   if (!/\.(db|sqlite|sqlite3|db3)$/i.test(n)) n += ".db";
-  if (n.length > 60) return { chyba: "Název je moc dlouhý." };
+  if (n.length > 60) return { chyba: t("Název je moc dlouhý.", "The name is too long.") };
   return { nazev: n };
 }
 

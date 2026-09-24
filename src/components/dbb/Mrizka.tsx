@@ -8,6 +8,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { t } from "@/lib/dbb/jazyk";
 
 export type Razeni = { sloupec: number; smer: "asc" | "desc" } | null;
 
@@ -84,8 +85,8 @@ export function Mrizka({
                     <input
                       value={filtry[i] || ""}
                       onChange={(e) => nastavFiltr(i, e.target.value)}
-                      placeholder="Filtr"
-                      aria-label={`Filtr sloupce ${s}`}
+                      placeholder={t("Filtr", "Filter")}
+                      aria-label={`${t("Filtr sloupce", "Filter column")} ${s}`}
                       spellCheck={false}
                       className="h-[18px] w-full min-w-[60px] border border-dbb-linka px-1 text-[12px] placeholder:text-dbb-slaby/70 focus:border-dbb-akcent"
                     />
@@ -136,7 +137,7 @@ export function Mrizka({
                             } else potvrd();
                           }}
                           spellCheck={false}
-                          aria-label="Upravit hodnotu buňky"
+                          aria-label={t("Upravit hodnotu buňky", "Edit cell value")}
                           className="absolute left-0 top-0 h-full w-full min-w-[80px] border border-dbb-akcent bg-dbb-povrch px-1.5 text-[12px]"
                         />
                       ) : bunka === null ? (
@@ -154,9 +155,9 @@ export function Mrizka({
       </div>
       {chyba && (
         <div role="alert" className="flex shrink-0 items-start border-t border-dbb-linka bg-[#fdf3f2] px-2 py-1.5 text-[12px] text-[#a4262c]">
-          <span className="flex-1">Hodnotu se nepodařilo uložit: {chyba}</span>
+          <span className="flex-1">{t("Hodnotu se nepodařilo uložit:", "The value could not be saved:")} {chyba}</span>
           <button type="button" onClick={() => nastavChybu(null)} className="ml-3 underline">
-            Zavřít
+            {t("Zavřít", "Close")}
           </button>
         </div>
       )}

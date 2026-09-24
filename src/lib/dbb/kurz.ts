@@ -16,6 +16,8 @@ import { LESSONS, type SqlTask } from "@/lib/sqlExercise";
 import type { SqlResult } from "@/lib/sqljs";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
 import { SADY as SADY_LEKCI } from "@/lib/dbb/sady";
+import { prelozLekci } from "@/lib/dbb/anglicky";
+import { t } from "@/lib/dbb/jazyk";
 
 /** Co má kontrola k dispozici u úkolů, které se neověřují výsledkem dotazu. */
 export type Kontext = {
@@ -142,28 +144,34 @@ const HODNOCENI_SPRAVNE = [
 
 /** Tabulka hodnoceni podle zadání lekce 17 – s vysvětlením, co chybí. */
 function testTabulkyHodnoceni(k: Kontext): Hodnoceni {
-  if (k.otevreny !== KNIHOVNA) return { ok: false, proc: "Otevři databázi knihovna.db – tabulka patří do ní." };
+  if (k.otevreny !== KNIHOVNA) return { ok: false, proc: t("Otevři databázi knihovna.db – tabulka patří do ní.", "Open the knihovna.db database – the table belongs in it.") };
   const sloupce = k.dotazZive("PRAGMA table_info(hodnoceni)");
   if (!sloupce || sloupce.values.length === 0) {
-    return { ok: false, proc: "Tabulka hodnoceni v databázi zatím není." };
+    return { ok: false, proc: t("Tabulka hodnoceni v databázi zatím není.", "There is no hodnoceni table in the database yet.") };
   }
   // table_info: cid, name, type, notnull, dflt_value, pk
   const podleNazvu: Record<string, unknown[]> = {};
   for (const r of sloupce.values) podleNazvu[String(r[1]).toLowerCase()] = r;
   for (const nazev of ["id", "kniha_id", "hvezdy"]) {
-    if (!podleNazvu[nazev]) return { ok: false, proc: `V tabulce chybí sloupec ${nazev}.` };
+    if (!podleNazvu[nazev]) return { ok: false, proc: t(`V tabulce chybí sloupec ${nazev}.`, `The table is missing the column ${nazev}.`) };
     if (String(podleNazvu[nazev][2]).toUpperCase().indexOf("INT") === -1) {
-      return { ok: false, proc: `Sloupec ${nazev} má mít typ INTEGER.` };
+      return { ok: false, proc: t(`Sloupec ${nazev} má mít typ INTEGER.`, `The column ${nazev} should be of type INTEGER.`) };
     }
   }
-  if (Number(podleNazvu.id[5]) !== 1) return { ok: false, proc: "Sloupec id má být PRIMARY KEY." };
+  if (Number(podleNazvu.id[5]) !== 1) return { ok: false, proc: t("Sloupec id má být PRIMARY KEY.", "The id column should be the PRIMARY KEY.") };
   const klice = k.dotazZive("PRAGMA foreign_key_list(hodnoceni)");
   // foreign_key_list: id, seq, table, from, to, …
   const odkaz = klice
     ? klice.values.some((r) => String(r[2]).toLowerCase() === "knihy" && String(r[3]).toLowerCase() === "kniha_id")
     : false;
   if (!odkaz) {
-    return { ok: false, proc: "Sloupec kniha_id má odkazovat na knihy – doplň REFERENCES knihy(id)." };
+    return {
+      ok: false,
+      proc: t(
+        "Sloupec kniha_id má odkazovat na knihy – doplň REFERENCES knihy(id).",
+        "The kniha_id column should point to knihy – add REFERENCES knihy(id).",
+      ),
+    };
   }
   return { ok: true };
 }
@@ -195,23 +203,29 @@ function sloupceBezTypu(k: Kontext, soubor: string, tabulka: string): string[] {
 function testPropojeni(k: Kontext): Hodnoceni {
   let proc: string | undefined;
   for (const soubor of vlastni(k)) {
-    for (const t of tabulkySouboru(k, soubor)) {
+    for (const tab of tabulkySouboru(k, soubor)) {
       const q = (x: string) => `"${x.replace(/"/g, '""')}"`;
-      const fk = hodnoty(k.dotazSoubor(soubor, `PRAGMA foreign_key_list(${q(t.nazev)})`));
+      const fk = hodnoty(k.dotazSoubor(soubor, `PRAGMA foreign_key_list(${q(tab.nazev)})`));
       if (!fk.length) continue;
       // foreign_key_list: id, seq, table, from, to, …
       const [, , cil, z, na] = fk[0];
-      const chybne = hodnoty(k.dotazSoubor(soubor, `PRAGMA foreign_key_check(${q(t.nazev)})`));
+      const chybne = hodnoty(k.dotazSoubor(soubor, `PRAGMA foreign_key_check(${q(tab.nazev)})`));
       if (chybne.length) {
-        proc = `Cizí klíč máš, ale ${chybne.length === 1 ? "jeden řádek" : `${chybne.length} řádky`} v tabulce ${t.nazev} ukazuje na řádek, který v tabulce ${cil} neexistuje.`;
+        proc = t(
+          `Cizí klíč máš, ale ${chybne.length === 1 ? "jeden řádek" : `${chybne.length} řádky`} v tabulce ${tab.nazev} ukazuje na řádek, který v tabulce ${cil} neexistuje.`,
+          `You have a foreign key, but ${chybne.length === 1 ? "one row" : `${chybne.length} rows`} in the table ${tab.nazev} ${chybne.length === 1 ? "points" : "point"} to a row that doesn't exist in the table ${cil}.`,
+        );
         continue;
       }
       const cilSloupec = na && na !== "null" ? na : "rowid";
       const spojene = hodnoty(
-        k.dotazSoubor(soubor, `SELECT COUNT(*) FROM ${q(t.nazev)} JOIN ${q(cil)} ON ${q(t.nazev)}.${q(z)} = ${q(cil)}.${q(cilSloupec)}`),
+        k.dotazSoubor(soubor, `SELECT COUNT(*) FROM ${q(tab.nazev)} JOIN ${q(cil)} ON ${q(tab.nazev)}.${q(z)} = ${q(cil)}.${q(cilSloupec)}`),
       );
       if (Number(spojene[0] ? spojene[0][0] : 0) > 0) return { ok: true };
-      proc = `Cizí klíč v tabulce ${t.nazev} máš, ale žádný její řádek se zatím nespojí s tabulkou ${cil} – vlož řádek, který na ni odkazuje, a zapiš změny.`;
+      proc = t(
+        `Cizí klíč v tabulce ${tab.nazev} máš, ale žádný její řádek se zatím nespojí s tabulkou ${cil} – vlož řádek, který na ni odkazuje, a zapiš změny.`,
+        `You have a foreign key in the table ${tab.nazev}, but none of its rows joins with the table ${cil} yet – insert a row that points to it and write the changes.`,
+      );
     }
   }
   return { ok: false, proc };
@@ -328,7 +342,10 @@ const NOVE: LekceKurzu[] = [
             if (k.udalosti.has("znovu-otevreno-po-zahozeni")) {
               return {
                 ok: false,
-                proc: "Databázi jsi zavřel(a) a otevřel(a), ale Temno je dostupné pořád – v souboru bylo zapsané už z minula. Obnov původní knihovnu (Nápověda → Obnovit původní knihovna.db) a zkus to znovu.",
+                proc: t(
+                  "Databázi jsi zavřel(a) a otevřel(a), ale Temno je dostupné pořád – v souboru bylo zapsané už z minula. Obnov původní knihovnu (Nápověda → Obnovit původní knihovna.db) a zkus to znovu.",
+                  "You closed and reopened the database, but Temno is still available – it was already written in the file from before. Restore the original library (Help → Restore Original knihovna.db) and try again.",
+                ),
               };
             }
             return { ok: false };
@@ -351,7 +368,10 @@ const NOVE: LekceKurzu[] = [
             if (r.length === 1 && r[0][0] === "1" && k.udalosti.has("zapsano")) return { ok: true };
             const zive = hodnoty(k.dotazZive("SELECT dostupna FROM knihy WHERE nazev = 'Temno'"));
             if (zive.length === 1 && zive[0][0] === "1") {
-              return { ok: false, proc: "Změna je zatím jen v paměti programu – ještě ji zapiš." };
+              return {
+                ok: false,
+                proc: t("Změna je zatím jen v paměti programu – ještě ji zapiš.", "The change is only in the program's memory so far – write it too."),
+              };
             }
             return { ok: false };
           },
@@ -400,7 +420,15 @@ const NOVE: LekceKurzu[] = [
             if (k.otevreny !== KNIHOVNA) return { ok: false };
             const r = hodnoty(k.dotazZive(HODNOCENI));
             if (stejne(r, HODNOCENI_SPRAVNE)) return { ok: true };
-            if (r.length > 3) return { ok: false, proc: `V tabulce je ${r.length} hodnocení, mají být přesně tři. Přebytečná smaž, nebo použij Vrátit změny.` };
+            if (r.length > 3) {
+              return {
+                ok: false,
+                proc: t(
+                  `V tabulce je ${r.length} hodnocení, mají být přesně tři. Přebytečná smaž, nebo použij Vrátit změny.`,
+                  `There are ${r.length} ratings in the table; there should be exactly three. Delete the extra ones, or use Revert Changes.`,
+                ),
+              };
+            }
             return { ok: false };
           },
         },
@@ -485,19 +513,28 @@ const NOVE: LekceKurzu[] = [
           test: (k) => {
             let bezTypu: string | undefined;
             for (const soubor of vlastni(k)) {
-              for (const t of tabulkySouboru(k, soubor)) {
-                if (t.radku < 5) continue;
+              for (const tab of tabulkySouboru(k, soubor)) {
+                if (tab.radku < 5) continue;
                 // „Rozumné datové typy“ z Úloh: každý sloupec musí nějaký typ mít.
-                const chybi = sloupceBezTypu(k, soubor, t.nazev);
+                const chybi = sloupceBezTypu(k, soubor, tab.nazev);
                 if (!chybi.length) return { ok: true };
-                bezTypu = `V tabulce ${t.nazev} nemá typ ${chybi.length === 1 ? "sloupec" : "sloupce"} ${chybi.join(", ")}. Doplň INTEGER, TEXT nebo REAL – tabulku založ znovu.`;
+                bezTypu = t(
+                  `V tabulce ${tab.nazev} nemá typ ${chybi.length === 1 ? "sloupec" : "sloupce"} ${chybi.join(", ")}. Doplň INTEGER, TEXT nebo REAL – tabulku založ znovu.`,
+                  `In the table ${tab.nazev}, the ${chybi.length === 1 ? "column" : "columns"} ${chybi.join(", ")} ${chybi.length === 1 ? "has" : "have"} no type. Add INTEGER, TEXT or REAL – create the table again.`,
+                );
               }
             }
             if (bezTypu) return { ok: false, proc: bezTypu };
             if (k.otevreny && k.otevreny !== KNIHOVNA) {
               const zive = k.dotazZive("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'");
               if (hodnoty(zive).length > 0) {
-                return { ok: false, proc: "V souboru zatím není tabulka s aspoň 5 záznamy. Nezapomněl(a) jsi zapsat změny?" };
+                return {
+                  ok: false,
+                  proc: t(
+                    "V souboru zatím není tabulka s aspoň 5 záznamy. Nezapomněl(a) jsi zapsat změny?",
+                    "There is no table with at least 5 records in the file yet. Did you forget to write the changes?",
+                  ),
+                };
               }
             }
             return { ok: false };
@@ -540,7 +577,7 @@ const NOVE: LekceKurzu[] = [
   },
 ];
 
-export const KURZ: LekceKurzu[] = PUVODNI.concat(NOVE);
+export const KURZ: LekceKurzu[] = PUVODNI.concat(NOVE).map(prelozLekci);
 
 export { SADY } from "@/lib/dbb/sady";
 

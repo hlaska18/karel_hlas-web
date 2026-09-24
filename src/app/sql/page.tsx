@@ -43,10 +43,9 @@ export const metadata: Metadata = {
  * ukládají postup do stejných klíčů, takže se sčítá. Webová podoba zůstává
  * v HTML i na počítači (jen skrytá), aby stránku našly vyhledávače.
  *
- * Kurz je zatím jen česky. Kdo sem přijde z anglické verze, musí se mít jak
- * vrátit – proto `?z=en`: odkaz zpět i značka pak míří na /en místo na /.
- * Obsah kurzu zůstává český, to je slíbené předem u obou odkazů, které sem
- * vedou (patička i dlaždice Databáze).
+ * `?z=en` (odkaz z anglické verze webu): program DB Browser i jeho lekce
+ * jsou anglicky (`lib/dbb/jazyk`), odkaz zpět i značka míří na /en. Data
+ * zůstávají česká se slovníčkem. Webová podoba pro telefony je jen česky.
  */
 export default function SqlPage({
   searchParams,

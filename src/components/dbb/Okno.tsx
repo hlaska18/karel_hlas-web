@@ -20,6 +20,7 @@ import {
 import { useDbb, precti, type Karta } from "@/components/dbb/kontext";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
 import { stahni } from "@/lib/dbb/stahni";
+import { t } from "@/lib/dbb/jazyk";
 
 /** Ikona programu: databázový válec. Vlastní kresba, ne logo programu. */
 export function IkonaProgramu({ className = "h-4 w-4" }: { className?: string }) {
@@ -52,18 +53,18 @@ export function Titulek({
         <span className="truncate text-[12px]">{text}</span>
       </div>
       <div className="flex h-full shrink-0">
-        <button type="button" aria-label="Minimalizovat" onClick={minimalizovat} className={`${tlacitko} hover:bg-black/[0.06]`}>
+        <button type="button" aria-label={t("Minimalizovat", "Minimize")} onClick={minimalizovat} className={`${tlacitko} hover:bg-black/[0.06]`}>
           <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" aria-hidden="true">
             <path d="M0 5h10" stroke="currentColor" strokeWidth="1" />
           </svg>
         </button>
         {/* Okno je přes celou obrazovku; obnovit menší okno tu nejde. */}
-        <button type="button" aria-label="Obnovit z maximalizace" className={`${tlacitko} cursor-default`} tabIndex={-1}>
+        <button type="button" aria-label={t("Obnovit z maximalizace", "Restore Down")} className={`${tlacitko} cursor-default`} tabIndex={-1}>
           <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" aria-hidden="true">
             <path d="M2.5 0.5h7v7M0.5 2.5h7v7h-7z" fill="none" stroke="currentColor" strokeWidth="1" />
           </svg>
         </button>
-        <button type="button" aria-label="Zavřít" onClick={zavrit} className={`${tlacitko} hover:bg-[#c42b1c] hover:text-white`}>
+        <button type="button" aria-label={t("Zavřít", "Close")} onClick={zavrit} className={`${tlacitko} hover:bg-[#c42b1c] hover:text-white`}>
           <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" aria-hidden="true">
             <path d="M0.5 0.5l9 9M9.5 0.5l-9 9" stroke="currentColor" strokeWidth="1" />
           </svg>
@@ -88,6 +89,7 @@ export function NabidkaOkna({
   novyZak,
   ulozKopii,
   predvadeni,
+  jazyk,
 }: {
   novaDatabaze: () => void;
   otevritDatabazi: () => void;
@@ -104,6 +106,8 @@ export function NabidkaOkna({
   ulozKopii: () => void;
   /** Zapne nebo ukončí režim předvádění pro projektor. */
   predvadeni: () => void;
+  /** Přepne program do druhého jazyka (čeština ↔ angličtina). */
+  jazyk: () => void;
 }) {
   const api = useDbb();
   const [otevrene, nastavOtevrene] = useState<string | null>(null);
@@ -133,88 +137,89 @@ export function NabidkaOkna({
     api.otevritDialog({
       druh: "zprava",
       titulek,
-      text: ok ? v_poradku : `Kontrola našla problémy:\n${radky.join("\n")}`,
+      text: ok ? v_poradku : `${t("Kontrola našla problémy:", "The check found problems:")}\n${radky.join("\n")}`,
     });
   };
 
   const nabidky: { nazev: string; polozky: Polozka[] }[] = [
     {
-      nazev: "Soubor",
+      nazev: t("Soubor", "File"),
       polozky: [
-        { text: "Nová databáze…", akce: novaDatabaze },
-        { text: "Otevřít databázi…", zkratka: "Ctrl+O", akce: otevritDatabazi },
-        { text: "Zavřít databázi", akce: zavritDatabazi, zakazano: bezDb },
+        { text: t("Nová databáze…", "New Database…"), akce: novaDatabaze },
+        { text: t("Otevřít databázi…", "Open Database…"), zkratka: "Ctrl+O", akce: otevritDatabazi },
+        { text: t("Zavřít databázi", "Close Database"), akce: zavritDatabazi, zakazano: bezDb },
         "-",
-        { text: "Zapsat změny", zkratka: "Ctrl+S", akce: api.zapsat, zakazano: !api.zmeneno },
-        { text: "Vrátit změny", akce: api.vratit, zakazano: !api.zmeneno },
+        { text: t("Zapsat změny", "Write Changes"), zkratka: "Ctrl+S", akce: api.zapsat, zakazano: !api.zmeneno },
+        { text: t("Vrátit změny", "Revert Changes"), akce: api.vratit, zakazano: !api.zmeneno },
         "-",
-        { text: "Uložit kopii do počítače…", akce: ulozKopii, zakazano: bezDb },
+        { text: t("Uložit kopii do počítače…", "Save a Copy to This Computer…"), akce: ulozKopii, zakazano: bezDb },
         "-",
         { text: "Import", zakazano: true },
         { text: "Export", zakazano: true },
         "-",
-        { text: "Konec", akce: konec },
+        { text: t("Konec", "Exit"), akce: konec },
       ],
     },
     {
-      nazev: "Úpravy",
+      nazev: t("Úpravy", "Edit"),
       polozky: [
-        { text: "Vytvořit tabulku…", akce: () => api.otevritDialog({ druh: "tabulka" }), zakazano: bezDb },
-        { text: "Upravit tabulku…", zakazano: true },
-        { text: "Vytvořit index…", zakazano: true },
+        { text: t("Vytvořit tabulku…", "Create Table…"), akce: () => api.otevritDialog({ druh: "tabulka" }), zakazano: bezDb },
+        { text: t("Upravit tabulku…", "Modify Table…"), zakazano: true },
+        { text: t("Vytvořit index…", "Create Index…"), zakazano: true },
         "-",
-        { text: "Předvolby…", zakazano: true },
+        { text: t("Předvolby…", "Preferences…"), zakazano: true },
       ],
     },
     {
-      nazev: "Zobrazit",
+      nazev: t("Zobrazit", "View"),
       polozky: [
-        { text: "Kurz SQL", akce: () => api.nastavDokKartu("kurz") },
-        { text: "Schéma DB", akce: () => api.nastavDokKartu("schema") },
-        { text: "Log SQL", akce: () => api.nastavDokKartu("log") },
+        { text: t("Kurz SQL", "SQL Course"), akce: () => api.nastavDokKartu("kurz") },
+        { text: t("Schéma DB", "DB Schema"), akce: () => api.nastavDokKartu("schema") },
+        { text: t("Log SQL", "SQL Log"), akce: () => api.nastavDokKartu("log") },
       ],
     },
     {
-      nazev: "Nástroje",
+      nazev: t("Nástroje", "Tools"),
       polozky: [
         {
-          text: "Kontrola integrity",
-          akce: kontrola("PRAGMA integrity_check;", "Kontrola integrity", "Databáze je v pořádku (integrity_check: ok)."),
+          text: t("Kontrola integrity", "Integrity Check"),
+          akce: kontrola("PRAGMA integrity_check;", t("Kontrola integrity", "Integrity Check"), t("Databáze je v pořádku (integrity_check: ok).", "The database is fine (integrity_check: ok).")),
           zakazano: bezDb,
         },
         {
-          text: "Kontrola cizích klíčů",
-          akce: kontrola("PRAGMA foreign_key_check;", "Kontrola cizích klíčů", "Všechny cizí klíče ukazují na existující řádky."),
+          text: t("Kontrola cizích klíčů", "Foreign-Key Check"),
+          akce: kontrola("PRAGMA foreign_key_check;", t("Kontrola cizích klíčů", "Foreign-Key Check"), t("Všechny cizí klíče ukazují na existující řádky.", "All foreign keys point to existing rows.")),
           zakazano: bezDb,
         },
       ],
     },
     {
-      nazev: "Nápověda",
+      nazev: t("Nápověda", "Help"),
       polozky: [
-        { text: "Moje výsledky…", akce: () => api.otevritDialog({ druh: "vysledky" }) },
+        { text: t("Moje výsledky…", "My Results…"), akce: () => api.otevritDialog({ druh: "vysledky" }) },
         {
-          text: "Stáhnout knihovna.db do počítače",
+          text: t("Stáhnout knihovna.db do počítače", "Download knihovna.db to This Computer"),
           akce: () => {
             const s = api.disk[KNIHOVNA];
             if (s) stahni(KNIHOVNA, s.bajty);
           },
         },
-        { text: "Obnovit původní knihovna.db…", akce: obnovitKnihovnu },
-        { text: "Nový žák…", akce: novyZak },
+        { text: t("Obnovit původní knihovna.db…", "Restore Original knihovna.db…"), akce: obnovitKnihovnu },
+        { text: t("Nový žák…", "New Pupil…"), akce: novyZak },
         "-",
-        { text: "O kurzu a pro učitele…", akce: () => api.otevritDialog({ druh: "okurzu" }) },
-        { text: "Přehled třídy (pro učitele)…", akce: () => api.otevritDialog({ druh: "prehled" }) },
-        { text: "Vytvořit úlohu pro třídu…", akce: () => api.otevritDialog({ druh: "uloha" }) },
+        { text: t("O kurzu a pro učitele…", "About the Course / For Teachers…"), akce: () => api.otevritDialog({ druh: "okurzu" }) },
+        { text: t("Přehled třídy (pro učitele)…", "Class Overview (for Teachers)…"), akce: () => api.otevritDialog({ druh: "prehled" }) },
+        { text: t("Vytvořit úlohu pro třídu…", "Create a Task for the Class…"), akce: () => api.otevritDialog({ druh: "uloha" }) },
         {
-          text: api.predvadeni ? "Ukončit režim předvádění" : "Režim předvádění (projektor)…",
+          text: api.predvadeni ? t("Ukončit režim předvádění", "End Presentation Mode") : t("Režim předvádění (projektor)…", "Presentation Mode (Projector)…"),
           akce: predvadeni,
         },
         "-",
-        { text: "O programu DB Browser for SQLite…", akce: () => api.otevritDialog({ druh: "oprogramu" }) },
+        { text: t("O programu DB Browser for SQLite…", "About DB Browser for SQLite…"), akce: () => api.otevritDialog({ druh: "oprogramu" }) },
         "-",
-        { text: "Přepnout na webovou podobu kurzu", akce: webovaPodoba },
-        { text: "Zpět na web", akce: zpetNaWeb },
+        { text: t("English version", "Česká verze (Czech version)"), akce: jazyk },
+        { text: t("Přepnout na webovou podobu kurzu", "Switch to the Web Version (in Czech)"), akce: webovaPodoba },
+        { text: t("Zpět na web", "Back to the Website"), akce: zpetNaWeb },
       ],
     },
   ];
@@ -313,36 +318,36 @@ export function Lista({
   const api = useDbb();
   return (
     <div className="flex h-[32px] shrink-0 items-center overflow-hidden border-b border-dbb-linka bg-dbb-lista px-1.5">
-      <TlacitkoListy ikona={<FilePlus2 className="h-4 w-4 text-[#2e75b6]" />} text="Nová databáze" akce={novaDatabaze} />
+      <TlacitkoListy ikona={<FilePlus2 className="h-4 w-4 text-[#2e75b6]" />} text={t("Nová databáze", "New Database")} akce={novaDatabaze} />
       <TlacitkoListy
         ikona={<FolderOpen className="h-4 w-4 text-[#c9901a]" />}
-        text="Otevřít databázi"
+        text={t("Otevřít databázi", "Open Database")}
         akce={otevritDatabazi}
-        titulek="Otevřít databázi (Ctrl+O)"
+        titulek={t("Otevřít databázi (Ctrl+O)", "Open Database (Ctrl+O)")}
       />
       <Oddelovac />
       {/* Šedá, dokud není co zapsat – podle toho žák pozná neuložené změny. */}
       <TlacitkoListy
         ikona={<Save className="h-4 w-4 text-[#2e75b6]" />}
-        text="Zapsat změny"
+        text={t("Zapsat změny", "Write Changes")}
         akce={api.zapsat}
         zakazano={!api.zmeneno}
-        titulek="Zapsat změny (Ctrl+S)"
+        titulek={t("Zapsat změny (Ctrl+S)", "Write Changes (Ctrl+S)")}
       />
       <TlacitkoListy
         ikona={<Undo2 className="h-4 w-4 text-[#c9901a]" />}
-        text="Vrátit změny"
+        text={t("Vrátit změny", "Revert Changes")}
         akce={api.vratit}
         zakazano={!api.zmeneno}
       />
       <Oddelovac />
-      <TlacitkoListy ikona={<FolderInput className="h-4 w-4" />} text="Otevřít projekt" zakazano />
-      <TlacitkoListy ikona={<FileOutput className="h-4 w-4" />} text="Uložit projekt" zakazano />
+      <TlacitkoListy ikona={<FolderInput className="h-4 w-4" />} text={t("Otevřít projekt", "Open Project")} zakazano />
+      <TlacitkoListy ikona={<FileOutput className="h-4 w-4" />} text={t("Uložit projekt", "Save Project")} zakazano />
       <Oddelovac />
-      <TlacitkoListy ikona={<Link2 className="h-4 w-4" />} text="Připojit databázi" zakazano />
+      <TlacitkoListy ikona={<Link2 className="h-4 w-4" />} text={t("Připojit databázi", "Attach Database")} zakazano />
       <TlacitkoListy
         ikona={<XCircle className="h-4 w-4 text-[#c42b1c]" />}
-        text="Zavřít databázi"
+        text={t("Zavřít databázi", "Close Database")}
         akce={zavritDatabazi}
         zakazano={!api.otevrena}
       />
@@ -353,10 +358,10 @@ export function Lista({
 /* ─────────────────────────────── karty ─────────────────────────────── */
 
 const KARTY: { id: Karta; text: string }[] = [
-  { id: "struktura", text: "Struktura databáze" },
-  { id: "data", text: "Prohlížet data" },
-  { id: "pragma", text: "Upravit pragma" },
-  { id: "sql", text: "Spustit SQL" },
+  { id: "struktura", text: t("Struktura databáze", "Database Structure") },
+  { id: "data", text: t("Prohlížet data", "Browse Data") },
+  { id: "pragma", text: t("Upravit pragma", "Edit Pragmas") },
+  { id: "sql", text: t("Spustit SQL", "Execute SQL") },
 ];
 
 export function Karty() {

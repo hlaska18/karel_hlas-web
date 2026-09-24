@@ -11,6 +11,8 @@
  */
 
 import type { Databaze, Hodnoceni, Kontext, LekceKurzu, UkolKurzu } from "@/lib/dbb/kurz";
+import { prelozLekci } from "@/lib/dbb/anglicky";
+import { t } from "@/lib/dbb/jazyk";
 
 export const DILNA: Databaze = {
   soubor: "dilna.db",
@@ -169,7 +171,13 @@ function zapsano(db: Databaze, dotazNaSoubor: string, ocekavano: string) {
     if (r.length === 1 && r[0][0] === ocekavano && k.udalosti.has("zapsano")) return { ok: true };
     const zive = hodnoty(k.dotazZive(dotazNaSoubor));
     if (k.otevreny === db.soubor && zive.length === 1 && zive[0][0] === ocekavano) {
-      return { ok: false, proc: "Změna je zatím jen v paměti programu – ještě ji zapiš (Ctrl+S)." };
+      return {
+        ok: false,
+        proc: t(
+          "Změna je zatím jen v paměti programu – ještě ji zapiš (Ctrl+S).",
+          "The change is only in the program's memory so far – write it too (Ctrl+S).",
+        ),
+      };
     }
     return { ok: false };
   };
@@ -393,7 +401,7 @@ const PROCVICOVANI_B: LekceKurzu = {
 export type Sada = { id: string; kratce: string; lekce: LekceKurzu };
 
 export const SADY: Sada[] = [
-  { id: "detektivka", kratce: "Detektivka", lekce: DETEKTIVKA_LEKCE },
-  { id: "dilna", kratce: "Procvičování A", lekce: PROCVICOVANI_A },
-  { id: "stavebniny", kratce: "Procvičování B", lekce: PROCVICOVANI_B },
+  { id: "detektivka", kratce: t("Detektivka", "Detective"), lekce: prelozLekci(DETEKTIVKA_LEKCE) },
+  { id: "dilna", kratce: t("Procvičování A", "Practice A"), lekce: prelozLekci(PROCVICOVANI_A) },
+  { id: "stavebniny", kratce: t("Procvičování B", "Practice B"), lekce: prelozLekci(PROCVICOVANI_B) },
 ];

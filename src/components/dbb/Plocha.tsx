@@ -11,6 +11,7 @@ import { useState } from "react";
 import { Database } from "lucide-react";
 import { IkonaProgramu } from "@/components/dbb/Okno";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
+import { t } from "@/lib/dbb/jazyk";
 
 function Ikona({
   popisek,
@@ -90,7 +91,7 @@ export function Plocha({
             <svg viewBox="0 0 40 20" className="mr-2 h-5 w-10" aria-hidden="true">
               <path d="M38 10H6M14 2L4 10l10 8" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            Poklepej na knihovna.db – otevře se v DB Browseru
+            {t("Poklepej na knihovna.db – otevře se v DB Browseru", "Double-click knihovna.db – it opens in DB Browser")}
           </div>
         )}
       </div>
@@ -99,8 +100,8 @@ export function Plocha({
         style={{ textShadow: "0 1px 3px rgba(0,0,0,0.6)" }}
       >
         {minimalizovano
-          ? "DB Browser je jen schovaný – vrátíš ho kliknutím na jeho ikonu na hlavním panelu dole."
-          : "DB Browser je zavřený. Spusť ho dvojklikem na ikonu programu, nebo rovnou na soubor knihovna.db."}
+          ? t("DB Browser je jen schovaný – vrátíš ho kliknutím na jeho ikonu na hlavním panelu dole.", "DB Browser is only minimized – bring it back by clicking its icon on the taskbar at the bottom.")
+          : t("DB Browser je zavřený. Spusť ho dvojklikem na ikonu programu, nebo rovnou na soubor knihovna.db.", "DB Browser is closed. Start it by double-clicking the program icon, or the knihovna.db file directly.")}
       </p>
       {/* Hlavní panel Windows – jen tolik, aby šel minimalizovaný program vrátit. */}
       <div className="flex h-[40px] shrink-0 items-center justify-center bg-[#f3f3f3]/90">

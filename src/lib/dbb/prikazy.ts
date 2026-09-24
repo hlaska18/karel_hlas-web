@@ -8,6 +8,7 @@
  */
 
 import type { SqlDb, SqlDbSoubor, SqlResult } from "@/lib/sqljs";
+import { jeAnglicky, t } from "@/lib/dbb/jazyk";
 
 export type Prikaz = {
   /** Text příkazu bez úvodních mezer a komentářů. */
@@ -185,6 +186,8 @@ export function spust(db: SqlDbSoubor, prikazy: Prikaz[]): Beh {
 
 /** „1 řádek vrácen“, „3 řádky vráceny“, „10 řádků vráceno“ – shoda jako v češtině. */
 export function pocetRadku(n: number, sloveso: "vrácen" | "ovlivněn"): string {
+  // Anglicky jako skutečný DB Browser: „3 rows returned“, „1 rows affected“.
+  if (jeAnglicky()) return `${n} ${n === 1 && sloveso === "vrácen" ? "row" : "rows"} ${sloveso === "vrácen" ? "returned" : "affected"}`;
   if (n === 1) return `1 řádek ${sloveso}`;
   if (n >= 2 && n <= 4) return `${n} řádky ${sloveso}y`;
   return `${n} řádků ${sloveso}o`;
@@ -220,5 +223,8 @@ export function poznamkaKRazeni(sql: string, vysledek: SqlResult | null): string
   const diakritika = /^[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]/;
   const ma = vysledek.values.some((r) => r.some((c) => typeof c === "string" && diakritika.test(c)));
   if (!ma) return undefined;
-  return "SQLite řadí texty podle kódu znaků, takže písmena s háčkem a čárkou (Č, Ř, Š, Ž…) jsou až za Z. Stejně řadí i skutečný DB Browser.";
+  return t(
+    "SQLite řadí texty podle kódu znaků, takže písmena s háčkem a čárkou (Č, Ř, Š, Ž…) jsou až za Z. Stejně řadí i skutečný DB Browser.",
+    "SQLite sorts text by character codes, so letters with accents (Č, Ř, Š, Ž…) come after Z. The real DB Browser sorts them the same way.",
+  );
 }

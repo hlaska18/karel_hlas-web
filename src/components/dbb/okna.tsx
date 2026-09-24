@@ -7,6 +7,7 @@
 
 import { useEffect, useRef, type ReactNode } from "react";
 import { IkonaProgramu } from "@/components/dbb/Okno";
+import { t } from "@/lib/dbb/jazyk";
 
 /* ─────────────────────────────── základ ─────────────────────────────── */
 
@@ -56,7 +57,7 @@ export function Okno({
           <span className="flex-1 truncate text-[12px]">{titulek}</span>
           <button
             type="button"
-            aria-label="Zavřít"
+            aria-label={t("Zavřít", "Close")}
             onClick={zavrit}
             className="flex h-full w-[46px] items-center justify-center hover:bg-[#c42b1c] hover:text-white"
           >

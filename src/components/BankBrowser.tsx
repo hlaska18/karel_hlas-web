@@ -164,8 +164,9 @@ const TOOL_POZNAMKA: Record<string, Record<Lang, string>> = {
  * (kurz SQL), stačily dva řetězce v STR, ale u druhého by pruh nad virtuálními
  * Windows sliboval kurz SQL.
  *
- * Anglická verze u obou přiznává, že samotný nástroj je česky – návštěvník to
- * má vědět předem, ne až po kliknutí.
+ * Anglická verze u simulátorů přiznává, že nástroj je česky – návštěvník to
+ * má vědět předem, ne až po kliknutí. Kurz SQL má od září 2026 anglický
+ * program i lekce (`?z=en`), česká zůstávají jen data – to popisek říká taky.
  */
 type Interaktivni = {
   cesta: string;
@@ -178,7 +179,7 @@ const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
     cesta: "/sql",
     popis: {
       cs: "Projdi si interaktivní kurz SQL ve virtuálním programu DB Browser – přímo v prohlížeči, nic se neinstaluje.",
-      en: "Take the interactive SQL course inside a virtual DB Browser – right in your browser, nothing to install. The course itself is in Czech.",
+      en: "Take the interactive SQL course inside a virtual DB Browser – right in your browser, nothing to install. The program and the lessons are in English; the practice data stay in Czech, with a glossary.",
     },
     cta: { cs: "Spustit kurz", en: "Start the course" },
   },
@@ -187,7 +188,7 @@ const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
   // hned pod ním ve výpisu, každý s vlastním popisem, co v něm žák najde.
 };
 
-/** Kurz je jen česky; z anglické verze se přidá `?z=en`, aby vedl odkaz zpět na /en. */
+/** Z anglické verze se přidá `?z=en`: kurz SQL se otevře anglicky a odkaz zpět vede na /en. */
 function interaktivniOdkaz(cesta: string, lang: Lang): string {
   return lang === "en" ? `${cesta}?z=en` : cesta;
 }

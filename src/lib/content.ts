@@ -2457,8 +2457,8 @@ export const t: Record<Lang, Dict> = {
       analytics: "Traffic is measured anonymously, without cookies.",
       soukromiOdkaz: "What this site stores",
       top: "Top",
-      // Kurz je jen česky – ať to Angličan pozná dřív, než klikne.
-      sqlCourse: "SQL course in the browser (in Czech)",
+      // Program i lekce kurzu jsou s ?z=en anglicky, data zůstávají česká (se slovníčkem).
+      sqlCourse: "SQL course in the browser",
       windows: "Virtual Windows 11 (in Czech)",
       macos: "Virtual macOS (in Czech)",
     },

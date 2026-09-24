@@ -120,35 +120,54 @@ const asKeys = (rows: unknown[][]) => rows.map((r) => JSON.stringify(r.map((c) =
  * apostrof: `WHERE zanr = poezie` hlásí „no such column: poezie“, což zní jako
  * chyba v datech, ne v zápisu. Originál vracíme zvlášť, ať se dá dohledat.
  */
-export function sqlErrorCs(raw: string): string {
+export function sqlErrorCs(raw: string, en = false): string {
   const m = raw.trim().replace(/^Error:\s*/i, "");
+  const tt = (cs: string, anglicky: string) => (en ? anglicky : cs);
 
   const noColumn = m.match(/no such column:\s*(\S+)/i);
   if (noColumn) {
-    return `Sloupec „${noColumn[1]}“ v tabulce není. Jde-li o text, patří do apostrofů – tedy '${noColumn[1]}'. Jinak zkontroluj překlep, správné názvy jsou v přehledu tabulek nad editorem.`;
+    return tt(
+      `Sloupec „${noColumn[1]}“ v tabulce není. Jde-li o text, patří do apostrofů – tedy '${noColumn[1]}'. Jinak zkontroluj překlep, správné názvy jsou v přehledu tabulek nad editorem.`,
+      `There is no column “${noColumn[1]}”. If it is meant to be text, it belongs in single quotes – '${noColumn[1]}'. Otherwise check the spelling.`,
+    );
   }
 
   const noTable = m.match(/no such table:\s*(\S+)/i);
   if (noTable) {
-    return `Tabulka „${noTable[1]}“ v databázi není. Jsou jen tři: knihy, ctenari a vypujcky (bez háčků a čárek).`;
+    return tt(
+      `Tabulka „${noTable[1]}“ v databázi není. Jsou jen tři: knihy, ctenari a vypujcky (bez háčků a čárek).`,
+      `There is no table “${noTable[1]}” in the database.`,
+    );
   }
 
   if (/UNIQUE constraint failed/i.test(m)) {
-    return "Řádek s tímhle id už v tabulce je – dvakrát se přidat nedá. Buď zvol jiné id, nebo klikni na Obnovit databázi a spusť příkaz znovu.";
+    return tt(
+      "Řádek s tímhle id už v tabulce je – dvakrát se přidat nedá. Buď zvol jiné id, nebo klikni na Obnovit databázi a spusť příkaz znovu.",
+      "A row with this id is already in the table – it can't be added twice. Choose a different id.",
+    );
   }
 
   const ambiguous = m.match(/ambiguous column name:\s*(\S+)/i);
   if (ambiguous) {
-    return `Sloupec „${ambiguous[1]}“ je ve víc propojených tabulkách naráz a SQL neví, který myslíš. Napiš ho i s tabulkou, například knihy.${ambiguous[1]}.`;
+    return tt(
+      `Sloupec „${ambiguous[1]}“ je ve víc propojených tabulkách naráz a SQL neví, který myslíš. Napiš ho i s tabulkou, například knihy.${ambiguous[1]}.`,
+      `The column “${ambiguous[1]}” is in more than one of the joined tables and SQL doesn't know which one you mean. Write it with the table name, for example knihy.${ambiguous[1]}.`,
+    );
   }
 
   const near = m.match(/near "([^"]+)":\s*syntax error/i);
   if (near) {
-    return `Někde u „${near[1]}“ je překlep v zápisu. Nejčastěji chybí čárka mezi sloupci, apostrof kolem textu, nebo je klíčové slovo napsané špatně.`;
+    return tt(
+      `Někde u „${near[1]}“ je překlep v zápisu. Nejčastěji chybí čárka mezi sloupci, apostrof kolem textu, nebo je klíčové slovo napsané špatně.`,
+      `There is a typo somewhere near “${near[1]}”. Most often a comma between columns or a quote around text is missing, or a keyword is misspelt.`,
+    );
   }
 
   if (/incomplete input/i.test(m)) {
-    return "Dotaz vypadá nedopsaně – zkontroluj, jestli máš uzavřené apostrofy a závorky.";
+    return tt(
+      "Dotaz vypadá nedopsaně – zkontroluj, jestli máš uzavřené apostrofy a závorky.",
+      "The query looks unfinished – check that your quotes and brackets are closed.",
+    );
   }
 
   return m;
@@ -175,7 +194,12 @@ export function diffMessage(
   mutating = false,
   /** Dotazy žáka a reference – bez nich se rada o podmínce jen hádá. */
   dotazy?: { zak: string; ref: string },
+  /** Anglicky – pro virtuální DB Browser na /sql?z=en. */
+  en = false,
 ): string {
+  const tt = (cs: string, anglicky: string) => (en ? anglicky : cs);
+  const rowsEn = (n: number) => `${n} ${n === 1 ? "row" : "rows"}`;
+  const colsEn = (n: number) => `${n} ${n === 1 ? "column" : "columns"}`;
   const mv = mine?.values ?? [];
   const rv = ref?.values ?? [];
   const zakMaWhere = dotazy ? maWhere(dotazy.zak) : true;
@@ -183,10 +207,16 @@ export function diffMessage(
 
   if (mv.length === 0 && rv.length > 0) {
     if (mutating) {
-      return `Po tvém příkazu je tabulka prázdná, ale zůstat v ní mělo ${rv.length} ${radky(rv.length)}. Nejspíš ti chybí WHERE – bez něj příkaz zasáhne úplně všechny řádky.`;
+      return tt(
+        `Po tvém příkazu je tabulka prázdná, ale zůstat v ní mělo ${rv.length} ${radky(rv.length)}. Nejspíš ti chybí WHERE – bez něj příkaz zasáhne úplně všechny řádky.`,
+        `After your command the table is empty, but ${rowsEn(rv.length)} should have stayed in it. You are probably missing WHERE – without it the command hits every single row.`,
+      );
     }
     if (!zakMaWhere) {
-      return `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínku v něm nemáš, takže se podívej, jestli vybíráš ze správné tabulky.`;
+      return tt(
+        `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínku v něm nemáš, takže se podívej, jestli vybíráš ze správné tabulky.`,
+        `Your query returned no rows; it should return ${rv.length}. It has no condition, so check that you are selecting from the right table.`,
+      );
     }
     // Nejčastější tichá past: SQLite u českých znaků rozlišuje velikost písmen,
     // takže 'čapek' nenajde nic a hláška o „přísné podmínce" by mátla.
@@ -195,37 +225,61 @@ export function diffMessage(
     const likeDiakritika =
       dotazy && /\blike\b/i.test(dotazy.zak) && /'[^']*[^\u0000-\u007f][^']*'/.test(dotazy.zak);
     const velikost = likeDiakritika
-      ? " Pozor na velká písmena: LIKE je bere jako stejná jen u písmen bez háčků a čárek – 'č%' proto nenajde „Čapek“. Napiš písmeno tak, jak je v datech (Č). Stejně se chová i skutečný DB Browser."
+      ? tt(
+          " Pozor na velká písmena: LIKE je bere jako stejná jen u písmen bez háčků a čárek – 'č%' proto nenajde „Čapek“. Napiš písmeno tak, jak je v datech (Č). Stejně se chová i skutečný DB Browser.",
+          " Mind the capitals: LIKE treats upper and lower case as the same only for letters without accents – so 'č%' won't find “Čapek”. Write the letter as it is in the data (Č). The real DB Browser behaves the same way.",
+        )
       : dotazy && maText(dotazy.zak)
-        ? " Pozor i na velká písmena – 'Čapek' a 'čapek' jsou pro databázi dvě různé hodnoty."
+        ? tt(
+            " Pozor i na velká písmena – 'Čapek' a 'čapek' jsou pro databázi dvě různé hodnoty.",
+            " Mind the capitals too – to the database, 'Čapek' and 'čapek' are two different values.",
+          )
         : "";
-    return `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.${velikost}`;
+    return tt(
+      `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.${velikost}`,
+      `Your query returned no rows; it should return ${rv.length}. The WHERE condition is probably too strict.${velikost}`,
+    );
   }
   if (mv.length !== rv.length) {
     if (mutating) {
       // Směr chyby se u INSERTu a DELETu obrací, tak ho neuhodneme – jen počty.
-      return `Po tvém příkazu má tabulka ${mv.length} ${radky(mv.length)}, správně jich má být ${rv.length}. Zkontroluj podmínku, příkaz zasáhl jiné řádky, než měl.`;
+      return tt(
+        `Po tvém příkazu má tabulka ${mv.length} ${radky(mv.length)}, správně jich má být ${rv.length}. Zkontroluj podmínku, příkaz zasáhl jiné řádky, než měl.`,
+        `After your command the table has ${rowsEn(mv.length)}; it should have ${rv.length}. Check the condition – the command hit different rows than it should have.`,
+      );
     }
     // Radit „oprav podmínku" tomu, kdo žádnou nenapsal, je matoucí – takový
     // žák si nejspíš spletl tabulku (klasika: opíše ukázku z výkladu).
     let konec: string;
     if (!zakMaWhere && !refMaWhere) {
-      konec = " Zkontroluj, jestli vybíráš ze správné tabulky.";
+      konec = tt(" Zkontroluj, jestli vybíráš ze správné tabulky.", " Check that you are selecting from the right table.");
     } else if (!zakMaWhere) {
-      konec = " Zatím nemáš žádnou podmínku – bez WHERE dostaneš celou tabulku.";
+      konec = tt(
+        " Zatím nemáš žádnou podmínku – bez WHERE dostaneš celou tabulku.",
+        " You have no condition yet – without WHERE you get the whole table.",
+      );
     } else {
       konec =
         mv.length > rv.length
-          ? " Podmínku máš, ale pouští dál moc řádků."
-          : " Podmínka nejspíš odfiltrovala i řádky, které tam patří.";
+          ? tt(" Podmínku máš, ale pouští dál moc řádků.", " You have a condition, but it lets too many rows through.")
+          : tt(
+              " Podmínka nejspíš odfiltrovala i řádky, které tam patří.",
+              " The condition has probably filtered out rows that belong there too.",
+            );
     }
-    return `Vrátil jsi ${mv.length} ${radky(mv.length)}, správně jich je ${rv.length}.${konec}`;
+    return tt(
+      `Vrátil jsi ${mv.length} ${radky(mv.length)}, správně jich je ${rv.length}.${konec}`,
+      `You returned ${rowsEn(mv.length)}; it should be ${rv.length}.${konec}`,
+    );
   }
 
   const mc = mv[0]?.length ?? 0;
   const rc = rv[0]?.length ?? 0;
   if (mc !== rc) {
-    return `Řádků máš správně ${mv.length}, ale vypisuješ ${mc} ${sloupce(mc)} místo ${rc}. Zkontroluj, co máš za SELECT.`;
+    return tt(
+      `Řádků máš správně ${mv.length}, ale vypisuješ ${mc} ${sloupce(mc)} místo ${rc}. Zkontroluj, co máš za SELECT.`,
+      `You have the right number of rows (${mv.length}), but you are listing ${colsEn(mc)} instead of ${rc}. Check what you have after SELECT.`,
+    );
   }
 
   // Stejné názvy sloupců v jiném pořadí = jediná chyba je pořadí za SELECT.
@@ -236,7 +290,10 @@ export function diffMessage(
   if (mn.length === rn.length && mn.length > 1) {
     const key = (xs: string[]) => [...xs].sort().join(" ");
     if (key(mn) === key(rn) && mn.join(" ") !== rn.join(" ")) {
-      return "Sloupce máš správné, jen prohozené. Za SELECT je vypiš v pořadí, v jakém je chce úkol.";
+      return tt(
+        "Sloupce máš správné, jen prohozené. Za SELECT je vypiš v pořadí, v jakém je chce úkol.",
+        "You have the right columns, just swapped. After SELECT, list them in the order the task asks for.",
+      );
     }
   }
 
@@ -244,13 +301,22 @@ export function diffMessage(
     const a = [...asKeys(mv)].sort();
     const b = [...asKeys(rv)].sort();
     if (a.every((x, i) => x === b[i])) {
-      return "Řádky máš správné, ale v jiném pořadí. Zkontroluj ORDER BY – a jestli tam nemá (nebo naopak nemá být) DESC.";
+      return tt(
+        "Řádky máš správné, ale v jiném pořadí. Zkontroluj ORDER BY – a jestli tam nemá (nebo naopak nemá být) DESC.",
+        "You have the right rows, but in a different order. Check ORDER BY – and whether DESC should (or shouldn't) be there.",
+      );
     }
   }
 
   return mutating
-    ? "Počet řádků sedí, ale hodnoty ne. Zkontroluj, jestli měníš správný řádek a jestli do správného sloupce zapisuješ správnou hodnotu."
-    : "Počet řádků i sloupců sedí, ale hodnoty ne. Porovnej svůj výsledek s tím, co po tobě úkol chce – nejčastěji je chyba v podmínce nebo ve sloupci, podle kterého vybíráš.";
+    ? tt(
+        "Počet řádků sedí, ale hodnoty ne. Zkontroluj, jestli měníš správný řádek a jestli do správného sloupce zapisuješ správnou hodnotu.",
+        "The number of rows is right, but the values aren't. Check that you are changing the right row and writing the right value into the right column.",
+      )
+    : tt(
+        "Počet řádků i sloupců sedí, ale hodnoty ne. Porovnej svůj výsledek s tím, co po tobě úkol chce – nejčastěji je chyba v podmínce nebo ve sloupci, podle kterého vybíráš.",
+        "The numbers of rows and columns are right, but the values aren't. Compare your result with what the task asks for – most often the mistake is in the condition or in the column you select by.",
+      );
 }
 
 export const LESSONS: SqlLesson[] = [

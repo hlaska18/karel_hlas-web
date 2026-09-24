@@ -11,6 +11,7 @@ import { Copy, Check, ExternalLink } from "lucide-react";
 import { forkDb, type SqlResult } from "@/lib/sqljs";
 import { Okno, Tlacitko, Paticka } from "@/components/dbb/okna";
 import { kopiruj } from "@/components/dbb/Vysledky";
+import { t, jeAnglicky } from "@/lib/dbb/jazyk";
 import { chybaCesky } from "@/lib/dbb/chyby";
 import { tabulky } from "@/lib/dbb/prikazy";
 import {
@@ -38,7 +39,7 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
   const uloha: UlohaOdkazu = { zadani: zadani.trim(), napoveda: napoveda.trim(), soubor, reference: reference.trim() };
   const odkaz =
     zkouska && zkouska.ok && zkouska.vysledek.values.length > 0 && uloha.zadani
-      ? `${window.location.origin}/sql?ukol=${zakodujUlohu(uloha)}`
+      ? `${window.location.origin}/sql?${jeAnglicky() ? "z=en&" : ""}ukol=${zakodujUlohu(uloha)}`
       : null;
 
   const zmena = () => {
@@ -65,15 +66,17 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
   };
 
   return (
-    <Okno titulek="Vytvořit úlohu pro třídu" zavrit={zavrit} sirka={720}>
+    <Okno titulek={t("Vytvořit úlohu pro třídu", "Create a Task for the Class")} zavrit={zavrit} sirka={720}>
       <div className="dbb-posuv min-h-0 flex-1 overflow-auto px-5 py-4 text-[12px] leading-relaxed">
         <p>
-          Napiš zadání a správný dotaz. Žák po otevření odkazu dostane úlohu jako lekci „Úloha od učitele“ a program
-          ji zkontroluje sám – stejně jako lekce kurzu, nad původními daty. Jde jen o dotazy SELECT.
+          {t(
+            "Napiš zadání a správný dotaz. Žák po otevření odkazu dostane úlohu jako lekci „Úloha od učitele“ a program ji zkontroluje sám – stejně jako lekce kurzu, nad původními daty. Jde jen o dotazy SELECT.",
+            "Write the task and the correct query. When a pupil opens the link, the task appears as the lesson “Task from your teacher” and the program checks it by itself – like the course lessons, against the original data. Only SELECT queries are possible.",
+          )}
         </p>
 
         <label className="mt-3 block">
-          <span className="font-semibold">Databáze</span>
+          <span className="font-semibold">{t("Databáze", "Database")}</span>
           <select
             value={soubor}
             onChange={(e) => {
@@ -91,7 +94,7 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
         </label>
 
         <label className="mt-3 block">
-          <span className="font-semibold">Zadání pro žáky</span>
+          <span className="font-semibold">{t("Zadání pro žáky", "Task for the pupils")}</span>
           <textarea
             value={zadani}
             maxLength={MAX_ZADANI}
@@ -100,13 +103,14 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
               zmena();
             }}
             rows={3}
-            placeholder="Vypiš názvy všech knih od Karla Čapka seřazené podle roku vydání."
+            placeholder={t("Vypiš názvy všech knih od Karla Čapka seřazené podle roku vydání.", "List the titles of all the books by Karel Čapek, sorted by year of publication.")}
             className={`${POLE} mt-1 resize-y`}
           />
         </label>
 
         <label className="mt-3 block">
-          <span className="font-semibold">Nápověda</span> <span className="text-dbb-slaby">(nepovinná)</span>
+          <span className="font-semibold">{t("Nápověda", "Hint")}</span>{" "}
+          <span className="text-dbb-slaby">{t("(nepovinná)", "(optional)")}</span>
           <input
             value={napoveda}
             maxLength={MAX_ZADANI}
@@ -114,14 +118,16 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
               nastavNapovedu(e.target.value);
               zmena();
             }}
-            placeholder="Použij WHERE a ORDER BY."
+            placeholder={t("Použij WHERE a ORDER BY.", "Use WHERE and ORDER BY.")}
             className={`${POLE} mt-1 h-[26px]`}
           />
         </label>
 
         <label className="mt-3 block">
-          <span className="font-semibold">Správný dotaz</span>{" "}
-          <span className="text-dbb-slaby">(žákovi se neukáže, podle něj se kontroluje výsledek)</span>
+          <span className="font-semibold">{t("Správný dotaz", "Correct query")}</span>{" "}
+          <span className="text-dbb-slaby">
+            {t("(žákovi se neukáže, podle něj se kontroluje výsledek)", "(pupils don't see it; their result is checked against it)")}
+          </span>
           <textarea
             value={reference}
             maxLength={MAX_DOTAZU}
@@ -143,7 +149,7 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
             disabled={!uloha.reference}
             className="h-[26px] border border-dbb-linka bg-dbb-povrch px-3 enabled:hover:bg-dbb-hover disabled:opacity-45"
           >
-            Vyzkoušet dotaz
+            {t("Vyzkoušet dotaz", "Test the Query")}
           </button>
         </div>
 
@@ -154,10 +160,18 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
           <div className="mt-2">
             <p className={zkouska.vysledek.values.length ? "text-dbb-slaby" : "text-[#6b1109]"}>
               {zkouska.vysledek.values.length
-                ? `Dotaz vrací ${zkouska.vysledek.values.length} ${
-                    zkouska.vysledek.values.length === 1 ? "řádek" : zkouska.vysledek.values.length < 5 ? "řádky" : "řádků"
-                  }. Tohle musí vyjít i žákovi:`
-                : "Dotaz nevrací žádné řádky – úlohu by pak splnil každý dotaz, který nic nenajde. Uprav zadání, ať něco vrací."}
+                ? t(
+                    `Dotaz vrací ${zkouska.vysledek.values.length} ${
+                      zkouska.vysledek.values.length === 1 ? "řádek" : zkouska.vysledek.values.length < 5 ? "řádky" : "řádků"
+                    }. Tohle musí vyjít i žákovi:`,
+                    `The query returns ${zkouska.vysledek.values.length} ${
+                      zkouska.vysledek.values.length === 1 ? "row" : "rows"
+                    }. The pupils have to get this too:`,
+                  )
+                : t(
+                    "Dotaz nevrací žádné řádky – úlohu by pak splnil každý dotaz, který nic nenajde. Uprav zadání, ať něco vrací.",
+                    "The query returns no rows – then any query that finds nothing would pass. Change the task so that it returns something.",
+                  )}
             </p>
             {zkouska.vysledek.values.length > 0 && (
               <div className="dbb-posuv mt-1 max-h-[150px] overflow-auto border border-dbb-mrizka">
@@ -190,16 +204,16 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
 
         {odkaz && (
           <div className="mt-4 border border-[#9fd5ae] bg-[#eaf7ee] px-3 py-2.5">
-            <p className="font-semibold">Odkaz pro třídu</p>
+            <p className="font-semibold">{t("Odkaz pro třídu", "Link for the class")}</p>
             <div className="mt-1 flex items-center">
-              <input readOnly value={odkaz} aria-label="Odkaz na úlohu" onFocus={(e) => e.target.select()} className={`${POLE} dbb-kod h-[26px] min-w-0 flex-1 text-[11px]`} />
+              <input readOnly value={odkaz} aria-label={t("Odkaz na úlohu", "Link to the task")} onFocus={(e) => e.target.select()} className={`${POLE} dbb-kod h-[26px] min-w-0 flex-1 text-[11px]`} />
               <button
                 type="button"
                 onClick={() => kopiruj(odkaz, () => nastavZkopirovano(true))}
                 className="ml-2 flex h-[26px] shrink-0 items-center border border-dbb-linka bg-dbb-povrch px-2 hover:bg-dbb-hover"
               >
                 {zkopirovano ? <Check className="mr-1 h-3.5 w-3.5 text-[#2e9d4f]" /> : <Copy className="mr-1 h-3.5 w-3.5" />}
-                {zkopirovano ? "Zkopírováno" : "Kopírovat"}
+                {zkopirovano ? t("Zkopírováno", "Copied") : t("Kopírovat", "Copy")}
               </button>
               <a
                 href={odkaz}
@@ -207,20 +221,22 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
                 rel="noopener noreferrer"
                 className="ml-2 flex h-[26px] shrink-0 items-center border border-dbb-linka bg-dbb-povrch px-2 hover:bg-dbb-hover"
               >
-                Vyzkoušet <ExternalLink className="ml-1 h-3 w-3" />
+                {t("Vyzkoušet", "Try It")} <ExternalLink className="ml-1 h-3 w-3" />
               </a>
             </div>
             <p className="mt-1.5 text-dbb-slaby">
-              Kód úlohy <b className="dbb-kod text-[11px] text-dbb-text">{klicUlohy(uloha)}</b> uvidíš v Přehledu třídy
-              u žáků, kteří ji splnili. Správný dotaz je v odkazu zakódovaný, ne zašifrovaný – na test to není, na
-              procvičení a domácí úkol ano.
+              {t("Kód úlohy", "The task code")} <b className="dbb-kod text-[11px] text-dbb-text">{klicUlohy(uloha)}</b>{" "}
+              {t(
+                "uvidíš v Přehledu třídy u žáků, kteří ji splnili. Správný dotaz je v odkazu zakódovaný, ne zašifrovaný – na test to není, na procvičení a domácí úkol ano.",
+                "shows up in the Class Overview for pupils who solved it. The correct query is encoded in the link, not encrypted – fine for practice and homework, not for a test.",
+              )}
             </p>
           </div>
         )}
       </div>
       <Paticka>
         <Tlacitko primarni prvni akce={zavrit}>
-          Zavřít
+          {t("Zavřít", "Close")}
         </Tlacitko>
       </Paticka>
     </Okno>

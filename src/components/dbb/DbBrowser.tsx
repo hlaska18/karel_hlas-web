@@ -55,6 +55,7 @@ import {
 } from "@/lib/dbb/kurz";
 import { vyhodnotDotaz, type SpusteniKontroly } from "@/lib/dbb/kontrola";
 import { dekodujUlohu, lekceZOdkazu, ID_ULOHY } from "@/lib/dbb/odkazUlohy";
+import { t, jeAnglicky, adresaVJazyce } from "@/lib/dbb/jazyk";
 import {
   DbbKontext,
   useDbb,
@@ -271,12 +272,12 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     pridejLog("aplikace", "RELEASE \"RESTOREPOINT\";");
     udalost("zapsano");
     if (ulozeno) {
-      status("Změny zapsány – soubor je uložený v tomhle prohlížeči na tomhle počítači.");
+      status(t("Změny zapsány – soubor je uložený v tomhle prohlížeči na tomhle počítači.", "Changes written – the file is saved in this browser on this computer."));
     } else {
       // Úložiště je plné nebo zakázané: v paměti zápis proběhl, ale po zavření
       // stránky by se ztratil. Radši to říct a nabídnout stažení.
       otevritDialog({ druh: "chybaZapisu", nazev: o.nazev, bajty });
-      status("Soubor se nepodařilo uložit v prohlížeči.");
+      status(t("Soubor se nepodařilo uložit v prohlížeči.", "The file could not be saved in the browser."));
     }
     zmenaVerze();
   }, [ulozNaDisk, pridejLog, udalost, status, zmenaVerze]);
@@ -294,7 +295,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     nastavOtevrenou(nazev);
     pridejLog("aplikace", "ROLLBACK TO SAVEPOINT \"RESTOREPOINT\";");
     udalost("vraceno");
-    status("Změny byly vráceny – databáze je ve stavu po posledním zápisu.");
+    status(t("Změny byly vráceny – databáze je ve stavu po posledním zápisu.", "Changes reverted – the database is as it was after the last write."));
     zmenaVerze();
   }, [zavriInterne, pridejLog, udalost, status, zmenaVerze]);
 
@@ -354,7 +355,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       if (!s) return;
       stahni(nazev, s.bajty);
       udalost(`stazeno:${nazev}`);
-      status(`Kopie souboru ${nazev} je ve složce Stažené soubory tvého počítače.`);
+      status(t(`Kopie souboru ${nazev} je ve složce Stažené soubory tvého počítače.`, `A copy of ${nazev} is in the Downloads folder of your computer.`));
     };
     if (!zmenenoRef.current) {
       stahniSoubor();
@@ -362,14 +363,14 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     }
     otevritDialog({
       druh: "potvrdit",
-      titulek: "Uložit kopii do počítače",
-      text: "Některé změny ještě nejsou zapsané v souboru. Zapsat je a stáhnout soubor i s nimi?",
-      tlacitko: "Zapsat a stáhnout",
+      titulek: t("Uložit kopii do počítače", "Save a Copy to This Computer"),
+      text: t("Některé změny ještě nejsou zapsané v souboru. Zapsat je a stáhnout soubor i s nimi?", "Some changes are not written to the file yet. Write them and download the file with them?"),
+      tlacitko: t("Zapsat a stáhnout", "Write and Download"),
       akce: () => {
         zapsat();
         stahniSoubor();
       },
-      zrusit: "Stáhnout bez nich",
+      zrusit: t("Stáhnout bez nich", "Download Without Them"),
       priZruseni: stahniSoubor,
     });
   }, [zapsat, udalost, status]);
@@ -377,16 +378,16 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   /** Soubor nahraný ze skutečného počítače (dialog Otevřít → Z tohoto počítače…). */
   const nahrajSoubor = useCallback(
     (puvodniNazev: string, bajty: Uint8Array): string | null => {
-      if (bajty.length > MAX_NAHRANI) return "Soubor je moc velký – do prohlížeče se vejde databáze nejvýš do 2 MB.";
-      if (!jeSqlite(bajty)) return "Tohle není databáze SQLite. Vyber soubor .db, který jsi třeba dřív stáhl(a) z kurzu.";
+      if (bajty.length > MAX_NAHRANI) return t("Soubor je moc velký – do prohlížeče se vejde databáze nejvýš do 2 MB.", "The file is too big – the browser can hold a database of up to 2 MB.");
+      if (!jeSqlite(bajty)) return t("Tohle není databáze SQLite. Vyber soubor .db, který jsi třeba dřív stáhl(a) z kurzu.", "This is not an SQLite database. Choose a .db file – one you downloaded from the course earlier, for example.");
       const nazvy = Object.keys(diskRef.current);
-      if (nazvy.length >= MAX_SOUBORU) return "Ve složce je moc souborů. Nějaký starý smaž (pravým tlačítkem → Odstranit).";
+      if (nazvy.length >= MAX_SOUBORU) return t("Ve složce je moc souborů. Nějaký starý smaž (pravým tlačítkem → Odstranit).", "There are too many files in the folder. Delete an old one (right-click → Delete).");
       const cisty = puvodniNazev.replace(/[\\/:*?"<>|]/g, "_");
-      const nazev = volnyNazev(cisty.toLowerCase() === KNIHOVNA ? "knihovna z počítače.db" : cisty, nazvy);
+      const nazev = volnyNazev(cisty.toLowerCase() === KNIHOVNA ? t("knihovna z počítače.db", "knihovna from computer.db") : cisty, nazvy);
       ulozNaDisk({ ...diskRef.current, [nazev]: { bajty, zmeneno: Date.now() } });
       otevritDialog(null);
       zavriDatabazi(() => otevri(nazev));
-      status(`Soubor ${nazev} je nahraný z počítače.`);
+      status(t(`Soubor ${nazev} je nahraný z počítače.`, `The file ${nazev} has been uploaded from your computer.`));
       return null;
     },
     [ulozNaDisk, zavriDatabazi, otevri, status],
@@ -403,7 +404,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     ulozNaDisk({ ...diskRef.current, [KNIHOVNA]: { bajty, zmeneno: Date.now() } });
     if (jeOtevrena) otevri(KNIHOVNA);
     else zavriDatabazi(() => otevri(KNIHOVNA));
-    status("Soubor knihovna.db je zpátky v původním stavu.");
+    status(t("Soubor knihovna.db je zpátky v původním stavu.", "The knihovna.db file is back in its original state."));
   }, [zavriInterne, ulozNaDisk, otevri, zavriDatabazi, status]);
 
   /** Založí (nebo vrátí do původního stavu) databázi sady – procvičování, detektivka. */
@@ -454,11 +455,11 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       if (!zmenena || prectiText(KLIC_ODMITNUTO) === zmenena) return;
       otevritDialog({
         druh: "potvrdit",
-        titulek: "Lekce počítá s původní knihovnou",
-        text: "Soubor knihovna.db už není v původním stavu – nejspíš z minulého průchodu, nebo po někom, kdo u počítače seděl před tebou. Úkoly by se pak mohly odškrtnout samy. Obnovit původní knihovnu? Tvůj postup v kurzu zůstane.",
-        tlacitko: "Obnovit",
+        titulek: t("Lekce počítá s původní knihovnou", "This lesson needs the original library"),
+        text: t("Soubor knihovna.db už není v původním stavu – nejspíš z minulého průchodu, nebo po někom, kdo u počítače seděl před tebou. Úkoly by se pak mohly odškrtnout samy. Obnovit původní knihovnu? Tvůj postup v kurzu zůstane.", "The knihovna.db file is no longer in its original state – probably from your previous run, or from someone who sat at this computer before you. Tasks could then tick themselves off. Restore the original library? Your progress in the course stays."),
+        tlacitko: t("Obnovit", "Restore"),
         akce: obnovKnihovnu,
-        zrusit: "Pokračovat se svou",
+        zrusit: t("Pokračovat se svou", "Keep Mine"),
         priZruseni: () => uloz(KLIC_ODMITNUTO, zmenena),
       });
     },
@@ -592,7 +593,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       return n;
     });
     nastavOdezvu((od) => (od && klice.indexOf(od.klic) !== -1 ? null : od));
-    status(klice.length === 1 ? "Úkol splněn." : "Úkoly splněny.");
+    status(klice.length === 1 ? t("Úkol splněn.", "Task completed.") : t("Úkoly splněny.", "Tasks completed."));
   }, [status]);
 
   const pridejPokus = useCallback((klic: string) => {
@@ -632,9 +633,9 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const novyZak = useCallback(() => {
     otevritDialog({
       druh: "potvrdit",
-      titulek: "Nový žák",
-      text: "Smaže se postup ve všech lekcích, rozepsaný dotaz i všechny databáze – zůstane jen původní knihovna.db. Hodí se, když si u počítače sedá někdo jiný.",
-      tlacitko: "Začít jako nový žák",
+      titulek: t("Nový žák", "New Pupil"),
+      text: t("Smaže se postup ve všech lekcích, rozepsaný dotaz i všechny databáze – zůstane jen původní knihovna.db. Hodí se, když si u počítače sedá někdo jiný.", "This deletes the progress in all lessons, the unfinished query and all databases – only the original knihovna.db stays. Useful when someone else sits down at this computer."),
+      tlacitko: t("Začít jako nový žák", "Start as a New Pupil"),
       akce: () => {
         nastavSplneno(new Set());
         nastavOpsano(new Set());
@@ -660,7 +661,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         nastavPlochu("ne");
         nastavKartu("sql");
         otevri(KNIHOVNA);
-        status("Začínáš jako nový žák – lekce 1.");
+        status(t("Začínáš jako nový žák – lekce 1.", "You are starting as a new pupil – lesson 1."));
       },
     });
   }, [nastavEditor, zavriInterne, ulozNaDisk, otevri, status]);
@@ -677,10 +678,13 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     }
     otevritDialog({
       druh: "potvrdit",
-      titulek: "Režim předvádění",
+      titulek: t("Režim předvádění", "Presentation Mode"),
       text:
-        "Pro učitele u projektoru. Program se zvětší, řešení půjdou ukázat hned bez pokusu a postup i soubory se budou ukládat zvlášť – postup žáka na tomhle počítači se nezmění.\n\nRežim platí, dokud nezavřeš kartu prohlížeče nebo ho neukončíš v nabídce Nápověda.",
-      tlacitko: "Zapnout předvádění",
+        t(
+          "Pro učitele u projektoru. Program se zvětší, řešení půjdou ukázat hned bez pokusu a postup i soubory se budou ukládat zvlášť – postup žáka na tomhle počítači se nezmění.\n\nRežim platí, dokud nezavřeš kartu prohlížeče nebo ho neukončíš v nabídce Nápověda.",
+          "For teachers at the projector. The program gets bigger, solutions can be shown straight away without an attempt, and progress and files are saved separately – the progress of the pupil who uses this computer doesn't change.\n\nThe mode lasts until you close the browser tab or end it in the Help menu.",
+        ),
+      tlacitko: t("Zapnout předvádění", "Turn On Presentation Mode"),
       akce: () => zavriDatabazi(prepnout),
     });
   }, [predvadeni, zavriDatabazi]);
@@ -753,18 +757,23 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   useEffect(() => {
     if (engine !== "hotovo") return;
     const o = otevrenaRef.current;
-    const t = lekce.tabulka;
+    const tab = lekce.tabulka;
     const soubor = souborLekce(lekce);
-    if (!o || !t || (soubor && o.nazev !== soubor) || tabulky(o.db).indexOf(t) === -1) {
+    if (!o || !tab || (soubor && o.nazev !== soubor) || tabulky(o.db).indexOf(tab) === -1) {
       nastavVystup(null);
       return;
     }
-    const r = precti(o.db, `SELECT * FROM ${uvoz(t)};`);
+    const r = precti(o.db, `SELECT * FROM ${uvoz(tab)};`);
     nastavVystup({
       vysledek: r,
-      zprava: [`Tady uvidíš výsledek svého dotazu. Zatím je tu obsah tabulky ${t}, ať víš, s čím pracuješ.`],
+      zprava: [
+        t(
+          `Tady uvidíš výsledek svého dotazu. Zatím je tu obsah tabulky ${tab}, ať víš, s čím pracuješ.`,
+          `The result of your query will appear here. For now it shows the ${tab} table, so you know what you are working with.`,
+        ),
+      ],
       chyba: false,
-      nahled: t,
+      nahled: tab,
     });
     // Jen při změně lekce nebo otevření souboru (i téhož – po obnovení).
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -779,7 +788,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       if (!o) {
         nastavVystup({
           vysledek: null,
-          zprava: ["Není otevřená žádná databáze.", "Otevři ji přes Soubor → Otevřít databázi (Ctrl+O)."],
+          zprava: [t("Není otevřená žádná databáze.", "No database is open."), t("Otevři ji přes Soubor → Otevřít databázi (Ctrl+O).", "Open one with File → Open Database (Ctrl+O).")],
           chyba: true,
         });
         return;
@@ -801,7 +810,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         prikazy = rozdelPrikazy(text);
       }
       if (!prikazy.length) {
-        nastavVystup({ vysledek: null, zprava: ["Editor je prázdný – napiš dotaz a spusť ho znovu."], chyba: false });
+        nastavVystup({ vysledek: null, zprava: [t("Editor je prázdný – napiš dotaz a spusť ho znovu.", "The editor is empty – write a query and run it again.")], chyba: false });
         return;
       }
 
@@ -811,7 +820,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       if (aktualni && aktualni.reseniJeSql) {
         const potreba = tabulkyDotazu(aktualni.reseni);
         const pouzite = tabulkyDotazu(prikazy.map((p) => p.text).join("\n"));
-        if (!souborLekce(lekce) || potreba.some((t) => pouzite.indexOf(t) !== -1)) pridejPokus(aktualni.klic);
+        if (!souborLekce(lekce) || potreba.some((x) => pouzite.indexOf(x) !== -1)) pridejPokus(aktualni.klic);
       }
 
       const beh = spust(o.db, prikazy);
@@ -819,36 +828,42 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       if (!beh.ok && beh.posledni) pridejLog("uzivatel", beh.posledni.text);
       if (beh.zmenil) nastavZmeneno(true);
       const posledni = beh.posledni;
-      const naRadku = posledni ? [`Na řádku ${posledni.radek}:`, posledni.text] : [];
+      const naRadku = posledni ? [t(`Na řádku ${posledni.radek}:`, `At line ${posledni.radek}:`), posledni.text] : [];
 
       if (!beh.ok) {
         nastavVystup({
           vysledek: null,
           zprava: beh.zakazano
-            ? ["Příkaz nebyl proveden."].concat(naRadku)
-            : ["Provádění skončilo s chybou.", `Výsledek: ${beh.chyba}`].concat(naRadku),
+            ? [t("Příkaz nebyl proveden.", "The statement was not executed.")].concat(naRadku)
+            : [t("Provádění skončilo s chybou.", "Execution finished with errors."), `${t("Výsledek", "Result")}: ${beh.chyba}`].concat(naRadku),
           chyba: true,
           cesky: beh.zakazano ? TRANSAKCE_ZAKAZANE : cesky(beh.chyba || "", tabulky(o.db)),
         });
-        status("Provádění skončilo s chybou.");
+        status(t("Provádění skončilo s chybou.", "Execution finished with errors."));
       } else {
         const druh = posledni ? druhPrikazu(posledni.text) : "jiny";
         let vysledekText: string;
         if (druh === "cteni" && beh.vysledek) {
           const n = beh.vysledek.values.length;
-          vysledekText = `Výsledek: ${pocetRadku(n, "vrácen")} za ${beh.ms} ms`;
+          vysledekText = t(`Výsledek: ${pocetRadku(n, "vrácen")} za ${beh.ms} ms`, `Result: ${pocetRadku(n, "vrácen")} in ${beh.ms}ms`);
         } else if (druh === "data") {
-          vysledekText = `Výsledek: dotaz byl úspěšně proveden. Trvalo ${beh.ms} ms, ${pocetRadku(beh.zmenenoRadku, "ovlivněn")}.`;
+          vysledekText = t(
+            `Výsledek: dotaz byl úspěšně proveden. Trvalo ${beh.ms} ms, ${pocetRadku(beh.zmenenoRadku, "ovlivněn")}.`,
+            `Result: query executed successfully. Took ${beh.ms}ms, ${pocetRadku(beh.zmenenoRadku, "ovlivněn")}`,
+          );
         } else {
-          vysledekText = `Výsledek: dotaz byl úspěšně proveden. Trvalo ${beh.ms} ms.`;
+          vysledekText = t(
+            `Výsledek: dotaz byl úspěšně proveden. Trvalo ${beh.ms} ms.`,
+            `Result: query executed successfully. Took ${beh.ms}ms`,
+          );
         }
         nastavVystup({
           vysledek: druh === "cteni" ? beh.vysledek : null,
-          zprava: ["Provádění dokončeno bez chyb.", vysledekText].concat(naRadku),
+          zprava: [t("Provádění dokončeno bez chyb.", "Execution finished without errors."), vysledekText].concat(naRadku),
           chyba: false,
           poznamka: druh === "cteni" && posledni ? poznamkaKRazeni(posledni.text, beh.vysledek) : undefined,
         });
-        status("Provádění dokončeno bez chyb.");
+        status(t("Provádění dokončeno bez chyb.", "Execution finished without errors."));
 
         // Vlastní SELECTy nad vlastní databází (lekce 19).
         if (o.nazev !== KNIHOVNA && !VSECHNY_LEKCE.some((l) => !!l.databaze && l.databaze.soubor === o.nazev)) {
@@ -891,7 +906,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const provedAplikaci = useCallback(
     (sql: string, params?: unknown[], zaznam?: string): string | null => {
       const o = otevrenaRef.current;
-      if (!o) return "Není otevřená žádná databáze.";
+      if (!o) return t("Není otevřená žádná databáze.", "No database is open.");
       try {
         o.db.run(sql, params);
         pridejLog("uzivatel", zaznam || sql);
@@ -979,7 +994,8 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     return (
       <div className="dbb flex vyska-obrazovky w-full items-center justify-center">
         <p className="flex items-center text-[13px] text-dbb-slaby">
-          <Loader2 className="mr-2 h-4 w-4 animate-spin" /> Spouštím DB Browser… (pár sekund, nic se neinstaluje)
+          <Loader2 className="mr-2 h-4 w-4 animate-spin" />{" "}
+          {t("Spouštím DB Browser… (pár sekund, nic se neinstaluje)", "Starting DB Browser… (a few seconds, nothing gets installed)")}
         </p>
       </div>
     );
@@ -988,8 +1004,10 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     return (
       <div className="dbb flex vyska-obrazovky w-full items-center justify-center p-6">
         <p className="max-w-md text-center text-[13px]">
-          Program se nepodařilo spustit – nenačetl se SQL engine. Zkontroluj připojení k internetu a načti
-          stránku znovu.
+          {t(
+            "Program se nepodařilo spustit – nenačetl se SQL engine. Zkontroluj připojení k internetu a načti stránku znovu.",
+            "The program could not start – the SQL engine did not load. Check your internet connection and reload the page.",
+          )}
         </p>
       </div>
     );
@@ -1000,6 +1018,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   return (
     <DbbKontext.Provider value={api}>
       <div
+        lang={jeAnglicky() ? "en" : undefined}
         className={`dbb relative flex select-none flex-col overflow-hidden ${meritko === 1 ? "vyska-obrazovky w-full" : ""}`}
         style={
           meritko === 1
@@ -1015,15 +1034,18 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         {predvadeni && (
           <div className="flex shrink-0 items-center bg-[#5b3fa0] px-3 py-1 text-[12px] text-white">
             <span className="flex-1">
-              <b>Režim předvádění</b> – postup a soubory se ukládají zvlášť, postup žáků na tomhle počítači se
-              nemění. Řešení jdou ukázat hned.
+              <b>{t("Režim předvádění", "Presentation mode")}</b>
+              {t(
+                " – postup a soubory se ukládají zvlášť, postup žáků na tomhle počítači se nemění. Řešení jdou ukázat hned.",
+                " – progress and files are saved separately; the pupils' progress on this computer doesn't change. Solutions can be shown straight away.",
+              )}
             </span>
             <button
               type="button"
               onClick={prepniPredvadeni}
               className="ml-3 border border-white/60 px-2.5 py-0.5 hover:bg-white/15"
             >
-              Ukončit předvádění
+              {t("Ukončit předvádění", "End Presentation")}
             </button>
           </div>
         )}
@@ -1042,14 +1064,17 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
             {uzke && (
               <div className="flex shrink-0 items-center bg-[#fff4ce] px-3 py-1.5 text-[12px] text-[#4a3500]">
                 <span className="flex-1">
-                  Okno je na program úzké. Roztáhni ho, nebo přepni na webovou podobu kurzu (lekce 1–13).
+                  {t(
+                    "Okno je na program úzké. Roztáhni ho, nebo přepni na webovou podobu kurzu (lekce 1–13).",
+                    "The window is too narrow for the program. Make it wider, or switch to the web version of the course (lessons 1–13, in Czech).",
+                  )}
                 </span>
                 <button
                   type="button"
                   onClick={() => zavriDatabazi(() => prepniPodobu("web"))}
                   className="ml-3 border border-[#c9a227] bg-white px-2.5 py-0.5 hover:bg-[#fff8e1]"
                 >
-                  Přepnout na webovou podobu
+                  {t("Přepnout na webovou podobu", "Switch to the Web Version")}
                 </button>
               </div>
             )}
@@ -1059,8 +1084,11 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
                 className="absolute right-3 top-[34px] z-[70] w-[340px] border border-[#8ab4e0] bg-[#eaf3fc] px-3 py-2.5 text-[12px] leading-snug shadow-[0_6px_18px_rgba(0,0,0,0.18)]"
               >
                 <p>
-                  <b>Tohle je program v prohlížeči</b> – nic se neinstaluje. Křížek vpravo nahoře zavře program, ne
-                  prohlížeč; z plochy ho zase spustíš dvojklikem.
+                  <b>{t("Tohle je program v prohlížeči", "This program runs in your browser")}</b>
+                  {t(
+                    " – nic se neinstaluje. Křížek vpravo nahoře zavře program, ne prohlížeč; z plochy ho zase spustíš dvojklikem.",
+                    " – nothing gets installed. The cross at the top right closes the program, not the browser; you start it again from the desktop with a double-click.",
+                  )}
                 </p>
                 <button
                   type="button"
@@ -1070,7 +1098,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
                   }}
                   className="mt-2 border border-dbb-akcent bg-dbb-akcent px-3 py-0.5 text-dbb-akcent-text hover:brightness-110"
                 >
-                  Rozumím
+                  {t("Rozumím", "Got It")}
                 </button>
               </div>
             )}
@@ -1089,15 +1117,16 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
               obnovitKnihovnu={() =>
                 otevritDialog({
                   druh: "potvrdit",
-                  titulek: "Obnovit původní knihovna.db",
-                  text: "Soubor knihovna.db se vrátí do stavu, v jakém byl na začátku kurzu. Všechno, co jsi do něj zapsal(a) – třeba tabulka hodnoceni – zmizí. Postup v kurzu zůstane.",
-                  tlacitko: "Obnovit",
+                  titulek: t("Obnovit původní knihovna.db", "Restore Original knihovna.db"),
+                  text: t("Soubor knihovna.db se vrátí do stavu, v jakém byl na začátku kurzu. Všechno, co jsi do něj zapsal(a) – třeba tabulka hodnoceni – zmizí. Postup v kurzu zůstane.", "The knihovna.db file goes back to how it was at the start of the course. Everything you wrote into it – the hodnoceni table, for example – disappears. Your progress in the course stays."),
+                  tlacitko: t("Obnovit", "Restore"),
                   akce: obnovKnihovnu,
                 })
               }
               novyZak={novyZak}
               ulozKopii={ulozKopii}
               predvadeni={prepniPredvadeni}
+              jazyk={() => zavriDatabazi(() => window.location.assign(adresaVJazyce(jeAnglicky() ? "cs" : "en")))}
             />
             <Lista
               novaDatabaze={() => zavriDatabazi(() => otevritDialog({ druh: "nova" }))}
@@ -1148,9 +1177,9 @@ function Hlavni() {
 
   useEffect(() => {
     const pohyb = (e: MouseEvent) => {
-      const t = tahRef.current;
-      if (!t) return;
-      nastavSirkuDoku(Math.max(300, Math.min(640, t.sirka - (e.clientX - t.x) / meritkoRef.current)));
+      const tah = tahRef.current;
+      if (!tah) return;
+      nastavSirkuDoku(Math.max(300, Math.min(640, tah.sirka - (e.clientX - tah.x) / meritkoRef.current)));
     };
     const konec = () => {
       tahRef.current = null;

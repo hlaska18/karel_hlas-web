@@ -10,6 +10,7 @@ import { ChevronDown, ChevronRight, Table2, KeyRound, Columns3, Trash2, Printer,
 import { useDbb, precti, uvoz } from "@/components/dbb/kontext";
 import { tabulky } from "@/lib/dbb/prikazy";
 import type { SqlDbSoubor } from "@/lib/sqljs";
+import { t } from "@/lib/dbb/jazyk";
 
 export type Sloupec = { nazev: string; typ: string; notNull: boolean; pk: boolean; odkaz?: string };
 export type TabulkaInfo = { nazev: string; sql: string; sloupce: Sloupec[] };
@@ -150,7 +151,7 @@ export function KartaStruktura() {
 
   const radky: ReactNode[] = [];
   radky.push(
-    radek({ uroven: 0, klic: "#tabulky", nazev: `Tabulky (${s.tabulky.length})`, rozbalitelny: true }),
+    radek({ uroven: 0, klic: "#tabulky", nazev: `${t("Tabulky", "Tables")} (${s.tabulky.length})`, rozbalitelny: true }),
   );
   if (rozbalene.has("#tabulky")) {
     s.tabulky.forEach((t) => {
@@ -187,9 +188,9 @@ export function KartaStruktura() {
   }
   (
     [
-      ["#indexy", "Indexy", s.indexy],
-      ["#pohledy", "Pohledy", s.pohledy],
-      ["#spoustece", "Spouštěče", s.spoustece],
+      ["#indexy", t("Indexy", "Indices"), s.indexy],
+      ["#pohledy", t("Pohledy", "Views"), s.pohledy],
+      ["#spoustece", t("Spouštěče", "Triggers"), s.spoustece],
     ] as [string, string, string[]][]
   ).forEach(([klic, nazev, polozky]) => {
     radky.push(
@@ -207,33 +208,36 @@ export function KartaStruktura() {
       <div className="flex h-[28px] shrink-0 items-center">
         <Tlacitko
           ikona={<Plus className="h-4 w-4 text-[#2e9d4f]" />}
-          text="Vytvořit tabulku"
+          text={t("Vytvořit tabulku", "Create Table")}
           akce={() => api.otevritDialog({ druh: "tabulka" })}
         />
-        <Tlacitko ikona={<Plus className="h-4 w-4" />} text="Vytvořit index" zakazano />
-        <Tlacitko ikona={<Pencil className="h-4 w-4" />} text="Upravit tabulku" zakazano />
+        <Tlacitko ikona={<Plus className="h-4 w-4" />} text={t("Vytvořit index", "Create Index")} zakazano />
+        <Tlacitko ikona={<Pencil className="h-4 w-4" />} text={t("Upravit tabulku", "Modify Table")} zakazano />
         <Tlacitko
           ikona={<Trash2 className="h-4 w-4 text-[#c42b1c]" />}
-          text="Smazat tabulku"
+          text={t("Smazat tabulku", "Delete Table")}
           zakazano={!vybranaTabulka}
           akce={
             vybranaTabulka
               ? () =>
                   api.otevritDialog({
                     druh: "potvrdit",
-                    titulek: "Smazat tabulku",
-                    text: `Opravdu chceš smazat tabulku „${vybranaTabulka}“ i se všemi jejími daty? Dokud změny nezapíšeš, jde to vrátit tlačítkem Vrátit změny.`,
-                    tlacitko: "Smazat",
+                    titulek: t("Smazat tabulku", "Delete Table"),
+                    text: t(
+                      `Opravdu chceš smazat tabulku „${vybranaTabulka}“ i se všemi jejími daty? Dokud změny nezapíšeš, jde to vrátit tlačítkem Vrátit změny.`,
+                      `Are you sure you want to delete the table “${vybranaTabulka}” with all its data? Until you write the changes, Revert Changes can undo it.`,
+                    ),
+                    tlacitko: t("Smazat", "Delete"),
                     akce: () => {
                       const chyba = api.provedAplikaci(`DROP TABLE ${uvoz(vybranaTabulka)};`);
-                      if (chyba) api.otevritDialog({ druh: "zprava", titulek: "Smazat tabulku", text: chyba });
+                      if (chyba) api.otevritDialog({ druh: "zprava", titulek: t("Smazat tabulku", "Delete Table"), text: chyba });
                       nastavVybranou(null);
                     },
                   })
               : undefined
           }
         />
-        <Tlacitko ikona={<Printer className="h-4 w-4" />} text="Tisk" zakazano />
+        <Tlacitko ikona={<Printer className="h-4 w-4" />} text={t("Tisk", "Print")} zakazano />
       </div>
       <div className="dbb-posuv min-h-0 flex-1 overflow-auto border border-dbb-linka bg-dbb-povrch">
         <table className="w-full table-fixed text-[12px]" style={{ borderSpacing: 0 }}>
@@ -244,9 +248,9 @@ export function KartaStruktura() {
           </colgroup>
           <thead>
             <tr className="text-left">
-              <th className="sticky top-0 h-[22px] border-b border-r border-dbb-mrizka bg-dbb-hlavicka px-2 font-normal">Název</th>
-              <th className="sticky top-0 border-b border-r border-dbb-mrizka bg-dbb-hlavicka px-2 font-normal">Typ</th>
-              <th className="sticky top-0 border-b border-dbb-mrizka bg-dbb-hlavicka px-2 font-normal">Schéma</th>
+              <th className="sticky top-0 h-[22px] border-b border-r border-dbb-mrizka bg-dbb-hlavicka px-2 font-normal">{t("Název", "Name")}</th>
+              <th className="sticky top-0 border-b border-r border-dbb-mrizka bg-dbb-hlavicka px-2 font-normal">{t("Typ", "Type")}</th>
+              <th className="sticky top-0 border-b border-dbb-mrizka bg-dbb-hlavicka px-2 font-normal">{t("Schéma", "Schema")}</th>
             </tr>
           </thead>
           <tbody>{radky}</tbody>

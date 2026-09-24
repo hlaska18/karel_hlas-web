@@ -14,8 +14,13 @@ import { Check, ChevronLeft, ChevronRight, Lightbulb, KeyRound, PartyPopper, Arr
 import { useDbb } from "@/components/dbb/kontext";
 import { KURZ, SADY, lekceHotova, povinne, souborLekce, type UkolKurzu } from "@/lib/dbb/kurz";
 import { ID_ULOHY } from "@/lib/dbb/odkazUlohy";
+import { t, jeAnglicky } from "@/lib/dbb/jazyk";
+import { SLOVNICEK } from "@/lib/dbb/anglicky";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
 import { sazba } from "@/lib/sazba";
+
+/** Jazyk sazby: česky se svazují jednopísmenná slova, anglicky ne. */
+const JAZYK = jeAnglicky() ? "en" : "cs";
 
 const TRIDA: Record<string, string> = {
   slovo: "dbb-slovo",
@@ -45,9 +50,9 @@ function Kod({ sql }: { sql: string }) {
 function cekaSeNa(ukol: UkolKurzu): string {
   if (ukol.ceka) return ukol.ceka;
   const k = ukol.kontrola;
-  if (k.druh === "zmena") return "Čeká se, až spustíš příkaz, který data změní (F5).";
-  if (k.druh === "dotaz") return "Čeká se, až spustíš dotaz SELECT (F5).";
-  return "Čeká se, až to v programu uděláš.";
+  if (k.druh === "zmena") return t("Čeká se, až spustíš příkaz, který data změní (F5).", "Waiting for you to run a command that changes the data (F5).");
+  if (k.druh === "dotaz") return t("Čeká se, až spustíš dotaz SELECT (F5).", "Waiting for you to run a SELECT query (F5).");
+  return t("Čeká se, až to v programu uděláš.", "Waiting for you to do it in the program.");
 }
 
 function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; aktualni: boolean }) {
@@ -79,7 +84,7 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
                 ? "bg-dbb-akcent text-dbb-akcent-text"
                 : "bg-dbb-mrizka text-dbb-slaby"
           }`}
-          title={hotovo ? (opsano ? "Splněno s pomocí řešení" : "Splněno") : undefined}
+          title={hotovo ? (opsano ? t("Splněno s pomocí řešení", "Completed with the help of the solution") : t("Splněno", "Completed")) : undefined}
         >
           {hotovo ? <Check className="h-3 w-3" strokeWidth={3} /> : poradi}
         </span>
@@ -87,15 +92,15 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
           <p className={`text-[13px] leading-snug ${hotovo ? "text-dbb-slaby" : ""}`}>
             {ukol.navic && (
               <span className="mr-1.5 rounded-sm bg-[#fff1c2] px-1 py-px text-[10px] font-semibold uppercase tracking-wide text-[#6b5000]">
-                navíc
+                {t("navíc", "extra")}
               </span>
             )}
-            {sazba(ukol.zadani, "cs")}
+            {sazba(ukol.zadani, JAZYK)}
           </p>
 
           {odezva && !hotovo && (
             <p role="status" className="mt-1.5 border-l-2 border-[#e8a33d] bg-[#fff8e1] px-2 py-1 text-[12px] leading-snug text-[#4a3500]">
-              <b>Ještě ne:</b> {odezva}
+              <b>{t("Ještě ne:", "Not yet:")}</b> {odezva}
             </p>
           )}
 
@@ -107,7 +112,7 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
                 aria-expanded={napoveda}
                 className="mr-4 inline-flex items-center text-dbb-akcent hover:underline"
               >
-                <Lightbulb className="mr-1 h-3.5 w-3.5" /> {napoveda ? "Skrýt nápovědu" : "Nápověda"}
+                <Lightbulb className="mr-1 h-3.5 w-3.5" /> {napoveda ? t("Skrýt nápovědu", "Hide Hint") : t("Nápověda", "Hint")}
               </button>
               {napoveda && reseniNabidnout && (
                 <button
@@ -116,7 +121,7 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
                   aria-expanded={reseni}
                   className="inline-flex items-center text-dbb-akcent hover:underline"
                 >
-                  <KeyRound className="mr-1 h-3.5 w-3.5" /> {reseni ? "Skrýt řešení" : "Ukázat řešení"}
+                  <KeyRound className="mr-1 h-3.5 w-3.5" /> {reseni ? t("Skrýt řešení", "Hide Solution") : t("Ukázat řešení", "Show Solution")}
                 </button>
               )}
             </div>
@@ -124,9 +129,11 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
           {!hotovo && aktualni && (
             <p className="mt-1 text-[11px] leading-snug text-dbb-slaby">{cekaSeNa(ukol)}</p>
           )}
-          {!hotovo && napoveda && <p className="mt-1 text-[12px] leading-snug text-dbb-slaby">{sazba(ukol.hint, "cs")}</p>}
+          {!hotovo && napoveda && <p className="mt-1 text-[12px] leading-snug text-dbb-slaby">{sazba(ukol.hint, JAZYK)}</p>}
           {!hotovo && napoveda && !reseniNabidnout && !!ukol.reseni && (
-            <p className="mt-1 text-[11px] text-dbb-slaby">Řešení se nabídne, až jednou zkusíš dotaz spustit.</p>
+            <p className="mt-1 text-[11px] text-dbb-slaby">
+              {t("Řešení se nabídne, až jednou zkusíš dotaz spustit.", "The solution is offered once you have tried running a query.")}
+            </p>
           )}
           {!hotovo && reseni && reseniNabidnout && (
             <div>
@@ -137,7 +144,7 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
                   onClick={() => kurz.vlozReseni(ukol.klic)}
                   className="mt-1 text-[12px] text-dbb-akcent hover:underline"
                 >
-                  Vložit do editoru
+                  {t("Vložit do editoru", "Insert into Editor")}
                 </button>
               )}
             </div>
@@ -172,7 +179,7 @@ export function PanelKurzu() {
         <div className="flex items-center">
           <button
             type="button"
-            aria-label="Předchozí lekce"
+            aria-label={t("Předchozí lekce", "Previous lesson")}
             disabled={index <= 0}
             onClick={() => kurz.vyberLekci(VSECHNY_LEKCE[index - 1].id)}
             className="flex h-[24px] w-[24px] items-center justify-center rounded-[3px] enabled:hover:bg-dbb-hover disabled:opacity-35"
@@ -182,10 +189,10 @@ export function PanelKurzu() {
           <select
             value={lekce.id}
             onChange={(e) => kurz.vyberLekci(Number(e.target.value))}
-            aria-label="Lekce"
+            aria-label={t("Lekce", "Lesson")}
             className="mx-1 h-[24px] min-w-0 flex-1 border border-dbb-linka bg-dbb-povrch px-1 text-[12px]"
           >
-            <optgroup label="Kurz SQL">
+            <optgroup label={t("Kurz SQL", "SQL course")}>
               {KURZ.map((l) => (
                 <option key={l.id} value={l.id}>
                   {lekceHotova(l, kurz.splneno) ? "✓ " : ""}
@@ -193,7 +200,7 @@ export function PanelKurzu() {
                 </option>
               ))}
             </optgroup>
-            <optgroup label="Navíc: detektivka a procvičování">
+            <optgroup label={t("Navíc: detektivka a procvičování", "Extra: detective story and practice")}>
               {SADY.map((s) => (
                 <option key={s.lekce.id} value={s.lekce.id}>
                   {lekceHotova(s.lekce, kurz.splneno) ? "✓ " : ""}
@@ -202,7 +209,7 @@ export function PanelKurzu() {
               ))}
             </optgroup>
             {uloha && (
-              <optgroup label="Od učitele">
+              <optgroup label={t("Od učitele", "From your teacher")}>
                 <option value={uloha.id}>
                   {lekceHotova(uloha, kurz.splneno) ? "✓ " : ""}
                   {uloha.title}
@@ -212,7 +219,7 @@ export function PanelKurzu() {
           </select>
           <button
             type="button"
-            aria-label="Další lekce"
+            aria-label={t("Další lekce", "Next lesson")}
             disabled={!VSECHNY_LEKCE[index + 1]}
             onClick={() => VSECHNY_LEKCE[index + 1] && kurz.vyberLekci(VSECHNY_LEKCE[index + 1].id)}
             className="flex h-[24px] w-[24px] items-center justify-center rounded-[3px] enabled:hover:bg-dbb-hover disabled:opacity-35"
@@ -224,20 +231,20 @@ export function PanelKurzu() {
           <div className="mr-2 h-[6px] flex-1 overflow-hidden rounded-full bg-dbb-mrizka">
             <div className="h-full rounded-full bg-[#2e9d4f]" style={{ width: `${(hotoveLekce / KURZ.length) * 100}%` }} />
           </div>
-          Hotovo {hotoveLekce}/{KURZ.length}
+          {t("Hotovo", "Done")} {hotoveLekce}/{KURZ.length}
           <button
             type="button"
             onClick={() => api.otevritDialog({ druh: "vysledky" })}
             className="ml-2 text-dbb-akcent hover:underline"
           >
-            Moje výsledky
+            {t("Moje výsledky", "My Results")}
           </button>
           <button
             type="button"
             onClick={() => api.otevritDialog({ druh: "okurzu" })}
             className="ml-2 text-dbb-akcent hover:underline"
           >
-            Pro učitele
+            {t("Pro učitele", "For Teachers")}
           </button>
         </div>
       </div>
@@ -246,14 +253,21 @@ export function PanelKurzu() {
         {vse && (
           <div className="mb-3 border border-[#9fd5ae] bg-[#eaf7ee] px-3 py-2.5 text-[12px] leading-relaxed">
             <p className="flex items-center text-[13px] font-semibold">
-              <PartyPopper className="mr-1.5 h-4 w-4 text-[#2e9d4f]" /> Kurz dokončen – všech {KURZ.length} lekcí!
+              <PartyPopper className="mr-1.5 h-4 w-4 text-[#2e9d4f]" />{" "}
+              {t(`Kurz dokončen – všech ${KURZ.length} lekcí!`, `Course completed – all ${KURZ.length} lessons!`)}
             </p>
             <p className="mt-1">
-              Umíš SQL i program, ve kterém se s databázemi pracuje. Skutečný DB Browser for SQLite je zdarma –{" "}
+              {t(
+                "Umíš SQL i program, ve kterém se s databázemi pracuje. Skutečný DB Browser for SQLite je zdarma –",
+                "You know SQL and the program people use to work with databases. The real DB Browser for SQLite is free –",
+              )}{" "}
               <a href="https://sqlitebrowser.org/dl/" target="_blank" rel="noopener noreferrer" className="text-dbb-akcent underline">
                 sqlitebrowser.org <ExternalLink className="inline h-3 w-3" />
               </a>
-              . A kdo chce SQL dál (vnořené dotazy, sjednocení tabulek), pokračuje v anglickém kurzu{" "}
+              {t(
+                ". A kdo chce SQL dál (vnořené dotazy, sjednocení tabulek), pokračuje v anglickém kurzu",
+                ". And if you want more SQL (subqueries, unions), carry on with the course",
+              )}{" "}
               <a href="https://sqlbolt.com" target="_blank" rel="noopener noreferrer" className="text-dbb-akcent underline">
                 SQLBolt <ExternalLink className="inline h-3 w-3" />
               </a>
@@ -263,39 +277,45 @@ export function PanelKurzu() {
         )}
 
         <p className="text-[11px] font-semibold uppercase tracking-wide text-dbb-slaby">
-          {lekce.id === ID_ULOHY ? "Od učitele" : jeSada ? `Lekce ${lekce.id} · navíc` : `Lekce ${lekce.id}`}
+          {lekce.id === ID_ULOHY
+            ? t("Od učitele", "From your teacher")
+            : jeSada
+              ? t(`Lekce ${lekce.id} · navíc`, `Lesson ${lekce.id} · extra`)
+              : t(`Lekce ${lekce.id}`, `Lesson ${lekce.id}`)}
         </p>
         <h2 className="mt-0.5 text-[15px] font-semibold leading-snug">{lekce.title}</h2>
 
         {jinySoubor && (
           <div className="mt-2 border border-[#f0c36d] bg-[#fff8e1] px-2.5 py-2 text-[12px] leading-snug text-[#4a3500]">
-            Tahle lekce pracuje s databází <b>{pozadovany}</b>
+            {t("Tahle lekce pracuje s databází", "This lesson works with the database")} <b>{pozadovany}</b>
             {api.otevrena ? (
               <>
-                , ale otevřená je <b>{api.otevrena}</b>
+                {t(", ale otevřená je", ", but the open one is")} <b>{api.otevrena}</b>
               </>
             ) : (
-              ", ale žádná databáze teď není otevřená"
+              t(", ale žádná databáze teď není otevřená", ", but no database is open at the moment")
             )}
             .{" "}
             <button type="button" onClick={() => api.otevritDialog({ druh: "otevrit" })} className="text-dbb-akcent underline">
-              Otevřít databázi…
+              {t("Otevřít databázi…", "Open Database…")}
             </button>
           </div>
         )}
 
-        <p className="mt-2 text-[13px] leading-relaxed">{sazba(lekce.teach, "cs")}</p>
+        <p className="mt-2 text-[13px] leading-relaxed">{sazba(lekce.teach, JAZYK)}</p>
         {lekce.example && <Kod sql={lekce.example} />}
 
         {lekce.id === 1 && (
           <p className="mt-2 text-[12px] leading-snug text-dbb-slaby">
-            Dotaz piš na kartě Spustit SQL a spusť ho klávesou F5 nebo zeleným tlačítkem ▶ nad editorem. Úkol se
-            odškrtne sám, jakmile výsledek sedí.
+            {t(
+              "Dotaz piš na kartě Spustit SQL a spusť ho klávesou F5 nebo zeleným tlačítkem ▶ nad editorem. Úkol se odškrtne sám, jakmile výsledek sedí.",
+              "Write your query on the Execute SQL tab and run it with F5 or the green ▶ button above the editor. The task ticks itself off as soon as the result is right.",
+            )}
           </p>
         )}
 
         <h3 className="mt-4 text-[11px] font-semibold uppercase tracking-wide text-dbb-slaby">
-          Úkoly {povinne(lekce).filter((u) => kurz.splneno.has(u.klic)).length}/{povinne(lekce).length}
+          {t("Úkoly", "Tasks")} {povinne(lekce).filter((u) => kurz.splneno.has(u.klic)).length}/{povinne(lekce).length}
         </h3>
         <ol className="mt-1">
           {lekce.ukoly.map((u, i) => (
@@ -306,27 +326,27 @@ export function PanelKurzu() {
         {hotova && dalsi && (
           <div className="mt-3 border border-[#9fd5ae] bg-[#eaf7ee] px-3 py-2 text-[12px]">
             <p className="flex items-center font-semibold">
-              <Check className="mr-1.5 h-4 w-4 text-[#2e9d4f]" strokeWidth={3} /> Lekce hotová
+              <Check className="mr-1.5 h-4 w-4 text-[#2e9d4f]" strokeWidth={3} /> {t("Lekce hotová", "Lesson done")}
             </p>
             <button
               type="button"
               onClick={() => kurz.vyberLekci(dalsi.id)}
               className="mt-1.5 inline-flex items-center border border-dbb-akcent bg-dbb-akcent px-3 py-1 text-[12px] text-dbb-akcent-text hover:brightness-110"
             >
-              Další lekce: {dalsi.title} <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+              {t("Další lekce:", "Next lesson:")} {dalsi.title} <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
             </button>
           </div>
         )}
 
         {lekce.databaze && (
           <p className="mt-3 text-[12px] text-dbb-slaby">
-            Rozbil(a) sis data?{" "}
+            {t("Rozbil(a) sis data?", "Broken your data?")}{" "}
             <button
               type="button"
               onClick={() => lekce.databaze && kurz.obnovDatabazi(lekce.databaze, true)}
               className="text-dbb-akcent underline"
             >
-              Obnovit původní {lekce.databaze.soubor}
+              {t("Obnovit původní", "Restore the original")} {lekce.databaze.soubor}
             </button>
           </p>
         )}
@@ -334,10 +354,10 @@ export function PanelKurzu() {
         {hotova && !dalsi && !vse && !jeSada && (
           <div className="mt-3 border border-[#9fd5ae] bg-[#eaf7ee] px-3 py-2 text-[12px] leading-snug">
             <p className="flex items-center font-semibold">
-              <Check className="mr-1.5 h-4 w-4 text-[#2e9d4f]" strokeWidth={3} /> Lekce hotová
+              <Check className="mr-1.5 h-4 w-4 text-[#2e9d4f]" strokeWidth={3} /> {t("Lekce hotová", "Lesson done")}
             </p>
             <p className="mt-1">
-              Poslední lekce je za tebou. Ještě ti chybí:{" "}
+              {t("Poslední lekce je za tebou. Ještě ti chybí:", "You have finished the last lesson. Still missing:")}{" "}
               {KURZ.filter((l) => !lekceHotova(l, kurz.splneno)).map((l, i) => (
                 <span key={l.id}>
                   {i > 0 && ", "}
@@ -351,9 +371,22 @@ export function PanelKurzu() {
           </div>
         )}
 
+        {jeAnglicky() && pozadovany && SLOVNICEK[pozadovany] && (
+          <details className="mt-4 border border-dbb-mrizka bg-dbb-povrch px-2.5 py-1.5 text-[12px]" open={lekce.id === 1 || lekce.id === 20}>
+            <summary className="cursor-pointer font-semibold">Glossary – Czech names in {pozadovany}</summary>
+            <dl className="mt-1.5 leading-snug">
+              {SLOVNICEK[pozadovany].map(([cz, en]) => (
+                <div key={cz} className="mt-1">
+                  <dt className="dbb-kod inline font-semibold">{cz}</dt> <dd className="inline">{en}</dd>
+                </div>
+              ))}
+            </dl>
+          </details>
+        )}
+
         {lekce.tabulka && !jinySoubor && (
           <p className="mt-4 text-[12px] text-dbb-slaby">
-            Obsah tabulek uvidíš i bez dotazu na kartě{" "}
+            {t("Obsah tabulek uvidíš i bez dotazu na kartě", "You can see what is in the tables without a query on the")}{" "}
             <button
               type="button"
               onClick={() => {
@@ -362,9 +395,9 @@ export function PanelKurzu() {
               }}
               className="text-dbb-akcent underline"
             >
-              Prohlížet data
+              {t("Prohlížet data", "Browse Data")}
             </button>
-            .
+            {t(".", " tab.")}
           </p>
         )}
       </div>

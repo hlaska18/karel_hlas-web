@@ -12,6 +12,7 @@ import { RefreshCw, FilterX, Plus, Trash2, Printer } from "lucide-react";
 import { useDbb, precti, uvoz } from "@/components/dbb/kontext";
 import { Mrizka, type Razeni } from "@/components/dbb/Mrizka";
 import { tabulky } from "@/lib/dbb/prikazy";
+import { t } from "@/lib/dbb/jazyk";
 
 /** Podmínka z textu filtru: [sql, parametr]. */
 export function podminkaFiltru(sloupec: string, text: string): [string, unknown] | null {
@@ -118,7 +119,7 @@ export function KartaData() {
     <div className="flex h-full flex-col p-1.5">
       <div className="flex h-[28px] shrink-0 items-center">
         <label className="mr-2 flex items-center text-[12px]">
-          <span className="mr-1.5">Tabulka:</span>
+          <span className="mr-1.5">{t("Tabulka:", "Table:")}</span>
           <select
             value={tabulka}
             onChange={(e) => {
@@ -139,8 +140,8 @@ export function KartaData() {
         </label>
         <button
           type="button"
-          title="Obnovit (F5)"
-          aria-label="Obnovit"
+          title={t("Obnovit (F5)", "Refresh (F5)")}
+          aria-label={t("Obnovit", "Refresh")}
           onClick={() => nastavFiltry((f) => f.slice())}
           className="flex h-[24px] w-[26px] items-center justify-center rounded-[3px] hover:bg-dbb-hover"
         >
@@ -148,14 +149,14 @@ export function KartaData() {
         </button>
         <button
           type="button"
-          title="Vymazat všechny filtry"
-          aria-label="Vymazat všechny filtry"
+          title={t("Vymazat všechny filtry", "Clear All Filters")}
+          aria-label={t("Vymazat všechny filtry", "Clear All Filters")}
           onClick={() => nastavFiltry([])}
           className="flex h-[24px] w-[26px] items-center justify-center rounded-[3px] hover:bg-dbb-hover"
         >
           <FilterX className="h-4 w-4" />
         </button>
-        <button type="button" title="Tisk" aria-label="Tisk" disabled className="flex h-[24px] w-[26px] items-center justify-center opacity-40">
+        <button type="button" title={t("Tisk", "Print")} aria-label={t("Tisk", "Print")} disabled className="flex h-[24px] w-[26px] items-center justify-center opacity-40">
           <Printer className="h-4 w-4" />
         </button>
         <span className="mx-1 h-5 w-px bg-dbb-linka" aria-hidden="true" />
@@ -167,7 +168,7 @@ export function KartaData() {
           }}
           className="flex h-[24px] items-center rounded-[3px] px-1.5 text-[12px] hover:bg-dbb-hover"
         >
-          <Plus className="mr-1 h-4 w-4 text-[#2e9d4f]" /> Nový záznam
+          <Plus className="mr-1 h-4 w-4 text-[#2e9d4f]" /> {t("Nový záznam", "New Record")}
         </button>
         <button
           type="button"
@@ -185,14 +186,14 @@ export function KartaData() {
           }}
           className="flex h-[24px] items-center rounded-[3px] px-1.5 text-[12px] enabled:hover:bg-dbb-hover disabled:opacity-45"
         >
-          <Trash2 className="mr-1 h-4 w-4 text-[#c42b1c]" /> Smazat záznam
+          <Trash2 className="mr-1 h-4 w-4 text-[#c42b1c]" /> {t("Smazat záznam", "Delete Record")}
         </button>
       </div>
       {chyba && (
         <div role="alert" className="mb-1 flex shrink-0 items-start border border-[#f1bbb9] bg-[#fdf3f2] px-2 py-1 text-[12px] text-[#a4262c]">
           <span className="flex-1">{chyba}</span>
           <button type="button" onClick={() => nastavChybu(null)} className="ml-3 underline">
-            Zavřít
+            {t("Zavřít", "Close")}
           </button>
         </div>
       )}
