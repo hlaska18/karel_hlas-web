@@ -1,12 +1,11 @@
 "use client";
 
 /**
- * Základ dialogů virtuálního DB Browseru – okno ve stylu Windows 11,
+ * Základ dialogů virtuálního DB Browseru – modální okno webové aplikace,
  * tlačítka a patička. Sdílí je všechny dialogy programu.
  */
 
 import { useEffect, useRef, type ReactNode } from "react";
-import { IkonaProgramu } from "@/components/dbb/Okno";
 import { t } from "@/lib/dbb/jazyk";
 
 /* ─────────────────────────────── základ ─────────────────────────────── */
@@ -49,17 +48,16 @@ export function Okno({
         role="dialog"
         aria-modal="true"
         aria-label={titulek}
-        className="flex max-h-[92%] max-w-[94%] select-text flex-col border border-[#9a9a9a] bg-dbb-povrch shadow-[0_14px_44px_rgba(0,0,0,0.3)]"
+        className="flex max-h-[92%] max-w-[94%] select-text flex-col overflow-hidden rounded-[6px] border border-dbb-linka bg-dbb-povrch shadow-[0_14px_44px_rgba(0,0,0,0.25)]"
         style={{ width: sirka }}
       >
-        <div className="flex h-[30px] shrink-0 items-center pl-3">
-          <IkonaProgramu className="mr-2 h-4 w-4" />
-          <span className="flex-1 truncate text-[12px]">{titulek}</span>
+        <div className="flex h-[36px] shrink-0 items-center border-b border-dbb-linka pl-4 pr-1.5">
+          <span className="flex-1 truncate text-[13px] font-semibold">{titulek}</span>
           <button
             type="button"
             aria-label={t("Zavřít", "Close")}
             onClick={zavrit}
-            className="flex h-full w-[46px] items-center justify-center hover:bg-[#c42b1c] hover:text-white"
+            className="flex h-[26px] w-[28px] items-center justify-center rounded-[4px] text-dbb-slaby hover:bg-dbb-hover hover:text-dbb-text"
           >
             <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" aria-hidden="true">
               <path d="M0.5 0.5l9 9M9.5 0.5l-9 9" stroke="currentColor" strokeWidth="1" />

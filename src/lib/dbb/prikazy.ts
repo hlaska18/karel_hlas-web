@@ -263,7 +263,14 @@ export function tabulkyDotazu(sql: string): string[] {
 export function poznamkaKRazeni(sql: string, vysledek: SqlResult | null): string | undefined {
   if (!vysledek || !/\border\s+by\b/i.test(sql)) return undefined;
   const diakritika = /^[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]/;
-  const ma = vysledek.values.some((r) => r.some((c) => typeof c === "string" && diakritika.test(c)));
+  // Řadí se podle sloupce, který je ve výsledku? Pak rozhoduje jen on –
+  // u ORDER BY body DESC s háčkem ve jméně by poznámka mátla.
+  const m = sql.match(/\border\s+by\s+(?:[A-Za-z_]\w*\.)?([A-Za-z_]\w*)/i);
+  const i = m ? vysledek.columns.map((c) => c.toLowerCase().split(".").pop()).indexOf(m[1].toLowerCase()) : -1;
+  const ma =
+    i !== -1
+      ? vysledek.values.some((r) => typeof r[i] === "string" && diakritika.test(r[i] as string))
+      : vysledek.values.some((r) => r.some((c) => typeof c === "string" && diakritika.test(c)));
   if (!ma) return undefined;
   return t(
     "SQLite řadí texty podle kódu znaků, takže písmena s háčkem a čárkou (Č, Ř, Š, Ž…) jsou až za Z. Stejně řadí i skutečný DB Browser.",

@@ -10,6 +10,7 @@ import { createContext, useContext, type RefObject } from "react";
 import type { SqlDbSoubor, SqlResult } from "@/lib/sqljs";
 import type { Disk } from "@/lib/dbb/soubory";
 import type { Databaze, LekceKurzu } from "@/lib/dbb/kurz";
+import type { PripravenaTabulka } from "@/lib/dbb/csv";
 
 export type Karta = "struktura" | "data" | "pragma" | "sql";
 export type DokKarta = "kurz" | "schema" | "log";
@@ -40,6 +41,10 @@ export type Dialog =
   | { druh: "vysledky" }
   | { druh: "prehled" }
   | { druh: "uloha" }
+  /** Tabulka z CSV ze skutečného počítače. */
+  | { druh: "importCsv"; soubor: string; bajty: Uint8Array }
+  /** Databáze ze souboru SQL ze skutečného počítače. */
+  | { druh: "importSql"; soubor: string; text: string }
   | {
       druh: "potvrdit";
       titulek: string;
@@ -96,6 +101,12 @@ export type DbbApi = {
   zapsat: () => void;
   vratit: () => void;
   kurz: KurzStav;
+  /** Soubor ze skutečného počítače: databáze .db, tabulka z CSV, databáze ze SQL. */
+  vyberSoubor: (ucel: "db" | "csv" | "sql") => void;
+  /** Vytvoří v otevřené databázi tabulku z CSV. Vrací chybu, nebo null. */
+  importujTabulku: (nazev: string, tabulka: PripravenaTabulka) => string | null;
+  /** Založí novou databázi ze skriptu SQL a otevře ji. Vrací chybu, nebo null. */
+  importujSql: (nazevDb: string, text: string) => string | null;
   /** Režim předvádění pro projektor: postup zvlášť, program zvětšený, řešení bez pokusu. */
   predvadeni: boolean;
   /** Zvětšení programu v režimu předvádění (1 = bez zvětšení). */

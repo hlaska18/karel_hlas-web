@@ -95,7 +95,7 @@ export const EN_LEKCE: Record<number, Lekce> = {
   16: {
     title: "Changes have to be written",
     teach:
-      "A database is a file on disk – here knihovna.db in the Downloads folder. Whatever you change exists only in the program's memory for now; you can tell because the Write Changes and Revert Changes buttons stop being grey. It only gets into the file through File → Write Changes (Ctrl+S). If you close the database with unwritten changes, the program asks – the Save button in that dialog does the same as Write Changes, Discard throws them away. Revert Changes throws away everything since the last write. The file lives in this browser on this computer; to get it onto your real computer, use File → Save a Copy to This Computer.",
+      "A database is a file – here knihovna.db, which the course keeps in this browser (in the real program it sits on disk). Whatever you change exists only in the program's memory for now; you can tell because the Write Changes and Revert Changes buttons stop being grey. It only gets into the file through File → Write Changes (Ctrl+S). If you close the database with unwritten changes, the program asks – the Save button in that dialog does the same as Write Changes, Discard throws them away. Revert Changes throws away everything since the last write. To get the file onto your real computer, use File → Save a Copy to This Computer.",
   },
   17: {
     title: "Your own table: CREATE TABLE",
@@ -278,7 +278,7 @@ export const EN_UKOLY: Record<string, Ukol> = {
   "19e": {
     zadani:
       "Download your database to your computer (File → Save a Copy to This Computer) and hand the file in the way your teacher tells you – in Teams, for example.",
-    hint: "The downloaded file is in your real Downloads folder. You can open it in the real DB Browser for SQLite too.",
+    hint: "The downloaded file is in your computer's Downloads folder. You can open it in the real DB Browser for SQLite too.",
     reseni: "Open your database → File → Save a Copy to This Computer",
     ceka: "Waiting for you to download your database to your computer.",
   },

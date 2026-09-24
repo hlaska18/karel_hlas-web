@@ -222,6 +222,10 @@ describe("vysvětlení k češtině v SQLite", () => {
     expect(poznamkaKRazeni("SELECT autor FROM knihy ORDER BY autor", s([["Alois"], ["Čapek"]]))).toContain("až za Z");
     expect(poznamkaKRazeni("SELECT autor FROM knihy ORDER BY autor", s([["Alois"], ["Karel"]]))).toBeUndefined();
     expect(poznamkaKRazeni("SELECT autor FROM knihy", s([["Čapek"]]))).toBeUndefined();
+    // Řazení podle čísla: háček ve jménu nevadí.
+    const dva = { columns: ["jmeno", "body"], values: [["Šárka", 18.5], ["Petr", 11]] };
+    expect(poznamkaKRazeni("SELECT jmeno, body FROM v ORDER BY body DESC", dva)).toBeUndefined();
+    expect(poznamkaKRazeni("SELECT jmeno, body FROM v ORDER BY v.jmeno", dva)).toContain("až za Z");
   });
 
   it("tabulkyDotazu najde tabulky za FROM, JOIN, INTO, UPDATE i CREATE TABLE", async () => {

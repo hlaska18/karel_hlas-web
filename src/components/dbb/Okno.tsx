@@ -1,7 +1,7 @@
 "use client";
 
 /**
- * Rám okna DB Browseru: titulek Windows 11, nabídky, lišta s tlačítky,
+ * Rám DB Browseru: hlavička webové aplikace, nabídky, lišta s tlačítky,
  * karty a stavový řádek. Rozložení a názvy drží program (česky tak, jak je
  * má návod v bance), ikony jsou vlastní – obrázky programu nepřebíráme.
  */
@@ -16,6 +16,7 @@ import {
   FileOutput,
   Link2,
   XCircle,
+  ArrowLeft,
 } from "lucide-react";
 import { useDbb, precti, type Karta } from "@/components/dbb/kontext";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
@@ -34,42 +35,37 @@ export function IkonaProgramu({ className = "h-4 w-4" }: { className?: string })
   );
 }
 
-/* ─────────────────────────────── titulek ─────────────────────────────── */
+/* ─────────────────────────────── hlavička ─────────────────────────────── */
 
-export function Titulek({
-  text,
-  minimalizovat,
-  zavrit,
-}: {
-  text: string;
-  minimalizovat: () => void;
-  zavrit: () => void;
-}) {
-  const tlacitko = "flex h-full w-[46px] items-center justify-center transition-colors";
+/**
+ * Hlavička webové aplikace. Dřív tu byl titulek okna Windows 11 s křížky
+ * a po zavření plocha; Karel chtěl kurz jako webovou aplikaci bez Windows
+ * (24. 9. 2026). Rozložení programu pod ní zůstává – na něj navazují
+ * lekce 14–19 i materiály v bance.
+ */
+export function Hlavicka({ soubor, zpet }: { soubor: string | null; zpet: () => void }) {
   return (
-    <div className="flex h-[30px] shrink-0 items-center bg-dbb-povrch">
-      <div className="flex min-w-0 flex-1 items-center pl-3">
-        <IkonaProgramu className="mr-2 h-4 w-4 shrink-0" />
-        <span className="truncate text-[12px]">{text}</span>
-      </div>
-      <div className="flex h-full shrink-0">
-        <button type="button" aria-label={t("Minimalizovat", "Minimize")} onClick={minimalizovat} className={`${tlacitko} hover:bg-black/[0.06]`}>
-          <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" aria-hidden="true">
-            <path d="M0 5h10" stroke="currentColor" strokeWidth="1" />
-          </svg>
-        </button>
-        {/* Okno je přes celou obrazovku; obnovit menší okno tu nejde. */}
-        <button type="button" aria-label={t("Obnovit z maximalizace", "Restore Down")} className={`${tlacitko} cursor-default`} tabIndex={-1}>
-          <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" aria-hidden="true">
-            <path d="M2.5 0.5h7v7M0.5 2.5h7v7h-7z" fill="none" stroke="currentColor" strokeWidth="1" />
-          </svg>
-        </button>
-        <button type="button" aria-label={t("Zavřít", "Close")} onClick={zavrit} className={`${tlacitko} hover:bg-[#c42b1c] hover:text-white`}>
-          <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" aria-hidden="true">
-            <path d="M0.5 0.5l9 9M9.5 0.5l-9 9" stroke="currentColor" strokeWidth="1" />
-          </svg>
-        </button>
-      </div>
+    <div className="flex h-[34px] shrink-0 items-center border-b border-dbb-linka bg-dbb-povrch px-3">
+      <IkonaProgramu className="mr-2 h-4 w-4 shrink-0" />
+      <span className="shrink-0 whitespace-nowrap text-[13px]">
+        <span className="text-dbb-slaby">Karel Hlas · </span>
+        <b className="font-semibold">{t("Kurz SQL", "SQL Course")}</b>
+      </span>
+      {soubor && (
+        <span className="ml-3 flex min-w-0 items-center truncate text-[12px] text-dbb-slaby" title={soubor}>
+          <span className="mr-2 h-3.5 w-px shrink-0 bg-dbb-linka" aria-hidden="true" />
+          {soubor}
+        </span>
+      )}
+      <span className="flex-1" />
+      <button
+        type="button"
+        onClick={zpet}
+        className="flex h-[24px] shrink-0 items-center rounded-[3px] border border-dbb-linka bg-dbb-okno px-2.5 text-[12px] hover:bg-dbb-hover"
+      >
+        <ArrowLeft className="mr-1 h-3.5 w-3.5" />
+        {t("Zpět na web", "Back to the Website")}
+      </button>
     </div>
   );
 }
@@ -152,9 +148,11 @@ export function NabidkaOkna({
         { text: t("Zapsat změny", "Write Changes"), zkratka: "Ctrl+S", akce: api.zapsat, zakazano: !api.zmeneno },
         { text: t("Vrátit změny", "Revert Changes"), akce: api.vratit, zakazano: !api.zmeneno },
         "-",
+        { text: t("Nahrát databázi z počítače…", "Upload Database from Computer…"), akce: () => api.vyberSoubor("db") },
         { text: t("Uložit kopii do počítače…", "Save a Copy to This Computer…"), akce: ulozKopii, zakazano: bezDb },
         "-",
-        { text: "Import", zakazano: true },
+        { text: t("Importovat tabulku z CSV…", "Import Table from CSV File…"), akce: () => api.vyberSoubor("csv"), zakazano: bezDb },
+        { text: t("Importovat databázi ze SQL…", "Import Database from SQL File…"), akce: () => api.vyberSoubor("sql") },
         { text: "Export", zakazano: true },
         "-",
         { text: t("Konec", "Exit"), akce: konec },

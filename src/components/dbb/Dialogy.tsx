@@ -2,15 +2,16 @@
 
 /**
  * Dialogy virtuálního DB Browseru: „Uložit změny?“, otevření a založení
- * souboru (jako okno Windows), návrh tabulky, informace o kurzu, potvrzení.
+ * databáze, návrh tabulky, informace o kurzu, potvrzení.
  */
 
-import { useMemo, useRef, useState, type ReactNode } from "react";
-import { HelpCircle, Info, Database, Folder, HardDrive, Monitor, Download, ExternalLink, Plus, Minus, ArrowUp, ArrowDown } from "lucide-react";
+import { useMemo, useRef, useState } from "react";
+import { HelpCircle, Info, Database, ExternalLink, Plus, Minus, ArrowUp, ArrowDown, Trash2, Upload } from "lucide-react";
 import { useDbb, precti, uvoz, type Dialog } from "@/components/dbb/kontext";
 import { IkonaProgramu } from "@/components/dbb/Okno";
 import { MojeVysledky, PrehledTridy } from "@/components/dbb/Vysledky";
 import { UlohaOdkazem } from "@/components/dbb/UlohaOdkazem";
+import { ImportCsv, ImportSql } from "@/components/dbb/Import";
 import { Okno, Tlacitko, Paticka, Zprava } from "@/components/dbb/okna";
 import { KNIHOVNA, MAX_SOUBORU, upravNazev, velikost } from "@/lib/dbb/soubory";
 import { tabulky } from "@/lib/dbb/prikazy";
@@ -26,6 +27,12 @@ function datum(t: number): string {
   return `${dva(d.getDate())}.${dva(d.getMonth() + 1)}.${d.getFullYear()} ${dva(d.getHours())}:${dva(d.getMinutes())}`;
 }
 
+/**
+ * Otevřít databázi / Nová databáze. Dřív to bylo okno Průzkumníka Windows
+ * (Tento počítač › Stažené soubory); Karel chtěl kurz jako webovou aplikaci
+ * bez Windows (24. 9. 2026), takže je to prostý seznam databází, které
+ * kurz drží v prohlížeči.
+ */
 function DialogSouboru({
   rezim,
   zavrit,
@@ -44,7 +51,7 @@ function DialogSouboru({
 }) {
   const api = useDbb();
   const soubory = Object.keys(api.disk).sort((a, b) => a.localeCompare(b, "cs"));
-  const [vybrany, nastavVybrany] = useState<string | null>(rezim === "otevrit" ? null : null);
+  const [vybrany, nastavVybrany] = useState<string | null>(null);
   const [nazev, nastavNazev] = useState("");
   const [chyba, nastavChybu] = useState<string | null>(null);
   const [nahradit, nastavNahradit] = useState<string | null>(null);
@@ -63,16 +70,15 @@ function DialogSouboru({
   };
 
   const potvrdit = (zadano?: string) => {
-    const text = zadano !== undefined ? zadano : nazev;
     nastavChybu(null);
     if (rezim === "otevrit") {
-      const n = text.trim();
-      if (!n) return nastavChybu(t("Vyber soubor, který chceš otevřít.", "Choose the file you want to open."));
-      if (!api.disk[n]) return nastavChybu(t(`Soubor „${n}“ ve složce není. Zkontroluj název.`, `There is no file “${n}” in the folder. Check the name.`));
+      const n = zadano !== undefined ? zadano : vybrany;
+      if (!n) return nastavChybu(t("Vyber databázi, kterou chceš otevřít.", "Choose the database you want to open."));
+      if (!api.disk[n]) return nastavChybu(t(`Databáze „${n}“ tu není.`, `There is no database “${n}”.`));
       otevrit(n);
       return;
     }
-    const u = upravNazev(text);
+    const u = upravNazev(zadano !== undefined ? zadano : nazev);
     if ("chyba" in u) return nastavChybu(u.chyba);
     if (u.nazev.toLowerCase() === KNIHOVNA) {
       return nastavChybu(t("Soubor knihovna.db potřebuje kurz – zvol pro svou databázi jiný název.", "The course needs the knihovna.db file – choose a different name for your database."));
@@ -82,149 +88,138 @@ function DialogSouboru({
       return;
     }
     if (soubory.length >= MAX_SOUBORU) {
-      return nastavChybu(t("Ve složce je moc souborů. Nějaký starý smaž (pravým tlačítkem → Odstranit).", "There are too many files in the folder. Delete an old one (right-click → Delete)."));
+      return nastavChybu(t("Databází je moc. Nějakou starou smaž ikonou koše v seznamu.", "There are too many databases. Delete an old one with the bin icon in the list."));
     }
     vytvorit(u.nazev);
   };
 
-  const nav = (ikona: ReactNode, text: string, aktivni?: boolean) => (
-    <div className={`flex h-[24px] items-center px-2 text-[12px] ${aktivni ? "bg-dbb-vyber" : "text-dbb-slaby"}`}>
-      <span className="mr-2 flex h-4 w-4 items-center justify-center">{ikona}</span>
-      {text}
-    </div>
-  );
+  const bunka = "border-b border-dbb-mrizka px-3";
 
   return (
-    <Okno
-      titulek={rezim === "otevrit" ? t("Vyberte soubor databáze", "Choose a database file") : t("Vyberte název souboru pro novou databázi", "Choose a file name for the new database")}
-      zavrit={zavrit}
-      sirka={720}
-    >
-      <div className="flex shrink-0 items-center border-b border-dbb-linka px-3 py-2 text-[12px]">
-        <div className="flex h-[26px] flex-1 items-center border border-dbb-linka px-2">
-          <Monitor className="mr-1.5 h-3.5 w-3.5 text-dbb-slaby" /> {t("Tento počítač", "This PC")}{" "}
-          <span className="mx-1.5 text-dbb-slaby">›</span>
-          {t("Stažené soubory", "Downloads")}
-        </div>
-        <div className="ml-2 flex h-[26px] w-[180px] items-center border border-dbb-linka px-2 text-dbb-slaby">{t("Hledat: Stažené soubory", "Search Downloads")}</div>
-      </div>
-      <div className="flex min-h-[250px] flex-1">
-        <div className="w-[170px] shrink-0 border-r border-dbb-linka py-1">
-          {nav(<Monitor className="h-3.5 w-3.5" />, t("Plocha", "Desktop"))}
-          {nav(<Download className="h-3.5 w-3.5 text-[#2e75b6]" />, t("Stažené soubory", "Downloads"), true)}
-          {nav(<Folder className="h-3.5 w-3.5 text-[#c9901a]" />, t("Dokumenty", "Documents"))}
-          {nav(<Folder className="h-3.5 w-3.5 text-[#c9901a]" />, t("Obrázky", "Pictures"))}
-          {nav(<HardDrive className="h-3.5 w-3.5" />, t("Tento počítač", "This PC"))}
-        </div>
-        <div className="dbb-posuv min-w-0 flex-1 overflow-auto">
-          <table className="w-full text-[12px]" style={{ borderSpacing: 0 }}>
-            <thead>
-              <tr className="text-left text-dbb-slaby">
-                <th className="h-[24px] border-b border-dbb-mrizka px-3 font-normal">{t("Název", "Name")}</th>
-                <th className="border-b border-dbb-mrizka px-3 font-normal">{t("Datum změny", "Date modified")}</th>
-                <th className="border-b border-dbb-mrizka px-3 font-normal">{t("Typ", "Type")}</th>
-                <th className="border-b border-dbb-mrizka px-3 text-right font-normal">{t("Velikost", "Size")}</th>
+    <Okno titulek={rezim === "otevrit" ? t("Otevřít databázi", "Open Database") : t("Nová databáze", "New Database")} zavrit={zavrit} sirka={620}>
+      <p className="shrink-0 px-4 pt-3 text-[12px] text-dbb-slaby">
+        {t(
+          "Databáze uložené v tomhle prohlížeči na tomhle počítači. Do skutečného počítače si je stáhneš přes Soubor → Uložit kopii do počítače.",
+          "Databases saved in this browser on this computer. To get one onto your real computer, use File → Save a Copy to This Computer.",
+        )}
+      </p>
+      <div className="dbb-posuv mx-4 mt-2 min-h-[180px] flex-1 overflow-auto border border-dbb-linka bg-dbb-povrch">
+        <table className="w-full text-[12px]" style={{ borderSpacing: 0 }}>
+          <thead>
+            <tr className="text-left text-dbb-slaby">
+              <th className={`${bunka} h-[24px] font-normal`}>{t("Název", "Name")}</th>
+              <th className={`${bunka} font-normal`}>{t("Změněno", "Modified")}</th>
+              <th className={`${bunka} text-right font-normal`}>{t("Velikost", "Size")}</th>
+              <th className={`${bunka} w-[36px]`} aria-hidden="true" />
+            </tr>
+          </thead>
+          <tbody>
+            {soubory.map((s) => (
+              <tr
+                key={s}
+                onClick={() => {
+                  nastavVybrany(s);
+                  if (rezim === "ulozit") nastavNazev(s);
+                  nastavMazani(null);
+                  nastavChybu(null);
+                }}
+                onDoubleClick={() => (rezim === "otevrit" ? potvrdit(s) : undefined)}
+                className={`cursor-default ${vybrany === s ? "bg-dbb-vyber" : "hover:bg-dbb-hover"}`}
+              >
+                <td className="h-[26px] px-3">
+                  <span className="flex items-center">
+                    <Database className="mr-2 h-3.5 w-3.5 shrink-0 text-[#2e75b6]" />
+                    {s}
+                    {api.otevrena === s && (
+                      <span className="ml-2 text-[11px] text-dbb-slaby">{t("(otevřená)", "(open)")}</span>
+                    )}
+                  </span>
+                </td>
+                <td className="whitespace-nowrap px-3 text-dbb-slaby">{datum(api.disk[s].zmeneno)}</td>
+                <td className="whitespace-nowrap px-3 text-right text-dbb-slaby">{velikost(api.disk[s].bajty.length)}</td>
+                <td className="px-1 text-right">
+                  {s !== KNIHOVNA && (
+                    <button
+                      type="button"
+                      aria-label={t(`Smazat ${s}`, `Delete ${s}`)}
+                      title={t("Smazat", "Delete")}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        nastavMazani(s);
+                      }}
+                      className="inline-flex h-[22px] w-[24px] items-center justify-center rounded-[3px] text-dbb-slaby hover:bg-dbb-hover hover:text-[#c42b1c]"
+                    >
+                      <Trash2 className="h-3.5 w-3.5" />
+                    </button>
+                  )}
+                </td>
               </tr>
-            </thead>
-            <tbody>
-              {soubory.map((s) => (
-                <tr
-                  key={s}
-                  onClick={() => {
-                    nastavVybrany(s);
-                    nastavNazev(s);
-                    nastavMazani(null);
-                  }}
-                  onDoubleClick={() => potvrdit(s)}
-                  onContextMenu={(e) => {
-                    e.preventDefault();
-                    nastavVybrany(s);
-                    nastavNazev(s);
-                    if (s !== KNIHOVNA) nastavMazani(s);
-                  }}
-                  className={`cursor-default ${vybrany === s ? "bg-dbb-vyber" : "hover:bg-dbb-hover"}`}
-                >
-                  <td className="h-[24px] px-3">
-                    <span className="flex items-center">
-                      <Database className="mr-2 h-3.5 w-3.5 text-[#2e75b6]" />
-                      {s}
-                    </span>
-                  </td>
-                  <td className="whitespace-nowrap px-3 text-dbb-slaby">{datum(api.disk[s].zmeneno)}</td>
-                  <td className="whitespace-nowrap px-3 text-dbb-slaby">{t("Soubor DB", "DB File")}</td>
-                  <td className="whitespace-nowrap px-3 text-right text-dbb-slaby">{velikost(api.disk[s].bajty.length)}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-          {mazani && (
-            <div className="m-3 border border-dbb-linka bg-dbb-okno px-3 py-2 text-[12px]">
-              {t("Odstranit soubor", "Delete the file")} <b>{mazani}</b>?{" "}
-              {t("Zpátky nepůjde vrátit.", "It can't be undone.")}
-              <span className="ml-2 inline-flex">
-                <Tlacitko
-                  akce={() => {
-                    if (api.otevrena === mazani) {
-                      nastavChybu(t("Otevřený soubor nejde odstranit – nejdřív ho zavři.", "An open file can't be deleted – close it first."));
-                    } else {
-                      smazat(mazani);
-                      nastavVybrany(null);
-                      nastavNazev("");
-                    }
-                    nastavMazani(null);
-                  }}
-                >
-                  {t("Odstranit", "Delete")}
-                </Tlacitko>
-                <Tlacitko akce={() => nastavMazani(null)}>{t("Ne", "No")}</Tlacitko>
-              </span>
-            </div>
-          )}
-        </div>
+            ))}
+          </tbody>
+        </table>
+        {mazani && (
+          <div className="m-3 border border-dbb-linka bg-dbb-okno px-3 py-2 text-[12px]">
+            {t("Smazat databázi", "Delete the database")} <b>{mazani}</b>? {t("Nepůjde to vrátit.", "It can't be undone.")}
+            <span className="ml-2 inline-flex">
+              <Tlacitko
+                akce={() => {
+                  if (api.otevrena === mazani) {
+                    nastavChybu(t("Otevřenou databázi nejde smazat – nejdřív ji zavři.", "An open database can't be deleted – close it first."));
+                  } else {
+                    smazat(mazani);
+                    if (vybrany === mazani) nastavVybrany(null);
+                    nastavNazev("");
+                  }
+                  nastavMazani(null);
+                }}
+              >
+                {t("Smazat", "Delete")}
+              </Tlacitko>
+              <Tlacitko akce={() => nastavMazani(null)}>{t("Ne", "No")}</Tlacitko>
+            </span>
+          </div>
+        )}
       </div>
-      <div className="shrink-0 border-t border-dbb-linka bg-dbb-okno px-4 py-3 text-[12px]">
-        <div className="flex items-center">
-          <label htmlFor="dbb-nazev-souboru" className="w-[110px] shrink-0 text-right pr-2">
-            {t("Název souboru:", "File name:")}
+      <div className="shrink-0 px-4 pb-1 pt-3 text-[12px]">
+        {rezim === "ulozit" && (
+          <label htmlFor="dbb-nazev-souboru" className="flex items-center">
+            <span className="mr-2 shrink-0">{t("Název nové databáze:", "Name of the new database:")}</span>
+            <input
+              id="dbb-nazev-souboru"
+              value={nazev}
+              placeholder={t("třeba hry.db", "games.db, for example")}
+              onChange={(e) => {
+                nastavNazev(e.target.value);
+                nastavChybu(null);
+                nastavNahradit(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  e.preventDefault();
+                  potvrdit();
+                }
+              }}
+              spellCheck={false}
+              className="h-[26px] flex-1 border border-dbb-linka bg-dbb-povrch px-1.5 text-[12px] focus:border-dbb-akcent"
+            />
           </label>
-          <input
-            id="dbb-nazev-souboru"
-            value={nazev}
-            onChange={(e) => {
-              nastavNazev(e.target.value);
-              nastavChybu(null);
-              nastavNahradit(null);
-            }}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") {
-                e.preventDefault();
-                potvrdit();
-              }
-            }}
-            spellCheck={false}
-            className="h-[24px] flex-1 border border-dbb-linka bg-dbb-povrch px-1.5 text-[12px] focus:border-dbb-akcent"
-          />
-          <select
-            aria-label={t("Typ souboru", "File type")}
-            className="ml-2 h-[24px] w-[230px] border border-dbb-linka bg-dbb-povrch px-1 text-[12px]"
-          >
-            <option>{t("Soubory databáze SQLite (*.db *.sqlite)", "SQLite database files (*.db *.sqlite)")}</option>
-          </select>
-        </div>
-        {chyba && <p className="mt-2 pl-[110px] text-[#a4262c]">{chyba}</p>}
+        )}
+        {chyba && <p className="mt-2 text-[#a4262c]">{chyba}</p>}
         {nahradit && (
-          <p className="mt-2 pl-[110px]">
-            {t("Soubor", "The file")} <b>{nahradit}</b>{" "}
-            {t("už existuje. Chceš ho nahradit prázdnou databází?", "already exists. Do you want to replace it with an empty database?")}
+          <p className="mt-2">
+            {t("Databáze", "The database")} <b>{nahradit}</b>{" "}
+            {t("už existuje. Chceš ji nahradit prázdnou?", "already exists. Do you want to replace it with an empty one?")}
             <span className="ml-2 inline-flex">
               <Tlacitko akce={() => vytvorit(nahradit)}>{t("Ano", "Yes")}</Tlacitko>
               <Tlacitko akce={() => nastavNahradit(null)}>{t("Ne", "No")}</Tlacitko>
             </span>
           </p>
         )}
-        <div className="mt-3 flex items-center justify-end">
-          {rezim === "otevrit" && (
-            <span className="mr-auto">
+      </div>
+      <Paticka
+        vlevo={
+          rezim === "otevrit" ? (
+            <span>
               <input
                 ref={vyberRef}
                 type="file"
@@ -239,18 +234,20 @@ function DialogSouboru({
               <button
                 type="button"
                 onClick={() => vyberRef.current && vyberRef.current.click()}
-                className="h-[28px] rounded-[4px] border border-dbb-linka bg-dbb-povrch px-3 hover:bg-dbb-hover"
+                className="flex h-[28px] items-center rounded-[4px] border border-dbb-linka bg-dbb-povrch px-3 hover:bg-dbb-hover"
               >
-                {t("Z tohoto počítače…", "From This Computer…")}
+                <Upload className="mr-1.5 h-3.5 w-3.5" />
+                {t("Nahrát z počítače…", "Upload from Computer…")}
               </button>
             </span>
-          )}
-          <Tlacitko primarni akce={() => potvrdit()}>
-            {rezim === "otevrit" ? t("Otevřít", "Open") : t("Uložit", "Save")}
-          </Tlacitko>
-          <Tlacitko akce={zavrit}>{t("Zrušit", "Cancel")}</Tlacitko>
-        </div>
-      </div>
+          ) : null
+        }
+      >
+        <Tlacitko primarni akce={() => potvrdit()} zakazano={rezim === "otevrit" && !vybrany}>
+          {rezim === "otevrit" ? t("Otevřít", "Open") : t("Vytvořit", "Create")}
+        </Tlacitko>
+        <Tlacitko akce={zavrit}>{t("Zrušit", "Cancel")}</Tlacitko>
+      </Paticka>
     </Okno>
   );
 }
@@ -545,6 +542,12 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
           z toho udělá odkaz do Teams. Žákovi se po otevření objeví jako „Úloha od učitele“ a kontroluje se sama.
         </p>
         <p className={odst}>
+          <b>Vlastní data.</b> Soubor → Importovat tabulku z CSV přidá do otevřené databáze tabulku z Excelu (Uložit
+          jako → CSV; český Excel se středníkem a Windows-1250 zvládne). Importovat databázi ze SQL založí databázi ze
+          skriptu – třeba z knihovna.sql v bance. Databázi .db nahraješ přes Soubor → Nahrát databázi z počítače.
+          Soubor jde do programu i přetáhnout myší.
+        </p>
+        <p className={odst}>
           <b>U projektoru.</b> <i>Nápověda → Režim předvádění</i> program zvětší, řešení jde ukázat hned a tvoje
           ukázka se ukládá zvlášť – nesmíchá se s postupem žáka, který u počítače sedí jindy.
         </p>
@@ -610,6 +613,12 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
         <p className={odst}>
           <b>Your own task.</b> <i>Help → Create a Task for the Class</i>: write the task and the correct SELECT, and the
           program turns it into a link for Teams. Pupils see it as “Task from your teacher” and it checks itself.
+        </p>
+        <p className={odst}>
+          <b>Your own data.</b> File → Import Table from CSV File adds a table from Excel (Save As → CSV) to the open
+          database. Import Database from SQL File creates a database from a script – for example knihovna.sql from the
+          bank. Upload a .db database with File → Upload Database from Computer. You can also drag a file onto the
+          program.
         </p>
         <p className={odst}>
           <b>At the projector.</b> <i>Help → Presentation Mode</i> enlarges the program, lets you show solutions straight
@@ -739,6 +748,10 @@ export function Dialogy({
       return <PrehledTridy zavrit={zavrit} />;
     case "uloha":
       return <UlohaOdkazem zavrit={zavrit} />;
+    case "importCsv":
+      return <ImportCsv soubor={dialog.soubor} bajty={dialog.bajty} zavrit={zavrit} />;
+    case "importSql":
+      return <ImportSql soubor={dialog.soubor} text={dialog.text} zavrit={zavrit} />;
     case "potvrdit":
       return (
         <Okno titulek={dialog.titulek} zavrit={zavrit}>

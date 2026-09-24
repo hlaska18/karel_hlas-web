@@ -107,6 +107,13 @@ a správný SELECT, program z toho udělá odkaz. Žák ho otevře
 a dostane úlohu, která se kontroluje sama. Správný dotaz je
 v odkazu jen zakódovaný – na procvičení ano, na test ne.
 
+Vlastní data: Soubor → Importovat tabulku z CSV přidá do
+otevřené databáze tabulku z Excelu (Uložit jako → CSV).
+Importovat databázi ze SQL založí databázi ze skriptu
+(třeba knihovna.sql ze složky 4). Soubor .db nahraješ přes
+Soubor → Nahrát databázi z počítače. Soubor jde do programu
+i přetáhnout myší.
+
 Anglická verze: karelhlas.vercel.app/sql?z=en. Program,
 lekce i hlášky jsou anglicky, data zůstávají česká
 a v panelu je slovníček. Přepíná se i v nabídce Nápověda.
@@ -127,8 +134,8 @@ u projektoru vyzkoušej:
   • F5 v editoru spustí dotaz (a nenačte stránku znovu),
   • Ctrl+S zapíše změny, Ctrl+O otevře soubor,
   • dvojklik do buňky na kartě Prohlížet data ji přepíše,
-  • křížek programu vpravo nahoře zavře program; z plochy
-    se spustí dvojklikem na ikonu,
+  • tlačítko Zpět na web vpravo nahoře program opustí
+    (s nezapsanými změnami se napřed zeptá),
   • zavření karty prohlížeče s nezapsanými změnami se
     zeptá, jestli odejít,
   • okno přichycené k polovině obrazovky (Win+←) a zvětšení

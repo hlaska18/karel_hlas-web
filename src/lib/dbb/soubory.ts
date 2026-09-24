@@ -7,8 +7,6 @@
  */
 
 export const KNIHOVNA = "knihovna.db";
-/** Složka, kterou ukazuje titulek okna a dialog pro otevření souboru. */
-export const SLOZKA = "C:\\Users\\zak\\Downloads";
 /** Víc souborů si žák nepotřebuje založit; strop hlídá místo v prohlížeči. */
 export const MAX_SOUBORU = 12;
 

@@ -19,7 +19,6 @@ import { nactiEngine, otevriDb, forkDb, type SqlDbSoubor } from "@/lib/sqljs";
 import { SCHEMA } from "@/lib/sqlExercise";
 import {
   KNIHOVNA,
-  SLOZKA,
   MAX_SOUBORU,
   MAX_NAHRANI,
   nactiDisk,
@@ -59,6 +58,7 @@ import {
 import { vyhodnotDotaz, type SpusteniKontroly } from "@/lib/dbb/kontrola";
 import { dekodujUlohu, lekceZOdkazu, ID_ULOHY } from "@/lib/dbb/odkazUlohy";
 import { t, jeAnglicky, adresaVJazyce } from "@/lib/dbb/jazyk";
+import { dekodujText, sqlVytvoreni, sqlVlozeni, type PripravenaTabulka } from "@/lib/dbb/csv";
 import {
   DbbKontext,
   useDbb,
@@ -71,14 +71,13 @@ import {
   type Vystup,
   type ZaznamLogu,
 } from "@/components/dbb/kontext";
-import { Titulek, NabidkaOkna, Lista, Karty, StavovyRadek } from "@/components/dbb/Okno";
+import { Hlavicka, NabidkaOkna, Lista, Karty, StavovyRadek } from "@/components/dbb/Okno";
 import { KartaStruktura } from "@/components/dbb/KartaStruktura";
 import { KartaData } from "@/components/dbb/KartaData";
 import { KartaPragma } from "@/components/dbb/KartaPragma";
 import { KartaSql } from "@/components/dbb/KartaSql";
 import { Dok } from "@/components/dbb/Dok";
 import { Dialogy } from "@/components/dbb/Dialogy";
-import { Plocha } from "@/components/dbb/Plocha";
 import { usePodoba } from "@/components/dbb/PodleSirky";
 
 /* ───────────────────────── úložiště postupu v kurzu ─────────────────────────
@@ -178,13 +177,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const [udalosti, nastavUdalosti] = useState<Set<string>>(new Set());
   const [prohlizeni, nastavProhlizeni] = useState<{ tabulka: string; id: string[] } | null>(null);
   const [dialog, otevritDialog] = useState<Dialog | null>(null);
-  const [plocha, nastavPlochu] = useState<"ne" | "zavreno" | "minimalizovano">("ne");
   const [statusText, nastavStatusText] = useState("");
-  /** Jednorázová věta při prvním spuštění: napodobený křížek zavře program, ne prohlížeč. */
-  const [tip, nastavTip] = useState(false);
-  useEffect(() => {
-    nastavTip(!predvadeni && !prectiText("dbb-tip"));
-  }, []);
   /** Co se zahodilo při „Neukládat“ – podle toho lekce 16 pozná, že změna opravdu zmizela. */
   const zahozenoRef = useRef<{ nazev: string; temno: string | null } | null>(null);
   /** Otisk původní knihovny (spočítá se jednou po startu). */
@@ -408,7 +401,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       if (bajty.length > MAX_NAHRANI) return t("Soubor je moc velký – do prohlížeče se vejde databáze nejvýš do 2 MB.", "The file is too big – the browser can hold a database of up to 2 MB.");
       if (!jeSqlite(bajty)) return t("Tohle není databáze SQLite. Vyber soubor .db, který jsi třeba dřív stáhl(a) z kurzu.", "This is not an SQLite database. Choose a .db file – one you downloaded from the course earlier, for example.");
       const nazvy = Object.keys(diskRef.current);
-      if (nazvy.length >= MAX_SOUBORU) return t("Ve složce je moc souborů. Nějaký starý smaž (pravým tlačítkem → Odstranit).", "There are too many files in the folder. Delete an old one (right-click → Delete).");
+      if (nazvy.length >= MAX_SOUBORU) return t("Databází je moc. Nějakou starou smaž ikonou koše v okně Otevřít databázi.", "There are too many databases. Delete an old one with the bin icon in the Open Database window.");
       const cisty = puvodniNazev.replace(/[\\/:*?"<>|]/g, "_");
       const nazev = volnyNazev(cisty.toLowerCase() === KNIHOVNA ? t("knihovna z počítače.db", "knihovna from computer.db") : cisty, nazvy);
       ulozNaDisk({ ...diskRef.current, [nazev]: { bajty, zmeneno: Date.now() } });
@@ -419,6 +412,152 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     },
     [ulozNaDisk, zavriDatabazi, otevri, status],
   );
+
+  /** Tabulka z CSV do otevřené databáze – na Zapsat změny čeká jako každá jiná změna. */
+  const importujTabulku = useCallback(
+    (nazev: string, tab: PripravenaTabulka): string | null => {
+      const o = otevrenaRef.current;
+      if (!o) return t("Nejdřív otevři nebo založ databázi.", "Open or create a database first.");
+      if (tabulky(o.db).some((x) => x.toLowerCase() === nazev.toLowerCase())) {
+        return t(`Tabulka ${nazev} už v databázi je – zvol jiný název.`, `The table ${nazev} is already in the database – choose a different name.`);
+      }
+      const vytvoreni = sqlVytvoreni(nazev, tab);
+      const vlozeni = sqlVlozeni(nazev, tab);
+      try {
+        o.db.run(vytvoreni);
+        tab.data.forEach((r) => o.db.run(vlozeni, r));
+      } catch (e) {
+        const chyba = chybaCesky(e instanceof Error ? e.message : String(e), tabulky(o.db));
+        try {
+          o.db.run(`DROP TABLE IF EXISTS ${uvoz(nazev)}`);
+        } catch {
+          /* tabulka nevznikla */
+        }
+        return chyba;
+      }
+      pridejLog("aplikace", vytvoreni);
+      pridejLog("aplikace", `${vlozeni} -- ${tab.data.length}×`);
+      nastavZmeneno(true);
+      zmenaVerze();
+      udalost(`import:${nazev}`);
+      status(
+        t(
+          `Tabulka ${nazev} má ${tab.data.length} řádků z CSV. Nezapomeň změny zapsat (Ctrl+S).`,
+          `The table ${nazev} has ${tab.data.length} rows from the CSV file. Don't forget to write the changes (Ctrl+S).`,
+        ),
+      );
+      return null;
+    },
+    [pridejLog, zmenaVerze, udalost, status],
+  );
+
+  /** Nová databáze ze skriptu SQL (třeba knihovna.sql z banky) – vytvoří soubor a otevře ho. */
+  const importujSql = useCallback(
+    (nazevDb: string, text: string): string | null => {
+      if (nazevDb.toLowerCase() === KNIHOVNA) {
+        return t("Soubor knihovna.db potřebuje kurz – zvol jiný název.", "The course needs the knihovna.db file – choose a different name.");
+      }
+      if (diskRef.current[nazevDb]) {
+        return t(`Databáze ${nazevDb} už existuje – zvol jiný název.`, `The database ${nazevDb} already exists – choose a different name.`);
+      }
+      if (Object.keys(diskRef.current).length >= MAX_SOUBORU) {
+        return t("Databází je moc. Nějakou starou smaž ikonou koše v okně Otevřít databázi.", "There are too many databases. Delete an old one with the bin icon in the Open Database window.");
+      }
+      const db = otevriDb();
+      let bajty: Uint8Array;
+      try {
+        db.exec(text);
+        if (!tabulky(db).length) {
+          return t("Soubor nevytvořil žádnou tabulku – je to opravdu skript s CREATE TABLE?", "The file created no table – is it really a script with CREATE TABLE?");
+        }
+        bajty = db.export();
+      } catch (e) {
+        return chybaCesky(e instanceof Error ? e.message : String(e), tabulky(db));
+      } finally {
+        db.close();
+      }
+      ulozNaDisk({ ...diskRef.current, [nazevDb]: { bajty, zmeneno: Date.now() } });
+      otevritDialog(null);
+      zavriDatabazi(() => otevri(nazevDb));
+      status(t(`Databáze ${nazevDb} je vytvořená ze souboru SQL.`, `The database ${nazevDb} has been created from the SQL file.`));
+      return null;
+    },
+    [ulozNaDisk, zavriDatabazi, otevri, status],
+  );
+
+  /**
+   * Soubor ze skutečného počítače – z nabídky Soubor nebo přetažený myší.
+   * Druh se pozná podle přípony: .db otevře databázi, .csv přidá tabulku,
+   * .sql založí databázi ze skriptu.
+   */
+  const zpracujSoubor = useCallback(
+    (f: File, ucel?: "db" | "csv" | "sql") => {
+      const pripona = (f.name.match(/\.([^.]+)$/) || ["", ""])[1].toLowerCase();
+      const podlePripony: "db" | "csv" | "sql" | null =
+        ["db", "sqlite", "sqlite3", "db3"].indexOf(pripona) !== -1
+          ? "db"
+          : ["csv", "tsv", "txt"].indexOf(pripona) !== -1
+            ? "csv"
+            : pripona === "sql"
+              ? "sql"
+              : null;
+      const druh = podlePripony || ucel || null;
+      const zprava = (titulek: string, text: string) => otevritDialog({ druh: "zprava", titulek, text });
+      if (!druh) {
+        zprava(
+          t("Tenhle soubor program neumí", "The program can't open this file"),
+          t(
+            "Program umí databázi .db (.sqlite), tabulku z CSV (z Excelu přes Uložit jako → CSV) a databázi ze souboru .sql.",
+            "The program can open a .db (.sqlite) database, a table from a CSV file (from Excel via Save As → CSV) and a database from an .sql file.",
+          ),
+        );
+        return;
+      }
+      if (f.size > MAX_NAHRANI) {
+        zprava(
+          t("Soubor je moc velký", "The file is too big"),
+          t("Do prohlížeče se vejde soubor nejvýš do 2 MB.", "The browser can hold a file of up to 2 MB."),
+        );
+        return;
+      }
+      if (druh === "csv" && !otevrenaRef.current) {
+        zprava(
+          t("Nejdřív otevři databázi", "Open a database first"),
+          t(
+            "Tabulka z CSV se přidá do otevřené databáze. Otevři nebo založ databázi (Soubor → Nová databáze) a zkus to znovu.",
+            "The table from the CSV file is added to the open database. Open or create a database (File → New Database) and try again.",
+          ),
+        );
+        return;
+      }
+      const cteni = new FileReader();
+      cteni.onload = () => {
+        const bajty = new Uint8Array(cteni.result as ArrayBuffer);
+        if (druh === "db") {
+          const chyba = nahrajSoubor(f.name, bajty);
+          if (chyba) zprava(t("Soubor se nepodařilo nahrát", "The file could not be uploaded"), chyba);
+        } else if (druh === "csv") {
+          otevritDialog({ druh: "importCsv", soubor: f.name, bajty });
+        } else {
+          otevritDialog({ druh: "importSql", soubor: f.name, text: dekodujText(bajty).text });
+        }
+      };
+      cteni.onerror = () => zprava(t("Soubor se nepodařilo přečíst", "The file could not be read"), f.name);
+      cteni.readAsArrayBuffer(f);
+    },
+    [nahrajSoubor],
+  );
+
+  const souborRef = useRef<HTMLInputElement>(null);
+  const ucelRef = useRef<"db" | "csv" | "sql">("db");
+  const vyberSoubor = useCallback((ucel: "db" | "csv" | "sql") => {
+    ucelRef.current = ucel;
+    const vstup = souborRef.current;
+    if (!vstup) return;
+    vstup.accept = ucel === "db" ? ".db,.sqlite,.sqlite3,.db3" : ucel === "csv" ? ".csv,.tsv,.txt" : ".sql,.txt";
+    vstup.click();
+  }, []);
+  const [pretahovani, nastavPretahovani] = useState(false);
 
   /** Vrátí knihovna.db do původního stavu (neuložené změny v ní zahodí) a otevře ji. */
   const obnovKnihovnu = useCallback(() => {
@@ -741,7 +880,6 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     otiskPriNacteniRef.current = null;
     smazatKlic(KLIC_POSLEDNI);
     smazatKlic("sql-kurz-dotazy");
-    nastavPlochu("ne");
     nastavKartu("sql");
     otevri(KNIHOVNA);
     status(t("Začínáš jako nový žák – lekce 1.", "You are starting as a new pupil – lesson 1."));
@@ -1033,7 +1171,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     // F5 a Ctrl+R by jinak znovu načetly stránku a neuložené změny by
     // zmizely – blokují se vždycky, i nad dialogem.
     if (spousteci) e.preventDefault();
-    if (plocha !== "ne" || dialog) return;
+    if (dialog) return;
     if (spousteci) {
       // Na kartě Prohlížet data F5 data obnoví, jinde mimo Spustit SQL nedělá nic.
       if (karta === "data" && e.key === "F5") zmenaVerze();
@@ -1080,12 +1218,16 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       zapsat,
       vratit,
       kurz: { lekceId, lekce: vsechnyLekce, splneno, opsano, pokusy, odezva, vyberLekci, vlozReseni, novyZak, obnovDatabazi },
+      vyberSoubor,
+      importujTabulku,
+      importujSql,
       predvadeni,
       meritko,
     }),
     [otevrena, verze, zmeneno, disk, karta, dokKarta, editor, nastavEditor, vystup, spustit, log, udalost,
       hlasProhlizeni, provedAplikaci, status, zapsat, vratit, lekceId, splneno, opsano, pokusy, odezva,
-      vyberLekci, vlozReseni, novyZak, obnovDatabazi, predvadeni, meritko, vsechnyLekce],
+      vyberLekci, vlozReseni, novyZak, obnovDatabazi, predvadeni, meritko, vsechnyLekce, vyberSoubor, importujTabulku,
+      importujSql],
   );
 
   if (engine === "nacita") {
@@ -1111,11 +1253,17 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     );
   }
 
-  const titulek = otevrena ? `DB Browser for SQLite - ${SLOZKA}\\${otevrena}` : "DB Browser for SQLite";
+  const zpetNaWeb = () => zavriDatabazi(() => window.location.assign(`${domu}#banka`));
 
   return (
     <DbbKontext.Provider value={api}>
       <div
+        onDragOver={(e) => {
+          // Jen soubory z počítače – ne přetahování textu v editoru.
+          if (!e.dataTransfer || Array.prototype.indexOf.call(e.dataTransfer.types, "Files") === -1) return;
+          e.preventDefault();
+          if (!pretahovani) nastavPretahovani(true);
+        }}
         lang={jeAnglicky() ? "en" : undefined}
         className={`dbb relative flex select-none flex-col overflow-hidden ${meritko === 1 ? "vyska-obrazovky w-full" : ""}`}
         style={
@@ -1147,18 +1295,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
             </button>
           </div>
         )}
-        {plocha !== "ne" ? (
-          <Plocha
-            minimalizovano={plocha === "minimalizovano"}
-            napovedaLekce16={lekceId === 16}
-            spustit={(soubor) => {
-              nastavPlochu("ne");
-              if (soubor) otevri(soubor);
-            }}
-            obnovit={() => nastavPlochu("ne")}
-          />
-        ) : (
-          <>
+        <>
             {uzke && (
               <div className="flex shrink-0 items-center bg-[#fff4ce] px-3 py-1.5 text-[12px] text-[#4a3500]">
                 <span className="flex-1">
@@ -1176,41 +1313,13 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
                 </button>
               </div>
             )}
-            {tip && (
-              <div
-                role="note"
-                className="absolute right-3 top-[34px] z-[70] w-[340px] border border-[#8ab4e0] bg-[#eaf3fc] px-3 py-2.5 text-[12px] leading-snug shadow-[0_6px_18px_rgba(0,0,0,0.18)]"
-              >
-                <p>
-                  <b>{t("Tohle je program v prohlížeči", "This program runs in your browser")}</b>
-                  {t(
-                    " – nic se neinstaluje. Křížek vpravo nahoře zavře program, ne prohlížeč; z plochy ho zase spustíš dvojklikem.",
-                    " – nothing gets installed. The cross at the top right closes the program, not the browser; you start it again from the desktop with a double-click.",
-                  )}
-                </p>
-                <button
-                  type="button"
-                  onClick={() => {
-                    uloz("dbb-tip", "1");
-                    nastavTip(false);
-                  }}
-                  className="mt-2 border border-dbb-akcent bg-dbb-akcent px-3 py-0.5 text-dbb-akcent-text hover:brightness-110"
-                >
-                  {t("Rozumím", "Got It")}
-                </button>
-              </div>
-            )}
-            <Titulek
-              text={titulek}
-              minimalizovat={() => nastavPlochu("minimalizovano")}
-              zavrit={() => zavriDatabazi(() => nastavPlochu("zavreno"))}
-            />
+            <Hlavicka soubor={otevrena} zpet={zpetNaWeb} />
             <NabidkaOkna
               novaDatabaze={() => zavriDatabazi(() => otevritDialog({ druh: "nova" }))}
               otevritDatabazi={() => otevritDialog({ druh: "otevrit" })}
               zavritDatabazi={() => zavriDatabazi()}
-              konec={() => zavriDatabazi(() => nastavPlochu("zavreno"))}
-              zpetNaWeb={() => zavriDatabazi(() => window.location.assign(`${domu}#banka`))}
+              konec={zpetNaWeb}
+              zpetNaWeb={zpetNaWeb}
               webovaPodoba={() => zavriDatabazi(() => prepniPodobu("web"))}
               obnovitKnihovnu={() =>
                 otevritDialog({
@@ -1233,7 +1342,41 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
             />
             <Hlavni />
             <StavovyRadek text={statusText} />
-          </>
+        </>
+        <input
+          ref={souborRef}
+          type="file"
+          className="hidden"
+          aria-hidden="true"
+          tabIndex={-1}
+          onChange={(e) => {
+            const f = e.target.files && e.target.files[0];
+            if (f) zpracujSoubor(f, ucelRef.current);
+            e.target.value = "";
+          }}
+        />
+        {pretahovani && (
+          <div
+            className="absolute bottom-0 left-0 right-0 top-0 z-[150] flex items-center justify-center bg-dbb-akcent/10 p-6"
+            onDragOver={(e) => e.preventDefault()}
+            onDragLeave={() => nastavPretahovani(false)}
+            onDrop={(e) => {
+              e.preventDefault();
+              nastavPretahovani(false);
+              const f = e.dataTransfer.files && e.dataTransfer.files[0];
+              if (f) zpracujSoubor(f);
+            }}
+          >
+            <div className="pointer-events-none rounded-[8px] border-2 border-dashed border-dbb-akcent bg-dbb-povrch px-8 py-6 text-center text-[13px] shadow-[0_10px_30px_rgba(0,0,0,0.15)]">
+              <p className="text-[15px] font-semibold">{t("Pusť soubor sem", "Drop the file here")}</p>
+              <p className="mt-1.5 text-dbb-slaby">
+                {t(
+                  ".db otevře databázi · .csv přidá tabulku do otevřené databáze · .sql založí databázi",
+                  ".db opens a database · .csv adds a table to the open database · .sql creates a database",
+                )}
+              </p>
+            </div>
+          </div>
         )}
         <Dialogy
           dialog={dialog}

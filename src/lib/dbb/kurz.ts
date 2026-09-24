@@ -321,7 +321,7 @@ const NOVE: LekceKurzu[] = [
     title: "Změny se musí zapsat",
     cista: true,
     teach:
-      "Databáze je soubor na disku – tady knihovna.db ve složce Stažené soubory. Co změníš, je zatím jen v paměti programu; poznáš to podle toho, že tlačítka Zapsat změny a Vrátit změny přestanou být šedá. Do souboru se to dostane až přes Soubor → Zapsat změny (Ctrl+S). Když databázi zavíráš s nezapsanými změnami, program se zeptá – tlačítko Uložit v tom dialogu udělá totéž co Zapsat změny, Neukládat je zahodí. Vrátit změny zahodí všechno, co vzniklo od posledního zápisu. Soubor leží v tomhle prohlížeči na tomhle počítači; do skutečného počítače si ho stáhneš přes Soubor → Uložit kopii do počítače.",
+      "Databáze je soubor – tady knihovna.db, který kurz drží v tomhle prohlížeči (ve skutečném programu leží na disku). Co změníš, je zatím jen v paměti programu; poznáš to podle toho, že tlačítka Zapsat změny a Vrátit změny přestanou být šedá. Do souboru se to dostane až přes Soubor → Zapsat změny (Ctrl+S). Když databázi zavíráš s nezapsanými změnami, program se zeptá – tlačítko Uložit v tom dialogu udělá totéž co Zapsat změny, Neukládat je zahodí. Vrátit změny zahodí všechno, co vzniklo od posledního zápisu. Do skutečného počítače si soubor stáhneš přes Soubor → Uložit kopii do počítače.",
     tabulka: "knihy",
     knihovna: true,
     ukoly: [
@@ -553,7 +553,7 @@ const NOVE: LekceKurzu[] = [
         klic: "19e",
         zadani:
           "Stáhni svou databázi do počítače (Soubor → Uložit kopii do počítače) a odevzdej soubor podle pokynů učitele – třeba do Teams.",
-        hint: "Stažený soubor najdeš ve skutečné složce Stažené soubory. Otevřít ho jde i ve skutečném programu DB Browser for SQLite.",
+        hint: "Stažený soubor najdeš ve složce Stažené soubory svého počítače. Otevřít ho jde i ve skutečném programu DB Browser for SQLite.",
         reseni: "Otevři svou databázi → Soubor → Uložit kopii do počítače",
         reseniJeSql: false,
         ceka: "Čeká se, až si svou databázi stáhneš do počítače.",
