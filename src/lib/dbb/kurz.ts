@@ -55,6 +55,8 @@ export type UkolKurzu = {
   reseniJeSql: boolean;
   /** Nepovinná úloha – do „Hotovo“ se nepočítá. */
   navic?: boolean;
+  /** Na co úkol čeká – ukáže se u nesplněného úkolu, ať žák ví, co program sleduje. */
+  ceka?: string;
   kontrola: Kontrola;
 };
 
@@ -67,6 +69,13 @@ export type LekceKurzu = {
   tabulka?: string;
   /** Lekce pracuje s knihovnou (1–18); poslední s vlastní databází. */
   knihovna: boolean;
+  /**
+   * Lekce počítá s PŮVODNÍ knihovnou (1–17). Když je soubor změněný z minula
+   * (druhý průchod, další žák na stejném počítači), program při vstupu
+   * nabídne obnovení – jinak by se úkoly odškrtly samy a v lekci 16 by
+   * změna „nezmizela“.
+   */
+  cista?: boolean;
   ukoly: UkolKurzu[];
 };
 
@@ -109,6 +118,7 @@ const PUVODNI: LekceKurzu[] = LESSONS.map((l) => ({
   example: l.example,
   tabulka: hlavniTabulka(l.reference),
   knihovna: true,
+  cista: true,
   ukoly: [zKurzu(l, String(l.id), false)].concat(l.bonus ? [zKurzu(l.bonus, `${l.id}b`, true)] : []),
 }));
 
@@ -174,6 +184,7 @@ const NOVE: LekceKurzu[] = [
       "Celou dobu pracuješ v napodobenině programu DB Browser for SQLite – toho, ve kterém se s databázemi pracuje doopravdy. Dotazy z lekcí 1–13 v něm fungují beze změny, pod ním je pořád stejné SQLite. Nové je okolí: karta Struktura databáze ukazuje, jaké tabulky databáze má, z jakých sloupců se skládají a jakého jsou typu. INTEGER je celé číslo, TEXT je text.",
     tabulka: "vypujcky",
     knihovna: true,
+    cista: true,
     ukoly: [
       {
         klic: "14a",
@@ -181,6 +192,7 @@ const NOVE: LekceKurzu[] = [
         hint: "Karty jsou nahoře pod lištou s tlačítky. Tabulku rozbalíš šipkou vlevo od jejího názvu.",
         reseni: "Klikni na kartu Struktura databáze, pak na šipku vedle Tabulky a nakonec na šipku vedle knihy.",
         reseniJeSql: false,
+        ceka: "Čeká se, až na kartě Struktura databáze rozbalíš tabulku knihy.",
         kontrola: {
           druh: "stav",
           test: (k) => ({ ok: k.udalosti.has("strom:knihy") }),
@@ -204,6 +216,7 @@ const NOVE: LekceKurzu[] = [
       "Karta Prohlížet data ukáže obsah tabulky bez psaní dotazu. Tabulku vybereš vlevo nahoře a kliknutím na záhlaví sloupce řadíš. Do políčka Filtr pod záhlavím napíšeš, co hledáš: kus textu, nebo podmínku jako >1900. Dvojklikem buňku přepíšeš a program za tebe pošle databázi příkaz UPDATE – uvidíš ho v panelu Log SQL.",
     tabulka: "knihy",
     knihovna: true,
+    cista: true,
     ukoly: [
       {
         klic: "15a",
@@ -212,9 +225,12 @@ const NOVE: LekceKurzu[] = [
         hint: "Do políčka Filtr pod záhlavím sloupce rok napiš podmínku stejně jako za WHERE, jen bez názvu sloupce.",
         reseni: "Vyber tabulku knihy a do filtru pod sloupcem rok napiš >1900.",
         reseniJeSql: false,
+        ceka: "Čeká se na filtr ve sloupci rok na kartě Prohlížet data.",
         kontrola: {
           druh: "stav",
           test: (k) => {
+            // Filtr musí vzniknout v téhle lekci – pohled z dřívějška se nepočítá.
+            if (!k.udalosti.has("filtr:knihy")) return { ok: false };
             if (!k.prohlizeni || k.prohlizeni.tabulka !== "knihy") return { ok: false };
             const ocekavane = hodnoty(k.dotazZive("SELECT id FROM knihy WHERE rok > 1900 ORDER BY id")).map((r) => r[0]);
             const videt = k.prohlizeni.id.slice().sort((a, b) => Number(a) - Number(b));
@@ -228,10 +244,14 @@ const NOVE: LekceKurzu[] = [
         hint: "Vyber tabulku ctenari, dvakrát klikni na buňku s třídou Evy Markové, přepiš ji a potvrď Enterem.",
         reseni: "Tabulka ctenari → dvojklik na 1.A u Evy Markové → napiš 1.B → Enter.",
         reseniJeSql: false,
+        ceka: "Čeká se, až v mřížce tabulky ctenari přepíšeš třídu Evy Markové.",
         kontrola: {
           druh: "stav",
           test: (k) => {
             if (k.otevreny !== KNIHOVNA) return { ok: false };
+            // Úkol je o mřížce: bez úpravy buňky v téhle lekci se neodškrtne,
+            // i kdyby Eva v 1.B už byla (z minula nebo přes UPDATE).
+            if (!k.udalosti.has("upraveno:ctenari")) return { ok: false };
             const r = hodnoty(k.dotazZive("SELECT trida FROM ctenari WHERE jmeno = 'Eva Marková'"));
             return { ok: r.length === 1 && r[0][0] === "1.B" };
           },
@@ -242,6 +262,7 @@ const NOVE: LekceKurzu[] = [
   {
     id: 16,
     title: "Změny se musí zapsat",
+    cista: true,
     teach:
       "Databáze je soubor na disku – tady knihovna.db ve složce Stažené soubory. Co změníš, je zatím jen v paměti programu; poznáš to podle toho, že tlačítka Zapsat změny a Vrátit změny přestanou být šedá. Do souboru se to dostane až přes Soubor → Zapsat změny (Ctrl+S). Když databázi zavřeš a změny nezapíšeš, jsou pryč. Vrátit změny naopak zahodí všechno, co vzniklo od posledního zápisu.",
     tabulka: "knihy",
@@ -255,9 +276,20 @@ const NOVE: LekceKurzu[] = [
         reseni:
           "UPDATE knihy SET dostupna = 1 WHERE nazev = 'Temno';  → Soubor → Zavřít databázi → Neukládat → Soubor → Otevřít databázi → knihovna.db",
         reseniJeSql: false,
+        ceka: "Čeká se na celý postup: změna Temna → Zavřít databázi → Neukládat → znovu otevřít.",
         kontrola: {
           druh: "stav",
-          test: (k) => ({ ok: k.udalosti.has("znovu-otevreno-po-zahozeni") }),
+          test: (k) => {
+            // Odškrtne se, až změna po „Neukládat“ opravdu zmizí – ne za samotné zavření.
+            if (k.udalosti.has("temno-zmizelo")) return { ok: true };
+            if (k.udalosti.has("znovu-otevreno-po-zahozeni")) {
+              return {
+                ok: false,
+                proc: "Databázi jsi zavřel(a) a otevřel(a), ale Temno je dostupné pořád – v souboru bylo zapsané už z minula. Obnov původní knihovnu (Nápověda → Obnovit původní knihovna.db) a zkus to znovu.",
+              };
+            }
+            return { ok: false };
+          },
         },
       },
       {
@@ -267,11 +299,13 @@ const NOVE: LekceKurzu[] = [
         hint: "Zapsat změny je v nabídce Soubor i jako tlačítko na liště nahoře.",
         reseni: "UPDATE knihy SET dostupna = 1 WHERE nazev = 'Temno';  → Soubor → Zapsat změny",
         reseniJeSql: false,
+        ceka: "Čeká se, až změnu Temna zapíšeš do souboru.",
         kontrola: {
           druh: "stav",
           test: (k) => {
             const r = hodnoty(k.dotazSoubor(KNIHOVNA, "SELECT dostupna FROM knihy WHERE nazev = 'Temno'"));
-            if (r.length === 1 && r[0][0] === "1") return { ok: true };
+            // Zápis musí proběhnout v téhle lekci, ne někdy dřív.
+            if (r.length === 1 && r[0][0] === "1" && k.udalosti.has("zapsano")) return { ok: true };
             const zive = hodnoty(k.dotazZive("SELECT dostupna FROM knihy WHERE nazev = 'Temno'"));
             if (zive.length === 1 && zive[0][0] === "1") {
               return { ok: false, proc: "Změna je zatím jen v paměti programu – ještě ji zapiš." };
@@ -287,6 +321,7 @@ const NOVE: LekceKurzu[] = [
         hint: "Vrátit změny je na liště hned vedle Zapsat změny.",
         reseni: "Třeba UPDATE ctenari SET trida = '4.A';  → Soubor → Vrátit změny",
         reseniJeSql: false,
+        ceka: "Čeká se, až nějakou změnu vrátíš tlačítkem Vrátit změny.",
         kontrola: { druh: "stav", test: (k) => ({ ok: k.udalosti.has("vraceno") }) },
       },
     ],
@@ -294,6 +329,7 @@ const NOVE: LekceKurzu[] = [
   {
     id: 17,
     title: "Vlastní tabulka CREATE TABLE",
+    cista: true,
     teach:
       "Zatím jsi pracoval(a) s hotovými tabulkami. Novou založí příkaz CREATE TABLE: za názvem tabulky jsou v závorce sloupce a u každého jeho typ. PRIMARY KEY označí sloupec, který jednoznačně určuje řádek. REFERENCES tabulka(sloupec) udělá ze sloupce odkaz do jiné tabulky – cizí klíč. Stejnou práci udělá i tlačítko Vytvořit tabulku na kartě Struktura databáze.",
     example: "CREATE TABLE autori (\n  id INTEGER PRIMARY KEY,\n  jmeno TEXT NOT NULL\n);",
@@ -458,4 +494,16 @@ export const povinne = (l: LekceKurzu) => l.ukoly.filter((u) => !u.navic);
 /** Je lekce hotová? Všechny povinné úkoly splněné. */
 export function lekceHotova(l: LekceKurzu, splneno: Set<string>): boolean {
   return povinne(l).every((u) => splneno.has(u.klic));
+}
+
+/**
+ * Co se stalo při novém otevření souboru, který se předtím zavřel s „Neukládat“.
+ * Lekce 16 se odškrtne, až změna Temna opravdu zmizí: před zahozením bylo
+ * dostupné (1), po otevření zase ne (0). Když bylo Temno dostupné už v souboru
+ * z minula, nic nezmizí a úkol se neodškrtne.
+ */
+export function udalostiPoZnovuotevreni(temnoPred: string | null, temnoPo: string | null): string[] {
+  const u = ["znovu-otevreno-po-zahozeni"];
+  if (temnoPred === "1" && temnoPo === "0") u.push("temno-zmizelo");
+  return u;
 }

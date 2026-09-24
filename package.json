@@ -32,6 +32,7 @@
     "autoprefixer": "10.4.20",
     "jsdom": "^25.0.1",
     "postcss": "8.5.10",
+    "sql.js": "1.10.3",
     "tailwindcss": "3.4.13",
     "typescript": "5.6.3",
     "vitest": "^2.1.9"

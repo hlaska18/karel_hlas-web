@@ -53,15 +53,21 @@ export function nactiDisk(): Disk {
   return disk;
 }
 
-export function ulozDisk(disk: Disk): void {
+/**
+ * Uloží disk do prohlížeče. Vrací false, když se to nepovedlo (plné nebo
+ * zakázané úložiště) – volající to musí žákovi říct, jinak by „Zapsat změny“
+ * vypadalo jako úspěch a práce by se po zavření stránky ztratila.
+ */
+export function ulozDisk(disk: Disk): boolean {
   try {
     const data: Record<string, { b: string; t: number }> = {};
     for (const nazev of Object.keys(disk)) {
       data[nazev] = { b: naBase64(disk[nazev].bajty), t: disk[nazev].zmeneno };
     }
     localStorage.setItem(KLIC, JSON.stringify(data));
+    return true;
   } catch {
-    /* plné nebo zakázané úložiště – práce zůstane aspoň v paměti */
+    return false;
   }
 }
 

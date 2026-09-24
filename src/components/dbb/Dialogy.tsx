@@ -12,6 +12,7 @@ import { IkonaProgramu } from "@/components/dbb/Okno";
 import { KNIHOVNA, MAX_SOUBORU, upravNazev, velikost } from "@/lib/dbb/soubory";
 import { tabulky } from "@/lib/dbb/prikazy";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
+import { stahni } from "@/lib/dbb/stahni";
 
 /* ─────────────────────────────── základ ─────────────────────────────── */
 
@@ -717,9 +718,31 @@ export function Dialogy({
             >
               {dialog.tlacitko}
             </Tlacitko>
-            <Tlacitko prvni akce={zavrit}>
-              Zrušit
+            <Tlacitko
+              prvni
+              akce={() => {
+                zavrit();
+                if (dialog.priZruseni) dialog.priZruseni();
+              }}
+            >
+              {dialog.zrusit || "Zrušit"}
             </Tlacitko>
+          </Paticka>
+        </Okno>
+      );
+    case "chybaZapisu":
+      return (
+        <Okno titulek="Změny se nepodařilo uložit" zavrit={zavrit}>
+          <Zprava ikona={<Info className="h-8 w-8 text-[#c42b1c]" />}>
+            Soubor {dialog.nazev} se nepodařilo uložit v prohlížeči – úložiště je plné, nebo ho prohlížeč nedovolí
+            (třeba v anonymním okně). Změny v programu zůstanou, dokud stránku nezavřeš. Stáhni si soubor do
+            počítače, ať o ně nepřijdeš.
+          </Zprava>
+          <Paticka>
+            <Tlacitko primarni prvni akce={() => stahni(dialog.nazev, dialog.bajty)}>
+              Stáhnout soubor
+            </Tlacitko>
+            <Tlacitko akce={zavrit}>Zavřít</Tlacitko>
           </Paticka>
         </Okno>
       );

@@ -23,6 +23,8 @@ export type Vystup = {
   chyba: boolean;
   /** Vysvětlení chyby po česku. */
   cesky?: string;
+  /** Poznámka k výsledku, který vypadá divně, ale je správně (řazení Č za Z). */
+  poznamka?: string;
   /** Výsledek je jen náhled tabulky lekce, ne dotaz žáka. */
   nahled?: string;
 };
@@ -34,8 +36,19 @@ export type Dialog =
   | { druh: "tabulka" }
   | { druh: "okurzu" }
   | { druh: "oprogramu" }
-  | { druh: "potvrdit"; titulek: string; text: string; tlacitko: string; akce: () => void }
-  | { druh: "zprava"; titulek: string; text: string };
+  | {
+      druh: "potvrdit";
+      titulek: string;
+      text: string;
+      tlacitko: string;
+      akce: () => void;
+      /** Popisek druhého tlačítka (výchozí „Zrušit“) a co udělá. */
+      zrusit?: string;
+      priZruseni?: () => void;
+    }
+  | { druh: "zprava"; titulek: string; text: string }
+  /** Zápis do úložiště prohlížeče se nepovedl – nabídne stažení souboru. */
+  | { druh: "chybaZapisu"; nazev: string; bajty: Uint8Array };
 
 export type KurzStav = {
   lekceId: number;
@@ -45,6 +58,7 @@ export type KurzStav = {
   odezva: { klic: string; text: string } | null;
   vyberLekci: (id: number) => void;
   vlozReseni: (klic: string) => void;
+  novyZak: () => void;
 };
 
 export type DbbApi = {

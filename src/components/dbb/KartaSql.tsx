@@ -174,6 +174,11 @@ export function KartaSql() {
             </div>
           ))}
         {v && v.nahled && <div className="text-dbb-slaby">{v.zprava[0]}</div>}
+        {v && v.poznamka && (
+          <div className="mt-1.5 border-l-[3px] border-dbb-akcent bg-dbb-hover px-2 py-1 text-dbb-text">
+            <b>Pozn.:</b> {v.poznamka}
+          </div>
+        )}
         {v && v.cesky && (
           <div className="mt-1.5 border-l-[3px] border-[#e8a33d] bg-[#fff8e1] px-2 py-1 text-[#4a3500]">
             <b>Po česku:</b> {v.cesky}

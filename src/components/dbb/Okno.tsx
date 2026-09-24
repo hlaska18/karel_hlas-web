@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { useDbb, precti, type Karta } from "@/components/dbb/kontext";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
+import { stahni } from "@/lib/dbb/stahni";
 
 /** Ikona programu: databázový válec. Vlastní kresba, ne logo programu. */
 export function IkonaProgramu({ className = "h-4 w-4" }: { className?: string }) {
@@ -76,26 +77,15 @@ export function Titulek({
 
 type Polozka = { text: string; zkratka?: string; akce?: () => void; zakazano?: boolean } | "-";
 
-function stahni(nazev: string, bajty: Uint8Array) {
-  const blob = new Blob([bajty], { type: "application/vnd.sqlite3" });
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement("a");
-  a.href = url;
-  a.download = nazev;
-  document.body.appendChild(a);
-  a.click();
-  document.body.removeChild(a);
-  setTimeout(() => URL.revokeObjectURL(url), 1000);
-}
-
 export function NabidkaOkna({
   novaDatabaze,
   otevritDatabazi,
   zavritDatabazi,
   konec,
   zpetNaWeb,
+  webovaPodoba,
   obnovitKnihovnu,
-  zacitZnovu,
+  novyZak,
 }: {
   novaDatabaze: () => void;
   otevritDatabazi: () => void;
@@ -103,8 +93,11 @@ export function NabidkaOkna({
   konec: () => void;
   /** Odchod ze simulace na web – s neuloženými změnami se napřed zeptá. */
   zpetNaWeb: () => void;
+  /** Přepne /sql na webovou podobu kurzu (volba se pamatuje). */
+  webovaPodoba: () => void;
   obnovitKnihovnu: () => void;
-  zacitZnovu: () => void;
+  /** Smaže postup i soubory – pro dalšího žáka u stejného počítače. */
+  novyZak: () => void;
 }) {
   const api = useDbb();
   const [otevrene, nastavOtevrene] = useState<string | null>(null);
@@ -200,10 +193,11 @@ export function NabidkaOkna({
           },
         },
         { text: "Obnovit původní knihovna.db…", akce: obnovitKnihovnu },
-        { text: "Začít kurz znovu…", akce: zacitZnovu },
+        { text: "Nový žák…", akce: novyZak },
         "-",
         { text: "O programu DB Browser for SQLite…", akce: () => api.otevritDialog({ druh: "oprogramu" }) },
         "-",
+        { text: "Přepnout na webovou podobu kurzu", akce: webovaPodoba },
         { text: "Zpět na web", akce: zpetNaWeb },
       ],
     },
@@ -281,7 +275,7 @@ function TlacitkoListy({
       onClick={akce}
       disabled={zakazano || !akce}
       title={titulek || text}
-      className="flex h-[26px] items-center rounded-[3px] px-1.5 text-[12px] enabled:hover:bg-dbb-hover disabled:opacity-45"
+      className="flex h-[26px] shrink-0 items-center whitespace-nowrap rounded-[3px] px-1.5 text-[12px] enabled:hover:bg-dbb-hover disabled:opacity-45"
     >
       <span className="mr-1.5 flex h-4 w-4 items-center justify-center">{ikona}</span>
       {text}
@@ -302,7 +296,7 @@ export function Lista({
 }) {
   const api = useDbb();
   return (
-    <div className="flex h-[32px] shrink-0 items-center border-b border-dbb-linka bg-dbb-lista px-1.5">
+    <div className="flex h-[32px] shrink-0 items-center overflow-hidden border-b border-dbb-linka bg-dbb-lista px-1.5">
       <TlacitkoListy ikona={<FilePlus2 className="h-4 w-4 text-[#2e75b6]" />} text="Nová databáze" akce={novaDatabaze} />
       <TlacitkoListy
         ikona={<FolderOpen className="h-4 w-4 text-[#c9901a]" />}

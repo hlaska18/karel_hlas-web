@@ -197,3 +197,28 @@ export function tabulky(db: SqlDbSoubor): string[] {
   );
   return r.length ? r[0].values.map((v) => String(v[0])) : [];
 }
+
+/** Tabulky, se kterými dotaz pracuje (za FROM, JOIN, INTO, UPDATE, TABLE), malými písmeny. */
+export function tabulkyDotazu(sql: string): string[] {
+  const vysledek: string[] = [];
+  const re = /\b(?:from|join|into|update|table)\s+(?:if\s+not\s+exists\s+)?["`[]?([A-Za-z_][A-Za-z0-9_]*)/gi;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(sql))) {
+    const t = m[1].toLowerCase();
+    if (vysledek.indexOf(t) === -1) vysledek.push(t);
+  }
+  return vysledek;
+}
+
+/**
+ * Poznámka k řazení: SQLite řadí texty podle kódu znaků, takže Č, Ř, Š a Ž
+ * skončí až za Z. Skutečný DB Browser to dělá stejně – není to chyba žáka ani
+ * simulace, ale bez vysvětlení to vypadá jako chyba.
+ */
+export function poznamkaKRazeni(sql: string, vysledek: SqlResult | null): string | undefined {
+  if (!vysledek || !/\border\s+by\b/i.test(sql)) return undefined;
+  const diakritika = /^[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]/;
+  const ma = vysledek.values.some((r) => r.some((c) => typeof c === "string" && diakritika.test(c)));
+  if (!ma) return undefined;
+  return "SQLite řadí texty podle kódu znaků, takže písmena s háčkem a čárkou (Č, Ř, Š, Ž…) jsou až za Z. Stejně řadí i skutečný DB Browser.";
+}

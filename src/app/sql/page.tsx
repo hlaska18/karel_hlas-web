@@ -15,7 +15,7 @@ import { Mark } from "@/components/Mark";
 import { SqlPlayground } from "@/components/SqlPlayground";
 import { Proza } from "@/components/Proza";
 import { VirtualniDbBrowser } from "@/components/dbb/DbBrowser";
-import { JenNaPocitaci, JenNaMaleObrazovce } from "@/components/dbb/PodleSirky";
+import { PodobaKurzu, ObalProgramu, ObalWebu, JenVeWebu, TlacitkoDoProgramu } from "@/components/dbb/PodleSirky";
 
 /** Cesty na soubory v bance (téma 8 – Základy databází). */
 const TEMA = "/materialy/1L/8";
@@ -50,12 +50,11 @@ export default function SqlPage({
   const domu = zEn ? "/en" : "/";
   return (
     <LanguageProvider lang="cs">
-      <div className="hidden vyska-obrazovky w-full overflow-hidden lg:block">
-        <JenNaPocitaci>
-          <VirtualniDbBrowser domu={domu} />
-        </JenNaPocitaci>
-      </div>
-      <div className="lg:hidden">
+      <PodobaKurzu>
+      <ObalProgramu>
+        <VirtualniDbBrowser domu={domu} />
+      </ObalProgramu>
+      <ObalWebu>
       <header className="glass-bar sticky top-0 z-40">
         <nav className="container-page flex h-16 items-center justify-between gap-4">
           <Link href={domu} className="group flex items-center gap-2.5" aria-label={SITE.name}>
@@ -93,6 +92,7 @@ export default function SqlPage({
             lekcemi navíc o práci se souborem a vlastní tabulce.
           </Proza>
         </p>
+        <TlacitkoDoProgramu />
 
         {/* Kurz je psaný pro žáka – jediná stránka na webu, která není pro
             učitele. Tenhle blok je proto NAD kurzem: kdo sem přijde vybírat
@@ -151,9 +151,9 @@ export default function SqlPage({
         </details>
 
         <div className="mt-8 max-w-3xl">
-          <JenNaMaleObrazovce>
+          <JenVeWebu>
             <SqlPlayground />
-          </JenNaMaleObrazovce>
+          </JenVeWebu>
         </div>
 
         {/* Závěrečná lekce kurzu: stejná databáze, opravdový program (DB Browser). */}
@@ -233,7 +233,8 @@ export default function SqlPage({
           </a>
         </section>
       </main>
-      </div>
+      </ObalWebu>
+      </PodobaKurzu>
     </LanguageProvider>
   );
 }

@@ -202,14 +202,16 @@ export function KartaData() {
             sloupce={data.sloupce}
             radky={data.radky}
             filtry={filtry}
-            nastavFiltr={(i, text) =>
+            nastavFiltr={(i, text) => {
+              // Kurz (lekce 15) chce filtr nastavený v otevřené lekci.
+              if (text.trim()) api.udalost(`filtr:${tabulka}`);
               nastavFiltry((f) => {
                 const n = f.slice();
                 while (n.length <= i) n.push("");
                 n[i] = text;
                 return n;
-              })
-            }
+              });
+            }}
             razeni={razeni}
             kliknutiZahlavi={(i) =>
               nastavRazeni((r) => (r && r.sloupec === i ? (r.smer === "asc" ? { sloupec: i, smer: "desc" } : null) : { sloupec: i, smer: "asc" }))

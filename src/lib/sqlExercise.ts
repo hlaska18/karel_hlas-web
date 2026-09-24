@@ -190,9 +190,15 @@ export function diffMessage(
     }
     // Nejčastější tichá past: SQLite u českých znaků rozlišuje velikost písmen,
     // takže 'čapek' nenajde nic a hláška o „přísné podmínce" by mátla.
-    const velikost = dotazy && maText(dotazy.zak)
-      ? " Pozor i na velká písmena – 'Čapek' a 'čapek' jsou pro databázi dvě různé hodnoty."
-      : "";
+    // LIKE bere velká a malá písmena jako stejná jen u písmen bez diakritiky,
+    // takže 'č%' nenajde „Čapek“. Skutečné SQLite (i DB Browser) to má stejně.
+    const likeDiakritika =
+      dotazy && /\blike\b/i.test(dotazy.zak) && /'[^']*[^\u0000-\u007f][^']*'/.test(dotazy.zak);
+    const velikost = likeDiakritika
+      ? " Pozor na velká písmena: LIKE je bere jako stejná jen u písmen bez háčků a čárek – 'č%' proto nenajde „Čapek“. Napiš písmeno tak, jak je v datech (Č). Stejně se chová i skutečný DB Browser."
+      : dotazy && maText(dotazy.zak)
+        ? " Pozor i na velká písmena – 'Čapek' a 'čapek' jsou pro databázi dvě různé hodnoty."
+        : "";
     return `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.${velikost}`;
   }
   if (mv.length !== rv.length) {

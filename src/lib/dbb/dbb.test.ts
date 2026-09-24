@@ -175,3 +175,31 @@ describe("sqlTabulky (okno Upravit definici tabulky)", () => {
     expect(sql).toContain('FOREIGN KEY("kniha_id") REFERENCES "knihy"("id")');
   });
 });
+
+describe("vysvětlení k češtině v SQLite", () => {
+  it("u LIKE s háčkem vysvětlí, proč 'č%' nenajde Čapka", async () => {
+    const { diffMessage } = await import("@/lib/sqlExercise");
+    const rows = (v: unknown[][]) => ({ columns: ["a"], values: v });
+    const msg = diffMessage(rows([]), rows([[1]]), false, false, {
+      zak: "SELECT nazev FROM knihy WHERE autor LIKE 'č%';",
+      ref: "SELECT nazev FROM knihy WHERE autor LIKE 'Č%';",
+    });
+    expect(msg).toContain("bez háčků");
+    expect(msg).toContain("skutečný DB Browser");
+  });
+
+  it("u řazení s háčky přidá poznámku, bez háčků ne", async () => {
+    const { poznamkaKRazeni } = await import("@/lib/dbb/prikazy");
+    const s = (v: unknown[][]) => ({ columns: ["autor"], values: v });
+    expect(poznamkaKRazeni("SELECT autor FROM knihy ORDER BY autor", s([["Alois"], ["Čapek"]]))).toContain("až za Z");
+    expect(poznamkaKRazeni("SELECT autor FROM knihy ORDER BY autor", s([["Alois"], ["Karel"]]))).toBeUndefined();
+    expect(poznamkaKRazeni("SELECT autor FROM knihy", s([["Čapek"]]))).toBeUndefined();
+  });
+
+  it("tabulkyDotazu najde tabulky za FROM, JOIN, INTO, UPDATE i CREATE TABLE", async () => {
+    const { tabulkyDotazu } = await import("@/lib/dbb/prikazy");
+    expect(tabulkyDotazu("SELECT * FROM knihy JOIN vypujcky ON 1")).toEqual(["knihy", "vypujcky"]);
+    expect(tabulkyDotazu("CREATE TABLE IF NOT EXISTS hodnoceni (id)")).toEqual(["hodnoceni"]);
+    expect(tabulkyDotazu("SELECT 1")).toEqual([]);
+  });
+});
