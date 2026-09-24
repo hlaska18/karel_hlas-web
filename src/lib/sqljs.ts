@@ -1,10 +1,19 @@
 /**
  * Klientský loader pro sql.js (SQLite zkompilované do WebAssembly).
- * Načítá se lazy z CDN – nezdržuje zbytek webu a nic se neinstaluje u žáka.
+ * Načítá se lazy – nezdržuje zbytek webu a nic se neinstaluje u žáka.
+ *
+ * Nejdřív z vlastní kopie na tomhle webu (public/sqljs/<verze>/), CDN je jen
+ * záloha. Rada 24. 9. 2026: školní filtr může cdn.jsdelivr.net blokovat
+ * a soubor z CDN obsahuje `?.`, který Chrome pod 80 a Safari pod 13.1
+ * nepřečtou. Vlastní kopie je přeložená na cíl webu – vyrábí ji
+ * scripts/sqljs-kopie.mjs, shodu hlídá sqljs.test.ts.
  */
 
-const SQLJS_VERSION = "1.10.3";
+export const SQLJS_VERSION = "1.10.3";
+const VLASTNI = `/sqljs/${SQLJS_VERSION}/`;
 const CDN = `https://cdn.jsdelivr.net/npm/sql.js@${SQLJS_VERSION}/dist/`;
+/** Odkud se engine opravdu načetl – odtud se bere i soubor .wasm. */
+let zaklad = VLASTNI;
 const SQLJS_SRI = "sha384-8D3Rsfo535FqoC1pHCCQMrNf75UgzyoG/HQm9zOzITRrz3QKzecc2E7JXKGCXoWu";
 
 export type SqlResult = { columns: string[]; values: unknown[][] };
@@ -21,21 +30,40 @@ type InitSqlJs = (cfg: { locateFile: (f: string) => string }) => Promise<any>;
 
 let scriptPromise: Promise<InitSqlJs> | null = null;
 
-function loadScript(): Promise<InitSqlJs> {
-  if (scriptPromise) return scriptPromise;
-  scriptPromise = new Promise((resolve, reject) => {
+/** Vloží <script> s enginem z dané adresy. */
+function vlozSkript(odkud: string, sri: boolean): Promise<InitSqlJs> {
+  return new Promise((resolve, reject) => {
     const w = window as unknown as { initSqlJs?: InitSqlJs };
-    if (w.initSqlJs) return resolve(w.initSqlJs);
     const s = document.createElement("script");
-    s.src = `${CDN}sql-wasm.js`;
+    s.src = `${odkud}sql-wasm.js`;
     s.async = true;
-    s.integrity = SQLJS_SRI;
-    s.crossOrigin = "anonymous";
-    s.onload = () =>
-      w.initSqlJs ? resolve(w.initSqlJs) : reject(new Error("sql.js se nenačetlo"));
+    if (sri) {
+      s.integrity = SQLJS_SRI;
+      s.crossOrigin = "anonymous";
+    }
+    s.onload = () => (w.initSqlJs ? resolve(w.initSqlJs) : reject(new Error("sql.js se nenačetlo")));
     s.onerror = () => reject(new Error("Nepodařilo se stáhnout SQL engine"));
     document.head.appendChild(s);
   });
+}
+
+function loadScript(): Promise<InitSqlJs> {
+  if (scriptPromise) return scriptPromise;
+  const w = window as unknown as { initSqlJs?: InitSqlJs };
+  scriptPromise = w.initSqlJs
+    ? Promise.resolve(w.initSqlJs)
+    : vlozSkript(VLASTNI, false).then(
+        (init) => {
+          zaklad = VLASTNI;
+          return init;
+        },
+        // Vlastní kopie nejde (výpadek, zastaralá mezipaměť) – záloha z CDN.
+        () =>
+          vlozSkript(CDN, true).then((init) => {
+            zaklad = CDN;
+            return init;
+          }),
+      );
   // Neúspěch nekešujeme: jinak by každý další pokus (i po obnovení sítě) dostal
   // tu samou starou chybu a engine by se už nikdy nenačetl.
   scriptPromise.catch(() => {
@@ -51,7 +79,7 @@ let engine: any = null;
 /** Načte engine, vytvoří DB v paměti a naplní ji zadaným schématem. */
 export async function createDb(schema: string): Promise<SqlDb> {
   const initSqlJs = await loadScript();
-  const SQL = await initSqlJs({ locateFile: (f: string) => `${CDN}${f}` });
+  const SQL = await initSqlJs({ locateFile: (f: string) => `${zaklad}${f}` });
   engine = SQL;
   const db = new SQL.Database();
   db.run(schema);
@@ -97,7 +125,7 @@ export type SqlDbSoubor = SqlDb & {
 export async function nactiEngine(): Promise<void> {
   if (engine) return;
   const initSqlJs = await loadScript();
-  engine = await initSqlJs({ locateFile: (f: string) => `${CDN}${f}` });
+  engine = await initSqlJs({ locateFile: (f: string) => `${zaklad}${f}` });
 }
 
 /** Otevře databázi z bajtů souboru, bez bajtů prázdnou. Až po `nactiEngine`. */

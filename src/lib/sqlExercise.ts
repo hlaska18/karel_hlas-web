@@ -142,8 +142,8 @@ export function sqlErrorCs(raw: string, en = false): string {
 
   if (/UNIQUE constraint failed/i.test(m)) {
     return tt(
-      "Řádek s tímhle id už v tabulce je – dvakrát se přidat nedá. Buď zvol jiné id, nebo klikni na Obnovit databázi a spusť příkaz znovu.",
-      "A row with this id is already in the table – it can't be added twice. Choose a different id.",
+      "Řádek s tímhle id už v tabulce je – nejspíš jsi příkaz spustil(a) podruhé. Klikni na Obnovit databázi a spusť ho znovu.",
+      "A row with this id is already in the table – you probably ran the command twice.",
     );
   }
 

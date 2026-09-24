@@ -15,7 +15,48 @@ export const TRANSAKCE_ZAKAZANE = t(
   "DB Browser manages transactions itself: it keeps your changes in memory and the Write Changes button (Ctrl+S) writes them to the file. So don't run BEGIN, COMMIT, ROLLBACK and the like here.",
 );
 
-export function chybaCesky(raw: string, tabulky: string[]): string {
+/** Co ještě hláška může vědět: sloupce otevřené databáze a příkaz, který spadl. */
+export type KontextChyby = { sloupce?: string[]; sql?: string };
+
+const bezDiakritiky = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+
+const PISMENO = /[0-9A-Za-z_\u00C0-\u024F]/;
+
+/**
+ * Stojí slovo v příkazu tam, kde se píše hodnota (za =, LIKE, v IN (…)
+ * nebo ve VALUES (…))? Jen tam dává smysl rada „dej ho do apostrofů“ –
+ * za SELECTem by žáka poslala do slepé uličky (rada 24. 9. 2026).
+ * Bez lookbehindu v regulárních výrazech – Safari 12 ho neumí.
+ */
+export function stojiJakoHodnota(sql: string, slovo: string): boolean {
+  const maly = sql.toLowerCase();
+  const hledane = slovo.toLowerCase();
+  let i = maly.indexOf(hledane);
+  while (i !== -1) {
+    const pred = i > 0 ? maly[i - 1] : "";
+    const za = maly[i + hledane.length] || "";
+    if (!PISMENO.test(pred) && !PISMENO.test(za)) {
+      const predtim = maly.slice(0, i);
+      const orez = predtim.replace(/\s+$/, "");
+      if (
+        /(=|<>|!=|<|>)$/.test(orez) ||
+        /\blike$/.test(orez) ||
+        /\bin\s*\([^)]*$/.test(predtim) ||
+        /\bvalues\s*(\([^)]*\)\s*,\s*)*\([^)]*$/.test(predtim)
+      ) {
+        return true;
+      }
+    }
+    i = maly.indexOf(hledane, i + 1);
+  }
+  return false;
+}
+
+export function chybaCesky(raw: string, tabulky: string[], kontext: KontextChyby = {}): string {
   const m = raw.trim().replace(/^Error:\s*/i, "");
 
   const bezTabulky = m.match(/no such table:\s*(\S+)/i);
@@ -42,6 +83,22 @@ export function chybaCesky(raw: string, tabulky: string[]): string {
   const bezSloupce = m.match(/no such column:\s*(\S+)/i);
   if (bezSloupce) {
     const nazev = bezSloupce[1];
+    const posledni = nazev.split(".").pop() || nazev;
+    // „název“ místo „nazev“: sloupce jsou bez háčků a čárek.
+    const holy = bezDiakritiky(posledni);
+    const sloupec = holy !== posledni.toLowerCase() ? (kontext.sloupce || []).filter((s) => s.toLowerCase() === holy)[0] : undefined;
+    if (sloupec) {
+      return t(
+        `Názvy sloupců jsou bez háčků a čárek – napiš ${sloupec} místo ${posledni}.`,
+        `Column names have no accents – write ${sloupec} instead of ${posledni}.`,
+      );
+    }
+    if (kontext.sql !== undefined && !stojiJakoHodnota(kontext.sql, posledni)) {
+      return t(
+        `Sloupec „${nazev}“ tu není. Zkontroluj překlep – názvy sloupců najdeš v panelu Schéma DB vpravo.`,
+        `There is no column “${nazev}”. Check the spelling – the column names are in the DB Schema panel on the right.`,
+      );
+    }
     return t(
       `Sloupec „${nazev}“ tu není. Jde-li o text, patří do apostrofů – tedy '${nazev}'. Jinak zkontroluj překlep; názvy sloupců najdeš v panelu Schéma DB vpravo.`,
       `There is no column “${nazev}”. If it is meant to be text, it belongs in single quotes – '${nazev}'. Otherwise check the spelling; the column names are in the DB Schema panel on the right.`,
@@ -50,8 +107,8 @@ export function chybaCesky(raw: string, tabulky: string[]): string {
 
   if (/UNIQUE constraint failed/i.test(m)) {
     return t(
-      "Řádek s tímhle id už v tabulce je – dvakrát se přidat nedá. Zvol jiné id, nebo změny zahoď tlačítkem Vrátit změny.",
-      "A row with this id is already in the table – it can't be added twice. Choose a different id, or throw the changes away with Revert Changes.",
+      "Tenhle řádek už v tabulce je – nejspíš jsi INSERT spustil(a) podruhé. Smaž ho z editoru, nebo klikni do nového příkazu a zmáčkni Shift+F5 – spustí se jen ten.",
+      "This row is already in the table – you probably ran the INSERT twice. Delete it from the editor, or click into your new command and press Shift+F5 – only that one runs.",
     );
   }
 

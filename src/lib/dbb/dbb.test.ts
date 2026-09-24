@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { rozdelPrikazy, druhPrikazu, prikazNaPozici, pocetRadku } from "@/lib/dbb/prikazy";
-import { KURZ, hlavniTabulka, lekceHotova, povinne } from "@/lib/dbb/kurz";
+import { rozdelPrikazy, druhPrikazu, prikazNaPozici, pocetRadku, zakomentujZmeny } from "@/lib/dbb/prikazy";
+import { KURZ, hlavniTabulka, lekceHotova, povinne, coSKnihovnou, rozdelSkore } from "@/lib/dbb/kurz";
 import { LESSONS } from "@/lib/sqlExercise";
 import { naBase64, zBase64, upravNazev, velikost } from "@/lib/dbb/soubory";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
@@ -144,8 +144,36 @@ describe("chybaCesky", () => {
     expect(chybaCesky("no such table: hodnoceni", ["ctenari", "knihy", "vypujcky"])).toContain("lekci 17");
   });
 
-  it("radí Vrátit změny místo tlačítka webového kurzu", () => {
-    expect(chybaCesky("UNIQUE constraint failed: knihy.id", [])).toContain("Vrátit změny");
+  it("u dvakrát spuštěného INSERTu radí Shift+F5, ne jiné id (lekce 11 chce id 11)", () => {
+    const text = chybaCesky("UNIQUE constraint failed: knihy.id", []);
+    expect(text).toContain("Shift+F5");
+    expect(text).not.toContain("jiné id");
+  });
+
+  it("u sloupce s háčkem řekne, že názvy jsou bez diakritiky", () => {
+    const sloupce = ["id", "nazev", "autor", "rok"];
+    expect(chybaCesky("no such column: název", ["knihy"], { sloupce, sql: "SELECT název FROM knihy" })).toContain(
+      "napiš nazev místo název",
+    );
+    expect(chybaCesky("no such column: knihy.název", ["knihy"], { sloupce, sql: "SELECT knihy.název FROM knihy" })).toContain(
+      "nazev",
+    );
+  });
+
+  it("apostrofy radí jen tam, kde má stát hodnota", () => {
+    const sloupce = ["id", "nazev", "zanr"];
+    expect(chybaCesky("no such column: poezie", ["knihy"], { sloupce, sql: "SELECT nazev FROM knihy WHERE zanr = poezie" })).toContain(
+      "apostrof",
+    );
+    expect(chybaCesky("no such column: nazv", ["knihy"], { sloupce, sql: "SELECT nazv FROM knihy" })).not.toContain("apostrof");
+    expect(
+      chybaCesky("no such column: Temno", ["knihy"], { sloupce, sql: "INSERT INTO knihy (nazev) VALUES (Temno)" }),
+    ).toContain("apostrof");
+    expect(chybaCesky("no such column: drama", ["knihy"], { sloupce, sql: "SELECT * FROM knihy WHERE zanr IN ('román', drama)" })).toContain(
+      "apostrof",
+    );
+    // Bez znalosti příkazu zůstává původní rada.
+    expect(chybaCesky("no such column: poezie", ["knihy"])).toContain("apostrof");
   });
 });
 
@@ -201,5 +229,63 @@ describe("vysvětlení k češtině v SQLite", () => {
     expect(tabulkyDotazu("SELECT * FROM knihy JOIN vypujcky ON 1")).toEqual(["knihy", "vypujcky"]);
     expect(tabulkyDotazu("CREATE TABLE IF NOT EXISTS hodnoceni (id)")).toEqual(["hodnoceni"]);
     expect(tabulkyDotazu("SELECT 1")).toEqual([]);
+  });
+});
+
+describe("editor při přechodu do jiné lekce", () => {
+  it("zakomentuje INSERT, UPDATE i CREATE, SELECT nechá", () => {
+    const text = "SELECT * FROM knihy;\nINSERT INTO knihy (id, nazev)\nVALUES (11, 'Bylo nás pět');\nUPDATE knihy SET dostupna = 1 WHERE nazev = 'Kytice';";
+    const z = zakomentujZmeny(text);
+    expect(z.pocet).toBe(2);
+    expect(z.text).toBe(
+      "SELECT * FROM knihy;\n-- INSERT INTO knihy (id, nazev)\n-- VALUES (11, 'Bylo nás pět');\n-- UPDATE knihy SET dostupna = 1 WHERE nazev = 'Kytice';",
+    );
+    // Po zakomentování zbyde jen SELECT – F5 už nic nezmění.
+    expect(rozdelPrikazy(z.text).map((p) => p.text)).toEqual(["SELECT * FROM knihy;"]);
+  });
+
+  it("bez změn dat text nechá být a znovu nezakomentovává", () => {
+    expect(zakomentujZmeny("SELECT 1;\n-- INSERT INTO x VALUES (1);")).toEqual({
+      text: "SELECT 1;\n-- INSERT INTO x VALUES (1);",
+      pocet: 0,
+    });
+    const jednou = zakomentujZmeny("CREATE TABLE t (a INTEGER);\n\nDELETE FROM t;").text;
+    expect(zakomentujZmeny(jednou).pocet).toBe(0);
+    expect(jednou).toBe("-- CREATE TABLE t (a INTEGER);\n\n-- DELETE FROM t;");
+  });
+});
+
+describe("stav knihovny při vstupu do lekce", () => {
+  const zaklad = {
+    zmenenaPriNacteni: null,
+    vyresenoVRelaci: false,
+    odmitnutyOtisk: null,
+    temnoVSouboru: "0",
+    lekce16Hotova: false,
+  };
+
+  it("v lekcích 1–13 se nikdy neptá – i když je knihovna změněná", () => {
+    for (let id = 1; id <= 13; id++) expect(coSKnihovnou(id, { ...zaklad, zmenenaPriNacteni: "x" })).toBe("nic");
+  });
+
+  it("vlastní změny z téhle relace nevadí, změna z minula ano – jednou", () => {
+    expect(coSKnihovnou(14, zaklad)).toBe("nic");
+    expect(coSKnihovnou(15, { ...zaklad, zmenenaPriNacteni: "x" })).toBe("zeptat");
+    expect(coSKnihovnou(17, { ...zaklad, zmenenaPriNacteni: "x", vyresenoVRelaci: true })).toBe("nic");
+    expect(coSKnihovnou(14, { ...zaklad, zmenenaPriNacteni: "x", odmitnutyOtisk: "x" })).toBe("nic");
+    expect(coSKnihovnou(18, { ...zaklad, zmenenaPriNacteni: "x" })).toBe("nic");
+  });
+
+  it("lekce 16 obnoví potichu, jen když je Temno v souboru dostupné a lekce není hotová", () => {
+    expect(coSKnihovnou(16, { ...zaklad, temnoVSouboru: "1" })).toBe("obnovit");
+    expect(coSKnihovnou(16, { ...zaklad, temnoVSouboru: "1", lekce16Hotova: true })).toBe("nic");
+    expect(coSKnihovnou(16, { ...zaklad, zmenenaPriNacteni: "x" })).toBe("nic");
+  });
+});
+
+describe("skóre podle hodin", () => {
+  it("rozdělí lekce na dotazy 1–13 a program 14–19", () => {
+    expect(rozdelSkore([1, 2, 3, 4, 5, 6, 7, 8, 9])).toEqual({ dotazy: [9, 13], program: [0, 6] });
+    expect(rozdelSkore([13, 14, 19, 20])).toEqual({ dotazy: [1, 13], program: [2, 6] });
   });
 });

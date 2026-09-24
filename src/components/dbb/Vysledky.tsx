@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Copy, Check } from "lucide-react";
 import { useDbb } from "@/components/dbb/kontext";
 import { Okno, Tlacitko, Paticka } from "@/components/dbb/okna";
-import { KURZ, SADY, lekceHotova, povinne } from "@/lib/dbb/kurz";
+import { KURZ, SADY, lekceHotova, povinne, rozdelSkore } from "@/lib/dbb/kurz";
 import { zakoduj, najdiKody, type Postup } from "@/lib/dbb/kodPostupu";
 import { stahni } from "@/lib/dbb/stahni";
 import { cist, zapsat } from "@/lib/dbb/uloziste";
@@ -82,6 +82,8 @@ export function MojeVysledky({ zavrit }: { zavrit: () => void }) {
   const kod = zakoduj(p);
   const d = new Date();
   const vlozeno = Array.from(kurz.opsano).length;
+  const skore = rozdelSkore(p.hotove);
+  const bezJmena = !jmeno.trim();
 
   return (
     <Okno titulek={t("Moje výsledky", "My Results")} zavrit={zavrit} sirka={560}>
@@ -95,12 +97,20 @@ export function MojeVysledky({ zavrit }: { zavrit: () => void }) {
               zapsat("dbb-jmeno", e.target.value);
             }}
             placeholder={t("napiš své jméno, ať je na fotce i v kódu", "type your name so it is on the photo and in the code")}
-            className="h-[26px] flex-1 border border-dbb-linka px-2 text-[13px] focus:border-dbb-akcent"
+            aria-invalid={bezJmena}
+            className={`h-[26px] flex-1 border px-2 text-[13px] focus:border-dbb-akcent ${
+              bezJmena ? "border-[#c42b1c]" : "border-dbb-linka"
+            }`}
           />
         </label>
-        <p className="mt-4 text-[28px] font-semibold leading-none">
-          {t("Splněno", "Completed")} {p.hotove.length}/{KURZ.length}
-          <span className="ml-3 text-[13px] font-normal text-dbb-slaby">
+        <p className="mt-4 flex flex-wrap items-baseline leading-none">
+          <span className="mr-5 text-[28px] font-semibold">
+            {t("Dotazy", "Queries")} {skore.dotazy[0]}/{skore.dotazy[1]}
+          </span>
+          <span className="mr-5 text-[28px] font-semibold">
+            {t("Program", "Program")} {skore.program[0]}/{skore.program[1]}
+          </span>
+          <span className="text-[13px] font-normal text-dbb-slaby">
             {jeAnglicky()
               ? `${d.getDate()} ${MESICE[d.getMonth()]} ${d.getFullYear()}`
               : `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`}{" "}
@@ -132,8 +142,8 @@ export function MojeVysledky({ zavrit }: { zavrit: () => void }) {
         <p className="mt-4 font-semibold">{t("Kód postupu pro učitele", "Progress code for your teacher")}</p>
         <p className="text-dbb-slaby">
           {t(
-            "Opiš nebo zkopíruj ho do Teams. Je to shrnutí – důkazem práce je soubor z lekce 19.",
-            "Copy it into Teams. It is a summary – the proof of your work is the file from lesson 19.",
+            "Zkopíruj ho do Teams. Když Teams nejde, vyfoť celé tohle okno. Je to shrnutí – důkazem práce je soubor z lekce 19.",
+            "Copy it into Teams. If Teams doesn't work, take a photo of this whole window. It is a summary – the proof of your work is the file from lesson 19.",
           )}
         </p>
         <div className="mt-1 flex items-center">
@@ -142,8 +152,10 @@ export function MojeVysledky({ zavrit }: { zavrit: () => void }) {
           </code>
           <button
             type="button"
+            disabled={bezJmena}
+            title={bezJmena ? t("Nejdřív nahoře napiš své jméno.", "Type your name at the top first.") : undefined}
             onClick={() => kopiruj(kod, () => nastavZkopirovano(true))}
-            className="ml-2 flex h-[26px] items-center border border-dbb-linka bg-dbb-povrch px-2 hover:bg-dbb-hover"
+            className="ml-2 flex h-[26px] items-center border border-dbb-linka bg-dbb-povrch px-2 enabled:hover:bg-dbb-hover disabled:opacity-45"
           >
             {zkopirovano ? <Check className="mr-1 h-3.5 w-3.5 text-[#2e9d4f]" /> : <Copy className="mr-1 h-3.5 w-3.5" />}
             {zkopirovano ? t("Zkopírováno", "Copied") : t("Kopírovat", "Copy")}
@@ -175,7 +187,8 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
     const hlava = [
       t("Jméno", "Name"),
       t("Datum", "Date"),
-      t("Splněno", "Completed"),
+      t("Dotazy (1–13)", "Queries (1–13)"),
+      t("Program (14–19)", "Program (14–19)"),
       t("Šedé lekce", "Grey lessons"),
       t("Úlohy navíc", "Extra tasks"),
     ].concat(
@@ -183,7 +196,14 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
       [t("Úlohy od učitele", "Tasks from the teacher")],
     );
     const radky = zaci.map((z) =>
-      [z.jmeno, z.datum, `${z.hotove.length}/${KURZ.length}`, z.sede.join(" "), String(z.navic)].concat(
+      [
+        z.jmeno,
+        z.datum,
+        `${rozdelSkore(z.hotove).dotazy[0]}/${rozdelSkore(z.hotove).dotazy[1]}`,
+        `${rozdelSkore(z.hotove).program[0]}/${rozdelSkore(z.hotove).program[1]}`,
+        z.sede.join(" "),
+        String(z.navic),
+      ].concat(
         SADY.map((s) => (z.sady && z.sady[s.id] ? `${z.sady[s.id][0]}/${z.sady[s.id][1]}` : "")),
         [(z.ulohy || []).join(" ")],
       ),
@@ -222,7 +242,8 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
                 <tr className="bg-dbb-hlavicka text-left">
                   <th className="border-b border-dbb-mrizka px-2 py-1 font-normal">{t("Jméno", "Name")}</th>
                   <th className="border-b border-dbb-mrizka px-2 py-1 font-normal">{t("Datum", "Date")}</th>
-                  <th className="border-b border-dbb-mrizka px-2 py-1 font-normal">{t("Splněno", "Completed")}</th>
+                  <th className="border-b border-dbb-mrizka px-2 py-1 font-normal">{t("Dotazy", "Queries")}</th>
+                  <th className="border-b border-dbb-mrizka px-2 py-1 font-normal">{t("Program", "Program")}</th>
                   <th className="border-b border-dbb-mrizka px-2 py-1 font-normal">{t("Lekce", "Lessons")}</th>
                   <th className="border-b border-dbb-mrizka px-2 py-1 font-normal">{t("Navíc", "Extra")}</th>
                   <th className="border-b border-dbb-mrizka px-2 py-1 font-normal">{t("Od učitele", "From teacher")}</th>
@@ -234,7 +255,10 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
                     <td className="border-b border-dbb-mrizka px-2 py-1 font-semibold">{z.jmeno || t("(bez jména)", "(no name)")}</td>
                     <td className="whitespace-nowrap border-b border-dbb-mrizka px-2 py-1">{z.datum}</td>
                     <td className="whitespace-nowrap border-b border-dbb-mrizka px-2 py-1">
-                      {z.hotove.length}/{KURZ.length}
+                      {rozdelSkore(z.hotove).dotazy[0]}/{rozdelSkore(z.hotove).dotazy[1]}
+                    </td>
+                    <td className="whitespace-nowrap border-b border-dbb-mrizka px-2 py-1">
+                      {rozdelSkore(z.hotove).program[0]}/{rozdelSkore(z.hotove).program[1]}
                     </td>
                     <td className="border-b border-dbb-mrizka px-2 py-1">
                       <span className="flex">

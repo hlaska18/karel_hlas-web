@@ -590,6 +590,23 @@ export function souborLekce(l: LekceKurzu): string | null {
   return l.knihovna ? KNIHOVNA : null;
 }
 
+/** Lekce podle hodin: dotazy SQL (1–13, první hodina) a práce v programu (14–19). */
+export const LEKCE_DOTAZY = KURZ.filter((l) => l.id <= 13).map((l) => l.id);
+export const LEKCE_PROGRAM = KURZ.filter((l) => l.id > 13).map((l) => l.id);
+
+/**
+ * Skóre rozdělené podle hodin. Samotné „9/19“ po první hodině vypadá jako
+ * propadák, i když žák stihl, co měl – „Dotazy 9/13 · Program 0/6“ ne
+ * (rada 24. 9. 2026).
+ */
+export function rozdelSkore(hotove: number[]): { dotazy: [number, number]; program: [number, number] } {
+  const pocet = (ids: number[]) => ids.filter((id) => hotove.indexOf(id) !== -1).length;
+  return {
+    dotazy: [pocet(LEKCE_DOTAZY), LEKCE_DOTAZY.length],
+    program: [pocet(LEKCE_PROGRAM), LEKCE_PROGRAM.length],
+  };
+}
+
 /** Povinné úkoly lekce (bez úloh navíc). */
 export const povinne = (l: LekceKurzu) => l.ukoly.filter((u) => !u.navic);
 
@@ -608,4 +625,36 @@ export function udalostiPoZnovuotevreni(temnoPred: string | null, temnoPo: strin
   const u = ["znovu-otevreno-po-zahozeni"];
   if (temnoPred === "1" && temnoPo === "0") u.push("temno-zmizelo");
   return u;
+}
+
+/** Co program ví o knihovně, když žák vstupuje do lekce. */
+export type StavKnihovny = {
+  /** Otisk knihovny při načtení stránky, když už tehdy nebyla původní (jinak null). */
+  zmenenaPriNacteni: string | null;
+  /** Žák už v téhle relaci (kartě prohlížeče) rozhodl – obnovil, nebo si nechal svou. */
+  vyresenoVRelaci: boolean;
+  /** Otisk, u kterého žák někdy dřív řekl „Pokračovat se svou“. */
+  odmitnutyOtisk: string | null;
+  /** Hodnota dostupna u Temna v souboru knihovna.db. */
+  temnoVSouboru: string | null;
+  lekce16Hotova: boolean;
+};
+
+/**
+ * Má program při vstupu do lekce řešit stav knihovny? (rada 24. 9. 2026)
+ *
+ * Dřív se ptal při každém přechodu na lekci 1–17 a počítal i změny, které
+ * žák udělal před minutou – INSERT v lekci 11, a v lekci 12 mu dialog řekl,
+ * že knihovnu změnil „někdo před tebou“. Teď:
+ *  - lekce 1–13 se kontrolují nad čistou kopií, stav knihovny jim je jedno,
+ *  - lekce 16 potřebuje jen Temno nedostupné v souboru – když není a lekce
+ *    ještě není hotová, knihovna se obnoví potichu,
+ *  - lekce 14, 15 a 17 se zeptají jednou za relaci a jen tehdy, když
+ *    knihovna nebyla původní už při načtení stránky (z minulé hodiny).
+ */
+export function coSKnihovnou(lekceId: number, s: StavKnihovny): "nic" | "zeptat" | "obnovit" {
+  if (lekceId === 16) return !s.lekce16Hotova && s.temnoVSouboru === "1" ? "obnovit" : "nic";
+  if (lekceId !== 14 && lekceId !== 15 && lekceId !== 17) return "nic";
+  if (!s.zmenenaPriNacteni || s.vyresenoVRelaci || s.odmitnutyOtisk === s.zmenenaPriNacteni) return "nic";
+  return "zeptat";
 }

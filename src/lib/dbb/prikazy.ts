@@ -75,6 +75,38 @@ export function rozdelPrikazy(text: string): Prikaz[] {
   return vysledek;
 }
 
+/**
+ * Zakomentuje v textu editoru příkazy, které mění data nebo strukturu
+ * (INSERT, UPDATE, DELETE, CREATE…). Volá se při přechodu do jiné lekce:
+ * žák jinak připíše UPDATE pod INSERT z lekce 11, F5 pustí INSERT znovu,
+ * spadne na UNIQUE a UPDATE se neprovede (rada 24. 9. 2026). SELECTy
+ * zůstávají – ty nic nerozbijí a žák z nich vychází.
+ */
+export function zakomentujZmeny(text: string): { text: string; pocet: number } {
+  const prikazy = rozdelPrikazy(text).filter((p) => {
+    const d = druhPrikazu(p.text);
+    return d === "data" || d === "struktura" || d === "transakce";
+  });
+  if (!prikazy.length) return { text, pocet: 0 };
+  const pozice: number[] = [];
+  prikazy.forEach((p) => {
+    pozice.push(p.od);
+    for (let i = p.od; i < p.do; i++) {
+      if (text[i] !== "\n" || i + 1 >= p.do) continue;
+      const konec = text.indexOf("\n", i + 1);
+      const radek = text.slice(i + 1, konec === -1 ? p.do : Math.min(konec, p.do));
+      if (radek.trim()) pozice.push(i + 1);
+    }
+  });
+  let vysledek = text;
+  pozice
+    .sort((a, b) => b - a)
+    .forEach((i) => {
+      vysledek = `${vysledek.slice(0, i)}-- ${vysledek.slice(i)}`;
+    });
+  return { text: vysledek, pocet: prikazy.length };
+}
+
 /** Odstraní z kusu textu úvodní mezery a komentáře. */
 function odstranUvod(kus: string): string {
   let s = kus;
@@ -199,6 +231,16 @@ export function tabulky(db: SqlDb): string[] {
     "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name",
   );
   return r.length ? r[0].values.map((v) => String(v[0])) : [];
+}
+
+/** Názvy všech sloupců všech tabulek (pro radu u sloupce s háčkem). */
+export function sloupceDb(db: SqlDb): string[] {
+  const vysledek: string[] = [];
+  tabulky(db).forEach((tab) => {
+    const r = db.exec(`PRAGMA table_info("${tab.replace(/"/g, '""')}")`);
+    if (r.length) r[0].values.forEach((v) => vysledek.indexOf(String(v[1])) === -1 && vysledek.push(String(v[1])));
+  });
+  return vysledek;
 }
 
 /** Tabulky, se kterými dotaz pracuje (za FROM, JOIN, INTO, UPDATE, TABLE), malými písmeny. */

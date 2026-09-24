@@ -39,16 +39,19 @@ import {
   pocetRadku,
   tabulkyDotazu,
   poznamkaKRazeni,
+  zakomentujZmeny,
+  sloupceDb,
   type Prikaz,
 } from "@/lib/dbb/prikazy";
 import { otisk } from "@/lib/dbb/otisk";
-import { chybaCesky, TRANSAKCE_ZAKAZANE } from "@/lib/dbb/chyby";
+import { chybaCesky, TRANSAKCE_ZAKAZANE, type KontextChyby } from "@/lib/dbb/chyby";
 import {
   KURZ,
   VSECHNY_LEKCE,
   lekceHotova,
   souborLekce,
   udalostiPoZnovuotevreni,
+  coSKnihovnou,
   type Databaze,
   type Kontext,
   type LekceKurzu,
@@ -89,6 +92,26 @@ const KLIC_EDITOR = "dbb-editor";
 const KLIC_POSLEDNI = "dbb-posledni";
 /** Otisk změněné knihovny, u kterého žák řekl „Pokračovat se svou“ – znovu se neptáme. */
 const KLIC_ODMITNUTO = "dbb-odmitnuto";
+/** V téhle kartě už žák o knihovně rozhodl – znovu se neptáme (sessionStorage). */
+const KLIC_RELACE_KNIHOVNA = "dbb-knihovna-vyreseno";
+/** Karta prohlížeče už byla otevřená – nová relace = možná nový žák u počítače. */
+const KLIC_RELACE = "dbb-relace";
+
+function relace(klic: string): boolean {
+  try {
+    return sessionStorage.getItem(klic) === "1";
+  } catch {
+    return false;
+  }
+}
+
+function oznacRelaci(klic: string) {
+  try {
+    sessionStorage.setItem(klic, "1");
+  } catch {
+    /* bez sessionStorage se zeptáme znovu po obnovení stránky */
+  }
+}
 
 function nactiCisla(klic: string): number[] {
   try {
@@ -109,8 +132,8 @@ const prectiText = (klic: string): string | null => cist(klic);
 type Otevrena = { nazev: string; db: SqlDbSoubor };
 
 /** Vysvětlení chyby – jen když opravdu něco vysvětluje, ne když opakuje originál. */
-function cesky(raw: string, seznam: string[]): string | undefined {
-  const text = chybaCesky(raw, seznam);
+function cesky(raw: string, seznam: string[], kontext: KontextChyby): string | undefined {
+  const text = chybaCesky(raw, seznam, kontext);
   const holy = raw.trim().replace(/^Error:\s*/i, "");
   return text === holy ? undefined : text;
 }
@@ -147,6 +170,8 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const [karta, nastavKartu] = useState<Karta>("sql");
   const [dokKarta, nastavDokKartu] = useState<DokKarta>("kurz");
   const [editor, nastavEditorStav] = useState("");
+  const editorTextRef = useRef(editor);
+  editorTextRef.current = editor;
   const editorRef = useRef<HTMLTextAreaElement>(null);
   const [vystup, nastavVystup] = useState<Vystup | null>(null);
   const [log, nastavLog] = useState<ZaznamLogu[]>([]);
@@ -164,6 +189,8 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const zahozenoRef = useRef<{ nazev: string; temno: string | null } | null>(null);
   /** Otisk původní knihovny (spočítá se jednou po startu). */
   const cistyOtiskRef = useRef<string | null>(null);
+  /** Otisk knihovny při načtení stránky, když už tehdy nebyla původní. */
+  const otiskPriNacteniRef = useRef<string | null>(null);
   const vlastniSelectyRef = useRef<Set<string>>(new Set());
   const [vlastniSelecty, nastavVlastniSelecty] = useState(0);
 
@@ -422,48 +449,66 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     [zavriInterne, ulozNaDisk, zavriDatabazi, otevri],
   );
 
-  /** Otisk knihovny, když není původní (i s neuloženými změnami); jinak null. */
-  const zmenenaKnihovna = useCallback((): string | null => {
-    const cisty = cistyOtiskRef.current;
-    if (!cisty) return null;
-    const o = otevrenaRef.current;
-    let aktualni: string;
-    if (o && o.nazev === KNIHOVNA) {
-      aktualni = otisk(o.db);
-    } else {
-      const s = diskRef.current[KNIHOVNA];
-      if (!s) return null;
-      const d = otevriDb(s.bajty);
-      try {
-        aktualni = otisk(d);
-      } finally {
-        d.close();
-      }
+  /** Hodnota dostupna u Temna tak, jak je zapsaná v souboru knihovna.db. */
+  const temnoVSouboru = useCallback((): string | null => {
+    const s = diskRef.current[KNIHOVNA];
+    if (!s) return null;
+    const d = otevriDb(s.bajty);
+    try {
+      const r = precti(d, "SELECT dostupna FROM knihy WHERE nazev = 'Temno'");
+      return r && r.values[0] ? String(r.values[0][0]) : null;
+    } finally {
+      d.close();
     }
-    return aktualni === cisty ? null : aktualni;
   }, []);
 
   /**
-   * Lekce 1–17 počítají s původní knihovnou. Když je změněná z minula, nabídne
-   * obnovení – jinak se úkoly odškrtnou samy a lekce 16 přijde o pointu.
+   * Stav knihovny při vstupu do lekce – kdy se ptát, kdy obnovit potichu
+   * a kdy nechat být, rozhoduje `coSKnihovnou` (kurz.ts).
    */
   const zkontrolujVychozi = useCallback(
     (id: number) => {
-      const l = najdiLekci(id);
-      if (!l || !l.cista) return;
-      const zmenena = zmenenaKnihovna();
-      if (!zmenena || prectiText(KLIC_ODMITNUTO) === zmenena) return;
+      const lekce16 = najdiLekci(16);
+      const rozhodnuti = coSKnihovnou(id, {
+        zmenenaPriNacteni: otiskPriNacteniRef.current,
+        vyresenoVRelaci: relace(KLIC_RELACE_KNIHOVNA),
+        odmitnutyOtisk: prectiText(KLIC_ODMITNUTO),
+        temnoVSouboru: id === 16 ? temnoVSouboru() : null,
+        lekce16Hotova: !!lekce16 && lekceHotova(lekce16, splnenoRef.current),
+      });
+      if (rozhodnuti === "obnovit") {
+        obnovKnihovnu();
+        pridejLog("aplikace", t("-- Knihovna vrácena do původního stavu – lekce 16 s ní počítá.", "-- Library restored to its original state – lesson 16 needs it."));
+        status(
+          t(
+            "Knihovna je zpátky v původním stavu – lekce 16 potřebuje, aby Temno bylo v souboru nedostupné.",
+            "The library is back in its original state – lesson 16 needs Temno to be unavailable in the file.",
+          ),
+        );
+        return;
+      }
+      if (rozhodnuti !== "zeptat") return;
+      const otiskPriNacteni = otiskPriNacteniRef.current;
       otevritDialog({
         druh: "potvrdit",
-        titulek: t("Lekce počítá s původní knihovnou", "This lesson needs the original library"),
-        text: t("Soubor knihovna.db už není v původním stavu – nejspíš z minulého průchodu, nebo po někom, kdo u počítače seděl před tebou. Úkoly by se pak mohly odškrtnout samy. Obnovit původní knihovnu? Tvůj postup v kurzu zůstane.", "The knihovna.db file is no longer in its original state – probably from your previous run, or from someone who sat at this computer before you. Tasks could then tick themselves off. Restore the original library? Your progress in the course stays."),
+        titulek: t("Knihovna není v původním stavu", "The library is not in its original state"),
+        text: t(
+          "Soubor knihovna.db nebyl v původním stavu už při otevření kurzu – nejspíš z minulé hodiny, nebo po někom, kdo u počítače seděl před tebou. Některé úkoly by se pak mohly odškrtnout samy, nebo by nešly splnit. Obnovit původní knihovnu? Tvůj postup v kurzu zůstane.",
+          "The knihovna.db file was not in its original state when you opened the course – probably from a previous lesson, or from someone who sat at this computer before you. Some tasks could then tick themselves off, or be impossible to complete. Restore the original library? Your progress in the course stays.",
+        ),
         tlacitko: t("Obnovit", "Restore"),
-        akce: obnovKnihovnu,
+        akce: () => {
+          oznacRelaci(KLIC_RELACE_KNIHOVNA);
+          obnovKnihovnu();
+        },
         zrusit: t("Pokračovat se svou", "Keep Mine"),
-        priZruseni: () => uloz(KLIC_ODMITNUTO, zmenena),
+        priZruseni: () => {
+          oznacRelaci(KLIC_RELACE_KNIHOVNA);
+          if (otiskPriNacteni) uloz(KLIC_ODMITNUTO, otiskPriNacteni);
+        },
       });
     },
-    [zmenenaKnihovna, obnovKnihovnu],
+    [najdiLekci, temnoVSouboru, obnovKnihovnu, pridejLog, status],
   );
 
   /* ─────────────────────────────── start ─────────────────────────────── */
@@ -534,11 +579,40 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         const cista = forkDb(SCHEMA);
         cistyOtiskRef.current = otisk(cista);
         cista.close();
+        // Byla knihovna původní už při načtení? Podle toho se lekce 14–17 ptají.
+        const soubor = otevriDb(d[KNIHOVNA].bajty);
+        try {
+          const o = otisk(soubor);
+          otiskPriNacteniRef.current = o === cistyOtiskRef.current ? null : o;
+        } finally {
+          soubor.close();
+        }
         nastavEngine("hotovo");
         const posledni = prectiText(KLIC_POSLEDNI);
         const souborUlohy = odkaz ? souborLekce(odkaz) : null;
         otevri(souborUlohy || (posledni && d[posledni] ? posledni : KNIHOVNA));
-        zkontrolujVychozi(lekceIdRef.current);
+        // Nová karta a v kurzu je jméno: sedí tu pořád týž žák? Jinak by kód
+        // postupu odešel do Teams pod cizím jménem (rada 24. 9. 2026).
+        const jmeno = (prectiText("dbb-jmeno") || "").trim().slice(0, 40);
+        const novaRelace = !relace(KLIC_RELACE);
+        oznacRelaci(KLIC_RELACE);
+        if (novaRelace && jmeno && !predvadeni) {
+          otevritDialog({
+            druh: "potvrdit",
+            titulek: t("Kdo sedí u počítače?", "Who is at this computer?"),
+            text: t(
+              `Naposledy tu v kurzu pracoval(a) ${jmeno}. Jsi to ty? Když ne, postup předchozího žáka se na tomhle počítači smaže a začneš od lekce 1.`,
+              `${jmeno} was the last to work on the course here. Is that you? If not, the previous pupil's progress on this computer is deleted and you start from lesson 1.`,
+            ),
+            // Výchozí (zaměřené) tlačítko je to bezpečné – Enter nic nesmaže.
+            tlacitko: t("Ne, jsem nový žák", "No, I'm a New Pupil"),
+            akce: () => provedNovyZakRef.current(),
+            zrusit: t(`Ano, jsem ${jmeno}`, `Yes, I'm ${jmeno}`),
+            priZruseni: () => zkontrolujVychozi(lekceIdRef.current),
+          });
+        } else {
+          zkontrolujVychozi(lekceIdRef.current);
+        }
       })
       .catch((e) => {
         console.error("SQL engine se nepodařilo načíst:", e);
@@ -607,6 +681,19 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
 
   const vyberLekci = useCallback(
     (id: number) => {
+      // Příkazy, které měnily data, se v nové lekci nesmí spustit znovu.
+      if (id !== lekceIdRef.current) {
+        const z = zakomentujZmeny(editorTextRef.current);
+        if (z.pocet) {
+          nastavEditor(z.text);
+          status(
+            t(
+              "Příkazy, které měnily data, jsou v editoru zakomentované (--), ať se v nové lekci nespustí znovu.",
+              "Commands that changed data are commented out (--) in the editor so they don't run again in the new lesson.",
+            ),
+          );
+        }
+      }
       nastavLekceId(id);
       nastavOdezvu(null);
       // Úkoly typu „rozbal tabulku“ nebo „vyzkoušej Vrátit změny“ se mají
@@ -626,45 +713,51 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       }
       zkontrolujVychozi(id);
     },
-    [zkontrolujVychozi, obnovDatabazi, zavriDatabazi, otevri, najdiLekci],
+    [zkontrolujVychozi, obnovDatabazi, zavriDatabazi, otevri, najdiLekci, nastavEditor, status],
   );
 
-  /** Nový žák: smaže postup, rozepsaný dotaz i všechny soubory a vrátí původní knihovnu. */
+  /** Nový žák: smaže postup, rozepsaný dotaz, jméno i všechny soubory a vrátí původní knihovnu. */
+  const provedNovyZak = useCallback(() => {
+    nastavSplneno(new Set());
+    nastavOpsano(new Set());
+    nastavPokusy(new Set());
+    nastavUdalosti(new Set());
+    nastavLekceId(1);
+    nastavOdezvu(null);
+    nastavEditor("");
+    nastavLog([]);
+    vlozenoRef.current = new Set();
+    vlastniSelectyRef.current = new Set();
+    nastavVlastniSelecty(0);
+    zahozenoRef.current = null;
+    zavriInterne();
+    const db = otevriDb();
+    db.exec(SCHEMA);
+    const bajty = db.export();
+    db.close();
+    ulozNaDisk({ [KNIHOVNA]: { bajty, zmeneno: Date.now() } });
+    smazatKlic(KLIC_ODMITNUTO);
+    smazatKlic("dbb-jmeno");
+    otiskPriNacteniRef.current = null;
+    smazatKlic(KLIC_POSLEDNI);
+    smazatKlic("sql-kurz-dotazy");
+    nastavPlochu("ne");
+    nastavKartu("sql");
+    otevri(KNIHOVNA);
+    status(t("Začínáš jako nový žák – lekce 1.", "You are starting as a new pupil – lesson 1."));
+  }, [nastavEditor, zavriInterne, ulozNaDisk, otevri, status]);
+  const provedNovyZakRef = useRef(provedNovyZak);
+  provedNovyZakRef.current = provedNovyZak;
+
   const novyZak = useCallback(() => {
     otevritDialog({
       druh: "potvrdit",
       titulek: t("Nový žák", "New Pupil"),
       text: t("Smaže se postup ve všech lekcích, rozepsaný dotaz i všechny databáze – zůstane jen původní knihovna.db. Hodí se, když si u počítače sedá někdo jiný.", "This deletes the progress in all lessons, the unfinished query and all databases – only the original knihovna.db stays. Useful when someone else sits down at this computer."),
       tlacitko: t("Začít jako nový žák", "Start as a New Pupil"),
-      akce: () => {
-        nastavSplneno(new Set());
-        nastavOpsano(new Set());
-        nastavPokusy(new Set());
-        nastavUdalosti(new Set());
-        nastavLekceId(1);
-        nastavOdezvu(null);
-        nastavEditor("");
-        nastavLog([]);
-        vlozenoRef.current = new Set();
-        vlastniSelectyRef.current = new Set();
-        nastavVlastniSelecty(0);
-        zahozenoRef.current = null;
-        zavriInterne();
-        const db = otevriDb();
-        db.exec(SCHEMA);
-        const bajty = db.export();
-        db.close();
-        ulozNaDisk({ [KNIHOVNA]: { bajty, zmeneno: Date.now() } });
-        smazatKlic(KLIC_ODMITNUTO);
-        smazatKlic(KLIC_POSLEDNI);
-        smazatKlic("sql-kurz-dotazy");
-        nastavPlochu("ne");
-        nastavKartu("sql");
-        otevri(KNIHOVNA);
-        status(t("Začínáš jako nový žák – lekce 1.", "You are starting as a new pupil – lesson 1."));
-      },
+      akce: provedNovyZak,
     });
-  }, [nastavEditor, zavriInterne, ulozNaDisk, otevri, status]);
+  }, [provedNovyZak]);
 
   /** Zapne nebo vypne režim předvádění – s novým načtením stránky, ať se nic nesmíchá. */
   const prepniPredvadeni = useCallback(() => {
@@ -837,7 +930,12 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
             ? [t("Příkaz nebyl proveden.", "The statement was not executed.")].concat(naRadku)
             : [t("Provádění skončilo s chybou.", "Execution finished with errors."), `${t("Výsledek", "Result")}: ${beh.chyba}`].concat(naRadku),
           chyba: true,
-          cesky: beh.zakazano ? TRANSAKCE_ZAKAZANE : cesky(beh.chyba || "", tabulky(o.db)),
+          cesky: beh.zakazano
+            ? TRANSAKCE_ZAKAZANE
+            : cesky(beh.chyba || "", tabulky(o.db), {
+                sloupce: sloupceDb(o.db),
+                sql: beh.posledni ? beh.posledni.text : undefined,
+              }),
         });
         status(t("Provádění skončilo s chybou.", "Execution finished with errors."));
       } else {
@@ -914,7 +1012,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         zmenaVerze();
         return null;
       } catch (e) {
-        return chybaCesky(e instanceof Error ? e.message : String(e), tabulky(o.db));
+        return chybaCesky(e instanceof Error ? e.message : String(e), tabulky(o.db), { sloupce: sloupceDb(o.db) });
       }
     },
     [pridejLog, zmenaVerze],

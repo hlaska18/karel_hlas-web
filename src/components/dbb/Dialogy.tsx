@@ -554,11 +554,16 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
           v lekci. <i>Nový žák</i> smaže postup i soubory – když si k počítači sedá někdo další.
         </p>
         <p className={odst}>
-          <b>Před první hodinou.</b> Na jednom školním počítači a v prohlížeči, který žáci používají: (1) otevři
-          kurz a spusť dotaz v lekci 1 – SQL engine se stahuje z internetu, školní síť ho nesmí blokovat; (2) splň
-          úkol, odhlas se a přihlas znovu – když se postup ztratí, profil se maže a žáci si na konci hodiny musí
-          opsat kód postupu nebo stáhnout soubor; (3) zkus promítnout v režimu předvádění, jestli je písmo čitelné
-          ze zadní lavice.
+          <b>Před první hodinou.</b> Na jednom školním počítači pod žákovským účtem: (1) otevři kurz a spusť dotaz
+          v lekci 1 – SQL engine se stahuje z tohoto webu, záložně z cdn.jsdelivr.net; (2) splň úkol a přihlas se na
+          jiném počítači v učebně – když tam postup není, žáci si na konci hodiny musí zkopírovat kód postupu do
+          Teams; (3) na školní klávesnici napiš &apos; * ; &lt; &gt; = – prváci je hledají;
+          (4) zkus promítnout v režimu předvádění, jestli je písmo čitelné ze zadní lavice. Odkaz do Teams posílej
+          bez www (karelhlas.vercel.app/sql), s www prohlížeč hlásí chybu certifikátu.
+        </p>
+        <p className={odst}>
+          <b>Konec hodiny.</b> Ve 40. minutě: Nápověda → Moje výsledky → napsat jméno → Kopírovat → vložit do Teams.
+          Ukaž to jednou v režimu předvádění, jinak to půlka třídy nestihne.
         </p>
         <p className={odst}>
           Plán hodin, pracovní list a řešení jsou v bance u tématu{" "}
@@ -616,11 +621,17 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
           a “Restore original…” link of their own. <i>New Pupil</i> deletes the progress and the files.
         </p>
         <p className={odst}>
-          <b>Before the first lesson.</b> On one school computer, in the browser the pupils use: (1) open the course and
-          run a query in lesson 1 – the SQL engine is downloaded from the internet, so the school network must not block
-          it; (2) complete a task, log out and log in again – if the progress is gone, profiles are wiped and pupils need
-          to copy their progress code or download their file at the end of the lesson; (3) try Presentation Mode on the
-          projector to see whether the text is readable from the back row.
+          <b>Before the first lesson.</b> On one school computer, under a pupil account: (1) open the course and run a
+          query in lesson 1 – the SQL engine is downloaded from this site, with cdn.jsdelivr.net as a fallback;
+          (2) complete a task and log in on another computer in the room – if the progress isn&apos;t there, pupils
+          need to copy their progress code into Teams at the end of the lesson; (3) type &apos; * ; &lt; &gt; = on
+          the school keyboard – first-years look for them; (4) try Presentation Mode on the projector to see whether the
+          text is readable from the back row. Send the link without www (karelhlas.vercel.app/sql?z=en) – with www the
+          browser reports a certificate error.
+        </p>
+        <p className={odst}>
+          <b>End of the lesson.</b> At minute 40: Help → My Results → type your name → Copy → paste into Teams. Show it
+          once in Presentation Mode, otherwise half the class won&apos;t make it.
         </p>
       </div>
       <Paticka>

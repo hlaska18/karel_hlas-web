@@ -13,7 +13,7 @@ import { Okno, Tlacitko, Paticka } from "@/components/dbb/okna";
 import { kopiruj } from "@/components/dbb/Vysledky";
 import { t, jeAnglicky } from "@/lib/dbb/jazyk";
 import { chybaCesky } from "@/lib/dbb/chyby";
-import { tabulky } from "@/lib/dbb/prikazy";
+import { tabulky, sloupceDb } from "@/lib/dbb/prikazy";
 import {
   DATABAZE_ULOH,
   MAX_ZADANI,
@@ -59,7 +59,13 @@ export function UlohaOdkazem({ zavrit }: { zavrit: () => void }) {
       const r = db.exec(uloha.reference);
       nastavZkousku({ ok: true, vysledek: r.length ? r[r.length - 1] : { columns: [], values: [] } });
     } catch (e) {
-      nastavZkousku({ ok: false, chyba: chybaCesky(e instanceof Error ? e.message : String(e), tabulky(db)) });
+      nastavZkousku({
+        ok: false,
+        chyba: chybaCesky(e instanceof Error ? e.message : String(e), tabulky(db), {
+          sloupce: sloupceDb(db),
+          sql: uloha.reference,
+        }),
+      });
     } finally {
       db.close();
     }

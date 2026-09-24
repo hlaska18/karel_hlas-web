@@ -12,7 +12,7 @@
 import { useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Lightbulb, KeyRound, PartyPopper, ArrowRight, ExternalLink } from "lucide-react";
 import { useDbb } from "@/components/dbb/kontext";
-import { KURZ, SADY, lekceHotova, povinne, souborLekce, type UkolKurzu } from "@/lib/dbb/kurz";
+import { KURZ, SADY, lekceHotova, povinne, souborLekce, rozdelSkore, type UkolKurzu } from "@/lib/dbb/kurz";
 import { ID_ULOHY } from "@/lib/dbb/odkazUlohy";
 import { t, jeAnglicky } from "@/lib/dbb/jazyk";
 import { SLOVNICEK } from "@/lib/dbb/anglicky";
@@ -231,7 +231,10 @@ export function PanelKurzu() {
           <div className="mr-2 h-[6px] flex-1 overflow-hidden rounded-full bg-dbb-mrizka">
             <div className="h-full rounded-full bg-[#2e9d4f]" style={{ width: `${(hotoveLekce / KURZ.length) * 100}%` }} />
           </div>
-          {t("Hotovo", "Done")} {hotoveLekce}/{KURZ.length}
+          {(() => {
+            const s = rozdelSkore(KURZ.filter((l) => lekceHotova(l, kurz.splneno)).map((l) => l.id));
+            return `${t("Dotazy", "Queries")} ${s.dotazy[0]}/${s.dotazy[1]} · ${t("Program", "Program")} ${s.program[0]}/${s.program[1]}`;
+          })()}
           <button
             type="button"
             onClick={() => api.otevritDialog({ druh: "vysledky" })}

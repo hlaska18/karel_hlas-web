@@ -115,12 +115,15 @@ a v panelu je slovníček. Přepíná se i v nabídce Nápověda.
 -----------------------------------------------------------
 PŘED PRVNÍ HODINOU (10 minut na školním PC)
 -----------------------------------------------------------
-Na počítači v učebně a na počítači u projektoru vyzkoušej:
+Na počítači v učebně (pod žákovským účtem) a na počítači
+u projektoru vyzkoušej:
   • dotaz v lekci 1 se spustí – SQL engine se stahuje
-    z internetu, školní síť ho nesmí blokovat,
-  • splň úkol, odhlas se a přihlas znovu – když postup
-    zmizí, profil se maže a žáci si na konci hodiny musí
-    opsat kód postupu nebo stáhnout soubor,
+    z tohoto webu, záložně z cdn.jsdelivr.net,
+  • splň úkol a přihlas se na jiném počítači v učebně –
+    když tam postup není, žáci si na konci hodiny musí
+    zkopírovat kód postupu do Teams,
+  • na školní klávesnici napiš ' * ; < > = – prváci je
+    hledají; ukaž jim, kde jsou,
   • F5 v editoru spustí dotaz (a nenačte stránku znovu),
   • Ctrl+S zapíše změny, Ctrl+O otevře soubor,
   • dvojklik do buňky na kartě Prohlížet data ji přepíše,
@@ -130,6 +133,15 @@ Na počítači v učebně a na počítači u projektoru vyzkoušej:
     zeptá, jestli odejít,
   • okno přichycené k polovině obrazovky (Win+←) a zvětšení
     stránky (Ctrl+plus) kurz nepřepnou – jen nabídnou lištu.
+Odkaz do Teams posílej bez www: karelhlas.vercel.app/sql
+(s www prohlížeč hlásí chybu certifikátu).
+
+Konec hodiny: ve 40. minutě Nápověda → Moje výsledky →
+napsat jméno → Kopírovat → vložit do Teams. Ukaž to jednou
+na projektoru, jinak to půlka třídy nestihne. Na začátku
+další hodiny se program na počítači, kde seděl někdo jiný,
+sám zeptá „Jsi to ty?“.
+
 Když na projektoru potřebuješ větší písmo, zapni
 Nápověda → Režim předvádění: má vlastní postup, takže ti
 nesmíchá ukázku s tvým vlastním postupem v kurzu.

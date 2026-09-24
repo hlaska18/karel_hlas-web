@@ -44,10 +44,11 @@ describe("createDb", () => {
 
     const db = await createDb("CREATE TABLE t(x);");
 
-    // Engine located from the same CDN base as the loader script.
+    // Engine from the site's own copy, .wasm from the same place.
     expect(initSqlJs).toHaveBeenCalledTimes(1);
     const cfg = initSqlJs.mock.calls[0][0] as { locateFile: (f: string) => string };
-    expect(cfg.locateFile("sql-wasm.wasm")).toMatch(/^https:\/\/.+sql-wasm\.wasm$/);
+    expect(cfg.locateFile("sql-wasm.wasm")).toMatch(/^\/sqljs\/[\d.]+\/sql-wasm\.wasm$/);
+    expect((append.mock.calls[0][0] as HTMLScriptElement).src).toMatch(/\/sqljs\/[\d.]+\/sql-wasm\.js$/);
     expect(run).toHaveBeenCalledWith("CREATE TABLE t(x);");
     expect(typeof db.exec).toBe("function");
     expect(append).toHaveBeenCalledTimes(1);
@@ -68,11 +69,40 @@ describe("createDb", () => {
     expect(initSqlJs).toHaveBeenCalled();
   });
 
-  it("rejects when the engine script fails to download", async () => {
+  it("falls back to the CDN when the site's own copy fails", async () => {
     const createDb = await freshCreateDb();
-    stubScriptLoading("error");
+    const run = vi.fn();
+    const initSqlJs: InitSqlJs = vi.fn().mockResolvedValue({ Database: vi.fn(() => ({ run, exec: vi.fn() })) });
+    let pokus = 0;
+    const append = vi.spyOn(document.head, "appendChild").mockImplementation(((node: Node) => {
+      const s = node as HTMLScriptElement;
+      pokus++;
+      queueMicrotask(() => {
+        if (pokus === 1) s.onerror?.(new Event("error"));
+        else {
+          (window as Win).initSqlJs = initSqlJs;
+          s.onload?.(new Event("load"));
+        }
+      });
+      return node;
+    }) as typeof document.head.appendChild);
+
+    await createDb("SELECT 1;");
+
+    expect(append).toHaveBeenCalledTimes(2);
+    const cdn = append.mock.calls[1][0] as HTMLScriptElement;
+    expect(cdn.src).toMatch(/^https:\/\/cdn\.jsdelivr\.net\/.+sql-wasm\.js$/);
+    expect(cdn.integrity).toMatch(/^sha384-/);
+    const cfg = initSqlJs.mock.calls[0][0] as { locateFile: (f: string) => string };
+    expect(cfg.locateFile("sql-wasm.wasm")).toMatch(/^https:\/\/cdn\.jsdelivr\.net\/.+sql-wasm\.wasm$/);
+  });
+
+  it("rejects when both the own copy and the CDN fail to download", async () => {
+    const createDb = await freshCreateDb();
+    const append = stubScriptLoading("error");
 
     await expect(createDb("SELECT 1;")).rejects.toThrow(/SQL engine/);
+    expect(append).toHaveBeenCalledTimes(2);
   });
 
   it("rejects when the script loads but the global is missing", async () => {
