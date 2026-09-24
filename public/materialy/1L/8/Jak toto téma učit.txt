@@ -79,13 +79,19 @@ prázdninami.
 Lekce 21 a 22 – Procvičování A (Dílna) a B (Stavebniny).
 Obě mají 16 úloh poskládaných stejně (SELECT až DELETE a dvě
 úlohy v programu), jen nad jinými daty – hodí se na písemku
-ve dvou skupinách.
+ve dvou skupinách. Když soubor dílny nebo stavebnin zůstal
+změněný z minulé hodiny, program při vstupu do lekce nabídne
+jeho obnovení.
 
 Moje výsledky (odkaz nahoře v panelu kurzu): velké
 „Dotazy X/13 · Program X/6“ a dlaždice lekcí, šedá = s pomocí
 vloženého řešení. Stačí obejít třídu, nebo ať pošlou fotku.
 Kód postupu z téhož okna žák pošle do Teams; ty kódy vložíš
 do Nápověda → Přehled třídy a dostaneš tabulku (i do Excelu).
+Kódy téhož žáka (z domu i ze školy) se sčítají a pod tabulkou
+vidíš, kolik žáků má kterou lekci – kde třída skončila.
+Na jiném počítači žák svůj kód vloží v Moje výsledky →
+Pokračovat z kódu a lekce se mu odškrtnou i tam.
 Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je
 soubor z lekce 19.
 
@@ -116,8 +122,9 @@ u projektoru vyzkoušej:
   • dotaz v lekci 1 se spustí – SQL engine se stahuje
     z tohoto webu, záložně z cdn.jsdelivr.net,
   • splň úkol a přihlas se na jiném počítači v učebně –
-    když tam postup není, žáci si na konci hodiny musí
-    zkopírovat kód postupu do Teams,
+    když tam postup není, žáci si na konci hodiny zkopírují
+    kód postupu do Teams a příště ho vloží v Moje výsledky
+    → Pokračovat z kódu,
   • na školní klávesnici napiš ' * ; < > = – prváci je
     hledají; ukaž jim, kde jsou,
   • F5 v editoru spustí dotaz (a nenačte stránku znovu),

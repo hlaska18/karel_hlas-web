@@ -28,7 +28,7 @@ import {
   type Disk,
 } from "@/lib/dbb/soubory";
 import { stahni } from "@/lib/dbb/stahni";
-import { cist, zapsat, smazat as smazatKlic, jePredvadeni, nastavPredvadeni } from "@/lib/dbb/uloziste";
+import { cist, zapsat, smazat as smazatKlic, jePredvadeni, nastavPredvadeni, klic as klicUloziste } from "@/lib/dbb/uloziste";
 import {
   rozdelPrikazy,
   prikazNaPozici,
@@ -57,6 +57,8 @@ import {
 } from "@/lib/dbb/kurz";
 import { vyhodnotDotaz, type SpusteniKontroly } from "@/lib/dbb/kontrola";
 import { dekodujUlohu, lekceZOdkazu, ID_ULOHY } from "@/lib/dbb/odkazUlohy";
+import { splnenoZKodu, KLIC_NAZVY_ULOH } from "@/lib/dbb/obnovaPostupu";
+import type { Postup } from "@/lib/dbb/kodPostupu";
 import { t, jeAnglicky, adresaVJazyce } from "@/lib/dbb/jazyk";
 import { dekodujText, sqlVytvoreni, sqlVlozeni, type PripravenaTabulka } from "@/lib/dbb/csv";
 import { sqlSkript } from "@/lib/dbb/export";
@@ -94,6 +96,8 @@ const KLIC_POSLEDNI = "dbb-posledni";
 const KLIC_ODMITNUTO = "dbb-odmitnuto";
 /** V téhle kartě už žák o knihovně rozhodl – znovu se neptáme (sessionStorage). */
 const KLIC_RELACE_KNIHOVNA = "dbb-knihovna-vyreseno";
+/** Předpona: o souboru procvičování už žák v téhle kartě rozhodl. */
+const KLIC_RELACE_SADA = "dbb-sada-vyreseno";
 /** Karta prohlížeče už byla otevřená – nová relace = možná nový žák u počítače. */
 const KLIC_RELACE = "dbb-relace";
 
@@ -179,12 +183,37 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const [prohlizeni, nastavProhlizeni] = useState<{ tabulka: string; id: string[] } | null>(null);
   const [dialog, otevritDialog] = useState<Dialog | null>(null);
   const [statusText, nastavStatusText] = useState("");
+
+  /*
+   * Hlídač dvou karet (rada 24. 9. 2026). Žák klikne v Teams na odkaz
+   * s úlohou a vedle rozdělaného kurzu se otevře druhá karta. Obě by
+   * zapisovaly do stejného úložiště a poslední zápis by potichu vrátil
+   * fajfky i soubory. Nejnovější karta vyhrává, starší se zastaví.
+   * Přes localStorage a událost storage – BroadcastChannel Safari 12 neumí.
+   */
+  const kartaIdRef = useRef(`${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const [jinaKarta, nastavJinouKartu] = useState(false);
+  useEffect(() => {
+    const k = klicUloziste("dbb-karta");
+    try {
+      localStorage.setItem(k, kartaIdRef.current);
+    } catch {
+      /* bez úložiště hlídač nepotřebujeme – nic se neukládá */
+    }
+    const posluchac = (e: StorageEvent) => {
+      if (e.key === k && e.newValue && e.newValue !== kartaIdRef.current) nastavJinouKartu(true);
+    };
+    window.addEventListener("storage", posluchac);
+    return () => window.removeEventListener("storage", posluchac);
+  }, []);
   /** Co se zahodilo při „Neukládat“ – podle toho lekce 16 pozná, že změna opravdu zmizela. */
   const zahozenoRef = useRef<{ nazev: string; temno: string | null } | null>(null);
   /** Otisk původní knihovny (spočítá se jednou po startu). */
   const cistyOtiskRef = useRef<string | null>(null);
   /** Otisk knihovny při načtení stránky, když už tehdy nebyla původní. */
   const otiskPriNacteniRef = useRef<string | null>(null);
+  /** Soubory procvičování, které už při načtení stránky nebyly původní. */
+  const zmeneneSadyRef = useRef<Set<string>>(new Set());
   const vlastniSelectyRef = useRef<Set<string>>(new Set());
   const [vlastniSelecty, nastavVlastniSelecty] = useState(0);
 
@@ -623,6 +652,34 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
    */
   const zkontrolujVychozi = useCallback(
     (id: number) => {
+      const lekce = najdiLekci(id);
+      // Procvičování s vlastní databází: když soubor nebyl původní už při
+      // načtení (z minulé hodiny, po předchozí skupině), nabídne obnovení.
+      // Detektivku a úlohy z odkazu to netrápí – kontrolují se nad čistou kopií.
+      if (lekce && lekce.databaze) {
+        const db = lekce.databaze;
+        const klicRelace = `${KLIC_RELACE_SADA}:${db.soubor}`;
+        const potrebujePuvodni = lekce.ukoly.some((u) => u.kontrola.druh !== "dotaz");
+        if (potrebujePuvodni && zmeneneSadyRef.current.has(db.soubor) && !relace(klicRelace)) {
+          otevritDialog({
+            druh: "potvrdit",
+            titulek: t(`${db.soubor} není v původním stavu`, `${db.soubor} is not in its original state`),
+            text: t(
+              `Soubor ${db.soubor} nebyl v původním stavu už při otevření kurzu – nejspíš z minulé hodiny, nebo po předchozí skupině. Na procvičování a písemku je lepší začít s původními daty. Obnovit původní ${db.soubor}? Postup v kurzu zůstane.`,
+              `The file ${db.soubor} was not in its original state when you opened the course – probably from a previous lesson or group. For practice and tests it is better to start with the original data. Restore the original ${db.soubor}? Your progress in the course stays.`,
+            ),
+            tlacitko: t("Obnovit", "Restore"),
+            akce: () => {
+              oznacRelaci(klicRelace);
+              zmeneneSadyRef.current.delete(db.soubor);
+              obnovDatabazi(db, true);
+            },
+            zrusit: t("Pokračovat se svým", "Keep Mine"),
+            priZruseni: () => oznacRelaci(klicRelace),
+          });
+        }
+        return;
+      }
       const lekce16 = najdiLekci(16);
       const rozhodnuti = coSKnihovnou(id, {
         zmenenaPriNacteni: otiskPriNacteniRef.current,
@@ -663,7 +720,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         },
       });
     },
-    [najdiLekci, temnoVSouboru, obnovKnihovnu, pridejLog, status],
+    [najdiLekci, temnoVSouboru, obnovKnihovnu, obnovDatabazi, pridejLog, status],
   );
 
   /* ─────────────────────────────── start ─────────────────────────────── */
@@ -697,6 +754,16 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     }
     ulohaRef.current = odkaz;
     nastavUlohu(odkaz);
+    // Název úlohy si kurz zapamatuje – učitel ho pak v Přehledu třídy uvidí místo „u-…“.
+    if (odkaz) {
+      try {
+        const nazvy = JSON.parse(prectiText(KLIC_NAZVY_ULOH) || "{}") as Record<string, string>;
+        nazvy[odkaz.ukoly[0].klic] = odkaz.ukoly[0].zadani.slice(0, 60);
+        uloz(KLIC_NAZVY_ULOH, nazvy);
+      } catch {
+        /* bez názvu – v přehledu zůstane kód úlohy */
+      }
+    }
     nastavLekceId(
       odkaz
         ? ID_ULOHY
@@ -742,6 +809,19 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         } finally {
           soubor.close();
         }
+        // Totéž u procvičování – na písemku ve dvou skupinách chce učitel původní data.
+        VSECHNY_LEKCE.forEach((l) => {
+          const db = l.databaze;
+          if (!db || !d[db.soubor]) return;
+          const puvodni = forkDb(db.schema);
+          const vSouboru = otevriDb(d[db.soubor].bajty);
+          try {
+            if (otisk(puvodni) !== otisk(vSouboru)) zmeneneSadyRef.current.add(db.soubor);
+          } finally {
+            puvodni.close();
+            vSouboru.close();
+          }
+        });
         nastavEngine("hotovo");
         const posledni = prectiText(KLIC_POSLEDNI);
         const souborUlohy = odkaz ? souborLekce(odkaz) : null;
@@ -862,11 +942,18 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       const l = najdiLekci(id);
       const soubor = l ? souborLekce(l) : null;
       if (l && l.databaze && !diskRef.current[l.databaze.soubor]) {
+        // Nový soubor je původní – není se na co ptát.
         obnovDatabazi(l.databaze, true);
       } else if (soubor && (!otevrenaRef.current || otevrenaRef.current.nazev !== soubor)) {
-        zavriDatabazi(() => otevri(soubor));
+        // Kontrola až po zavření předchozí databáze: dialog „Uložit změny?“
+        // se nesmí přepsat dialogem o původním stavu.
+        zavriDatabazi(() => {
+          otevri(soubor);
+          zkontrolujVychozi(id);
+        });
+      } else {
+        zkontrolujVychozi(id);
       }
-      zkontrolujVychozi(id);
     },
     [zkontrolujVychozi, obnovDatabazi, zavriDatabazi, otevri, najdiLekci, nastavEditor, status],
   );
@@ -912,6 +999,34 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       akce: provedNovyZak,
     });
   }, [provedNovyZak]);
+
+  /**
+   * Pokračovat z kódu – postup z jiného počítače (kód z Teams) se přidá
+   * k tomu, co je tady. Lekce, kterou tu žák má zelenou, šedá z kódu nepřebije.
+   */
+  const obnovZKodu = useCallback(
+    (p: Postup) => {
+      const { splneno: s, opsano: o } = splnenoZKodu(p);
+      const predtim = splnenoRef.current;
+      const nove = new Set(Array.from(predtim).concat(s));
+      nastavSplneno(nove);
+      nastavOpsano((prev) => {
+        const n = new Set(prev);
+        o.forEach((k) => !predtim.has(k) && n.add(k));
+        return n;
+      });
+      if (p.jmeno) uloz("dbb-jmeno", p.jmeno);
+      const prvni = KURZ.find((l) => !lekceHotova(l, nove));
+      if (prvni) vyberLekci(prvni.id);
+      status(
+        t(
+          `Postup z kódu je načtený${p.jmeno ? ` (${p.jmeno})` : ""} – pokračuj lekcí ${prvni ? prvni.id : KURZ.length}.`,
+          `Progress from the code is loaded${p.jmeno ? ` (${p.jmeno})` : ""} – carry on with lesson ${prvni ? prvni.id : KURZ.length}.`,
+        ),
+      );
+    },
+    [vyberLekci, status],
+  );
 
   /** Zapne nebo vypne režim předvádění – s novým načtením stránky, ať se nic nesmíchá. */
   const prepniPredvadeni = useCallback(() => {
@@ -1233,7 +1348,19 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       status,
       zapsat,
       vratit,
-      kurz: { lekceId, lekce: vsechnyLekce, splneno, opsano, pokusy, odezva, vyberLekci, vlozReseni, novyZak, obnovDatabazi },
+      kurz: {
+        lekceId,
+        lekce: vsechnyLekce,
+        splneno,
+        opsano,
+        pokusy,
+        odezva,
+        vyberLekci,
+        vlozReseni,
+        novyZak,
+        obnovDatabazi,
+        obnovZKodu,
+      },
       vyberSoubor,
       importujTabulku,
       importujSql,
@@ -1243,7 +1370,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     }),
     [otevrena, verze, zmeneno, disk, karta, dokKarta, editor, nastavEditor, vystup, spustit, log, udalost,
       hlasProhlizeni, provedAplikaci, status, zapsat, vratit, lekceId, splneno, opsano, pokusy, odezva,
-      vyberLekci, vlozReseni, novyZak, obnovDatabazi, predvadeni, meritko, vsechnyLekce, vyberSoubor, importujTabulku,
+      vyberLekci, vlozReseni, novyZak, obnovDatabazi, obnovZKodu, predvadeni, meritko, vsechnyLekce, vyberSoubor, importujTabulku,
       importujSql, exportujSql],
   );
 
@@ -1299,8 +1426,8 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
             <span className="flex-1">
               <b>{t("Režim předvádění", "Presentation mode")}</b>
               {t(
-                " – postup a soubory se ukládají zvlášť, postup žáků na tomhle počítači se nemění. Řešení jdou ukázat hned.",
-                " – progress and files are saved separately; the pupils' progress on this computer doesn't change. Solutions can be shown straight away.",
+                " – postup a soubory se ukládají zvlášť, postup žáků na tomhle počítači se nemění. Řešení jdou ukázat hned. Na žákovském počítači předvádění ukonči, jinak se žákův postup v téhle kartě uloží stranou.",
+                " – progress and files are saved separately; the pupils' progress on this computer doesn't change. Solutions can be shown straight away. On a pupil's computer, end the presentation, otherwise the pupil's progress in this tab is saved separately.",
               )}
             </span>
             <button
@@ -1372,6 +1499,26 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
             e.target.value = "";
           }}
         />
+        {jinaKarta && (
+          <div className="absolute bottom-0 left-0 right-0 top-0 z-[300] flex items-center justify-center bg-black/40 p-6">
+            <div className="max-w-[440px] rounded-[6px] border border-dbb-linka bg-dbb-povrch px-5 py-4 text-[13px] leading-relaxed shadow-[0_14px_44px_rgba(0,0,0,0.3)]">
+              <p className="text-[14px] font-semibold">{t("Kurz máš otevřený v jiné kartě", "The course is open in another tab")}</p>
+              <p className="mt-2">
+                {t(
+                  "Aby se ti postup nepřepsal, tahle karta se zastavila a nic neukládá. Pracuj v té novější – tuhle můžeš zavřít. Nezapsané změny v databázi odsud se nepřenesou.",
+                  "So that your progress doesn't get overwritten, this tab has stopped and saves nothing. Work in the newer one – you can close this one. Unwritten changes in the database here are not carried over.",
+                )}
+              </p>
+              <button
+                type="button"
+                onClick={() => window.location.reload()}
+                className="mt-3 h-[28px] rounded-[4px] border border-dbb-akcent bg-dbb-akcent px-3 text-[12px] text-dbb-akcent-text hover:brightness-110"
+              >
+                {t("Pokračovat tady (načte kurz znovu)", "Continue here (reloads the course)")}
+              </button>
+            </div>
+          </div>
+        )}
         {pretahovani && (
           <div
             className="absolute bottom-0 left-0 right-0 top-0 z-[150] flex items-center justify-center bg-dbb-akcent/10 p-6"

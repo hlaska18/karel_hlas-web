@@ -8,11 +8,12 @@
 
 import { beforeAll, describe, expect, it } from "vitest";
 import initSqlJs from "sql.js";
-import { SADY, type Kontext, type UkolKurzu, type Databaze } from "@/lib/dbb/kurz";
+import { SADY, KURZ, lekceHotova, type Kontext, type UkolKurzu, type Databaze } from "@/lib/dbb/kurz";
 import { DETEKTIVKA } from "@/lib/dbb/sady";
 import { vyhodnotDotaz } from "@/lib/dbb/kontrola";
 import { rozdelPrikazy, spust, druhPrikazu } from "@/lib/dbb/prikazy";
-import { zakoduj, dekoduj, najdiKody, type Postup } from "@/lib/dbb/kodPostupu";
+import { zakoduj, dekoduj, najdiKody, sloucitPostupy, souhrnTridy, normalizujJmeno, type Postup } from "@/lib/dbb/kodPostupu";
+import { splnenoZKodu, POVINNE_KLICE } from "@/lib/dbb/obnovaPostupu";
 import { zakodujUlohu, dekodujUlohu, lekceZOdkazu, chybaDotazu, klicUlohy } from "@/lib/dbb/odkazUlohy";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
 import type { SqlDb, SqlDbSoubor, SqlResult } from "@/lib/sqljs";
@@ -186,10 +187,20 @@ describe("kód postupu", () => {
     navic: 2,
     sady: { detektivka: [6, 6], dilna: [3, 16] },
     ulohy: ["u-abc-1f"],
+    klice: ["3b", "20a", "A1"],
+    nazvyUloh: { "u-abc-1f": "Vypiš knihy od Čapka" },
   };
 
   it("se přečte zpátky i s diakritikou", () => {
     expect(dekoduj(zakoduj(p))).toEqual(p);
+  });
+
+  it("starý kód bez klíčů a názvů úloh se přečte taky", () => {
+    // Kód z verze před 24. 9. 2026 (bez polí k a v).
+    const stary = "SQLKURZ1-" + btoa(JSON.stringify({ j: "Petr", d: "2026-09-20", h: [1], s: [], n: 0, x: {}, u: [] }));
+    const r = dekoduj(stary.replace(/=+$/, ""));
+    expect(r && r.klice).toEqual([]);
+    expect(r && r.nazvyUloh).toEqual({});
   });
 
   it("najde se v celé zprávě z Teams, poškozený ne", () => {
@@ -259,5 +270,61 @@ describe("úloha z odkazu", () => {
     expect(l.databaze && l.databaze.soubor).toBe("dilna.db");
     expect(l.knihovna).toBe(false);
     expect(l.tabulka).toBe("dily");
+  });
+});
+
+describe("přehled třídy a pokračování z kódu", () => {
+  const kod = (jmeno: string, datum: string, hotove: number[], sede: number[] = [], jine: Partial<Postup> = {}): Postup => ({
+    jmeno,
+    datum,
+    hotove,
+    sede,
+    navic: 0,
+    sady: {},
+    ulohy: [],
+    klice: [],
+    nazvyUloh: {},
+    ...jine,
+  });
+
+  it("jméno se porovná bez diakritiky, velikosti písmen a pořadí slov", () => {
+    expect(normalizujJmeno("Novák  Adam")).toBe(normalizujJmeno("adam novak"));
+    expect(normalizujJmeno("Šárka Řeháková")).toBe("rehakova sarka");
+  });
+
+  it("kódy téhož žáka se sečtou – domácí úkol nezmizí, zelená přebije šedou", () => {
+    const [z] = sloucitPostupy([
+      kod("Adam Novák", "2026-09-24", [1, 2, 3, 11, 12, 13], [12]),
+      kod("novák adam", "2026-09-25", [1, 2, 3, 4, 14], [3], { navic: 2, sady: { dilna: [5, 16] } }),
+      kod("Adam Novák", "2026-09-23", [1], [], { sady: { dilna: [9, 16] }, ulohy: ["u-1"], nazvyUloh: { "u-1": "Čapek" } }),
+    ]);
+    expect(z.jmeno).toBe("novák adam");
+    expect(z.datum).toBe("2026-09-25");
+    expect(z.hotove).toEqual([1, 2, 3, 4, 11, 12, 13, 14]);
+    // 3 je šedá jen v jednom kódu, v jiném zelená → zelená; 12 je šedá tam, kde je hotová.
+    expect(z.sede).toEqual([12]);
+    expect(z.navic).toBe(2);
+    expect(z.sady).toEqual({ dilna: [9, 16] });
+    expect(z.nazvyUloh).toEqual({ "u-1": "Čapek" });
+  });
+
+  it("souhrn ukáže, kolik žáků má kterou lekci", () => {
+    const zaci = sloucitPostupy([kod("A", "1", [1, 2]), kod("B", "1", [1]), kod("C", "1", [])]);
+    expect(souhrnTridy(zaci, [1, 2, 3])).toEqual([2, 1, 0]);
+  });
+
+  it("pokračování z kódu odškrtne hotové lekce, šedou nechá šedou a vrátí úlohy navíc", () => {
+    const { splneno, opsano } = splnenoZKodu(kod("Eva", "1", [1, 3, 17], [3], { klice: ["3b", "A1"], ulohy: ["u-9"] }));
+    const s = new Set(splneno);
+    const l = (id: number) => KURZ.filter((x) => x.id === id)[0];
+    expect(lekceHotova(l(1), s)).toBe(true);
+    expect(lekceHotova(l(3), s)).toBe(true);
+    expect(lekceHotova(l(17), s)).toBe(true);
+    expect(lekceHotova(l(2), s)).toBe(false);
+    expect(opsano).toEqual(["3"]);
+    expect(s.has("3b") && s.has("A1") && s.has("u-9")).toBe(true);
+    // Klíče navíc nejsou mezi povinnými – jinak by se v kódu posílaly dvakrát.
+    expect(POVINNE_KLICE.indexOf("3b")).toBe(-1);
+    expect(POVINNE_KLICE.indexOf("17a")).not.toBe(-1);
   });
 });

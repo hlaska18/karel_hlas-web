@@ -22,6 +22,10 @@ export type Postup = {
   sady?: Record<string, [number, number]>;
   /** Splněné úlohy od učitele z odkazu (jejich kódy „u-…“). */
   ulohy?: string[];
+  /** Splněné úlohy navíc a úkoly detektivky a procvičování – aby šly obnovit. */
+  klice?: string[];
+  /** Začátky zadání úloh od učitele podle kódu – do Přehledu třídy místo „u-…“. */
+  nazvyUloh?: Record<string, string>;
 };
 
 const PREDPONA = "SQLKURZ1-";
@@ -42,7 +46,17 @@ export function zakoduj(p: Postup): string {
   return (
     PREDPONA +
     naBase64Url(
-      JSON.stringify({ j: p.jmeno, d: p.datum, h: p.hotove, s: p.sede, n: p.navic, x: p.sady || {}, u: p.ulohy || [] }),
+      JSON.stringify({
+        j: p.jmeno,
+        d: p.datum,
+        h: p.hotove,
+        s: p.sede,
+        n: p.navic,
+        x: p.sady || {},
+        u: p.ulohy || [],
+        k: p.klice || [],
+        v: p.nazvyUloh || {},
+      }),
     )
   );
 }
@@ -62,6 +76,8 @@ export function dekoduj(kod: string): Postup | null {
       n: number;
       x?: Record<string, [number, number]>;
       u?: string[];
+      k?: string[];
+      v?: Record<string, unknown>;
     };
     if (typeof d.j !== "string" || !Array.isArray(d.h)) return null;
     return {
@@ -72,10 +88,23 @@ export function dekoduj(kod: string): Postup | null {
       navic: Number(d.n || 0),
       sady: d.x || {},
       ulohy: Array.isArray(d.u) ? d.u.map(String) : [],
+      klice: Array.isArray(d.k) ? d.k.map(String).slice(0, 200) : [],
+      nazvyUloh: nazvy(d.v),
     };
   } catch {
     return null;
   }
+}
+
+/** Názvy úloh z kódu – jen krátké texty, cokoli jiného se zahodí. */
+function nazvy(v: unknown): Record<string, string> {
+  const vysledek: Record<string, string> = {};
+  if (!v || typeof v !== "object") return vysledek;
+  Object.keys(v as object).forEach((k) => {
+    const n = (v as Record<string, unknown>)[k];
+    if (k.indexOf("u-") === 0 && typeof n === "string") vysledek[k] = n.slice(0, 60);
+  });
+  return vysledek;
 }
 
 /** Všechny kódy z vloženého textu (třeba celé vlákno z Teams). */
@@ -88,4 +117,79 @@ export function najdiKody(text: string): Postup[] {
     if (p) vysledek.push(p);
   }
   return vysledek;
+}
+
+/* ─────────────────────────── přehled třídy ─────────────────────────── */
+
+/** Jméno pro porovnání: bez diakritiky, malými písmeny, slova podle abecedy („Novák Adam“ = „Adam Novák“). */
+export function normalizujJmeno(jmeno: string): string {
+  return jmeno
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .split(/\s+/)
+    .filter((s) => s)
+    .sort()
+    .join(" ");
+}
+
+function sjednot<T>(a: T[], b: T[]): T[] {
+  return a.concat(b.filter((x) => a.indexOf(x) === -1));
+}
+
+/**
+ * Sloučí kódy téhož žáka (rada 24. 9. 2026). Dřív platil jen nejnovější,
+ * takže domácí úkol (lekce 11–13 z domu) zmizel, když žák pak poslal kód
+ * ze školy. Teď se splněné lekce sčítají, zelená přebije šedou, u detektivky
+ * a procvičování platí nejlepší výsledek.
+ */
+export function sloucitPostupy(postupy: Postup[]): Postup[] {
+  const podleJmena: Record<string, Postup[]> = {};
+  postupy.forEach((p) => {
+    const k = normalizujJmeno(p.jmeno);
+    (podleJmena[k] = podleJmena[k] || []).push(p);
+  });
+  return Object.keys(podleJmena)
+    .map((k) => {
+      const kody = podleJmena[k].slice().sort((a, b) => (a.datum < b.datum ? -1 : a.datum > b.datum ? 1 : 0));
+      const posledni = kody[kody.length - 1];
+      let hotove: number[] = [];
+      let sede: number[] = [];
+      const zelene: number[] = [];
+      const sady: Record<string, [number, number]> = {};
+      let ulohy: string[] = [];
+      let klice: string[] = [];
+      const nazvyUloh: Record<string, string> = {};
+      let navic = 0;
+      kody.forEach((p) => {
+        hotove = sjednot(hotove, p.hotove);
+        sede = sjednot(sede, p.sede);
+        p.hotove.forEach((id) => p.sede.indexOf(id) === -1 && zelene.indexOf(id) === -1 && zelene.push(id));
+        navic = Math.max(navic, p.navic);
+        Object.keys(p.sady || {}).forEach((id) => {
+          const [n, celkem] = (p.sady || {})[id];
+          if (!sady[id] || sady[id][0] < n) sady[id] = [n, celkem];
+        });
+        ulohy = sjednot(ulohy, p.ulohy || []);
+        klice = sjednot(klice, p.klice || []);
+        Object.keys(p.nazvyUloh || {}).forEach((u) => (nazvyUloh[u] = (p.nazvyUloh || {})[u]));
+      });
+      return {
+        jmeno: posledni.jmeno,
+        datum: posledni.datum,
+        hotove: hotove.sort((a, b) => a - b),
+        sede: sede.filter((id) => zelene.indexOf(id) === -1).sort((a, b) => a - b),
+        navic,
+        sady,
+        ulohy,
+        klice,
+        nazvyUloh,
+      };
+    })
+    .sort((a, b) => a.jmeno.localeCompare(b.jmeno, "cs"));
+}
+
+/** Kolik žáků má kterou lekci hotovou (zelenou i šedou) – kde třída skončila. */
+export function souhrnTridy(zaci: Postup[], lekce: number[]): number[] {
+  return lekce.map((id) => zaci.filter((z) => z.hotove.indexOf(id) !== -1).length);
 }

@@ -13,7 +13,8 @@ import { Copy, Check } from "lucide-react";
 import { useDbb } from "@/components/dbb/kontext";
 import { Okno, Tlacitko, Paticka } from "@/components/dbb/okna";
 import { KURZ, SADY, lekceHotova, povinne, rozdelSkore } from "@/lib/dbb/kurz";
-import { zakoduj, najdiKody, type Postup } from "@/lib/dbb/kodPostupu";
+import { zakoduj, najdiKody, dekoduj, sloucitPostupy, souhrnTridy, type Postup } from "@/lib/dbb/kodPostupu";
+import { POVINNE_KLICE, KLIC_NAZVY_ULOH } from "@/lib/dbb/obnovaPostupu";
 import { stahni } from "@/lib/dbb/stahni";
 import { cist, zapsat } from "@/lib/dbb/uloziste";
 import { t, jeAnglicky } from "@/lib/dbb/jazyk";
@@ -37,7 +38,27 @@ export function spoctiPostup(splneno: Set<string>, opsano: Set<string>, jmeno: s
     sady[s.id] = [ukoly.filter((u) => splneno.has(u.klic)).length, ukoly.length];
   });
   const ulohy = Array.from(splneno).filter((k) => k.indexOf("u-") === 0);
-  return { jmeno, datum: `${d.getFullYear()}-${dva(d.getMonth() + 1)}-${dva(d.getDate())}`, hotove, sede, navic, sady, ulohy };
+  // Úlohy navíc, detektivka a procvičování – aby šly z kódu obnovit na jiném počítači.
+  const klice = Array.from(splneno).filter((k) => k.indexOf("u-") !== 0 && POVINNE_KLICE.indexOf(k) === -1);
+  let ulozeneNazvy: Record<string, string> = {};
+  try {
+    ulozeneNazvy = JSON.parse(cist(KLIC_NAZVY_ULOH) || "{}");
+  } catch {
+    ulozeneNazvy = {};
+  }
+  const nazvyUloh: Record<string, string> = {};
+  ulohy.forEach((u) => ulozeneNazvy[u] && (nazvyUloh[u] = ulozeneNazvy[u]));
+  return {
+    jmeno,
+    datum: `${d.getFullYear()}-${dva(d.getMonth() + 1)}-${dva(d.getDate())}`,
+    hotove,
+    sede,
+    navic,
+    sady,
+    ulohy,
+    klice,
+    nazvyUloh,
+  };
 }
 
 export function kopiruj(text: string, hotovo: () => void) {
@@ -78,6 +99,31 @@ export function MojeVysledky({ zavrit }: { zavrit: () => void }) {
   const { kurz } = useDbb();
   const [jmeno, nastavJmeno] = useState(() => cist("dbb-jmeno") || "");
   const [zkopirovano, nastavZkopirovano] = useState(false);
+  const [vlozenyKod, nastavVlozenyKod] = useState("");
+  const [obnova, nastavObnovu] = useState<{ ok: boolean; text: string } | null>(null);
+  const nactiKod = () => {
+    const p = najdiKody(vlozenyKod)[0] || dekoduj(vlozenyKod);
+    if (!p) {
+      nastavObnovu({
+        ok: false,
+        text: t("Tohle není kód postupu – začíná SQLKURZ1-. Vlož celý kód z Teams.", "This is not a progress code – it starts with SQLKURZ1-. Paste the whole code from Teams."),
+      });
+      return;
+    }
+    kurz.obnovZKodu(p);
+    if (p.jmeno && !jmeno.trim()) {
+      nastavJmeno(p.jmeno);
+    }
+    nastavVlozenyKod("");
+    const s = rozdelSkore(p.hotove);
+    nastavObnovu({
+      ok: true,
+      text: t(
+        `Načteno z kódu: Dotazy ${s.dotazy[0]}/${s.dotazy[1]} · Program ${s.program[0]}/${s.program[1]}. Rozpracované lekce kód nenese – ty dodělej znovu.`,
+        `Loaded from the code: Queries ${s.dotazy[0]}/${s.dotazy[1]} · Program ${s.program[0]}/${s.program[1]}. Unfinished lessons are not in the code – do them again.`,
+      ),
+    });
+  };
   const p = spoctiPostup(kurz.splneno, kurz.opsano, jmeno.trim());
   const kod = zakoduj(p);
   const d = new Date();
@@ -87,7 +133,7 @@ export function MojeVysledky({ zavrit }: { zavrit: () => void }) {
 
   return (
     <Okno titulek={t("Moje výsledky", "My Results")} zavrit={zavrit} sirka={560}>
-      <div className="px-5 py-4 text-[12px] leading-relaxed">
+      <div className="dbb-posuv min-h-0 flex-1 overflow-auto px-5 py-4 text-[12px] leading-relaxed">
         <label className="flex items-center">
           <span className="mr-2 shrink-0">{t("Jméno:", "Name:")}</span>
           <input
@@ -161,6 +207,39 @@ export function MojeVysledky({ zavrit }: { zavrit: () => void }) {
             {zkopirovano ? t("Zkopírováno", "Copied") : t("Kopírovat", "Copy")}
           </button>
         </div>
+
+        <p className="mt-4 font-semibold">{t("Pokračovat z kódu", "Continue from a code")}</p>
+        <p className="text-dbb-slaby">
+          {t(
+            "Začal(a) jsi na jiném počítači? Vlož svůj kód postupu (třeba z Teams) a lekce se ti odškrtnou i tady.",
+            "Did you start on another computer? Paste your progress code (from Teams, for example) and your lessons are ticked off here too.",
+          )}
+        </p>
+        <div className="mt-1 flex items-center">
+          <input
+            value={vlozenyKod}
+            onChange={(e) => {
+              nastavVlozenyKod(e.target.value);
+              nastavObnovu(null);
+            }}
+            onKeyDown={(e) => {
+              if (e.key === "Enter") nactiKod();
+            }}
+            spellCheck={false}
+            placeholder="SQLKURZ1-…"
+            aria-label={t("Kód postupu z jiného počítače", "Progress code from another computer")}
+            className="dbb-kod h-[26px] min-w-0 flex-1 border border-dbb-linka px-2 text-[11px] focus:border-dbb-akcent"
+          />
+          <button
+            type="button"
+            disabled={!vlozenyKod.trim()}
+            onClick={nactiKod}
+            className="ml-2 flex h-[26px] items-center border border-dbb-linka bg-dbb-povrch px-2 enabled:hover:bg-dbb-hover disabled:opacity-45"
+          >
+            {t("Načíst", "Load")}
+          </button>
+        </div>
+        {obnova && <p className={`mt-1 ${obnova.ok ? "text-[#1e6b35]" : "text-[#a4262c]"}`}>{obnova.text}</p>}
       </div>
       <Paticka>
         <Tlacitko primarni prvni akce={zavrit}>
@@ -173,15 +252,10 @@ export function MojeVysledky({ zavrit }: { zavrit: () => void }) {
 
 export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
   const [text, nastavText] = useState("");
-  // Stejné jméno víckrát (žák poslal kód dvakrát) – platí nejnovější.
-  const podleJmena: Record<string, Postup> = {};
-  najdiKody(text).forEach((p) => {
-    const klic = p.jmeno.toLowerCase() || t("(bez jména)", "(no name)");
-    if (!podleJmena[klic] || podleJmena[klic].datum <= p.datum) podleJmena[klic] = p;
-  });
-  const zaci = Object.keys(podleJmena)
-    .sort((a, b) => a.localeCompare(b, "cs"))
-    .map((k) => podleJmena[k]);
+  // Kódy téhož žáka (z domu i ze školy) se sčítají – nic se neztratí.
+  const zaci = sloucitPostupy(najdiKody(text));
+  const souhrn = souhrnTridy(zaci, KURZ.map((l) => l.id));
+  const nazevUlohy = (z: Postup, u: string) => (z.nazvyUloh && z.nazvyUloh[u]) || u;
 
   const csv = () => {
     const hlava = [
@@ -205,7 +279,7 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
         String(z.navic),
       ].concat(
         SADY.map((s) => (z.sady && z.sady[s.id] ? `${z.sady[s.id][0]}/${z.sady[s.id][1]}` : "")),
-        [(z.ulohy || []).join(" ")],
+        [(z.ulohy || []).map((u) => nazevUlohy(z, u)).join(" | ")],
       ),
     );
     const obsah = [hlava]
@@ -282,12 +356,43 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
                         z.sady && z.sady[s.id] && z.sady[s.id][0] > 0 ? ` · ${s.kratce} ${z.sady[s.id][0]}/${z.sady[s.id][1]}` : "",
                       )}
                     </td>
-                    <td className="border-b border-dbb-mrizka px-2 py-1 dbb-kod text-[11px]">
-                      {(z.ulohy || []).join(", ") || "–"}
+                    <td className="border-b border-dbb-mrizka px-2 py-1 text-[11px]">
+                      {(z.ulohy || []).length
+                        ? (z.ulohy || []).map((u) => (
+                            <span key={u} className="block" title={u}>
+                              ✓ {nazevUlohy(z, u)}
+                            </span>
+                          ))
+                        : "–"}
                     </td>
                   </tr>
                 ))}
               </tbody>
+              <tfoot>
+                <tr className="bg-dbb-okno">
+                  <td colSpan={4} className="px-2 py-1.5 text-right text-dbb-slaby">
+                    {t(`Lekci má hotovou (z ${zaci.length}):`, `Lesson done by (of ${zaci.length}):`)}
+                  </td>
+                  <td className="px-2 py-1.5">
+                    <span className="flex">
+                      {KURZ.map((l, i) => (
+                        <span
+                          key={l.id}
+                          title={t(`Lekce ${l.id}: ${souhrn[i]} z ${zaci.length}`, `Lesson ${l.id}: ${souhrn[i]} of ${zaci.length}`)}
+                          className="mr-px w-[12px] text-center text-[9px] leading-[14px] text-white"
+                          style={{
+                            // Čím víc žáků lekci má, tím sytější zelená – kde třída skončila, je vidět na první pohled.
+                            background: `rgba(46, 157, 79, ${zaci.length ? 0.15 + (0.85 * souhrn[i]) / zaci.length : 0.15})`,
+                          }}
+                        >
+                          {souhrn[i]}
+                        </span>
+                      ))}
+                    </span>
+                  </td>
+                  <td colSpan={2} />
+                </tr>
+              </tfoot>
             </table>
           )}
         </div>

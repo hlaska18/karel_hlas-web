@@ -533,9 +533,10 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
         </p>
         <p className={odst}>
           <b>Jak poznáš, že to umí.</b> Žák otevře <i>Moje výsledky</i> (odkaz nahoře v panelu Kurz SQL): velké
-          „Splněno X/19“ a dlaždice lekcí – šedá znamená splněno s pomocí vloženého řešení. Stačí obejít třídu, nebo
+          „Dotazy X/13 · Program X/6“ a dlaždice lekcí – šedá znamená splněno s pomocí vloženého řešení. Stačí obejít třídu, nebo
           ať pošlou fotku. Kód postupu z téhož okna vlož do <i>Nápověda → Přehled třídy</i> a dostaneš tabulku
-          (i do Excelu). Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je soubor z lekce 19, který si žák
+          (i do Excelu) – kódy téhož žáka se sčítají a pod tabulkou vidíš, kolik žáků má kterou lekci. Na jiném
+          počítači žák kód vloží v <i>Moje výsledky → Pokračovat z kódu</i>. Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je soubor z lekce 19, který si žák
           stáhne. A spolehlivá je pořád otázka: „Přečti nahlas, co tvůj dotaz dělá.“
         </p>
         <p className={odst}>
@@ -561,8 +562,8 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
         <p className={odst}>
           <b>Před první hodinou.</b> Na jednom školním počítači pod žákovským účtem: (1) otevři kurz a spusť dotaz
           v lekci 1 – SQL engine se stahuje z tohoto webu, záložně z cdn.jsdelivr.net; (2) splň úkol a přihlas se na
-          jiném počítači v učebně – když tam postup není, žáci si na konci hodiny musí zkopírovat kód postupu do
-          Teams; (3) na školní klávesnici napiš &apos; * ; &lt; &gt; = – prváci je hledají;
+          jiném počítači v učebně – když tam postup není, žáci si na konci hodiny zkopírují kód postupu do Teams
+          a příště ho vloží v Moje výsledky → Pokračovat z kódu; (3) na školní klávesnici napiš &apos; * ; &lt; &gt; = – prváci je hledají;
           (4) zkus promítnout v režimu předvádění, jestli je písmo čitelné ze zadní lavice. Odkaz do Teams posílej
           bez www (karelhlas.vercel.app/sql), s www prohlížeč hlásí chybu certifikátu.
         </p>
@@ -607,9 +608,11 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
         </p>
         <p className={odst}>
           <b>Checking progress.</b> Pupils open <i>My Results</i> (the link at the top of the SQL Course panel): a big
-          “Completed X/19” and lesson tiles – grey means completed with the help of an inserted solution. Walk round the
-          class, or ask for a photo. Paste the progress codes into <i>Help → Class Overview</i> to get a table (for
-          Excel too). A code is a summary, not proof – it can be edited. The proof of work is the file from lesson 19,
+          “Queries X/13 · Program X/6” and lesson tiles – grey means completed with the help of an inserted solution.
+          Walk round the class, or ask for a photo. Paste the progress codes into <i>Help → Class Overview</i> to get a
+          table (for Excel too) – codes from the same pupil are added up, and below the table you see how many pupils
+          have each lesson. On another computer, a pupil pastes the code in <i>My Results → Continue from a code</i>. A
+          code is a summary, not proof – it can be edited. The proof of work is the file from lesson 19,
           which the pupil downloads. And the old question still works best: “Read out what your query does.”
         </p>
         <p className={odst}>
@@ -636,7 +639,8 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
           <b>Before the first lesson.</b> On one school computer, under a pupil account: (1) open the course and run a
           query in lesson 1 – the SQL engine is downloaded from this site, with cdn.jsdelivr.net as a fallback;
           (2) complete a task and log in on another computer in the room – if the progress isn&apos;t there, pupils
-          need to copy their progress code into Teams at the end of the lesson; (3) type &apos; * ; &lt; &gt; = on
+          copy their progress code into Teams at the end of the lesson and paste it next time in My Results → Continue
+          from a code; (3) type &apos; * ; &lt; &gt; = on
           the school keyboard – first-years look for them; (4) try Presentation Mode on the projector to see whether the
           text is readable from the back row. Send the link without www (karelhlas.vercel.app/sql?z=en) – with www the
           browser reports a certificate error.

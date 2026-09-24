@@ -11,6 +11,7 @@ import type { SqlDbSoubor, SqlResult } from "@/lib/sqljs";
 import type { Disk } from "@/lib/dbb/soubory";
 import type { Databaze, LekceKurzu } from "@/lib/dbb/kurz";
 import type { PripravenaTabulka } from "@/lib/dbb/csv";
+import type { Postup } from "@/lib/dbb/kodPostupu";
 
 export type Karta = "struktura" | "data" | "pragma" | "sql";
 export type DokKarta = "kurz" | "schema" | "log";
@@ -74,6 +75,8 @@ export type KurzStav = {
   novyZak: () => void;
   /** Vrátí databázi procvičování nebo detektivky do původního stavu. */
   obnovDatabazi: (d: Databaze, otevritPotom: boolean) => void;
+  /** Pokračovat z kódu: přidá postup z kódu SQLKURZ1-… k tomu, co je v prohlížeči. */
+  obnovZKodu: (p: Postup) => void;
 };
 
 export type DbbApi = {

@@ -253,6 +253,18 @@ export function PanelKurzu() {
       </div>
 
       <div className="px-3 pb-4 pt-3">
+        {kurz.splneno.size === 0 && !api.predvadeni && (
+          <p className="mb-3 border border-dbb-mrizka bg-dbb-povrch px-2.5 py-1.5 text-[12px] leading-snug">
+            {t("Začal(a) jsi na jiném počítači?", "Did you start on another computer?")}{" "}
+            <button
+              type="button"
+              onClick={() => api.otevritDialog({ druh: "vysledky" })}
+              className="text-dbb-akcent underline"
+            >
+              {t("Vlož svůj kód postupu", "Paste your progress code")}
+            </button>
+          </p>
+        )}
         {vse && (
           <div className="mb-3 border border-[#9fd5ae] bg-[#eaf7ee] px-3 py-2.5 text-[12px] leading-relaxed">
             <p className="flex items-center text-[13px] font-semibold">
@@ -325,6 +337,16 @@ export function PanelKurzu() {
             <Ukol key={u.klic} ukol={u} poradi={i + 1} aktualni={!!aktualni && aktualni.klic === u.klic} />
           ))}
         </ol>
+
+        {lekce.id === 20 && hotova && (
+          <p className="mt-3 border border-[#9fd5ae] bg-[#eaf7ee] px-3 py-2 text-[12px] leading-snug">
+            <b>{t("Případ uzavřen!", "Case closed!")}</b>{" "}
+            {t(
+              "Pachatele ostatním neprozrazuj – ať na něj přijdou sami.",
+              "Don't tell the others who did it – let them work it out themselves.",
+            )}
+          </p>
+        )}
 
         {hotova && dalsi && (
           <div className="mt-3 border border-[#9fd5ae] bg-[#eaf7ee] px-3 py-2 text-[12px]">
