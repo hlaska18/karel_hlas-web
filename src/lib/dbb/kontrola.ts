@@ -28,8 +28,8 @@ export type SpusteniKontroly = {
 };
 
 export type Prostredky = {
-  /** Čerstvá kopie knihovny v paměti (volající ji po použití zavře). */
-  cista: () => SqlDb;
+  /** Čerstvá kopie databáze v paměti ze schématu (volající ji po použití zavře). */
+  cista: (schema: string) => SqlDb;
   /** Živá databáze, nad kterou žák pracuje. */
   ziva: SqlDb | null;
 };
@@ -44,14 +44,15 @@ const posledni = (r: SqlResult[]): SqlResult => (r.length ? r[r.length - 1] : { 
 export function vyhodnotDotaz(ukol: UkolKurzu, beh: SpusteniKontroly, p: Prostredky): Hodnoceni | null {
   const k = ukol.kontrola;
   if (k.druh === "stav") return null;
-  if (beh.soubor !== KNIHOVNA) {
-    return { ok: false, proc: "Kurz pracuje s databází knihovna.db – otevři ji přes Soubor → Otevřít databázi." };
+  const db = k.databaze || { soubor: KNIHOVNA, schema: SCHEMA };
+  if (beh.soubor !== db.soubor) {
+    return { ok: false, proc: `Úkol pracuje s databází ${db.soubor} – otevři ji přes Soubor → Otevřít databázi.` };
   }
 
   if (k.druh === "zmena") {
     if (!beh.menilData) return null;
-    const moje = p.cista();
-    const vzor = p.cista();
+    const moje = p.cista(db.schema);
+    const vzor = p.cista(db.schema);
     try {
       moje.exec(beh.text);
       vzor.exec(k.reference);
@@ -74,8 +75,8 @@ export function vyhodnotDotaz(ukol: UkolKurzu, beh: SpusteniKontroly, p: Prostre
   let mine: SqlResult | null;
   let ref: SqlResult | null;
   if (k.nadCistou) {
-    const moje = p.cista();
-    const vzor = p.cista();
+    const moje = p.cista(db.schema);
+    const vzor = p.cista(db.schema);
     try {
       mine = posledni(moje.exec(beh.text));
       ref = posledni(vzor.exec(k.reference));
@@ -101,6 +102,3 @@ export function vyhodnotDotaz(ukol: UkolKurzu, beh: SpusteniKontroly, p: Prostre
   }
   return { ok: false, proc: diffMessage(mine, ref, ordered, false, { zak: beh.text, ref: k.reference }) };
 }
-
-/** Čistá knihovna pro kontrolu – ze stejného schématu jako soubor knihovna.db. */
-export const SCHEMA_KNIHOVNY = SCHEMA;

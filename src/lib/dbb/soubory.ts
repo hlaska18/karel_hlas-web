@@ -12,6 +12,8 @@ export const SLOZKA = "C:\\Users\\zak\\Downloads";
 /** Víc souborů si žák nepotřebuje založit; strop hlídá místo v prohlížeči. */
 export const MAX_SOUBORU = 12;
 
+import { cist, zapsat } from "@/lib/dbb/uloziste";
+
 const KLIC = "dbb-soubory";
 
 export type Soubor = { bajty: Uint8Array; zmeneno: number };
@@ -37,7 +39,7 @@ export function zBase64(text: string): Uint8Array {
 export function nactiDisk(): Disk {
   const disk: Disk = {};
   try {
-    const raw = localStorage.getItem(KLIC);
+    const raw = cist(KLIC);
     if (!raw) return disk;
     const data = JSON.parse(raw) as Record<string, { b: string; t: number }>;
     for (const nazev of Object.keys(data)) {
@@ -64,8 +66,7 @@ export function ulozDisk(disk: Disk): boolean {
     for (const nazev of Object.keys(disk)) {
       data[nazev] = { b: naBase64(disk[nazev].bajty), t: disk[nazev].zmeneno };
     }
-    localStorage.setItem(KLIC, JSON.stringify(data));
-    return true;
+    return zapsat(KLIC, JSON.stringify(data));
   } catch {
     return false;
   }
@@ -81,6 +82,29 @@ export function upravNazev(zadano: string): { nazev: string } | { chyba: string 
   if (!/\.(db|sqlite|sqlite3|db3)$/i.test(n)) n += ".db";
   if (n.length > 60) return { chyba: "Název je moc dlouhý." };
   return { nazev: n };
+}
+
+/** Největší soubor, který jde nahrát z počítače – prohlížeč má na úložiště jen pár MB. */
+export const MAX_NAHRANI = 2 * 1024 * 1024;
+
+/** Je to soubor SQLite? Každý začíná hlavičkou „SQLite format 3“ a nulou. */
+export function jeSqlite(bajty: Uint8Array): boolean {
+  const hlavicka = "SQLite format 3\u0000";
+  if (bajty.length < 100) return false;
+  for (let i = 0; i < hlavicka.length; i++) if (bajty[i] !== hlavicka.charCodeAt(i)) return false;
+  return true;
+}
+
+/** Volný název: „hry.db“, když je obsazený, tak „hry (2).db“… */
+export function volnyNazev(nazev: string, obsazene: string[]): string {
+  if (obsazene.indexOf(nazev) === -1) return nazev;
+  const tecka = nazev.lastIndexOf(".");
+  const zaklad = tecka > 0 ? nazev.slice(0, tecka) : nazev;
+  const pripona = tecka > 0 ? nazev.slice(tecka) : "";
+  for (let i = 2; ; i++) {
+    const n = `${zaklad} (${i})${pripona}`;
+    if (obsazene.indexOf(n) === -1) return n;
+  }
 }
 
 /** Velikost souboru, jak ji ukazuje dialog Windows („12 kB“). */

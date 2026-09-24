@@ -46,10 +46,13 @@ function Ikona({
 
 export function Plocha({
   minimalizovano,
+  napovedaLekce16,
   spustit,
   obnovit,
 }: {
   minimalizovano: boolean;
+  /** V lekci 16 žák program zavře schválně – ukázat mu, kudy zpátky. */
+  napovedaLekce16?: boolean;
   spustit: (soubor: string | null) => void;
   obnovit: () => void;
 }) {
@@ -79,6 +82,17 @@ export function Plocha({
           vyber={() => nastavVybranou("soubor")}
           spustit={() => (minimalizovano ? obnovit() : spustit(KNIHOVNA))}
         />
+        {napovedaLekce16 && !minimalizovano && (
+          <div
+            className="pointer-events-none absolute left-[104px] top-[64px] flex items-center text-[14px] font-semibold text-white"
+            style={{ textShadow: "0 1px 3px rgba(0,0,0,0.7)" }}
+          >
+            <svg viewBox="0 0 40 20" className="mr-2 h-5 w-10" aria-hidden="true">
+              <path d="M38 10H6M14 2L4 10l10 8" fill="none" stroke="white" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Poklepej na knihovna.db – otevře se v DB Browseru
+          </div>
+        )}
       </div>
       <p
         className="pointer-events-none absolute left-0 right-0 top-6 text-center text-[13px] text-white/90"

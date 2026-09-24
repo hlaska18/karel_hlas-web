@@ -26,7 +26,19 @@ export function zvladneProgram(): boolean {
   return obrazovka && mys;
 }
 
+/** Otevřel žák odkaz s úlohou od učitele (/sql?ukol=…)? */
+function maUlohu(): boolean {
+  try {
+    return !!new URLSearchParams(window.location.search).get("ukol");
+  } catch {
+    return false;
+  }
+}
+
 function vychozi(): Podoba {
+  // Úloha od učitele běží jen v programu – kdo ho zvládne, dostane ho i přes
+  // uloženou volbu webové podoby (volba se tím nepřepíše).
+  if (maUlohu() && zvladneProgram()) return "program";
   try {
     const ulozena = localStorage.getItem(KLIC);
     if (ulozena === "program" || ulozena === "web") return ulozena;
@@ -102,5 +114,30 @@ export function TlacitkoDoProgramu() {
     >
       Otevřít kurz v programu DB Browser (lekce 1–19)
     </button>
+  );
+}
+
+/** Ve webové podobě: odkaz s úlohou od učitele se otevře jen v programu. */
+export function UlohaVeWebu() {
+  const { podoba, prepni } = usePodoba();
+  const [stav, nastavStav] = useState<"ne" | "muze" | "nemuze">("ne");
+  useEffect(() => nastavStav(maUlohu() ? (zvladneProgram() ? "muze" : "nemuze") : "ne"), []);
+  if (podoba !== "web" || stav === "ne") return null;
+  return (
+    <div className="povrch mt-6 max-w-2xl rounded-karta border-l-4 border-accent-600 px-5 py-4 text-sm leading-relaxed text-zinc-700 dark:text-zinc-200">
+      <b>Máš úlohu od učitele.</b>{" "}
+      {stav === "muze"
+        ? "Otevře se v programu DB Browser – přepni do něj."
+        : "Otevře se jen v programu DB Browser na počítači s myší. Otevři stejný odkaz na počítači; tady mezitím můžeš procvičovat lekce kurzu."}
+      {stav === "muze" && (
+        <button
+          type="button"
+          onClick={() => prepni("program")}
+          className="ml-2 inline-flex items-center rounded-full bg-accent-700 px-4 py-1.5 text-sm font-semibold text-white transition hover:bg-accent-800"
+        >
+          Otevřít úlohu v programu
+        </button>
+      )}
+    </div>
   );
 }

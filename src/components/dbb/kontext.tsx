@@ -9,6 +9,7 @@
 import { createContext, useContext, type RefObject } from "react";
 import type { SqlDbSoubor, SqlResult } from "@/lib/sqljs";
 import type { Disk } from "@/lib/dbb/soubory";
+import type { Databaze, LekceKurzu } from "@/lib/dbb/kurz";
 
 export type Karta = "struktura" | "data" | "pragma" | "sql";
 export type DokKarta = "kurz" | "schema" | "log";
@@ -36,6 +37,9 @@ export type Dialog =
   | { druh: "tabulka" }
   | { druh: "okurzu" }
   | { druh: "oprogramu" }
+  | { druh: "vysledky" }
+  | { druh: "prehled" }
+  | { druh: "uloha" }
   | {
       druh: "potvrdit";
       titulek: string;
@@ -52,6 +56,8 @@ export type Dialog =
 
 export type KurzStav = {
   lekceId: number;
+  /** Všechny lekce: kurz, procvičování a případně úloha z odkazu. */
+  lekce: LekceKurzu[];
   splneno: Set<string>;
   opsano: Set<string>;
   pokusy: Set<string>;
@@ -59,6 +65,8 @@ export type KurzStav = {
   vyberLekci: (id: number) => void;
   vlozReseni: (klic: string) => void;
   novyZak: () => void;
+  /** Vrátí databázi procvičování nebo detektivky do původního stavu. */
+  obnovDatabazi: (d: Databaze, otevritPotom: boolean) => void;
 };
 
 export type DbbApi = {
@@ -88,6 +96,10 @@ export type DbbApi = {
   zapsat: () => void;
   vratit: () => void;
   kurz: KurzStav;
+  /** Režim předvádění pro projektor: postup zvlášť, program zvětšený, řešení bez pokusu. */
+  predvadeni: boolean;
+  /** Zvětšení programu v režimu předvádění (1 = bez zvětšení). */
+  meritko: number;
 };
 
 export const DbbKontext = createContext<DbbApi | null>(null);

@@ -5,123 +5,17 @@
  * souboru (jako okno Windows), návrh tabulky, informace o kurzu, potvrzení.
  */
 
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { HelpCircle, Info, Database, Folder, HardDrive, Monitor, Download, ExternalLink, Plus, Minus, ArrowUp, ArrowDown } from "lucide-react";
 import { useDbb, precti, uvoz, type Dialog } from "@/components/dbb/kontext";
 import { IkonaProgramu } from "@/components/dbb/Okno";
+import { MojeVysledky, PrehledTridy } from "@/components/dbb/Vysledky";
+import { UlohaOdkazem } from "@/components/dbb/UlohaOdkazem";
+import { Okno, Tlacitko, Paticka, Zprava } from "@/components/dbb/okna";
 import { KNIHOVNA, MAX_SOUBORU, upravNazev, velikost } from "@/lib/dbb/soubory";
 import { tabulky } from "@/lib/dbb/prikazy";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
 import { stahni } from "@/lib/dbb/stahni";
-
-/* ─────────────────────────────── základ ─────────────────────────────── */
-
-function Okno({
-  titulek,
-  zavrit,
-  sirka = 440,
-  children,
-}: {
-  titulek: string;
-  zavrit: () => void;
-  sirka?: number;
-  children: ReactNode;
-}) {
-  const ref = useRef<HTMLDivElement>(null);
-  useEffect(() => {
-    // Zaměří označené tlačítko, jinak první pole – ne křížek v titulku, který
-    // je v HTML první a psaní by šlo do prázdna.
-    const obal = ref.current;
-    const prvni =
-      obal &&
-      (obal.querySelector<HTMLElement>("[data-prvni]") ||
-        obal.querySelector<HTMLElement>("input:not([type=checkbox]), select, textarea"));
-    if (prvni) prvni.focus();
-    const esc = (e: KeyboardEvent) => {
-      if (e.key === "Escape") {
-        e.preventDefault();
-        zavrit();
-      }
-    };
-    document.addEventListener("keydown", esc);
-    return () => document.removeEventListener("keydown", esc);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  return (
-    <div className="absolute bottom-0 left-0 right-0 top-0 z-[100] flex items-center justify-center bg-black/[0.12]">
-      <div
-        ref={ref}
-        role="dialog"
-        aria-modal="true"
-        aria-label={titulek}
-        className="flex max-h-[92%] max-w-[94%] select-text flex-col border border-[#9a9a9a] bg-dbb-povrch shadow-[0_14px_44px_rgba(0,0,0,0.3)]"
-        style={{ width: sirka }}
-      >
-        <div className="flex h-[30px] shrink-0 items-center pl-3">
-          <IkonaProgramu className="mr-2 h-4 w-4" />
-          <span className="flex-1 truncate text-[12px]">{titulek}</span>
-          <button
-            type="button"
-            aria-label="Zavřít"
-            onClick={zavrit}
-            className="flex h-full w-[46px] items-center justify-center hover:bg-[#c42b1c] hover:text-white"
-          >
-            <svg viewBox="0 0 10 10" className="h-2.5 w-2.5" aria-hidden="true">
-              <path d="M0.5 0.5l9 9M9.5 0.5l-9 9" stroke="currentColor" strokeWidth="1" />
-            </svg>
-          </button>
-        </div>
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function Tlacitko({
-  primarni,
-  children,
-  akce,
-  zakazano,
-  prvni,
-}: {
-  primarni?: boolean;
-  children: ReactNode;
-  akce: () => void;
-  zakazano?: boolean;
-  prvni?: boolean;
-}) {
-  return (
-    <button
-      type="button"
-      onClick={akce}
-      disabled={zakazano}
-      data-prvni={prvni ? "" : undefined}
-      className={`ml-2 h-[28px] min-w-[84px] rounded-[4px] border px-3 text-[12px] disabled:opacity-45 ${
-        primarni
-          ? "border-dbb-akcent bg-dbb-akcent text-dbb-akcent-text enabled:hover:brightness-110"
-          : "border-dbb-linka bg-dbb-povrch enabled:hover:bg-dbb-hover"
-      }`}
-    >
-      {children}
-    </button>
-  );
-}
-
-const Paticka = ({ children, vlevo }: { children: ReactNode; vlevo?: ReactNode }) => (
-  <div className="flex shrink-0 items-center border-t border-dbb-linka bg-dbb-okno px-4 py-3">
-    <div className="flex-1 text-[12px]">{vlevo}</div>
-    {children}
-  </div>
-);
-
-function Zprava({ ikona, children }: { ikona: ReactNode; children: ReactNode }) {
-  return (
-    <div className="flex items-start px-5 py-5 text-[12px] leading-relaxed">
-      <span className="mr-3 mt-0.5 shrink-0">{ikona}</span>
-      <div className="min-w-0 flex-1 whitespace-pre-wrap">{children}</div>
-    </div>
-  );
-}
 
 /* ─────────────────────────── soubory ─────────────────────────── */
 
@@ -137,12 +31,15 @@ function DialogSouboru({
   otevrit,
   vytvorit,
   smazat,
+  nahrat,
 }: {
   rezim: "otevrit" | "ulozit";
   zavrit: () => void;
   otevrit: (nazev: string) => void;
   vytvorit: (nazev: string) => void;
   smazat: (nazev: string) => void;
+  /** Soubor ze skutečného počítače; vrací chybu, nebo null. */
+  nahrat: (nazev: string, bajty: Uint8Array) => string | null;
 }) {
   const api = useDbb();
   const soubory = Object.keys(api.disk).sort((a, b) => a.localeCompare(b, "cs"));
@@ -151,6 +48,18 @@ function DialogSouboru({
   const [chyba, nastavChybu] = useState<string | null>(null);
   const [nahradit, nastavNahradit] = useState<string | null>(null);
   const [mazani, nastavMazani] = useState<string | null>(null);
+  const vyberRef = useRef<HTMLInputElement>(null);
+
+  /** Soubor ze skutečného počítače – FileReader, ať to jde i ve starém Chromu. */
+  const zPocitace = (soubor: File) => {
+    const cteni = new FileReader();
+    cteni.onload = () => {
+      const chybaNahrani = nahrat(soubor.name, new Uint8Array(cteni.result as ArrayBuffer));
+      if (chybaNahrani) nastavChybu(chybaNahrani);
+    };
+    cteni.onerror = () => nastavChybu("Soubor se nepodařilo přečíst.");
+    cteni.readAsArrayBuffer(soubor);
+  };
 
   const potvrdit = (zadano?: string) => {
     const text = zadano !== undefined ? zadano : nazev;
@@ -309,7 +218,29 @@ function DialogSouboru({
             </span>
           </p>
         )}
-        <div className="mt-3 flex justify-end">
+        <div className="mt-3 flex items-center justify-end">
+          {rezim === "otevrit" && (
+            <span className="mr-auto">
+              <input
+                ref={vyberRef}
+                type="file"
+                accept=".db,.sqlite,.sqlite3,.db3"
+                className="hidden"
+                onChange={(e) => {
+                  const f = e.target.files && e.target.files[0];
+                  if (f) zPocitace(f);
+                  e.target.value = "";
+                }}
+              />
+              <button
+                type="button"
+                onClick={() => vyberRef.current && vyberRef.current.click()}
+                className="h-[28px] rounded-[4px] border border-dbb-linka bg-dbb-povrch px-3 hover:bg-dbb-hover"
+              >
+                Z tohoto počítače…
+              </button>
+            </span>
+          )}
           <Tlacitko primarni akce={() => potvrdit()}>
             {rezim === "otevrit" ? "Otevřít" : "Uložit"}
           </Tlacitko>
@@ -582,30 +513,47 @@ function EditorTabulky({ zavrit }: { zavrit: () => void }) {
 function OKurzu({ zavrit }: { zavrit: () => void }) {
   const odst = "mt-2.5";
   return (
-    <Okno titulek="O kurzu a pro učitele" zavrit={zavrit} sirka={600}>
+    <Okno titulek="O kurzu a pro učitele" zavrit={zavrit} sirka={640}>
       <div className="dbb-posuv min-h-0 flex-1 overflow-auto px-5 py-4 text-[12px] leading-relaxed">
         <p className="text-[14px] font-semibold">Kurz SQL ve virtuálním DB Browseru</p>
         <p className={odst}>
           <b>Co to je.</b> Napodobenina programu DB Browser for SQLite, ve které běží kurz SQL. Lekce 1–13 jsou
           stejné jako na pracovním listu v bance, lekce 14–19 učí práci s programem: strukturu databáze, úpravu dat
-          v mřížce, zápis změn do souboru a vlastní tabulku. Úkoly se odškrtávají samy, jakmile výsledek sedí.
+          v mřížce, zápis změn do souboru a vlastní tabulku. Navíc je detektivka (lekce 20) a procvičování A a B
+          (21 a 22) na jiných datech – obě varianty mají úlohy poskládané stejně, takže se hodí na písemku. Úkoly
+          se odškrtávají samy, jakmile výsledek sedí.
         </p>
         <p className={odst}>
           <b>Kolik hodin.</b> Lekce 1–13 jsou jedna hodina u počítačů – průměrná třída 1. ročníku dojde za 45 minut
-          do lekce 8 až 10, zbytek je dobrý domácí úkol. Lekce 14–19 jsou druhá hodina. Dřív kvůli ní musel být na
-          počítačích nainstalovaný DB Browser, teď stačí prohlížeč.
+          do lekce 8 až 10, zbytek je dobrý domácí úkol. Lekce 14–19 jsou druhá hodina. Stačí prohlížeč, nic se
+          neinstaluje.
         </p>
         <p className={odst}>
-          <b>Když nestihnou.</b> Postup, rozepsaný dotaz i soubory databází se ukládají v prohlížeči a žák pokračuje
-          doma. Na telefonu se místo programu otevře jednodušší podoba kurzu (lekce 1–13) se stejným postupem.
+          <b>Jak poznáš, že to umí.</b> Žák otevře <i>Moje výsledky</i> (odkaz nahoře v panelu Kurz SQL): velké
+          „Splněno X/19“ a dlaždice lekcí – šedá znamená splněno s pomocí vloženého řešení. Stačí obejít třídu, nebo
+          ať pošlou fotku. Kód postupu z téhož okna vlož do <i>Nápověda → Přehled třídy</i> a dostaneš tabulku
+          (i do Excelu). Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je soubor z lekce 19, který si žák
+          stáhne. A spolehlivá je pořád otázka: „Přečti nahlas, co tvůj dotaz dělá.“
         </p>
         <p className={odst}>
-          <b>Jak poznáš, že to umí.</b> Nahoře v panelu Kurz SQL svítí „Hotovo X/19“. Úkol splněný vložením řešení
-          má šedou fajfku místo zelené. Spolehlivější je ale otázka: „Přečti nahlas, co tvůj dotaz dělá.“
+          <b>Vlastní úloha.</b> <i>Nápověda → Vytvořit úlohu pro třídu</i>: napíšeš zadání a správný SELECT, program
+          z toho udělá odkaz do Teams. Žákovi se po otevření objeví jako „Úloha od učitele“ a kontroluje se sama.
         </p>
         <p className={odst}>
-          <b>Když něco rozbijí.</b> Vrátit změny zahodí všechno od posledního zápisu. Nápověda → Obnovit původní
-          knihovna.db vrátí soubor do stavu ze začátku kurzu.
+          <b>U projektoru.</b> <i>Nápověda → Režim předvádění</i> program zvětší, řešení jde ukázat hned a tvoje
+          ukázka se ukládá zvlášť – nesmíchá se s postupem žáka, který u počítače sedí jindy.
+        </p>
+        <p className={odst}>
+          <b>Když něco rozbijí.</b> Vrátit změny zahodí všechno od posledního zápisu. <i>Nápověda → Obnovit původní
+          knihovna.db</i> vrátí soubor do stavu ze začátku kurzu, u procvičování je odkaz „Obnovit původní…“ přímo
+          v lekci. <i>Nový žák</i> smaže postup i soubory – když si k počítači sedá někdo další.
+        </p>
+        <p className={odst}>
+          <b>Před první hodinou.</b> Na jednom školním počítači a v prohlížeči, který žáci používají: (1) otevři
+          kurz a spusť dotaz v lekci 1 – SQL engine se stahuje z internetu, školní síť ho nesmí blokovat; (2) splň
+          úkol, odhlas se a přihlas znovu – když se postup ztratí, profil se maže a žáci si na konci hodiny musí
+          opsat kód postupu nebo stáhnout soubor; (3) zkus promítnout v režimu předvádění, jestli je písmo čitelné
+          ze zadní lavice.
         </p>
         <p className={odst}>
           Plán hodin, pracovní list a řešení jsou v bance u tématu{" "}
@@ -662,6 +610,7 @@ export function Dialogy({
   otevritSoubor,
   vytvoritSoubor,
   smazatSoubor,
+  nahratSoubor,
 }: {
   dialog: Dialog | null;
   zavrit: () => void;
@@ -669,6 +618,7 @@ export function Dialogy({
   otevritSoubor: (nazev: string) => void;
   vytvoritSoubor: (nazev: string) => void;
   smazatSoubor: (nazev: string) => void;
+  nahratSoubor: (nazev: string, bajty: Uint8Array) => string | null;
 }) {
   if (!dialog) return null;
   switch (dialog.druh) {
@@ -677,6 +627,8 @@ export function Dialogy({
         <Okno titulek="DB Browser for SQLite" zavrit={() => rozhodnutiUlozit("zrusit", dialog.potom)}>
           <Zprava ikona={<HelpCircle className="h-8 w-8 text-dbb-akcent" />}>
             Chcete uložit změny provedené v souboru databáze „{dialog.nazev}“?
+            {"\n"}
+            <span className="text-[11px] text-dbb-slaby">Uložit udělá totéž co Soubor → Zapsat změny.</span>
           </Zprava>
           <Paticka>
             <Tlacitko primarni prvni akce={() => rozhodnutiUlozit("ulozit", dialog.potom)}>
@@ -696,6 +648,7 @@ export function Dialogy({
           otevrit={otevritSoubor}
           vytvorit={vytvoritSoubor}
           smazat={smazatSoubor}
+          nahrat={nahratSoubor}
         />
       );
     case "tabulka":
@@ -704,6 +657,12 @@ export function Dialogy({
       return <OKurzu zavrit={zavrit} />;
     case "oprogramu":
       return <OProgramu zavrit={zavrit} />;
+    case "vysledky":
+      return <MojeVysledky zavrit={zavrit} />;
+    case "prehled":
+      return <PrehledTridy zavrit={zavrit} />;
+    case "uloha":
+      return <UlohaOdkazem zavrit={zavrit} />;
     case "potvrdit":
       return (
         <Okno titulek={dialog.titulek} zavrit={zavrit}>

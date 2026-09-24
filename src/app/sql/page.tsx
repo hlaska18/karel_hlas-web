@@ -15,7 +15,14 @@ import { Mark } from "@/components/Mark";
 import { SqlPlayground } from "@/components/SqlPlayground";
 import { Proza } from "@/components/Proza";
 import { VirtualniDbBrowser } from "@/components/dbb/DbBrowser";
-import { PodobaKurzu, ObalProgramu, ObalWebu, JenVeWebu, TlacitkoDoProgramu } from "@/components/dbb/PodleSirky";
+import {
+  PodobaKurzu,
+  ObalProgramu,
+  ObalWebu,
+  JenVeWebu,
+  TlacitkoDoProgramu,
+  UlohaVeWebu,
+} from "@/components/dbb/PodleSirky";
 
 /** Cesty na soubory v bance (téma 8 – Základy databází). */
 const TEMA = "/materialy/1L/8";
@@ -25,7 +32,7 @@ const BROWSER = encodeURI(`${TEMA}/3. Vlastní databáze v DB Browseru`);
 export const metadata: Metadata = {
   title: "Kurz SQL ve virtuálním DB Browseru",
   description:
-    "Interaktivní kurz základů databází a SQL uvnitř napodobeniny programu DB Browser for SQLite: 13 lekcí od SELECTu po zápis dat a 6 lekcí o práci s programem – soubor, zápis změn, vlastní tabulka. Úkoly se kontrolují samy, přímo v prohlížeči, nic se neinstaluje.",
+    "Interaktivní kurz základů databází a SQL uvnitř napodobeniny programu DB Browser for SQLite: 13 lekcí od SELECTu po zápis dat, 6 lekcí o práci s programem – soubor, zápis změn, vlastní tabulka – a navíc detektivka a procvičování na jiných datech. Úkoly se kontrolují samy, přímo v prohlížeči, nic se neinstaluje.",
   alternates: { canonical: "/sql" },
 };
 
@@ -93,6 +100,7 @@ export default function SqlPage({
           </Proza>
         </p>
         <TlacitkoDoProgramu />
+        <UlohaVeWebu />
 
         {/* Kurz je psaný pro žáka – jediná stránka na webu, která není pro
             učitele. Tenhle blok je proto NAD kurzem: kdo sem přijde vybírat

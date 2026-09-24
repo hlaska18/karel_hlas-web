@@ -36,6 +36,10 @@ export function KartaPragma() {
 
   return (
     <div className="dbb-posuv h-full overflow-auto p-3">
+      <p className="mb-3 border-l-[3px] border-dbb-akcent bg-dbb-hover px-2 py-1 text-[12px]">
+        Pokročilé nastavení databáze. <b>V kurzu tu nic neměň</b> – hodnoty tu jsou, jen aby karta vypadala
+        jako v programu.
+      </p>
       <table className="text-[12px]">
         <tbody>
           {hodnoty.map((p) => (
@@ -53,9 +57,6 @@ export function KartaPragma() {
           ))}
         </tbody>
       </table>
-      <p className="mt-3 max-w-md text-[12px] text-dbb-slaby">
-        Nastavení databáze tu jen čteš – pro kurz není potřeba nic měnit.
-      </p>
     </div>
   );
 }

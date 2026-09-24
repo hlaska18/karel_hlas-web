@@ -15,6 +15,7 @@
 import { LESSONS, type SqlTask } from "@/lib/sqlExercise";
 import type { SqlResult } from "@/lib/sqljs";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
+import { SADY as SADY_LEKCI } from "@/lib/dbb/sady";
 
 /** Co má kontrola k dispozici u úkolů, které se neověřují výsledkem dotazu. */
 export type Kontext = {
@@ -36,11 +37,14 @@ export type Kontext = {
 
 export type Hodnoceni = { ok: boolean; proc?: string };
 
+/** Databáze, nad kterou úkol běží (výchozí je knihovna). Procvičování má vlastní. */
+export type Databaze = { soubor: string; schema: string };
+
 export type Kontrola =
   /** Výsledek dotazu se porovná s referenčním. U lekcí 1–13 nad čistou knihovnou. */
-  | { druh: "dotaz"; reference: string; nadCistou: boolean }
+  | { druh: "dotaz"; reference: string; nadCistou: boolean; databaze?: Databaze }
   /** INSERT/UPDATE/DELETE: porovná se stav tabulky po příkazu, na čistých kopiích. */
-  | { druh: "zmena"; reference: string; check: string }
+  | { druh: "zmena"; reference: string; check: string; databaze?: Databaze }
   /** Stav programu nebo souboru. */
   | { druh: "stav"; test: (k: Kontext) => Hodnoceni };
 
@@ -76,6 +80,8 @@ export type LekceKurzu = {
    * změna „nezmizela“.
    */
   cista?: boolean;
+  /** Lekce s vlastní databází (procvičování, detektivka) – program ji při vstupu otevře. */
+  databaze?: Databaze;
   ukoly: UkolKurzu[];
 };
 
@@ -174,6 +180,43 @@ function tabulkySouboru(k: Kontext, soubor: string): { nazev: string; radku: num
   });
 }
 
+/** Sloupce tabulky bez datového typu (CREATE TABLE t (a, b) typy nemá). */
+function sloupceBezTypu(k: Kontext, soubor: string, tabulka: string): string[] {
+  const info = k.dotazSoubor(soubor, `PRAGMA table_info("${tabulka.replace(/"/g, '""')}")`);
+  return hodnoty(info)
+    .filter((r) => !r[2] || r[2] === "null")
+    .map((r) => r[1]);
+}
+
+/**
+ * Lekce 19, úloha navíc: druhá tabulka propojená cizím klíčem, který dává smysl –
+ * odkazy vedou na existující řádky a aspoň jeden řádek se opravdu spojí JOINem.
+ */
+function testPropojeni(k: Kontext): Hodnoceni {
+  let proc: string | undefined;
+  for (const soubor of vlastni(k)) {
+    for (const t of tabulkySouboru(k, soubor)) {
+      const q = (x: string) => `"${x.replace(/"/g, '""')}"`;
+      const fk = hodnoty(k.dotazSoubor(soubor, `PRAGMA foreign_key_list(${q(t.nazev)})`));
+      if (!fk.length) continue;
+      // foreign_key_list: id, seq, table, from, to, …
+      const [, , cil, z, na] = fk[0];
+      const chybne = hodnoty(k.dotazSoubor(soubor, `PRAGMA foreign_key_check(${q(t.nazev)})`));
+      if (chybne.length) {
+        proc = `Cizí klíč máš, ale ${chybne.length === 1 ? "jeden řádek" : `${chybne.length} řádky`} v tabulce ${t.nazev} ukazuje na řádek, který v tabulce ${cil} neexistuje.`;
+        continue;
+      }
+      const cilSloupec = na && na !== "null" ? na : "rowid";
+      const spojene = hodnoty(
+        k.dotazSoubor(soubor, `SELECT COUNT(*) FROM ${q(t.nazev)} JOIN ${q(cil)} ON ${q(t.nazev)}.${q(z)} = ${q(cil)}.${q(cilSloupec)}`),
+      );
+      if (Number(spojene[0] ? spojene[0][0] : 0) > 0) return { ok: true };
+      proc = `Cizí klíč v tabulce ${t.nazev} máš, ale žádný její řádek se zatím nespojí s tabulkou ${cil} – vlož řádek, který na ni odkazuje, a zapiš změny.`;
+    }
+  }
+  return { ok: false, proc };
+}
+
 /* ─────────────────────────────── nové lekce ─────────────────────────────── */
 
 const NOVE: LekceKurzu[] = [
@@ -264,7 +307,7 @@ const NOVE: LekceKurzu[] = [
     title: "Změny se musí zapsat",
     cista: true,
     teach:
-      "Databáze je soubor na disku – tady knihovna.db ve složce Stažené soubory. Co změníš, je zatím jen v paměti programu; poznáš to podle toho, že tlačítka Zapsat změny a Vrátit změny přestanou být šedá. Do souboru se to dostane až přes Soubor → Zapsat změny (Ctrl+S). Když databázi zavřeš a změny nezapíšeš, jsou pryč. Vrátit změny naopak zahodí všechno, co vzniklo od posledního zápisu.",
+      "Databáze je soubor na disku – tady knihovna.db ve složce Stažené soubory. Co změníš, je zatím jen v paměti programu; poznáš to podle toho, že tlačítka Zapsat změny a Vrátit změny přestanou být šedá. Do souboru se to dostane až přes Soubor → Zapsat změny (Ctrl+S). Když databázi zavíráš s nezapsanými změnami, program se zeptá – tlačítko Uložit v tom dialogu udělá totéž co Zapsat změny, Neukládat je zahodí. Vrátit změny zahodí všechno, co vzniklo od posledního zápisu. Soubor leží v tomhle prohlížeči na tomhle počítači; do skutečného počítače si ho stáhneš přes Soubor → Uložit kopii do počítače.",
     tabulka: "knihy",
     knihovna: true,
     ukoly: [
@@ -440,9 +483,17 @@ const NOVE: LekceKurzu[] = [
         kontrola: {
           druh: "stav",
           test: (k) => {
+            let bezTypu: string | undefined;
             for (const soubor of vlastni(k)) {
-              if (tabulkySouboru(k, soubor).some((t) => t.radku >= 5)) return { ok: true };
+              for (const t of tabulkySouboru(k, soubor)) {
+                if (t.radku < 5) continue;
+                // „Rozumné datové typy“ z Úloh: každý sloupec musí nějaký typ mít.
+                const chybi = sloupceBezTypu(k, soubor, t.nazev);
+                if (!chybi.length) return { ok: true };
+                bezTypu = `V tabulce ${t.nazev} nemá typ ${chybi.length === 1 ? "sloupec" : "sloupce"} ${chybi.join(", ")}. Doplň INTEGER, TEXT nebo REAL – tabulku založ znovu.`;
+              }
             }
+            if (bezTypu) return { ok: false, proc: bezTypu };
             if (k.otevreny && k.otevreny !== KNIHOVNA) {
               const zive = k.dotazZive("SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%'");
               if (hodnoty(zive).length > 0) {
@@ -462,6 +513,19 @@ const NOVE: LekceKurzu[] = [
         kontrola: { druh: "stav", test: (k) => ({ ok: k.vlastniSelecty >= 2 }) },
       },
       {
+        klic: "19e",
+        zadani:
+          "Stáhni svou databázi do počítače (Soubor → Uložit kopii do počítače) a odevzdej soubor podle pokynů učitele – třeba do Teams.",
+        hint: "Stažený soubor najdeš ve skutečné složce Stažené soubory. Otevřít ho jde i ve skutečném programu DB Browser for SQLite.",
+        reseni: "Otevři svou databázi → Soubor → Uložit kopii do počítače",
+        reseniJeSql: false,
+        ceka: "Čeká se, až si svou databázi stáhneš do počítače.",
+        kontrola: {
+          druh: "stav",
+          test: (k) => ({ ok: vlastni(k).some((s) => k.udalosti.has(`stazeno:${s}`)) }),
+        },
+      },
+      {
         klic: "19d",
         navic: true,
         zadani: "Přidej druhou tabulku a propoj ji s první cizím klíčem (REFERENCES).",
@@ -469,24 +533,25 @@ const NOVE: LekceKurzu[] = [
         reseni:
           "CREATE TABLE hodnoceni_her (\n  id INTEGER PRIMARY KEY,\n  hra_id INTEGER REFERENCES hry(id),\n  body INTEGER\n);",
         reseniJeSql: true,
-        kontrola: {
-          druh: "stav",
-          test: (k) => {
-            for (const soubor of vlastni(k)) {
-              for (const t of tabulkySouboru(k, soubor)) {
-                const fk = k.dotazSoubor(soubor, `PRAGMA foreign_key_list("${t.nazev.replace(/"/g, '""')}")`);
-                if (fk && fk.values.length > 0) return { ok: true };
-              }
-            }
-            return { ok: false };
-          },
-        },
+        ceka: "Čeká se na druhou tabulku s cizím klíčem, jejíž řádky se spojí s první tabulkou.",
+        kontrola: { druh: "stav", test: testPropojeni },
       },
     ],
   },
 ];
 
 export const KURZ: LekceKurzu[] = PUVODNI.concat(NOVE);
+
+export { SADY } from "@/lib/dbb/sady";
+
+/** Kurz i lekce navíc (detektivka, procvičování) – pro vyhledání lekce podle čísla. */
+export const VSECHNY_LEKCE: LekceKurzu[] = KURZ.concat(SADY_LEKCI.map((s) => s.lekce));
+
+/** Soubor, se kterým lekce pracuje (knihovna, databáze sady), nebo null u vlastní databáze. */
+export function souborLekce(l: LekceKurzu): string | null {
+  if (l.databaze) return l.databaze.soubor;
+  return l.knihovna ? KNIHOVNA : null;
+}
 
 /** Povinné úkoly lekce (bez úloh navíc). */
 export const povinne = (l: LekceKurzu) => l.ukoly.filter((u) => !u.navic);

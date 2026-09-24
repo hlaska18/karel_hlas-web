@@ -17,7 +17,19 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Loader2 } from "lucide-react";
 import { nactiEngine, otevriDb, forkDb, type SqlDbSoubor } from "@/lib/sqljs";
 import { SCHEMA } from "@/lib/sqlExercise";
-import { KNIHOVNA, SLOZKA, nactiDisk, ulozDisk, type Disk } from "@/lib/dbb/soubory";
+import {
+  KNIHOVNA,
+  SLOZKA,
+  MAX_SOUBORU,
+  MAX_NAHRANI,
+  nactiDisk,
+  ulozDisk,
+  jeSqlite,
+  volnyNazev,
+  type Disk,
+} from "@/lib/dbb/soubory";
+import { stahni } from "@/lib/dbb/stahni";
+import { cist, zapsat, smazat as smazatKlic, jePredvadeni, nastavPredvadeni } from "@/lib/dbb/uloziste";
 import {
   rozdelPrikazy,
   prikazNaPozici,
@@ -31,8 +43,18 @@ import {
 } from "@/lib/dbb/prikazy";
 import { otisk } from "@/lib/dbb/otisk";
 import { chybaCesky, TRANSAKCE_ZAKAZANE } from "@/lib/dbb/chyby";
-import { KURZ, lekceHotova, udalostiPoZnovuotevreni, type Kontext } from "@/lib/dbb/kurz";
+import {
+  KURZ,
+  VSECHNY_LEKCE,
+  lekceHotova,
+  souborLekce,
+  udalostiPoZnovuotevreni,
+  type Databaze,
+  type Kontext,
+  type LekceKurzu,
+} from "@/lib/dbb/kurz";
 import { vyhodnotDotaz, type SpusteniKontroly } from "@/lib/dbb/kontrola";
+import { dekodujUlohu, lekceZOdkazu, ID_ULOHY } from "@/lib/dbb/odkazUlohy";
 import {
   DbbKontext,
   useDbb,
@@ -69,28 +91,19 @@ const KLIC_ODMITNUTO = "dbb-odmitnuto";
 
 function nactiCisla(klic: string): number[] {
   try {
-    const raw = localStorage.getItem(klic);
+    const raw = cist(klic);
     return raw ? (JSON.parse(raw) as number[]) : [];
   } catch {
     return [];
   }
 }
 
+/** Zapíše do úložiště kurzu (v režimu předvádění do odděleného). */
 function uloz(klic: string, hodnota: unknown) {
-  try {
-    localStorage.setItem(klic, typeof hodnota === "string" ? hodnota : JSON.stringify(hodnota));
-  } catch {
-    /* bez úložiště jede kurz jen do zavření stránky */
-  }
+  zapsat(klic, typeof hodnota === "string" ? hodnota : JSON.stringify(hodnota));
 }
 
-function prectiText(klic: string): string | null {
-  try {
-    return localStorage.getItem(klic);
-  } catch {
-    return null;
-  }
-}
+const prectiText = (klic: string): string | null => cist(klic);
 
 type Otevrena = { nazev: string; db: SqlDbSoubor };
 
@@ -103,15 +116,24 @@ function cesky(raw: string, seznam: string[]): string | undefined {
 
 export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const { prepni: prepniPodobu } = usePodoba();
+  // Režim předvádění se zapíná jen s novým načtením stránky – za běhu se nemění.
+  const [predvadeni] = useState(jePredvadeni);
+  const [meritko, nastavMeritko] = useState(1);
   // Úzké okno program nepřepne (to dělalo potíže u projektoru a Win+←), jen
   // nabídne roztažení nebo webovou podobu.
   const [uzke, nastavUzke] = useState(false);
   useEffect(() => {
-    const zmer = () => nastavUzke(window.innerWidth < 900);
+    const zmer = () => {
+      // Při předvádění se program zvětší, aby byl čitelný ze zadní lavice –
+      // ale jen tolik, aby se na plátno pořád vešel (aspoň 1100 px šířky).
+      const m = predvadeni ? Math.max(1, Math.min(1.35, window.innerWidth / 1100)) : 1;
+      nastavMeritko(m);
+      nastavUzke(window.innerWidth / m < 900);
+    };
     zmer();
     window.addEventListener("resize", zmer);
     return () => window.removeEventListener("resize", zmer);
-  }, []);
+  }, [predvadeni]);
   const [engine, nastavEngine] = useState<"nacita" | "hotovo" | "chyba">("nacita");
   const [disk, nastavDisk] = useState<Disk>({});
   const diskRef = useRef<Disk>({});
@@ -132,6 +154,11 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const [dialog, otevritDialog] = useState<Dialog | null>(null);
   const [plocha, nastavPlochu] = useState<"ne" | "zavreno" | "minimalizovano">("ne");
   const [statusText, nastavStatusText] = useState("");
+  /** Jednorázová věta při prvním spuštění: napodobený křížek zavře program, ne prohlížeč. */
+  const [tip, nastavTip] = useState(false);
+  useEffect(() => {
+    nastavTip(!predvadeni && !prectiText("dbb-tip"));
+  }, []);
   /** Co se zahodilo při „Neukládat“ – podle toho lekce 16 pozná, že změna opravdu zmizela. */
   const zahozenoRef = useRef<{ nazev: string; temno: string | null } | null>(null);
   /** Otisk původní knihovny (spočítá se jednou po startu). */
@@ -154,7 +181,17 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const zmenenoRef = useRef(zmeneno);
   zmenenoRef.current = zmeneno;
 
-  const lekce = KURZ.find((l) => l.id === lekceId) || KURZ[0];
+  /** Úloha od učitele z odkazu (/sql?ukol=…) – jako lekce navíc za procvičováním. */
+  const [uloha, nastavUlohu] = useState<LekceKurzu | null>(null);
+  const ulohaRef = useRef<LekceKurzu | null>(null);
+  const najdiLekci = useCallback(
+    (id: number): LekceKurzu | undefined =>
+      id === ID_ULOHY && ulohaRef.current ? ulohaRef.current : VSECHNY_LEKCE.find((l) => l.id === id),
+    [],
+  );
+  const vsechnyLekce = useMemo(() => (uloha ? VSECHNY_LEKCE.concat(uloha) : VSECHNY_LEKCE), [uloha]);
+
+  const lekce = (lekceId === ID_ULOHY && uloha) || VSECHNY_LEKCE.find((l) => l.id === lekceId) || KURZ[0];
 
   const zmenaVerze = useCallback(() => nastavVerzi((v) => v + 1), []);
   const pridejLog = useCallback((kdo: ZaznamLogu["kdo"], text: string) => {
@@ -304,6 +341,57 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     [zapsat, zavriInterne, udalost],
   );
 
+  /**
+   * Soubor → Uložit kopii do počítače: stáhne soubor do skutečné složky
+   * Stažené soubory. S nezapsanými změnami se zeptá, jestli je zapsat.
+   */
+  const ulozKopii = useCallback(() => {
+    const o = otevrenaRef.current;
+    if (!o) return;
+    const nazev = o.nazev;
+    const stahniSoubor = () => {
+      const s = diskRef.current[nazev];
+      if (!s) return;
+      stahni(nazev, s.bajty);
+      udalost(`stazeno:${nazev}`);
+      status(`Kopie souboru ${nazev} je ve složce Stažené soubory tvého počítače.`);
+    };
+    if (!zmenenoRef.current) {
+      stahniSoubor();
+      return;
+    }
+    otevritDialog({
+      druh: "potvrdit",
+      titulek: "Uložit kopii do počítače",
+      text: "Některé změny ještě nejsou zapsané v souboru. Zapsat je a stáhnout soubor i s nimi?",
+      tlacitko: "Zapsat a stáhnout",
+      akce: () => {
+        zapsat();
+        stahniSoubor();
+      },
+      zrusit: "Stáhnout bez nich",
+      priZruseni: stahniSoubor,
+    });
+  }, [zapsat, udalost, status]);
+
+  /** Soubor nahraný ze skutečného počítače (dialog Otevřít → Z tohoto počítače…). */
+  const nahrajSoubor = useCallback(
+    (puvodniNazev: string, bajty: Uint8Array): string | null => {
+      if (bajty.length > MAX_NAHRANI) return "Soubor je moc velký – do prohlížeče se vejde databáze nejvýš do 2 MB.";
+      if (!jeSqlite(bajty)) return "Tohle není databáze SQLite. Vyber soubor .db, který jsi třeba dřív stáhl(a) z kurzu.";
+      const nazvy = Object.keys(diskRef.current);
+      if (nazvy.length >= MAX_SOUBORU) return "Ve složce je moc souborů. Nějaký starý smaž (pravým tlačítkem → Odstranit).";
+      const cisty = puvodniNazev.replace(/[\\/:*?"<>|]/g, "_");
+      const nazev = volnyNazev(cisty.toLowerCase() === KNIHOVNA ? "knihovna z počítače.db" : cisty, nazvy);
+      ulozNaDisk({ ...diskRef.current, [nazev]: { bajty, zmeneno: Date.now() } });
+      otevritDialog(null);
+      zavriDatabazi(() => otevri(nazev));
+      status(`Soubor ${nazev} je nahraný z počítače.`);
+      return null;
+    },
+    [ulozNaDisk, zavriDatabazi, otevri, status],
+  );
+
   /** Vrátí knihovna.db do původního stavu (neuložené změny v ní zahodí) a otevře ji. */
   const obnovKnihovnu = useCallback(() => {
     const db = otevriDb();
@@ -317,6 +405,21 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     else zavriDatabazi(() => otevri(KNIHOVNA));
     status("Soubor knihovna.db je zpátky v původním stavu.");
   }, [zavriInterne, ulozNaDisk, otevri, zavriDatabazi, status]);
+
+  /** Založí (nebo vrátí do původního stavu) databázi sady – procvičování, detektivka. */
+  const obnovDatabazi = useCallback(
+    (d: Databaze, otevritPotom: boolean) => {
+      const db = otevriDb();
+      db.exec(d.schema);
+      const bajty = db.export();
+      db.close();
+      const jeOtevrena = otevrenaRef.current && otevrenaRef.current.nazev === d.soubor;
+      if (jeOtevrena) zavriInterne();
+      ulozNaDisk({ ...diskRef.current, [d.soubor]: { bajty, zmeneno: Date.now() } });
+      if (jeOtevrena || otevritPotom) zavriDatabazi(() => otevri(d.soubor));
+    },
+    [zavriInterne, ulozNaDisk, zavriDatabazi, otevri],
+  );
 
   /** Otisk knihovny, když není původní (i s neuloženými změnami); jinak null. */
   const zmenenaKnihovna = useCallback((): string | null => {
@@ -345,7 +448,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
    */
   const zkontrolujVychozi = useCallback(
     (id: number) => {
-      const l = KURZ.find((x) => x.id === id);
+      const l = najdiLekci(id);
       if (!l || !l.cista) return;
       const zmenena = zmenenaKnihovna();
       if (!zmenena || prectiText(KLIC_ODMITNUTO) === zmenena) return;
@@ -383,7 +486,25 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     nastavSplneno(s);
     nastavOpsano(o);
     const prvniNehotova = KURZ.find((l) => !lekceHotova(l, s));
-    nastavLekceId(ulozeny.lekce && KURZ.some((l) => l.id === ulozeny.lekce) ? ulozeny.lekce : prvniNehotova ? prvniNehotova.id : 1);
+    // Odkaz s úlohou od učitele má přednost před lekcí, kde žák skončil.
+    let odkaz: LekceKurzu | null = null;
+    try {
+      const u = dekodujUlohu(new URLSearchParams(window.location.search).get("ukol"));
+      odkaz = u ? lekceZOdkazu(u) : null;
+    } catch {
+      odkaz = null;
+    }
+    ulohaRef.current = odkaz;
+    nastavUlohu(odkaz);
+    nastavLekceId(
+      odkaz
+        ? ID_ULOHY
+        : ulozeny.lekce && VSECHNY_LEKCE.some((l) => l.id === ulozeny.lekce)
+          ? ulozeny.lekce
+          : prvniNehotova
+            ? prvniNehotova.id
+            : 1,
+    );
     nastavEditorStav(prectiText(KLIC_EDITOR) || "");
     nastavNacteno(true);
 
@@ -398,6 +519,15 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
           db.close();
           ulozDisk(d);
         }
+        // Úloha z odkazu nad procvičováním: soubor se založí, když ještě není.
+        const dbUlohy = odkaz && odkaz.databaze;
+        if (dbUlohy && !d[dbUlohy.soubor]) {
+          const db = otevriDb();
+          db.exec(dbUlohy.schema);
+          d[dbUlohy.soubor] = { bajty: db.export(), zmeneno: Date.now() };
+          db.close();
+          ulozDisk(d);
+        }
         diskRef.current = d;
         nastavDisk(d);
         const cista = forkDb(SCHEMA);
@@ -405,7 +535,8 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         cista.close();
         nastavEngine("hotovo");
         const posledni = prectiText(KLIC_POSLEDNI);
-        otevri(posledni && d[posledni] ? posledni : KNIHOVNA);
+        const souborUlohy = odkaz ? souborLekce(odkaz) : null;
+        otevri(souborUlohy || (posledni && d[posledni] ? posledni : KNIHOVNA));
         zkontrolujVychozi(lekceIdRef.current);
       })
       .catch((e) => {
@@ -480,9 +611,21 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       // Úkoly typu „rozbal tabulku“ nebo „vyzkoušej Vrátit změny“ se mají
       // udělat v téhle lekci – co žák udělal dřív, se nepočítá.
       nastavUdalosti(new Set());
+      // Lekce 1–13 jsou jen o SQL: začínají na kartě Spustit SQL. Karty se
+      // nezamykají (skutečný program nic nezamyká), jen se na ně nezačíná.
+      if (id <= 13) nastavKartu("sql");
+      // Lekce s vlastní databází (procvičování, detektivka) ji otevře sama –
+      // a když ještě není na disku, založí ji. Lekce knihovny vrátí knihovnu.
+      const l = najdiLekci(id);
+      const soubor = l ? souborLekce(l) : null;
+      if (l && l.databaze && !diskRef.current[l.databaze.soubor]) {
+        obnovDatabazi(l.databaze, true);
+      } else if (soubor && (!otevrenaRef.current || otevrenaRef.current.nazev !== soubor)) {
+        zavriDatabazi(() => otevri(soubor));
+      }
       zkontrolujVychozi(id);
     },
-    [zkontrolujVychozi],
+    [zkontrolujVychozi, obnovDatabazi, zavriDatabazi, otevri, najdiLekci],
   );
 
   /** Nový žák: smaže postup, rozepsaný dotaz i všechny soubory a vrátí původní knihovnu. */
@@ -511,13 +654,9 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         const bajty = db.export();
         db.close();
         ulozNaDisk({ [KNIHOVNA]: { bajty, zmeneno: Date.now() } });
-        try {
-          localStorage.removeItem(KLIC_ODMITNUTO);
-          localStorage.removeItem(KLIC_POSLEDNI);
-          localStorage.removeItem("sql-kurz-dotazy");
-        } catch {
-          /* bez úložiště není co mazat */
-        }
+        smazatKlic(KLIC_ODMITNUTO);
+        smazatKlic(KLIC_POSLEDNI);
+        smazatKlic("sql-kurz-dotazy");
         nastavPlochu("ne");
         nastavKartu("sql");
         otevri(KNIHOVNA);
@@ -525,6 +664,26 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       },
     });
   }, [nastavEditor, zavriInterne, ulozNaDisk, otevri, status]);
+
+  /** Zapne nebo vypne režim předvádění – s novým načtením stránky, ať se nic nesmíchá. */
+  const prepniPredvadeni = useCallback(() => {
+    const prepnout = () => {
+      nastavPredvadeni(!predvadeni);
+      window.location.reload();
+    };
+    if (predvadeni) {
+      zavriDatabazi(prepnout);
+      return;
+    }
+    otevritDialog({
+      druh: "potvrdit",
+      titulek: "Režim předvádění",
+      text:
+        "Pro učitele u projektoru. Program se zvětší, řešení půjdou ukázat hned bez pokusu a postup i soubory se budou ukládat zvlášť – postup žáka na tomhle počítači se nezmění.\n\nRežim platí, dokud nezavřeš kartu prohlížeče nebo ho neukončíš v nabídce Nápověda.",
+      tlacitko: "Zapnout předvádění",
+      akce: () => zavriDatabazi(prepnout),
+    });
+  }, [predvadeni, zavriDatabazi]);
 
   // Zavření nebo obnovení stránky s neuloženými změnami: prohlížeč se zeptá.
   // F5 a Ctrl+R zachytí program, ale ne křížek karty, Ctrl+W ani F5 v adresním řádku.
@@ -595,7 +754,8 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     if (engine !== "hotovo") return;
     const o = otevrenaRef.current;
     const t = lekce.tabulka;
-    if (!o || !t || (lekce.knihovna && o.nazev !== KNIHOVNA) || tabulky(o.db).indexOf(t) === -1) {
+    const soubor = souborLekce(lekce);
+    if (!o || !t || (soubor && o.nazev !== soubor) || tabulky(o.db).indexOf(t) === -1) {
       nastavVystup(null);
       return;
     }
@@ -651,7 +811,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       if (aktualni && aktualni.reseniJeSql) {
         const potreba = tabulkyDotazu(aktualni.reseni);
         const pouzite = tabulkyDotazu(prikazy.map((p) => p.text).join("\n"));
-        if (!lekce.knihovna || potreba.some((t) => pouzite.indexOf(t) !== -1)) pridejPokus(aktualni.klic);
+        if (!souborLekce(lekce) || potreba.some((t) => pouzite.indexOf(t) !== -1)) pridejPokus(aktualni.klic);
       }
 
       const beh = spust(o.db, prikazy);
@@ -691,7 +851,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         status("Provádění dokončeno bez chyb.");
 
         // Vlastní SELECTy nad vlastní databází (lekce 19).
-        if (o.nazev !== KNIHOVNA) {
+        if (o.nazev !== KNIHOVNA && !VSECHNY_LEKCE.some((l) => !!l.databaze && l.databaze.soubor === o.nazev)) {
           beh.provedene.forEach((p) => {
             if (druhPrikazu(p.text) === "cteni" && /\bfrom\b/i.test(p.text)) {
               vlastniSelectyRef.current.add(p.text.toLowerCase().replace(/\s+/g, " ").replace(/;$/, ""));
@@ -713,7 +873,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
         let text2: { klic: string; text: string } | null = null;
         for (const u of nesplnene) {
           if (u.kontrola.druh === "stav") continue;
-          const h = vyhodnotDotaz(u, kb, { cista: () => forkDb(SCHEMA), ziva: o.db });
+          const h = vyhodnotDotaz(u, kb, { cista: (schema) => forkDb(schema), ziva: o.db });
           if (!h) continue;
           if (h.ok) nove.push(u.klic);
           else if (aktualni && u.klic === aktualni.klic && h.proc) text2 = { klic: u.klic, text: h.proc };
@@ -806,11 +966,13 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       status,
       zapsat,
       vratit,
-      kurz: { lekceId, splneno, opsano, pokusy, odezva, vyberLekci, vlozReseni, novyZak },
+      kurz: { lekceId, lekce: vsechnyLekce, splneno, opsano, pokusy, odezva, vyberLekci, vlozReseni, novyZak, obnovDatabazi },
+      predvadeni,
+      meritko,
     }),
     [otevrena, verze, zmeneno, disk, karta, dokKarta, editor, nastavEditor, vystup, spustit, log, udalost,
       hlasProhlizeni, provedAplikaci, status, zapsat, vratit, lekceId, splneno, opsano, pokusy, odezva,
-      vyberLekci, vlozReseni, novyZak],
+      vyberLekci, vlozReseni, novyZak, obnovDatabazi, predvadeni, meritko, vsechnyLekce],
   );
 
   if (engine === "nacita") {
@@ -837,10 +999,38 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
 
   return (
     <DbbKontext.Provider value={api}>
-      <div className="dbb relative flex vyska-obrazovky w-full select-none flex-col overflow-hidden">
+      <div
+        className={`dbb relative flex select-none flex-col overflow-hidden ${meritko === 1 ? "vyska-obrazovky w-full" : ""}`}
+        style={
+          meritko === 1
+            ? undefined
+            : {
+                width: `${100 / meritko}vw`,
+                height: `${100 / meritko}vh`,
+                transform: `scale(${meritko})`,
+                transformOrigin: "0 0",
+              }
+        }
+      >
+        {predvadeni && (
+          <div className="flex shrink-0 items-center bg-[#5b3fa0] px-3 py-1 text-[12px] text-white">
+            <span className="flex-1">
+              <b>Režim předvádění</b> – postup a soubory se ukládají zvlášť, postup žáků na tomhle počítači se
+              nemění. Řešení jdou ukázat hned.
+            </span>
+            <button
+              type="button"
+              onClick={prepniPredvadeni}
+              className="ml-3 border border-white/60 px-2.5 py-0.5 hover:bg-white/15"
+            >
+              Ukončit předvádění
+            </button>
+          </div>
+        )}
         {plocha !== "ne" ? (
           <Plocha
             minimalizovano={plocha === "minimalizovano"}
+            napovedaLekce16={lekceId === 16}
             spustit={(soubor) => {
               nastavPlochu("ne");
               if (soubor) otevri(soubor);
@@ -860,6 +1050,27 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
                   className="ml-3 border border-[#c9a227] bg-white px-2.5 py-0.5 hover:bg-[#fff8e1]"
                 >
                   Přepnout na webovou podobu
+                </button>
+              </div>
+            )}
+            {tip && (
+              <div
+                role="note"
+                className="absolute right-3 top-[34px] z-[70] w-[340px] border border-[#8ab4e0] bg-[#eaf3fc] px-3 py-2.5 text-[12px] leading-snug shadow-[0_6px_18px_rgba(0,0,0,0.18)]"
+              >
+                <p>
+                  <b>Tohle je program v prohlížeči</b> – nic se neinstaluje. Křížek vpravo nahoře zavře program, ne
+                  prohlížeč; z plochy ho zase spustíš dvojklikem.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => {
+                    uloz("dbb-tip", "1");
+                    nastavTip(false);
+                  }}
+                  className="mt-2 border border-dbb-akcent bg-dbb-akcent px-3 py-0.5 text-dbb-akcent-text hover:brightness-110"
+                >
+                  Rozumím
                 </button>
               </div>
             )}
@@ -885,6 +1096,8 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
                 })
               }
               novyZak={novyZak}
+              ulozKopii={ulozKopii}
+              predvadeni={prepniPredvadeni}
             />
             <Lista
               novaDatabaze={() => zavriDatabazi(() => otevritDialog({ druh: "nova" }))}
@@ -912,6 +1125,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
             udalost("nova-databaze");
             otevritDialog({ druh: "tabulka" });
           }}
+          nahratSoubor={nahrajSoubor}
           smazatSoubor={(nazev) => {
             const novy = { ...diskRef.current };
             delete novy[nazev];
@@ -925,15 +1139,18 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
 
 /** Karty vlevo a panel s kurzem vpravo. */
 function Hlavni() {
-  const { karta } = useDbb();
+  const { karta, meritko } = useDbb();
   const [sirkaDoku, nastavSirkuDoku] = useState(400);
   const tahRef = useRef<{ x: number; sirka: number } | null>(null);
+  // Při předvádění je program zvětšený – pohyb myši se musí přepočítat.
+  const meritkoRef = useRef(meritko);
+  meritkoRef.current = meritko;
 
   useEffect(() => {
     const pohyb = (e: MouseEvent) => {
       const t = tahRef.current;
       if (!t) return;
-      nastavSirkuDoku(Math.max(300, Math.min(640, t.sirka - (e.clientX - t.x))));
+      nastavSirkuDoku(Math.max(300, Math.min(640, t.sirka - (e.clientX - t.x) / meritkoRef.current)));
     };
     const konec = () => {
       tahRef.current = null;

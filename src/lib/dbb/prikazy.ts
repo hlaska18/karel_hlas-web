@@ -7,7 +7,7 @@
  * v apostrofech ani v komentáři příkaz nekončí.
  */
 
-import type { SqlDbSoubor, SqlResult } from "@/lib/sqljs";
+import type { SqlDb, SqlDbSoubor, SqlResult } from "@/lib/sqljs";
 
 export type Prikaz = {
   /** Text příkazu bez úvodních mezer a komentářů. */
@@ -191,7 +191,7 @@ export function pocetRadku(n: number, sloveso: "vrácen" | "ovlivněn"): string 
 }
 
 /** Názvy tabulek v otevřené databázi, podle abecedy (bez interních sqlite_). */
-export function tabulky(db: SqlDbSoubor): string[] {
+export function tabulky(db: SqlDb): string[] {
   const r = db.exec(
     "SELECT name FROM sqlite_master WHERE type = 'table' AND name NOT LIKE 'sqlite_%' ORDER BY name",
   );

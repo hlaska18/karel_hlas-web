@@ -28,9 +28,9 @@ beforeAll(async () => {
   SQL = await initSqlJs();
 });
 
-const cista = (): SqlDb => {
+const cista = (schema: string = SCHEMA): SqlDb => {
   const db = new SQL.Database();
-  db.run(SCHEMA);
+  db.run(schema);
   return db;
 };
 
@@ -338,5 +338,47 @@ describe("pokrytí", () => {
     [14, 15, 16, 17, 18, 19].forEach((id) => dotcene.add(id));
     expect(Array.from(dotcene).sort((a, b) => a - b)).toEqual(KURZ.map((l) => l.id));
     expect(lekce(19).ukoly.length).toBeGreaterThan(0);
+  });
+});
+
+describe("lekce 19 – smysl návrhu", () => {
+  const vlastniDb = () => {
+    const p = new Program();
+    p.disk["hry.db"] = new SQL.Database().export();
+    p.otevri("hry.db");
+    return p;
+  };
+
+  it("19b: tabulka bez datových typů neprojde a řekne, kterým sloupcům typ chybí", () => {
+    const p = vlastniDb();
+    p.spust("CREATE TABLE hry (nazev, rok); INSERT INTO hry VALUES ('a',1),('b',2),('c',3),('d',4),('e',5);");
+    p.zapis();
+    const h = p.stav(ukol("19b"));
+    expect(h.ok).toBe(false);
+    expect(h.proc).toContain("nazev, rok");
+  });
+
+  it("19d: cizí klíč, který nikam nevede, neprojde; spojené řádky ano", () => {
+    const p = vlastniDb();
+    p.spust(ukol("19b").reseni);
+    p.spust("CREATE TABLE body (id INTEGER PRIMARY KEY, hra_id INTEGER REFERENCES hry(id), pocet INTEGER);");
+    p.zapis();
+    expect(p.stav(ukol("19d")).ok).toBe(false);
+    expect(p.stav(ukol("19d")).proc).toContain("nespojí");
+    p.ziva!.exec("PRAGMA foreign_keys = OFF;");
+    p.spust("INSERT INTO body (hra_id, pocet) VALUES (99, 5);");
+    p.zapis();
+    expect(p.stav(ukol("19d")).proc).toContain("neexistuje");
+    p.spust("DELETE FROM body; INSERT INTO body (hra_id, pocet) VALUES (1, 5);");
+    p.zapis();
+    expect(p.stav(ukol("19d")).ok).toBe(true);
+  });
+
+  it("19e: odškrtne stažení vlastní databáze, knihovna nestačí", () => {
+    const p = vlastniDb();
+    p.udalosti.add(`stazeno:${KNIHOVNA}`);
+    expect(p.stav(ukol("19e")).ok).toBe(false);
+    p.udalosti.add("stazeno:hry.db");
+    expect(p.stav(ukol("19e")).ok).toBe(true);
   });
 });

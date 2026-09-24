@@ -12,8 +12,8 @@
 import { useState } from "react";
 import { Check, ChevronLeft, ChevronRight, Lightbulb, KeyRound, PartyPopper, ArrowRight, ExternalLink } from "lucide-react";
 import { useDbb } from "@/components/dbb/kontext";
-import { KURZ, lekceHotova, povinne, type UkolKurzu } from "@/lib/dbb/kurz";
-import { KNIHOVNA } from "@/lib/dbb/soubory";
+import { KURZ, SADY, lekceHotova, povinne, souborLekce, type UkolKurzu } from "@/lib/dbb/kurz";
+import { ID_ULOHY } from "@/lib/dbb/odkazUlohy";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
 import { sazba } from "@/lib/sazba";
 
@@ -41,6 +41,15 @@ function Kod({ sql }: { sql: string }) {
   );
 }
 
+/** Na co program čeká, aby úkol odškrtl – žák tak ví, že nemá mačkat nic dalšího. */
+function cekaSeNa(ukol: UkolKurzu): string {
+  if (ukol.ceka) return ukol.ceka;
+  const k = ukol.kontrola;
+  if (k.druh === "zmena") return "Čeká se, až spustíš příkaz, který data změní (F5).";
+  if (k.druh === "dotaz") return "Čeká se, až spustíš dotaz SELECT (F5).";
+  return "Čeká se, až to v programu uděláš.";
+}
+
 function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; aktualni: boolean }) {
   const api = useDbb();
   const { kurz } = api;
@@ -49,7 +58,8 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
   const hotovo = kurz.splneno.has(ukol.klic);
   const opsano = kurz.opsano.has(ukol.klic);
   // Řešení SQL se nabídne až po pokusu; postup v programu (bez SQL) rovnou.
-  const reseniNabidnout = !ukol.reseniJeSql || kurz.pokusy.has(ukol.klic);
+  // Při předvádění učitel ukazuje řešení rovnou, nemusí napřed „zkoušet“.
+  const reseniNabidnout = !!ukol.reseni && (!ukol.reseniJeSql || kurz.pokusy.has(ukol.klic) || api.predvadeni);
   const odezva = kurz.odezva && kurz.odezva.klic === ukol.klic ? kurz.odezva.text : null;
 
   return (
@@ -111,8 +121,11 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
               )}
             </div>
           )}
+          {!hotovo && aktualni && (
+            <p className="mt-1 text-[11px] leading-snug text-dbb-slaby">{cekaSeNa(ukol)}</p>
+          )}
           {!hotovo && napoveda && <p className="mt-1 text-[12px] leading-snug text-dbb-slaby">{sazba(ukol.hint, "cs")}</p>}
-          {!hotovo && napoveda && !reseniNabidnout && (
+          {!hotovo && napoveda && !reseniNabidnout && !!ukol.reseni && (
             <p className="mt-1 text-[11px] text-dbb-slaby">Řešení se nabídne, až jednou zkusíš dotaz spustit.</p>
           )}
           {!hotovo && reseni && reseniNabidnout && (
@@ -138,13 +151,18 @@ function Ukol({ ukol, poradi, aktualni }: { ukol: UkolKurzu; poradi: number; akt
 export function PanelKurzu() {
   const api = useDbb();
   const { kurz } = api;
-  const index = KURZ.findIndex((l) => l.id === kurz.lekceId);
-  const lekce = KURZ[index] || KURZ[0];
+  const VSECHNY_LEKCE = kurz.lekce;
+  const index = VSECHNY_LEKCE.findIndex((l) => l.id === kurz.lekceId);
+  const uloha = VSECHNY_LEKCE.filter((l) => l.id === ID_ULOHY)[0];
+  const lekce = VSECHNY_LEKCE[index] || KURZ[0];
+  const jeSada = lekce.id > KURZ.length;
   const hotoveLekce = KURZ.filter((l) => lekceHotova(l, kurz.splneno)).length;
   const hotova = lekceHotova(lekce, kurz.splneno);
-  const dalsi = KURZ[index + 1];
+  // „Další lekce“ vede jen v rámci kurzu nebo v rámci lekcí navíc, ne přes hranici.
+  const dalsi = VSECHNY_LEKCE[index + 1] && (VSECHNY_LEKCE[index + 1].id > KURZ.length) === jeSada ? VSECHNY_LEKCE[index + 1] : undefined;
   const aktualni = lekce.ukoly.find((u) => !kurz.splneno.has(u.klic));
-  const jinySoubor = lekce.knihovna && api.otevrena !== KNIHOVNA;
+  const pozadovany = souborLekce(lekce);
+  const jinySoubor = !!pozadovany && api.otevrena !== pozadovany;
   const vse = hotoveLekce === KURZ.length;
 
   return (
@@ -156,7 +174,7 @@ export function PanelKurzu() {
             type="button"
             aria-label="Předchozí lekce"
             disabled={index <= 0}
-            onClick={() => kurz.vyberLekci(KURZ[index - 1].id)}
+            onClick={() => kurz.vyberLekci(VSECHNY_LEKCE[index - 1].id)}
             className="flex h-[24px] w-[24px] items-center justify-center rounded-[3px] enabled:hover:bg-dbb-hover disabled:opacity-35"
           >
             <ChevronLeft className="h-4 w-4" />
@@ -167,18 +185,36 @@ export function PanelKurzu() {
             aria-label="Lekce"
             className="mx-1 h-[24px] min-w-0 flex-1 border border-dbb-linka bg-dbb-povrch px-1 text-[12px]"
           >
-            {KURZ.map((l) => (
-              <option key={l.id} value={l.id}>
-                {lekceHotova(l, kurz.splneno) ? "✓ " : ""}
-                {l.id}. {l.title}
-              </option>
-            ))}
+            <optgroup label="Kurz SQL">
+              {KURZ.map((l) => (
+                <option key={l.id} value={l.id}>
+                  {lekceHotova(l, kurz.splneno) ? "✓ " : ""}
+                  {l.id}. {l.title}
+                </option>
+              ))}
+            </optgroup>
+            <optgroup label="Navíc: detektivka a procvičování">
+              {SADY.map((s) => (
+                <option key={s.lekce.id} value={s.lekce.id}>
+                  {lekceHotova(s.lekce, kurz.splneno) ? "✓ " : ""}
+                  {s.lekce.id}. {s.lekce.title}
+                </option>
+              ))}
+            </optgroup>
+            {uloha && (
+              <optgroup label="Od učitele">
+                <option value={uloha.id}>
+                  {lekceHotova(uloha, kurz.splneno) ? "✓ " : ""}
+                  {uloha.title}
+                </option>
+              </optgroup>
+            )}
           </select>
           <button
             type="button"
             aria-label="Další lekce"
-            disabled={!dalsi}
-            onClick={() => dalsi && kurz.vyberLekci(dalsi.id)}
+            disabled={!VSECHNY_LEKCE[index + 1]}
+            onClick={() => VSECHNY_LEKCE[index + 1] && kurz.vyberLekci(VSECHNY_LEKCE[index + 1].id)}
             className="flex h-[24px] w-[24px] items-center justify-center rounded-[3px] enabled:hover:bg-dbb-hover disabled:opacity-35"
           >
             <ChevronRight className="h-4 w-4" />
@@ -189,6 +225,20 @@ export function PanelKurzu() {
             <div className="h-full rounded-full bg-[#2e9d4f]" style={{ width: `${(hotoveLekce / KURZ.length) * 100}%` }} />
           </div>
           Hotovo {hotoveLekce}/{KURZ.length}
+          <button
+            type="button"
+            onClick={() => api.otevritDialog({ druh: "vysledky" })}
+            className="ml-2 text-dbb-akcent hover:underline"
+          >
+            Moje výsledky
+          </button>
+          <button
+            type="button"
+            onClick={() => api.otevritDialog({ druh: "okurzu" })}
+            className="ml-2 text-dbb-akcent hover:underline"
+          >
+            Pro učitele
+          </button>
         </div>
       </div>
 
@@ -212,12 +262,14 @@ export function PanelKurzu() {
           </div>
         )}
 
-        <p className="text-[11px] font-semibold uppercase tracking-wide text-dbb-slaby">Lekce {lekce.id}</p>
+        <p className="text-[11px] font-semibold uppercase tracking-wide text-dbb-slaby">
+          {lekce.id === ID_ULOHY ? "Od učitele" : jeSada ? `Lekce ${lekce.id} · navíc` : `Lekce ${lekce.id}`}
+        </p>
         <h2 className="mt-0.5 text-[15px] font-semibold leading-snug">{lekce.title}</h2>
 
         {jinySoubor && (
           <div className="mt-2 border border-[#f0c36d] bg-[#fff8e1] px-2.5 py-2 text-[12px] leading-snug text-[#4a3500]">
-            Tahle lekce pracuje s databází <b>knihovna.db</b>
+            Tahle lekce pracuje s databází <b>{pozadovany}</b>
             {api.otevrena ? (
               <>
                 , ale otevřená je <b>{api.otevrena}</b>
@@ -266,7 +318,20 @@ export function PanelKurzu() {
           </div>
         )}
 
-        {hotova && !dalsi && !vse && (
+        {lekce.databaze && (
+          <p className="mt-3 text-[12px] text-dbb-slaby">
+            Rozbil(a) sis data?{" "}
+            <button
+              type="button"
+              onClick={() => lekce.databaze && kurz.obnovDatabazi(lekce.databaze, true)}
+              className="text-dbb-akcent underline"
+            >
+              Obnovit původní {lekce.databaze.soubor}
+            </button>
+          </p>
+        )}
+
+        {hotova && !dalsi && !vse && !jeSada && (
           <div className="mt-3 border border-[#9fd5ae] bg-[#eaf7ee] px-3 py-2 text-[12px] leading-snug">
             <p className="flex items-center font-semibold">
               <Check className="mr-1.5 h-4 w-4 text-[#2e9d4f]" strokeWidth={3} /> Lekce hotová

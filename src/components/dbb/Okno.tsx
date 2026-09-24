@@ -86,6 +86,8 @@ export function NabidkaOkna({
   webovaPodoba,
   obnovitKnihovnu,
   novyZak,
+  ulozKopii,
+  predvadeni,
 }: {
   novaDatabaze: () => void;
   otevritDatabazi: () => void;
@@ -98,6 +100,10 @@ export function NabidkaOkna({
   obnovitKnihovnu: () => void;
   /** Smaže postup i soubory – pro dalšího žáka u stejného počítače. */
   novyZak: () => void;
+  /** Stáhne otevřenou databázi do skutečného počítače. */
+  ulozKopii: () => void;
+  /** Zapne nebo ukončí režim předvádění pro projektor. */
+  predvadeni: () => void;
 }) {
   const api = useDbb();
   const [otevrene, nastavOtevrene] = useState<string | null>(null);
@@ -142,6 +148,8 @@ export function NabidkaOkna({
         { text: "Zapsat změny", zkratka: "Ctrl+S", akce: api.zapsat, zakazano: !api.zmeneno },
         { text: "Vrátit změny", akce: api.vratit, zakazano: !api.zmeneno },
         "-",
+        { text: "Uložit kopii do počítače…", akce: ulozKopii, zakazano: bezDb },
+        "-",
         { text: "Import", zakazano: true },
         { text: "Export", zakazano: true },
         "-",
@@ -184,7 +192,7 @@ export function NabidkaOkna({
     {
       nazev: "Nápověda",
       polozky: [
-        { text: "O kurzu a pro učitele…", akce: () => api.otevritDialog({ druh: "okurzu" }) },
+        { text: "Moje výsledky…", akce: () => api.otevritDialog({ druh: "vysledky" }) },
         {
           text: "Stáhnout knihovna.db do počítače",
           akce: () => {
@@ -194,6 +202,14 @@ export function NabidkaOkna({
         },
         { text: "Obnovit původní knihovna.db…", akce: obnovitKnihovnu },
         { text: "Nový žák…", akce: novyZak },
+        "-",
+        { text: "O kurzu a pro učitele…", akce: () => api.otevritDialog({ druh: "okurzu" }) },
+        { text: "Přehled třídy (pro učitele)…", akce: () => api.otevritDialog({ druh: "prehled" }) },
+        { text: "Vytvořit úlohu pro třídu…", akce: () => api.otevritDialog({ druh: "uloha" }) },
+        {
+          text: api.predvadeni ? "Ukončit režim předvádění" : "Režim předvádění (projektor)…",
+          akce: predvadeni,
+        },
         "-",
         { text: "O programu DB Browser for SQLite…", akce: () => api.otevritDialog({ druh: "oprogramu" }) },
         "-",
