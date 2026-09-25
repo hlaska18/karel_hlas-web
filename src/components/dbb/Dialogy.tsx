@@ -609,7 +609,8 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
           Ukaž to jednou v režimu předvádění, jinak to půlka třídy nestihne.
         </p>
         <p className={odst}>
-          Plán hodin, pracovní list a řešení jsou v bance u tématu{" "}
+          Návod pro učitele (ovládání programu), řešení a postup všech úloh, plán hodin a pracovní list jsou
+          v bance u tématu{" "}
           <a href="/?tema=Datab%C3%A1ze#banka" target="_blank" rel="noopener noreferrer" className="text-dbb-akcent underline">
             Databáze
           </a>
