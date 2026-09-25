@@ -335,23 +335,9 @@ function Obrazovka() {
           titul: "Zobrazení",
           polozky: [
             { text: "Jako ikony", zkratka: "⌘1", zesedle: true },
-            {
-              text: "Jako seznam",
-              zkratka: "⌘2",
-              zesedle: true,
-              oddelovac: true,
-            },
-            {
-              text: stav.nastaveni.skrytePolozky
-                ? "Skrýt položky s tečkou"
-                : "Zobrazit položky s tečkou",
-              zkratka: "⇧⌘.",
-              akce: () =>
-                poslat({
-                  typ: "nastaveni/zmen",
-                  zmena: { skrytePolozky: !stav.nastaveni.skrytePolozky },
-                }),
-            },
+            // Položky s tečkou se ve skutečném Finderu v nabídce zapnout
+            // nedají, jen zkratkou ⇧⌘. (tady Ctrl+Shift+.). Proto tu nejsou.
+            { text: "Jako seznam", zkratka: "⌘2", zesedle: true },
           ],
         },
         {
@@ -584,10 +570,10 @@ function Obrazovka() {
 /**
  * Vynutit ukončení.
  *
- * Ve Windows se na to chodí do Správce úloh, což je celý program s grafy
- * a záložkami. Na Macu je to jedno okénko se seznamem toho, co běží – a je to
- * jediné místo, kde žák uvidí běžící program BEZ okna pojmenovaný nahlas.
- * Proto je v úlohách hned po té první.
+ * Jedno okénko se seznamem toho, co běží. Program bez okna v něm žák uvidí
+ * pojmenovaný, i když po něm na obrazovce nic není. Popisky a tlačítka jsou
+ * jako na skutečném Macu: žádné „bez okna“ a u Finderu „Znovu spustit“,
+ * protože Finder ukončit nejde (rada 25. 9. 2026).
  */
 function VynutitUkonceni({ zavri }: { zavri: () => void }) {
   const { stav, poslat } = useMac();
@@ -601,14 +587,13 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
             Vynutit ukončení aplikací
           </h2>
           <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
-            Tady je vidět, co běží. Zavřené okno program nezastaví – pokud je v
-            seznamu, běží dál.
+            Pokud aplikace nereaguje, vyber její název a klikni na Vynutit
+            ukončení.
           </p>
         </div>
 
         <ul className="max-h-[220px] overflow-y-auto p-2">
           {stav.bezici.map((app) => {
-            const oken = stav.okna.filter((o) => o.app === app).length;
             return (
               <li key={app}>
                 <button
@@ -621,9 +606,6 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
                   }`}
                 >
                   <span>{APLIKACE[app].nazev}</span>
-                  <span className="text-[11px] opacity-70">
-                    {oken === 0 ? "bez okna" : `${oken} okno`}
-                  </span>
                 </button>
               </li>
             );
@@ -640,19 +622,16 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
           </button>
           <button
             type="button"
-            disabled={!vybrana || vybrana === "finder"}
-            title={
-              vybrana === "finder"
-                ? "Finder ukončit nejde, dá se jen znovu spustit."
-                : undefined
-            }
+            disabled={!vybrana}
             onClick={() => {
-              if (vybrana) poslat({ typ: "app/ukonci", app: vybrana });
+              // Finder se jen znovu spustí – okna i stav zůstanou, jak byly.
+              if (vybrana && vybrana !== "finder")
+                poslat({ typ: "app/ukonci", app: vybrana });
               zavri();
             }}
             className="rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90 disabled:opacity-40"
           >
-            Vynutit ukončení
+            {vybrana === "finder" ? "Znovu spustit" : "Vynutit ukončení"}
           </button>
         </div>
       </div>
@@ -887,8 +866,8 @@ function ZacitZnovu({
           </h2>
           <p className="mt-2 text-[12px] leading-relaxed text-mac-slaby">
             Smažou se všechny soubory, které sis vytvořil, vrátí se nastavení a
-            vynulují se odškrtnuté úlohy. Budeš se muset znovu přihlásit kódem
-            od vyučujícího. Tohle se nedá vzít zpět.
+            vynulují se odškrtnuté úlohy. Budeš se muset znovu přihlásit
+            jménem. Tohle se nedá vzít zpět.
           </p>
         </div>
         <div className="flex justify-end gap-2 border-t border-mac-linka bg-mac-panel px-4 py-3">

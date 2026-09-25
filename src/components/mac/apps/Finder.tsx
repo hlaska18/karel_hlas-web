@@ -9,13 +9,12 @@
  *   1. CESTA NEMÁ PÍSMENO DISKU. Všechno visí pod jediným `/` a připojený
  *      flash disk se objeví ve `/Volumes`. Proto je dole pruh s cestou –
  *      žák má vidět, kde zrovna je, zapsané tak, jak se to na Macu píše.
- *   2. SKRYTÉ JE JMÉNO, ne příznak. Cokoli s tečkou na začátku Finder neukáže.
- *      Přepínač proto říká „položky s tečkou", ne „skryté položky" – ať je
- *      poznat, že je to něco jiného než ve Windows.
+ *   2. SKRYTÉ JE HLAVNĚ JMÉNO. Cokoli s tečkou na začátku Finder neukáže
+ *      (macOS má i příznak „skrytý“, ale ten simulace nenapodobuje). Ukázat
+ *      se to dá jen zkratkou ⇧⌘. (tady Ctrl+Shift+.), jako na Macu.
  *   3. `.app` NENÍ SOUBOR, je to složka. Finder ji ukazuje jako jednu položku
  *      a dovnitř pustí jen přes „Zobrazit obsah balíčku" v pravém tlačítku.
- *   4. INFORMACE MÍSTO VLASTNOSTÍ. Ukazují druh položky a plnou cestu –
- *      u balíčku doslova napíšou, že je to balíček.
+ *   4. INFORMACE MÍSTO VLASTNOSTÍ. Ukazují druh položky a plnou cestu.
  */
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
@@ -100,7 +99,7 @@ const MISTA = [
  * Bez toho tam stálo „1 položek“, což je přesně ten druh drobnosti, podle
  * které je poznat, že prostředí nikdo nedodělal.
  */
-/** Přípony, které Poznámky umí otevřít jako text. */
+/** Přípony, které TextEdit umí otevřít jako text. */
 const TEXTOVE = ["txt", "plist", "csv", "md", "xml", "json", "log", "zshrc"];
 
 function jeTextovy(jmeno: string): boolean {
@@ -162,7 +161,11 @@ export function Finder() {
     // „199 198 416 kB k dispozici“ místo „190,0 GB“.
     return velikostText(245_000_000_000 - obsazeno);
   }, [stav.disk]);
-  const jmenoMista = cesta[cesta.length - 1] || "Macintosh HD";
+  // Česká verze macOS píše v titulku okna české jméno (Plocha, Dokumenty),
+  // ne anglické jméno složky na disku – jinak se pletlo „Plocha“ s „Desktop“.
+  const jmenoMista =
+    MISTA.find((m) => slozMac(m.cesta) === slozMac(cesta))?.jmeno ??
+    (cesta[cesta.length - 1] || "Macintosh HD");
 
   useEffect(() => {
     nastavTitul(jmenoMista);
@@ -276,13 +279,18 @@ export function Finder() {
   const dokonciPrejmenovani = () => {
     if (!prejmenovavany) return;
     const cil = novyNazev.trim();
-    if (cil && cil !== prejmenovavany) {
+    // Skutečný Finder jméno s tečkou na začátku odmítne – takové položky se
+    // zakládají v Terminálu (úloha „zaloz-teckovou“).
+    if (cil && cil !== prejmenovavany && jeSkryte(cil)) {
+      nastavHlasku({
+        nadpis: `Nemůžeš použít název „${cil}“.`,
+        text: "Názvy začínající tečkou jsou vyhrazené pro systém.",
+      });
+    } else if (cil && cil !== prejmenovavany) {
       const novy = prejmenuj(stav.disk, [...cesta, prejmenovavany], cil);
       if (novy) {
         poslat({ typ: "disk/nastav", disk: novy });
         nastavVybrano(cil);
-        // Doklad pro úlohu o tom, že tečka na začátku položku schová.
-        if (jeSkryte(cil)) stopa("zalozil-teckovou");
       }
     }
     nastavPrejmenovavany(null);
@@ -418,6 +426,9 @@ export function Finder() {
         return;
       }
       if (prejmenovavany) return;
+      // Otevřená hláška bere Enter i Escape sama – jinak by Enter místo „OK“
+      // znovu spustil přejmenování vybrané položky.
+      if (hlaska) return;
 
       if (e.key === " " || e.code === "Space") {
         e.preventDefault();
@@ -446,7 +457,7 @@ export function Finder() {
     return () => {
       window.removeEventListener("keydown", klavesa);
     };
-  }, [aktivni, prejmenovavany, nahled, vybrano, slozka, stopa]);
+  }, [aktivni, prejmenovavany, hlaska, nahled, vybrano, slozka, stopa]);
 
   const polozkyNabidky = (jmeno: string | null): PolozkaNabidky[] => {
     if (!jmeno) {
@@ -921,11 +932,10 @@ export function Finder() {
  * dozví, aniž by musel hádat – a bez něj by úloha „dostaň se dovnitř aplikace"
  * neměla za co chytit.
  */
+/** Druh tak, jak ho píše skutečný Finder – bez vysvětlivek navíc. */
 function druh(u: Uzel): string {
-  if (jeBalicek(u.jmeno)) return "Balíček aplikace (je to složka)";
+  if (jeBalicek(u.jmeno)) return "Aplikace";
   if (jeSlozka(u)) return "Složka";
-  if (jeSkryte(u.jmeno))
-    return "Dokument (jméno začíná tečkou, proto se běžně neukazuje)";
   return "Dokument";
 }
 
@@ -969,8 +979,14 @@ function Hlaska({
     const klavesa = (e: KeyboardEvent) => {
       if (e.key === "Escape" || e.key === "Enter") zavri();
     };
-    window.addEventListener("keydown", klavesa);
-    return () => window.removeEventListener("keydown", klavesa);
+    // Až po dokončení aktuální události: hlášku umí vyvolat i Enter (jméno
+    // s tečkou při přejmenování) a React ten efekt spustí ještě během téhož
+    // stisku – hláška by se tím samým Enterem hned zase zavřela.
+    const id = window.setTimeout(() => window.addEventListener("keydown", klavesa), 0);
+    return () => {
+      window.clearTimeout(id);
+      window.removeEventListener("keydown", klavesa);
+    };
   }, [zavri]);
 
   return (

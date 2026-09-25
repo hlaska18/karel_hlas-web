@@ -63,10 +63,20 @@ export type AkceMac =
 /** Kaskáda, ať nová okna nepadají přesně na sebe. */
 const KASKADA = 26;
 
+/**
+ * Levý okraj nového okna. Panel úkolů sedí vlevo dole a je 330 px široký –
+ * okno otevřené od x = 120 pod ním schovávalo výstup Terminálu i spodek
+ * postranního panelu Finderu (rada 25. 9. 2026). Kde je místo, okno se proto
+ * otevře napravo od panelu; na úzké obrazovce zůstane tam, kde bylo.
+ */
+const ZA_PANELEM = 370;
+
 function novaPoloha(stav: StavMac, app: AppId): Obdelnik {
   const { w, h } = VYCHOZI_OKNO[app];
   const posun = (stav.okna.length % 5) * KASKADA;
-  return { x: 120 + posun, y: 80 + posun, w, h };
+  const sirka = typeof window === "undefined" ? 0 : window.innerWidth;
+  const levy = sirka >= ZA_PANELEM + w + 4 * KASKADA + 20 ? ZA_PANELEM : 120;
+  return { x: levy + posun, y: 80 + posun, w, h };
 }
 
 const dopredu = (stav: StavMac, id: number): StavMac => {

@@ -14,12 +14,13 @@
  *   cd    chození včetně `~` a `..`
  *   cat   obsah souboru
  *   open  otevře složku ve Finderu – spojka mezi terminálem a oknem
+ *   mkdir založí složku – i s tečkou na začátku, kterou Finder odmítne
  */
 
 import { useEffect, useRef, useState } from "react";
 import { useMac, useOknoMac } from "../system";
 import { DOMOV, KOREN, rozlozMac, slozMac, sVlnovkou, jeSkryte } from "@/lib/mac/cesty";
-import { jeSlozka, najdi, najdiSlozku } from "@/lib/win/fs";
+import { jeSlozka, najdi, najdiSlozku, novaSlozka, vloz } from "@/lib/win/fs";
 
 interface Radek {
   vstup?: string;
@@ -37,12 +38,12 @@ interface Radek {
 
 const UVOD = `Poslední přihlášení: dnes
 
-Tohle je výukový terminál. Umí: pwd, ls, cd, cat, open, clear, help
+Tohle je výukový terminál. Umí: pwd, ls, cd, cat, open, mkdir, clear, help
 Cesty se píšou lomítkem a začínají u kořene /, ne u písmene disku.
 `;
 
 export function Terminal() {
-  const { stav, spust, stopa } = useMac();
+  const { stav, poslat, spust, stopa } = useMac();
   const { nastavTitul } = useOknoMac();
 
   const [cesta, nastavCestu] = useState<string[]>(DOMOV);
@@ -121,6 +122,7 @@ export function Terminal() {
             "cd <cesta>     přejde do složky (funguje ~ i ..)\n" +
             "cat <soubor>   vypíše obsah souboru\n" +
             "open <cesta>   otevře složku ve Finderu\n" +
+            "mkdir <název>  založí složku\n" +
             "clear          smaže okno",
         );
         return;
@@ -187,20 +189,53 @@ export function Terminal() {
         return;
       }
 
+      case "mkdir": {
+        if (!cile[0]) {
+          pridej("usage: mkdir <název složky>");
+          return;
+        }
+        const cil = vyres(cile[0]);
+        const rodic = najdiSlozku(stav.disk, cil.slice(0, -1));
+        const jmeno = cil[cil.length - 1];
+        if (!rodic) {
+          pridej(`mkdir: ${cile[0]}: Adresář neexistuje`);
+          return;
+        }
+        if (rodic.zamceno) {
+          pridej(`mkdir: ${cile[0]}: Přístup odepřen`);
+          return;
+        }
+        if (rodic.deti.some((d) => d.jmeno === jmeno)) {
+          pridej(`mkdir: ${cile[0]}: Soubor už existuje`);
+          return;
+        }
+        poslat({ typ: "disk/nastav", disk: vloz(stav.disk, cil.slice(0, -1), novaSlozka(jmeno)) });
+        // Doklad pro úlohu o tom, že tečka na začátku položku schová.
+        if (jeSkryte(jmeno)) stopa("zalozil-teckovou");
+        nastavRadky((r) => [...r, { vstup: radek, vystup: "", kde: cesta }]);
+        return;
+      }
+
       case "clear":
         nastavRadky([]);
         return;
 
       // Windowsové příkazy nejsou chyba žáka – jsou to jeho dosavadní znalosti.
-      // Odpověď to proto říká rovnou, místo aby ho nechala hádat.
+      // První řádek je to, co napíše skutečné zsh; druhý je nápověda simulace
+      // a je tak i označený, aby se nepletl se skutečným výstupem.
       case "dir":
-        pridej("dir: příkaz nenalezen. Na Macu je to ls.");
+        pridej("zsh: command not found: dir\n(Nápověda simulace: na Macu se obsah složky vypíše příkazem ls.)");
         return;
       case "cls":
-        pridej("cls: příkaz nenalezen. Na Macu je to clear.");
+        pridej("zsh: command not found: cls\n(Nápověda simulace: okno smaže příkaz clear.)");
         return;
       case "type":
-        pridej("type: příkaz nenalezen. Na Macu je to cat.");
+        // `type` v zsh existuje, jen dělá něco jiného: řekne, co je dané
+        // jméno za příkaz. U jména souboru proto odpoví „not found“.
+        pridej(
+          (cile[0] ? `${cile[0]} not found\n` : "") +
+            "(Nápověda simulace: v zsh type obsah souboru nevypíše – na to je cat.)",
+        );
         return;
 
       default:

@@ -58,11 +58,13 @@ export default function StrankaMacOS() {
           Mac liší od Windows: horní lišta patří aplikaci vpředu, ne oknu;
           červený puntík zavře okno, ale program běží dál a je vidět v Docku;
           cesta k souboru nemá písmeno disku a připojený flash disk se objeví
-          ve složce Volumes; skrytá položka se pozná podle tečky na začátku
-          jména. K dispozici je Finder, Terminál a okno Vynutit ukončení. Nic se
-          neinstaluje a nejde o skutečný operační systém; vstupuje se kódem od
-          vyučujícího. Práce zůstává v prohlížeči žáka – na server se neodesílá
-          nic a žádné účty se nezakládají.
+          ve složce Volumes; skrytá položka se většinou pozná podle tečky na
+          začátku jména. K dispozici je Finder, Terminál, TextEdit a okno
+          Vynutit ukončení. Nic se neinstaluje a nejde o skutečný operační
+          systém. Žák se přihlásí jménem a výsledky předá učiteli kódem postupu.
+          Práce zůstává v prohlížeči žáka – na server se neodesílá nic a žádné
+          účty se nezakládají. Hodí se jako bonus ke srovnání s Windows
+          v hodinách o operačním systému a o příkazovém řádku.
         </p>
       </div>
     </>

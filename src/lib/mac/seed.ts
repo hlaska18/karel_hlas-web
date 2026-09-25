@@ -5,7 +5,7 @@
  * udělat právě ty úlohy, které ve Windows nemají obdobu – a nic navíc:
  *
  *   `.DS_Store`, `.zshrc`   skrytá položka je tu JMÉNO, ne příznak souboru
- *   `Poznámky.app`          co vypadá jako soubor, je ve skutečnosti složka
+ *   `TextEdit.app`          co vypadá jako soubor, je ve skutečnosti složka
  *   `/Volumes/FLASH`        disk se nepřipojí pod písmenem, ale do stromu
  *   `Library/Preferences`   nastavení programu je čitelný soubor, ne registr
  *   `Kalkulačka.dmg`        instalace = přetáhnout, žádný instalátor
@@ -27,6 +27,11 @@ const CTI_ME = `Vítej na Macu.
 Tohle prostředí vypadá jinak než Windows, ale pod povrchem dělá totéž:
 skládá soubory do složek, spouští programy a hlídá, kdo smí co.
 
+Proč Mac, když ho nemáš? Neučíš se tu ovládat Mac. Uvidíš na něm, že
+spousta věcí, které bereš jako samozřejmost – písmeno disku, zavření
+programu křížkem, skrytý soubor – je jen zvyk jednoho systému. Hodí se
+to u cizího počítače, v práci i na serveru.
+
 Úkoly v panelu vlevo dole jsou schválně jen ty, které ve Windows nemají
 obdobu. Nehledej tu podruhé to, co už umíš.
 `;
@@ -38,9 +43,11 @@ Pamatuje si, jak má být složka zobrazená – velikost ikon, řazení, pozici
 Nikdo ho nevytvořil schválně a k ničemu dalšímu není.
 
 Proč ho normálně nevidíš: jeho jméno začíná tečkou. Tak se to tady dělá.
-Ve Windows je „skrytý" příznak, který se zapíná v nastavení zobrazení; tady
-je to prostě jméno. Přejmenuj si vlastní soubor tak, aby začínal tečkou,
-a zmizí taky.
+Ve Windows se skrývá hlavně příznakem „skrytý“; tady většinou stačí jméno.
+Vlastní složku s tečkou si založíš v Terminálu (mkdir .pokus) – Finder
+takové jméno nedovolí.
+
+(Skutečný .DS_Store není čitelný text. Tenhle obsah je vysvětlivka simulace.)
 `;
 
 const ZSHRC = `# Nastavení příkazového řádku. Načte se při každém spuštění Terminálu.
@@ -97,18 +104,31 @@ export function vytvorDiskMac(): Slozka {
   return slozka(
     "",
     [
+      // Rozmístění jako na skutečném Macu: Terminál je v Utilities, Finder
+      // v /Applications vůbec není – systém ho má v CoreServices.
       slozka(
         "Applications",
         [
-          aplikace("Finder", 400),
-          aplikace("Terminál", 400),
-          aplikace("Poznámky", 400),
+          aplikace("TextEdit", 400),
           aplikace("Náhled", 400),
+          slozka("Utilities", [aplikace("Terminál", 400)], 400, true),
         ],
         400,
         true,
       ),
-      slozka("System", [slozka("Library", [], 400, true)], 400, true),
+      slozka(
+        "System",
+        [
+          slozka(
+            "Library",
+            [slozka("CoreServices", [aplikace("Finder", 400)], 400, true)],
+            400,
+            true,
+          ),
+        ],
+        400,
+        true,
+      ),
       slozka(
         "Users",
         [

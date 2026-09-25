@@ -34,7 +34,8 @@ export const PORADI_DOCKU: (AppId | "aplikace")[] = ["finder", "aplikace", "pozn
 export const APLIKACE: Record<AppId, { nazev: string; popis: string }> = {
   finder: { nazev: "Finder", popis: "Procházení souborů a složek" },
   terminal: { nazev: "Terminál", popis: "Příkazový řádek" },
-  poznamky: { nazev: "Poznámky", popis: "Jednoduchý textový editor" },
+  // Id zůstalo `poznamky`, program je TextEdit: ten na Macu otevírá .txt.
+  poznamky: { nazev: "TextEdit", popis: "Jednoduchý textový editor" },
   nastaveni: { nazev: "Nastavení systému", popis: "Vzhled a obnovení" },
 };
 
@@ -239,6 +240,28 @@ function staraVychoziTapeta(
   return {};
 }
 
+/**
+ * Systémové složky vezme vždycky z aktuálního výchozího disku.
+ *
+ * Žák do /Applications ani /System nic ukládat nemůže (jsou zamčené), takže
+ * se v nich nic jeho neztratí. Když se ale jejich obsah změní – 25. 9. 2026
+ * se Finder přestěhoval do CoreServices, Terminál do Utilities a Poznámky
+ * nahradil TextEdit –, dostane novou podobu i ten, kdo má disk uložený
+ * z dřívějška. Jinak by mu kroky úloh neseděly na to, co vidí.
+ */
+const SYSTEMOVE = ["Applications", "System"];
+
+export function obnovSystemoveSlozky(disk: Slozka): Slozka {
+  const novy = vytvorDiskMac();
+  const deti = disk.deti.map((d) =>
+    SYSTEMOVE.includes(d.jmeno) ? (novy.deti.find((n) => n.jmeno === d.jmeno) ?? d) : d,
+  );
+  for (const n of novy.deti) {
+    if (SYSTEMOVE.includes(n.jmeno) && !deti.some((d) => d.jmeno === n.jmeno)) deti.push(n);
+  }
+  return { ...disk, deti };
+}
+
 export function nactiMac(): StavMac | null {
   if (typeof window === "undefined") return null;
   try {
@@ -248,7 +271,7 @@ export function nactiMac(): StavMac | null {
     if (ulozeny?.verze !== VERZE_ULOZISTE || !ulozeny.disk) return null;
     return {
       ...vychoziStavMac(),
-      disk: ulozeny.disk,
+      disk: obnovSystemoveSlozky(ulozeny.disk),
       nastaveni: {
         ...VYCHOZI_NASTAVENI,
         ...ulozeny.nastaveni,

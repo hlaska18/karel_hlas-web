@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { reducerMac } from "@/lib/mac/reducer";
-import { vychoziStavMac } from "@/lib/mac/stav";
-import { najdi } from "@/lib/win/fs";
+import { obnovSystemoveSlozky, vychoziStavMac } from "@/lib/mac/stav";
+import { najdi, novaSlozka, vloz } from "@/lib/win/fs";
 import { DOMOV, KOS, jeBalicek, jeSkryte, rozlozMac, slozMac, sVlnovkou } from "@/lib/mac/cesty";
 import { vytvorDiskMac } from "@/lib/mac/seed";
 
@@ -136,8 +136,29 @@ describe("disk", () => {
   });
 
   it("aplikace je ve skutečnosti složka", () => {
-    const app = najdi(disk, rozlozMac("/Applications/Finder.app"));
+    const app = najdi(disk, rozlozMac("/Applications/TextEdit.app"));
     expect(app?.druh).toBe("slozka");
+  });
+
+  it("aplikace leží tam, kde na skutečném Macu", () => {
+    // Finder v /Applications není (je v CoreServices), Terminál je v Utilities.
+    expect(najdi(disk, rozlozMac("/Applications/Finder.app"))).toBeNull();
+    expect(najdi(disk, rozlozMac("/System/Library/CoreServices/Finder.app"))).not.toBeNull();
+    expect(najdi(disk, rozlozMac("/Applications/Utilities/Terminál.app"))).not.toBeNull();
+  });
+
+  it("starý uložený disk dostane nové systémové složky, žákovy soubory zůstanou", () => {
+    const stary = {
+      ...disk,
+      deti: disk.deti.map((d) =>
+        d.jmeno === "Applications" ? { ...novaSlozka("Applications"), deti: [novaSlozka("Poznámky.app")] } : d,
+      ),
+    };
+    const s = vloz(stary, rozlozMac("/Users/zak/Documents"), novaSlozka("Moje"));
+    const obnoveny = obnovSystemoveSlozky(s);
+    expect(najdi(obnoveny, rozlozMac("/Applications/Poznámky.app"))).toBeNull();
+    expect(najdi(obnoveny, rozlozMac("/Applications/TextEdit.app"))).not.toBeNull();
+    expect(najdi(obnoveny, rozlozMac("/Users/zak/Documents/Moje"))).not.toBeNull();
   });
 
   it("připojený disk visí ve stromu, ne pod písmenem", () => {

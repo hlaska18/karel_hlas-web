@@ -470,7 +470,7 @@ function Informace({
         {
           popisek: "Druh",
           hodnota: jeBalicek(jmeno)
-            ? "Balíček aplikace (je to složka)"
+            ? "Aplikace"
             : uzel && jeSlozka(uzel)
               ? "Složka"
               : "Dokument",

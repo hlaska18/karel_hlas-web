@@ -13,8 +13,8 @@
     "en": "Virtual macOS",
     "url": "/macos",
     "note": {
-      "cs": "Finder, Terminál, Dock a horní lišta. 14 úloh jen na to, čím se Mac liší od Windows: zavřené okno program nezastaví, cesta nemá písmeno disku, skrytý soubor pozná podle tečky, aplikace je ve skutečnosti složka a Enter soubor neotevře, ale přejmenuje.",
-      "en": "Finder, Terminal, the Dock and the menu bar. 14 exercises on what makes a Mac different from Windows: closing a window does not quit the program, paths have no drive letter, a hidden file is known by its leading dot, an application is really a folder, and Enter renames a file instead of opening it. The environment is in Czech."
+      "cs": "Bonus ke srovnání s Windows, ne kurz Macu. Finder, Terminál, Dock a horní lišta: 14 úloh jen na to, čím se Mac liší – zavřené okno program nezastaví, cesta nemá písmeno disku, skrytý soubor se většinou pozná podle tečky, aplikace je ve skutečnosti složka a Enter soubor neotevře, ale přejmenuje. Hodí se pro rychlíky v hodině o operačním systému a o příkazovém řádku (asi 10 minut).",
+      "en": "A bonus for comparing with Windows, not a Mac course. Finder, Terminal, the Dock and the menu bar: 14 exercises on what makes a Mac different – closing a window does not quit the program, paths have no drive letter, a hidden file is usually known by its leading dot, an application is really a folder, and Enter renames a file instead of opening it. Works as a 10-minute extension for fast finishers in lessons on the operating system and the command line. The environment is in Czech."
     }
   }
 ]

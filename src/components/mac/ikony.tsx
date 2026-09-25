@@ -27,7 +27,7 @@ import { VZHLED_APLIKACI } from "./Dock";
 export const APLIKACE_BALICKU: Record<string, AppId | undefined> = {
   "Finder.app": "finder",
   "Terminál.app": "terminal",
-  "Poznámky.app": "poznamky",
+  "TextEdit.app": "poznamky",
 };
 
 /**

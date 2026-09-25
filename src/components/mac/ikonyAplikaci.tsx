@@ -164,7 +164,11 @@ export function IkonaTerminal({ className, style }: Vlastnosti) {
   );
 }
 
-/** Poznámky: linkovaný papír se žlutým pruhem nahoře. */
+/**
+ * TextEdit: popsaný list papíru a plnicí pero přes něj. Aplikace se v kódu
+ * dál jmenuje `poznamky` – na Macu ale obyčejné .txt otevírá TextEdit,
+ * Poznámky jsou jiný program, který si texty ukládá sám (rada 25. 9. 2026).
+ */
 export function IkonaPoznamky({ className, style }: Vlastnosti) {
   const id = useIdIkony();
   return (
@@ -173,25 +177,23 @@ export function IkonaPoznamky({ className, style }: Vlastnosti) {
         <clipPath id={id("tvar")}>
           <rect {...SQUIRCLE} />
         </clipPath>
-        <linearGradient id={id("papir")} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#fffefa" />
-          <stop offset="1" stopColor="#f1ede4" />
-        </linearGradient>
-        <linearGradient id={id("pruh")} x1="0" y1="0" x2="0" y2="1">
-          <stop offset="0" stopColor="#ffd75e" />
-          <stop offset="1" stopColor="#f4b52c" />
+        <linearGradient id={id("pozadi")} x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0" stopColor="#f4f5f7" />
+          <stop offset="1" stopColor="#d9dce2" />
         </linearGradient>
       </defs>
       <g clipPath={`url(#${id("tvar")})`}>
-        <rect x="0" y="0" width="64" height="64" fill={`url(#${id("papir")})`} />
-        <rect x="0" y="0" width="64" height="17" fill={`url(#${id("pruh")})`} />
-        {/* Perforace pod pruhem, jako u odtrhávacího bloku. */}
-        {Array.from({ length: 13 }).map((_, i) => (
-          <circle key={i} cx={5 + i * 4.5} cy="20" r="0.9" fill="#b9b3a6" />
+        <rect x="0" y="0" width="64" height="64" fill={`url(#${id("pozadi")})`} />
+        <rect x="13" y="8" width="38" height="48" rx="2" fill="#ffffff" stroke="#c9ccd3" strokeWidth="1" />
+        {[16, 22, 28, 34, 40].map((y) => (
+          <rect key={y} x="18" y={y} width={y === 40 ? 16 : 28} height="1.6" rx="0.8" fill="#b8bcc5" />
         ))}
-        {[30, 38.5, 47, 55.5].map((y) => (
-          <rect key={y} x="9" y={y} width="46" height="1.4" rx="0.7" fill="#d8d2c4" />
-        ))}
+        {/* Pero šikmo přes list: tělo, kovový úchyt a hrot. */}
+        <g transform="rotate(-38 40 42)">
+          <rect x="37" y="18" width="7" height="26" rx="2" fill="#2b2d33" />
+          <rect x="37" y="40" width="7" height="3" fill="#c9a44a" />
+          <path d="M37 43 H44 L40.5 52 Z" fill="#d8b75c" />
+        </g>
       </g>
       <Odlesk id={id} />
     </svg>

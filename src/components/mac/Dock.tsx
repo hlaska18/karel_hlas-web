@@ -124,7 +124,7 @@ type Znak = React.ComponentType<{
  * jejich aplikace.
  *
  * Každá je vlastní kresba, ne symbol z knihovny na barevném čtverci: Finder má
- * dvoubarevný obličej, Terminál výzvu na černém, Poznámky linkovaný papír
+ * dvoubarevný obličej, Terminál výzvu na černém, TextEdit list papíru s perem
  * se žlutým pruhem. Na obecném symbolu nebylo poznat, která aplikace to je,
  * a v Docku to byla ta nejnápadnější věc.
  */
@@ -205,20 +205,11 @@ function ZnakPoznamky({
       style={style}
       aria-hidden="true"
     >
-      <rect x="4" y="3.5" width="16" height="17" rx="2" fill="#fffaf0" />
-      <rect x="4" y="3.5" width="16" height="3.6" rx="2" fill="#f0b429" />
-      {[10.5, 13.4, 16.3].map((y) => (
-        <rect
-          key={y}
-          x="6.6"
-          y={y}
-          width="10.8"
-          height="1.25"
-          rx="0.62"
-          fill="#c9a227"
-          opacity="0.6"
-        />
+      <rect x="4.5" y="3" width="13" height="18" rx="1.5" fill="#ffffff" stroke="#9aa0aa" strokeWidth="0.8" />
+      {[6.5, 9.2, 11.9, 14.6].map((y) => (
+        <rect key={y} x="6.5" y={y} width="9" height="1.1" rx="0.55" fill="#9aa0aa" />
       ))}
+      <path d="M20.5 8.5 L13 17.5 L12 20 L14.5 19 L22 10 Z" fill="#2b2d33" />
     </svg>
   );
 }
@@ -273,8 +264,8 @@ export const VZHLED_APLIKACI: Record<AppId, VzhledAplikace> = {
     plna: IkonaFinder,
   },
   poznamky: {
-    pozadi: "linear-gradient(165deg,#fff6dc,#f3d98a)",
-    barva: "#5a4300",
+    pozadi: "linear-gradient(165deg,#f4f5f7,#d9dce2)",
+    barva: "#2b2d33",
     znak: ZnakPoznamky,
     plna: IkonaPoznamky,
   },
