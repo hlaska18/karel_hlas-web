@@ -716,6 +716,14 @@ function MaterialRow({
   const t = fileType(it.ext, lang);
   const previewable = canPreview(it.ext);
   const TypeIcon = typeIcon(t.key);
+  /* Řešení úlohy z cvičebnice je žluté a nese štítek „učitelé“: učitel ho
+     promítá, žák ho má dostat až po úloze. Soubor přitom zůstává přístupný
+     všem (`audience` se nemění) – jde jen o to, aby na první pohled bylo
+     vidět, co je co (Karel 25. 9. 2026). */
+  const jeReseniUlohy =
+    /^(Word|Excel|PowerBI) › Úlohy › /.test(it.group?.cs ?? "") &&
+    /^řešení/i.test(it.label.cs);
+  const ucitelske = it.audience === "teacher" || jeReseniUlohy;
   return (
     /* Náhled otevře KLIK KAMKOLI do řádku, ne jen ikona oka. Karlova kolegyně
        klikla pro náhled rovnou na buňku – když řádek vypadá jako karta, člověk
@@ -742,7 +750,7 @@ function MaterialRow({
             },
           }
         : {})}
-      className={`povrch group/radek flex flex-wrap items-center gap-x-3 gap-y-1 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5 ${
+      className={`povrch ${jeReseniUlohy ? "povrch-reseni " : ""}group/radek flex flex-wrap items-center gap-x-3 gap-y-1 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5 ${
         previewable
           ? "cursor-pointer hover:border-accent-500/40 dark:hover:border-accent-500/40"
           : ""
@@ -801,9 +809,9 @@ function MaterialRow({
       {/* Odznak se ukazuje i na mobilu. Dřív měl `hidden sm:inline-flex`, takže
           pod 640 px zmizel – a „Klíč k testům" pak vypadal stejně jako pracovní
           list. Odkazy do skupin se přitom otevírají hlavně na telefonu. */}
-      {it.audience !== "both" && (
+      {(it.audience !== "both" || jeReseniUlohy) && (
         <span className="inline-flex shrink-0 items-center gap-1.5">
-          {it.audience === "teacher" ? (
+          {ucitelske ? (
             <span className="inline-flex items-center gap-1 rounded-stitek bg-amber-500/15 px-2 py-0.5 text-xs font-medium text-amber-700 dark:text-amber-300">
               <GraduationCap className="h-3.5 w-3.5" /> {s.teacherBadge}
             </span>
@@ -814,7 +822,9 @@ function MaterialRow({
           )}
         </span>
       )}
-      <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-600 md:block">
+      {/* `dark:text-zinc-400`: bez něj měla velikost v tmavém motivu kontrast
+          1,8 : 1 (šedá #52525b na tmavě zelené), skoro neviditelná. */}
+      <span className="hidden w-14 shrink-0 text-right text-xs text-zinc-600 md:block dark:text-zinc-400">
         {fmtSize(it.sizeBytes, lang)}
       </span>
       <span className="ml-auto flex shrink-0 items-center gap-1 sm:ml-0 sm:gap-0">
