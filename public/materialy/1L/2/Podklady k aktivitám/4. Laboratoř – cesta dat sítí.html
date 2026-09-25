@@ -97,6 +97,16 @@ code{font-family:Consolas,Menlo,monospace;background:#eef2f1;padding:1px 6px;bor
 .spoj{stroke:#c3cbc8;stroke-width:3;fill:none}
 .spoj.wifi{stroke-dasharray:9 8}
 .spoj.aktivni{stroke:var(--teal);stroke-width:5}
+.spoj.prerusena{stroke:var(--rust);stroke-width:4;stroke-dasharray:3 7}
+.prerus{font-size:22px;font-weight:700;fill:var(--rust)}
+/* V topologiích vedou kabely přes popisky – bílý obrys je nechá čitelné. */
+#sctop .jm{paint-order:stroke;stroke:#fff;stroke-width:6px;stroke-linejoin:round}
+/* Popis zvolené topologie (modul 06) */
+.topo dl{display:grid;grid-template-columns:auto 1fr;grid-gap:6px 12px;margin:8px 0 0;font-size:15px}
+.topo dt{color:var(--grey);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding-top:3px}
+.topo dd{margin:0}
+.topo h3{margin:0 0 4px;font-size:18px}
+.topo p{margin:0}
 .oblak{fill:#f0f7f6;stroke:#b7d9d5;stroke-width:2;stroke-dasharray:7 6}
 .oblak-t{font-size:15px;font-weight:700;fill:#076663}
 .halo{fill:#d9efec;opacity:0;transition:opacity .25s}
@@ -147,7 +157,8 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
   <li><a href="#m3"><b>03</b>Klient a server</a></li>
   <li><a href="#m4"><b>04</b>DNS</a></li>
   <li><a href="#m5"><b>05</b>Všechno dohromady</a></li>
-  <li class="navic"><a href="#m6"><b>06</b>Bonus: dvě adresy</a></li>
+  <li><a href="#mtop"><b>06</b>Jak se dá síť zapojit</a></li>
+  <li class="navic"><a href="#m6"><b>07</b>Bonus: dvě adresy</a></li>
 </ol>
 
 <!-- ============ MODUL 01 ============ -->
@@ -310,7 +321,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <div class="popis" aria-live="polite"><h3 id="titul5"></h3><p id="text5"></p></div>
       <div class="obalka"><h4>Obálka (paket)</h4><div id="obalka5"></div></div>
     </div>
-    <p class="deni" style="font-size:14px;color:var(--grey);min-height:0;margin-top:14px"><b style="color:var(--ink)">Zjednodušeno.</b> Routerů bývá po cestě víc a stránka se posílá v mnoha paketech. Na obálce je kromě příjemce i odesílatel – ukáže ho modul 06. Skutečnou cestu si prohlédneš v hodině o příkazovém řádku.</p>
+    <p class="deni" style="font-size:14px;color:var(--grey);min-height:0;margin-top:14px"><b style="color:var(--ink)">Zjednodušeno.</b> Routerů bývá po cestě víc a stránka se posílá v mnoha paketech. Na obálce je kromě příjemce i odesílatel – ukáže ho modul 07. Skutečnou cestu si prohlédneš v hodině o příkazovém řádku.</p>
     <div class="q"><b>Zapiš:</b> Popiš vlastními slovy pět kroků od stisku Enter po zobrazení stránky.</div>
     <div class="chk">
       <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">DNS server přestal fungovat, zbytek sítě jede. Co se stane, když napíšeš seznam.cz?</span><br>
@@ -322,9 +333,53 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
   </div>
 </section>
 
-<!-- ============ MODUL 06 ============ -->
+<!-- ============ MODUL 06: TOPOLOGIE ============ -->
+<section class="mod" id="mtop">
+  <h2><span>MODUL 06</span>Jak se dá síť zapojit: sběrnice, hvězda a spol.</h2>
+  <div class="body">
+    <p>Tvoje domácí síť z modulu 02 má uprostřed router a všechno je připojené k němu. Takhle se ale sítě zapojovat nemusí. Tvaru zapojení se říká topologie – a každý tvar se jinak chová, když se něco pokazí.</p>
+    <div class="pojmy">
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>LAN</h3>
+        <p>Místní síť – doma, ve škole nebo ve firmě. Internet propojuje obrovské množství takových sítí.</p><span class="jako">Jako ulice jedné obce.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Topologie</h3>
+        <p>Tvar zapojení sítě: kudy vedou kabely a přes co jdou data.</p><span class="jako">Jako plánek cest mezi domy.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Přepínač (switch)</h3>
+        <p>Krabička, do které vedou kabely od počítačů. Zprávu pošle jen tomu, komu patří. Domácí router ho má v sobě.</p><span class="jako">Jako třídírna pošty pro jednu budovu.</span></div>
+    </div>
+    <div class="ovl">
+      <span class="lbl">Zapojení:</span>
+      <button class="mtopo on" data-t="sbernice" type="button">Sběrnice</button>
+      <button class="mtopo" data-t="hvezda" type="button">Hvězda</button>
+      <button class="mtopo" data-t="kruh" type="button">Kruh</button>
+      <button class="mtopo" data-t="strom" type="button">Strom</button>
+      <button class="mtopo" data-t="kazdy" type="button">Každý s každým</button>
+    </div>
+    <div class="ovl">
+      <button id="mtposli" class="hl" type="button">Pošli zprávu z A do D</button>
+      <button id="mtprerus" type="button">Přeruš kabel</button>
+      <span class="mezera"></span>
+      <button id="mtznovu" type="button">Znovu</button>
+    </div>
+    <div class="pane"><svg class="scena" id="sctop" viewBox="0 0 1000 395" role="img" aria-label="Schéma zvolené topologie sítě"></svg></div>
+    <p class="posun">Schéma si posuň prstem do strany.</p>
+    <div class="dvoj">
+      <p class="deni" id="dtop" aria-live="polite"></p>
+      <div class="obalka topo" id="infotop"></div>
+    </div>
+    <p class="deni" style="font-size:14px;color:var(--grey);min-height:0;margin-top:14px"><b style="color:var(--ink)">Zjednodušeno.</b> Ve schématech je pár počítačů a zpráva je jedna obálka. Skutečná sběrnice i kruh měly navíc pravidla, kdo smí zrovna vysílat.</p>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">ve škole je síť zapojená do hvězdy a u jednoho počítače se přetrhne kabel. Co se stane?</span><br>
+      <button class="atop" data-ok="1">Bez sítě bude jen ten jeden počítač</button>
+      <button class="atop" data-ok="0">Přestane fungovat celá síť</button>
+      <button class="atop" data-ok="0">Nic, data si najdou jinou cestu</button>
+      <div class="res" id="rtop"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODUL 07 ============ -->
 <section class="mod navic" id="m6">
-  <h2><span>MODUL 06</span>Bonus: proč má router dvě adresy</h2>
+  <h2><span>MODUL 07</span>Bonus: proč má router dvě adresy</h2>
   <div class="body">
     <p>Bonus z pracovního listu: tvoje IP adresa nejspíš začíná 192.168…, ale web „what is my IP“ (anglicky „jaká je moje IP adresa“) ti ukáže úplně jinou. Proč?</p>
     <div class="pojmy">
@@ -363,7 +418,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
 
 <footer>
   <p><b>Poznámka k adresám.</b> IP adresy v internetu jsou v laboratoři vymyšlené. Pochází z rozsahů vyhrazených pro ukázky, které nikomu nepatří. Skutečné adresy si žáci zjistí v hodině o příkazovém řádku.</p>
-  <p><b>Pro učitele.</b> Laboratoř patří k hodině o počítačových sítích (1. ročník, téma Úvod do informatiky a digitální gramotnost). Moduly 01–05 jdou od základů k celé cestě dat, modul 06 je bonus. Běží offline a nic neodesílá. Pracovní list, plán hodiny a navazující hodinu s příkazovým řádkem najdete v bance materiálů na karelhlas.vercel.app.</p>
+  <p><b>Pro učitele.</b> Laboratoř patří k hodině o počítačových sítích (1. ročník, téma Úvod do informatiky a digitální gramotnost). Moduly 01–05 jdou od základů k celé cestě dat, modul 06 ukazuje zapojení LAN (topologie), modul 07 je bonus. Běží offline a nic neodesílá. Pracovní list, plán hodiny a navazující hodinu s příkazovým řádkem najdete v bance materiálů na karelhlas.vercel.app.</p>
 </footer>
 </main>
 
@@ -467,6 +522,31 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       el('circle',{cx:x,cy:y,r:20,fill:'#17211e'},g);
       el('path',{'class':'sipky',transform:'translate('+x+' '+y+')',d:'M-9 -4 H8 M4 -8 L8 -4 L4 0 M9 4 H-8 M-4 0 L-8 4 L-4 8'},g);
       return {vrch:y-20,popisek:null};
+    },
+    // Malý počítač pro schémata topologií – notebook by se tam nevešel.
+    pc:function(g,u){
+      var x=u.x,y=u.y;
+      el('rect',{x:x-28,y:y-20,width:56,height:38,rx:3,fill:'#17211e'},g);
+      el('rect',{x:x-24,y:y-16,width:48,height:28,rx:1,fill:'#fff'},g);
+      el('rect',{x:x-4,y:y+18,width:8,height:6,fill:'#5c6965'},g);
+      el('rect',{x:x-14,y:y+24,width:28,height:4,rx:2,fill:'#5c6965'},g);
+      return {vrch:y-20,popisek:y+48};
+    },
+    prepinac:function(g,u){
+      var x=u.x,y=u.y;
+      el('rect',{x:x-42,y:y-13,width:84,height:26,rx:5,fill:'#17211e'},g);
+      for(var n=0;n<5;n++)el('rect',{x:x-32+n*13,y:y-4,width:8,height:8,rx:1,fill:'#7fd6cf'},g);
+      return {vrch:y-13,popisek:y+33};
+    },
+    // Odbočka na sběrnici: jen bod na kabelu, obálka nad ním proletí.
+    bod:function(g,u){
+      el('circle',{cx:u.x,cy:u.y,r:4,fill:'#5c6965'},g);
+      return {vrch:u.y,popisek:null};
+    },
+    // Zakončovací odpor (terminátor) na konci sběrnice.
+    konec:function(g,u){
+      el('rect',{x:u.x-7,y:u.y-12,width:14,height:24,rx:3,fill:'#5c6965'},g);
+      return {vrch:u.y-12,popisek:null};
     },
     server:function(g,u){
       var x=u.x,y=u.y;
@@ -847,7 +927,133 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     nastavDomenu();ukaz(0,false);
   })();
 
-  /* ================= Modul 06: vnitřní a veřejná adresa ================= */
+  /* ================= Modul 06: topologie ================= */
+  (function(){
+    // Pětiúhelník pro kruh a „každý s každým“: A nahoře, dál po směru hodin.
+    var P={A:[500,115],B:[614,198],C:[571,332],D:[429,332],E:[386,198]};
+    function pet(){var u=[],k;for(k in P){if(P.hasOwnProperty(k))u.push({id:k,typ:'pc',x:P[k][0],y:P[k][1],jm:k});}return u;}
+    var T={
+      sbernice:{
+        nazev:'Sběrnice (bus)',
+        popis:'Všechny počítače visí na jednom společném kabelu. Na obou koncích je zakončovací odpor (terminátor).',
+        kde:'Starý Ethernet s koaxiálním kabelem v 80. a 90. letech. V dnešních LAN skoro ne.',
+        plus:'Málo kabelu a jednoduché zapojení.',
+        minus:'Přerušený kabel vyřadí celou síť. Když vysílají dva najednou, zprávy se srazí.',
+        uzly:[{id:'t1',typ:'konec',x:80,y:250,pop:'terminátor',px:80,py:290},{id:'t2',typ:'konec',x:920,y:250,pop:'terminátor',px:920,py:290},
+          {id:'j1',typ:'bod',x:180,y:250},{id:'j2',typ:'bod',x:340,y:250},{id:'j3',typ:'bod',x:500,y:250},{id:'j4',typ:'bod',x:660,y:250},{id:'j5',typ:'bod',x:820,y:250},
+          {id:'A',typ:'pc',x:180,y:130,jm:'A'},{id:'B',typ:'pc',x:340,y:130,jm:'B'},{id:'C',typ:'pc',x:500,y:130,jm:'C'},{id:'D',typ:'pc',x:660,y:130,jm:'D'},{id:'E',typ:'pc',x:820,y:130,jm:'E'}],
+        spoje:[{a:'t1',b:'j1'},{a:'j1',b:'j2'},{a:'j2',b:'j3'},{a:'j3',b:'j4'},{a:'j4',b:'j5'},{a:'j5',b:'t2'},
+          {a:'A',b:'j1'},{a:'B',b:'j2'},{a:'C',b:'j3'},{a:'D',b:'j4'},{a:'E',b:'j5'}],
+        cesta:['A','j1','j2','j3','j4','D'],vsem:true,
+        ok:'Zpráva se rozlila po celém kabelu a dostali ji všichni. Každý se podíval na adresu – nechal si ji jen D.',
+        prerus:['j2','j3'],cestaPrerus:['A','j1','j2'],
+        chyba:'Zpráva narazila na přerušený kabel. Na volném konci se signál odráží zpátky a ruší všechno ostatní – nefunguje celá síť, ne jen její část.'
+      },
+      hvezda:{
+        nazev:'Hvězda (star)',
+        popis:'Každý počítač má vlastní kabel do přepínače uprostřed.',
+        kde:'Dnes skoro každá LAN: škola, firma i domov, kde je středem router. I Wi-Fi funguje jako hvězda kolem přístupového bodu.',
+        plus:'Přetržený kabel vyřadí jen jeden počítač. Nový počítač se snadno přidá.',
+        minus:'Víc kabelů. Když selže přepínač uprostřed, nefunguje nic.',
+        uzly:[{id:'S',typ:'prepinac',x:500,y:235,jm:'přepínač'},
+          {id:'A',typ:'pc',x:500,y:95,jm:'A'},{id:'B',typ:'pc',x:790,y:150,jm:'B'},{id:'C',typ:'pc',x:720,y:320,jm:'C'},{id:'D',typ:'pc',x:280,y:320,jm:'D'},{id:'E',typ:'pc',x:210,y:150,jm:'E'}],
+        spoje:[{a:'A',b:'S'},{a:'B',b:'S'},{a:'C',b:'S'},{a:'D',b:'S'},{a:'E',b:'S'}],
+        cesta:['A','S','D'],
+        ok:'Zpráva šla z A do přepínače a ten ji poslal jen do D. Ostatní ji vůbec neviděli.',
+        prerus:['C','S'],cestaPrerus:['A','S','D'],prerusOk:true,
+        chyba:'Zpráva prošla. Bez sítě je jen C – přetrhl se jeho vlastní kabel. (Kdyby ale selhal přepínač uprostřed, nefungovalo by nic.)'
+      },
+      kruh:{
+        nazev:'Kruh (ring)',
+        popis:'Každý počítač je spojený se dvěma sousedy. Data obíhají dokola jedním směrem, od souseda k sousedovi.',
+        kde:'Starší sítě Token Ring. Dvojitý kruh dodnes najdeš u páteřních optických sítí.',
+        plus:'Vysílá se postupně, takže se zprávy nesrazí.',
+        minus:'V jednoduchém kruhu vyřadí přerušení kdekoli celý kruh. Proto se stavěly kruhy dvojité.',
+        uzly:pet(),
+        spoje:[{a:'A',b:'B'},{a:'B',b:'C'},{a:'C',b:'D'},{a:'D',b:'E'},{a:'E',b:'A'}],
+        cesta:['A','B','C','D'],
+        ok:'Zpráva putovala od souseda k sousedovi: A → B → C → D.',
+        prerus:['B','C'],cestaPrerus:['A','B'],
+        chyba:'Data obíhají jedním směrem a přes přetržený kabel se nedostanou – celý kruh stojí. (Ve dvojitém kruhu by data obrátila a šla druhou stranou.)'
+      },
+      strom:{
+        nazev:'Strom (tree)',
+        popis:'Hvězdy napojené na sebe: přepínače v učebnách vedou do hlavního přepínače.',
+        kde:'Školy a firmy – učebna, patro, budova. Každá úroveň je jedna hvězda.',
+        plus:'Síť se dá rozšiřovat po částech a porucha v učebně zůstane v učebně.',
+        minus:'Když vypadne spojení k větvi, odřízne se celá větev.',
+        uzly:[{id:'R',typ:'prepinac',x:500,y:95,jm:'hlavní přepínač'},{id:'S1',typ:'prepinac',x:290,y:200,jm:'učebna 1'},{id:'S2',typ:'prepinac',x:710,y:200,jm:'učebna 2'},
+          {id:'A',typ:'pc',x:190,y:315,jm:'A'},{id:'B',typ:'pc',x:390,y:315,jm:'B'},{id:'C',typ:'pc',x:610,y:315,jm:'C'},{id:'D',typ:'pc',x:810,y:315,jm:'D'}],
+        spoje:[{a:'R',b:'S1'},{a:'R',b:'S2'},{a:'S1',b:'A'},{a:'S1',b:'B'},{a:'S2',b:'C'},{a:'S2',b:'D'}],
+        cesta:['A','S1','R','S2','D'],
+        ok:'Zpráva šla nahoru k hlavnímu přepínači a pak dolů do druhé učebny k D.',
+        prerus:['R','S2'],cestaPrerus:['A','S1','R'],
+        chyba:'Učebna 2 s C a D je odříznutá. A a B si ale mezi sebou psát můžou dál.'
+      },
+      kazdy:{
+        nazev:'Každý s každým (mesh)',
+        popis:'Každé zařízení je propojené se všemi ostatními.',
+        kde:'Celou LAN takhle nikdo nestaví. Částečně takhle propojené jsou routery v páteři internetu a domácí Wi-Fi mesh.',
+        plus:'Přetržený kabel nevadí – data jdou jinudy.',
+        minus:'Strašně moc kabelů: u 5 zařízení 10, u 20 zařízení už 190.',
+        uzly:pet(),
+        spoje:[{a:'A',b:'B'},{a:'A',b:'C'},{a:'A',b:'D'},{a:'A',b:'E'},{a:'B',b:'C'},{a:'B',b:'D'},{a:'B',b:'E'},{a:'C',b:'D'},{a:'C',b:'E'},{a:'D',b:'E'}],
+        cesta:['A','D'],
+        ok:'A a D mají vlastní kabel, zpráva šla napřímo.',
+        prerus:['A','D'],cestaPrerus:['A','E','D'],prerusOk:true,
+        chyba:'Přímý kabel je přetržený, a tak zpráva šla oklikou přes E. Proto se takhle propojují routery v internetu.'
+      }
+    };
+    var svg=$('sctop'),deni=$('dtop'),info=$('infotop'),bP=$('mtposli'),bX=$('mtprerus'),tl=document.querySelectorAll('.mtopo');
+    var ted='sbernice',sc=null,prerusena=false,znacka=null;
+    function kresli(){
+      while(svg.firstChild)svg.removeChild(svg.firstChild);
+      var t=T[ted];sc=new Scena(svg,{uzly:t.uzly,spoje:t.spoje});
+      prerusena=false;znacka=null;bX.textContent='Přeruš kabel';bP.disabled=false;
+      info.innerHTML='<h3>'+esc(t.nazev)+'</h3><p>'+esc(t.popis)+'</p><dl><dt>Kde</dt><dd>'+esc(t.kde)+'</dd><dt>Výhoda</dt><dd>'+esc(t.plus)+'</dd><dt>Nevýhoda</dt><dd>'+esc(t.minus)+'</dd></dl>';
+      deni.textContent='Pošli zprávu z A do D. Pak přeruš kabel a zkus to znovu.';
+    }
+    function prepniKabel(){
+      var t=T[ted],sp=sc.spoj(t.prerus[0],t.prerus[1]);
+      sc.zastav();sc.skryj();sc.zhasni();sc.zvyrazni(null);bP.disabled=false;
+      prerusena=!prerusena;
+      if(prerusena){
+        sp.classList.add('prerusena');
+        var a=sc.u[t.prerus[0]],b=sc.u[t.prerus[1]];
+        znacka=napis(svg,(a.x+b.x)/2,(a.y+b.y)/2+8,'✕','prerus');
+        bX.textContent='Oprav kabel';
+        deni.textContent='Kabel je přetržený. Pošli zprávu znovu a sleduj, co se stane.';
+      }else{
+        sp.classList.remove('prerusena');
+        if(znacka&&znacka.parentNode)znacka.parentNode.removeChild(znacka);
+        znacka=null;bX.textContent='Přeruš kabel';
+        deni.textContent='Kabel je opravený.';
+      }
+    }
+    bP.addEventListener('click',function(){
+      var t=T[ted],cesta=prerusena?t.cestaPrerus:t.cesta,dojde=!prerusena||t.prerusOk;
+      bP.disabled=true;sc.zhasni();
+      if(prerusena)sc.spoj(t.prerus[0],t.prerus[1]).classList.add('prerusena');
+      sc.obalka('pro D',true);
+      deni.textContent='Zpráva vyrazila z A…';
+      sc.posli(cesta,{hotovo:function(){
+        if(dojde&&t.vsem){for(var k in sc.spoje){if(sc.spoje.hasOwnProperty(k))sc.spoje[k].classList.add('aktivni');}}
+        deni.textContent=prerusena?t.chyba:t.ok;
+        bP.disabled=false;
+      }});
+    });
+    bX.addEventListener('click',prepniKabel);
+    $('mtznovu').addEventListener('click',kresli);
+    for(var n=0;n<tl.length;n++){
+      tl[n].addEventListener('click',function(){
+        for(var m=0;m<tl.length;m++)tl[m].classList.remove('on');
+        this.classList.add('on');ted=this.getAttribute('data-t');kresli();
+      });
+    }
+    kresli();
+  })();
+
+  /* ================= Modul 07: vnitřní a veřejná adresa ================= */
   (function(){
     var IP=ipPro('seznam.cz');
     var sc=new Scena($('sc6'),{oblak:{x:425,y:92,w:330,h:195,lx:451,ly:275},
@@ -942,6 +1148,8 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
         'DNS stránky neposílá – ke jménu jen najde IP adresu.');
   check('.a5','r5','Síť funguje, jen počítač nezjistí, jaké číslo patří ke jménu. Kdo zná IP adresu serveru, často se na stránku dostane i tak.',
         'Data se posílají podle IP adres a ty fungují dál. Chybí jen překlad jména na číslo – a bez něj počítač neví, kam žádost poslat.');
+  check('.atop','rtop','U hvězdy má každý počítač vlastní kabel, takže přetržený kabel odpojí jen ten jeden.',
+        'Ve hvězdě vede ke každému počítači jeho vlastní kabel. Jiná cesta k němu nevede, ale ostatním nic nechybí.');
   check('.a6','r6','Stejnou vnitřní adresu mají tisíce domácností, v internetu by nebylo jasné, kam obálku poslat. Proto jde odpověď na veřejnou adresu routeru.',
         'Adresa existuje, ale platí jen uvnitř domácí sítě. V internetu platí veřejná adresa routeru.');
 
