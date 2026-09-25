@@ -87,6 +87,13 @@ code{font-family:Consolas,Menlo,monospace;background:#eef2f1;padding:1px 6px;bor
 /* Scény */
 .pane{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .scena{display:block;width:100%;height:auto}
+/* Na telefonu by popisky ve schématu byly nečitelně malé – schéma se posouvá jen uvnitř rámečku. */
+.posun{display:none;margin:4px 0 0;font-size:13px;color:var(--grey)}
+@media (max-width:600px){
+  .pane{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .scena{min-width:640px}
+  .posun{display:block}
+}
 .spoj{stroke:#c3cbc8;stroke-width:3;fill:none}
 .spoj.wifi{stroke-dasharray:9 8}
 .spoj.aktivni{stroke:var(--teal);stroke-width:5}
@@ -165,6 +172,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <button id="m1znovu" type="button">Znovu</button>
     </div>
     <div class="pane"><svg class="scena" id="sc1" viewBox="0 0 1000 250" role="img" aria-label="Dva počítače spojené kabelem"></svg></div>
+    <p class="posun">Schéma si posuň prstem do strany.</p>
     <p class="deni" id="d1" aria-live="polite"></p>
     <div class="chk">
       <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">kdy mluvíme o počítačové síti?</span><br>
@@ -196,6 +204,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <button class="m2cil hl" data-cil="tv" type="button">192.168.1.40</button>
     </div>
     <div class="pane"><svg class="scena" id="sc2" viewBox="0 0 1000 455" role="img" aria-label="Domácí síť: notebook, mobil, tiskárna a televize připojené k routeru"></svg></div>
+    <p class="posun">Schéma si posuň prstem do strany.</p>
     <p class="deni" id="d2" aria-live="polite"></p>
     <div class="chk">
       <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">obálka má adresu 192.168.1.40. Kam ji router pošle?</span><br>
@@ -226,6 +235,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <button id="m3znovu" type="button">Znovu</button>
     </div>
     <div class="pane"><svg class="scena" id="sc3" viewBox="0 0 1000 290" role="img" aria-label="Notebook, domácí router, internet a server se stránkami"></svg></div>
+    <p class="posun">Schéma si posuň prstem do strany.</p>
     <p class="deni" id="d3" aria-live="polite"></p>
     <p class="otazka" id="m3otazka" style="display:none"><b>Otázka na další modul:</b> Jak notebook věděl, kde server je? Ty jsi přece napsal seznam.cz, ne číslo.</p>
     <div class="chk">
@@ -256,6 +266,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <button class="m4jm hl" data-jm="ceskatelevize.cz" type="button">ceskatelevize.cz</button>
     </div>
     <div class="pane"><svg class="scena" id="sc4" viewBox="0 0 1000 290" role="img" aria-label="Notebook se přes router a internet ptá DNS serveru"></svg></div>
+    <p class="posun">Schéma si posuň prstem do strany.</p>
     <div class="dvoj">
       <p class="deni" id="d4" aria-live="polite"></p>
       <div>
@@ -297,6 +308,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <li data-k="5"><b>5</b>Zobrazení</li>
     </ol>
     <div class="pane"><svg class="scena" id="sc5" viewBox="0 0 1000 445" role="img" aria-label="Celá cesta: notebook, router, internet, server se stránkou a DNS server"></svg></div>
+    <p class="posun">Schéma si posuň prstem do strany.</p>
     <div class="dvoj">
       <div class="popis" aria-live="polite"><h3 id="titul5"></h3><p id="text5"></p></div>
       <div class="obalka"><h4>Obálka (paket)</h4><div id="obalka5"></div></div>
@@ -330,6 +342,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <button id="m6znovu" type="button">Znovu</button>
     </div>
     <div class="pane"><svg class="scena" id="sc6" viewBox="0 0 1000 290" role="img" aria-label="Notebook, domácí router s vnitřní a veřejnou adresou, internet a server"></svg></div>
+    <p class="posun">Schéma si posuň prstem do strany.</p>
     <div class="dvoj">
       <p class="deni" id="d6" aria-live="polite"></p>
       <div class="obalka"><h4>Obálka (paket)</h4><div id="obalka6"></div></div>
