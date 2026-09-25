@@ -201,6 +201,7 @@ const NAME_EN: Record<string, string> = {
   "Laboratoř – barevná hloubka": "Lab – colour depth",
   "Laboratoř – komprese a formáty": "Lab – compression and formats",
   "Laboratoř – vzorkování zvuku": "Lab – audio sampling",
+  "Laboratoř – cesta dat sítí": "Lab – how data travels through a network",
   "Formáty a komprese": "Formats and compression",
   "Rastr a vektor": "Raster and vector",
   "Parametry médií": "Media parameters",
