@@ -1080,7 +1080,7 @@ function ToolFolders({
   const s = STR[lang];
   const { rozcestniky, loose, folders } = useMemo(() => {
     // Klíč nese i publikum. Na disku má `_ucitel/` podsložky pojmenované stejně
-    // jako žákovské (téma Databáze: „2. Kurz SQL v prohlížeči" je v obou), a
+    // jako žákovské (téma Databáze: „1. Kurz SQL v prohlížeči" je v obou), a
     // dokud se grupovalo jen podle názvu, slily se do jedné karty – vedle
     // pracovního listu tak ležela i řešení a karta nebyla ani jantarová.
     //

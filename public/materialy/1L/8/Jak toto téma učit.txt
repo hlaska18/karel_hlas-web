@@ -4,25 +4,19 @@
 Přehled pro vyučujícího: co je ve kterých složkách, v jakém
 pořadí to jde za sebou a kolik času to zabere.
 
-Celé téma = 3 vyučovací hodiny. Klidně jich oduč míň –
-každá část dává smysl i samostatně.
+Celé téma = 2 vyučovací hodiny u počítačů, obě v kurzu na
+karelhlas.vercel.app/sql. Pojmy (tabulka, řádek, sloupec,
+klíč) si kurz zavádí sám, samostatný úvod bez počítače není
+potřeba.
+
+Jak se program ovládá (předvádění, Přehled třídy, úloha
+odkazem, písemka, obnovení dat), je v souboru Návod pro
+učitele – DB Browser. Řešení a postup každé úlohy z lekcí
+1–22 je v souboru Řešení a postup – DB Browser.
 
 
 -----------------------------------------------------------
-SLOŽKA 1 – ÚVOD DO DATABÁZÍ            (45 min, bez počítače)
------------------------------------------------------------
-Pojmy: tabulka, řádek, sloupec, datový typ, primární klíč,
-cizí klíč. Proč se data nedrží v jednom velkém seznamu.
-
-Pro žáky:   Žákovský list
-Pro učitele: Metodika, Plán hodiny
-
-Když máš na téma jen dvě hodiny, tuhle část zkrať na
-úvodních 10 minut druhé hodiny – kurz si pojmy zavádí sám.
-
-
------------------------------------------------------------
-SLOŽKA 2 – KURZ SQL: LEKCE 1–13             (45 min, počítače)
+KURZ SQL: LEKCE 1–13                        (45 min, počítače)
 -----------------------------------------------------------
 Interaktivní kurz na karelhlas.vercel.app/sql. Na počítači
 se otevře jako napodobenina programu DB Browser for SQLite
@@ -38,7 +32,9 @@ dokončit doma.
 Potřebuješ: počítače s internetem. Nic víc.
 
 Pro žáky:   Pracovní list – SQL (tištěná verze týchž úloh)
-Pro učitele: Plán hodin – Kurz SQL, Řešení – pracovní list
+Pro učitele: Plán hodin – Kurz SQL, Řešení – pracovní list,
+             Řešení a postup – DB Browser,
+             Návod pro učitele – DB Browser
 
 Co třída za 45 minut nestihne (typicky lekce 11–13), je dobrý
 domácí úkol.

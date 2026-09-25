@@ -132,16 +132,16 @@ const NAME_EN: Record<string, string> = {
   "Řešení 1 – věk": "Solution 1 – age",
   "Řešení 2A – vlajka Lotyšska": "Solution 2A – flag of Latvia",
   "Řešení 2B – vlajka Finska": "Solution 2B – flag of Finland",
-  // Téma 8 je rozdělené na složky v pořadí výuky (číslo v cestě, ne v popisku).
-  "Úvod do databází": "Introduction to databases",
+  // Téma 8 (Databáze) je od 24. 9. 2026 jen kurz v DB Browseru – úvod
+  // bez počítače Karel z tématu smazal.
   "Kurz SQL v prohlížeči": "SQL course in the browser",
   "Jak toto téma učit": "How to teach this topic",
   "Plán hodin – Kurz SQL": "Lesson plans – SQL course",
   "Pracovní list – SQL": "SQL worksheet",
   "Řešení – pracovní list": "Worksheet solutions",
-  "Žákovský list": "Student worksheet",
+  "Řešení a postup – DB Browser": "Solutions and walkthrough – DB Browser",
+  "Návod pro učitele – DB Browser": "Teacher's guide – DB Browser",
   Metodika: "Teaching notes",
-  "Plán hodiny": "Lesson plan",
   // Digitální gramotnost – jednotlivé hodiny a jejich plány
   "Kybernetická bezpečnost": "Cybersecurity",
   "Kybernetická bezpečnost – plán hodiny": "Cybersecurity – lesson plan",
