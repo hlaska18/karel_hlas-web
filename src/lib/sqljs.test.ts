@@ -35,7 +35,7 @@ describe("createDb", () => {
   it("loads the engine, builds an in-memory DB and runs the schema", async () => {
     const createDb = await freshCreateDb();
     const run = vi.fn();
-    const Database = vi.fn(() => ({ run, exec: vi.fn() }));
+    const Database = vi.fn(function () { return { run, exec: vi.fn() }; });
     const initSqlJs: InitSqlJs = vi.fn().mockResolvedValue({ Database });
     // The "loaded" CDN script is what exposes window.initSqlJs.
     const append = stubScriptLoading("load", () => {
@@ -59,7 +59,7 @@ describe("createDb", () => {
     const run = vi.fn();
     const initSqlJs: InitSqlJs = vi
       .fn()
-      .mockResolvedValue({ Database: vi.fn(() => ({ run, exec: vi.fn() })) });
+      .mockResolvedValue({ Database: vi.fn(function () { return { run, exec: vi.fn() }; }) });
     (window as Win).initSqlJs = initSqlJs;
     const append = stubScriptLoading("load");
 
@@ -72,7 +72,7 @@ describe("createDb", () => {
   it("falls back to the CDN when the site's own copy fails", async () => {
     const createDb = await freshCreateDb();
     const run = vi.fn();
-    const initSqlJs: InitSqlJs = vi.fn().mockResolvedValue({ Database: vi.fn(() => ({ run, exec: vi.fn() })) });
+    const initSqlJs: InitSqlJs = vi.fn().mockResolvedValue({ Database: vi.fn(function () { return { run, exec: vi.fn() }; }) });
     let pokus = 0;
     const append = vi.spyOn(document.head, "appendChild").mockImplementation(((node: Node) => {
       const s = node as HTMLScriptElement;
