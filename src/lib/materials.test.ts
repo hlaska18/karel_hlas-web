@@ -280,6 +280,29 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     }
   });
 
+  it("pracovní soubor Wordu a Excelu se jmenuje jako v zadání, v bance je to pořád pracovní soubor", () => {
+    // Soubor na disku nese jméno ze zadání (`01_tabulka.xlsx`), aby ho žák
+    // po stažení našel. Popisek v bance ho ale dál uvádí jako pracovní
+    // soubor, jinak by se zařadil mezi podklady.
+    const zadani = items.find(
+      (it) => it.group?.cs === "Excel › Úlohy › 01 – Tabulka" && it.label.cs === "Zadání",
+    );
+    const pracovni = items.find(
+      (it) => it.group?.cs === "Excel › Úlohy › 01 – Tabulka" && it.label.cs.startsWith("Pracovní soubor"),
+    );
+    expect(zadani).toBeDefined();
+    expect(pracovni?.label).toEqual({
+      cs: "Pracovní soubor (01_tabulka.xlsx)",
+      en: "Working file (01_tabulka.xlsx)",
+    });
+    expect(pracovni?.href).toMatch(/\/01_tabulka\.xlsx$/);
+    // Žádný soubor v úlohách Wordu a Excelu se už nejmenuje „Pracovní soubor“.
+    for (const it of items) {
+      if (!/^(Word|Excel) › Úlohy › /.test(it.group?.cs ?? "")) continue;
+      expect(decodeURIComponent(it.href), it.group!.cs).not.toMatch(/\/Pracovní soubor[^/]*$/);
+    }
+  });
+
   it("adresa souboru s čárkou v názvu není rozbitá", () => {
     // Next u statických souborů nedekóduje `%2C`, takže čárka zakódovaná
     // přes `encodeURIComponent` vedla na 404. Lámalo to i materiály, které

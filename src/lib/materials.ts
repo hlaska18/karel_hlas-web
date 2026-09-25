@@ -111,8 +111,6 @@ const NAME_EN: Record<string, string> = {
   "Obrázek k vložení": "Image to insert",
   "Obrázek – olympijská medaile": "Image – Olympic medal",
   "Obrázek – slavnostní zahájení": "Image – opening ceremony",
-  "Pracovní soubor – původní dokument": "Working file – original document",
-  "Pracovní soubor – verze od Aleše": "Working file – Aleš's version",
   "Řešení – porovnaný dokument": "Solution – merged document",
   "Řešení – hotový tisk (PDF)": "Solution – finished print (PDF)",
   "Zdroj dat – výsledky OH": "Data source – Olympic results",
@@ -489,6 +487,23 @@ function rolePoradi(label: string): number {
 /** Dvojjazyčná věta v `_popis.json`. */
 type Popis = { cs: string; en: string };
 
+/**
+ * Pracovní soubor úlohy z cvičebnice (Word, Excel).
+ *
+ * Na disku se jmenuje přesně tak, jak ho uvádí zadání – `01_tabulka.xlsx`,
+ * `olympiada1.docx` –, aby ho žák po stažení našel pod stejným jménem, jaké
+ * čte v zadání. Dřív se všechny jmenovaly „Pracovní soubor“ a se zadáním se
+ * nepotkaly (Karel 25. 9. 2026). V bance ale dál vystupuje jako pracovní
+ * soubor: tím se řadí hned za zadání (`rolePoradi`) a dá se přeložit.
+ */
+const PRACOVNI_SOUBOR = /^(\d{2}_\S+|olympiada1)\.(docx|docm|xlsx|xlsm)$/i;
+
+function pracovniSoubor(file: string, segs: string[]): Popis | null {
+  const vUloze = segs.some((s) => s.normalize("NFC") === "Úlohy");
+  if (!vUloze || !PRACOVNI_SOUBOR.test(file.normalize("NFC"))) return null;
+  return { cs: `Pracovní soubor (${file})`, en: `Working file (${file})` };
+}
+
 export function getBankItems(): BankItem[] {
   // Sloučení duplicit napříč obory (1L/1S/1P): klíč = nástroj+skupina+název+typ,
   // NE číslo tématu (Excel je v 1L téma 4, v 1S/1P téma 3). Soubory jsou
@@ -739,7 +754,8 @@ export function getBankItems(): BankItem[] {
           } else if (e.isFile()) {
             const file = e.name;
             const ext = path.extname(file).slice(1).toLowerCase();
-            const label = cleanLabel(file);
+            const pracovni = pracovniSoubor(file, segs);
+            const label = pracovni?.cs ?? cleanLabel(file);
             const tool = toolOf(`${group?.cs ?? ""} ${topicLabel.cs} ${label}`, ext, group?.cs);
             const key = [tool, audience, group?.cs ?? "", label, ext]
               .join("|")
@@ -785,7 +801,7 @@ export function getBankItems(): BankItem[] {
             }
             seen.set(key, {
               href: "/materialy/" + parts.join("/"),
-              label: { cs: label, en: enLabel(label) },
+              label: pracovni ?? { cs: label, en: enLabel(label) },
               ext,
               kind: kindFromExt(path.extname(file)),
               sizeBytes,

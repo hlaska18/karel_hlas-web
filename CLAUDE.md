@@ -101,7 +101,7 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Opravené nepravdy: macOS má i příznak skrytý (ale většinu skrývá tečka),
   položky s tečkou jen zkratkou (⇧⌘., v simulaci Ctrl+Shift+.) – ne v menu,
   Finder název s tečkou odmítne (zakládá se `mkdir` v Terminálu),
-  Vynutit ukončení má u Finderu „Znovu spustit“, TextEdit místo Poznámek
+  Vynutit ukončení má u Finderu „Spustit znovu“, TextEdit místo Poznámek
   (id aplikace zůstalo `poznamky`), Finder.app v /System/Library/CoreServices,
   Terminál v /Applications/Utilities, Windows má podokno náhledu Alt+P,
   dir/cls → „zsh: command not found“ + označená nápověda simulace.
@@ -126,6 +126,15 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   modul 05). Plány a listy 1, 4, 6 jsou vyexportované z Wordu a zkontrolované.
 - **Codex jako druhý názor:** skill ~/.claude/skills/codex-druhy-nazor (jen
   pro čtení). Existuje jen na Karlově Macu, v cloudu není.
+- **Simulátor macOS ověřený na skutečném Macu** (macOS 27, česky): úlohy věcně
+  sedí, opravené byly jen české názvy – Monitor aktivity, „Spustit znovu“ u
+  Finderu, v postranním panelu „Místa“ a „Stahování“, „Zobrazit řádek s
+  cestou“, Utilities = Utility, nabídka „Otevřít“ (Go) s položkami Domov a
+  Otevřít složku…, hláška o názvu s tečkou podle skutečného znění.
+- **Pracovní soubory Wordu a Excelu** se jmenují jako v zadání
+  (`01_tabulka.xlsx`, `olympiada1.docx` …). Banka je pozná podle vzoru
+  `PRACOVNI_SOUBOR` v src/lib/materials.ts a ukáže jako „Pracovní soubor
+  (01_tabulka.xlsx)“. Nový pracovní soubor pojmenuj stejně jako v zadání.
 
 ## Otevřené / nápady (nic naléhavého)
 
