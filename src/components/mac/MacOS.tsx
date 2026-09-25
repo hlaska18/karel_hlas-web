@@ -60,7 +60,7 @@ import { zapomenMac } from "@/lib/mac/stav";
  * Fáze celého počítače. Restart = vypínání → start → zámek, vypnutí =
  * vypínání → černá obrazovka s „Zapnout znovu“. Jako ve virtuálních Windows.
  */
-type Faze = "prihlaseni" | "bezi" | "vypinam" | "vypnuto" | "startuji";
+type Faze = "prihlaseni" | "bezi" | "vypinam" | "vypnuto" | "startuji" | "spanek";
 type Panel =
   null | "vynutit" | "oMacu" | "znovu" | "jdi" | "launchpad" | "spotlight";
 
@@ -218,10 +218,46 @@ function Obrazovka() {
   }, []);
 
   const odhlasit = () => {
+    nastavZamek(false);
     zapamatujPrihlaseni(false, "macos");
     nastavPanel(null);
     nastavFazi("prihlaseni");
   };
+
+  /**
+   * Zamknout obrazovku a Uspat. Na rozdíl od restartu se nic nezavírá:
+   * po odemčení jsou okna i běžící programy tam, kde byly. Probuzený Mac
+   * chce jméno znovu, jako skutečný chce heslo.
+   */
+  const [zamek, nastavZamek] = useState(false);
+  const zamknout = () => {
+    zapamatujPrihlaseni(false, "macos");
+    nastavPanel(null);
+    nastavZamek(true);
+    nastavFazi("prihlaseni");
+  };
+  const uspat = () => {
+    zapamatujPrihlaseni(false, "macos");
+    nastavPanel(null);
+    nastavZamek(true);
+    nastavFazi("spanek");
+  };
+
+  useEffect(() => {
+    if (faze !== "spanek") return;
+    const probud = () => nastavFazi("prihlaseni");
+    // Až po dokončení kliknutí, kterým se usínalo – jinak by ho tentýž klik
+    // hned probudil.
+    const id = window.setTimeout(() => {
+      window.addEventListener("mousedown", probud);
+      window.addEventListener("keydown", probud);
+    }, 300);
+    return () => {
+      window.clearTimeout(id);
+      window.removeEventListener("mousedown", probud);
+      window.removeEventListener("keydown", probud);
+    };
+  }, [faze]);
 
   /** Na co se právě ptá potvrzovací okénko Restartovat / Vypnout. */
   const [potvrdit, nastavPotvrdit] = useState<null | "restart" | "vypnout">(null);
@@ -235,6 +271,7 @@ function Obrazovka() {
   const napajeni = (co: "restart" | "vypnout") => {
     nastavPotvrdit(null);
     nastavPanel(null);
+    nastavZamek(false);
     poslat({ typ: "system/vypni" });
     zapamatujPrihlaseni(false, "macos");
     nastavFazi("vypinam");
@@ -470,11 +507,14 @@ function Obrazovka() {
       data-motiv={stav.nastaveni.motiv}
       data-efekty={stav.nastaveni.omezitEfekty ? "omezene" : undefined}
     >
+      {/* Zámek a spánek leží NAD běžící plochou (z-[950]), ne místo ní – po
+          odemčení je všechno, jak bylo, včetně historie Terminálu. */}
       {faze === "prihlaseni" && (
-        <>
+        <div className="absolute inset-0 z-[950]">
           <PrihlaseniMac
             onHotovo={() => {
               zapamatujPrihlaseni(true, "macos");
+              nastavZamek(false);
               nastavFazi("bezi");
               otevriUvitani();
             }}
@@ -501,10 +541,17 @@ function Obrazovka() {
               <ArrowLeft className="h-3.5 w-3.5" /> Zpět na web
             </Link>
           </div>
-        </>
+        </div>
       )}
 
       {faze === "vypinam" && <div className="absolute inset-0 bg-black" />}
+
+      {/* Spánek: jen černo. Myš ani klávesa nic neprozradí, dokud se neprobudí. */}
+      {faze === "spanek" && (
+        <div className="absolute inset-0 z-[960] cursor-none bg-black">
+          <span className="sr-only">Mac spí. Probudíš ho kliknutím nebo klávesou.</span>
+        </div>
+      )}
 
       {faze === "startuji" && (
         <div className="absolute inset-0 flex flex-col items-center justify-center gap-10 bg-black text-white">
@@ -546,13 +593,15 @@ function Obrazovka() {
         />
       )}
 
-      {faze === "bezi" && (
-        <div className="absolute inset-0 flex flex-col">
+      {(faze === "bezi" || zamek) && (
+        <div className="absolute inset-0 flex flex-col" inert={faze !== "bezi"}>
           <HorniLista
             nabidky={nabidky}
             onVynutitUkonceni={otevriVynuceni}
             onOdhlasit={odhlasit}
             onNapajeni={nastavPotvrdit}
+            onUspat={uspat}
+            onZamknout={zamknout}
             onZacitZnovu={() => nastavPanel("znovu")}
             onOMacu={() => nastavPanel("oMacu")}
             // Lupa je přepínač: druhé kliknutí hledání zavře, jako na Macu.

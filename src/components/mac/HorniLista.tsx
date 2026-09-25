@@ -52,6 +52,8 @@ export function HorniLista({
   onVynutitUkonceni,
   onOdhlasit,
   onNapajeni,
+  onUspat,
+  onZamknout,
   onZacitZnovu,
   onOMacu,
   onSpotlight,
@@ -62,6 +64,10 @@ export function HorniLista({
   onOdhlasit: () => void;
   /** Restartovat… / Vypnout… – obojí se nejdřív ptá, jako na Macu. */
   onNapajeni: (co: "restart" | "vypnout") => void;
+  /** Uspat: obrazovka zhasne, programy běží dál. Probudí ji klik nebo klávesa. */
+  onUspat: () => void;
+  /** Zamknout obrazovku: zámek, ale okna zůstanou, jak byla. */
+  onZamknout: () => void;
   onZacitZnovu: () => void;
   onOMacu: () => void;
   onSpotlight: () => void;
@@ -107,9 +113,12 @@ export function HorniLista({
       akce: onVynutitUkonceni,
       oddelovac: true,
     },
-    // Pořadí jako v macOS: napájení pod Vynutit ukončení, odhlášení až pod ním.
+    // Pořadí jako v macOS: napájení pod Vynutit ukončení, zámek a odhlášení
+    // až pod ním.
+    { text: "Uspat", akce: onUspat },
     { text: "Restartovat…", akce: () => onNapajeni("restart") },
     { text: "Vypnout…", akce: () => onNapajeni("vypnout"), oddelovac: true },
+    { text: "Zamknout obrazovku", zkratka: "⌃⌘Q", akce: onZamknout },
     { text: "Odhlásit se", zkratka: "⇧⌘Q", akce: onOdhlasit, oddelovac: true },
     // Ve skutečném macOS nic takového není. Je to učební pomůcka: žák si má
     // moct prostředí vrátit do stavu, ve kterém ho dostal, aniž by čekal na
