@@ -71,7 +71,12 @@
       "Bash(./node_modules/.bin/tsc --noEmit)",
       "Bash(npx vitest *)",
       "Bash(kill -0 %1)",
-      "Bash(wait)"
+      "Bash(wait)",
+      "Bash(npm outdated *)",
+      "Bash(npm audit *)",
+      "Bash(PATH=/private/tmp/claude-501/-Users-karlik-macbook-Desktop-Web/4ee5e443-cf5e-47bb-9d10-bcdc9e03f76c/scratchpad/node22/node_modules/.bin:__TRACKED_VAR__ node -v)",
+      "Bash(npm view *)",
+      "Bash(node -e 'const v=JSON.parse\\(require\\(\"fs\"\\).readFileSync\\(0\\)\\);console.log\\(v.filter\\(x=>/^\\(5|6|7\\)\\\\.\\\\d+\\\\.\\\\d+$/.test\\(x\\)\\).slice\\(-12\\).join\\(\" \"\\)\\)')"
     ]
   }
 }
