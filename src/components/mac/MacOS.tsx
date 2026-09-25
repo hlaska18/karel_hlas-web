@@ -16,7 +16,8 @@ import {
   useRef,
   useState,
 } from "react";
-import { ArrowLeft, Maximize2, Minimize2, Search } from "lucide-react";
+import { ArrowLeft, Maximize2, Minimize2, Power, Search } from "lucide-react";
+import { ZnakJablko } from "@/components/ZnakJablko";
 import Link from "next/link";
 import { MacProvider, OknoMacProvider, useMac } from "./system";
 import { jeSlozka, najdiSlozku, najdiSoubor } from "@/lib/win/fs";
@@ -55,7 +56,11 @@ import {
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import { zapomenMac } from "@/lib/mac/stav";
 
-type Faze = "prihlaseni" | "bezi";
+/**
+ * Fáze celého počítače. Restart = vypínání → start → zámek, vypnutí =
+ * vypínání → černá obrazovka s „Zapnout znovu“. Jako ve virtuálních Windows.
+ */
+type Faze = "prihlaseni" | "bezi" | "vypinam" | "vypnuto" | "startuji";
 type Panel =
   null | "vynutit" | "oMacu" | "znovu" | "jdi" | "launchpad" | "spotlight";
 
@@ -216,6 +221,27 @@ function Obrazovka() {
     zapamatujPrihlaseni(false, "macos");
     nastavPanel(null);
     nastavFazi("prihlaseni");
+  };
+
+  /** Na co se právě ptá potvrzovací okénko Restartovat / Vypnout. */
+  const [potvrdit, nastavPotvrdit] = useState<null | "restart" | "vypnout">(null);
+
+  /** Start: jablko a pruh, pak zamykací obrazovka. */
+  const nastartuj = () => {
+    nastavFazi("startuji");
+    window.setTimeout(() => nastavFazi("prihlaseni"), 2600);
+  };
+
+  const napajeni = (co: "restart" | "vypnout") => {
+    nastavPotvrdit(null);
+    nastavPanel(null);
+    poslat({ typ: "system/vypni" });
+    zapamatujPrihlaseni(false, "macos");
+    nastavFazi("vypinam");
+    window.setTimeout(() => {
+      if (co === "restart") nastartuj();
+      else nastavFazi("vypnuto");
+    }, 1400);
   };
 
   /**
@@ -478,12 +504,55 @@ function Obrazovka() {
         </>
       )}
 
+      {faze === "vypinam" && <div className="absolute inset-0 bg-black" />}
+
+      {faze === "startuji" && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-10 bg-black text-white">
+          <ZnakJablko className="h-20 w-20" />
+          <div className="h-[5px] w-[180px] overflow-hidden rounded-full bg-white/25">
+            {/* S omezeným pohybem pruh neběží, rovnou je plný (globals.css). */}
+            <div className="mac-start-pruh h-full rounded-full bg-white" />
+          </div>
+        </div>
+      )}
+
+      {faze === "vypnuto" && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-5 bg-black px-6 text-center text-white">
+          <Power className="h-10 w-10 text-white/40" />
+          <p className="text-[15px] text-white/80">Virtuální Mac je vypnutý.</p>
+          <div className="flex flex-wrap items-center justify-center gap-2">
+            <button
+              type="button"
+              onClick={nastartuj}
+              className="rounded-md border border-white/30 px-4 py-2 text-[13px] hover:bg-white/10"
+            >
+              Zapnout znovu
+            </button>
+            <Link
+              href="/"
+              className="rounded-md border border-white/30 px-4 py-2 text-[13px] hover:bg-white/10"
+            >
+              Zpět na web
+            </Link>
+          </div>
+        </div>
+      )}
+
+      {faze === "bezi" && potvrdit && (
+        <PotvrditNapajeni
+          co={potvrdit}
+          zrusit={() => nastavPotvrdit(null)}
+          potvrdit={() => napajeni(potvrdit)}
+        />
+      )}
+
       {faze === "bezi" && (
         <div className="absolute inset-0 flex flex-col">
           <HorniLista
             nabidky={nabidky}
             onVynutitUkonceni={otevriVynuceni}
             onOdhlasit={odhlasit}
+            onNapajeni={nastavPotvrdit}
             onZacitZnovu={() => nastavPanel("znovu")}
             onOMacu={() => nastavPanel("oMacu")}
             // Lupa je přepínač: druhé kliknutí hledání zavře, jako na Macu.
@@ -632,6 +701,69 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
             className="rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90 disabled:opacity-40"
           >
             {vybrana === "finder" ? "Znovu spustit" : "Vynutit ukončení"}
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/**
+ * „Opravdu chceš počítač nyní vypnout?“ Skutečný Mac se po Restartovat… a
+ * Vypnout… nejdřív zeptá a když nikdo nic neudělá, za 60 sekund to provede
+ * sám. Odpočet tu běží taky – žák uvidí, že okénko není jen ozdoba.
+ */
+function PotvrditNapajeni({
+  co,
+  zrusit,
+  potvrdit,
+}: {
+  co: "restart" | "vypnout";
+  zrusit: () => void;
+  potvrdit: () => void;
+}) {
+  const [zbyva, nastavZbyva] = useState(60);
+  const potvrdRef = useRef(potvrdit);
+  potvrdRef.current = potvrdit;
+
+  useEffect(() => {
+    const id = window.setInterval(() => nastavZbyva((z) => z - 1), 1000);
+    return () => window.clearInterval(id);
+  }, []);
+  useEffect(() => {
+    if (zbyva <= 0) potvrdRef.current();
+  }, [zbyva]);
+
+  const restart = co === "restart";
+  return (
+    <div className="absolute inset-0 z-[900] flex items-start justify-center bg-black/25 pt-[14vh]">
+      <div className="mac-vjezd w-[360px] rounded-xl bg-mac-povrch p-5 text-center shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
+        <ZnakJablko className="mx-auto h-10 w-10 text-mac-text" />
+        <p className="mt-3 text-[13px] font-semibold text-mac-text">
+          {restart
+            ? "Opravdu chceš počítač nyní restartovat?"
+            : "Opravdu chceš počítač nyní vypnout?"}
+        </p>
+        <p className="mt-2 text-[12px] leading-relaxed text-mac-slaby">
+          Pokud nic neuděláš, počítač se automaticky{" "}
+          {restart ? "restartuje" : "vypne"} za {zbyva}{" "}
+          {zbyva === 1 ? "sekundu" : zbyva >= 2 && zbyva <= 4 ? "sekundy" : "sekund"}.
+          Otevřená okna se zavřou, soubory zůstanou na disku.
+        </p>
+        <div className="mt-4 flex gap-2">
+          <button
+            type="button"
+            onClick={zrusit}
+            className="flex-1 rounded-md border border-mac-linka bg-mac-povrch px-3 py-1.5 text-[13px] text-mac-text hover:bg-mac-zvyrazneny"
+          >
+            Zrušit
+          </button>
+          <button
+            type="button"
+            onClick={potvrdit}
+            className="flex-1 rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90"
+          >
+            {restart ? "Restartovat" : "Vypnout"}
           </button>
         </div>
       </div>

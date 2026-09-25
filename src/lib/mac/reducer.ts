@@ -54,6 +54,8 @@ export type AkceMac =
   | { typ: "ukoly/splneno"; ids: string[] }
   | { typ: "system/nacti"; stav: StavMac }
   | { typ: "system/reset" }
+  /** Restart nebo vypnutí: okna se zavřou, programy skončí, disk zůstane. */
+  | { typ: "system/vypni" }
   | { typ: "uvitani/ukazano" }
   /** Ikona přetažená na jiné místo plochy. `x`, `y` jsou zlomky plochy. */
   | { typ: "plocha/umisti"; jmeno: string; x: number; y: number }
@@ -266,6 +268,11 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
 
     case "system/nacti":
       return akce.stav;
+
+    case "system/vypni":
+      // Jako na skutečném Macu: po vypnutí nic neběží, jen Finder, který
+      // systém spouští sám. Soubory, nastavení a postup zůstávají na disku.
+      return { ...stav, okna: [], bezici: ["finder"], vpredu: "finder" };
 
     case "system/reset":
       // Měkký reset uklidí plochu, ale postup i to, že uvítání už bylo,

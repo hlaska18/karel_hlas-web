@@ -220,3 +220,18 @@ describe("uvítání po přihlášení", () => {
     expect(stav.okna.some((o) => o.app === "poznamky")).toBe(false);
   });
 });
+
+describe("restart a vypnutí", () => {
+  it("zavře okna a ukončí programy, soubory a postup nechá", () => {
+    let s = vychoziStavMac();
+    s = reducerMac(s, { typ: "okno/otevri", app: "terminal" });
+    s = reducerMac(s, { typ: "okno/otevri", app: "poznamky" });
+    s = { ...s, splneno: ["terminal-pwd"] };
+    const disk = s.disk;
+    const po = reducerMac(s, { typ: "system/vypni" });
+    expect(po.okna).toEqual([]);
+    expect(po.bezici).toEqual(["finder"]);
+    expect(po.splneno).toEqual(["terminal-pwd"]);
+    expect(po.disk).toBe(disk);
+  });
+});

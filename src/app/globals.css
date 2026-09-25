@@ -1237,6 +1237,28 @@
   }
 }
 
+/* Pruh při startu Macu (po restartu a po „Zapnout znovu“). Jako ostatní
+   animace simulace se řídí jejím přepínačem Omezit pohyb, ne systémem –
+   s omezeným pohybem je pruh rovnou plný. */
+@keyframes mac-start-pruh {
+  from {
+    width: 0;
+  }
+  to {
+    width: 100%;
+  }
+}
+
+.mac-start-pruh {
+  width: 0;
+  animation: mac-start-pruh 2.4s ease-in-out forwards;
+}
+
+.mac[data-efekty="omezene"] .mac-start-pruh {
+  width: 100%;
+  animation: none;
+}
+
 /* Tapety macOS.
    Základní `.mac-tapeta` výš zůstává jako přechod v CSS („Vrstvy") a slouží
    i jako záloha, kdyby se obrázek nenačetl. Zbylé dvě jsou fotky, vybírané
