@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Síť naostro v příkazovém řádku</title>
+<style>
+:root{--teal:#0c8a83;--teal-d:#076663;--ink:#17211e;--grey:#5c6965;--cream:#f7f6f2;--line:#dcdcd6;--rust:#c45a3e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+header{background:var(--ink);color:#fff;padding:26px 32px}
+header .lbl{color:#7fd6cf;font-weight:700;letter-spacing:.08em;font-size:13px;text-transform:uppercase}
+header h1{margin:6px 0 4px;font-size:30px}
+header p{margin:0;color:#b9c4c0;font-size:15px}
+.bar{background:var(--teal);height:6px}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px}
+.mod{background:#fff;border:1px solid var(--line);border-radius:10px;margin:22px 0;overflow:hidden}
+.mod>h2{margin:0;padding:16px 22px;background:#fbfbf9;border-bottom:1px solid var(--line);font-size:19px}
+.mod>h2 span{display:inline-block;background:var(--rust);color:#fff;border-radius:5px;
+  font-size:12px;padding:3px 9px;margin-right:10px;vertical-align:2px;letter-spacing:.06em}
+.body{padding:20px 22px}
+.body>p:first-child{margin-top:0}
+.q{background:#f2f8f7;border-left:4px solid var(--teal);padding:11px 15px;margin:16px 0 0;font-size:15px}
+.q b{color:var(--teal-d)}
+.pozor{background:#fdf3ef;border-left:4px solid var(--rust);padding:10px 14px;margin:0 0 18px;font-size:15px}
+code{font-family:Consolas,Menlo,monospace;background:#eef2f1;padding:1px 6px;border-radius:4px;font-size:15px}
+.prikazy{margin:0;padding-left:22px}
+.prikazy li{margin:0 0 14px}
+.prikazy li p{margin:4px 0 0}
+a{color:var(--teal-d)}
+footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font-size:13px}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<header>
+  <div class="lbl">Informatika · 1. ročník SŠ</div>
+  <h1>Síť naostro v příkazovém řádku</h1>
+  <p>Bonus k hodině o příkazovém řádku. Navazuje na laboratoř Cesta dat sítí.</p>
+</header>
+<main>
+
+<section class="mod">
+  <h2><span>BONUS</span>Ověř si cestu dat na skutečném počítači</h2>
+  <div class="body">
+    <p>V <a href="4.%20Laborato%C5%99%20%E2%80%93%20cesta%20dat%20s%C3%ADt%C3%AD.html">laboratoři Cesta dat sítí</a> byla cesta dat zjednodušená. Teď uvidíš, jak vypadá doopravdy. Otevři příkazový řádek (Start → napiš <code>cmd</code> → Enter) a postupně zadej tyhle čtyři příkazy. Fungují ve Windows.</p>
+    <p class="pozor"><b>Ve škole může něco selhat.</b> Školní sítě často blokují <code>ping</code> a <code>tracert</code>. Když místo časů uvidíš hvězdičky <code>*</code> nebo „Časový limit žádosti vypršel“, neznamená to, že internet nefunguje. Zkus to doma.</p>
+    <ol class="prikazy">
+      <li><code>ipconfig</code>
+        <p>Řádek <b>Adresa IPv4</b> je adresa tvého počítače, <b>Výchozí brána</b> je router. Stejnou adresu najdeš i v Nastavení → Síť a internet. Ve škole bude jiná než doma.</p></li>
+      <li><code>nslookup seznam.cz</code>
+        <p>Počítač se zeptá DNS serveru, stejně jako v modulu 04 laboratoře. První řádky říkají, kterého DNS serveru se ptal. Pod „Neautoritativní odpověď“ najdeš skutečné IP adresy serveru. Velké weby jich mívají víc. Adresy s dvojtečkami jsou novější druh adres (IPv6).</p></li>
+      <li><code>tracert seznam.cz</code>
+        <p>Každý řádek je jedna zastávka na cestě. Všechny řádky kromě posledního jsou routery, poslední řádek je samotný server. Hvězdičky <code>*</code> znamenají, že zastávka na dotaz neodpověděla. Data přesto většinou propouští dál.</p></li>
+      <li><code>ping seznam.cz</code>
+        <p>Počítač pošle serveru krátkou zprávu a čeká na odpověď. Čas v ms říká, jak dlouho trvala cesta tam a zpátky (1 000 ms = 1 s).</p></li>
+    </ol>
+    <div class="q"><b>Zapiš:</b> Kolik routerů ukázal tracert? (Poslední řádek nepočítej, to je server.) A jak dlouho podle pingu trvala cesta tam a zpátky?</div>
+  </div>
+</section>
+
+<footer>
+  <p><b>Pro učitele.</b> Bonus pro rychlíky k hodině o příkazovém řádku (1. ročník, téma Úvod do informatiky a digitální gramotnost). Navazuje na hodinu o počítačových sítích a její laboratoř Cesta dat sítí. Na školních počítačích předem ověř, že cmd, ping a tracert nejsou blokované.</p>
+</footer>
+</main>
+</body>
+</html>

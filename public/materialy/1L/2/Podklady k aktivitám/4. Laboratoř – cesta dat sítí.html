@@ -129,9 +129,6 @@ th{background:#f4f7f6;font-size:12px;text-transform:uppercase;letter-spacing:.05
 td.adr{font-family:Consolas,Menlo,monospace}
 tr.nalezeno td{background:#e2f2ea;font-weight:700}
 
-.prikazy{margin:0;padding-left:22px}
-.prikazy li{margin:0 0 12px}
-
 @media (prefers-reduced-motion: reduce){.halo{transition:none}}
 </style>
 </head>
@@ -140,7 +137,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
 <header>
   <div class="lbl">Informatika · 1. ročník SŠ</div>
   <h1>Laboratoř – cesta dat sítí</h1>
-  <p>Modul k hodině 4 – Počítačové sítě. Běží offline a nic neodesílá. Začíná od úplných základů a každý modul přidá jednu novou věc.</p>
+  <p>Co se děje, když otevřeš webovou stránku. Začneme od úplných základů a každý modul přidá jednu novou věc.</p>
 </header>
 <main>
 
@@ -150,8 +147,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
   <li><a href="#m3"><b>03</b>Klient a server</a></li>
   <li><a href="#m4"><b>04</b>DNS</a></li>
   <li><a href="#m5"><b>05</b>Všechno dohromady</a></li>
-  <li class="navic"><a href="#m6"><b>06</b>Pro rychlíky</a></li>
-  <li class="navic"><a href="#m7"><b>07</b>K hodině 6: naostro</a></li>
+  <li class="navic"><a href="#m6"><b>06</b>Bonus: dvě adresy</a></li>
 </ol>
 
 <!-- ============ MODUL 01 ============ -->
@@ -161,9 +157,9 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     <p>Začneme úplně od začátku: dva počítače a jeden kabel.</p>
     <div class="pojmy">
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Síť</h3>
-        <p>Zařízení propojená kabelem nebo Wi-Fi, aby si mohla posílat data.</p><span class="jako">Jako silnice mezi domy.</span></div>
+        <p>Zařízení propojená kabelem nebo Wi-Fi, aby si mohla posílat data – zprávy, fotky, stránky.</p><span class="jako">Jako cesty mezi domy, po kterých chodí pošta.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Paket</h3>
-        <p>Malý balíček dat. Delší zprávy, fotky i stránky se rozdělí na mnoho paketů.</p><span class="jako">Jako obálka s kouskem dopisu.</span></div>
+        <p>Malý balíček dat. Delší zprávy, fotky i stránky se rozdělí na mnoho paketů.</p><span class="jako">Jako obálka s kouskem dopisu. V laboratoři proto paketu říkáme obálka.</span></div>
     </div>
     <div class="ovl">
       <button id="m1posli" class="hl" type="button">Pošli zprávu „Ahoj!“</button>
@@ -177,7 +173,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     <div class="chk">
       <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">kdy mluvíme o počítačové síti?</span><br>
       <button class="a1" data-ok="1">Když jsou aspoň dvě zařízení propojená a posílají si data</button>
-      <button class="a1" data-ok="0">Když má počítač prohlížeč</button>
+      <button class="a1" data-ok="0">Když má počítač hodně paměti</button>
       <button class="a1" data-ok="0">Jen když je počítač připojený k internetu</button>
       <div class="res" id="r1"></div>
     </div>
@@ -191,7 +187,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     <p>Doma je zařízení víc a všechna jsou připojená k jedné krabičce – routeru. Jak router pozná, komu obálka patří?</p>
     <div class="pojmy">
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>IP adresa</h3>
-        <p>Číslo, které má v síti každé zařízení. Podle něj se pozná, komu data patří.</p><span class="jako">Jako adresa domu na obálce.</span></div>
+        <p>Číslo, které má v síti každé zařízení. Podle něj se pozná, komu data patří. Na rozdíl od adresy domu se může měnit – třeba když se připojíš k jiné síti.</p><span class="jako">Jako adresa domu na obálce.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Router</h3>
         <p>Krabička, která propojuje zařízení a podle adresy posílá obálky správným směrem.</p><span class="jako">Jako třídírna na poště.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Kabel a Wi-Fi</h3>
@@ -206,6 +202,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     <div class="pane"><svg class="scena" id="sc2" viewBox="0 0 1000 455" role="img" aria-label="Domácí síť: notebook, mobil, tiskárna a televize připojené k routeru"></svg></div>
     <p class="posun">Schéma si posuň prstem do strany.</p>
     <p class="deni" id="d2" aria-live="polite"></p>
+    <p class="deni" style="font-size:14px;color:var(--grey);min-height:0;margin-top:6px"><b style="color:var(--ink)">Zjednodušeno.</b> Domácí „router“ je ve skutečnosti router, přepínač a Wi-Fi v jedné krabičce. Uvnitř domácí sítě obálky doručuje přepínač a řídí se přitom ještě jinou adresou zařízení (MAC). Podle IP adres se směruje hlavně cestou ven do internetu.</p>
     <div class="chk">
       <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">obálka má adresu 192.168.1.40. Kam ji router pošle?</span><br>
       <button class="a2" data-ok="0">Mobilu</button>
@@ -223,11 +220,11 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     <p>Stránky, videa ani e-maily nejsou v tvém počítači. Leží na jiných počítačích někde v internetu a tvůj počítač si o ně musí říct.</p>
     <div class="pojmy">
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Klient</h3>
-        <p>Zařízení, které o něco žádá – tvůj notebook nebo mobil.</p><span class="jako">Jako host v restauraci, který si objednává.</span></div>
+        <p>Zařízení, které o něco žádá – tvůj notebook nebo mobil.</p><span class="jako">Jako odesílatel, který poštou o něco požádá.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Server</h3>
-        <p>Počítač, který žádosti vyřizuje. Bydlí na něm stránky, videa nebo e-maily.</p><span class="jako">Jako kuchyně, která jídlo připraví.</span></div>
+        <p>Počítač, který žádosti vyřizuje. Bydlí na něm stránky, videa nebo e-maily.</p><span class="jako">Jako adresát, který na dopis odpoví a pošle, o co se žádalo.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Internet</h3>
-        <p>Síť sítí. Routery po celém světě si mezi sebou předávají obálky.</p><span class="jako">Jako silnice mezi městy celého světa.</span></div>
+        <p>Síť sítí. Routery po celém světě si mezi sebou předávají obálky.</p><span class="jako">Jako třídírny pošty po celém světě, které si dopisy předávají.</span></div>
     </div>
     <div class="ovl">
       <button id="m3otevri" class="hl" type="button">Otevři stránku</button>
@@ -237,7 +234,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     <div class="pane"><svg class="scena" id="sc3" viewBox="0 0 1000 290" role="img" aria-label="Notebook, domácí router, internet a server se stránkami"></svg></div>
     <p class="posun">Schéma si posuň prstem do strany.</p>
     <p class="deni" id="d3" aria-live="polite"></p>
-    <p class="otazka" id="m3otazka" style="display:none"><b>Otázka na další modul:</b> Jak notebook věděl, kde server je? Ty jsi přece napsal seznam.cz, ne číslo.</p>
+    <p class="otazka" id="m3otazka" style="display:none"><b>Otázka na další modul:</b> Jak notebook věděl, kde server je? V adresním řádku je přece jméno seznam.cz, ne číslo.</p>
     <div class="chk">
       <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">pouštíš si na mobilu video. Kdo je klient?</span><br>
       <button class="a3" data-ok="1">Mobil</button>
@@ -255,7 +252,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     <p>Ty píšeš jména stránek, síť ale doručuje podle čísel. Někdo je musí přeložit.</p>
     <div class="pojmy">
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Doménové jméno</h3>
-        <p>Jméno stránky pro lidi, třeba seznam.cz. Lidé si pamatují jména, síť pracuje s čísly.</p><span class="jako">Jako jméno kamaráda v kontaktech.</span></div>
+        <p>Jméno stránky pro lidi, třeba seznam.cz. Lidé si pamatují jména, síť pracuje s čísly.</p><span class="jako">Jako jméno v telefonním seznamu – snáz se pamatuje než číslo.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>DNS</h3>
         <p>Služba, která ke jménu najde IP adresu.</p><span class="jako">Jako telefonní seznam: hledáš jméno, dostaneš číslo.</span></div>
     </div>
@@ -290,11 +287,11 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
 <section class="mod" id="m5">
   <h2><span>MODUL 05</span>Všechno dohromady: co se stane, když dáš Enter</h2>
   <div class="body">
-    <p>Teď znáš všechny díly. Tady je spojíš do jedné cesty – přesně podle pěti kroků z pracovního listu.</p>
+    <p>Teď znáš všechny díly. Tady je spojíš do jedné cesty o pěti krocích – stejných, jaké máš v pracovním listu.</p>
     <div class="ovl">
       <label class="lbl" for="adresa5">Adresa stránky:</label>
       <input id="adresa5" type="text" value="seznam.cz" spellcheck="false" autocomplete="off">
-      <button id="dalsi5" class="hl" type="button">Stiskni Enter</button>
+      <button id="dalsi5" class="hl" type="button">Odeslat (Enter)</button>
       <button id="zpet5" type="button">◀ Zpět</button>
       <span class="mezera"></span>
       <button id="prehrat5" type="button">▶ Přehrát vše</button>
@@ -313,7 +310,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <div class="popis" aria-live="polite"><h3 id="titul5"></h3><p id="text5"></p></div>
       <div class="obalka"><h4>Obálka (paket)</h4><div id="obalka5"></div></div>
     </div>
-    <p class="deni" style="font-size:14px;color:var(--grey);min-height:0;margin-top:14px"><b style="color:var(--ink)">Zjednodušeno.</b> Routerů bývá po cestě víc a stránka se posílá v mnoha paketech. Jak to vypadá doopravdy, uvidíš v modulu 07.</p>
+    <p class="deni" style="font-size:14px;color:var(--grey);min-height:0;margin-top:14px"><b style="color:var(--ink)">Zjednodušeno.</b> Routerů bývá po cestě víc a stránka se posílá v mnoha paketech. Na obálce je kromě příjemce i odesílatel – ukáže ho modul 06. Skutečnou cestu si prohlédneš v hodině o příkazovém řádku.</p>
     <div class="q"><b>Zapiš:</b> Popiš vlastními slovy pět kroků od stisku Enter po zobrazení stránky.</div>
     <div class="chk">
       <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">DNS server přestal fungovat, zbytek sítě jede. Co se stane, když napíšeš seznam.cz?</span><br>
@@ -327,14 +324,14 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
 
 <!-- ============ MODUL 06 ============ -->
 <section class="mod navic" id="m6">
-  <h2><span>MODUL 06</span>Pro rychlíky: proč má router dvě adresy</h2>
+  <h2><span>MODUL 06</span>Bonus: proč má router dvě adresy</h2>
   <div class="body">
-    <p>Bonus z pracovního listu: tvoje IP adresa nejspíš začíná 192.168…, ale web „what is my IP“ ti ukáže úplně jinou. Proč?</p>
+    <p>Bonus z pracovního listu: tvoje IP adresa nejspíš začíná 192.168…, ale web „what is my IP“ (anglicky „jaká je moje IP adresa“) ti ukáže úplně jinou. Proč?</p>
     <div class="pojmy">
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Vnitřní adresa</h3>
-        <p>Platí jen uvnitř jedné sítě. Doma obvykle začíná 192.168., ve škole často 10. Stejnou vnitřní adresu mají zároveň tisíce jiných domácností.</p><span class="jako">Jako číslo pokoje v hotelu – pokoj 12 je v každém hotelu.</span></div>
+        <p>Platí jen uvnitř jedné sítě. Doma obvykle začíná 192.168., ve škole často 10. Stejnou vnitřní adresu mají zároveň tisíce jiných domácností.</p><span class="jako">Jako číslo bytu – byt 12 je skoro v každém větším domě.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Veřejná adresa</h3>
-        <p>Adresa, pod kterou je tvoje síť vidět v internetu. Má ji router a sdílí ji všechna zařízení v domácnosti.</p><span class="jako">Jako adresa hotelu. Recepce pak předá poštu do správného pokoje.</span></div>
+        <p>Adresa, pod kterou je tvoje síť vidět v internetu. Má ji router a sdílí ji všechna zařízení v domácnosti.</p><span class="jako">Jako adresa domu. Uvnitř pak pošta dojde do správného bytu.</span></div>
     </div>
     <div class="ovl">
       <button id="m6posli" class="hl" type="button">Pošli žádost o stránku</button>
@@ -347,6 +344,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <p class="deni" id="d6" aria-live="polite"></p>
       <div class="obalka"><h4>Obálka (paket)</h4><div id="obalka6"></div></div>
     </div>
+    <p class="deni" style="font-size:14px;color:var(--grey);min-height:0;margin-top:14px"><b style="color:var(--ink)">Zjednodušeno.</b> Stránka by ve skutečnosti přišla v mnoha obálkách a router by adresy přepsal u každé z nich.</p>
     <div class="chk">
       <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">proč server neposílá stránku rovnou na 192.168.1.15?</span><br>
       <button class="a6" data-ok="1">Ta adresa platí jen v tvé domácí síti</button>
@@ -357,22 +355,6 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
   </div>
 </section>
 
-<!-- ============ MODUL 07 ============ -->
-<section class="mod navic" id="m7">
-  <h2><span>MODUL 07</span>K hodině 6: ověř si to naostro</h2>
-  <div class="body">
-    <p>Tenhle modul patří k 6. hodině, kde se naučíš pracovat s příkazovým řádkem. Dnes svou IP adresu najdeš v Nastavení → Síť a internet.</p>
-    <p>Laboratoř cestu zjednodušuje. Na skutečném počítači uvidíš, jak to vypadá doopravdy. Otevři příkazový řádek (Start → napiš <code>cmd</code> → Enter) a zadej:</p>
-    <ol class="prikazy">
-      <li><code>ipconfig</code> – řádek <b>Adresa IPv4</b> je adresa tvého počítače, <b>Výchozí brána</b> je router. Ve škole bude adresa jiná než doma.</li>
-      <li><code>nslookup seznam.cz</code> – počítač se zeptá DNS serveru stejně jako v modulu 04. V odpovědi najdeš skutečnou IP adresu serveru. Velké weby jich mívají víc.</li>
-      <li><code>tracert seznam.cz</code> – každý řádek je jeden router na cestě k serveru. Hvězdičky <code>*</code> znamenají, že router na dotaz neodpověděl. Data dál přesto většinou propouští.</li>
-      <li><code>ping seznam.cz</code> – čas v ms je, jak dlouho trvala cesta tam a zpátky (1 000 ms = 1 s). Když místo časů vidíš chyby, síť ping nejspíš blokuje. Zkus to doma.</li>
-    </ol>
-    <div class="q"><b>Zapiš:</b> Kolik routerů ukázal tracert? A jak dlouho podle pingu trvala cesta tam a zpátky?</div>
-  </div>
-</section>
-
 <!-- ============ SLOVNÍČEK ============ -->
 <section class="mod">
   <h2>Slovníček – všechny pojmy na jednom místě</h2>
@@ -380,7 +362,8 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
 </section>
 
 <footer>
-  <p><b>Poznámka k adresám.</b> IP adresy v internetu jsou v laboratoři vymyšlené. Pochází z rozsahů vyhrazených pro ukázky, které nikomu nepatří. Skutečnou adresu serveru zjistíš příkazem nslookup. Laboratoř nenačítá nic z internetu.</p>
+  <p><b>Poznámka k adresám.</b> IP adresy v internetu jsou v laboratoři vymyšlené. Pochází z rozsahů vyhrazených pro ukázky, které nikomu nepatří. Skutečné adresy si žáci zjistí v hodině o příkazovém řádku.</p>
+  <p><b>Pro učitele.</b> Laboratoř patří k hodině o počítačových sítích (1. ročník, téma Úvod do informatiky a digitální gramotnost). Moduly 01–05 jdou od základů k celé cestě dat, modul 06 je bonus. Běží offline a nic neodesílá. Pracovní list, plán hodiny a navazující hodinu s příkazovým řádkem najdete v bance materiálů na karelhlas.vercel.app.</p>
 </footer>
 </main>
 
@@ -789,7 +772,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     function sceny(){
       var D=dom,IP=ipPro(D);
       return [
-        {k:1,obr:'adresa',titul:'Připraveno',text:'Napiš adresu a stiskni Enter. Uvidíš najednou všechno, co znáš z modulů 01–04.'},
+        {k:1,obr:'adresa',titul:'Připraveno',text:'Napiš adresu a klikni na Odeslat. Uvidíš najednou všechno, co znáš z modulů 01–04.'},
         {k:1,obr:'ceka',zvyr:'pc',titul:'1. Napíšeš adresu a stiskneš Enter',text:'Prohlížeč zná jméno '+D+', ale ne číslo serveru. Musí se zeptat DNS.'},
         {k:2,obr:'ceka',titul:'2. Počítač se zeptá DNS na IP adresu',text:'Obálka s otázkou letí přes Wi-Fi, router a internet k DNS serveru.',
          ob:{stitek:'otázka',ven:true,pro:'DNS server ('+DNS_IP+')',obsah:'Jaká je IP adresa '+D+'?'},cesta:['pc','router','r1','r3','dns']},
@@ -809,7 +792,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     }
     function tlacitka(){
       var d=$('dalsi5');
-      d.textContent=i===0?'Stiskni Enter':'Další krok ▶';
+      d.textContent=i===0?'Odeslat (Enter)':'Další krok ▶';
       d.disabled=i===SC.length-1&&!sc.beh;
       $('zpet5').disabled=i===0;
       $('prehrat5').textContent=auto?'■ Zastavit':'▶ Přehrát vše';
@@ -882,7 +865,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     }
     function panel(o,z,kdeText){
       var box=$('obalka6');
-      if(!o){box.innerHTML='<p class="prazdna">Obálka zatím nevyrazila. Sleduj hlavně políčka Od a Pro.</p>';return;}
+      if(!o){box.innerHTML='<p class="prazdna">Obálka zatím nevyrazila. Na obálce je adresa příjemce (Pro) i odesílatele (Od), aby bylo kam poslat odpověď. Sleduj hlavně tyhle dvě.</p>';return;}
       function radek(nazev,klic){
         var zm=!!z[klic];
         return '<dt>'+nazev+'</dt><dd'+(zm?' class="zmena"':'')+'><span class="adr">'+esc(o[klic])+'</span> <span class="kdo">('+esc(kdo(o[klic]))+')</span>'+
@@ -950,7 +933,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     }
   }
   check('.a1','r1','Síť může být i malá – třeba dva počítače spojené kabelem. Internet je jen ta největší.',
-        'Síť jsou propojená zařízení, která si posílají data. Prohlížeč ani internet k tomu potřeba nejsou.');
+        'Síť jsou propojená zařízení, která si posílají data. Na výkonu počítače nezáleží a internet k tomu potřeba není.');
   check('.a2','r2','Router se podívá na adresu a pošle obálku televizi.',
         'Podívej se na adresy pod zařízeními ve schématu. Adresu 192.168.1.40 má televize.');
   check('.a3','r3','Mobil o video žádá, takže je klient. Server video posílá.',

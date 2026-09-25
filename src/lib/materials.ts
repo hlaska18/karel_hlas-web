@@ -202,6 +202,7 @@ const NAME_EN: Record<string, string> = {
   "Laboratoř – komprese a formáty": "Lab – compression and formats",
   "Laboratoř – vzorkování zvuku": "Lab – audio sampling",
   "Laboratoř – cesta dat sítí": "Lab – how data travels through a network",
+  "Síť naostro v příkazovém řádku": "The real network in the command line",
   "Formáty a komprese": "Formats and compression",
   "Rastr a vektor": "Raster and vector",
   "Parametry médií": "Media parameters",
