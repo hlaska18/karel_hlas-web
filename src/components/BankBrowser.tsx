@@ -716,10 +716,11 @@ function MaterialRow({
   const t = fileType(it.ext, lang);
   const previewable = canPreview(it.ext);
   const TypeIcon = typeIcon(t.key);
-  /* Řešení úlohy z cvičebnice je žluté a nese štítek „učitelé“: učitel ho
-     promítá, žák ho má dostat až po úloze. Soubor přitom zůstává přístupný
-     všem (`audience` se nemění) – jde jen o to, aby na první pohled bylo
-     vidět, co je co (Karel 25. 9. 2026). */
+  /* Řešení úlohy z cvičebnice nese štítek „učitelé“: učitel ho promítá, žák
+     ho má dostat až po úloze. Vypadá přesně jako ostatní učitelské položky
+     (plán hodiny, klíč k testům) – běžný povrch a jantarový štítek, žádné
+     vlastní pozadí. Soubor přitom zůstává přístupný všem (`audience` se
+     nemění), jde jen o to, aby bylo vidět, co je co (Karel 25. 9. 2026). */
   const jeReseniUlohy =
     /^(Word|Excel|PowerBI) › Úlohy › /.test(it.group?.cs ?? "") &&
     /^řešení/i.test(it.label.cs);
@@ -750,7 +751,7 @@ function MaterialRow({
             },
           }
         : {})}
-      className={`povrch ${jeReseniUlohy ? "povrch-reseni " : ""}group/radek flex flex-wrap items-center gap-x-3 gap-y-1 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5 ${
+      className={`povrch group/radek flex flex-wrap items-center gap-x-3 gap-y-1 rounded-karta px-4 py-3 transition hover:shadow-lg hover:shadow-accent-600/15 sm:flex-nowrap sm:gap-4 sm:py-3.5 ${
         previewable
           ? "cursor-pointer hover:border-accent-500/40 dark:hover:border-accent-500/40"
           : ""

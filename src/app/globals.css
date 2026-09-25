@@ -170,22 +170,6 @@
   box-shadow: 0 10px 26px -16px rgba(0, 0, 0, 0.75);
 }
 
-/* Řešení úlohy z cvičebnice (Word, Excel, Power BI) svítí žlutě: je pro
-   učitele, který ho třeba promítne. Žlutá = učitelská, stejně jako štítek
-   „učitelé“ (Karel 25. 9. 2026). Dvojitá třída kvůli prioritě nad
-   `.povrch` a `.dark .povrch`. */
-.povrch.povrch-reseni {
-  background-color: #fdf4d3;
-  background-image: linear-gradient(135deg, #fffbeb, #fcefc2);
-  border-color: rgba(180, 120, 0, 0.35);
-}
-
-.dark .povrch.povrch-reseni {
-  background-color: #373014;
-  background-image: linear-gradient(135deg, #3d3517, #312a11);
-  border-color: rgba(251, 191, 36, 0.3);
-}
-
 .dark .glass {
   background-image: linear-gradient(
     135deg,
