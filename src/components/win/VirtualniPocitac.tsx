@@ -30,7 +30,8 @@ import { Fotky } from "./apps/Fotky";
 import { Prohlizec } from "./apps/Prohlizec";
 import { Reklama } from "./apps/Reklama";
 import { vybranyAkcent } from "@/lib/win/akcenty";
-import { MERITKO } from "@/lib/win/stav";
+import { MERITKO, VYCHOZI_NASTAVENI, vychoziStav } from "@/lib/win/stav";
+import { postup } from "@/lib/win/ukoly";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import type { AppId } from "@/lib/win/typy";
 import type { Okno } from "@/lib/win/stav";
@@ -57,7 +58,7 @@ function Obrazovka() {
 
   /* Rozběhnuté sezení si pamatuje karta – obnovení stránky nevrací na zámek. */
   useEffect(() => {
-    if (jePrihlasen()) nastavFazi("bezi");
+    if (jePrihlasen("windows")) nastavFazi("bezi");
   }, []);
 
   /* Rozměry plochy: okna se kladou a přichytávají vůči ní, ne vůči stránce. */
@@ -156,7 +157,7 @@ function Obrazovka() {
   const napajeni = (co: "odhlasit" | "restart" | "vypnout") => {
     nastavPanel(null);
     stav.okna.forEach((o) => poslat({ typ: "okno/zavri", id: o.id }));
-    zapamatujPrihlaseni(false);
+    zapamatujPrihlaseni(false, "windows");
     if (co === "restart") {
       nastavFazi("restartuji");
       window.setTimeout(() => nastavFazi("prihlaseni"), 2200);
@@ -199,8 +200,21 @@ function Obrazovka() {
           <Prihlaseni
             jmenoUctu={n.jmenoUctu}
             tapetaId={n.tapeta}
-            onHotovo={() => {
-              zapamatujPrihlaseni(true);
+            rozdelano={postup(stav.splneno)}
+            onHotovo={(jmeno, nacisto) => {
+              // Přihlášení jménem (od 25. 9. 2026 místo kódu). Jméno je
+              // jméno účtu – ukazuje se ve Startu, v Nastavení a nese ho
+              // kód postupu. „Začít načisto“ = rozdělaná práce patřila
+              // někomu jinému: čistý počítač pro tentýž scénář.
+              if (nacisto) {
+                poslat({
+                  typ: "system/nacti",
+                  stav: { ...vychoziStav(stav.scenar), nastaveni: { ...VYCHOZI_NASTAVENI, jmenoUctu: jmeno } },
+                });
+              } else {
+                poslat({ typ: "nastaveni/zmen", zmena: { jmenoUctu: jmeno } });
+              }
+              zapamatujPrihlaseni(true, "windows");
               nastavFazi("bezi");
             }}
           />

@@ -385,7 +385,7 @@ function Obnoveni() {
    */
   const zacniOdZacatku = () => {
     zapomen();
-    zapamatujPrihlaseni(false);
+    zapamatujPrihlaseni(false, "windows");
     window.location.reload();
   };
 

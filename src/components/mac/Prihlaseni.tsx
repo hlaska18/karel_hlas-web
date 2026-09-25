@@ -3,27 +3,34 @@
 /**
  * Přihlašovací obrazovka macOS.
  *
- * Kódy jsou TYTÉŽ jako u Windows (`win/pristup.ts`) a je to schválně: kód
- * patří třídě, ne operačnímu systému. Učitel napíše na tabuli jeden a platí
- * pro obě prostředí; kdo se přihlásil do Windows, projde i sem.
+ * Od 25. 9. 2026 se žák přihlásí SVÝM JMÉNEM, ne kódem od učitele – kód nic
+ * nechránil (Karlovo rozhodnutí, stejně jako ve Windows). Jméno nese kód
+ * postupu, který žák na konci hodiny pošle učiteli.
  *
- * Stejně jako tam platí, že je to ORGANIZAČNÍ ZÁVORA, ne zámek – porovnává se
- * v prohlížeči a kdo se podívá do zdroje, najde ho. Obrazovka to říká nahlas.
+ * Když na počítači zůstala rozdělaná práce pod jiným jménem, obrazovka se
+ * zeptá, čí je – bez výchozího tlačítka, Enter nesmí převzít cizí práci.
  */
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { datumSlovy, hodiny } from "@/lib/win/format";
-import { kodSedi } from "@/lib/win/pristup";
 import { VYCHOZI_NASTAVENI, vychoziStavMac, zapomenMac } from "@/lib/mac/stav";
+import { postupMac } from "@/lib/mac/ukoly";
+import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru";
 import { useMac } from "./system";
 
-type Faze = "zamek" | "kod" | "vitejte";
+type Faze = "zamek" | "jmeno" | "vitejte";
 
 export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
-  const { poslat } = useMac();
+  const { stav, poslat } = useMac();
+  const jmenoUctu = stav.nastaveni.jmenoUctu || VYCHOZI_JMENO;
+  const rozdelano = postupMac(stav.splneno);
   const [faze, nastavFazi] = useState<Faze>("zamek");
-  const [kod, nastavKod] = useState("");
+  // Pole je vždycky prázdné, i když si počítač pamatuje minulé jméno:
+  // předvyplněné jméno předchozího žáka by nový žák jen odklepl Enterem.
+  const [jmeno, nastavJmeno] = useState("");
+  /** Rozdělaná práce patří jinému jménu – ptáme se, čí je. */
+  const [ptaSeCi, nastavPtaSeCi] = useState(false);
   const [hlaska, nastavHlasku] = useState("");
   /** Ptá se na potvrzení úklidu po předchozím žákovi? */
   const [ptaSeNaUklid, nastavPtaSeNaUklid] = useState(false);
@@ -42,7 +49,7 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
   /* Ze zámku se jde dál čímkoli – klik, mezerník, Enter. */
   useEffect(() => {
     if (faze !== "zamek") return;
-    const dal = () => nastavFazi("kod");
+    const dal = () => nastavFazi("jmeno");
     window.addEventListener("keydown", dal);
     window.addEventListener("mousedown", dal);
     return () => {
@@ -51,28 +58,47 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
     };
   }, [faze]);
 
-  // Informace se při přechodu ze zámku k poli na kód zavřou – na nízké
+  // Informace se při přechodu ze zámku k poli na jméno zavřou – na nízké
   // obrazovce by jinak zakryly odkaz Začít načisto.
   useEffect(() => nastavInfo(false), [faze]);
 
   useEffect(() => {
-    if (faze === "kod") window.setTimeout(() => pole.current?.focus(), 60);
+    if (faze === "jmeno") window.setTimeout(() => pole.current?.focus(), 60);
     if (faze === "vitejte") {
       const id = window.setTimeout(() => onHotovo(), 1200);
       return () => window.clearTimeout(id);
     }
   }, [faze, onHotovo]);
 
+  /** Přihlásí jménem; `nacisto` = rozdělaná práce patřila někomu jinému. */
+  const prihlas = (nacisto: boolean) => {
+    const j = jmeno.trim();
+    if (nacisto) {
+      zapomenMac();
+      // Čistý stav i do paměti – jinak by se hned uložil zpátky ten starý
+      // (stejně jako u odkazu Začít načisto níž).
+      poslat({ typ: "system/nacti", stav: vychoziStavMac() });
+    }
+    poslat({ typ: "nastaveni/zmen", zmena: { jmenoUctu: j } });
+    nastavPtaSeCi(false);
+    nastavFazi("vitejte");
+  };
+
   const odesli = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!kodSedi(kod, "macos")) {
-      nastavHlasku("Tenhle kód nesedí. Zeptej se vyučujícího.");
+    if (!jmenoPlatne(jmeno)) {
+      nastavHlasku("Napiš své jméno a příjmení.");
       nastavChybu(true);
       window.setTimeout(() => nastavChybu(false), 700);
       return;
     }
     nastavHlasku("");
-    nastavFazi("vitejte");
+    const cizi = jmenoUctu !== VYCHOZI_JMENO && !stejneJmeno(jmenoUctu, jmeno) && rozdelano.hotovo > 0;
+    if (cizi) {
+      nastavPtaSeCi(true);
+      return;
+    }
+    prihlas(false);
   };
 
   // Zamykací obrazovka ukazuje výchozí tapetu, ne vlastní pozadí – na Macu
@@ -121,34 +147,37 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
           </div>
         )}
 
-        {faze === "kod" && (
+        {faze === "jmeno" && (
           <form
             onSubmit={odesli}
             className={`mt-14 flex w-[360px] max-w-[92vw] flex-col items-center ${
               chyba ? "animate-[zatreseni_0.45s]" : ""
             }`}
           >
-            <AvatarZak />
-            <h1 className="mt-3 text-[20px] font-medium drop-shadow">Žák</h1>
+            <AvatarZak jmeno={jmeno} />
+            <h1 className="mt-3 text-[20px] font-medium drop-shadow">{jmeno.trim() || "Přihlášení"}</h1>
 
             <div // Zaostřené pole se jen prosvětlí, jako na zamykací obrazovce Macu.
               className="mac-sklo-zaloha mt-5 flex w-[260px] items-center gap-2 rounded-full border border-white/40 bg-black/30 pl-4 pr-1 backdrop-blur transition-colors focus-within:border-white/75 focus-within:bg-black/40"
             >
               <input
                 ref={pole}
-                value={kod}
-                onChange={(e) => nastavKod(e.target.value)}
-                placeholder="Kód od vyučujícího"
-                aria-label="Kód od vyučujícího"
+                value={jmeno}
+                onChange={(e) => {
+                  nastavJmeno(e.target.value);
+                  nastavPtaSeCi(false);
+                }}
+                placeholder="Jméno a příjmení"
+                aria-label="Jméno a příjmení"
                 autoComplete="off"
                 spellCheck={false}
-                maxLength={32}
-                className="h-9 min-w-0 flex-1 bg-transparent text-[14px] uppercase tracking-widest text-white outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-white/50"
+                maxLength={60}
+                className="h-9 min-w-0 flex-1 bg-transparent text-[14px] text-white outline-none placeholder:text-white/50"
               />
               <button
                 type="submit"
-                disabled={!kod.trim()}
-                aria-label="Odemknout"
+                disabled={!jmeno.trim() || ptaSeCi}
+                aria-label="Přihlásit se"
                 className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-white/25 transition hover:bg-white/40 disabled:opacity-40"
               >
                 <ArrowRight className="h-4 w-4" />
@@ -162,6 +191,32 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
             >
               {hlaska || " "}
             </p>
+
+            {ptaSeCi && (
+              <div className="mb-2 flex max-w-[340px] flex-col items-center gap-2 rounded-lg bg-black/40 px-4 py-3 text-center">
+                <p className="text-[12px] leading-relaxed text-white/85">
+                  Na tomhle počítači je rozdělaná práce pod jménem <b>{jmenoUctu}</b> – splněno {rozdelano.hotovo} z{" "}
+                  {rozdelano.celkem} úloh. Je tvoje?
+                </p>
+                {/* Žádné tlačítko není výchozí: Enter nesmí převzít cizí práci. */}
+                <div className="flex gap-2">
+                  <button
+                    type="button"
+                    onClick={() => prihlas(true)}
+                    className="rounded-md bg-white/85 px-3 py-1.5 text-[12px] font-semibold text-black transition hover:bg-white"
+                  >
+                    Ne, začít načisto
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => prihlas(false)}
+                    className="rounded-md px-3 py-1.5 text-[12px] text-white/80 ring-1 ring-white/40 transition hover:text-white"
+                  >
+                    Ano, pokračovat
+                  </button>
+                </div>
+              </div>
+            )}
 
             {/*
               Začít načisto PATŘÍ SEM, ne jen do Nastavení.
@@ -221,7 +276,7 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
 
         {faze === "vitejte" && (
           <div className="mt-20 flex flex-col items-center gap-4">
-            <AvatarZak />
+            <AvatarZak jmeno={jmeno} />
             <Loader2 className="h-5 w-5 animate-spin" />
           </div>
         )}
@@ -246,13 +301,11 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
                 v téhle záložce – tvého počítače se to nedotkne.
               </p>
               <p className="mt-2">
-                {/* Jen „školní": veřejný kód MACOS pro cizí učitele do Windows
-                    neplatí, takže „jeden platí do obou" by pro ně nebyla pravda. */}
-                Školní kód platí i do virtuálních Windows. Drží pohromadě třídu,
-                nechrání žádné údaje – žádné se tu neukládají. Co tu uděláš,
-                zůstává v tomhle prohlížeči.{" "}
+                Jméno ani práce se nikam neodesílají – zůstávají v tomhle
+                prohlížeči. Učiteli je pošleš sám kódem postupu (panel Úkoly →
+                Moje výsledky).{" "}
                 <strong className="font-semibold text-white/90">
-                  Na jiném počítači ani po vyčištění prohlížeče to nenajdeš.
+                  Na jiném počítači práci nenajdeš – pokračuješ tam z kódu postupu.
                 </strong>{" "}
                 <a
                   href="/soukromi"
@@ -281,13 +334,16 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
 }
 
 /**
- * Avatar s iniciálou. Obecná ikona postavičky z knihovny působila jako
- * webový formulář; Mac ukazuje u účtu bez fotky iniciálu na barevném kruhu.
+ * Avatar s iniciálami. Obecná ikona postavičky z knihovny působila jako
+ * webový formulář; Mac ukazuje u účtu bez fotky iniciály na barevném kruhu.
+ * Píšou se živě z pole se jménem.
  */
-function AvatarZak() {
+function AvatarZak({ jmeno }: { jmeno: string }) {
+  const slova = jmeno.trim().split(/\s+/).filter(Boolean);
+  const inicialy = slova.length ? (slova[0][0] + (slova.length > 1 ? slova[slova.length - 1][0] : "")).toUpperCase() : "Ž";
   return (
-    <div className="flex h-[96px] w-[96px] items-center justify-center rounded-full bg-gradient-to-br from-[#8ab4ff] via-[#7867e6] to-[#44309a] text-[40px] font-medium text-white shadow-lg">
-      Ž
+    <div className="flex h-[96px] w-[96px] items-center justify-center rounded-full bg-gradient-to-br from-[#8ab4ff] via-[#7867e6] to-[#44309a] text-[38px] font-medium text-white shadow-lg">
+      {inicialy}
     </div>
   );
 }

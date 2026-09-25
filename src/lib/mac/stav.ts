@@ -93,6 +93,11 @@ export interface NastaveniMac {
    * a Dock → Minimalizovat okna pomocí: džin, nebo prosté zmenšení.
    */
   efektMinimalizace: "dzin" | "zmenseni";
+  /**
+   * Jméno, kterým se žák přihlásil (od 25. 9. 2026 místo vstupního kódu).
+   * Nese ho kód postupu. Domovská složka zůstává `zak` – úlohy na ni odkazují.
+   */
+  jmenoUctu: string;
 }
 
 /** Meze velikosti Docku. Skutečný Mac má podobné – menší už není vidět,
@@ -139,6 +144,7 @@ export const VYCHOZI_NASTAVENI: NastaveniMac = {
   jas: 1,
   nocniRezim: false,
   efektMinimalizace: "dzin",
+  jmenoUctu: "Žák",
 };
 
 /** Nejvyšší zvětšení ikony pod kurzorem a dosah, na který ještě působí. */

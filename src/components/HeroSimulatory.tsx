@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useLang } from "@/lib/i18n";
 import { ZnakWindows } from "@/components/ZnakWindows";
 import { ZnakJablko } from "@/components/ZnakJablko";
-import { VEREJNE_KODY } from "@/lib/win/pristup";
 import type { Lang } from "@/lib/content";
 
 /**
@@ -17,14 +16,14 @@ import type { Lang } from "@/lib/content";
  *
  * Počet úloh přichází z opravdových seznamů úloh (počítá ho `Site`), ne
  * z věty v textech: číslo napsané ručně v popisu dlaždice se jednou rozjelo
- * se skutečností (34 proti 33). Kód je ten veřejný pro učitele z jiných
- * škol – bez něj by cizí učitel skončil na zamykací obrazovce.
+ * se skutečností (34 proti 33). Vstupní kód tu býval taky; od 25. 9. 2026
+ * se do simulátorů vstupuje jménem, bez kódu.
  */
 
 export type PoctyUloh = { windows: number; macos: number };
 
-/** Anglicky „tasks“, ne „exercises“ jako na dlaždici: s dovětkem „in Czech“
- *  a kódem by se řádek v kartě široké 22 rem ořízl zrovna na kódu. */
+/** Anglicky „tasks“, ne „exercises“ jako na dlaždici – kratší řádek
+ *  se v kartě široké 22 rem neořízne. */
 function pocetUloh(n: number, lang: Lang): string {
   if (lang === "en") return `${n} ${n === 1 ? "task" : "tasks"}`;
   const slovo = n === 1 ? "úloha" : n >= 2 && n <= 4 ? "úlohy" : "úloh";
@@ -41,14 +40,12 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
     {
       href: "/windows",
       nazev: tr.hero.simWindows,
-      kod: VEREJNE_KODY.windows,
       pocet: ulohy.windows,
       znak: <ZnakWindows className="h-6 w-6" />,
     },
     {
       href: "/macos",
       nazev: tr.hero.simMacos,
-      kod: VEREJNE_KODY.macos,
       pocet: ulohy.macos,
       znak: <ZnakJablko className="h-7 w-7" />,
     },
@@ -63,9 +60,7 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
 
       <ul className="space-y-4">
         {simulatory.map((s, i) => {
-          const poznamka = tr.hero.simNote
-            .replace("{tasks}", pocetUloh(s.pocet, lang))
-            .replace("{code}", s.kod);
+          const poznamka = tr.hero.simNote.replace("{tasks}", pocetUloh(s.pocet, lang));
           return (
             <li key={s.href}>
               {/* Stejná dvě gesta jako u stohu článků: najetí kamkoli do

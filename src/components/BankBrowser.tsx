@@ -76,7 +76,6 @@ const STR: Record<
     collapseFolder: string;
     sourceBadge: string;
     toolBadge: string;
-    toolCode: string;
     ukazkyNote: (pocet: number) => string;
     openTool: string;
     sourceNote: string;
@@ -101,7 +100,6 @@ const STR: Record<
     collapseFolder: "Zavřít složku",
     sourceBadge: "zdroj",
     toolBadge: "web",
-    toolCode: "Kód pro vstup",
     openTool: "Spustit",
     ukazkyNote: (p) =>
       `Ukázky do výkladu – ${p} ${p === 1 ? "soubor" : p < 5 ? "soubory" : "souborů"} k porovnání`,
@@ -126,7 +124,6 @@ const STR: Record<
     collapseFolder: "Close folder",
     sourceBadge: "source",
     toolBadge: "web",
-    toolCode: "Access code",
     openTool: "Open",
     ukazkyNote: (p) =>
       `Examples for the lesson – ${p} file${p === 1 ? "" : "s"} to compare`,
@@ -646,17 +643,6 @@ function MaterialRow({
             {it.sourceNote && (
               <span className="mt-0.5 block text-sm text-zinc-600 dark:text-zinc-400">
                 {L(it.sourceNote, lang)}
-              </span>
-            )}
-            {/* Vstupní kód simulátoru. Bez něj se učitel z jiné školy dovnitř
-                nedostane – dřív nebyl napsaný nikde na webu. Vlastní štítek,
-                ne věta na konci popisku, ať se nedá přehlédnout. */}
-            {it.kod && (
-              <span className="mt-1.5 inline-flex items-center gap-1.5 rounded-stitek bg-zinc-900/5 px-2 py-0.5 text-sm text-zinc-700 dark:bg-white/10 dark:text-zinc-300">
-                {s.toolCode}:
-                <code className="font-mono font-semibold tracking-wide text-zinc-900 dark:text-white">
-                  {it.kod}
-                </code>
               </span>
             )}
           </span>

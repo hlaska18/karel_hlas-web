@@ -29,18 +29,21 @@ describe("HeroSimulatory", () => {
     expect(odkazy).toEqual(["/windows", "/macos"]);
   });
 
-  it("ukáže předaný počet úloh, správně vyskloňovaný, a veřejný kód", () => {
+  it("ukáže předaný počet úloh, správně vyskloňovaný, a že se vstupuje jménem", () => {
     vykresli("cs", 7, 3);
     const [win, mac] = screen.getAllByRole("link");
-    expect(win.textContent).toContain("7 úloh · kód WIN11");
-    expect(mac.textContent).toContain("3 úlohy · kód MACOS");
+    expect(win.textContent).toContain("7 úloh · přihlášení jménem");
+    expect(mac.textContent).toContain("3 úlohy · přihlášení jménem");
+    // Vstupní kódy jsou od 25. 9. 2026 zrušené – na úvodu už nesmí být.
+    expect(win.textContent).not.toMatch(/kód/);
   });
 
   it("anglicky řekne, že prostředí je česky", () => {
     vykresli("en", 1, 14);
     const [win, mac] = screen.getAllByRole("link");
-    expect(win.textContent).toContain("1 task in Czech · code WIN11");
-    expect(mac.textContent).toContain("14 tasks in Czech · code MACOS");
+    expect(win.textContent).toContain("1 task in Czech");
+    expect(mac.textContent).toContain("14 tasks in Czech");
+    expect(win.textContent).not.toMatch(/code/);
   });
 
   it("odkaz není vnořený v jiném odkazu", () => {

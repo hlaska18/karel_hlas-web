@@ -25,6 +25,7 @@ import {
   type SkoreSady,
 } from "@/lib/dbb/kodPostupu";
 import { pisemka, LEKCE_PISEMKY, type Varianta } from "@/lib/dbb/pisemka";
+import { NAZEV_SIMULATORU, najdiKodySimulatoru, sloucitSimulatory } from "@/lib/postupSimulatoru";
 import { POVINNE_KLICE, KLIC_NAZVY_ULOH } from "@/lib/dbb/obnovaPostupu";
 import { stahni } from "@/lib/dbb/stahni";
 import { cist, zapsat } from "@/lib/dbb/uloziste";
@@ -336,6 +337,9 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
   const vsichni = sloucitPostupy(najdiKody(text));
   const zaci = vsichni.filter((z) => !z.pisemka);
   const pisemky = vsichni.filter((z) => !!z.pisemka);
+  // Kódy z Windows a macOS (WIN1-, MAC1-) – učitel často vloží celé vlákno
+  // z Teams, kde jsou všechny tři simulátory pohromadě.
+  const simulatory = sloucitSimulatory(najdiKodySimulatoru(text));
   const souhrn = souhrnTridy(zaci, KURZ.map((l) => l.id));
   const zacit = kdeZacit(souhrn, zaci.length);
   const bezLekce = (id: number) => zaci.filter((z) => z.hotove.indexOf(id) === -1).map((z) => z.jmeno || "?");
@@ -386,8 +390,8 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
       <div className="flex min-h-0 flex-1 flex-col px-5 py-4 text-[12px]">
         <p className="leading-relaxed">
           {t(
-            "Vlož kódy postupu od žáků – klidně celé zprávy z Teams, kódy se v textu najdou samy. Kód je shrnutí, ne důkaz: vzniká v prohlížeči žáka a dá se upravit. Důkazem práce je stažený soubor z lekce 19.",
-            "Paste the pupils' progress codes – whole Teams messages are fine, the codes are found in the text automatically. A code is a summary, not proof: it is made in the pupil's browser and can be edited. The proof of work is the file downloaded in lesson 19.",
+            "Vlož kódy postupu od žáků – klidně celé zprávy z Teams, kódy se v textu najdou samy, i ty z virtuálních Windows a macOS. Kód je shrnutí, ne důkaz: vzniká v prohlížeči žáka a dá se upravit. Důkazem práce je stažený soubor z lekce 19.",
+            "Paste the pupils' progress codes – whole Teams messages are fine, the codes are found in the text automatically, including those from the virtual Windows and macOS. A code is a summary, not proof: it is made in the pupil's browser and can be edited. The proof of work is the file downloaded in lesson 19.",
           )}
         </p>
         <textarea
@@ -399,7 +403,7 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
           className="dbb-kod mt-2 h-[90px] w-full shrink-0 resize-none border border-dbb-linka bg-dbb-povrch p-2 text-[11px] text-dbb-text focus:border-dbb-akcent"
         />
         <div className="dbb-posuv mt-3 min-h-[120px] flex-1 overflow-auto border border-dbb-linka">
-          {vsichni.length === 0 ? (
+          {vsichni.length === 0 && simulatory.length === 0 ? (
             <p className="p-3 text-dbb-slaby">{t("Zatím žádný kód.", "No codes yet.")}</p>
           ) : (
             <>
@@ -506,6 +510,40 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
                   {t(
                     `– hotovou ji má jen ${souhrn[zacit]} z ${zaci.length}. Chybí: ${bezLekce(KURZ[zacit].id).join(", ")}.`,
                     `– only ${souhrn[zacit]} of ${zaci.length} have done it. Missing: ${bezLekce(KURZ[zacit].id).join(", ")}.`,
+                  )}
+                </p>
+              )}
+              {simulatory.length > 0 && (
+                <table className="w-full" style={{ borderSpacing: 0 }}>
+                  <thead>
+                    <tr className="bg-dbb-hlavicka text-left">
+                      <th className="border-b border-t border-dbb-mrizka px-2 py-1 font-normal">
+                        {t("Windows a macOS – jméno", "Windows and macOS – name")}
+                      </th>
+                      <th className="border-b border-t border-dbb-mrizka px-2 py-1 font-normal">{t("Simulátor", "Simulator")}</th>
+                      <th className="border-b border-t border-dbb-mrizka px-2 py-1 font-normal">{t("Datum", "Date")}</th>
+                      <th className="border-b border-t border-dbb-mrizka px-2 py-1 font-normal">{t("Hotovo", "Done")}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {simulatory.map((z, i) => (
+                      <tr key={i}>
+                        <td className="border-b border-dbb-mrizka px-2 py-1 font-semibold">{z.jmeno || t("(bez jména)", "(no name)")}</td>
+                        <td className="border-b border-dbb-mrizka px-2 py-1">{NAZEV_SIMULATORU[z.simulator]}</td>
+                        <td className="whitespace-nowrap border-b border-dbb-mrizka px-2 py-1">{z.datum}</td>
+                        <td className="whitespace-nowrap border-b border-dbb-mrizka px-2 py-1">
+                          {z.splneno.length}/{z.celkem}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )}
+              {simulatory.length > 0 && (
+                <p className="px-3 py-1.5 text-dbb-slaby">
+                  {t(
+                    "Které úlohy kdo splnil, ukáže Přehled třídy přímo ve virtuálních Windows nebo macOS (panel Úkoly).",
+                    "Which tasks each pupil completed is shown by the Class Overview inside the virtual Windows or macOS (Tasks panel).",
                   )}
                 </p>
               )}

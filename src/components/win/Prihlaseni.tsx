@@ -3,38 +3,45 @@
 /**
  * Uzamykací a přihlašovací obrazovka.
  *
- * První, co žák uvidí. Kromě zadání kódu má ještě jednu úlohu: říct rovnou
+ * První, co žák uvidí. Kromě přihlášení jménem má ještě jednu úlohu: říct rovnou
  * a bez kliků navíc, co to je. Nikdo nemá strávit první minutu hodiny
  * hádáním, jestli se dívá na skutečné Windows, nebo na výukovou simulaci.
  */
 
 import { useEffect, useRef, useState } from "react";
-import { ArrowRight, KeyRound, Loader2 } from "lucide-react";
+import { ArrowRight, Loader2, UserRound } from "lucide-react";
 import { Ikona } from "./Ikona";
 import { TAPETY, vybranaTapeta } from "@/lib/win/obrazky";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { scenarPodleId, scenarZAdresy, VYCHOZI_SCENAR } from "@/lib/win/scenare";
-import { kodSedi } from "@/lib/win/pristup";
+import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru";
 
 /**
- * Kroky: zámek → kód → vítejte.
+ * Kroky: zámek → jméno → vítejte.
  *
  * Účty žáků na serveru byly zrušené (viz `pristup.ts`): postup zůstává
- * v prohlížeči a na server nejde nic. Zbyl vstupní kód od učitele, a ten
- * je ORGANIZAČNÍ ZÁVORA, ne zámek – drží pohromadě třídu a otevírá hodinu.
- * Obrazovka to říká nahlas, protože kód se porovnává v prohlížeči a kdo se
- * podívá do zdroje, najde ho.
+ * v prohlížeči a na server nejde nic. Vstupní kód od učitele Karel
+ * 25. 9. 2026 zrušil taky – nic nechránil. Žák se přihlásí SVÝM JMÉNEM:
+ * to se objeví v kódu postupu, který na konci hodiny pošle učiteli.
+ *
+ * Když na počítači zůstala rozdělaná práce pod jiným jménem (jiný žák,
+ * předchozí hodina), obrazovka se zeptá, jestli je jeho. Bez výchozího
+ * tlačítka – Enter nesmí potichu převzít cizí práci.
  */
-type Faze = "zamek" | "kod" | "vitejte";
+type Faze = "zamek" | "jmeno" | "vitejte";
 
 export function Prihlaseni({
   jmenoUctu,
   tapetaId,
+  rozdelano,
   onHotovo,
 }: {
   jmenoUctu: string;
   tapetaId: string;
-  onHotovo: () => void;
+  /** Kolik úloh je na tomhle počítači splněných (rozdělaná práce). */
+  rozdelano: { hotovo: number; celkem: number };
+  /** Přihlášení jménem; `nacisto` = začít bez rozdělané práce předchozího. */
+  onHotovo: (jmeno: string, nacisto: boolean) => void;
 }) {
   const [faze, nastavFazi] = useState<Faze>("zamek");
   /**
@@ -54,8 +61,13 @@ export function Prihlaseni({
   useEffect(() => nastavScenarId(scenarZAdresy()), []);
   const scenar = scenarPodleId(scenarId);
   const [chyba, nastavChybu] = useState(false);
-  const [kod, nastavKod] = useState("");
+  // Pole je vždycky prázdné, i když si počítač pamatuje minulé jméno:
+  // předvyplněné jméno předchozího žáka by nový žák jen odklepl Enterem.
+  const [jmeno, nastavJmeno] = useState("");
   const [hlaska, nastavHlasku] = useState("");
+  /** Rozdělaná práce patří jinému jménu – ptáme se, čí je. */
+  const [ptaSe, nastavPtaSe] = useState(false);
+  const volba = useRef<{ jmeno: string; nacisto: boolean }>({ jmeno: "", nacisto: false });
   const [cas, nastavCas] = useState<Date | null>(null);
   const pole = useRef<HTMLInputElement>(null);
   const tapeta = vybranaTapeta(tapetaId) ?? TAPETY[0];
@@ -69,7 +81,7 @@ export function Prihlaseni({
   /* Uzamykací obrazovku odemkne cokoli – klik, mezerník, Enter. */
   useEffect(() => {
     if (faze !== "zamek") return;
-    const dal = () => nastavFazi("kod");
+    const dal = () => nastavFazi("jmeno");
     window.addEventListener("keydown", dal);
     window.addEventListener("pointerdown", dal);
     return () => {
@@ -79,27 +91,39 @@ export function Prihlaseni({
   }, [faze]);
 
   useEffect(() => {
-    if (faze === "kod") window.setTimeout(() => pole.current?.focus(), 60);
+    if (faze === "jmeno") window.setTimeout(() => pole.current?.focus(), 60);
 
     if (faze === "vitejte") {
       // Krátká pauza jako při skutečném přihlašování – ne kvůli efektu,
       // ale aby bylo poznat, že se přechází do jiného prostředí.
-      const id = window.setTimeout(() => onHotovo(), 1400);
+      const id = window.setTimeout(() => onHotovo(volba.current.jmeno, volba.current.nacisto), 1400);
       return () => window.clearTimeout(id);
     }
   }, [faze, onHotovo]);
 
-  /** Ověření kódu. Běží celé v prohlížeči – nic se neodesílá. */
-  const odesliKod = (e: React.FormEvent) => {
+  const prihlas = (nacisto: boolean) => {
+    volba.current = { jmeno: jmeno.trim(), nacisto };
+    nastavPtaSe(false);
+    nastavFazi("vitejte");
+  };
+
+  /** Přihlášení jménem. Běží celé v prohlížeči – nic se neodesílá. */
+  const odesliJmeno = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!kodSedi(kod, "windows")) {
-      nastavHlasku("Tenhle kód nesedí. Zeptej se vyučujícího.");
+    if (!jmenoPlatne(jmeno)) {
+      nastavHlasku("Napiš své jméno a příjmení.");
       nastavChybu(true);
       window.setTimeout(() => nastavChybu(false), 700);
       return;
     }
     nastavHlasku("");
-    nastavFazi("vitejte");
+    // Rozdělaná práce pod jiným jménem: zeptat se, čí je.
+    const cizi = jmenoUctu !== VYCHOZI_JMENO && !stejneJmeno(jmenoUctu, jmeno) && rozdelano.hotovo > 0;
+    if (cizi) {
+      nastavPtaSe(true);
+      return;
+    }
+    prihlas(false);
   };
 
   return (
@@ -153,36 +177,39 @@ export function Prihlaseni({
         </div>
       )}
 
-      {faze === "kod" && (
+      {faze === "jmeno" && (
         <form
-          onSubmit={odesliKod}
+          onSubmit={odesliJmeno}
           className={`relative z-10 flex w-[420px] max-w-[92vw] flex-col items-center text-white ${
             chyba ? "animate-[zatreseni_0.45s]" : ""
           }`}
         >
           <Ikona klic="uzivatel" velikost={112} className="drop-shadow-lg" />
-          <h1 className="mt-4 text-[26px] font-light">{jmenoUctu}</h1>
+          <h1 className="mt-4 text-[26px] font-light">{jmeno.trim() || "Přihlášení"}</h1>
           <p className="mt-1 max-w-[320px] text-center text-[13px] leading-relaxed text-white/75">
-            Zadej kód, který máš od vyučujícího.
+            Napiš své jméno a příjmení. Objeví se v kódu postupu, který na konci hodiny pošleš učiteli.
           </p>
 
           <div className="mt-5 flex w-full max-w-[300px] items-center gap-2 rounded-md border border-white/40 bg-black/35 px-3 backdrop-blur">
-            <KeyRound className="h-4 w-4 shrink-0 text-white/60" />
+            <UserRound className="h-4 w-4 shrink-0 text-white/60" />
             <input
               ref={pole}
-              value={kod}
-              onChange={(e) => nastavKod(e.target.value)}
-              placeholder="Kód"
-              aria-label="Kód od vyučujícího"
+              value={jmeno}
+              onChange={(e) => {
+                nastavJmeno(e.target.value);
+                nastavPtaSe(false);
+              }}
+              placeholder="Jméno a příjmení"
+              aria-label="Jméno a příjmení"
               autoComplete="off"
               spellCheck={false}
-              maxLength={32}
-              className="h-11 min-w-0 flex-1 bg-transparent text-[15px] uppercase tracking-widest text-white outline-none placeholder:normal-case placeholder:tracking-normal placeholder:text-white/50"
+              maxLength={60}
+              className="h-11 min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/50"
             />
             <button
               type="submit"
-              disabled={!kod.trim()}
-              aria-label="Pokračovat"
+              disabled={!jmeno.trim() || ptaSe}
+              aria-label="Přihlásit se"
               className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-white/20 transition hover:bg-white/35 disabled:opacity-40"
             >
               <ArrowRight className="h-4 w-4" />
@@ -197,23 +224,43 @@ export function Prihlaseni({
             {hlaska || "\u00a0"}
           </p>
 
-          {/* Řekne se to na rovinu. Kód se porovnává tady v prohlížeči, takže
-              kdo se umí podívat do zdroje stránky, najde ho – vydávat ho za
-              zabezpečení by byla lež. Drží třídu pohromadě, nic víc, a po
-              zrušení účtů tu ani není co chránit. */}
+          {ptaSe && (
+            <div className="mt-2 flex w-full max-w-[340px] flex-col items-center gap-2 rounded-lg bg-black/45 px-4 py-3 text-center">
+              <p className="text-[13px] leading-relaxed text-white/85">
+                Na tomhle počítači je rozdělaná práce pod jménem <b>{jmenoUctu}</b> – splněno {rozdelano.hotovo} z{" "}
+                {rozdelano.celkem} úloh. Je tvoje?
+              </p>
+              {/* Žádné tlačítko není výchozí: Enter nesmí převzít cizí práci. */}
+              <div className="flex flex-wrap justify-center gap-2">
+                <button
+                  type="button"
+                  onClick={() => prihlas(true)}
+                  className="rounded-md bg-white/85 px-3 py-1.5 text-[12px] font-semibold text-black transition hover:bg-white"
+                >
+                  Ne, začít načisto
+                </button>
+                <button
+                  type="button"
+                  onClick={() => prihlas(false)}
+                  className="rounded-md border border-white/50 px-3 py-1.5 text-[12px] text-white transition hover:bg-white/15"
+                >
+                  Ano, pokračovat
+                </button>
+              </div>
+            </div>
+          )}
+
+          {/* Řekne se to na rovinu: jméno zůstává v prohlížeči a pryč odejde
+              jen v kódu postupu, který žák sám zkopíruje. */}
           <p className="mt-8 max-w-[340px] text-center text-[12px] leading-relaxed text-white/65">
-            Kód drží pohromadě třídu, nechrání žádné údaje – žádné se tu
-            neukládají. Co v prostředí uděláš, zůstává v tomhle prohlížeči
-            a na server se neodesílá nic.{" "}
-            {/* Druhá půlka téhož faktu, a pro žáka ta praktičtější: když
-                práce nikam neodchází, znamená to i to, že ji na jiném
-                počítači nenajde. Říct to AŽ POTOM, co o ni přijde, je pozdě. */}
+            Jméno ani práce se nikam neodesílají – zůstávají v tomhle prohlížeči. Učiteli je pošleš sám kódem postupu
+            (panel Úkoly → Moje výsledky).{" "}
+            {/* Druhá půlka téhož faktu, a pro žáka ta praktičtější. */}
             <strong className="font-semibold text-white/80">
-              Na jiném počítači ani po vyčištění prohlížeče ji ale nenajdeš.
+              Na jiném počítači práci nenajdeš – pokračuješ tam z kódu postupu.
             </strong>{" "}
             {/* Odkaz je tady schválně, ne až v patičce webu: tvrzení „nic se
-                neukládá" má být doložitelné právě ve chvíli, kdy ho žák čte
-                a rozhoduje se, jestli kód zadá. */}
+                neodesílá" má být doložitelné právě ve chvíli, kdy ho žák čte. */}
             <a
               href="/soukromi"
               target="_blank"
@@ -229,7 +276,7 @@ export function Prihlaseni({
       {faze === "vitejte" && (
         <div className="relative z-10 flex flex-col items-center text-white">
           <Ikona klic="uzivatel" velikost={112} className="drop-shadow-lg" />
-          <h1 className="mt-4 text-[26px] font-light">{jmenoUctu}</h1>
+          <h1 className="mt-4 text-[26px] font-light">{volba.current.jmeno || jmenoUctu}</h1>
           <div className="mt-6 flex items-center gap-3 text-[15px]">
             <Loader2 className="h-5 w-5 animate-spin" />
             Vítejte

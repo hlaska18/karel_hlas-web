@@ -1122,7 +1122,7 @@ type Dict = {
     simulators: string;
     simWindows: string;
     simMacos: string;
-    /** Řádek pod názvem simulátoru. `{tasks}` je počet úloh i se slovem, `{code}` kód pro vstup. */
+    /** Řádek pod názvem simulátoru. `{tasks}` je počet úloh i se slovem. */
     simNote: string;
     /** Štítek vpravo na tlačítku simulátoru. */
     simOpen: string;
@@ -1344,7 +1344,7 @@ export const t: Record<Lang, Dict> = {
       simulators: "Simulátory v prohlížeči",
       simWindows: "Virtuální Windows 11",
       simMacos: "Virtuální macOS",
-      simNote: "{tasks} · kód {code}",
+      simNote: "{tasks} · přihlášení jménem",
       simOpen: "Spustit",
       reading: "Zajímavé články",
       ctaLessons: "Procházet materiály",
@@ -1781,7 +1781,7 @@ export const t: Record<Lang, Dict> = {
       title: "Co web ukládá",
       intro:
         "Krátce a bez právničiny: nic, podle čeho by šlo poznat, kdo jsi. Níž je napsané, co to znamená u každé části webu, kdo ho provozuje a kde technicky běží.",
-      updated: "Naposledy upraveno 14. 9. 2026.",
+      updated: "Naposledy upraveno 25. 9. 2026.",
       zpet: "Zpátky na web",
       sekce: [
         {
@@ -1798,9 +1798,9 @@ export const t: Record<Lang, Dict> = {
           ],
         },
         {
-          nadpis: "Virtuální Windows",
+          nadpis: "Virtuální Windows a macOS",
           odstavce: [
-            "Do prostředí se vstupuje kódem, který dostaneš od učitele. Kód není účet: neváže se k tobě, nic si k němu neukládáme a je společný pro celou třídu.",
+            "Do prostředí se přihlásíš svým jménem. Jméno není účet: zůstává jen v tomhle prohlížeči a na server se neodesílá. Pryč odejde jen v kódu postupu, který sám zkopíruješ a pošleš učiteli – třeba do Teams. Stejně to funguje v kurzu SQL.",
             "Co v prostředí uděláš – jaká okna otevřeš, co nakreslíš v Malování, jak daleko dojdeš v úlohách – zůstává v tomhle prohlížeči a na server se neodesílá. Když si smažeš data prohlížeče, zmizí to i tobě.",
             "Dřív si tu žáci mohli zakládat účet a postup se ukládal na server. To bylo 1. 9. 2026 zrušené a 4. 9. 2026 bylo smazané i úložiště včetně účtů, které do té doby vznikly.",
           ],
@@ -1813,7 +1813,7 @@ export const t: Record<Lang, Dict> = {
           nadpis: "Cookies a co zůstane v prohlížeči",
           odstavce: [
             "Web nenastavuje žádnou cookie. Ani vlastní, ani cizí – proto tu nenajdeš lištu, kterou by bylo potřeba odklikávat. Změřeno na všech stránkách včetně virtuálního Windows a SQL hřiště.",
-            "Do prohlížeče se ukládají dvě věci, a obě až ve chvíli, kdy si o ně sám řekneš: zvolený světlý nebo tmavý režim a stav virtuálního Windows, tedy tvoje rozdělaná práce. Nic z toho tě neidentifikuje, nic se neodesílá na server a nikdo jiný se k tomu nedostane.",
+            "Do prohlížeče se ukládají dvě věci, a obě až ve chvíli, kdy si o ně sám řekneš: zvolený světlý nebo tmavý režim a stav simulátorů (Windows, macOS, kurz SQL), tedy tvoje rozdělaná práce i jméno, pod kterým ses přihlásil(a). Nic z toho se neodesílá na server a nikdo jiný se k tomu nedostane.",
             "Souhlas se na tohle nevyžaduje, protože bez toho uložení by ta funkce nefungovala – motiv by se zapomněl při každém načtení a práce v prostředí by zmizela. Smažeš to v nastavení prohlížeče (historie → data webů).",
           ],
         },
@@ -1848,7 +1848,7 @@ export const t: Record<Lang, Dict> = {
         {
           nadpis: "Nezletilí",
           odstavce: [
-            "Prostředí používají žáci střední školy. Proto je postavené tak, aby se nezadávalo nic osobního: žádný účet, žádné jméno, žádný e-mail, jen kód od učitele.",
+            "Prostředí používají žáci střední školy. Proto je postavené tak, aby se zadávalo co nejméně: žádný účet, žádné heslo, žádný e-mail. Jméno žák napíše jen proto, aby učitel poznal, čí kód postupu dostal – zůstává v prohlížeči a samo se nikam neodesílá.",
           ],
         },
       ],
@@ -1921,7 +1921,7 @@ export const t: Record<Lang, Dict> = {
       simulators: "Simulators in the browser",
       simWindows: "Virtual Windows 11",
       simMacos: "Virtual macOS",
-      simNote: "{tasks} in Czech · code {code}",
+      simNote: "{tasks} in Czech",
       simOpen: "Open",
       reading: "Interesting articles",
       ctaLessons: "Browse the materials",
@@ -2354,7 +2354,7 @@ export const t: Record<Lang, Dict> = {
       title: "What this site stores",
       intro:
         "Briefly and without legalese: nothing that could identify you. Below is what that means for each part of the site, who runs it and where it technically runs.",
-      updated: "Last updated 14 September 2026.",
+      updated: "Last updated 25 September 2026.",
       zpet: "Back to the site",
       sekce: [
         {
@@ -2371,9 +2371,9 @@ export const t: Record<Lang, Dict> = {
           ],
         },
         {
-          nadpis: "Virtual Windows",
+          nadpis: "Virtual Windows and macOS",
           odstavce: [
-            "You enter the environment with a code from your teacher. The code is not an account: it is not tied to you, nothing is stored against it, and it is shared by the whole class.",
+            "You sign in to the environment with your name. The name is not an account: it stays in this browser only and is never sent to a server. It only leaves inside the progress code that you copy yourself and send to your teacher – in Teams, for example. The SQL course works the same way.",
             "What you do inside – which windows you open, what you draw in Paint, how far you get in the tasks – stays in this browser and is never sent to a server. Clear your browser data and it is gone for you too.",
             "Pupils used to be able to create an account here, with progress stored on a server. That was removed on 1 September 2026, and on 4 September 2026 the storage itself was deleted, including the accounts created until then.",
           ],
@@ -2386,7 +2386,7 @@ export const t: Record<Lang, Dict> = {
           nadpis: "Cookies and what stays in your browser",
           odstavce: [
             "This site sets no cookies at all – neither its own nor anyone else's. That is why there is no consent bar to click away. Measured across every page, including the virtual Windows and the SQL playground.",
-            "Two things are stored in your browser, and both only once you ask for them: the light or dark theme you picked, and the state of the virtual Windows – your unfinished work. Neither identifies you, neither is sent to a server, and nobody else can reach it.",
+            "Two things are stored in your browser, and both only once you ask for them: the light or dark theme you picked, and the state of the simulators (Windows, macOS, the SQL course) – your unfinished work, including the name you signed in with. None of it is sent to a server, and nobody else can reach it.",
             "No consent is required for this, because without that storage the feature would not work – the theme would be forgotten on every load and your work in the environment would vanish. You can clear it in your browser settings (history → site data).",
           ],
         },
@@ -2421,7 +2421,7 @@ export const t: Record<Lang, Dict> = {
         {
           nadpis: "Minors",
           odstavce: [
-            "The environment is used by secondary school pupils. That is why it is built so that nothing personal is ever entered: no account, no name, no e-mail, just a code from the teacher.",
+            "The environment is used by secondary school pupils. That is why it asks for as little as possible: no account, no password, no e-mail. A pupil types their name only so that the teacher knows whose progress code they received – it stays in the browser and is never sent anywhere on its own.",
           ],
         },
       ],

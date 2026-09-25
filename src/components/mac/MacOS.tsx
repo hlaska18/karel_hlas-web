@@ -114,7 +114,7 @@ function Obrazovka() {
 
   /* Rozběhnuté sezení si pamatuje karta – obnovení stránky nevrací na zámek. */
   useEffect(() => {
-    if (jePrihlasen()) nastavFazi("bezi");
+    if (jePrihlasen("macos")) nastavFazi("bezi");
   }, []);
 
   /* Rozměry plochy: okna se kladou vůči ní, ne vůči stránce. */
@@ -213,7 +213,7 @@ function Obrazovka() {
   }, []);
 
   const odhlasit = () => {
-    zapamatujPrihlaseni(false);
+    zapamatujPrihlaseni(false, "macos");
     nastavPanel(null);
     nastavFazi("prihlaseni");
   };
@@ -231,7 +231,7 @@ function Obrazovka() {
    */
   const zacitZnovu = () => {
     zapomenMac();
-    zapamatujPrihlaseni(false);
+    zapamatujPrihlaseni(false, "macos");
     window.location.reload();
   };
 
@@ -462,7 +462,7 @@ function Obrazovka() {
         <>
           <PrihlaseniMac
             onHotovo={() => {
-              zapamatujPrihlaseni(true);
+              zapamatujPrihlaseni(true, "macos");
               nastavFazi("bezi");
               otevriUvitani();
             }}
