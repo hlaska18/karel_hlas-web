@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Laboratoř – cesta dat sítí</title>
+<style>
+:root{--teal:#0c8a83;--teal-d:#076663;--ink:#17211e;--grey:#5c6965;--cream:#f7f6f2;--line:#dcdcd6;--rust:#c45a3e}
+*{box-sizing:border-box}
+body{margin:0;background:var(--cream);color:var(--ink);font:16px/1.55 "Segoe UI",system-ui,-apple-system,Arial,sans-serif}
+header{background:var(--ink);color:#fff;padding:26px 32px}
+header .lbl{color:#7fd6cf;font-weight:700;letter-spacing:.08em;font-size:13px;text-transform:uppercase}
+header h1{margin:6px 0 4px;font-size:30px}
+header p{margin:0;color:#b9c4c0;font-size:15px}
+.bar{background:var(--teal);height:6px}
+main{max-width:1100px;margin:0 auto;padding:26px 22px 60px}
+.mod{background:#fff;border:1px solid var(--line);border-radius:10px;margin:22px 0;overflow:hidden}
+.mod>h2{margin:0;padding:16px 22px;background:#fbfbf9;border-bottom:1px solid var(--line);font-size:19px}
+.mod>h2 span{display:inline-block;background:var(--teal);color:#fff;border-radius:5px;
+  font-size:12px;padding:3px 9px;margin-right:10px;vertical-align:2px;letter-spacing:.06em}
+.mod.navic>h2 span{background:var(--rust)}
+.body{padding:20px 22px}
+.body>p:first-child{margin-top:0}
+.q{background:#f2f8f7;border-left:4px solid var(--teal);padding:11px 15px;margin:16px 0;font-size:15px}
+.q b{color:var(--teal-d)}
+button{font:inherit;font-size:14px;padding:7px 14px;border:1px solid var(--teal);background:#fff;
+  color:var(--teal-d);border-radius:6px;cursor:pointer}
+button.on,button:hover{background:var(--teal);color:#fff}
+button:focus{outline:3px solid #7fd6cf;outline-offset:2px}
+button.hl{background:var(--teal);color:#fff;font-weight:600}
+button.hl:hover{background:var(--teal-d)}
+button[disabled],button[disabled]:hover{opacity:.45;cursor:default;background:#fff;color:var(--teal-d)}
+button.hl[disabled],button.hl[disabled]:hover{background:var(--teal);color:#fff}
+.chk{margin-top:16px;border-top:1px dashed var(--line);padding-top:14px}
+.chk button{margin:4px 6px 4px 0}
+.res{font-size:14px;margin-top:8px;font-weight:600;min-height:22px}
+footer{max-width:1100px;margin:0 auto;padding:0 22px 40px;color:var(--grey);font-size:13px}
+code{font-family:Consolas,Menlo,monospace;background:#eef2f1;padding:1px 6px;border-radius:4px;font-size:15px}
+
+/* Rozcestník modulů */
+.cesta{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap}
+.cesta li{margin:0 8px 8px 0}
+.cesta a{display:block;padding:6px 12px;border:1px solid var(--line);border-radius:20px;background:#fff;
+  color:var(--ink);text-decoration:none;font-size:14px}
+.cesta a:hover{border-color:var(--teal);color:var(--teal-d)}
+.cesta a b{color:var(--teal-d);margin-right:6px}
+.cesta .navic a b{color:var(--rust)}
+
+/* Vysvětlivky */
+.pojmy{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));grid-gap:12px;margin:0 0 18px}
+.pojem{border:1px solid var(--line);border-radius:8px;padding:10px 14px;background:#fbfbf9}
+.pojem .stitek{font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-d)}
+.pojem h3{margin:1px 0 4px;font-size:17px}
+.pojem p{margin:0;font-size:15px}
+.pojem .jako{display:block;margin-top:5px;color:var(--grey);font-size:14px}
+
+/* Ovládání a popis dění */
+.ovl{display:flex;flex-wrap:wrap;align-items:center;margin:0 0 12px}
+.ovl>*{margin:0 10px 8px 0}
+.ovl .lbl{font-size:14px;color:var(--grey);font-weight:600}
+.ovl input{font:15px Consolas,Menlo,monospace;padding:7px 10px;border:1px solid var(--line);border-radius:6px;width:210px;color:var(--ink)}
+.ovl input:focus{outline:3px solid #7fd6cf;outline-offset:1px;border-color:var(--teal)}
+.ovl .mezera{flex:1 1 auto;margin:0}
+.deni{margin:12px 0 0;font-size:16px;min-height:50px}
+.dvoj{display:grid;grid-template-columns:3fr 2fr;grid-gap:16px;margin-top:12px}
+.dvoj .deni{margin:0}
+@media (max-width:760px){.dvoj{grid-template-columns:1fr}}
+.otazka{background:#fdf3ef;border-left:4px solid var(--rust);padding:10px 14px;margin:12px 0 0;font-size:15px}
+
+/* Kroky z pracovního listu (modul 05) */
+.kroky{display:flex;flex-wrap:wrap;list-style:none;margin:0 0 12px;padding:0}
+.kroky li{flex:1 1 150px;margin:0 8px 8px 0;padding:7px 10px;border:1px solid var(--line);border-radius:8px;
+  font-size:14px;color:var(--grey);background:#fff}
+.kroky li b{display:inline-block;width:24px;height:24px;line-height:24px;text-align:center;border-radius:50%;
+  background:#eef2f1;margin-right:7px;font-size:13px}
+.kroky li.ted{border-color:var(--teal);background:#f2f8f7;color:var(--ink);font-weight:600}
+.kroky li.ted b{background:var(--teal);color:#fff}
+.kroky li.hotovo b{background:#e2f2ea;color:#1e6b45}
+/* Na úzké obrazovce jen čísla – popis kroku je pod schématem. */
+@media (max-width:600px){
+  .kroky li{flex:1 1 0;min-width:0;padding:6px 0;text-align:center;font-size:0}
+  .kroky li b{margin:0;font-size:13px}
+}
+.popis h3{margin:0 0 4px;font-size:18px}
+.popis p{margin:0}
+
+/* Scény */
+.pane{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
+.scena{display:block;width:100%;height:auto}
+.spoj{stroke:#c3cbc8;stroke-width:3;fill:none}
+.spoj.wifi{stroke-dasharray:9 8}
+.spoj.aktivni{stroke:var(--teal);stroke-width:5}
+.oblak{fill:#f0f7f6;stroke:#b7d9d5;stroke-width:2;stroke-dasharray:7 6}
+.oblak-t{font-size:15px;font-weight:700;fill:#076663}
+.halo{fill:#d9efec;opacity:0;transition:opacity .25s}
+.uzel.zvyr .halo{opacity:1}
+.jm{font-size:16px;font-weight:700;fill:#17211e}
+.role{font-size:14px;font-weight:700;fill:#076663}
+.ip{font-size:14px;fill:#5c6965;font-family:Consolas,Menlo,monospace}
+.pop{font-size:13px;fill:#5c6965}
+.scr{font-size:12px;fill:#5c6965}
+.scr-zprava{font-size:16px;font-weight:700;fill:#17211e}
+.sipky{fill:none;stroke:#fff;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+
+/* Obálka pod scénou */
+.obalka{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:#fbfbf9}
+.obalka h4{margin:0 0 10px;font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
+.obalka dl{display:grid;grid-template-columns:auto 1fr;grid-gap:7px 12px;margin:0;font-size:15px}
+.obalka dt{color:var(--grey);font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.05em;padding-top:3px}
+.obalka dd{margin:0}
+.obalka .adr{font-family:Consolas,Menlo,monospace}
+.obalka .kdo{color:var(--grey);font-size:14px}
+.obalka dd.zmena .adr{background:#fbe9e4;color:#a33c1e;border-radius:4px;padding:0 5px}
+.obalka .prepsal{display:block;font-size:12px;color:#a33c1e;font-weight:700}
+.obalka .kde{margin-top:10px;font-size:14px;color:var(--grey)}
+.prazdna{color:var(--grey);font-size:14px;margin:0}
+
+/* Telefonní seznam DNS (modul 04) */
+table{border-collapse:collapse;width:100%;font-size:15px}
+th,td{border:1px solid var(--line);padding:6px 10px;text-align:left}
+th{background:#f4f7f6;font-size:12px;text-transform:uppercase;letter-spacing:.05em;color:var(--grey)}
+td.adr{font-family:Consolas,Menlo,monospace}
+tr.nalezeno td{background:#e2f2ea;font-weight:700}
+
+.prikazy{margin:0;padding-left:22px}
+.prikazy li{margin:0 0 12px}
+
+@media (prefers-reduced-motion: reduce){.halo{transition:none}}
+</style>
+</head>
+<body>
+<div class="bar"></div>
+<header>
+  <div class="lbl">Informatika · 1. ročník SŠ</div>
+  <h1>Laboratoř – cesta dat sítí</h1>
+  <p>Modul k hodině 4 – Počítačové sítě. Běží offline a nic neodesílá. Začíná od úplných základů a každý modul přidá jednu novou věc.</p>
+</header>
+<main>
+
+<ol class="cesta">
+  <li><a href="#m1"><b>01</b>Co je síť</a></li>
+  <li><a href="#m2"><b>02</b>Adresy a router</a></li>
+  <li><a href="#m3"><b>03</b>Klient a server</a></li>
+  <li><a href="#m4"><b>04</b>DNS</a></li>
+  <li><a href="#m5"><b>05</b>Všechno dohromady</a></li>
+  <li class="navic"><a href="#m6"><b>06</b>Pro rychlíky</a></li>
+  <li><a href="#m7"><b>07</b>Ověř si to naostro</a></li>
+</ol>
+
+<!-- ============ MODUL 01 ============ -->
+<section class="mod" id="m1">
+  <h2><span>MODUL 01</span>Co je síť</h2>
+  <div class="body">
+    <p>Začneme úplně od začátku: dva počítače a jeden kabel.</p>
+    <div class="pojmy">
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Síť</h3>
+        <p>Zařízení propojená kabelem nebo Wi-Fi, aby si mohla posílat data.</p><span class="jako">Jako silnice mezi domy.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Paket</h3>
+        <p>Malý balíček dat. Delší zprávy, fotky i stránky se rozdělí na mnoho paketů.</p><span class="jako">Jako obálka s kouskem dopisu.</span></div>
+    </div>
+    <div class="ovl">
+      <button id="m1posli" class="hl" type="button">Pošli zprávu „Ahoj!“</button>
+      <button id="m1odpovez" type="button">Odpověz „Čau!“</button>
+      <span class="mezera"></span>
+      <button id="m1znovu" type="button">Znovu</button>
+    </div>
+    <div class="pane"><svg class="scena" id="sc1" viewBox="0 0 1000 250" role="img" aria-label="Dva počítače spojené kabelem"></svg></div>
+    <p class="deni" id="d1" aria-live="polite"></p>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">kdy mluvíme o počítačové síti?</span><br>
+      <button class="a1" data-ok="1">Když jsou aspoň dvě zařízení propojená a posílají si data</button>
+      <button class="a1" data-ok="0">Když má počítač prohlížeč</button>
+      <button class="a1" data-ok="0">Jen když je počítač připojený k internetu</button>
+      <div class="res" id="r1"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODUL 02 ============ -->
+<section class="mod" id="m2">
+  <h2><span>MODUL 02</span>Adresy a router</h2>
+  <div class="body">
+    <p>Doma je zařízení víc a všechna jsou připojená k jedné krabičce – routeru. Jak router pozná, komu obálka patří?</p>
+    <div class="pojmy">
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>IP adresa</h3>
+        <p>Číslo, které má v síti každé zařízení. Podle něj se pozná, komu data patří.</p><span class="jako">Jako adresa domu na obálce.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Router</h3>
+        <p>Krabička, která propojuje zařízení a podle adresy posílá obálky správným směrem.</p><span class="jako">Jako třídírna na poště.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Kabel a Wi-Fi</h3>
+        <p>Dva způsoby připojení. Kabel bývá stabilnější, Wi-Fi je bez drátů.</p><span class="jako">Ve schématu: plná čára = kabel, přerušovaná = Wi-Fi.</span></div>
+    </div>
+    <div class="ovl">
+      <span class="lbl">Pošli obálku z notebooku na adresu:</span>
+      <button class="m2cil hl" data-cil="mobil" type="button">192.168.1.20</button>
+      <button class="m2cil hl" data-cil="tiskarna" type="button">192.168.1.30</button>
+      <button class="m2cil hl" data-cil="tv" type="button">192.168.1.40</button>
+    </div>
+    <div class="pane"><svg class="scena" id="sc2" viewBox="0 0 1000 455" role="img" aria-label="Domácí síť: notebook, mobil, tiskárna a televize připojené k routeru"></svg></div>
+    <p class="deni" id="d2" aria-live="polite"></p>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">obálka má adresu 192.168.1.40. Kam ji router pošle?</span><br>
+      <button class="a2" data-ok="0">Mobilu</button>
+      <button class="a2" data-ok="0">Tiskárně</button>
+      <button class="a2" data-ok="1">Televizi</button>
+      <div class="res" id="r2"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODUL 03 ============ -->
+<section class="mod" id="m3">
+  <h2><span>MODUL 03</span>Klient a server</h2>
+  <div class="body">
+    <p>Stránky, videa ani e-maily nejsou v tvém počítači. Leží na jiných počítačích někde v internetu a tvůj počítač si o ně musí říct.</p>
+    <div class="pojmy">
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Klient</h3>
+        <p>Zařízení, které o něco žádá – tvůj notebook nebo mobil.</p><span class="jako">Jako host v restauraci, který si objednává.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Server</h3>
+        <p>Počítač, který žádosti vyřizuje. Bydlí na něm stránky, videa nebo e-maily.</p><span class="jako">Jako kuchyně, která jídlo připraví.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Internet</h3>
+        <p>Síť sítí. Routery po celém světě si mezi sebou předávají obálky.</p><span class="jako">Jako silnice mezi městy celého světa.</span></div>
+    </div>
+    <div class="ovl">
+      <button id="m3otevri" class="hl" type="button">Otevři stránku</button>
+      <span class="mezera"></span>
+      <button id="m3znovu" type="button">Znovu</button>
+    </div>
+    <div class="pane"><svg class="scena" id="sc3" viewBox="0 0 1000 290" role="img" aria-label="Notebook, domácí router, internet a server se stránkami"></svg></div>
+    <p class="deni" id="d3" aria-live="polite"></p>
+    <p class="otazka" id="m3otazka" style="display:none"><b>Otázka na další modul:</b> Jak notebook věděl, kde server je? Ty jsi přece napsal seznam.cz, ne číslo.</p>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">pouštíš si na mobilu video. Kdo je klient?</span><br>
+      <button class="a3" data-ok="1">Mobil</button>
+      <button class="a3" data-ok="0">Server s videem</button>
+      <button class="a3" data-ok="0">Router</button>
+      <div class="res" id="r3"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODUL 04 ============ -->
+<section class="mod" id="m4">
+  <h2><span>MODUL 04</span>DNS – ze jména číslo</h2>
+  <div class="body">
+    <p>Ty píšeš jména stránek, síť ale doručuje podle čísel. Někdo je musí přeložit.</p>
+    <div class="pojmy">
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Doménové jméno</h3>
+        <p>Jméno stránky pro lidi, třeba seznam.cz. Lidé si pamatují jména, síť pracuje s čísly.</p><span class="jako">Jako jméno kamaráda v kontaktech.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>DNS</h3>
+        <p>Služba, která ke jménu najde IP adresu.</p><span class="jako">Jako telefonní seznam: hledáš jméno, dostaneš číslo.</span></div>
+    </div>
+    <div class="ovl">
+      <span class="lbl">Zeptej se DNS na:</span>
+      <button class="m4jm hl" data-jm="seznam.cz" type="button">seznam.cz</button>
+      <button class="m4jm hl" data-jm="wikipedia.org" type="button">wikipedia.org</button>
+      <button class="m4jm hl" data-jm="ceskatelevize.cz" type="button">ceskatelevize.cz</button>
+    </div>
+    <div class="pane"><svg class="scena" id="sc4" viewBox="0 0 1000 290" role="img" aria-label="Notebook se přes router a internet ptá DNS serveru"></svg></div>
+    <div class="dvoj">
+      <p class="deni" id="d4" aria-live="polite"></p>
+      <div>
+        <table>
+          <thead><tr><th>Seznam DNS serveru: jméno</th><th>IP adresa</th></tr></thead>
+          <tbody id="m4seznam"></tbody>
+        </table>
+      </div>
+    </div>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">co ti DNS server pošle, když se zeptáš na wikipedia.org?</span><br>
+      <button class="a4" data-ok="0">Hotovou stránku Wikipedie</button>
+      <button class="a4" data-ok="1">IP adresu serveru Wikipedie</button>
+      <button class="a4" data-ok="0">Heslo k Wi-Fi</button>
+      <div class="res" id="r4"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODUL 05 ============ -->
+<section class="mod" id="m5">
+  <h2><span>MODUL 05</span>Všechno dohromady: co se stane, když dáš Enter</h2>
+  <div class="body">
+    <p>Teď znáš všechny díly. Tady je spojíš do jedné cesty – přesně podle pěti kroků z pracovního listu.</p>
+    <div class="ovl">
+      <label class="lbl" for="adresa5">Adresa stránky:</label>
+      <input id="adresa5" type="text" value="seznam.cz" spellcheck="false" autocomplete="off">
+      <button id="dalsi5" class="hl" type="button">Stiskni Enter</button>
+      <button id="zpet5" type="button">◀ Zpět</button>
+      <span class="mezera"></span>
+      <button id="prehrat5" type="button">▶ Přehrát vše</button>
+      <button id="znovu5" type="button">Od začátku</button>
+    </div>
+    <ol class="kroky" id="kroky5">
+      <li data-k="1"><b>1</b>Napíšeš adresu</li>
+      <li data-k="2"><b>2</b>Dotaz na DNS</li>
+      <li data-k="3"><b>3</b>Žádost k serveru</li>
+      <li data-k="4"><b>4</b>Stránka zpět</li>
+      <li data-k="5"><b>5</b>Zobrazení</li>
+    </ol>
+    <div class="pane"><svg class="scena" id="sc5" viewBox="0 0 1000 445" role="img" aria-label="Celá cesta: notebook, router, internet, server se stránkou a DNS server"></svg></div>
+    <div class="dvoj">
+      <div class="popis" aria-live="polite"><h3 id="titul5"></h3><p id="text5"></p></div>
+      <div class="obalka"><h4>Obálka (paket)</h4><div id="obalka5"></div></div>
+    </div>
+    <p class="deni" style="font-size:14px;color:var(--grey);min-height:0;margin-top:14px"><b style="color:var(--ink)">Zjednodušeno.</b> Routerů bývá po cestě víc a stránka se posílá v mnoha paketech. Jak to vypadá doopravdy, uvidíš v modulu 07.</p>
+    <div class="q"><b>Zapiš:</b> Popiš vlastními slovy pět kroků od stisku Enter po zobrazení stránky.</div>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">DNS server přestal fungovat, zbytek sítě jede. Co se stane, když napíšeš seznam.cz?</span><br>
+      <button class="a5" data-ok="0">Internet přestane fungovat úplně</button>
+      <button class="a5" data-ok="1">Počítač nezjistí IP adresu a stránku nenajde</button>
+      <button class="a5" data-ok="0">Stránka se načte, jen pomaleji</button>
+      <div class="res" id="r5"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODUL 06 ============ -->
+<section class="mod navic" id="m6">
+  <h2><span>MODUL 06</span>Pro rychlíky: proč má router dvě adresy</h2>
+  <div class="body">
+    <p>Bonus z pracovního listu: tvoje IP adresa nejspíš začíná 192.168…, ale web „what is my IP“ ti ukáže úplně jinou. Proč?</p>
+    <div class="pojmy">
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Vnitřní adresa</h3>
+        <p>Platí jen uvnitř jedné sítě. Doma obvykle začíná 192.168., ve škole často 10. Stejnou vnitřní adresu mají zároveň tisíce jiných domácností.</p><span class="jako">Jako číslo pokoje v hotelu – pokoj 12 je v každém hotelu.</span></div>
+      <div class="pojem"><div class="stitek">Nový pojem</div><h3>Veřejná adresa</h3>
+        <p>Adresa, pod kterou je tvoje síť vidět v internetu. Má ji router a sdílí ji všechna zařízení v domácnosti.</p><span class="jako">Jako adresa hotelu. Recepce pak předá poštu do správného pokoje.</span></div>
+    </div>
+    <div class="ovl">
+      <button id="m6posli" class="hl" type="button">Pošli žádost o stránku</button>
+      <span class="mezera"></span>
+      <button id="m6znovu" type="button">Znovu</button>
+    </div>
+    <div class="pane"><svg class="scena" id="sc6" viewBox="0 0 1000 290" role="img" aria-label="Notebook, domácí router s vnitřní a veřejnou adresou, internet a server"></svg></div>
+    <div class="dvoj">
+      <p class="deni" id="d6" aria-live="polite"></p>
+      <div class="obalka"><h4>Obálka (paket)</h4><div id="obalka6"></div></div>
+    </div>
+    <div class="chk">
+      <b style="font-size:14px">Rychlá kontrola —</b> <span style="font-size:14px">proč server neposílá stránku rovnou na 192.168.1.15?</span><br>
+      <button class="a6" data-ok="1">Ta adresa platí jen v tvé domácí síti</button>
+      <button class="a6" data-ok="0">Poslal by ji moc pomalu</button>
+      <button class="a6" data-ok="0">Adresa 192.168.1.15 vůbec neexistuje</button>
+      <div class="res" id="r6"></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ MODUL 07 ============ -->
+<section class="mod" id="m7">
+  <h2><span>MODUL 07</span>Ověř si to naostro</h2>
+  <div class="body">
+    <p>Laboratoř cestu zjednodušuje. Na skutečném počítači uvidíš, jak to vypadá doopravdy. Otevři příkazový řádek (Start → napiš <code>cmd</code> → Enter) a zadej:</p>
+    <ol class="prikazy">
+      <li><code>ipconfig</code> – řádek <b>Adresa IPv4</b> je adresa tvého počítače, <b>Výchozí brána</b> je router. Ve škole bude adresa jiná než doma.</li>
+      <li><code>nslookup seznam.cz</code> – počítač se zeptá DNS serveru stejně jako v modulu 04. V odpovědi najdeš skutečnou IP adresu serveru. Velké weby jich mívají víc.</li>
+      <li><code>tracert seznam.cz</code> – každý řádek je jeden router na cestě k serveru. Hvězdičky <code>*</code> znamenají, že router na dotaz neodpověděl. Data dál přesto většinou propouští.</li>
+      <li><code>ping seznam.cz</code> – čas v ms je, jak dlouho trvala cesta tam a zpátky (1 000 ms = 1 s). Když místo časů vidíš chyby, síť ping nejspíš blokuje. Zkus to doma.</li>
+    </ol>
+    <div class="q"><b>Zapiš:</b> Kolik routerů ukázal tracert? A jak dlouho podle pingu trvala cesta tam a zpátky?</div>
+  </div>
+</section>
+
+<!-- ============ SLOVNÍČEK ============ -->
+<section class="mod">
+  <h2>Slovníček – všechny pojmy na jednom místě</h2>
+  <div class="body"><div class="pojmy" id="slovnicek"></div></div>
+</section>
+
+<footer>
+  <p><b>Poznámka k adresám.</b> IP adresy v internetu jsou v laboratoři vymyšlené. Pochází z rozsahů vyhrazených pro ukázky, které nikomu nepatří. Skutečnou adresu serveru zjistíš příkazem nslookup. Laboratoř nenačítá nic z internetu.</p>
+</footer>
+</main>
+
+<script>
+(function(){
+  function $(i){return document.getElementById(i)}
+  var mm=window.matchMedia?window.matchMedia('(prefers-reduced-motion: reduce)'):null;
+  function klidne(){return !!(mm&&mm.matches);}
+  function esc(t){return String(t).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+
+  var VNITRNI='192.168.1.15', VEREJNA='203.0.113.25', DNS_IP='198.51.100.53';
+
+  // Vymyšlená, ale pro jedno jméno vždy stejná adresa z ukázkového rozsahu.
+  function ipPro(d){
+    var h=7;for(var n=0;n<d.length;n++){h=(h*31+d.charCodeAt(n))%100003;}
+    var x=10+h%230;if(x===53)x=54;return '198.51.100.'+x;
+  }
+  function vycisti(t){
+    t=String(t||'').toLowerCase().replace(/^\s+|\s+$/g,'').replace(/^[a-z]+:\/\//,'');
+    t=t.split('/')[0].split('?')[0].split('#')[0].replace(/\s+/g,'');
+    if(t.length>30)t=t.slice(0,30);
+    return t||'seznam.cz';
+  }
+  // Delší text se do místa nevejde – zúží se, místo aby přetekl.
+  function vejdi(el,max){
+    el.removeAttribute('textLength');el.removeAttribute('lengthAdjust');
+    try{if(el.getComputedTextLength()>max){el.setAttribute('textLength',max);el.setAttribute('lengthAdjust','spacingAndGlyphs');}}catch(e){}
+  }
+
+  /* ================= Společná scéna ================= */
+  var NS='http://www.w3.org/2000/svg';
+  function el(tag,at,rodic){
+    var e=document.createElementNS(NS,tag);
+    for(var k in at){if(at.hasOwnProperty(k))e.setAttribute(k,at[k]);}
+    if(rodic)rodic.appendChild(e);return e;
+  }
+  function napis(rodic,x,y,s,cls,kotva){
+    var t=el('text',{x:x,y:y,'class':cls||'','text-anchor':kotva||'middle'},rodic);t.textContent=s;return t;
+  }
+
+  // Kresby zařízení. Každá vrací horní okraj ikony (nad ním zastaví obálka)
+  // a výšku, od které začínají popisky.
+  var KRESBA={
+    notebook:function(g,u){
+      var x=u.x,y=u.y,o={};
+      el('rect',{x:x-72,y:y-50,width:144,height:102,rx:7,fill:'#17211e'},g);
+      el('rect',{x:x-65,y:y-43,width:130,height:88,rx:2,fill:'#fff'},g);
+      o.lista=el('g',{},g);
+      el('rect',{x:x-61,y:y-39,width:122,height:15,rx:7.5,fill:'#eef2f1'},o.lista);
+      o.adresa=el('text',{x:x-54,y:y-28.5,'font-size':10.5,fill:'#17211e','font-family':'Consolas,Menlo,monospace'},o.lista);
+      o.ceka=el('g',{},g);napis(o.ceka,x,y+8,'Načítám…','scr');
+      o.stranka=el('g',{},g);
+      el('rect',{x:x-61,y:y-20,width:122,height:12,fill:'#0c8a83'},o.stranka);
+      el('rect',{x:x-44,y:y-1,width:88,height:11,rx:5.5,fill:'none',stroke:'#c3cbc8','stroke-width':1.5},o.stranka);
+      el('rect',{x:x-57,y:y+18,width:54,height:5,rx:2,fill:'#c3cbc8'},o.stranka);
+      el('rect',{x:x-57,y:y+28,width:46,height:5,rx:2,fill:'#c3cbc8'},o.stranka);
+      el('rect',{x:x-57,y:y+37,width:50,height:4,rx:2,fill:'#dcdcd6'},o.stranka);
+      el('rect',{x:x+3,y:y+18,width:54,height:23,rx:2,fill:'#e2f2ea'},o.stranka);
+      o.zprava=el('g',{},g);
+      el('rect',{x:x-46,y:y-18,width:92,height:36,rx:10,fill:'#e2f2ea'},o.zprava);
+      o.zpravaText=napis(o.zprava,x,y+6,'','scr-zprava');
+      el('path',{d:'M'+(x-84)+' '+(y+52)+' H'+(x+84)+' L'+(x+74)+' '+(y+64)+' H'+(x-74)+' Z',fill:'#5c6965'},g);
+      // Výchozí stav je prázdná obrazovka.
+      o.lista.style.display=o.ceka.style.display=o.stranka.style.display=o.zprava.style.display='none';
+      u.obr=o;
+      return {vrch:y-50,popisek:y+90};
+    },
+    mobil:function(g,u){
+      var x=u.x,y=u.y;
+      el('rect',{x:x-24,y:y-42,width:48,height:84,rx:8,fill:'#17211e'},g);
+      el('rect',{x:x-19,y:y-34,width:38,height:64,rx:2,fill:'#fff'},g);
+      el('rect',{x:x-8,y:y+34,width:16,height:3,rx:1.5,fill:'#5c6965'},g);
+      return {vrch:y-42,popisek:y+64};
+    },
+    tiskarna:function(g,u){
+      var x=u.x,y=u.y;
+      el('rect',{x:x-30,y:y-34,width:60,height:20,fill:'#fff',stroke:'#c3cbc8','stroke-width':1.5},g);
+      el('rect',{x:x-45,y:y-18,width:90,height:40,rx:6,fill:'#17211e'},g);
+      el('rect',{x:x-28,y:y+14,width:56,height:18,fill:'#fff',stroke:'#c3cbc8','stroke-width':1.5},g);
+      el('circle',{cx:x+32,cy:y-6,r:3,fill:'#7fd6cf'},g);
+      return {vrch:y-34,popisek:y+54};
+    },
+    tv:function(g,u){
+      var x=u.x,y=u.y;
+      el('rect',{x:x-58,y:y-38,width:116,height:70,rx:5,fill:'#17211e'},g);
+      el('rect',{x:x-52,y:y-32,width:104,height:58,rx:2,fill:'#2f4a44'},g);
+      el('rect',{x:x-4,y:y+32,width:8,height:10,fill:'#5c6965'},g);
+      el('rect',{x:x-26,y:y+42,width:52,height:5,rx:2,fill:'#5c6965'},g);
+      return {vrch:y-38,popisek:y+68};
+    },
+    router:function(g,u){
+      var x=u.x,y=u.y;
+      el('line',{x1:x-22,y1:y-13,x2:x-29,y2:y-37,stroke:'#17211e','stroke-width':4,'stroke-linecap':'round'},g);
+      el('line',{x1:x+22,y1:y-13,x2:x+29,y2:y-37,stroke:'#17211e','stroke-width':4,'stroke-linecap':'round'},g);
+      el('rect',{x:x-36,y:y-15,width:72,height:30,rx:6,fill:'#17211e'},g);
+      for(var n=0;n<3;n++)el('circle',{cx:x-22+n*12,cy:y,r:3,fill:'#7fd6cf'},g);
+      return {vrch:y-37,popisek:y+39};
+    },
+    rint:function(g,u){
+      var x=u.x,y=u.y;
+      el('circle',{cx:x,cy:y,r:20,fill:'#17211e'},g);
+      el('path',{'class':'sipky',transform:'translate('+x+' '+y+')',d:'M-9 -4 H8 M4 -8 L8 -4 L4 0 M9 4 H-8 M-4 0 L-8 4 L-4 8'},g);
+      return {vrch:y-20,popisek:null};
+    },
+    server:function(g,u){
+      var x=u.x,y=u.y;
+      el('rect',{x:x-28,y:y-42,width:56,height:84,rx:6,fill:'#17211e'},g);
+      for(var n=0;n<3;n++)el('rect',{x:x-20,y:y-32+n*13,width:40,height:7,rx:2,fill:'#5c6965'},g);
+      el('circle',{cx:x+16,cy:y+26,r:3.5,fill:'#7fd6cf'},g);
+      return {vrch:y-42,popisek:y+63};
+    }
+  };
+
+  function Scena(svg,cfg){
+    var ja=this,n,k;
+    ja.u={};ja.spoje={};ja.beh=null;
+    if(cfg.oblak){
+      var o=cfg.oblak;
+      el('rect',{x:o.x,y:o.y,width:o.w,height:o.h,rx:60,'class':'oblak'},svg);
+      napis(svg,o.lx||o.x+26,o.ly||o.y+34,'Internet','oblak-t','start');
+    }
+    var gs=el('g',{},svg),gu=el('g',{},svg);
+    for(n=0;n<cfg.uzly.length;n++){var c=cfg.uzly[n],u={};for(k in c){if(c.hasOwnProperty(k))u[k]=c[k];}ja.u[u.id]=u;}
+    for(n=0;n<cfg.spoje.length;n++){
+      var s=cfg.spoje[n],a=ja.u[s.a],b=ja.u[s.b];
+      ja.spoje[s.a+'-'+s.b]=el('line',{x1:a.x,y1:a.y,x2:b.x,y2:b.y,'class':'spoj'+(s.wifi?' wifi':'')},gs);
+      if(s.popis)napis(gs,s.px,s.py,s.popis,'pop');
+    }
+    for(k in ja.u){
+      if(!ja.u.hasOwnProperty(k))continue;
+      var uz=ja.u[k],g=el('g',{'class':'uzel'},gu),r=KRESBA[uz.typ](g,uz);
+      uz.g=g;
+      if(r.popisek!==null){
+        var py=r.popisek;
+        if(uz.jm){uz.tJm=napis(g,uz.x,py,uz.jm,'jm');py+=19;}
+        if(uz.role){napis(g,uz.x,py,uz.role,'role');py+=18;}
+        if(uz.ip){uz.tIp=napis(g,uz.x,py,uz.ip,'ip');py+=18;}
+        if(uz.ip2){napis(g,uz.x,py,uz.ip2,'ip');}
+      }
+      if(uz.pop)napis(g,uz.px,uz.py,uz.pop,'pop',uz.pa||'middle');
+      try{var bb=g.getBBox();var h=el('rect',{x:bb.x-10,y:bb.y-10,width:bb.width+20,height:bb.height+20,rx:14,'class':'halo'});g.insertBefore(h,g.firstChild);}catch(e){}
+      uz.ax=uz.x;uz.ay=r.vrch-53;
+    }
+    if(cfg.legenda)napis(svg,cfg.legenda.x,cfg.legenda.y,'plná čára = kabel · přerušovaná = Wi-Fi','pop','start');
+    // Obálka: nad ikonou, se štítkem pod sebou.
+    var e=el('g',{style:'display:none'},svg);ja.env=e;
+    ja.oRam=el('rect',{x:-32,y:-21,width:64,height:42,rx:5,fill:'#fff','stroke-width':2.5},e);
+    ja.oKlopa=el('polyline',{points:'-32,-21 0,1 32,-21',fill:'none','stroke-width':2.5,'stroke-linejoin':'round'},e);
+    ja.oBg=el('rect',{y:25,height:22,rx:11},e);
+    ja.oTxt=el('text',{x:0,y:40.5,'text-anchor':'middle','font-size':13,'font-weight':700,fill:'#fff'},e);
+  }
+  Scena.prototype.spoj=function(a,b){return this.spoje[a+'-'+b]||this.spoje[b+'-'+a];};
+  Scena.prototype.zvyrazni=function(id){
+    for(var k in this.u){if(this.u.hasOwnProperty(k))this.u[k].g.classList.remove('zvyr');}
+    if(id)this.u[id].g.classList.add('zvyr');
+  };
+  Scena.prototype.zhasni=function(){
+    for(var k in this.spoje){if(this.spoje.hasOwnProperty(k))this.spoje[k].classList.remove('aktivni');}
+  };
+  // Stav obrazovky notebooku: prazdna | adresa | ceka | stranka | zprava.
+  Scena.prototype.obrazovka=function(id,stav,text){
+    var o=this.u[id].obr;if(!o)return;
+    o.lista.style.display=(stav==='adresa'||stav==='ceka'||stav==='stranka')?'':'none';
+    o.ceka.style.display=stav==='ceka'?'':'none';
+    o.stranka.style.display=stav==='stranka'?'':'none';
+    o.zprava.style.display=stav==='zprava'?'':'none';
+    if(stav==='zprava')o.zpravaText.textContent=text||'';
+    else if(text){o.adresa.textContent=text;vejdi(o.adresa,108);}
+  };
+  Scena.prototype.obalka=function(stitek,ven){
+    var c=ven?'#0c8a83':'#17211e',w=Math.max(70,stitek.length*8+22);
+    this.oRam.setAttribute('stroke',c);this.oKlopa.setAttribute('stroke',c);this.oBg.setAttribute('fill',c);
+    this.oBg.setAttribute('x',-w/2);this.oBg.setAttribute('width',w);
+    this.oTxt.textContent=stitek;this.env.style.display='';
+  };
+  Scena.prototype.skryj=function(){this.env.style.display='none';};
+  Scena.prototype.umisti=function(x,y){this.env.setAttribute('transform','translate('+x.toFixed(1)+','+y.toFixed(1)+')');};
+  Scena.prototype.poloz=function(id){var u=this.u[id];this.umisti(u.ax,u.ay);};
+  Scena.prototype.zastav=function(){if(this.beh)this.beh.zrus();};
+  // Bez animace rovnou do cíle (tlačítko Zpět).
+  Scena.prototype.staticky=function(cesta,naUzlu){
+    this.zastav();
+    for(var n=0;n<cesta.length-1;n++){
+      var sp=this.spoj(cesta[n],cesta[n+1]);if(sp)sp.classList.add('aktivni');
+      if(naUzlu)naUzlu(cesta[n+1],cesta[n+2],true);
+    }
+    var id=cesta[cesta.length-1];this.poloz(id);this.zvyrazni(id);
+  };
+  // Obálka proletí cestou uzel po uzlu. naUzlu(id, dalsi, preskoceno) se volá
+  // při každém příletu; vrátí-li true, obálka se u uzlu zdrží déle.
+  Scena.prototype.posli=function(cesta,volby){
+    var ja=this;ja.zastav();
+    var k=0,raf=0,tm=0,konec=false,naUzlu=volby.naUzlu||function(){return false;};
+    function zrus(){konec=true;if(raf)cancelAnimationFrame(raf);if(tm)clearTimeout(tm);raf=0;tm=0;if(ja.beh===beh)ja.beh=null;}
+    function dojdi(){
+      if(konec)return;
+      zrus();
+      for(var n=k;n<cesta.length-1;n++){
+        var sp=ja.spoj(cesta[n],cesta[n+1]);if(sp)sp.classList.add('aktivni');
+        naUzlu(cesta[n+1],cesta[n+2],true);
+      }
+      var id=cesta[cesta.length-1];ja.poloz(id);ja.zvyrazni(id);
+      if(volby.hotovo)volby.hotovo();
+    }
+    function prijezd(){
+      if(konec)return;
+      k++;
+      var id=cesta[k];ja.poloz(id);ja.zvyrazni(id);
+      var zdrz=naUzlu(id,cesta[k+1],false);
+      if(k>=cesta.length-1){dojdi();return;}
+      tm=setTimeout(hop,zdrz?1600:250);
+    }
+    function hop(){
+      if(konec)return;
+      var a=ja.u[cesta[k]],b=ja.u[cesta[k+1]],sp=ja.spoj(cesta[k],cesta[k+1]);
+      if(sp)sp.classList.add('aktivni');
+      ja.zvyrazni(null);
+      if(klidne()){tm=setTimeout(prijezd,700);return;}
+      var d=Math.sqrt((b.ax-a.ax)*(b.ax-a.ax)+(b.ay-a.ay)*(b.ay-a.ay)),dur=Math.max(550,d*3.4),t0=0;
+      function snimek(ts){
+        if(konec)return;
+        if(!t0)t0=ts;
+        var p=Math.min(1,(ts-t0)/dur),e=p<.5?2*p*p:1-Math.pow(-2*p+2,2)/2;
+        ja.umisti(a.ax+(b.ax-a.ax)*e,a.ay+(b.ay-a.ay)*e);
+        if(p<1)raf=requestAnimationFrame(snimek);else{raf=0;prijezd();}
+      }
+      raf=requestAnimationFrame(snimek);
+    }
+    var beh={dojdi:dojdi,zrus:zrus};
+    ja.beh=beh;
+    ja.poloz(cesta[0]);ja.zvyrazni(cesta[0]);
+    tm=setTimeout(hop,450);
+    return beh;
+  };
+
+  function povol(seznam,ano){for(var n=0;n<seznam.length;n++)seznam[n].disabled=!ano;}
+
+  /* ================= Modul 01: dva počítače ================= */
+  (function(){
+    var sc=new Scena($('sc1'),{
+      uzly:[{id:'a',typ:'notebook',x:250,y:140,jm:'Tvůj počítač'},{id:'b',typ:'notebook',x:750,y:140,jm:'Spolužákův počítač'}],
+      spoje:[{a:'a',b:'b',popis:'kabel',px:500,py:128}]});
+    var deni=$('d1'),bP=$('m1posli'),bO=$('m1odpovez');
+    function start(){
+      sc.zastav();sc.skryj();sc.zhasni();sc.zvyrazni(null);
+      sc.obrazovka('a','prazdna');sc.obrazovka('b','prazdna');
+      deni.textContent='Dva počítače spojené kabelem jsou ta nejmenší síť. Pošli spolužákovi zprávu.';
+      bP.disabled=false;bO.disabled=true;
+    }
+    bP.addEventListener('click',function(){
+      bP.disabled=true;bO.disabled=true;sc.zhasni();sc.obrazovka('b','prazdna');
+      sc.obalka('Ahoj!',true);deni.textContent='Zpráva letí po kabelu v obálce – paketu…';
+      sc.posli(['a','b'],{hotovo:function(){
+        sc.obrazovka('b','zprava','Ahoj!');
+        deni.textContent='Zpráva dorazila a spolužák ji vidí na obrazovce. Teď může odpovědět.';
+        bO.disabled=false;
+      }});
+    });
+    bO.addEventListener('click',function(){
+      bO.disabled=true;sc.zhasni();sc.obalka('Čau!',false);deni.textContent='Odpověď letí zpátky…';
+      sc.posli(['b','a'],{hotovo:function(){
+        sc.obrazovka('a','zprava','Čau!');
+        deni.textContent='Data putovala oběma směry. Přesně tohle dělá každá síť – jen je v ní víc zařízení a mnohem víc obálek.';
+        bP.disabled=false;
+      }});
+    });
+    $('m1znovu').addEventListener('click',start);
+    start();
+  })();
+
+  /* ================= Modul 02: adresy a router ================= */
+  (function(){
+    var sc=new Scena($('sc2'),{legenda:{x:24,y:440},
+      uzly:[
+        {id:'pc',typ:'notebook',x:150,y:245,jm:'Tvůj notebook',ip:'192.168.1.15'},
+        {id:'router',typ:'router',x:500,y:250,jm:'Domácí router',ip:'192.168.1.1'},
+        {id:'mobil',typ:'mobil',x:330,y:125,jm:'Mobil',ip:'192.168.1.20'},
+        {id:'tiskarna',typ:'tiskarna',x:820,y:130,jm:'Tiskárna',ip:'192.168.1.30'},
+        {id:'tv',typ:'tv',x:800,y:350,jm:'Televize',ip:'192.168.1.40'}],
+      spoje:[{a:'pc',b:'router',wifi:true},{a:'mobil',b:'router',wifi:true},{a:'tiskarna',b:'router'},{a:'tv',b:'router'}]});
+    var CIL={mobil:{ip:'192.168.1.20',komu:'mobilu'},tiskarna:{ip:'192.168.1.30',komu:'tiskárně'},tv:{ip:'192.168.1.40',komu:'televizi'}};
+    var deni=$('d2'),tl=document.querySelectorAll('.m2cil');
+    deni.textContent='Vyber adresu a sleduj, kam router obálku doručí.';
+    for(var n=0;n<tl.length;n++){
+      tl[n].addEventListener('click',function(){
+        var cil=this.getAttribute('data-cil'),c=CIL[cil];
+        povol(tl,false);sc.zhasni();sc.obalka(c.ip,true);
+        deni.textContent='Obálka s adresou '+c.ip+' letí k routeru…';
+        sc.posli(['pc','router',cil],{
+          naUzlu:function(id,dalsi,skok){
+            if(id==='router'&&!skok){deni.textContent='Router přečte adresu '+c.ip+' a rozhodne, kam obálku poslat.';return true;}
+            return false;
+          },
+          hotovo:function(){
+            deni.textContent='Doručeno. Adresa '+c.ip+' patří '+c.komu+', a tak ji tam router poslal. Zkus jinou adresu.';
+            povol(tl,true);
+          }});
+      });
+    }
+  })();
+
+  /* ================= Modul 03: klient a server ================= */
+  (function(){
+    var sc=new Scena($('sc3'),{oblak:{x:425,y:92,w:330,h:195,lx:451,ly:275},
+      uzly:[
+        {id:'pc',typ:'notebook',x:120,y:165,jm:'Tvůj notebook',role:'klient'},
+        {id:'router',typ:'router',x:320,y:178,jm:'Domácí router'},
+        {id:'r1',typ:'rint',x:520,y:188},{id:'r2',typ:'rint',x:660,y:188},
+        {id:'server',typ:'server',x:870,y:165,jm:'Server se stránkami',role:'server'}],
+      spoje:[{a:'pc',b:'router',wifi:true},{a:'router',b:'r1'},{a:'r1',b:'r2'},{a:'r2',b:'server'}]});
+    var deni=$('d3'),b=$('m3otevri'),otazka=$('m3otazka'),tah=0,cek=0;
+    function start(){
+      tah++;clearTimeout(cek);sc.zastav();sc.skryj();sc.zhasni();sc.zvyrazni(null);
+      sc.obrazovka('pc','adresa','seznam.cz');
+      deni.textContent='Klikni na Otevři stránku a sleduj, kdo o co žádá a kdo odpovídá.';
+      b.disabled=false;otazka.style.display='none';
+    }
+    b.addEventListener('click',function(){
+      var t=++tah;clearTimeout(cek);b.disabled=true;otazka.style.display='none';
+      sc.zhasni();sc.obrazovka('pc','ceka');sc.obalka('žádost',true);
+      deni.textContent='Klient – tvůj notebook – posílá žádost „Pošli mi stránku“. Routery ji předávají dál, až dorazí k serveru.';
+      sc.posli(['pc','router','r1','r2','server'],{hotovo:function(){
+        if(t!==tah)return;
+        deni.textContent='Server žádost vyřídil a posílá stránku zpátky.';
+        cek=setTimeout(function(){
+          if(t!==tah)return;
+          sc.zhasni();sc.obalka('stránka',false);
+          sc.posli(['server','r2','r1','router','pc'],{hotovo:function(){
+            if(t!==tah)return;
+            sc.obrazovka('pc','stranka');
+            deni.textContent='Stránka dorazila. Klient žádá, server odpovídá – tak funguje skoro všechno na internetu.';
+            otazka.style.display='';b.disabled=false;
+          }});
+        },900);
+      }});
+    });
+    $('m3znovu').addEventListener('click',start);
+    start();
+  })();
+
+  /* ================= Modul 04: DNS ================= */
+  (function(){
+    var sc=new Scena($('sc4'),{oblak:{x:440,y:92,w:200,h:190,lx:466,ly:268},
+      uzly:[
+        {id:'pc',typ:'notebook',x:120,y:165,jm:'Tvůj notebook'},
+        {id:'router',typ:'router',x:320,y:178,jm:'Domácí router'},
+        {id:'r1',typ:'rint',x:540,y:188},
+        {id:'dns',typ:'server',x:820,y:165,jm:'DNS server',ip:DNS_IP}],
+      spoje:[{a:'pc',b:'router',wifi:true},{a:'router',b:'r1'},{a:'r1',b:'dns'}]});
+    var JMENA=['seznam.cz','wikipedia.org','ceskatelevize.cz','youtube.com'],radky={};
+    var tb=$('m4seznam');
+    for(var n=0;n<JMENA.length;n++){
+      var tr=document.createElement('tr');
+      tr.innerHTML='<td>'+JMENA[n]+'</td><td class="adr">'+ipPro(JMENA[n])+'</td>';
+      tb.appendChild(tr);radky[JMENA[n]]=tr;
+    }
+    function oznac(jm){for(var k in radky){if(radky.hasOwnProperty(k))radky[k].className=k===jm?'nalezeno':'';}}
+    var deni=$('d4'),tl=document.querySelectorAll('.m4jm'),tah=0,cek=0;
+    sc.obrazovka('pc','adresa','seznam.cz');
+    deni.textContent='Vyber jméno a sleduj, jak DNS server najde jeho číslo.';
+    for(n=0;n<tl.length;n++){
+      tl[n].addEventListener('click',function(){
+        var jm=this.getAttribute('data-jm'),t=++tah;
+        clearTimeout(cek);povol(tl,false);oznac(null);sc.zhasni();
+        sc.obrazovka('pc','ceka',jm);sc.obalka('otázka',true);
+        deni.textContent='Notebook se ptá DNS serveru: „Jaká je IP adresa '+jm+'?“';
+        sc.posli(['pc','router','r1','dns'],{hotovo:function(){
+          if(t!==tah)return;
+          oznac(jm);deni.textContent='DNS server našel '+jm+' ve svém seznamu a posílá odpověď.';
+          cek=setTimeout(function(){
+            if(t!==tah)return;
+            sc.zhasni();sc.obalka('odpověď',false);
+            sc.posli(['dns','r1','router','pc'],{hotovo:function(){
+              if(t!==tah)return;
+              sc.obrazovka('pc','adresa',jm);
+              deni.textContent='Odpověď: '+jm+' = '+ipPro(jm)+'. Teď notebook ví, kam poslat žádost o stránku.';
+              povol(tl,true);
+            }});
+          },900);
+        }});
+      });
+    }
+  })();
+
+  /* Mapa celé cesty – moduly 05 a 06 */
+  function velkaMapa(router){
+    return {oblak:{x:425,y:62,w:335,h:352},
+      uzly:[
+        {id:'pc',typ:'notebook',x:110,y:228,jm:'Tvůj notebook',ip:VNITRNI},
+        router,
+        {id:'r1',typ:'rint',x:500,y:250,pop:'router poskytovatele',px:500,py:292},
+        {id:'r2',typ:'rint',x:630,y:150,pop:'router',px:602,py:155,pa:'end'},
+        {id:'r3',typ:'rint',x:630,y:350,pop:'router',px:602,py:355,pa:'end'},
+        {id:'server',typ:'server',x:870,y:140,jm:'Server seznam.cz',ip:ipPro('seznam.cz')},
+        {id:'dns',typ:'server',x:870,y:350,jm:'DNS server',ip:DNS_IP}],
+      spoje:[{a:'pc',b:'router',wifi:true,popis:'Wi-Fi',px:232,py:234},{a:'router',b:'r1',popis:'kabel',px:446,py:241},
+        {a:'r1',b:'r2'},{a:'r1',b:'r3'},{a:'r2',b:'r3'},{a:'r2',b:'server'},{a:'r3',b:'dns'}]};
+  }
+
+  /* ================= Modul 05: všechno dohromady ================= */
+  (function(){
+    var sc=new Scena($('sc5'),velkaMapa({id:'router',typ:'router',x:330,y:251,jm:'Domácí router',ip:'192.168.1.1'}));
+    var dom='seznam.cz',SC=[],i=0,auto=false,autoT=null;
+    var KDE={pc:'u tvého notebooku',router:'u domácího routeru',r1:'u routeru poskytovatele',r2:'u routeru v internetu',r3:'u routeru v internetu',dns:'u DNS serveru'};
+    function kde(id){return id==='server'?'u serveru '+dom:KDE[id];}
+    function sceny(){
+      var D=dom,IP=ipPro(D);
+      return [
+        {k:1,obr:'adresa',titul:'Připraveno',text:'Napiš adresu a stiskni Enter. Uvidíš najednou všechno, co znáš z modulů 01–04.'},
+        {k:1,obr:'ceka',zvyr:'pc',titul:'1. Napíšeš adresu a stiskneš Enter',text:'Prohlížeč zná jméno '+D+', ale ne číslo serveru. Musí se zeptat DNS.'},
+        {k:2,obr:'ceka',titul:'2. Počítač se zeptá DNS na IP adresu',text:'Obálka s otázkou letí přes Wi-Fi, router a internet k DNS serveru.',
+         ob:{stitek:'otázka',ven:true,pro:'DNS server ('+DNS_IP+')',obsah:'Jaká je IP adresa '+D+'?'},cesta:['pc','router','r1','r3','dns']},
+        {k:2,obr:'ceka',titul:'2. DNS odpoví',text:'DNS server pošle zpátky číslo: '+D+' = '+IP+'.',
+         ob:{stitek:'odpověď',ven:false,pro:'tvůj notebook',obsah:D+' = '+IP},cesta:['dns','r3','r1','router','pc']},
+        {k:3,obr:'ceka',titul:'3. Žádost letí přes router k serveru',text:'Počítač už zná číslo, a tak pošle serveru žádost o stránku. Routery ji posílají dál podle adresy.',
+         ob:{stitek:'žádost',ven:true,pro:'server '+D+' ('+IP+')',obsah:'Pošli mi úvodní stránku.'},cesta:['pc','router','r1','r2','server']},
+        {k:4,obr:'ceka',titul:'4. Server pošle stránku zpět',text:'Server žádost vyřídí a pošle stránku zpátky tvému notebooku.',
+         ob:{stitek:'stránka',ven:false,pro:'tvůj notebook',obsah:'Úvodní stránka '+D},cesta:['server','r2','r1','router','pc']},
+        {k:5,obr:'stranka',zvyr:'pc',titul:'5. Prohlížeč stránku zobrazí',text:'Hotovo. Ve skutečnosti to celé trvá zlomek sekundy – laboratoř to jen zpomalila, aby bylo vidět, co se děje.'}
+      ];
+    }
+    function panel(ob,kdeText){
+      var box=$('obalka5');
+      if(!ob){box.innerHTML='<p class="prazdna">'+(i===0?'Obálka zatím nevyrazila.':(i===SC.length-1?'Všechny obálky dorazily.':'Prohlížeč chystá první obálku.'))+'</p>';return;}
+      box.innerHTML='<dl><dt>Pro</dt><dd>'+esc(ob.pro)+'</dd><dt>Obsah</dt><dd>'+esc(ob.obsah)+'</dd></dl><div class="kde">Obálka je teď '+esc(kdeText)+'.</div>';
+    }
+    function tlacitka(){
+      var d=$('dalsi5');
+      d.textContent=i===0?'Stiskni Enter':'Další krok ▶';
+      d.disabled=i===SC.length-1&&!sc.beh;
+      $('zpet5').disabled=i===0;
+      $('prehrat5').textContent=auto?'■ Zastavit':'▶ Přehrát vše';
+      $('prehrat5').className=auto?'on':'';
+    }
+    function ukaz(n,animovat){
+      sc.zastav();
+      i=n;var s=SC[n];
+      var li=document.querySelectorAll('#kroky5 li');
+      for(var m=0;m<li.length;m++){var kk=+li[m].getAttribute('data-k');li[m].className=kk===s.k?'ted':(kk<s.k?'hotovo':'');}
+      $('titul5').textContent=s.titul;$('text5').textContent=s.text;
+      sc.obrazovka('pc',s.obr,dom);sc.zhasni();sc.zvyrazni(s.zvyr||null);
+      if(s.ob){
+        sc.obalka(s.ob.stitek,s.ob.ven);
+        var naUzlu=function(id){panel(s.ob,kde(id));return false;};
+        if(animovat){panel(s.ob,kde(s.cesta[0]));sc.posli(s.cesta,{naUzlu:naUzlu,hotovo:function(){tlacitka();naplanuj();}});}
+        else sc.staticky(s.cesta,naUzlu);
+      }else{
+        sc.skryj();panel(null);
+        if(animovat)naplanuj();
+      }
+      tlacitka();
+    }
+    function dalsi(){
+      if(sc.beh){sc.beh.dojdi();return;}
+      if(i<SC.length-1)ukaz(i+1,true);
+    }
+    function naplanuj(){
+      if(!auto)return;
+      if(i>=SC.length-1){zastavAuto();return;}
+      autoT=setTimeout(function(){autoT=null;dalsi();},3600);
+    }
+    function zastavAuto(){auto=false;if(autoT){clearTimeout(autoT);autoT=null;}tlacitka();}
+    function nastavDomenu(){
+      dom=vycisti($('adresa5').value);SC=sceny();
+      var u=sc.u.server;u.tJm.textContent='Server '+dom;vejdi(u.tJm,196);u.tIp.textContent=ipPro(dom);
+    }
+    $('dalsi5').addEventListener('click',function(){zastavAuto();dalsi();});
+    $('zpet5').addEventListener('click',function(){zastavAuto();if(i>0)ukaz(i-1,false);});
+    $('znovu5').addEventListener('click',function(){zastavAuto();ukaz(0,false);});
+    $('prehrat5').addEventListener('click',function(){
+      if(auto){zastavAuto();return;}
+      auto=true;
+      if(i>=SC.length-1)ukaz(0,false);
+      tlacitka();
+      if(!sc.beh)dalsi();
+    });
+    $('adresa5').addEventListener('keydown',function(e){
+      if(e.key==='Enter'||e.keyCode===13){e.preventDefault();zastavAuto();nastavDomenu();ukaz(0,false);dalsi();}
+    });
+    $('adresa5').addEventListener('input',function(){zastavAuto();nastavDomenu();ukaz(0,false);});
+    nastavDomenu();ukaz(0,false);
+  })();
+
+  /* ================= Modul 06: vnitřní a veřejná adresa ================= */
+  (function(){
+    var IP=ipPro('seznam.cz');
+    var sc=new Scena($('sc6'),{oblak:{x:425,y:92,w:330,h:195,lx:451,ly:275},
+      uzly:[
+        {id:'pc',typ:'notebook',x:120,y:165,jm:'Tvůj notebook',ip:VNITRNI},
+        {id:'router',typ:'router',x:320,y:172,jm:'Domácí router',ip:'doma 192.168.1.1',ip2:'venku '+VEREJNA},
+        {id:'r1',typ:'rint',x:520,y:188},{id:'r2',typ:'rint',x:660,y:188},
+        {id:'server',typ:'server',x:870,y:165,jm:'Server seznam.cz',ip:IP}],
+      spoje:[{a:'pc',b:'router',wifi:true},{a:'router',b:'r1'},{a:'r1',b:'r2'},{a:'r2',b:'server'}]});
+    var KDE={pc:'u tvého notebooku',router:'u domácího routeru',r1:'v internetu',r2:'v internetu',server:'u serveru seznam.cz'};
+    function kdo(adr){
+      if(adr===VNITRNI)return 'tvůj notebook, vnitřní adresa';
+      if(adr===VEREJNA)return 'tvůj router, veřejná adresa';
+      return 'server seznam.cz';
+    }
+    function panel(o,z,kdeText){
+      var box=$('obalka6');
+      if(!o){box.innerHTML='<p class="prazdna">Obálka zatím nevyrazila. Sleduj hlavně políčka Od a Pro.</p>';return;}
+      function radek(nazev,klic){
+        var zm=!!z[klic];
+        return '<dt>'+nazev+'</dt><dd'+(zm?' class="zmena"':'')+'><span class="adr">'+esc(o[klic])+'</span> <span class="kdo">('+esc(kdo(o[klic]))+')</span>'+
+          (zm?'<span class="prepsal">přepsal domácí router</span>':'')+'</dd>';
+      }
+      box.innerHTML='<dl>'+radek('Od','od')+radek('Pro','pro')+'<dt>Obsah</dt><dd>'+esc(o.obsah)+'</dd></dl><div class="kde">Obálka je teď '+esc(kdeText)+'.</div>';
+    }
+    var deni=$('d6'),b=$('m6posli'),tah=0,cek=0;
+    function start(){
+      tah++;clearTimeout(cek);sc.zastav();sc.skryj();sc.zhasni();sc.zvyrazni(null);
+      sc.obrazovka('pc','adresa','seznam.cz');panel(null);
+      deni.textContent='Pošli žádost a sleduj, co se s adresami stane, když obálka projíždí domácím routerem.';
+      b.disabled=false;
+    }
+    b.addEventListener('click',function(){
+      var t=++tah;clearTimeout(cek);b.disabled=true;sc.zhasni();sc.obrazovka('pc','ceka');
+      var o={od:VNITRNI,pro:IP,obsah:'Pošli mi úvodní stránku.'},z={};
+      sc.obalka('žádost',true);panel(o,z,KDE.pc);
+      deni.textContent='Notebook posílá žádost. Jako odesílatel je na obálce jeho vnitřní adresa.';
+      sc.posli(['pc','router','r1','r2','server'],{
+        naUzlu:function(id,dalsi,skok){
+          var zdrz=false;
+          if(id==='router'&&o.od===VNITRNI){o.od=VEREJNA;z.od=true;zdrz=true;
+            if(!skok)deni.textContent='Router vyměnil vnitřní adresu odesílatele za svou veřejnou. A zapamatoval si, že obálka patří notebooku.';}
+          panel(o,z,KDE[id]);return zdrz;
+        },
+        hotovo:function(){
+          if(t!==tah)return;
+          deni.textContent='Server vidí jen veřejnou adresu routeru. Tam také pošle odpověď.';
+          cek=setTimeout(function(){
+            if(t!==tah)return;
+            var o2={od:IP,pro:VEREJNA,obsah:'Úvodní stránka seznam.cz'},z2={};
+            sc.zhasni();sc.obalka('stránka',false);panel(o2,z2,KDE.server);
+            sc.posli(['server','r2','r1','router','pc'],{
+              naUzlu:function(id,dalsi,skok){
+                var zdrz=false;
+                if(id==='router'&&o2.pro===VEREJNA){o2.pro=VNITRNI;z2.pro=true;zdrz=true;
+                  if(!skok)deni.textContent='Router podle svého záznamu pozná, komu odpověď patří, a vymění adresu příjemce zpátky na vnitřní.';}
+                panel(o2,z2,KDE[id]);return zdrz;
+              },
+              hotovo:function(){
+                if(t!==tah)return;
+                sc.obrazovka('pc','stranka');
+                deni.textContent='Hotovo. Díky tomu stačí celé domácnosti jedna veřejná adresa – a stejné vnitřní adresy můžou mít i sousedi.';
+                b.disabled=false;
+              }});
+          },1100);
+        }});
+    });
+    $('m6znovu').addEventListener('click',start);
+    start();
+  })();
+
+  /* ================= Rychlé kontroly ================= */
+  function check(sel,out,ok,bad){
+    var b=document.querySelectorAll(sel);
+    for(var n=0;n<b.length;n++){
+      b[n].addEventListener('click',function(){
+        for(var m=0;m<b.length;m++)b[m].classList.remove('on');
+        this.classList.add('on');
+        var r=$(out);
+        if(this.getAttribute('data-ok')==='1'){r.style.color='#1e6b45';r.textContent='Správně. '+ok;}
+        else{r.style.color='#a33c1e';r.textContent='Ne. '+bad;}
+      });
+    }
+  }
+  check('.a1','r1','Síť může být i malá – třeba dva počítače spojené kabelem. Internet je jen ta největší.',
+        'Síť jsou propojená zařízení, která si posílají data. Prohlížeč ani internet k tomu potřeba nejsou.');
+  check('.a2','r2','Router se podívá na adresu a pošle obálku televizi.',
+        'Podívej se na adresy pod zařízeními ve schématu. Adresu 192.168.1.40 má televize.');
+  check('.a3','r3','Mobil o video žádá, takže je klient. Server video posílá.',
+        'Klient je ten, kdo žádá. O video žádá tvůj mobil.');
+  check('.a4','r4','DNS jen přeloží jméno na číslo. Stránku pak pošle server Wikipedie.',
+        'DNS stránky neposílá – ke jménu jen najde IP adresu.');
+  check('.a5','r5','Síť funguje, jen počítač nezjistí, jaké číslo patří ke jménu. Kdo zná IP adresu serveru, často se na stránku dostane i tak.',
+        'Data se posílají podle IP adres a ty fungují dál. Chybí jen překlad jména na číslo – a bez něj počítač neví, kam žádost poslat.');
+  check('.a6','r6','Stejnou vnitřní adresu mají tisíce domácností, v internetu by nebylo jasné, kam obálku poslat. Proto jde odpověď na veřejnou adresu routeru.',
+        'Adresa existuje, ale platí jen uvnitř domácí sítě. V internetu platí veřejná adresa routeru.');
+
+  /* ================= Slovníček: posbírá vysvětlivky ze všech modulů ================= */
+  var karty=document.querySelectorAll('.mod .pojem'),sl=$('slovnicek');
+  for(var n=0;n<karty.length;n++){
+    var kopie=karty[n].cloneNode(true),st=kopie.querySelector('.stitek');
+    var modul=karty[n].parentNode.parentNode.parentNode.querySelector('h2 span');
+    if(st)st.textContent=modul?modul.textContent:'';
+    sl.appendChild(kopie);
+  }
+})();
+</script>
+</body>
+</html>
