@@ -863,7 +863,9 @@ type LessonConfig = {
 
 const LESSON_CONFIG: Record<string, LessonConfig> = {
   "Digitální gramotnost": {
-    studentGroups: ["Pracovní listy"],
+    // Podklady (laboratoř sítí, CHAOS) patří do karty své hodiny – bez nich
+    // padaly pod všechny lekce a u hodiny, kam patří, nebyly vidět.
+    studentGroups: ["Pracovní listy", "Podklady k aktivitám"],
     teacherNoGroup: true,
     studentLabel: { cs: "Pracovní list", en: "Worksheet" },
     teacherLabel: { cs: "Plán hodiny", en: "Lesson plan" },
