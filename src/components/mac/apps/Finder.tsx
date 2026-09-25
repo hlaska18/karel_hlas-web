@@ -7,7 +7,7 @@
  * jsou záměr, ne zjednodušení:
  *
  *   1. CESTA NEMÁ PÍSMENO DISKU. Všechno visí pod jediným `/` a připojený
- *      flash disk se objeví ve `/Volumes`. Proto je dole pruh s cestou –
+ *      flash disk se objeví ve `/Volumes`. Proto je dole řádek s cestou –
  *      žák má vidět, kde zrovna je, zapsané tak, jak se to na Macu píše.
  *   2. SKRYTÉ JE HLAVNĚ JMÉNO. Cokoli s tečkou na začátku Finder neukáže
  *      (macOS má i příznak „skrytý“, ale ten simulace nenapodobuje). Ukázat
@@ -90,7 +90,7 @@ const MISTA = [
   { jmeno: "zak", cesta: DOMOV, znak: House },
   { jmeno: "Plocha", cesta: PLOCHA, znak: Monitor },
   { jmeno: "Dokumenty", cesta: DOKUMENTY, znak: FileText },
-  { jmeno: "Stažené", cesta: STAZENE, znak: Download },
+  { jmeno: "Stahování", cesta: STAZENE, znak: Download },
   { jmeno: "Obrázky", cesta: OBRAZKY, znak: Image },
 ];
 
@@ -172,7 +172,7 @@ export function Finder() {
   }, [jmenoMista, nastavTitul]);
 
   /**
-   * Nabídka „Jít“ poslala okno jinam. Porovnává se s aktuální cestou, aby to
+   * Nabídka „Otevřít“ (Go) poslala okno jinam. Porovnává se s aktuální cestou, aby to
    * nezacyklilo: `jdi` sáhne do historie, ta překreslí Finder a efekt by se
    * spustil znovu.
    */
@@ -283,8 +283,9 @@ export function Finder() {
     // zakládají v Terminálu (úloha „zaloz-teckovou“).
     if (cil && cil !== prejmenovavany && jeSkryte(cil)) {
       nastavHlasku({
-        nadpis: `Nemůžeš použít název „${cil}“.`,
-        text: "Názvy začínající tečkou jsou vyhrazené pro systém.",
+        // Znění podle českého macOS 27, jen s tykáním jako zbytek simulace.
+        nadpis: "Nemůžeš použít název, který začíná tečkou „.“",
+        text: "Tyto názvy jsou vyhrazeny pro systém. Vyber jiný název.",
       });
     } else if (cil && cil !== prejmenovavany) {
       const novy = prejmenuj(stav.disk, [...cesta, prejmenovavany], cil);
@@ -692,7 +693,7 @@ export function Finder() {
             onClick={() => jdi(m.cesta)}
           />
         ))}
-        <Skupina nazev="Umístění" />
+        <Skupina nazev="Místa" />
         <PolozkaBoku
           jmeno="Macintosh HD"
           znak={<HardDrive className="h-[15px] w-[15px] text-mac-akcent" />}

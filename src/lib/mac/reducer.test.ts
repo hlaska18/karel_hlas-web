@@ -67,8 +67,8 @@ describe("okno není program", () => {
     expect(stav.okna[0].zvetsene).toBe(false);
   });
 
-  it("nabídka Jít přepne otevřené okno, neotevře nové", () => {
-    // Na Macu „Jít → Domů" nepřidá okno, jen pošle to současné jinam.
+  it("nabídka Otevřít (Go) přepne otevřené okno, neotevře nové", () => {
+    // Na Macu „Otevřít → Domov" nepřidá okno, jen pošle to současné jinam.
     let stav = reducerMac(vychoziStavMac(), { typ: "okno/otevri", app: "finder" });
     const id = stav.okna[0].id;
     stav = reducerMac(stav, { typ: "okno/minimalizuj", id });

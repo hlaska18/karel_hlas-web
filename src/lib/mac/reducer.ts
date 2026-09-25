@@ -34,7 +34,7 @@ export type AkceMac =
   /** Aplikace si přepisuje text v záhlaví (Finder cestou, Terminál složkou). */
   | { typ: "okno/titul"; id: number; titul: string; arg?: string }
   /**
-   * Pošle otevřené okno jinam. Používá nabídka „Jít“ ve Finderu – na Macu
+   * Pošle otevřené okno jinam. Používá nabídka „Otevřít“ (Go) ve Finderu – na Macu
    * přepne SOUČASNÉ okno, neotevře nové, a bez tohohle by to nešlo: cestu si
    * Finder drží ve vlastním stavu, kam lišta nedosáhne.
    */
@@ -169,7 +169,7 @@ export function reducerMac(stav: StavMac, akce: AkceMac): StavMac {
         ...stav,
         vpredu: okno.app,
         okna: stav.okna.map((o) =>
-          // Okno se zároveň vytáhne dopředu a vrátí z Docku – „Jít“ na schované
+          // Okno se zároveň vytáhne dopředu a vrátí z Docku – „Otevřít“ na schované
           // okno by jinak nikam viditelně nevedlo.
           o.id === akce.id
             ? { ...o, arg: akce.arg, minimalizovane: false, z: nejvyssi + 1 }

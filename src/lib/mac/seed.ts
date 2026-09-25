@@ -193,7 +193,7 @@ export function vytvorDiskMac(): Slozka {
 export const DOMOVSKE_SLOZKY: { jmeno: string; cesta: string[] }[] = [
   { jmeno: "Plocha", cesta: PLOCHA },
   { jmeno: "Dokumenty", cesta: DOKUMENTY },
-  { jmeno: "Stažené", cesta: STAZENE },
+  { jmeno: "Stahování", cesta: STAZENE },
   { jmeno: "Obrázky", cesta: OBRAZKY },
   { jmeno: "Aplikace", cesta: APLIKACE },
 ];

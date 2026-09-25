@@ -89,12 +89,12 @@ export const UKOLY_MAC: UkolMac[] = [
     id: "vynutit-ukonceni",
     nazev: "Podívej se do seznamu běžících programů",
     popis:
-      "Na Macu se tomu okénku říká Vynutit ukončení a ukončuje se v něm program, který se zasekl – podobně jako ve Windows ve Správci úloh. (Úplnou obdobou Správce úloh je na Macu Monitor činnosti.) Uvidíš v něm i programy, které nemají žádné okno.",
+      "Na Macu se tomu okénku říká Vynutit ukončení a ukončuje se v něm program, který se zasekl – podobně jako ve Windows ve Správci úloh. (Úplnou obdobou Správce úloh je na Macu Monitor aktivity.) Uvidíš v něm i programy, které nemají žádné okno.",
     kroky: [
       "Vlevo nahoře v liště je jablko. Klikni na něj.",
       "Vyber Vynutit ukončení. (Na skutečném Macu to jde zkratkou Cmd+Option+Esc, tady Ctrl+Alt+Esc.)",
       "V seznamu jsou všechny běžící programy – i ty, po kterých na obrazovce není žádné okno. Porovnej seznam s tím, co vidíš na ploše.",
-      "Klikni na Finder. Tlačítko dole se změní na Znovu spustit: Finder na Macu ukončit nejde, systém ho potřebuje pořád. Dá se jen znovu spustit.",
+      "Klikni na Finder. Tlačítko dole se změní na Spustit znovu: Finder na Macu ukončit nejde, systém ho potřebuje pořád. Dá se jen znovu spustit.",
       "Zavři okénko tlačítkem Zrušit.",
     ],
     skupina: "Okno není program",
@@ -173,8 +173,8 @@ export const UKOLY_MAC: UkolMac[] = [
       "Ve Windows dostane flash disk písmeno, třeba D:. Tady žádné písmeno nedostane – musí se někam pověsit do téhož stromu. Zjisti kam.",
     kroky: [
       "Otevři okno Finderu (ikona v Docku vlevo).",
-      "V postranním panelu dole, pod nadpisem Umístění, je FLASH. Klikni na něj.",
-      "Podívej se na pruh úplně dole v okně – simulace v něm ukazuje cestu. (Na skutečném Macu si ho musíš zapnout: Zobrazení → Zobrazit pruh s cestou.)",
+      "V postranním panelu dole, pod nadpisem Místa, je FLASH. Klikni na něj.",
+      "Podívej se na řádek úplně dole v okně – simulace v něm ukazuje cestu. (Na skutečném Macu si ho musíš zapnout: Zobrazení → Zobrazit řádek s cestou.)",
       "Stojí tam /Volumes/FLASH – tak, jak by cestu vypsal i Terminál. Nikde ani písmeno disku.",
       "Volumes znamená svazky. Každý připojený disk se objeví jako složka v ní.",
       "Proto na Macu nikdy neuslyšíš otázku „jaké má písmeno“. Písmena disků jsou vynález Windows.",
@@ -223,7 +223,7 @@ export const UKOLY_MAC: UkolMac[] = [
       "Když skrývá jméno, jde schovat i to, co si vytvoříš sám. Finder ti ale název s tečkou nedovolí – zkus to a pak to udělej v Terminálu.",
     kroky: [
       "V okně Finderu klikni v postranním panelu na Dokumenty, pak pravým tlačítkem do prázdného místa a vyber Nová složka.",
-      "Napiš název, který ZAČÍNÁ TEČKOU, třeba .pokus, a stiskni Enter. Finder odmítne – názvy s tečkou jsou vyhrazené pro systém.",
+      "Napiš název, který ZAČÍNÁ TEČKOU, třeba .pokus, a stiskni Enter. Finder odmítne – názvy začínající tečkou jsou vyhrazené pro systém.",
       "Spusť z Docku Terminál, napiš cd Documents a stiskni Enter.",
       "Napiš mkdir .pokus a Enter. Terminál složku založí bez řečí.",
       "Napiš ls a Enter. Složka ve výpisu není. Teď napiš ls -a – a je tam.",
@@ -242,7 +242,7 @@ export const UKOLY_MAC: UkolMac[] = [
     kroky: [
       "V okně Finderu klikni v postranním panelu na Macintosh HD.",
       "Dvakrát klikni na složku Applications. (Česká verze macOS ji ve Finderu ukazuje jako Aplikace, v cestě je ale vždycky /Applications.) Pozor, ikona Aplikace v Docku je něco jiného: programy z ní jen spouštíš, složka s nimi je tady.",
-      "Je v ní TextEdit.app, Náhled.app a složka Utilities, ve které je Terminál. Zkus na TextEdit.app dvakrát kliknout – spustí se, jako by to byl jeden soubor.",
+      "Je v ní TextEdit.app, Náhled.app a složka Utilities (česky Utility), ve které je Terminál. Zkus na TextEdit.app dvakrát kliknout – spustí se, jako by to byl jeden soubor.",
       "Klikni na TextEdit.app pravým tlačítkem a vyber Zobrazit obsah balíčku.",
       "Jsi uvnitř. Je tam složka Contents a v ní MacOS se spustitelným souborem a Resources s ikonou.",
       "Proto se hodně programů na Macu instaluje přetažením jedné ikony do Aplikací a odinstaluje přesunutím do koše.",

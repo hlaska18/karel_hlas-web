@@ -582,7 +582,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
     if (co === "stazene")
       return [
         {
-          text: "Otevřít „Stažené“",
+          text: "Otevřít „Stahování“",
           akce: () => spust("finder", slozMac(STAZENE)),
         },
       ];
@@ -693,7 +693,7 @@ export function Dock({ onLaunchpad }: { onLaunchpad: () => void }) {
           <div className="mx-auto h-full w-px bg-mac-text/20" />
         </div>
         <Ikona
-          popis="Stažené"
+          popis="Stahování"
           strana={velikost}
           zvetsuje={zvetsovat}
           vzhled={{

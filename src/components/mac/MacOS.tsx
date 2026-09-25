@@ -361,7 +361,7 @@ function Obrazovka() {
     };
 
     if (vpredu === "finder") {
-      /* „Jít“ na Macu přepne SOUČASNÉ okno. Nové otevře jen tehdy, když žádné
+      /* „Otevřít“ (Go) na Macu přepne SOUČASNÉ okno. Nové otevře jen tehdy, když žádné
          není – to dělá skutečný Finder taky. */
       const finderVpredu = mojeOkna().sort((a, b) => b.z - a.z)[0];
       const jdi = (kam: string[]) => {
@@ -406,12 +406,13 @@ function Obrazovka() {
         {
           // Tahle nabídka na Windows nemá obdobu a je to nejlepší místo, kde
           // žák uvidí, že domovská složka, Plocha i Aplikace jsou jen cesty.
-          titul: "Jít",
+          // Česky „Otevřít“ (anglicky Go), položky podle českého macOS 27.
+          titul: "Otevřít",
           polozky: [
-            { text: "Domů", zkratka: "⇧⌘H", akce: () => jdi(DOMOV) },
+            { text: "Domov", zkratka: "⇧⌘H", akce: () => jdi(DOMOV) },
             { text: "Plocha", zkratka: "⇧⌘D", akce: () => jdi(PLOCHA) },
             { text: "Dokumenty", zkratka: "⇧⌘O", akce: () => jdi(DOKUMENTY) },
-            { text: "Stažené", zkratka: "⌥⌘L", akce: () => jdi(STAZENE) },
+            { text: "Stahování", zkratka: "⌥⌘L", akce: () => jdi(STAZENE) },
             {
               text: "Aplikace",
               zkratka: "⇧⌘A",
@@ -425,7 +426,7 @@ function Obrazovka() {
               oddelovac: true,
             },
             {
-              text: "Přejít do složky…",
+              text: "Otevřít složku…",
               zkratka: "⇧⌘G",
               akce: () => nastavPanel("jdi"),
             },
@@ -690,7 +691,7 @@ function Obrazovka() {
  *
  * Jedno okénko se seznamem toho, co běží. Program bez okna v něm žák uvidí
  * pojmenovaný, i když po něm na obrazovce nic není. Popisky a tlačítka jsou
- * jako na skutečném Macu: žádné „bez okna“ a u Finderu „Znovu spustit“,
+ * jako na skutečném Macu: žádné „bez okna“ a u Finderu „Spustit znovu“,
  * protože Finder ukončit nejde (rada 25. 9. 2026).
  */
 function VynutitUkonceni({ zavri }: { zavri: () => void }) {
@@ -749,7 +750,7 @@ function VynutitUkonceni({ zavri }: { zavri: () => void }) {
             }}
             className="rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90 disabled:opacity-40"
           >
-            {vybrana === "finder" ? "Znovu spustit" : "Vynutit ukončení"}
+            {vybrana === "finder" ? "Spustit znovu" : "Vynutit ukončení"}
           </button>
         </div>
       </div>
@@ -939,7 +940,7 @@ function Launchpad({ zavri }: { zavri: () => void }) {
 }
 
 /**
- * „Přejít do složky…“ (⇧⌘G).
+ * „Otevřít složku…“ (⇧⌘G).
  *
  * Na Windows se cesta píše do adresního řádku nahoře v okně; na Macu do
  * tohohle okénka. Je to nejpřímější způsob, jak si žák vyzkouší, že cesta
@@ -982,7 +983,7 @@ function PrejitDoSlozky({ zavri }: { zavri: () => void }) {
     <div className="absolute inset-0 z-[860] flex items-start justify-center bg-black/20 pt-[16vh]">
       <div className="mac-vjezd w-[460px] rounded-xl bg-mac-povrch p-5 shadow-[0_24px_70px_rgba(0,0,0,0.45)]">
         <h2 className="text-[13px] font-semibold text-mac-text">
-          Přejít do složky:
+          Otevřít složku:
         </h2>
         <input
           ref={pole}
@@ -1017,7 +1018,7 @@ function PrejitDoSlozky({ zavri }: { zavri: () => void }) {
             onClick={jdi}
             className="rounded-md bg-mac-akcent px-3 py-1.5 text-[13px] font-medium text-mac-akcent-text hover:opacity-90"
           >
-            Jít
+            Otevřít
           </button>
         </div>
       </div>
