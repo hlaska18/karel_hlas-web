@@ -208,13 +208,15 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     // k úloze ve Wordu. Kdyby spadl do Excelu, chybí přesně tam, kde ho
     // učitel potřebuje – a to je táž chyba jako ten rozbitý odkaz, kvůli
     // kterému se celá cvičebnice na web nahrávala.
-    const zdrojDat = items.find((it) => it.label.cs === "Zdroj dat – výsledky OH");
+    const zdrojDat = items.find(
+      (it) => it.label.cs === "Podklad (28_hromadna_korespondence_vysledkyOH.xlsx)",
+    );
     expect(zdrojDat).toBeDefined();
     expect(zdrojDat!.tool).toBe("Word");
 
     // Totéž z druhé strany: databáze k importu dat je .accdb, ale je to
     // podklad k úloze v Excelu.
-    const databaze = items.find((it) => it.label.cs === "Zdrojová databáze");
+    const databaze = items.find((it) => it.label.cs === "Podklad (33_prace.accdb)");
     expect(databaze).toBeDefined();
     expect(databaze!.tool).toBe("Excel");
   });
@@ -296,6 +298,13 @@ describe("cvičebnice 100 příkladů pro Office", () => {
       en: "Working file (01_tabulka.xlsx)",
     });
     expect(pracovni?.href).toMatch(/\/01_tabulka\.xlsx$/);
+    // Podklady, které zadání jmenuje, nesou taky jméno ze zadání – a v bance
+    // zůstávají podkladem, ne druhým pracovním souborem.
+    const csv = items.find((it) => it.href.endsWith("/32_prehled_prodeje.csv"));
+    expect(csv?.label).toEqual({
+      cs: "Podklad (32_prehled_prodeje.csv)",
+      en: "Handout (32_prehled_prodeje.csv)",
+    });
     // Žádný soubor v úlohách Wordu a Excelu se už nejmenuje „Pracovní soubor“.
     for (const it of items) {
       if (!/^(Word|Excel) › Úlohy › /.test(it.group?.cs ?? "")) continue;

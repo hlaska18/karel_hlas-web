@@ -135,6 +135,8 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   (`01_tabulka.xlsx`, `olympiada1.docx` …). Banka je pozná podle vzoru
   `PRACOVNI_SOUBOR` v src/lib/materials.ts a ukáže jako „Pracovní soubor
   (01_tabulka.xlsx)“. Nový pracovní soubor pojmenuj stejně jako v zadání.
+  Podklady, které zadání jmenuje (CSV, XML, .accdb, zdroj dat, anotace),
+  se jmenují taky podle zadání a jsou vyjmenované v `PODKLADY_ULOH`.
 
 ## Otevřené / nápady (nic naléhavého)
 

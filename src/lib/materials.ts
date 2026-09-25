@@ -105,19 +105,12 @@ const NAME_EN: Record<string, string> = {
   "Řešení (PDF)": "Solution (PDF)",
   "Zadání úloh – cvičebnice": "Exercises – the workbook",
   "Zdrojová data": "Source data",
-  "Zdrojová databáze": "Source database",
-  "Anotace k překladu": "Abstract for translation",
   "Podklad k tisku": "Printing handout",
   "Obrázek k vložení": "Image to insert",
   "Obrázek – olympijská medaile": "Image – Olympic medal",
   "Obrázek – slavnostní zahájení": "Image – opening ceremony",
   "Řešení – porovnaný dokument": "Solution – merged document",
   "Řešení – hotový tisk (PDF)": "Solution – finished print (PDF)",
-  "Zdroj dat – výsledky OH": "Data source – Olympic results",
-  "Podklad – kniha jízd (CSV)": "Handout – trip log (CSV)",
-  "Podklad – počasí (textový soubor)": "Handout – weather (text file)",
-  "Podklad – přehled prodeje (CSV)": "Handout – sales overview (CSV)",
-  "Podklad – přehled prodeje (XML)": "Handout – sales overview (XML)",
   "Úlohy v Excelu": "Excel exercises",
   "Úlohy ve Wordu": "Word exercises",
   "Excel – materiály k úlohám": "Excel – exercise materials",
@@ -498,9 +491,28 @@ type Popis = { cs: string; en: string };
  */
 const PRACOVNI_SOUBOR = /^(\d{2}_\S+|olympiada1)\.(docx|docm|xlsx|xlsm)$/i;
 
+/**
+ * Podklady, které zadání taky jmenuje (CSV k importu, zdroj dat hromadné
+ * korespondence…). Jméno mají ve stejném tvaru jako pracovní soubor, takže
+ * je vzor nerozliší – vyjmenované jsou tady. Ostatní podklady (obrázky,
+ * „Zdrojová data“) zadání nejmenuje a nesou popisné jméno.
+ */
+const PODKLADY_ULOH = new Set([
+  "25_preklady_dokumentu_anotace.docx",
+  "28_hromadna_korespondence_vysledkyOH.xlsx",
+  "32_prehled_prodeje.csv",
+  "32_kniha_jizd.csv",
+  "32_pocasi.txt",
+  "33_prace.accdb",
+  "33_prehled_prodeje.xml",
+]);
+
 function pracovniSoubor(file: string, segs: string[]): Popis | null {
   const vUloze = segs.some((s) => s.normalize("NFC") === "Úlohy");
-  if (!vUloze || !PRACOVNI_SOUBOR.test(file.normalize("NFC"))) return null;
+  if (!vUloze) return null;
+  const jmeno = file.normalize("NFC");
+  if (PODKLADY_ULOH.has(jmeno)) return { cs: `Podklad (${file})`, en: `Handout (${file})` };
+  if (!PRACOVNI_SOUBOR.test(jmeno)) return null;
   return { cs: `Pracovní soubor (${file})`, en: `Working file (${file})` };
 }
 
