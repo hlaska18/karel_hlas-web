@@ -65,6 +65,19 @@ code{font-family:Consolas,Menlo,monospace;background:#eef2f1;padding:1px 6px;bor
 .dvoj{display:grid;grid-template-columns:3fr 2fr;grid-gap:16px;margin-top:12px}
 .dvoj .deni{margin:0}
 @media (max-width:760px){.dvoj{grid-template-columns:1fr}}
+/* „Tipni si nejdřív“: akce modulu se spustí až po tipu – žák má nejdřív přemýšlet. */
+.tip{background:#fff8e6;border-left:4px solid #d9a21b;padding:10px 14px;margin:0 0 12px;font-size:15px}
+.tip>b{color:#7a5a00}
+.tip button{margin:6px 6px 0 0}
+.tip.pozor{outline:3px solid var(--rust);outline-offset:2px}
+/* Zvolený tip zůstane vidět i po uzamčení ostatních možností. */
+.tip button.on[disabled],.tip button.on[disabled]:hover{opacity:1;background:var(--teal);color:#fff}
+/* Seřazení kroků (modul 05) */
+.karty{display:flex;flex-wrap:wrap;margin:8px 0 4px}
+.karty button{margin:0 8px 8px 0;text-align:left}
+.karty .cis{display:inline-block;min-width:22px;height:22px;line-height:22px;margin-right:6px;border-radius:50%;
+  background:#eef2f1;color:var(--ink);text-align:center;font-weight:700;font-size:12px}
+.karty button.on .cis{background:#fff;color:var(--teal-d)}
 .otazka{background:#fdf3ef;border-left:4px solid var(--rust);padding:10px 14px;margin:12px 0 0;font-size:15px}
 
 /* Kroky z pracovního listu (modul 05) */
@@ -88,7 +101,8 @@ code{font-family:Consolas,Menlo,monospace;background:#eef2f1;padding:1px 6px;bor
 .pane{border:1px solid var(--line);border-radius:8px;overflow:hidden;background:#fff}
 .scena{display:block;width:100%;height:auto}
 /* Na telefonu by popisky ve schématu byly nečitelně malé – schéma se posouvá jen uvnitř rámečku. */
-.posun{display:none;margin:4px 0 0;font-size:13px;color:var(--grey)}
+.posun{display:none;margin:4px 0 0;font-size:13px;font-weight:600;color:var(--teal-d)}
+.jakpouzit{margin:4px 0 0;font-size:14px;color:var(--grey)}
 @media (max-width:600px){
   .pane{overflow-x:auto;-webkit-overflow-scrolling:touch}
   .scena{min-width:640px}
@@ -157,9 +171,10 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
   <li><a href="#m3"><b>03</b>Klient a server</a></li>
   <li><a href="#m4"><b>04</b>DNS</a></li>
   <li><a href="#m5"><b>05</b>Všechno dohromady</a></li>
-  <li><a href="#mtop"><b>06</b>Jak se dá síť zapojit</a></li>
+  <li class="navic"><a href="#mtop"><b>06</b>Navíc: zapojení sítě</a></li>
   <li class="navic"><a href="#m6"><b>07</b>Bonus: dvě adresy</a></li>
 </ol>
+<p class="jakpouzit"><b>Jak laboratoř použít:</b> v hodině modul 05 (po hře na síť) · na opakování moduly 01–04 · navíc 06 (zapojení sítě) a 07 (dvě adresy).</p>
 
 <!-- ============ MODUL 01 ============ -->
 <section class="mod" id="m1">
@@ -204,6 +219,12 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Kabel a Wi-Fi</h3>
         <p>Dva způsoby připojení. Kabel bývá stabilnější, Wi-Fi je bez drátů.</p><span class="jako">Ve schématu: plná čára = kabel, přerušovaná = Wi-Fi.</span></div>
     </div>
+    <div class="tip" id="tip2"><b>Tipni si nejdřív —</b> pošleš obálku z notebooku televizi. Kdo ji dostane jako první?<br>
+      <button class="tipvol" data-ok="1" type="button">Domácí router</button>
+      <button class="tipvol" data-ok="0" type="button">Rovnou televize</button>
+      <button class="tipvol" data-ok="0" type="button">Všechna zařízení v síti</button>
+      <div class="res"></div>
+    </div>
     <div class="ovl">
       <span class="lbl">Pošli obálku z notebooku na adresu:</span>
       <button class="m2cil hl" data-cil="mobil" type="button">192.168.1.20</button>
@@ -237,6 +258,12 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Internet</h3>
         <p>Síť sítí. Routery po celém světě si mezi sebou předávají obálky.</p><span class="jako">Jako třídírny pošty po celém světě, které si dopisy předávají.</span></div>
     </div>
+    <div class="tip" id="tip3"><b>Tipni si nejdřív —</b> kolik obálek musí proletět sítí, než uvidíš stránku?<br>
+      <button class="tipvol" data-ok="0" type="button">Jedna – stránka přijde sama</button>
+      <button class="tipvol" data-ok="1" type="button">Dvě – žádost tam a stránka zpátky</button>
+      <button class="tipvol" data-ok="0" type="button">Žádná, stránka je v počítači</button>
+      <div class="res"></div>
+    </div>
     <div class="ovl">
       <button id="m3otevri" class="hl" type="button">Otevři stránku</button>
       <span class="mezera"></span>
@@ -266,6 +293,12 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
         <p>Jméno stránky pro lidi, třeba seznam.cz. Lidé si pamatují jména, síť pracuje s čísly.</p><span class="jako">Jako jméno v telefonním seznamu – snáz se pamatuje než číslo.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>DNS</h3>
         <p>Služba, která ke jménu najde IP adresu.</p><span class="jako">Jako telefonní seznam: hledáš jméno, dostaneš číslo.</span></div>
+    </div>
+    <div class="tip" id="tip4"><b>Tipni si nejdřív —</b> napíšeš seznam.cz. Komu pošle notebook první otázku?<br>
+      <button class="tipvol" data-ok="0" type="button">Serveru seznam.cz</button>
+      <button class="tipvol" data-ok="1" type="button">DNS serveru</button>
+      <button class="tipvol" data-ok="0" type="button">Nikomu, jméno stačí</button>
+      <div class="res"></div>
     </div>
     <div class="ovl">
       <span class="lbl">Zeptej se DNS na:</span>
@@ -298,7 +331,14 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
 <section class="mod" id="m5">
   <h2><span>MODUL 05</span>Všechno dohromady: co se stane, když dáš Enter</h2>
   <div class="body">
-    <p>Teď znáš všechny díly. Tady je spojíš do jedné cesty o pěti krocích – stejných, jaké máš v pracovním listu.</p>
+    <p>Díly znáš ze hry na síť (nebo z modulů 01–04). Tady je spojíš do jedné cesty o pěti krocích – stejných, jaké máš v pracovním listu.</p>
+    <div class="tip" id="serad5"><b>Nejdřív ty —</b> klikni na kroky ve správném pořadí, od stisku Enteru po zobrazení stránky. Pak si cestu přehraješ.
+      <div class="karty" id="karty5"></div>
+      <button id="zkontroluj5" class="hl" type="button">Zkontrolovat</button>
+      <button id="vymaz5" type="button">Začít znovu</button>
+      <button id="preskoc5" type="button">Přeskočit a rovnou přehrát</button>
+      <div class="res" id="rserad5"></div>
+    </div>
     <div class="ovl">
       <label class="lbl" for="adresa5">Adresa stránky:</label>
       <input id="adresa5" type="text" value="seznam.cz" spellcheck="false" autocomplete="off">
@@ -308,7 +348,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <button id="prehrat5" type="button">▶ Přehrát vše</button>
       <button id="znovu5" type="button">Od začátku</button>
     </div>
-    <ol class="kroky" id="kroky5">
+    <ol class="kroky" id="kroky5" style="display:none">
       <li data-k="1"><b>1</b>Napíšeš adresu</li>
       <li data-k="2"><b>2</b>Dotaz na DNS</li>
       <li data-k="3"><b>3</b>Žádost k serveru</li>
@@ -334,8 +374,8 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
 </section>
 
 <!-- ============ MODUL 06: TOPOLOGIE ============ -->
-<section class="mod" id="mtop">
-  <h2><span>MODUL 06</span>Jak se dá síť zapojit: sběrnice, hvězda a spol.</h2>
+<section class="mod navic" id="mtop">
+  <h2><span>MODUL 06</span>Navíc: jak se dá síť zapojit (sběrnice, hvězda a spol.)</h2>
   <div class="body">
     <p>Tvoje domácí síť z modulu 02 má uprostřed router a všechno je připojené k němu. Takhle se ale sítě zapojovat nemusí. Tvaru zapojení se říká topologie – a každý tvar se jinak chová, když se něco pokazí.</p>
     <div class="pojmy">
@@ -344,7 +384,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Topologie</h3>
         <p>Tvar zapojení sítě: kudy vedou kabely a přes co jdou data.</p><span class="jako">Jako plánek cest mezi domy.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Přepínač (switch)</h3>
-        <p>Krabička, do které vedou kabely od počítačů. Zprávu pošle jen tomu, komu patří. Domácí router ho má v sobě.</p><span class="jako">Jako třídírna pošty pro jednu budovu.</span></div>
+        <p>Krabička, do které vedou kabely od počítačů. Zprávu pro jeden počítač pošle jen do jeho kabelu (hromadné zprávy pošle všem). Domácí router ho má v sobě.</p><span class="jako">Jako domovní schránky: dopis skončí jen v té správné.</span></div>
     </div>
     <div class="ovl">
       <span class="lbl">Zapojení:</span>
@@ -359,6 +399,11 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       <button id="mtprerus" type="button">Přeruš kabel</button>
       <span class="mezera"></span>
       <button id="mtznovu" type="button">Znovu</button>
+    </div>
+    <div class="tip" id="tiptop" style="display:none"><b>Tipni si nejdřív —</b> kabel je přetržený. Dostane D zprávu?<br>
+      <button class="tipvol" data-v="ano" type="button">Ano</button>
+      <button class="tipvol" data-v="ne" type="button">Ne</button>
+      <div class="res"></div>
     </div>
     <div class="pane"><svg class="scena" id="sctop" viewBox="0 0 1000 395" role="img" aria-label="Schéma zvolené topologie sítě"></svg></div>
     <p class="posun">Schéma si posuň prstem do strany.</p>
@@ -387,6 +432,12 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
         <p>Platí jen uvnitř jedné sítě. Doma obvykle začíná 192.168., ve škole často 10. Stejnou vnitřní adresu mají zároveň tisíce jiných domácností.</p><span class="jako">Jako číslo bytu – byt 12 je skoro v každém větším domě.</span></div>
       <div class="pojem"><div class="stitek">Nový pojem</div><h3>Veřejná adresa</h3>
         <p>Adresa, pod kterou je tvoje síť vidět v internetu. Má ji router a sdílí ji všechna zařízení v domácnosti.</p><span class="jako">Jako adresa domu. Uvnitř pak pošta dojde do správného bytu.</span></div>
+    </div>
+    <div class="tip" id="tip7"><b>Tipni si nejdřív —</b> jakou adresu odesílatele uvidí na obálce server seznam.cz?<br>
+      <button class="tipvol" data-ok="0" type="button">192.168.1.15 (notebook)</button>
+      <button class="tipvol" data-ok="1" type="button">203.0.113.25 (veřejná adresa routeru)</button>
+      <button class="tipvol" data-ok="0" type="button">Žádnou, odesílatel se nepíše</button>
+      <div class="res"></div>
     </div>
     <div class="ovl">
       <button id="m6posli" class="hl" type="button">Pošli žádost o stránku</button>
@@ -681,6 +732,36 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
 
   function povol(seznam,ano){for(var n=0;n<seznam.length;n++)seznam[n].disabled=!ano;}
 
+  /* „Tipni si nejdřív.“ Akce modulu se spustí až po tipu a po animaci se tip
+     vyhodnotí i s vysvětlením. Žák tak nejdřív přemýšlí a teprve pak se dívá. */
+  function Tip(id,vysvetleni){
+    var box=$(id),vol=box.querySelectorAll('.tipvol'),res=box.querySelector('.res'),zvol=null,hotovo=false;
+    for(var n=0;n<vol.length;n++){
+      vol[n].addEventListener('click',function(){
+        if(zvol)return;
+        zvol=this;this.classList.add('on');povol(vol,false);
+        box.className='tip';res.style.color='';res.textContent='Tip je uložený. Teď to vyzkoušej.';
+      });
+    }
+    return {
+      zvoleno:function(){return !!zvol;},
+      upozorni:function(){
+        box.className='tip pozor';res.style.color='#a33c1e';res.textContent='Nejdřív si tipni – klikni na jednu z možností.';
+        try{box.scrollIntoView({block:'center'});}catch(e){}
+      },
+      vyhodnot:function(){
+        if(!zvol||hotovo)return;
+        hotovo=true;var ok=zvol.getAttribute('data-ok')==='1';
+        res.style.color=ok?'#1e6b45':'#a33c1e';
+        res.textContent=(ok?'Tip vyšel. ':'Tip nevyšel. ')+vysvetleni;
+      }
+    };
+  }
+  var tip2=Tip('tip2','Každá obálka jde nejdřív do domácího routeru a teprve ten ji pošle dál. Notebook s televizí přímo spojený není.');
+  var tip3=Tip('tip3','Nejdřív letí tvoje žádost k serveru, pak stránka zpátky. (Ve skutečnosti je obálek mnohem víc – stránka se rozdělí na mnoho paketů.)');
+  var tip4=Tip('tip4','Notebook ještě nezná číslo serveru seznam.cz, a tak se nejdřív zeptá DNS serveru – jako když hledáš číslo v telefonním seznamu.');
+  var tip7=Tip('tip7','Router cestou ven přepíše vnitřní adresu na svou veřejnou. Server vidí jen ji a odpověď pošle na ni.');
+
   /* ================= Modul 01: dva počítače ================= */
   (function(){
     var sc=new Scena($('sc1'),{
@@ -730,6 +811,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     for(var n=0;n<tl.length;n++){
       tl[n].addEventListener('click',function(){
         var cil=this.getAttribute('data-cil'),c=CIL[cil];
+        if(!tip2.zvoleno()){tip2.upozorni();return;}
         povol(tl,false);sc.zhasni();sc.obalka(c.ip,true);
         deni.textContent='Obálka s adresou '+c.ip+' letí k routeru…';
         sc.posli(['pc','router',cil],{
@@ -739,7 +821,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
           },
           hotovo:function(){
             deni.textContent='Doručeno. Adresa '+c.ip+' patří '+c.komu+', a tak ji tam router poslal. Zkus jinou adresu.';
-            povol(tl,true);
+            povol(tl,true);tip2.vyhodnot();
           }});
       });
     }
@@ -762,6 +844,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       b.disabled=false;otazka.style.display='none';
     }
     b.addEventListener('click',function(){
+      if(!tip3.zvoleno()){tip3.upozorni();return;}
       var t=++tah;clearTimeout(cek);b.disabled=true;otazka.style.display='none';
       sc.zhasni();sc.obrazovka('pc','ceka');sc.obalka('žádost',true);
       deni.textContent='Klient – tvůj notebook – posílá žádost „Pošli mi stránku“. Routery ji předávají dál, až dorazí k serveru.';
@@ -775,7 +858,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
             if(t!==tah)return;
             sc.obrazovka('pc','stranka');
             deni.textContent='Stránka dorazila. Klient žádá, server odpovídá – tak funguje skoro všechno na internetu.';
-            otazka.style.display='';b.disabled=false;
+            otazka.style.display='';b.disabled=false;tip3.vyhodnot();
           }});
         },900);
       }});
@@ -806,6 +889,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     deni.textContent='Vyber jméno a sleduj, jak DNS server najde jeho číslo.';
     for(n=0;n<tl.length;n++){
       tl[n].addEventListener('click',function(){
+        if(!tip4.zvoleno()){tip4.upozorni();return;}
         var jm=this.getAttribute('data-jm'),t=++tah;
         clearTimeout(cek);povol(tl,false);oznac(null);sc.zhasni();
         sc.obrazovka('pc','ceka',jm);sc.obalka('otázka',true);
@@ -820,7 +904,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
               if(t!==tah)return;
               sc.obrazovka('pc','adresa',jm);
               deni.textContent='Odpověď: '+jm+' = '+ipPro(jm)+'. Teď notebook ví, kam poslat žádost o stránku.';
-              povol(tl,true);
+              povol(tl,true);tip4.vyhodnot();
             }});
           },900);
         }});
@@ -844,6 +928,49 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
   }
 
   /* ================= Modul 05: všechno dohromady ================= */
+  // Nejdřív žák kroky sám seřadí, teprve pak si cestu přehraje.
+  var serazeno5=false,serad5=null;
+  (function(){
+    var KROKY=['Napíšeš adresu a stiskneš Enter','Počítač se zeptá DNS serveru na IP adresu','Žádost letí přes router k serveru','Server pošle stránku zpátky','Prohlížeč stránku zobrazí'];
+    var ZAMICHANE=[2,0,4,1,3],box=$('karty5'),res=$('rserad5'),poradi=[],tl=[],pokusu=0,n;
+    for(n=0;n<ZAMICHANE.length;n++){
+      var b=document.createElement('button');b.type='button';b.setAttribute('data-k',ZAMICHANE[n]);
+      b.innerHTML='<span class="cis">?</span>'+esc(KROKY[ZAMICHANE[n]]);
+      b.addEventListener('click',function(){
+        if(serazeno5||this.className==='on')return;
+        poradi.push(+this.getAttribute('data-k'));this.className='on';
+        this.firstChild.textContent=String(poradi.length);
+      });
+      box.appendChild(b);tl.push(b);
+    }
+    function vymaz(){
+      if(serazeno5)return;
+      poradi=[];for(var m=0;m<tl.length;m++){tl[m].className='';tl[m].firstChild.textContent='?';}
+      res.textContent='';
+    }
+    function odemkni(text,ok){
+      serazeno5=true;$('kroky5').style.display='';
+      res.style.color=ok?'#1e6b45':'';res.textContent=text;
+      $('serad5').className='tip';
+    }
+    serad5={upozorni:function(){
+      $('serad5').className='tip pozor';res.style.color='#a33c1e';res.textContent='Nejdřív seřaď kroky – nebo klikni na Přeskočit.';
+      try{$('serad5').scrollIntoView({block:'center'});}catch(e){}
+    }};
+    $('vymaz5').addEventListener('click',vymaz);
+    $('zkontroluj5').addEventListener('click',function(){
+      if(serazeno5)return;
+      if(poradi.length<KROKY.length){res.style.color='#a33c1e';res.textContent='Očísluj všech pět kroků.';return;}
+      var dobre=0;for(var m=0;m<poradi.length;m++)if(poradi[m]===m)dobre++;
+      if(dobre===KROKY.length){odemkni('Správně! Teď si cestu přehraj tlačítkem Odeslat (Enter) a sleduj, jestli sedí.',true);return;}
+      pokusu++;res.style.color='#a33c1e';
+      res.textContent='Na správném místě je '+dobre+' z 5. Nápověda: počítač musí nejdřív zjistit číslo serveru, jinak neví, kam žádost poslat. Klikni na Začít znovu.';
+    });
+    $('preskoc5').addEventListener('click',function(){
+      if(serazeno5)return;
+      odemkni('Přehraj si cestu tlačítkem Odeslat (Enter) – kroky se ukážou jeden po druhém ve správném pořadí.',false);
+    });
+  })();
   (function(){
     var sc=new Scena($('sc5'),velkaMapa({id:'router',typ:'router',x:330,y:251,jm:'Domácí router',ip:'192.168.1.1'}));
     var dom='seznam.cz',SC=[],i=0,auto=false,autoT=null;
@@ -910,10 +1037,11 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       dom=vycisti($('adresa5').value);SC=sceny();
       var u=sc.u.server;u.tJm.textContent='Server '+dom;vejdi(u.tJm,196);u.tIp.textContent=ipPro(dom);
     }
-    $('dalsi5').addEventListener('click',function(){zastavAuto();dalsi();});
+    $('dalsi5').addEventListener('click',function(){if(!serazeno5){serad5.upozorni();return;}zastavAuto();dalsi();});
     $('zpet5').addEventListener('click',function(){zastavAuto();if(i>0)ukaz(i-1,false);});
     $('znovu5').addEventListener('click',function(){zastavAuto();ukaz(0,false);});
     $('prehrat5').addEventListener('click',function(){
+      if(!serazeno5){serad5.upozorni();return;}
       if(auto){zastavAuto();return;}
       auto=true;
       if(i>=SC.length-1)ukaz(0,false);
@@ -921,7 +1049,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       if(!sc.beh)dalsi();
     });
     $('adresa5').addEventListener('keydown',function(e){
-      if(e.key==='Enter'||e.keyCode===13){e.preventDefault();zastavAuto();nastavDomenu();ukaz(0,false);dalsi();}
+      if(e.key==='Enter'||e.keyCode===13){e.preventDefault();if(!serazeno5){serad5.upozorni();return;}zastavAuto();nastavDomenu();ukaz(0,false);dalsi();}
     });
     $('adresa5').addEventListener('input',function(){zastavAuto();nastavDomenu();ukaz(0,false);});
     nastavDomenu();ukaz(0,false);
@@ -935,10 +1063,10 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
     var T={
       sbernice:{
         nazev:'Sběrnice (bus)',
-        popis:'Všechny počítače visí na jednom společném kabelu. Na obou koncích je zakončovací odpor (terminátor).',
-        kde:'Starý Ethernet s koaxiálním kabelem v 80. a 90. letech. V dnešních LAN skoro ne.',
+        popis:'Všechny počítače visí na jednom společném kabelu. Na obou koncích je zakončení (terminátor), aby se signál na konci kabelu neodrážel zpátky.',
+        kde:'Starší sítě z 80. a 90. let s jedním dlouhým kabelem. V dnešních LAN skoro ne.',
         plus:'Málo kabelu a jednoduché zapojení.',
-        minus:'Přerušený kabel vyřadí celou síť. Když vysílají dva najednou, zprávy se srazí.',
+        minus:'Přetržený kabel vyřadí celou síť. Když vysílají dva najednou, zprávy se srazí (pomíchají) a musí se poslat znovu.',
         uzly:[{id:'t1',typ:'konec',x:80,y:250,pop:'terminátor',px:80,py:290},{id:'t2',typ:'konec',x:920,y:250,pop:'terminátor',px:920,py:290},
           {id:'j1',typ:'bod',x:180,y:250},{id:'j2',typ:'bod',x:340,y:250},{id:'j3',typ:'bod',x:500,y:250},{id:'j4',typ:'bod',x:660,y:250},{id:'j5',typ:'bod',x:820,y:250},
           {id:'A',typ:'pc',x:180,y:130,jm:'A'},{id:'B',typ:'pc',x:340,y:130,jm:'B'},{id:'C',typ:'pc',x:500,y:130,jm:'C'},{id:'D',typ:'pc',x:660,y:130,jm:'D'},{id:'E',typ:'pc',x:820,y:130,jm:'E'}],
@@ -947,40 +1075,40 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
         cesta:['A','j1','j2','j3','j4','D'],vsem:true,
         ok:'Zpráva se rozlila po celém kabelu a dostali ji všichni. Každý se podíval na adresu – nechal si ji jen D.',
         prerus:['j2','j3'],cestaPrerus:['A','j1','j2'],
-        chyba:'Zpráva narazila na přerušený kabel. Na volném konci se signál odráží zpátky a ruší všechno ostatní – nefunguje celá síť, ne jen její část.'
+        chyba:'Zpráva narazila na přetržený kabel. Na volném konci chybí zakončení, signál se odráží zpátky a ruší ostatní zprávy – nefunguje celá síť, ne jen její část.'
       },
       hvezda:{
         nazev:'Hvězda (star)',
         popis:'Každý počítač má vlastní kabel do přepínače uprostřed.',
-        kde:'Dnes skoro každá LAN: škola, firma i domov, kde je středem router. I Wi-Fi funguje jako hvězda kolem přístupového bodu.',
+        kde:'Dnes skoro každá LAN: škola, firma i domov, kde je středem router. I Wi-Fi má tvar hvězdy – všechno se připojuje k jedné Wi-Fi krabičce. Místo kabelů je tam ale rádio, které slyší všichni v dosahu.',
         plus:'Přetržený kabel vyřadí jen jeden počítač. Nový počítač se snadno přidá.',
         minus:'Víc kabelů. Když selže přepínač uprostřed, nefunguje nic.',
         uzly:[{id:'S',typ:'prepinac',x:500,y:235,jm:'přepínač'},
           {id:'A',typ:'pc',x:500,y:95,jm:'A'},{id:'B',typ:'pc',x:790,y:150,jm:'B'},{id:'C',typ:'pc',x:720,y:320,jm:'C'},{id:'D',typ:'pc',x:280,y:320,jm:'D'},{id:'E',typ:'pc',x:210,y:150,jm:'E'}],
         spoje:[{a:'A',b:'S'},{a:'B',b:'S'},{a:'C',b:'S'},{a:'D',b:'S'},{a:'E',b:'S'}],
         cesta:['A','S','D'],
-        ok:'Zpráva šla z A do přepínače a ten ji poslal jen do D. Ostatní ji vůbec neviděli.',
-        prerus:['C','S'],cestaPrerus:['A','S','D'],prerusOk:true,
-        chyba:'Zpráva prošla. Bez sítě je jen C – přetrhl se jeho vlastní kabel. (Kdyby ale selhal přepínač uprostřed, nefungovalo by nic.)'
+        ok:'Zpráva šla z A do přepínače a ten ji poslal jen do kabelu k D. Ostatní ji vůbec nedostali.',
+        prerus:['D','S'],cestaPrerus:['A','S'],
+        chyba:'Zpráva došla do přepínače, ale dál ne – D je bez sítě, přetrhl se jeho vlastní kabel. A, B, C a E si ale píšou dál. (Kdyby selhal přepínač uprostřed, nefungovalo by nic.)'
       },
       kruh:{
         nazev:'Kruh (ring)',
         popis:'Každý počítač je spojený se dvěma sousedy. Data obíhají dokola jedním směrem, od souseda k sousedovi.',
-        kde:'Starší sítě Token Ring. Dvojitý kruh dodnes najdeš u páteřních optických sítí.',
-        plus:'Vysílá se postupně, takže se zprávy nesrazí.',
-        minus:'V jednoduchém kruhu vyřadí přerušení kdekoli celý kruh. Proto se stavěly kruhy dvojité.',
+        kde:'Dnes třeba sítě strojů ve výrobních halách. Zapojují se tak, aby při přerušení data obrátila a šla druhou stranou.',
+        plus:'Málo kabelů a data mají pevně danou cestu dokola.',
+        minus:'V jednoduchém kruhu vyřadí přerušení kdekoli celý kruh. Proto se staví kruhy, které umí data obrátit.',
         uzly:pet(),
         spoje:[{a:'A',b:'B'},{a:'B',b:'C'},{a:'C',b:'D'},{a:'D',b:'E'},{a:'E',b:'A'}],
         cesta:['A','B','C','D'],
         ok:'Zpráva putovala od souseda k sousedovi: A → B → C → D.',
         prerus:['B','C'],cestaPrerus:['A','B'],
-        chyba:'Data obíhají jedním směrem a přes přetržený kabel se nedostanou – celý kruh stojí. (Ve dvojitém kruhu by data obrátila a šla druhou stranou.)'
+        chyba:'V jednoduchém kruhu jdou data jedním směrem a přes přetržený kabel se nedostanou – celý kruh stojí. (Kruhy ve výrobních halách to řeší tak, že data obrátí.)'
       },
       strom:{
         nazev:'Strom (tree)',
         popis:'Hvězdy napojené na sebe: přepínače v učebnách vedou do hlavního přepínače.',
         kde:'Školy a firmy – učebna, patro, budova. Každá úroveň je jedna hvězda.',
-        plus:'Síť se dá rozšiřovat po částech a porucha v učebně zůstane v učebně.',
+        plus:'Síť se dá rozšiřovat po částech. Přetržený kabel v učebně odpojí nanejvýš tu učebnu.',
         minus:'Když vypadne spojení k větvi, odřízne se celá větev.',
         uzly:[{id:'R',typ:'prepinac',x:500,y:95,jm:'hlavní přepínač'},{id:'S1',typ:'prepinac',x:290,y:200,jm:'učebna 1'},{id:'S2',typ:'prepinac',x:710,y:200,jm:'učebna 2'},
           {id:'A',typ:'pc',x:190,y:315,jm:'A'},{id:'B',typ:'pc',x:390,y:315,jm:'B'},{id:'C',typ:'pc',x:610,y:315,jm:'C'},{id:'D',typ:'pc',x:810,y:315,jm:'D'}],
@@ -993,7 +1121,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       kazdy:{
         nazev:'Každý s každým (mesh)',
         popis:'Každé zařízení je propojené se všemi ostatními.',
-        kde:'Celou LAN takhle nikdo nestaví. Částečně takhle propojené jsou routery v páteři internetu a domácí Wi-Fi mesh.',
+        kde:'Celou LAN takhle nikdo nestaví. Částečně takhle jsou mezi sebou propojené routery v internetu.',
         plus:'Přetržený kabel nevadí – data jdou jinudy.',
         minus:'Strašně moc kabelů: u 5 zařízení 10, u 20 zařízení už 190.',
         uzly:pet(),
@@ -1005,11 +1133,25 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       }
     };
     var svg=$('sctop'),deni=$('dtop'),info=$('infotop'),bP=$('mtposli'),bX=$('mtprerus'),tl=document.querySelectorAll('.mtopo');
-    var ted='sbernice',sc=null,prerusena=false,znacka=null;
+    var ted='sbernice',sc=null,prerusena=false,znacka=null,tipOdp=null;
+    var tipBox=$('tiptop'),tipVol=tipBox.querySelectorAll('.tipvol'),tipRes=tipBox.querySelector('.res');
+    function tipReset(ukaz){
+      tipOdp=null;tipBox.style.display=ukaz?'':'none';tipBox.className='tip';tipRes.textContent='';tipRes.style.color='';
+      for(var m=0;m<tipVol.length;m++){tipVol[m].className='tipvol';tipVol[m].disabled=false;}
+    }
+    for(var q=0;q<tipVol.length;q++){
+      tipVol[q].addEventListener('click',function(){
+        if(tipOdp)return;
+        tipOdp=this.getAttribute('data-v');this.className='tipvol on';povol(tipVol,false);
+        tipBox.className='tip';tipRes.style.color='';tipRes.textContent='Tip je uložený. Teď pošli zprávu.';
+      });
+    }
     function kresli(){
+      // Běžící let obálky zastavit – jinak by po přepnutí dopsal text staré topologie.
+      if(sc)sc.zastav();
       while(svg.firstChild)svg.removeChild(svg.firstChild);
       var t=T[ted];sc=new Scena(svg,{uzly:t.uzly,spoje:t.spoje});
-      prerusena=false;znacka=null;bX.textContent='Přeruš kabel';bP.disabled=false;
+      prerusena=false;znacka=null;bX.textContent='Přeruš kabel';bP.disabled=false;tipReset(false);
       info.innerHTML='<h3>'+esc(t.nazev)+'</h3><p>'+esc(t.popis)+'</p><dl><dt>Kde</dt><dd>'+esc(t.kde)+'</dd><dt>Výhoda</dt><dd>'+esc(t.plus)+'</dd><dt>Nevýhoda</dt><dd>'+esc(t.minus)+'</dd></dl>';
       deni.textContent='Pošli zprávu z A do D. Pak přeruš kabel a zkus to znovu.';
     }
@@ -1022,16 +1164,18 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
         var a=sc.u[t.prerus[0]],b=sc.u[t.prerus[1]];
         znacka=napis(svg,(a.x+b.x)/2,(a.y+b.y)/2+8,'✕','prerus');
         bX.textContent='Oprav kabel';
-        deni.textContent='Kabel je přetržený. Pošli zprávu znovu a sleduj, co se stane.';
+        deni.textContent='Kabel je přetržený. Nejdřív si tipni, jestli zpráva dojde, a pak ji pošli.';
+        tipReset(true);
       }else{
         sp.classList.remove('prerusena');
         if(znacka&&znacka.parentNode)znacka.parentNode.removeChild(znacka);
         znacka=null;bX.textContent='Přeruš kabel';
-        deni.textContent='Kabel je opravený.';
+        deni.textContent='Kabel je opravený.';tipReset(false);
       }
     }
     bP.addEventListener('click',function(){
       var t=T[ted],cesta=prerusena?t.cestaPrerus:t.cesta,dojde=!prerusena||t.prerusOk;
+      if(prerusena&&!tipOdp){tipBox.className='tip pozor';tipRes.style.color='#a33c1e';tipRes.textContent='Nejdřív si tipni – Ano, nebo Ne?';return;}
       bP.disabled=true;sc.zhasni();
       if(prerusena)sc.spoj(t.prerus[0],t.prerus[1]).classList.add('prerusena');
       sc.obalka('pro D',true);
@@ -1039,6 +1183,11 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       sc.posli(cesta,{hotovo:function(){
         if(dojde&&t.vsem){for(var k in sc.spoje){if(sc.spoje.hasOwnProperty(k))sc.spoje[k].classList.add('aktivni');}}
         deni.textContent=prerusena?t.chyba:t.ok;
+        if(prerusena&&tipOdp){
+          var vysel=(tipOdp==='ano')===!!dojde;
+          tipRes.style.color=vysel?'#1e6b45':'#a33c1e';
+          tipRes.textContent=(vysel?'Tip vyšel. ':'Tip nevyšel. ')+'Zkus jiné zapojení – u každého dopadne přetržený kabel jinak.';
+        }
         bP.disabled=false;
       }});
     });
@@ -1087,6 +1236,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
       b.disabled=false;
     }
     b.addEventListener('click',function(){
+      if(!tip7.zvoleno()){tip7.upozorni();return;}
       var t=++tah;clearTimeout(cek);b.disabled=true;sc.zhasni();sc.obrazovka('pc','ceka');
       var o={od:VNITRNI,pro:IP,obsah:'Pošli mi úvodní stránku.'},z={};
       sc.obalka('žádost',true);panel(o,z,KDE.pc);
@@ -1101,6 +1251,7 @@ tr.nalezeno td{background:#e2f2ea;font-weight:700}
         hotovo:function(){
           if(t!==tah)return;
           deni.textContent='Server vidí jen veřejnou adresu routeru. Tam také pošle odpověď.';
+          tip7.vyhodnot();
           cek=setTimeout(function(){
             if(t!==tah)return;
             var o2={od:IP,pro:VEREJNA,obsah:'Úvodní stránka seznam.cz'},z2={};
