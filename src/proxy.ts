@@ -16,14 +16,17 @@ import type { NextRequest } from "next/server";
  * zápis ve vzoru nepřijal a `/Windows` dál vracelo 404 (ověřeno proti
  * produkčnímu serveru, ne odhadnuto).
  *
- * ROZSAH. `matcher` pouští middleware jen na tvary slova „windows", takže se
+ * ROZSAH. `matcher` pouští proxy jen na tvary slova „windows", takže se
  * nedotkne ničeho jiného – hlavně ne souborů v `public/materialy`, kde na
  * velikosti písmen v názvech ZÁLEŽÍ.
  *
  * Dočasné (307), ne trvalé: trvalé si prohlížeče zapamatují natvrdo a špatně
  * se to bere zpátky.
+ *
+ * Next.js 16 přejmenoval `middleware.ts` na `proxy.ts` a funkci `middleware`
+ * na `proxy` (upgrade 25. 9. 2026). Dělá přesně totéž.
  */
-export function middleware(request: NextRequest) {
+export function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
   if (pathname !== "/windows") {

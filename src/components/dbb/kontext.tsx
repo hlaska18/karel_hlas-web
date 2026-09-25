@@ -102,7 +102,7 @@ export type DbbApi = {
   nastavDokKartu: (k: DokKarta) => void;
   editor: string;
   nastavEditor: (text: string) => void;
-  editorRef: RefObject<HTMLTextAreaElement>;
+  editorRef: RefObject<HTMLTextAreaElement | null>;
   vystup: Vystup | null;
   spustit: (rezim: "vse" | "radek") => void;
   log: ZaznamLogu[];

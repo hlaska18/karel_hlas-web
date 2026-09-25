@@ -2,16 +2,29 @@
 #
 # Jsou to PŘESNĚ hodnoty, které Next.js používá sám, když žádný cíl
 # nenajde (`MODERN_BROWSERSLIST_TARGET` v `next/dist/shared/lib/constants.js`).
+#
+# 25. 9. 2026 UPGRADE NA NEXT.JS 16: jeho vlastní běhové prostředí počítá
+# s Chrome 111, Edge 111, Firefox 111 a Safari 16.4 – starší prohlížeče
+# nepodporuje, ať je náš kód přeložený na cokoli. Dřívější cíl (Chrome 64,
+# Safari 12) by tak jen zbytečně zpomaloval kód a nic nezachránil. Škola má
+# Chrome 153 (změřeno 23. 9. 2026). `-webkit-backdrop-filter` pro Safari
+# 16.4–17 autoprefixer přidává dál.
 # Ověřit je jde takhle:
 #
 #   node -e "console.log(require('next/dist/shared/lib/constants.js').MODERN_BROWSERSLIST_TARGET)"
 #
+# Pojistky pro Chrome 64 a Safari 12 v komentářích a kódu (bez `min()`,
+# bez `dvh`, myší události místo Pointer Events…) zůstaly: neškodí a jejich
+# přepis by nic nepřinesl. Nové věci je ale psát nemusí.
+#
 # PROČ TU TEN SOUBOR VŮBEC JE, když se hodnoty shodují s výchozím stavem:
 # Next ten výchozí cíl použije na CSS, ale UŽ NE na překlad JavaScriptu.
-# Bez tohohle souboru zůstalo v balíku volitelné řetězení `?.` a `??`, které
-# neumí ani jeden prohlížeč z cíle – a neznámá syntaxe neshodí jednu funkci,
-# nýbrž celý chunk. Padal na to `133-*.js`, tedy prohlížeč banky.
-# Změřeno 31. 8. 2026 na dvou buildech:
+# Za Nextu 14 (cíl Chrome 64) tak bez tohohle souboru zůstalo v balíku
+# volitelné řetězení `?.` a `??`, které tehdejší cíl neuměl – a neznámá
+# syntaxe neshodí jednu funkci, nýbrž celý chunk. Padal na to `133-*.js`,
+# tedy prohlížeč banky. Dnešní cíl `?.` i `??` umí, soubor ale drží JS a CSS
+# na stejném cíli a nese tohle vysvětlení.
+# Změřeno 31. 8. 2026 (ještě Next 14) na dvou buildech:
 #
 #   bez tohoto souboru   ?. = 8,  ?? = 26   (133-*.js: 2 a 22)
 #   s tímto souborem     ?. = 4,  ?? = 1
@@ -21,16 +34,17 @@
 # Ověřeno pohledem na kontext. Navíc `main-*.js` app router vůbec nenačítá,
 # ten používá `main-app-*.js` – a v tom není nic.
 #
-# CSS se tím nezhoršilo, naopak: přibylo `-webkit-backdrop-filter` a
+# CSS se tím tehdy nezhoršilo, naopak: přibylo `-webkit-backdrop-filter` a
 # `-webkit-text-decoration-*` pro Safari 12; ubyly předpony pro Firefox 62
 # a Operu 12, které v cíli stejně nejsou.
 #
-# CÍL NEZUŽOVAT. Když se sem napíše novější prohlížeč (zkusil jsem Safari 15.6),
-# vypadnou předpony, které starší Macy potřebují. `npx browserslist` navíc hlásí
-# úplně jiná čísla – to je výchozí stav balíčku browserslist, ne tohoto webu.
+# CÍL DRŽET STEJNÝ JAKO NEXT. Užší cíl, než podporuje Next (zkusil jsem
+# Safari 15.6 ještě za Nextu 14), shodí předpony, které starší Macy potřebují;
+# širší nic nezachrání, protože Next sám starší prohlížeče nepodporuje. Při
+# dalším upgradu Nextu hodnoty přepiš podle příkazu výš. `npx browserslist`
+# hlásí úplně jiná čísla – to je výchozí stav balíčku browserslist, ne webu.
 
-chrome 64
-edge 79
-firefox 67
-opera 51
-safari 12
+chrome 111
+edge 111
+firefox 111
+safari 16.4

@@ -38,13 +38,16 @@ export const metadata: Metadata = {
  * `?z=en` (odkaz z anglické verze webu): program DB Browser i jeho lekce
  * jsou anglicky (`lib/dbb/jazyk`), odkaz zpět i značka míří na /en. Data
  * zůstávají česká se slovníčkem. Webová podoba pro telefony je jen česky.
+ *
+ * Od Next.js 15 přicházejí parametry adresy jako Promise – proto `await`.
  */
-export default function SqlPage({
+export default async function SqlPage({
   searchParams,
 }: {
-  searchParams?: { z?: string };
+  searchParams?: Promise<{ z?: string }>;
 }) {
-  const zEn = searchParams?.z === "en";
+  const parametry = searchParams ? await searchParams : {};
+  const zEn = parametry.z === "en";
   const domu = zEn ? "/en" : "/";
   return (
     <LanguageProvider lang="cs">

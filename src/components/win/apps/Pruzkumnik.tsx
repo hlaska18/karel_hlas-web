@@ -1387,7 +1387,7 @@ function PoleJmena({
   onHotovo,
 }: {
   hodnota: string;
-  poleJmena: React.RefObject<HTMLInputElement>;
+  poleJmena: React.RefObject<HTMLInputElement | null>;
   onZmena: (h: string) => void;
   onHotovo: () => void;
 }) {
@@ -1441,7 +1441,7 @@ function TabulkaPolozek({
   vzestupne: boolean;
   prejmenovava: string | null;
   navrhJmena: string;
-  poleJmena: React.RefObject<HTMLInputElement>;
+  poleJmena: React.RefObject<HTMLInputElement | null>;
   onNavrh: (h: string) => void;
   onDokonci: () => void;
   onKlik: (e: React.MouseEvent, jmeno: string) => void;
@@ -1551,7 +1551,7 @@ function MrizkaPolozek({
   velke: boolean;
   prejmenovava: string | null;
   navrhJmena: string;
-  poleJmena: React.RefObject<HTMLInputElement>;
+  poleJmena: React.RefObject<HTMLInputElement | null>;
   onNavrh: (h: string) => void;
   onDokonci: () => void;
   onKlik: (e: React.MouseEvent, jmeno: string) => void;

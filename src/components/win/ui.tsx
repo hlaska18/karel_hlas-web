@@ -448,7 +448,7 @@ export function Dialog({
 
 /** Zavře cokoli, na co se kliklo mimo. Používá `pointerdown`, ne `click`. */
 export function useVenkovniKlik(
-  odkaz: React.RefObject<HTMLElement>,
+  odkaz: React.RefObject<HTMLElement | null>,
   akce: () => void,
 ) {
   useEffect(() => {
