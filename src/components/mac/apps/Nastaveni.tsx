@@ -237,7 +237,7 @@ export function Nastaveni({ onZacitZnovu }: { onZacitZnovu: () => void }) {
       <p className="mt-1 text-[12px] leading-relaxed text-mac-slaby">
         Vrátí prostředí do stavu, ve kterém jsi ho dostal. Smažou se soubory,
         které sis vytvořil, vrátí se nastavení a vynulují se odškrtnuté úlohy.
-        Budeš se muset znovu přihlásit kódem od vyučujícího.
+        Budeš se muset znovu přihlásit jménem.
       </p>
       <button
         type="button"

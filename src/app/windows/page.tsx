@@ -59,7 +59,8 @@ export default function StrankaWindows() {
           soubory a složkami v Průzkumníku, přípony a vlastnosti souborů, nastavení
           systému, Poznámkový blok, Malování, Kalkulačku v programátorském režimu,
           příkazový řádek a PowerShell. Nic se neinstaluje a nejde o skutečný
-          operační systém; vstupuje se kódem od vyučujícího. Práce zůstává
+          operační systém. Žák se přihlásí jménem a výsledky předá učiteli
+          kódem postupu. Práce zůstává
           v prohlížeči žáka – na server se neodesílá nic a žádné účty se
           nezakládají.
         </p>

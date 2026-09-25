@@ -67,7 +67,7 @@ konci práce ho aktualizuj, ať ví i další relace.
   sousední odstavec, ať zůstane formátování) nebo python-docx; ověř, že se
   soubor otevře (python-docx). Vzhled ve Wordu kontroluje Karel.
 
-## Co se udělalo (září 2026, poslední commit 5c1a55b)
+## Co se udělalo (září 2026)
 
 ### Laboratoř „Cesta dat sítí“ (hodina 4)
 Soubor: public/materialy/1L/2/Podklady k aktivitám/4. Laboratoř – cesta dat sítí.html
@@ -113,9 +113,24 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Ukotvení: bonus „Totéž, jinak“ v listu a plánu hodiny 1, „Totéž na Macu“
   v listu a plánu hodiny 6, popis v public/materialy/1L/11/_nastroj.json.
 
+### Lokální relace 25. 9. 2026 odpoledne
+- **Vstupní kódy do simulátorů jsou zrušené** (commit 7ef2a3f, ráno v lokální
+  relaci): žák se do /windows i /macos přihlásí jménem a učiteli pošle kód
+  postupu. Zbylé zmínky o „kódu od vyučujícího“ jsou opravené (stránka
+  /windows, Nastavení ve Windows i na Macu, pracovní list 1).
+- Laboratoř sítí prošla na webu s plnými animacemi, na telefonu nepřetéká.
+  Tip v modulu 02 je obecný („jinému zařízení v síti“), protože žák může
+  poslat obálku kterémukoli zařízení.
+- Plány 4 a 6: odkaz do banky je „banka → Digitální gramotnost → lekce 4/6“,
+  harmonogram hodiny 4 ve fázi 14–22 odpovídá metodické poznámce (promítá se
+  modul 05). Plány a listy 1, 4, 6 jsou vyexportované z Wordu a zkontrolované.
+- **Codex jako druhý názor:** skill ~/.claude/skills/codex-druhy-nazor (jen
+  pro čtení). Existuje jen na Karlově Macu, v cloudu není.
+
 ## Otevřené / nápady (nic naléhavého)
 
-- Karel má zkontrolovat ve Wordu upravené plány a listy hodin 1, 4, 6.
+- Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
+  z Wordu 25. 9.); formátování sedí.
 - Úlohy simulátoru macOS by měl jednou projít někdo se skutečným Macem.
 - Hláška „Zkopíruj ho do Teams“ ve VysledkySimulatoru.tsx je sdílená
   s Windows – neměnit bez Karlova pokynu.

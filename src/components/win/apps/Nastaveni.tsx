@@ -357,7 +357,7 @@ function OddilSystem({
  * přijít o hodinu práce – a splněný úkol už je splněný.
  *
  * ZAČÍT ÚPLNĚ OD ZAČÁTKU je nová hodina nanečisto: nezůstane nic, ani postup,
- * a prostředí naběhne na zamykací obrazovce, kde se žák znovu přihlásí kódem.
+ * a prostředí naběhne na zamykací obrazovce, kde se žák znovu přihlásí jménem.
  * Karel to chtěl přesně takhle – když si někdo projde celý panel, potřebuje
  * mít možnost začít znovu, a ne se doprošovat vyčištění prohlížeče.
  *
@@ -443,7 +443,7 @@ function Obnoveni() {
             a vynulují se odškrtnuté úlohy.
           </p>
           <p className="mt-3">
-            Budeš se muset znovu přihlásit kódem od vyučujícího.{" "}
+            Budeš se muset znovu přihlásit jménem.{" "}
             <strong>Tohle se nedá vzít zpět.</strong>
           </p>
         </Dialog>
@@ -759,7 +759,7 @@ function OddilUcty({ n, zmen }: { n: TypNastaveni; zmen: (z: Partial<TypNastaven
       </Karta>
       <Karta
         nadpis="Možnosti přihlášení"
-        popis="Kódem od vyučujícího. Žádný účet se nezakládá a nic se neodesílá."
+        popis="Jménem. Žádný účet se nezakládá a nic se neodesílá."
         ikona={<ShieldCheck className="h-5 w-5" />}
       />
     </>

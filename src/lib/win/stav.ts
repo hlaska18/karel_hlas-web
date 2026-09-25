@@ -11,7 +11,9 @@
  * počítači, ale na jiném stroji ani v anonymním okně po ní nic nezbyde.
  *
  * Otázka osobních údajů tím ODPADÁ: ven nejde nic. Do prostředí se vchází
- * kódem od vyučujícího, který se porovnává taky jen v prohlížeči.
+ * jménem (od 25. 9. 2026, dřív kódem od vyučujícího), které taky zůstává
+ * jen v prohlížeči. K učiteli se dostane jen v kódu postupu, který žák
+ * pošle sám.
  */
 
 import type { Slozka, Uzel } from "./fs";
