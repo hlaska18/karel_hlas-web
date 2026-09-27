@@ -1,5 +1,6 @@
 "use client";
 
+import { Mlhovina } from "@/components/Mlhovina";
 import { useId, useState } from "react";
 import Image from "next/image";
 import {
@@ -62,7 +63,10 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           }
         />
 
-        <ul className="mt-8 grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Mlhovina pod dlaždicemi – matné sklo potřebuje, co rozmazat. */}
+        <div className="relative isolate mt-8">
+        <Mlhovina varianta={5} className="-left-[12%] -top-[18%] h-[140%] w-[125%]" />
+        <ul className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {c.items.map((it, i) => (
             <Reveal as="li" key={it.subject} delay={0.05 * i} className="flex">
               <SubjectTile
@@ -79,7 +83,7 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           <Reveal as="li" delay={0.05 * c.items.length} className="flex">
             <a
               href={`mailto:${SITE.email}`}
-              className="povrch group flex w-full flex-col rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 dark:border-white/15"
+              className="povrch dlazdice group flex w-full flex-col rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 dark:border-white/15"
             >
               <span className="flex items-center gap-3">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
@@ -103,6 +107,7 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
             </a>
           </Reveal>
         </ul>
+        </div>
 
         <p className="mt-8 flex items-start gap-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
@@ -150,7 +155,7 @@ function SubjectTile({
   const Zahlavi = maObsah ? "button" : "div";
   const panelId = useId();
   return (
-    <div className="povrch flex w-full flex-col rounded-karta transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15">
+    <div className="povrch dlazdice flex w-full flex-col rounded-karta transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15">
       <Zahlavi
         {...(maObsah
           ? { type: "button" as const, onClick: onToggle, "aria-expanded": open, "aria-controls": panelId }

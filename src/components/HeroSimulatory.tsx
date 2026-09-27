@@ -69,7 +69,7 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
                   `dark:border-*` hover přebije. */}
               <Link
                 href={s.href}
-                className={`glass group/karta flex items-center gap-3 rounded-karta p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${NATOCENI[i % NATOCENI.length]}`}
+                className={`glass dlazdice group/karta flex items-center gap-3 rounded-karta p-4 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70 focus-visible:ring-offset-2 focus-visible:ring-offset-transparent ${NATOCENI[i % NATOCENI.length]}`}
               >
                 {/* Značka je smaragdová už v klidu: na rozdíl od souborů
                     a článků jsou tohle tlačítka a mají být vidět. */}

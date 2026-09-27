@@ -89,7 +89,7 @@ export function Ctenie() {
                    „Procházet materiály" a pilulky v hlavičce. Vlastní jméno
                    skupiny `karta`, aby si obě úrovně nelezly do zelí.
                    `dark:hover:` je nutné, jinak `dark:border-*` hover přebije. */
-                className={`glass group/karta flex items-center gap-3 rounded-karta p-2.5 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${NATOCENI[i % NATOCENI.length]}`}
+                className={`glass dlazdice group/karta flex items-center gap-3 rounded-karta p-2.5 transition duration-300 hover:-translate-y-0.5 hover:border-accent-500/40 hover:shadow-lg hover:shadow-accent-600/30 group-hover:rotate-0 group-hover:translate-x-0 dark:hover:border-accent-500/40 ${NATOCENI[i % NATOCENI.length]}`}
               >
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] transition duration-300 group-hover/karta:bg-accent-500/15 dark:bg-white/5 dark:group-hover/karta:bg-accent-500/20">
                   {/* Značka zdroje jako maska, ne obrázek: barvu tak řídí styl

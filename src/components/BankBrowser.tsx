@@ -1,5 +1,6 @@
 "use client";
 
+import { Mlhovina } from "@/components/Mlhovina";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   Search,
@@ -492,7 +493,11 @@ export function BankBrowser({
           se „Grafika a multimédia“ lámalo na tři řádky a lepilo se na ikonu.
           Dva sloupce dají textu ~150 px a název se vejde na dva řádky. */}
       {!showList && (
-        <ul ref={dlazdiceRef} className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+        // Obal kvůli mlhovině pod dlaždicemi: matné sklo potřebuje, co
+        // rozmazat (Karel 27. 9. 2026). Uvnitř <ul> by byla neplatné HTML.
+        <div className="relative isolate mt-6">
+        <Mlhovina varianta={4} className="-left-[12%] -top-[18%] h-[140%] w-[125%]" />
+        <ul ref={dlazdiceRef} className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {tiles.map((t) => {
             const Icon = toolIcon(t.name);
             return (
@@ -501,7 +506,7 @@ export function BankBrowser({
                   type="button"
                   onClick={() => otevriTema(t.name)}
                   data-tool={t.name}
-                  className="povrch group flex h-full w-full flex-col items-center gap-2 overflow-hidden rounded-karta p-4 text-center transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 sm:flex-row sm:items-center sm:gap-3 sm:p-5 sm:text-left"
+                  className="povrch dlazdice group flex h-full w-full flex-col items-center gap-2 overflow-hidden rounded-karta p-4 text-center transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 sm:flex-row sm:items-center sm:gap-3 sm:p-5 sm:text-left"
                 >
                   {/* Text: na mobilu pod ikonou (přes celou šířku), na desktopu vlevo */}
                   <span className="order-2 flex min-w-0 flex-col gap-0.5 sm:order-1 sm:flex-1 sm:gap-1">
@@ -532,6 +537,7 @@ export function BankBrowser({
             );
           })}
         </ul>
+        </div>
       )}
 
       {/* ── Seznam materiálů (hledání nebo vybraná dlaždice) ── */}
