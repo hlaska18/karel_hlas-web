@@ -48,7 +48,7 @@ export function Hero({
                 až u tlačítka. Dřív visely dvě kruhové záře u okrajů OKNA a na
                 širokém monitoru působila levá jako flek (Karel 27. 9. 2026).
                 Teď je ve sloupci s textem a jde s ním; tvar viz `Mlhovina`. */}
-            <Mlhovina className="-left-[200px] -top-[150px] h-[580px] w-[1360px]" />
+            <Mlhovina className="-left-[320px] -top-[320px] h-[900px] w-[1640px]" />
             {/* Nadpis se vypisuje jako na psacím stroji; `aria-label` nese
                 celou větu, takže čtečka ji přečte naráz (animace je aria-hidden). */}
             <h1
