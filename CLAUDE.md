@@ -138,6 +138,20 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   Podklady, které zadání jmenuje (CSV, XML, .accdb, zdroj dat, anotace),
   se jmenují taky podle zadání a jsou vyjmenované v `PODKLADY_ULOH`.
 
+### Vzhled webu 27. 9. 2026 (lokální relace)
+- Tečky na pozadí zrušené. Za nadpisy úvodu a sekcí 01–05 a pod mřížkami
+  dlaždic je `src/components/Mlhovina.tsx`: tři oblé mraky (ne kruh), každá
+  mlhovina jiná (`varianta`), mraky pomalu „dýchají“ (CSS transform;
+  s „omezit pohyb“ stojí). Rozmazání SVG filtrem uvnitř obrázku – CSS
+  `filter: blur` na SVG dělal v Safari fialový pruh. Sílu měnit jen tam.
+- Dlaždice (`.dlazdice`: témata, předměty, karty simulátorů a článků
+  v úvodu) jsou matné sklo (visionOS). Seznamy souborů, náhled a mobilní
+  menu zůstávají neprůhledné (výkon a čitelnost na školních PC).
+- Řešení úloh cvičebnice má štítek „učitelé“ jako ostatní učitelské
+  položky, žádné vlastní pozadí.
+- Revize frontendu Codexem (commit c428857): klávesnice v bance, fokus po
+  kotvách, kontrast, pojistka bez JS, omezit pohyb, `sizes` u obrázků.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
