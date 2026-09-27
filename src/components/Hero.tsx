@@ -1,5 +1,6 @@
 "use client";
 
+import { Mlhovina } from "@/components/Mlhovina";
 import { ArrowDown, Library } from "lucide-react";
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
@@ -42,16 +43,12 @@ export function Hero({
             obsah. Na mobilu je pravý sloupec skrytý, tam se nic nemění. */}
         <div className="flex items-center justify-between gap-14">
           <div className="relative max-w-3xl">
-            {/* Malachitová záře za nadpisem. Bez ní byla první obrazovka plochá
-                – v tmavém tématu skoro černá – a barva webu se objevila až
-                u tlačítka. Dřív visely dvě záře u okrajů OKNA, takže na širokém
-                monitoru ujela ta levá k okraji a působila jako flek (Karel
-                27. 9. 2026). Teď je ve sloupci s textem a jde s ním.
-                `isolate` na sekci drží `-z-10` nad pozadím stránky. */}
-            <div
-              aria-hidden
-              className="pointer-events-none absolute -left-24 -top-20 -z-10 h-[440px] w-[640px] rounded-full bg-accent-300/25 blur-[120px] dark:bg-accent-500/[0.13]"
-            />
+            {/* Malachitová mlhovina za nadpisem. Bez ní byla první obrazovka
+                plochá – v tmavém tématu skoro černá – a barva webu se objevila
+                až u tlačítka. Dřív visely dvě kruhové záře u okrajů OKNA a na
+                širokém monitoru působila levá jako flek (Karel 27. 9. 2026).
+                Teď je ve sloupci s textem a jde s ním; tvar viz `Mlhovina`. */}
+            <Mlhovina className="-left-[200px] -top-[150px] h-[580px] w-[1360px]" />
             {/* Nadpis se vypisuje jako na psacím stroji; `aria-label` nese
                 celou větu, takže čtečka ji přečte naráz (animace je aria-hidden). */}
             <h1

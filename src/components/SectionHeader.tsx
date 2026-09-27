@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { Mlhovina } from "@/components/Mlhovina";
 import { Reveal } from "@/components/Reveal";
 import { SectionKicker } from "@/components/SectionKicker";
 
@@ -27,14 +28,12 @@ export function SectionHeader({
   introClassName?: string;
 }) {
   return (
-    // Stejná malachitová záře jako za nadpisem úvodu (Hero), aby sekce 01–05
-    // navazovaly (Karel 27. 9. 2026). `isolate` drží `-z-10` nad pozadím
-    // stránky; do strany ji ořízne `overflow-x: clip` na `.sekce`.
+    // Stejná mlhovina jako za nadpisem úvodu (Hero), aby sekce 01–05
+    // navazovaly (Karel 27. 9. 2026); nadpis je tu menší, tak i ona – na
+    // tři čtvrtiny. `isolate` drží `-z-10` nad pozadím stránky; do strany ji
+    // ořízne `overflow-x: clip` na `.sekce`.
     <div className="relative isolate">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute -left-24 -top-16 -z-10 h-[360px] w-[560px] rounded-full bg-accent-300/25 blur-[120px] dark:bg-accent-500/[0.13]"
-      />
+      <Mlhovina className="-left-[150px] -top-[112px] h-[435px] w-[1020px]" />
       <Reveal>
         <SectionKicker no={no}>{kicker}</SectionKicker>
         <h2 className={headingClassName}>{heading}</h2>
