@@ -35,8 +35,9 @@
     color: var(--fg);
     /* Filmový šum tu býval schválně, aby stránka nepůsobila jako hladká
        šablona. Proti klidnému, „applovskému" povrchu ale hraje – zrno je
-       přesně to, co takový povrch nemá. Karel ho nechal odstranit; náznak
-       ručnosti drží dál tečkovaný vzor v Site.tsx. */
+       přesně to, co takový povrch nemá. Karel ho nechal odstranit. Tečkovaný
+       vzor, který ho pak nahradil, odstranil 27. 9. 2026 taky – pozadí je
+       teď hladké. */
   }
 
   /* Vybraný text: accent-700 místo accent-500. Na světlejším odstínu měla
@@ -237,11 +238,6 @@
     .tw-caret {
       animation: none;
     }
-  }
-
-  .bg-dots {
-    background-image: radial-gradient(currentColor 1px, transparent 1px);
-    background-size: 22px 22px;
   }
 
   .text-balance {

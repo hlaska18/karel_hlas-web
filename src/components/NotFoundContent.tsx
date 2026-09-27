@@ -34,7 +34,6 @@ export function NotFoundContent() {
       <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
         <div className="absolute left-1/2 top-[-12%] h-[420px] w-[420px] -translate-x-1/2 rounded-full bg-accent-400/20 blur-[120px] dark:bg-accent-500/20" />
         <div className="absolute bottom-[-10%] right-[-8%] h-[320px] w-[320px] rounded-full bg-accent-300/20 blur-[110px] dark:bg-accent-700/20" />
-        <div className="absolute inset-0 text-black/[0.04] bg-dots dark:text-white/[0.05]" />
       </div>
 
       <div className="povrch w-full max-w-lg rounded-[2rem] p-10 text-center sm:p-12">
