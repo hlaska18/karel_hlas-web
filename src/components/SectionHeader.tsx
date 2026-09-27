@@ -33,7 +33,10 @@ export function SectionHeader({
     // tři čtvrtiny. `isolate` drží `-z-10` nad pozadím stránky; do strany ji
     // ořízne `overflow-x: clip` na `.sekce`.
     <div className="relative isolate">
-      <Mlhovina className="-left-[240px] -top-[240px] h-[675px] w-[1230px]" />
+      <Mlhovina
+        varianta={parseInt(no, 10) || 0}
+        className="-left-[240px] -top-[240px] h-[675px] w-[1230px]"
+      />
       <Reveal>
         <SectionKicker no={no}>{kicker}</SectionKicker>
         <h2 className={headingClassName}>{heading}</h2>

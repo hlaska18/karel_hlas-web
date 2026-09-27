@@ -37,6 +37,8 @@ export function Reveal({
   const [shown, setShown] = useState(false);
 
   useEffect(() => {
+    // Hlášení pro pojistku v layout.tsx: odhalování běží, skrývání smí zůstat.
+    document.documentElement.classList.add("reveal-ok");
     const el = ref.current;
     if (!el) return;
     if (!("IntersectionObserver" in window)) {

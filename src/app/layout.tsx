@@ -117,11 +117,14 @@ export default function RootLayout({
       >
         {/* Dvě věci ještě před vykreslením: jazyk podle adresy (aby čtečka
             nečetla anglickou stránku česky) a html.js-reveal pro odhalovací
-            sekce (jen když je IntersectionObserver), aby se neblikalo. */}
+            sekce (jen když je IntersectionObserver), aby se neblikalo.
+            Pojistka: když se do 2,5 s nepřihlásí `Reveal` (třída reveal-ok) –
+            JS se na školní síti nenačetl nebo spadl –, skrývání se zruší
+            a obsah je vidět bez animace (Codex 27. 9. 2026). */}
         <script
           dangerouslySetInnerHTML={{
             __html:
-              "try{var p=location.pathname;document.documentElement.lang=(p==='/en'||p.indexOf('/en/')===0)?'en':'cs';if('IntersectionObserver' in window)document.documentElement.classList.add('js-reveal')}catch(e){}",
+              "try{var p=location.pathname;document.documentElement.lang=(p==='/en'||p.indexOf('/en/')===0)?'en':'cs';var h=document.documentElement;if('IntersectionObserver' in window){h.classList.add('js-reveal');setTimeout(function(){if(!h.classList.contains('reveal-ok'))h.classList.remove('js-reveal')},2500)}}catch(e){}",
           }}
         />
         <SkipLink />

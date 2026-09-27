@@ -40,6 +40,9 @@ export function About() {
                   alt={SITE.fullName}
                   width={733}
                   height={1100}
+                  // Zobrazuje se na 224 px, od sm na 320 px. Bez `sizes` si
+                  // prohlížeč bral variantu 750 nebo 1920 px (Codex 27. 9. 2026).
+                  sizes="(min-width: 640px) 320px, 224px"
                   className="foto-o-mne w-56 rounded-karta object-cover shadow-md ring-1 ring-black/5 dark:ring-white/10 sm:w-80"
                 />
               </Reveal>

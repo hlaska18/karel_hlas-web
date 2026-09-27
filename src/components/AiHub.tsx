@@ -369,7 +369,7 @@ function KartaNastroje({
               {sazba(nastroj.pouziti, lang)}
             </p>
           </div>
-          <p className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-500">
+          <p className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
             {sazba(nastroj.note, lang)}
           </p>
         </div>

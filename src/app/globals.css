@@ -51,10 +51,23 @@
     scroll-margin-top: 6rem;
   }
 
+  /* Ve světlém motivu tmavší zelená (accent-700): #14b28b měl proti
+     světlému pozadí jen 2,35 : 1 a rámeček fokusu musí mít aspoň 3 : 1
+     (Codex 27. 9. 2026). V tmavém motivu zůstává světlejší – níž. */
   :focus-visible {
-    outline: 2px solid #14b28b;
+    outline: 2px solid #0a745d;
     outline-offset: 3px;
     border-radius: 4px;
+  }
+  .dark :focus-visible {
+    outline-color: #14b28b;
+  }
+
+  /* Cíl kotvy (sekce, <main>) dostává fokus jen proto, aby klávesnice
+     pokračovala odtud (SmoothScroll). Rámeček kolem celé sekce by nic
+     neoznačoval, jen by rušil. */
+  [tabindex="-1"]:focus-visible {
+    outline: none;
   }
 }
 
@@ -242,6 +255,56 @@
     .tw-caret {
       animation: none;
     }
+  }
+
+  /* Mlhovina (Mlhovina.tsx): každý mrak pomalu „dýchá“ – mění tvar
+     natažením, stlačením a pootočením kolem svého středu. Hýbe se celé
+     rozmazané SVG, takže to počítá grafická karta a rozmazání se
+     nepřepočítává. Délku a posun fáze nastavuje komponenta. */
+  .mlhovina-mrak {
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
+    will-change: transform;
+  }
+  .mlhovina-mrak--1 {
+    animation-name: mlhovina-dech-1;
+  }
+  .mlhovina-mrak--2 {
+    animation-name: mlhovina-dech-2;
+  }
+  .mlhovina-mrak--3 {
+    animation-name: mlhovina-dech-3;
+  }
+  @keyframes mlhovina-dech-1 {
+    0% { transform: scale(1, 1) rotate(0deg); }
+    50% { transform: scale(1.07, 0.93) rotate(2deg); }
+    100% { transform: scale(0.95, 1.06) rotate(-1.5deg); }
+  }
+  @keyframes mlhovina-dech-2 {
+    0% { transform: scale(1, 1) rotate(0deg); }
+    50% { transform: scale(0.92, 1.08) rotate(-3deg); }
+    100% { transform: scale(1.08, 0.95) rotate(2deg); }
+  }
+  @keyframes mlhovina-dech-3 {
+    0% { transform: scale(1, 1) rotate(0deg); }
+    50% { transform: scale(1.1, 0.94) rotate(3deg); }
+    100% { transform: scale(0.94, 1.05) rotate(-2deg); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .mlhovina-mrak {
+      animation: none;
+      will-change: auto;
+    }
+  }
+
+  /* Psací stroj (Typewriter): plný nadpis je vidět, dokud neběží JS;
+     s JS (html.js-reveal) jen drží místo a píše vrstva nad ním. */
+  .js-reveal .tw-drzak {
+    visibility: hidden;
+  }
+  html:not(.js-reveal) .tw-vrstva {
+    display: none;
   }
 
   .text-balance {

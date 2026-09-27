@@ -65,8 +65,12 @@ export function Typewriter({
     <span aria-hidden className={`grid ${className}`}>
       {/* Drží rozměr (i po zalomení), takže se nadpis při psaní nehýbe.
           `select-none` = při označení nadpisu se text nezkopíruje dvakrát. */}
-      <span className="invisible col-start-1 row-start-1 select-none">{text}</span>
-      <span className="col-start-1 row-start-1">
+      {/* Bez JavaScriptu (nebo když se do 2,5 s nenačte – pojistka
+          `js-reveal` v layout.tsx) je tahle vrstva vidět a nadpis se ukáže
+          celý hned. S JavaScriptem je neviditelná a píše vrstva pod ní
+          (Codex 27. 9. 2026). Styly `tw-drzak` / `tw-vrstva` v globals.css. */}
+      <span className="tw-drzak col-start-1 row-start-1 select-none">{text}</span>
+      <span className="tw-vrstva col-start-1 row-start-1">
         {shown}
         <span
           className={`tw-caret text-accent-700 dark:text-accent-400 ${done ? "" : "tw-caret--typing"}`}

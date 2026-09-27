@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useId, useMemo, useRef, useState } from "react";
 import {
   Search,
   Download,
@@ -319,6 +319,49 @@ export function BankBrowser({
   const [openLesson, setOpenLesson] = useState<number | null>(null);
   const [preview, setPreview] = useState<BankItem | null>(null);
 
+  // Kam přesunout fokus po přepnutí pohledu (Codex 27. 9. 2026). Otevření
+  // tématu odstraní dlaždici, na které fokus byl, a návrat odstraní tlačítko
+  // Zpět – bez tohohle skončila klávesnice na začátku stránky. Nastavuje se
+  // jen z kliknutí, ne při otevření ze sdíleného odkazu.
+  const fokusPoZmene = useRef<{ kam: "tema" } | { kam: "dlazdice"; tool: string } | null>(null);
+  const pocetRef = useRef<HTMLParagraphElement | null>(null);
+  const dlazdiceRef = useRef<HTMLUListElement | null>(null);
+  // Otevřené téma se píše i do adresy (?tema=…). Přepínač jazyka adresu
+  // předává dál, takže bez tohohle vrátil po sdíleném odkazu původní téma
+  // místo toho, které má člověk otevřené. Lekce ze sdíleného odkazu patří
+  // jen k původnímu tématu, proto se při změně maže (Codex 27. 9. 2026).
+  const zapisTemaDoAdresy = (name: string | null) => {
+    try {
+      const url = new URL(window.location.href);
+      if (name) url.searchParams.set("tema", name);
+      else url.searchParams.delete("tema");
+      url.searchParams.delete("lekce");
+      window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+    } catch {
+      /* bez History API zůstane adresa, jak byla */
+    }
+  };
+  const otevriTema = (name: string) => {
+    fokusPoZmene.current = { kam: "tema" };
+    setTool(name);
+    zapisTemaDoAdresy(name);
+  };
+  const zpetNaTemata = () => {
+    if (tool) fokusPoZmene.current = { kam: "dlazdice", tool };
+    setTool(null);
+    zapisTemaDoAdresy(null);
+  };
+  useEffect(() => {
+    const cil = fokusPoZmene.current;
+    fokusPoZmene.current = null;
+    if (!cil) return;
+    if (cil.kam === "tema") pocetRef.current?.focus();
+    else
+      dlazdiceRef.current
+        ?.querySelector<HTMLElement>(`[data-tool="${CSS.escape(cil.tool)}"]`)
+        ?.focus();
+  }, [tool]);
+
   // Proklik z homepage dlaždice: ?tema=Excel rovnou otevře obor.
   // Sdílený odkaz na lekci: ...&lekce=5 navíc tu lekci rovnou rozbalí a odscrolluje k ní.
   useEffect(() => {
@@ -449,14 +492,15 @@ export function BankBrowser({
           se „Grafika a multimédia“ lámalo na tři řádky a lepilo se na ikonu.
           Dva sloupce dají textu ~150 px a název se vejde na dva řádky. */}
       {!showList && (
-        <ul className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
+        <ul ref={dlazdiceRef} className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {tiles.map((t) => {
             const Icon = toolIcon(t.name);
             return (
               <li key={t.name}>
                 <button
                   type="button"
-                  onClick={() => setTool(t.name)}
+                  onClick={() => otevriTema(t.name)}
+                  data-tool={t.name}
                   className="povrch group flex h-full w-full flex-col items-center gap-2 overflow-hidden rounded-karta p-4 text-center transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 sm:flex-row sm:items-center sm:gap-3 sm:p-5 sm:text-left"
                 >
                   {/* Text: na mobilu pod ikonou (přes celou šířku), na desktopu vlevo */}
@@ -497,13 +541,20 @@ export function BankBrowser({
             {tool && !needle && (
               <button
                 type="button"
-                onClick={() => setTool(null)}
+                onClick={zpetNaTemata}
                 className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-700 dark:text-accent-400 dark:text-zinc-200 dark:hover:text-accent-400"
               >
                 <ArrowLeft className="h-4 w-4" /> {s.back}
               </button>
             )}
-            <p className="text-sm text-zinc-600 dark:text-zinc-400">
+            {/* `role="status"`: čtečka oznámí počet výsledků při hledání.
+                `tabIndex={-1}`: sem skočí fokus po otevření tématu. */}
+            <p
+              ref={pocetRef}
+              tabIndex={-1}
+              role="status"
+              className="text-sm text-zinc-600 dark:text-zinc-400"
+            >
               {needle
                 ? s.searchResults
                 : tool
@@ -744,6 +795,10 @@ function MaterialRow({
             "aria-label": `${n.previewTitle}: ${label}`,
             onClick: () => onPreview(it),
             onKeyDown: (e: React.KeyboardEvent) => {
+              // Jen klávesa mířená na řádek sám. Enter na odkazu „Stáhnout“
+              // uvnitř sem probublá – a `preventDefault` by mu zrušil stažení
+              // a místo něj otevřel náhled (Codex 27. 9. 2026).
+              if (e.target !== e.currentTarget) return;
               if (e.key === "Enter" || e.key === " ") {
                 e.preventDefault();
                 onPreview(it);
@@ -1289,6 +1344,7 @@ function Hlavicka({
   name,
   s,
   onClick,
+  panelId,
   children,
 }: {
   vzdyOtevrena: boolean;
@@ -1296,6 +1352,8 @@ function Hlavicka({
   name: string;
   s: (typeof STR)[Lang];
   onClick: () => void;
+  /** Id panelu, který tlačítko rozbaluje – pro `aria-controls`. */
+  panelId: string;
   children: React.ReactNode;
 }) {
   const trida = "flex w-full items-center gap-3 px-4 py-3 text-left";
@@ -1305,6 +1363,7 @@ function Hlavicka({
       type="button"
       onClick={onClick}
       aria-expanded={open}
+      aria-controls={panelId}
       aria-label={`${open ? s.collapseFolder : s.expandFolder}: ${name}`}
       className={`transition active:scale-[0.99] active:duration-100 ${trida}`}
     >
@@ -1367,6 +1426,7 @@ function FolderCard({
 }) {
   const s = STR[lang];
   const [open, setOpen] = useState(vzdyOtevrena);
+  const panelId = useId();
   /**
    * Jantarová barva = celá složka je pro učitele.
    *
@@ -1399,6 +1459,7 @@ function FolderCard({
         name={name}
         s={s}
         onClick={() => setOpen((o) => !o)}
+        panelId={panelId}
       >
         <span
           className={`flex h-10 w-10 shrink-0 items-center justify-center rounded-ovladac ${
@@ -1443,7 +1504,9 @@ function FolderCard({
           open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
-        <div className="overflow-hidden">
+        {/* Sbalený obsah je `inert`: jinak by do schovaných odkazů dál
+            skákal Tab a četla je čtečka (Codex 27. 9. 2026). */}
+        <div id={panelId} inert={!open} className="overflow-hidden">
           {/* Věta o složce stojí NAD soubory, ne v hlavičce karty: v hlavičce
               se text ořezává na jeden řádek a tohle jsou dvě tři věty o tom,
               jak spolu úlohy souvisí. Zavřenou kartu to navíc nenafoukne. */}
@@ -1551,6 +1614,7 @@ function LessonCard({
 }) {
   const s = STR[lang];
   const [open, setOpen] = useState(autoOpen);
+  const panelId = useId();
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const hasStudent = items.some((it) => isStudentSlot(it, cfg));
@@ -1561,7 +1625,13 @@ function LessonCard({
   // Otevření ze sdíleného odkazu (?tema=...&lekce=N) – odscroluj k ní jednou po načtení.
   useEffect(() => {
     if (autoOpen)
-      ref.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      ref.current?.scrollIntoView({
+        // S „omezit pohyb“ bez animace (Codex 27. 9. 2026).
+        behavior: window.matchMedia?.("(prefers-reduced-motion: reduce)").matches
+          ? "auto"
+          : "smooth",
+        block: "center",
+      });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -1586,6 +1656,7 @@ function LessonCard({
           type="button"
           onClick={() => setOpen((o) => !o)}
           aria-expanded={open}
+          aria-controls={panelId}
           className="flex min-w-0 flex-1 items-center gap-3 rounded-ovladac px-1.5 py-1.5 text-left"
         >
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-ovladac bg-accent-500/15 font-display text-sm font-bold text-accent-700 dark:text-accent-300">
@@ -1626,6 +1697,8 @@ function LessonCard({
         <button
           type="button"
           onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          aria-controls={panelId}
           aria-label={open ? s.collapseLesson : s.expandLesson}
           className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-full sm:h-9 sm:w-9 text-zinc-600 transition hover:bg-accent-500/10 hover:text-accent-700 dark:text-accent-400 dark:hover:text-accent-400"
         >
@@ -1639,7 +1712,9 @@ function LessonCard({
           open ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
-        <div className="overflow-hidden">
+        {/* Sbalený obsah je `inert`: jinak by do schovaných odkazů dál
+            skákal Tab a četla je čtečka (Codex 27. 9. 2026). */}
+        <div id={panelId} inert={!open} className="overflow-hidden">
           <ul className="space-y-2 px-3 pb-3">
             {items.map((it) => (
               <MaterialRow
@@ -1981,7 +2056,9 @@ export function PreviewModal({
     const ohnisko = () =>
       Array.from(
         panelRef.current?.querySelectorAll<HTMLElement>(
-          'a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])',
+          // `iframe` (náhled PDF) a `summary` (poznámky u prezentací) chyběly,
+          // takže je Tab přeskakoval a vracel se na začátek (Codex 27. 9. 2026).
+          'a[href], button:not([disabled]), textarea, input, select, iframe, summary, [tabindex]:not([tabindex="-1"])',
         ) ?? [],
       ).filter((el) => el.offsetParent !== null);
 

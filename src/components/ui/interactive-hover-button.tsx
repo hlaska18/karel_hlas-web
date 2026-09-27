@@ -65,7 +65,7 @@ function Inner({ text, icon, dot }: { text: string; icon?: ReactNode; dot: strin
       {/* tečka → po najetí se rozlije přes celé tlačítko */}
       <span
         aria-hidden
-        className={`absolute top-1/2 -translate-y-1/2 rounded-full bg-accent-500 transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:translate-y-0 group-hover:scale-[1.8] group-hover:bg-accent-600 ${dot}`}
+        className={`absolute top-1/2 -translate-y-1/2 rounded-full bg-accent-500 transition-all duration-300 group-hover:left-0 group-hover:top-0 group-hover:h-full group-hover:w-full group-hover:translate-y-0 group-hover:scale-[1.8] group-hover:bg-accent-700 ${dot}`}
       />
     </>
   );

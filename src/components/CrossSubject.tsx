@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useId, useState } from "react";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -148,11 +148,12 @@ function SubjectTile({
   // Karta se rozbaluje, takže nadzvednutí platí i otevřené – chová se pak jako
   // jeden kus, ne jako panel, co se rozjel.
   const Zahlavi = maObsah ? "button" : "div";
+  const panelId = useId();
   return (
     <div className="povrch flex w-full flex-col rounded-karta transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15">
       <Zahlavi
         {...(maObsah
-          ? { type: "button" as const, onClick: onToggle, "aria-expanded": open }
+          ? { type: "button" as const, onClick: onToggle, "aria-expanded": open, "aria-controls": panelId }
           : {})}
         className="group flex w-full items-center gap-3 p-5 text-left transition active:scale-[0.99] active:duration-100"
       >
@@ -162,7 +163,9 @@ function SubjectTile({
             alt=""
             width={224}
             height={224}
-          sizes="(min-width: 640px) 112px, 96px"
+          // Ikona se vykresluje v rámečku 56 × 56 px (h-14 w-14); ostrost
+          // na Retině si prohlížeč dopočítá z `sizes` sám (Codex 27. 9. 2026).
+          sizes="56px"
             className="h-full w-full object-contain transition duration-300 group-hover:scale-105"
           />
         </span>
@@ -195,7 +198,9 @@ function SubjectTile({
           open && maObsah ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
         }`}
       >
-        <div className="overflow-hidden">
+        {/* Sbalený obsah je `inert`: jinak by do schovaných odkazů dál
+            skákal Tab a četla je čtečka (Codex 27. 9. 2026). */}
+        <div id={panelId} inert={!(open && maObsah)} className="overflow-hidden">
           <div className="space-y-4 border-t border-black/10 px-5 py-4 dark:border-white/10">
           {item.tool && files.length > 0 && (
             <div>
