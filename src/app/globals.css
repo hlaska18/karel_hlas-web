@@ -69,6 +69,10 @@
      většina „applovského" dojmu je vzduch, ne efekt. */
   .sekce {
     @apply py-20 sm:py-28;
+    /* Záře za nadpisem sekce (SectionHeader) vyčnívá do strany. `clip`
+       ji ořízne na okraji okna, ať stránka nejde posouvat do strany, a na
+       rozdíl od `hidden` nevyrábí posuvný kontejner – nerozbije `sticky`. */
+    overflow-x: clip;
   }
 
   /* ───── Plný povrch ─────
