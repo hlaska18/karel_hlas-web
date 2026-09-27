@@ -32,17 +32,6 @@ export function Hero({
 
   return (
     <section id="top" className="relative isolate overflow-hidden pt-28 sm:pt-32">
-      {/* Malachitový nádech za úvodem. Bez něj byla první obrazovka plochá –
-          v tmavém tématu skoro černá – a barva webu se objevila až u tlačítka.
-          Stránka 404 tenhle prvek má a odkazuje se na „hlavní stránku“, takže
-          se tím zároveň srovnává rozpor.
-          `isolate` na sekci je nutné: bez vlastního stohovacího kontextu by
-          `-z-10` propadlo pod pozadí stránky a záře by nebyla vidět. */}
-      <div aria-hidden className="pointer-events-none absolute inset-0 -z-10">
-        <div className="absolute left-[-10%] top-[-22%] h-[460px] w-[460px] rounded-full bg-accent-300/20 blur-[120px] dark:bg-accent-500/[0.10]" />
-        <div className="absolute right-[-8%] top-[6%] h-[380px] w-[380px] rounded-full bg-accent-200/25 blur-[110px] dark:bg-accent-600/[0.09]" />
-      </div>
-
       {/* Menší mezera pod sloupci = šipka „Materiály" sedí blíž obsahu.
           S vyšším pravým sloupcem se odsunula moc nízko. */}
       <div className="container-page pb-6 lg:pb-8">
@@ -52,7 +41,17 @@ export function Hero({
             rozdělí nad a pod text a čte se jako vzduch, ne jako chybějící
             obsah. Na mobilu je pravý sloupec skrytý, tam se nic nemění. */}
         <div className="flex items-center justify-between gap-14">
-          <div className="max-w-3xl">
+          <div className="relative max-w-3xl">
+            {/* Malachitová záře za nadpisem. Bez ní byla první obrazovka plochá
+                – v tmavém tématu skoro černá – a barva webu se objevila až
+                u tlačítka. Dřív visely dvě záře u okrajů OKNA, takže na širokém
+                monitoru ujela ta levá k okraji a působila jako flek (Karel
+                27. 9. 2026). Teď je ve sloupci s textem a jde s ním.
+                `isolate` na sekci drží `-z-10` nad pozadím stránky. */}
+            <div
+              aria-hidden
+              className="pointer-events-none absolute -left-24 -top-20 -z-10 h-[440px] w-[640px] rounded-full bg-accent-300/25 blur-[120px] dark:bg-accent-500/[0.13]"
+            />
             {/* Nadpis se vypisuje jako na psacím stroji; `aria-label` nese
                 celou větu, takže čtečka ji přečte naráz (animace je aria-hidden). */}
             <h1
