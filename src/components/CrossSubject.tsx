@@ -1,7 +1,7 @@
 "use client";
 
 import { Mlhovina } from "@/components/Mlhovina";
-import { useId, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -43,6 +43,40 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
   const { tr, lang } = useLang();
   const c = tr.cross;
   const [open, setOpen] = useState<string | null>(null);
+  const mrizkaRef = useRef<HTMLUListElement | null>(null);
+
+  // Všechny dlaždice stejně vysoké (Karel 28. 9. 2026). Mřížka to udělat
+  // nemůže – rozbalení jedné dlaždice by natáhlo celý řádek –, a pevná výška
+  // by na některé šířce text ořízla nebo nechala díru. Proto se změří
+  // nejvyšší ZÁHLAVÍ (sbalená část) a stejná výška se dá všem přes
+  // proměnnou --vyska-dlazdice. Přepočítá se při každé změně šířky i po
+  // načtení písma. Dlaždice s výzvou má i okraje (+2 px), proto `data-okraj`.
+  useEffect(() => {
+    const ul = mrizkaRef.current;
+    if (!ul || !("ResizeObserver" in window)) return;
+    let posledni = -1;
+    const vyrovnej = () => {
+      const prvky = Array.from(ul.querySelectorAll<HTMLElement>("[data-vyrovnat]"));
+      if (!prvky.length) return;
+      ul.style.removeProperty("--vyska-dlazdice");
+      const max = Math.max(
+        ...prvky.map((p) => p.offsetHeight - (p.dataset.okraj ? 2 : 0)),
+      );
+      posledni = max;
+      ul.style.setProperty("--vyska-dlazdice", `${max}px`);
+    };
+    const ro = new ResizeObserver(() => {
+      const w = ul.offsetWidth;
+      if (w === sirka && posledni >= 0) return;
+      sirka = w;
+      vyrovnej();
+    });
+    let sirka = -1;
+    ro.observe(ul);
+    vyrovnej();
+    document.fonts?.ready.then(vyrovnej).catch(() => {});
+    return () => ro.disconnect();
+  }, [lang]);
 
   return (
     <section id="jinam" className="sekce">
@@ -66,7 +100,7 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
         {/* Mlhovina pod dlaždicemi – matné sklo potřebuje, co rozmazat. */}
         <div className="relative isolate mt-8">
         <Mlhovina varianta={5} className="-left-[12%] -top-[18%] h-[140%] w-[125%]" />
-        <ul className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <ul ref={mrizkaRef} className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {c.items.map((it, i) => (
             <Reveal as="li" key={it.subject} delay={0.05 * i} className="flex">
               <SubjectTile
@@ -83,7 +117,9 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           <Reveal as="li" delay={0.05 * c.items.length} className="flex">
             <a
               href={`mailto:${SITE.email}`}
-              className="povrch dlazdice group flex w-full flex-col rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 dark:border-white/15"
+              data-vyrovnat
+              data-okraj
+              className="povrch dlazdice group flex min-h-[calc(var(--vyska-dlazdice,0px)+2px)] w-full flex-col justify-center rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 dark:border-white/15"
             >
               <span className="flex items-center gap-3">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
@@ -160,7 +196,8 @@ function SubjectTile({
         {...(maObsah
           ? { type: "button" as const, onClick: onToggle, "aria-expanded": open, "aria-controls": panelId }
           : {})}
-        className="group flex w-full items-center gap-3 p-5 text-left transition active:scale-[0.99] active:duration-100"
+        data-vyrovnat
+        className="group flex min-h-[var(--vyska-dlazdice,0px)] w-full items-center gap-3 p-5 text-left transition active:scale-[0.99] active:duration-100"
       >
         <span className="flex h-14 w-14 shrink-0 items-center justify-center">
           <Image
