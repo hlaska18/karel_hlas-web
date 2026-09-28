@@ -152,6 +152,19 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Revize frontendu Codexem (commit c428857): klávesnice v bance, fokus po
   kotvách, kontrast, pojistka bez JS, omezit pohyb, `sizes` u obrázků.
 
+### Vlastní databáze z Excelu (28. 9. 2026)
+- Téma Databáze (1L/8) má lekci „2. Vlastní databáze z Excelu“: žákovský
+  návod, ukázková data filmy.csv (štítek „Podklad (filmy.csv)“ přes
+  PODKLADY_ULOH) a v _ucitel návod pro učitele (průběh hodiny, hodnocení,
+  limity). Oba .docx generuje scripts/dbb-dokumenty/vlastni-data.js
+  (zak|ucitel), tabulka FILMY v něm musí sedět s filmy.csv.
+- Postup je ověřený v simulátoru: Nová databáze → okno Upravit definici
+  tabulky zavřít Zrušit → Soubor → Importovat tabulku z CSV → Zapsat změny
+  → dotazy → Uložit výsledek do CSV. CSV z českého Excelu (středník,
+  Windows-1250) i CSV UTF-8 s čárkami projdou.
+- Logo v hlavičce zabalí všechny rozbalené složky, lekce a dlaždice
+  (src/lib/zabalit.ts, událost web:zabalit-vse).
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

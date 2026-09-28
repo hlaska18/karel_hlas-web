@@ -18,6 +18,7 @@ import {
   pripravTabulku,
   nazevProSql,
   MAX_RADKU_CSV,
+  radkuCesky,
   type Oddelovac,
 } from "@/lib/dbb/csv";
 
@@ -89,7 +90,7 @@ export function ImportCsv({ soubor, bajty, zavrit }: { soubor: string; bajty: Ui
         </div>
         <p className="text-dbb-slaby">
           {t(
-            `Náhled – ${tabulka.data.length} řádků. Názvy sloupců jsou upravené bez háčků a mezer, ať jdou psát v SQL; typ se pozná podle hodnot.`,
+            `Náhled – ${radkuCesky(tabulka.data.length)}. Názvy sloupců jsou upravené bez háčků a mezer, ať jdou psát v SQL; typ se pozná podle hodnot.`,
             `Preview – ${tabulka.data.length} rows. Column names are adjusted without accents and spaces so they can be typed in SQL; the type is guessed from the values.`,
           )}
         </p>

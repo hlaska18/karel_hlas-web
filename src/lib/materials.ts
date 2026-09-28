@@ -132,6 +132,9 @@ const NAME_EN: Record<string, string> = {
   "Řešení – pracovní list": "Worksheet solutions",
   "Řešení a postup – DB Browser": "Solutions and walkthrough – DB Browser",
   "Návod pro učitele – DB Browser": "Teacher's guide – DB Browser",
+  "Vlastní databáze z Excelu": "Your own database from Excel",
+  "Návod – vlastní databáze z Excelu": "Guide – your own database from Excel",
+  "Návod pro učitele – vlastní databáze z Excelu": "Teacher's guide – your own database from Excel",
   Metodika: "Teaching notes",
   // Digitální gramotnost – jednotlivé hodiny a jejich plány
   "Kybernetická bezpečnost": "Cybersecurity",
@@ -505,13 +508,16 @@ const PODKLADY_ULOH = new Set([
   "32_pocasi.txt",
   "33_prace.accdb",
   "33_prehled_prodeje.xml",
+  // Databáze: ukázková tabulka k návodu „Vlastní databáze z Excelu“ (leží
+  // v lekci, ne v Úlohách – proto se podklady hledají dřív než Úlohy).
+  "filmy.csv",
 ]);
 
 function pracovniSoubor(file: string, segs: string[]): Popis | null {
-  const vUloze = segs.some((s) => s.normalize("NFC") === "Úlohy");
-  if (!vUloze) return null;
   const jmeno = file.normalize("NFC");
   if (PODKLADY_ULOH.has(jmeno)) return { cs: `Podklad (${file})`, en: `Handout (${file})` };
+  const vUloze = segs.some((s) => s.normalize("NFC") === "Úlohy");
+  if (!vUloze) return null;
   if (!PRACOVNI_SOUBOR.test(jmeno)) return null;
   return { cs: `Pracovní soubor (${file})`, en: `Working file (${file})` };
 }

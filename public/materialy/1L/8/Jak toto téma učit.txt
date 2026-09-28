@@ -66,6 +66,22 @@ změny a dotazy z kurzu fungují stejně.
 
 
 -----------------------------------------------------------
+VLASTNÍ DATABÁZE Z EXCELU         (45 min, počítače, navíc)
+-----------------------------------------------------------
+Projekt po lekcích 1–19: žák si v Excelu připraví vlastní
+tabulku (filmy, hry, sport, měření…), uloží ji jako CSV,
+v kurzu založí novou databázi (Soubor → Nová databáze),
+tabulku do ní naimportuje a ptá se jí v SQL. Výsledek dotazu
+vrátí do Excelu a udělá z něj graf. Odevzdá soubor .db, pět
+otázek s dotazy a graf.
+
+Pro žáky:   Návod – vlastní databáze z Excelu,
+            filmy.csv (hotová data pro ty, kdo nestihnou Excel)
+Pro učitele: Návod pro učitele – vlastní databáze z Excelu
+             (průběh hodiny, hodnocení, limity programu)
+
+
+-----------------------------------------------------------
 V KURZU NAVÍC
 -----------------------------------------------------------
 Lekce 20 – detektivka: kdo odnesl Krakatit. Stejné příkazy

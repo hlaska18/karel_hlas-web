@@ -13,7 +13,7 @@ import { Okno, Tlacitko, Paticka } from "@/components/dbb/okna";
 import { t } from "@/lib/dbb/jazyk";
 import { tabulky } from "@/lib/dbb/prikazy";
 import { stahni } from "@/lib/dbb/stahni";
-import { doCsv, csvKeStazeni, EXPORT_PRO_EXCEL, type Oddelovac } from "@/lib/dbb/csv";
+import { doCsv, csvKeStazeni, radkuCesky, EXPORT_PRO_EXCEL, type Oddelovac } from "@/lib/dbb/csv";
 
 /** Zdroj „výsledek posledního dotazu“ v seznamu – tabulka se tak jmenovat nemůže. */
 const VYSLEDEK = "\u0000vysledek";
@@ -104,7 +104,7 @@ export function ExportCsv({ zdroj, zavrit }: { zdroj?: "vysledek" | string; zavr
         <p className="text-dbb-slaby">
           {data
             ? t(
-                `Náhled souboru ${nazevSouboru} – ${data.values.length} řádků.`,
+                `Náhled souboru ${nazevSouboru} – ${radkuCesky(data.values.length)}.`,
                 `Preview of ${nazevSouboru} – ${data.values.length} rows.`,
               )
             : t("Není co exportovat.", "There is nothing to export.")}

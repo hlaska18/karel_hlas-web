@@ -150,6 +150,11 @@ export function sqlVlozeni(nazev: string, t: PripravenaTabulka): string {
   return `INSERT INTO ${uvoz(nazev)} (${t.sloupce.map(uvoz).join(", ")}) VALUES (${t.sloupce.map(() => "?").join(", ")});`;
 }
 
+/** „1 řádek“, „3 řádky“, „5 řádků“ – do vět o počtu řádků. */
+export function radkuCesky(n: number): string {
+  return `${n} ${n === 1 ? "řádek" : n >= 2 && n <= 4 ? "řádky" : "řádků"}`;
+}
+
 /** Nejvíc řádků z jednoho CSV – víc se do prohlížeče stejně nevejde. */
 export const MAX_RADKU_CSV = 5000;
 

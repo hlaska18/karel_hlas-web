@@ -219,6 +219,12 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     const databaze = items.find((it) => it.label.cs === "Podklad (33_prace.accdb)");
     expect(databaze).toBeDefined();
     expect(databaze!.tool).toBe("Excel");
+
+    // Ukázková CSV k návodu „Vlastní databáze z Excelu“ je .csv, ale patří
+    // k Databázím, ne do Excelu.
+    const filmy = items.find((it) => it.label.cs === "Podklad (filmy.csv)");
+    expect(filmy).toBeDefined();
+    expect(filmy!.tool).toBe("Databáze");
   });
 
   it("pravidlo o složce nepřetáhlo do dlaždic nic dalšího", () => {

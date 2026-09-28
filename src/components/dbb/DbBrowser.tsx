@@ -63,7 +63,7 @@ import { splnenoZKodu, KLIC_NAZVY_ULOH } from "@/lib/dbb/obnovaPostupu";
 import type { Postup } from "@/lib/dbb/kodPostupu";
 import { t, jeAnglicky, adresaVJazyce } from "@/lib/dbb/jazyk";
 import { pisemka, lekcePisemky } from "@/lib/dbb/pisemka";
-import { dekodujText, sqlVytvoreni, sqlVlozeni, type PripravenaTabulka } from "@/lib/dbb/csv";
+import { dekodujText, radkuCesky, sqlVytvoreni, sqlVlozeni, type PripravenaTabulka } from "@/lib/dbb/csv";
 import { sqlSkript } from "@/lib/dbb/export";
 import {
   DbbKontext,
@@ -494,7 +494,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       udalost(`import:${nazev}`);
       status(
         t(
-          `Tabulka ${nazev} má ${tab.data.length} řádků z CSV. Nezapomeň změny zapsat (Ctrl+S).`,
+          `Tabulka ${nazev} má ${radkuCesky(tab.data.length)} z CSV. Nezapomeň změny zapsat (Ctrl+S).`,
           `The table ${nazev} has ${tab.data.length} rows from the CSV file. Don't forget to write the changes (Ctrl+S).`,
         ),
       );
