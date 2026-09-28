@@ -2,6 +2,7 @@
 
 import { Mlhovina } from "@/components/Mlhovina";
 import { useEffect, useId, useRef, useState } from "react";
+import { useZabalit } from "@/lib/zabalit";
 import Image from "next/image";
 import {
   ArrowRight,
@@ -43,6 +44,7 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
   const { tr, lang } = useLang();
   const c = tr.cross;
   const [open, setOpen] = useState<string | null>(null);
+  useZabalit(() => setOpen(null));
   const mrizkaRef = useRef<HTMLUListElement | null>(null);
 
   // Všechny dlaždice stejně vysoké (Karel 28. 9. 2026). Mřížka to udělat
@@ -311,6 +313,7 @@ function MaterialFolder({
   c: ReturnType<typeof useLang>["tr"]["cross"];
 }) {
   const [open, setOpen] = useState(false);
+  useZabalit(() => setOpen(false));
   // Autor celé skupiny (_autor.txt) – u převzatých cvičebnic je to podstatné.
   const author = items.find((i) => i.groupAuthor)?.groupAuthor;
 

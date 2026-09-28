@@ -8,6 +8,7 @@
  * dozvědět, co nefungovalo, dřív než si to stáhne.
  */
 
+import { useZabalit } from "@/lib/zabalit";
 import {
   ChevronDown,
   ExternalLink,
@@ -323,6 +324,7 @@ function KartaNastroje({
   lang: Parameters<typeof sazba>[1];
 }) {
   const [otevrena, nastavOtevrenou] = useState(false);
+  useZabalit(() => nastavOtevrenou(false));
   const idPodrobnosti = `nastroj-${nastroj.name.replace(/\W+/g, "-").toLowerCase()}`;
 
   return (

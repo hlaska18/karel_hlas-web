@@ -2,6 +2,7 @@
 
 import { Mlhovina } from "@/components/Mlhovina";
 import { useEffect, useId, useMemo, useRef, useState } from "react";
+import { useZabalit } from "@/lib/zabalit";
 import {
   Search,
   Download,
@@ -352,6 +353,13 @@ export function BankBrowser({
     setTool(null);
     zapisTemaDoAdresy(null);
   };
+  // Klik na logo: zpátky na přehled témat. Hledání zůstává – to je
+  // rozepsaný text, ne rozbalená složka.
+  useZabalit(() => {
+    if (tool) zapisTemaDoAdresy(null);
+    setTool(null);
+    setOpenLesson(null);
+  });
   useEffect(() => {
     const cil = fokusPoZmene.current;
     fokusPoZmene.current = null;
@@ -1433,6 +1441,7 @@ function FolderCard({
   const s = STR[lang];
   const [open, setOpen] = useState(vzdyOtevrena);
   const panelId = useId();
+  useZabalit(() => setOpen(vzdyOtevrena));
   /**
    * Jantarová barva = celá složka je pro učitele.
    *
@@ -1621,6 +1630,7 @@ function LessonCard({
   const s = STR[lang];
   const [open, setOpen] = useState(autoOpen);
   const panelId = useId();
+  useZabalit(() => setOpen(false));
   const [copied, setCopied] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
   const hasStudent = items.some((it) => isStudentSlot(it, cfg));
