@@ -28,6 +28,7 @@ import {
   type Simulator,
 } from "@/lib/postupSimulatoru";
 import { najdiKody, sloucitPostupy } from "@/lib/dbb/kodPostupu";
+import { bezVzorce } from "@/lib/dbb/csv";
 import { stahni } from "@/lib/dbb/stahni";
 import { UKOLY as UKOLY_WIN } from "@/lib/win/ukoly";
 import { UKOLY_MAC } from "@/lib/mac/ukoly";
@@ -317,7 +318,9 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
         "",
       ]);
     });
-    const obsah = radky.map((r) => r.map((b) => `"${b.replace(/"/g, '""')}"`).join(";")).join("\r\n");
+    // Jméno píše žák – bez `bezVzorce` by si mohl dát třeba =HYPERLINK(…) a
+    // Excel by to učiteli spustil (Codex 29. 9. 2026, Karel souhlasil se změnou).
+    const obsah = radky.map((r) => r.map((b) => `"${bezVzorce(b).replace(/"/g, '""')}"`).join(";")).join("\r\n");
     // BOM, ať Excel pozná češtinu.
     stahni("prehled-tridy-simulatory.csv", new TextEncoder().encode("\uFEFF" + obsah), "text/csv");
   };
