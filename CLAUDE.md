@@ -191,6 +191,13 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   už „plán B v telefonu“ neslibují.
 - **Všechno musí fungovat i na Linuxu** (Karel): cíl Firefox 111 nemá
   `inert`, proto `.sbalitelny[inert] { visibility: hidden }` v globals.css.
+- Vercel Function Storage: `outputFileTracingExcludes` v next.config.mjs
+  drží public/materialy mimo serverové funkce (dřív ~75 MB v každé).
+- Neukládá-li se práce (plné/zakázané úložiště), ukáže se pruh
+  `UpozorneniUlozeni` (src/lib/ulozeni.ts – ukládat přes `ulozDoProhlizece`).
+- Simulátor Windows: Správce úloh Shift+F8, Start Shift+F4; skutečné
+  zkratky Windows jsou v závorce u úlohy a v bublině Startu (Karel 29. 9.).
+- Na iPhonu ověřeno 30. 9.: simulátory ukazují „jen na počítači“.
 
 ## Otevřené / nápady (nic naléhavého)
 
