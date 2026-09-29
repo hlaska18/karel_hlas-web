@@ -503,8 +503,10 @@ export function BankBrowser({
       {!showList && (
         // Obal kvůli mlhovině pod dlaždicemi: matné sklo potřebuje, co
         // rozmazat (Karel 27. 9. 2026). Uvnitř <ul> by byla neplatné HTML.
+        // Výška v pixelech, ne v % obalu – stejně jako v „Nejen do
+        // informatiky“, kde se mlhovina s rostoucí mřížkou posouvala.
         <div className="relative isolate mt-6">
-        <Mlhovina varianta={4} className="-left-[12%] -top-[18%] h-[140%] w-[125%]" />
+        <Mlhovina varianta={4} className="-left-[12%] -top-[130px] h-[1000px] w-[125%]" />
         <ul ref={dlazdiceRef} className="grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
           {tiles.map((t) => {
             const Icon = toolIcon(t.name);

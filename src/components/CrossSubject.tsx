@@ -99,9 +99,14 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           }
         />
 
-        {/* Mlhovina pod dlaždicemi – matné sklo potřebuje, co rozmazat. */}
+        {/* Mlhovina pod dlaždicemi – matné sklo potřebuje, co rozmazat.
+            Výška a posun nahoru v pixelech, NE v procentech mřížky: dlaždice
+            se rozbaluje na místě, mřížka roste a mlhovina s výškou v % se
+            s ní v každém snímku natahovala a posouvala – tři velká rozmazaná
+            SVG a sklo nad nimi se přepočítávaly a web sekal (Karel 30. 9.).
+            Šířka v % zůstává, ta se mění jen se šířkou okna. */}
         <div className="relative isolate mt-8">
-        <Mlhovina varianta={5} className="-left-[12%] -top-[18%] h-[140%] w-[125%]" />
+        <Mlhovina varianta={5} className="-left-[12%] -top-[130px] h-[1000px] w-[125%]" />
         <ul ref={mrizkaRef} className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {c.items.map((it, i) => (
             <Reveal as="li" key={it.subject} delay={0.05 * i} className="flex">
