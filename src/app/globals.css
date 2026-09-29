@@ -1838,3 +1838,13 @@
 .dlazdice:hover::before {
   opacity: 1;
 }
+
+/* Sbalený panel v bance a v „Nejen do informatiky“ (třída `sbalitelny`).
+   Tab ho přeskakuje díky `inert`, jenže Firefox ho umí až od verze 112 a cíl
+   webu je Firefox 111 (Linux, Karel 29. 9. 2026: „všechno musí fungovat
+   i na Linuxu“). Skrytý obsah se do pořadí Tabu ani pro čtečku nedostane.
+   Skrytí počká, až se panel dosune (300 ms); při otevření je obsah vidět hned. */
+.sbalitelny[inert] {
+  visibility: hidden;
+  transition: visibility 0s linear 0.3s;
+}

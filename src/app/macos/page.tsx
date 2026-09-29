@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { VirtualniMac } from "@/components/mac/MacOS";
+import { JenNaPocitaci } from "@/components/JenNaPocitaci";
 import { sdileni } from "@/lib/sdileni";
 
 export const metadata: Metadata = {
@@ -24,28 +25,32 @@ export default function StrankaMacOS() {
   return (
     <>
       {/*
-        Na telefonu ani na tabletu se prostředí nepouští – Finder má pevnou
-        šířku a horní lišta s Dockem se na úzkou obrazovku nevejdou. Hranice
-        je stejná jako u Windows (`lg`, 1024 px), ať si to učitel nemusí
-        pamatovat dvakrát.
+        Na telefonu ani na tabletu se prostředí nepouští (Karel 29. 9. 2026) –
+        Finder má pevnou šířku, okna se táhnou myší a horní lišta s Dockem se
+        na úzkou obrazovku nevejdou. Rozhoduje totéž co u Windows
+        (`JenNaPocitaci`: obrazovka aspoň 1024 px a myš).
       */}
-      <div className="flex vyska-obrazovky w-full flex-col items-center justify-center gap-4 px-6 text-center lg:hidden">
-        <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální macOS</h1>
-        <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Tohle prostředí je stavěné na počítač – okno Finderu ani Dock se na
-          telefon a tablet nevejdou. Otevři si stránku na notebooku nebo ve
-          školní učebně.
-        </p>
-        <Link
-          href="/"
-          className="povrch rounded-ovladac px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5"
-        >
-          Zpět na web
-        </Link>
-      </div>
-      <main className="hidden vyska-obrazovky w-full overflow-hidden lg:block">
-        <VirtualniMac />
-      </main>
+      <JenNaPocitaci
+        jinak={
+          <div className="flex vyska-obrazovky w-full flex-col items-center justify-center gap-4 px-6 text-center">
+            <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální macOS</h1>
+            <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              Tohle prostředí běží jen na počítači s myší – na telefonu ani na tabletu se
+              nespouští. Otevři si stránku na notebooku nebo ve školní učebně.
+            </p>
+            <Link
+              href="/"
+              className="povrch rounded-ovladac px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5"
+            >
+              Zpět na web
+            </Link>
+          </div>
+        }
+      >
+        <main className="vyska-obrazovky w-full overflow-hidden">
+          <VirtualniMac />
+        </main>
+      </JenNaPocitaci>
       {/*
         Popis pro vyhledávače a čtečky obrazovky. Simulace sama je pro
         odečítač beztak nepoužitelná – tohle je to, co má člověk i robot

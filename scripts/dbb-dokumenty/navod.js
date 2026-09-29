@@ -39,7 +39,7 @@ N("Co to je", 1);
 B([
   "Napodobenina programu DB Browser for SQLite, ve které běží kurz SQL o 22 lekcích. Pod ní je skutečné SQLite, přímo v prohlížeči – nic se neinstaluje.",
   "Databáze i postup žáka zůstávají v prohlížeči počítače, na kterém pracuje. Na server nejde nic.",
-  "Na počítači s myší a obrazovkou aspoň 1024 px se otevře program. Na telefonu a tabletu webová podoba kurzu (lekce 1–13, jen česky). Postup se v obou sčítá.",
+  "Kurz běží jen na počítači s myší a obrazovkou aspoň 1024 px. Na telefonu ani na tabletu se nespouští – stránka tam ukáže jen popis a vysvětlení.",
   "Anglická verze: karelhlas.vercel.app/sql?z=en – program, lekce i hlášky anglicky, data zůstávají česká a panel ukazuje slovníček.",
   "Odkaz do Teams posílej bez www, s www prohlížeč hlásí chybu certifikátu.",
 ]);
@@ -134,7 +134,7 @@ B([
   "Žák u úlohy, která sedí, vidí fajfku. Nápověda, řešení, „Ještě ne“ ani vysvětlení chyb po česku se neukazují – výjimka je jen rada k ´ místo apostrofu (to je klávesnice, ne SQL).",
   "Postup z kódu se v písemce nepřenáší. Písemka se ukládá zvlášť od kurzu i od druhé varianty.",
   "Na konci žák otevře Moje výsledky, napíše jméno a zkopíruje kód. V Přehledu třídy mají písemky vlastní tabulku (body a splněné úlohy).",
-  "Jen na počítači – na telefonu se místo písemky ukáže vysvětlení.",
+  "Jen na počítači – na telefonu a tabletu se místo písemky ukáže vysvětlení.",
   "Klíč k písemce je v souboru Řešení a postup – DB Browser (lekce 21 a 22).",
 ]);
 
@@ -179,7 +179,7 @@ T(
   [3400, 6238],
   [
     ["Co se děje", "Co s tím"],
-    ["Kurz se ve škole nenačte (síť, filtr).", "Plán B: pracovní list na papíře, nebo kurz v telefonu přes mobilní data (lekce 1–13)."],
+    ["Kurz se ve škole nenačte (síť, filtr).", "Plán B: pracovní list na papíře."],
     ["„Kurz máš otevřený v jiné kartě“", "Pracovat v novější kartě, starší zavřít. Tlačítko v hlášce kurz v téhle kartě načte znovu."],
     ["„Změny se nepodařilo uložit“", "Úložiště prohlížeče je plné nebo zakázané (anonymní okno). Program nabídne stažení souboru; staré databáze smazat v okně Otevřít databázi."],
     ["„Knihovna není v původním stavu“", "Zbyla z minulé hodiny nebo po jiném žákovi, případně jsou v ní zapsané změny z lekcí 1–13. Obnovit – postup žáka zůstane."],

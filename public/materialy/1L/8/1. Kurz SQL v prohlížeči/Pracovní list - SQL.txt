@@ -91,7 +91,7 @@ Příkazy, které se hodí:
 
 POZOR u úloh 12 a 13: bez WHERE zasáhne příkaz CELOU tabulku.
 V kurzu to nevadí (dokud změnu nezapíšeš, vrátí ji tlačítko
-Vrátit změny; na telefonu Obnovit databázi), v praxi je to
+Vrátit změny, ve webové podobě Obnovit databázi), v praxi je to
 nejdražší chyba v SQL.
 
 Řešení má tvůj vyučující (soubor „Řešení - pracovní list“).

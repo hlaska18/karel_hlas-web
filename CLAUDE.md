@@ -183,8 +183,14 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   Excelu přes `bezVzorce()` (src/lib/dbb/csv.ts, i ve sdíleném přehledu
   Windows/macOS), limity CSV importu, Ctrl+R v DB Browseru nespouští SQL.
   Nedělat: povinné PR, CSP, SQL ve Workeru. Historie Gitu bez tajemství.
-- Otevřené: /windows a /macos pustí plné prostředí i na tabletu ≥1024 px
-  bez myši (SQL už hlídá `pointer: fine`) – u Windows čeká na Karlův souhlas.
+- **Simulátory Windows, macOS i kurz SQL běží jen na počítači** (Karel
+  29. 9. 2026): `src/components/JenNaPocitaci.tsx` (obrazovka ≥1024 px a myš).
+  Na telefonu a tabletu vysvětlení; u /sql zůstává popis pro učitele, místo
+  kurzu věta „Kurz běží jen na počítači s myší“. Webová podoba SQL jen pro
+  počítač v úzkém okně. Dokumenty (Jak toto téma učit, návody, plán hodin)
+  už „plán B v telefonu“ neslibují.
+- **Všechno musí fungovat i na Linuxu** (Karel): cíl Firefox 111 nemá
+  `inert`, proto `.sbalitelny[inert] { visibility: hidden }` v globals.css.
 
 ## Otevřené / nápady (nic naléhavého)
 

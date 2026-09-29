@@ -244,7 +244,7 @@ function SubjectTile({
       >
         {/* Sbalený obsah je `inert`: jinak by do schovaných odkazů dál
             skákal Tab a četla je čtečka (Codex 27. 9. 2026). */}
-        <div id={panelId} inert={!(open && maObsah)} className="overflow-hidden">
+        <div id={panelId} inert={!(open && maObsah)} className="sbalitelny overflow-hidden">
           <div className="space-y-4 border-t border-black/10 px-5 py-4 dark:border-white/10">
           {item.tool && files.length > 0 && (
             <div>

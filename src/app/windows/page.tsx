@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { OdkazNaWeb, VirtualniPocitac } from "@/components/win/VirtualniPocitac";
+import { JenNaPocitaci } from "@/components/JenNaPocitaci";
 import { sdileni } from "@/lib/sdileni";
 
 export const metadata: Metadata = {
@@ -24,29 +25,33 @@ export default function StrankaWindows() {
   return (
     <>
       {/*
-        Na telefonu ani na tabletu se prostředí nepouští. Okna mají pevné
-        rozměry (Nastavení 1000 px), takže z nich na uzsi obrazovce zbude
-        kus – a na tabletu to klame nejvic, protože tam to na první pohled
-        vypadá, že se to vejde. Hranice je proto na `lg` (1024 px), ne na
-        `sm`: až od ní má okno Nastavení kam růst.
+        Na telefonu ani na tabletu se prostředí nepouští (Karel 29. 9. 2026).
+        Okna mají pevné rozměry (Nastavení 1000 px) a ovládají se myší a
+        klávesami. Dřív rozhodovala jen šířka `lg` (1024 px), takže iPad na
+        šířku dostal celé prostředí, které se prstem ovládat nedalo. Teď
+        rozhoduje `JenNaPocitaci`: obrazovka aspoň 1024 px a myš.
 
         Radši to říct rovnou, než aby si učitel otevřel odkaz na tabletu
         a odnesl si dojem, že je něco rozbité.
       */}
-      <div className="flex vyska-obrazovky w-full flex-col items-center justify-center gap-4 px-6 text-center lg:hidden">
-        <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální Windows 11</h1>
-        <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
-          Tohle prostředí je stavěné na počítač – okna Průzkumníka a Nastavení se na
-          telefon ani na tablet nevejdou. Otevři si stránku na notebooku nebo ve
-          školní učebně.
-        </p>
-        <OdkazNaWeb className="povrch rounded-ovladac px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5">
-          Zpět na web
-        </OdkazNaWeb>
-      </div>
-      <main className="hidden vyska-obrazovky w-full overflow-hidden lg:block">
-        <VirtualniPocitac />
-      </main>
+      <JenNaPocitaci
+        jinak={
+          <div className="flex vyska-obrazovky w-full flex-col items-center justify-center gap-4 px-6 text-center">
+            <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální Windows 11</h1>
+            <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+              Tohle prostředí běží jen na počítači s myší – na telefonu ani na tabletu se
+              nespouští. Otevři si stránku na notebooku nebo ve školní učebně.
+            </p>
+            <OdkazNaWeb className="povrch rounded-ovladac px-4 py-2 text-sm font-semibold transition hover:-translate-y-0.5">
+              Zpět na web
+            </OdkazNaWeb>
+          </div>
+        }
+      >
+        <main className="vyska-obrazovky w-full overflow-hidden">
+          <VirtualniPocitac />
+        </main>
+      </JenNaPocitaci>
       {/*
         Popis pro vyhledávače a čtečky obrazovky. Simulace sama je pro
         odečítač obrazovky beztak nepoužitelná – tohle je to, co má člověk

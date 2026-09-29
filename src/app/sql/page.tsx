@@ -38,15 +38,17 @@ export const metadata: Metadata = {
 };
 
 /**
- * Na počítači (od 1024 px) se kurz otevře ve virtuálním DB Browseru přes
- * celou obrazovku, jako simulátory Windows a macOS. Na telefonu a tabletu se
- * program nevejde, tak tam zůstává webová podoba kurzu (lekce 1–13) – obě
- * ukládají postup do stejných klíčů, takže se sčítá. Webová podoba zůstává
- * v HTML i na počítači (jen skrytá), aby stránku našly vyhledávače.
+ * Na počítači (od 1024 px a s myší) se kurz otevře ve virtuálním DB Browseru
+ * přes celou obrazovku, jako simulátory Windows a macOS. Na telefonu
+ * a tabletu kurz neběží vůbec (Karel 29. 9. 2026) – stránka ukáže popis
+ * a místo kurzu vysvětlení (`JenVeWebu`). Webová podoba (lekce 1–13) zbývá
+ * pro počítač s programem v úzkém okně; obě podoby ukládají postup do
+ * stejných klíčů, takže se sčítá. Text stránky je v HTML vždycky (jen
+ * skrytý), aby ji našly vyhledávače.
  *
  * `?z=en` (odkaz z anglické verze webu): program DB Browser i jeho lekce
  * jsou anglicky (`lib/dbb/jazyk`), odkaz zpět i značka míří na /en. Data
- * zůstávají česká se slovníčkem. Webová podoba pro telefony je jen česky.
+ * zůstávají česká se slovníčkem. Webová podoba je jen česky.
  *
  * Od Next.js 15 přicházejí parametry adresy jako Promise – proto `await`.
  */

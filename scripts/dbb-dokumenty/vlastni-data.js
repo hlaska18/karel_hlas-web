@@ -101,7 +101,7 @@ function zak() {
 
   /* ── 3 ── */
   N("3. Založ databázi a nahraj do ní CSV", 1);
-  P("Otevři karelhlas.vercel.app/sql na počítači (na telefonu se program neotevře, jen webová podoba kurzu).");
+  P("Otevři karelhlas.vercel.app/sql na počítači s myší – na telefonu ani na tabletu kurz neběží.");
   K([
     "Soubor → Nová databáze… (nebo tlačítko Nová databáze na liště). Napiš název, třeba `filmy`, a klikni na Vytvořit.",
     "Otevře se okno Upravit definici tabulky. Zavři ho tlačítkem Zrušit – tabulku nebudeš skládat ručně, přijde z CSV.",

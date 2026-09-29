@@ -88,7 +88,7 @@ import { usePodoba } from "@/components/dbb/PodleSirky";
 
 /* ───────────────────────── úložiště postupu v kurzu ─────────────────────────
  * Stejné klíče jako kurz na webu (`SqlPlayground`), aby se postup sčítal:
- * na telefonu běží pořád webový kurz, na počítači DB Browser. */
+ * v úzkém okně běží webová podoba kurzu, jinak DB Browser. */
 const KLIC_HOTOVO = "sql-kurz-hotovo";
 const KLIC_NAVIC = "sql-kurz-navic";
 const KLIC_OPSANO = "sql-kurz-opsano";

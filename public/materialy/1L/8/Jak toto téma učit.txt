@@ -18,10 +18,10 @@ učitele – DB Browser. Řešení a postup každé úlohy z lekcí
 -----------------------------------------------------------
 KURZ SQL: LEKCE 1–13                        (45 min, počítače)
 -----------------------------------------------------------
-Interaktivní kurz na karelhlas.vercel.app/sql. Na počítači
-se otevře jako napodobenina programu DB Browser for SQLite
-(celý kurz má 22 lekcí), na telefonu a tabletu jako webová
-stránka (lekce 1–13). Postup se v obou sčítá.
+Interaktivní kurz na karelhlas.vercel.app/sql. Otevře se
+jako napodobenina programu DB Browser for SQLite (celý kurz
+má 22 lekcí). Běží jen na počítači s myší – na telefonu ani
+na tabletu se nespouští.
 
 Lekce 1–13 vedou od prvního SELECTu po mazání dat. Žák píše
 dotazy, spustí je klávesou F5 a úkol se odškrtne sám, jakmile
@@ -184,8 +184,7 @@ další hodiny se program na počítači, kde seděl někdo jiný,
 sám zeptá, jestli je rozdělaná práce jeho.
 
 Když se kurz ve škole nenačte (síť, filtr): plán B je
-pracovní list na papíře, nebo kurz v telefonu přes mobilní
-data – lekce 1–13 jdou i tam.
+pracovní list na papíře.
 
 Když na projektoru potřebuješ větší písmo, zapni
 Nápověda → Režim předvádění: má vlastní postup, takže ti
@@ -213,8 +212,8 @@ DB Browser to dělá stejně; kurz to žákovi vysvětlí.
 
 „Smazal jsem si to.“ – dokud změnu nezapsal, stačí
 Soubor → Vrátit změny. Když už je zapsaná, Nápověda →
-Obnovit původní knihovna.db. Na telefonu (webová podoba)
-je tlačítko Obnovit databázi.
+Obnovit původní knihovna.db. Ve webové podobě (kurz
+v úzkém okně na počítači) je tlačítko Obnovit databázi.
 
 „U počítače před námi seděl někdo jiný.“ – Nápověda →
 Nový žák smaže postup i soubory. Kurz se navíc sám zeptá,

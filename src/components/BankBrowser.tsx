@@ -1521,7 +1521,7 @@ function FolderCard({
       >
         {/* Sbalený obsah je `inert`: jinak by do schovaných odkazů dál
             skákal Tab a četla je čtečka (Codex 27. 9. 2026). */}
-        <div id={panelId} inert={!open} className="overflow-hidden">
+        <div id={panelId} inert={!open} className="sbalitelny overflow-hidden">
           {/* Věta o složce stojí NAD soubory, ne v hlavičce karty: v hlavičce
               se text ořezává na jeden řádek a tohle jsou dvě tři věty o tom,
               jak spolu úlohy souvisí. Zavřenou kartu to navíc nenafoukne. */}
@@ -1730,7 +1730,7 @@ function LessonCard({
       >
         {/* Sbalený obsah je `inert`: jinak by do schovaných odkazů dál
             skákal Tab a četla je čtečka (Codex 27. 9. 2026). */}
-        <div id={panelId} inert={!open} className="overflow-hidden">
+        <div id={panelId} inert={!open} className="sbalitelny overflow-hidden">
           <ul className="space-y-2 px-3 pb-3">
             {items.map((it) => (
               <MaterialRow
