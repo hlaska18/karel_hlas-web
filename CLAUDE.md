@@ -179,6 +179,12 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   že `_nastroj.json` míří jen dovnitř webu). Linuxhrou.cz je v 1L/11.
 - Vercel: úložiště nasazení (10 GB zdarma) plnily kopie webu (~100 MB)
   z každého pushe; retence nastavená na 1 den. Pushovat radši jednou denně.
+- Bezpečnost (Codex + rada 29. 9.): SRI u všech knihoven z CDN, export do
+  Excelu přes `bezVzorce()` (src/lib/dbb/csv.ts, i ve sdíleném přehledu
+  Windows/macOS), limity CSV importu, Ctrl+R v DB Browseru nespouští SQL.
+  Nedělat: povinné PR, CSP, SQL ve Workeru. Historie Gitu bez tajemství.
+- Otevřené: /windows a /macos pustí plné prostředí i na tabletu ≥1024 px
+  bez myši (SQL už hlídá `pointer: fine`) – u Windows čeká na Karlův souhlas.
 
 ## Otevřené / nápady (nic naléhavého)
 
