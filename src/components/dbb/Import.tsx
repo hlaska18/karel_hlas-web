@@ -18,6 +18,7 @@ import {
   pripravTabulku,
   nazevProSql,
   MAX_RADKU_CSV,
+  MAX_SLOUPCU_CSV,
   radkuCesky,
   type Oddelovac,
 } from "@/lib/dbb/csv";
@@ -32,9 +33,18 @@ export function ImportCsv({ soubor, bajty, zavrit }: { soubor: string; bajty: Ui
   const [nazev, nastavNazev] = useState(() => nazevProSql(soubor.replace(/\.[^.]*$/, ""), "tabulka"));
   const [chyba, nastavChybu] = useState<string | null>(null);
 
-  const radky = useMemo(() => parsujCsv(text, oddelovac), [text, oddelovac]);
+  // Parsuje se nejvýš o řádek a sloupec víc, než se vejde – stačí to na hlášku
+  // „moc“ a obří soubor tak nezamrazí kartu.
+  const radky = useMemo(() => parsujCsv(text, oddelovac, MAX_RADKU_CSV + 1, MAX_SLOUPCU_CSV), [text, oddelovac]);
   const tabulka = useMemo(() => pripravTabulku(radky, hlavicka), [radky, hlavicka]);
-  const moc = tabulka.data.length > MAX_RADKU_CSV;
+  const mocSloupcu = tabulka.sloupce.length > MAX_SLOUPCU_CSV;
+  const moc = tabulka.data.length > MAX_RADKU_CSV || mocSloupcu;
+  // Tlačítko Importovat je při „moc“ šedé, tak se důvod ukazuje rovnou.
+  const varovani = mocSloupcu
+    ? t(`Sloupců je moc – tabulka jich smí mít nejvýš ${MAX_SLOUPCU_CSV}.`, `Too many columns – the table can have at most ${MAX_SLOUPCU_CSV}.`)
+    : moc
+      ? t(`Řádků je moc – do prohlížeče se vejde nejvýš ${MAX_RADKU_CSV}.`, `Too many rows – the browser can hold at most ${MAX_RADKU_CSV}.`)
+      : null;
 
   const importovat = () => {
     const n = nazevProSql(nazev, "");
@@ -42,11 +52,7 @@ export function ImportCsv({ soubor, bajty, zavrit }: { soubor: string; bajty: Ui
     if (!tabulka.sloupce.length || !tabulka.data.length) {
       return nastavChybu(t("V souboru nejsou žádná data.", "The file contains no data."));
     }
-    if (moc) {
-      return nastavChybu(
-        t(`Řádků je moc – do prohlížeče se vejde nejvýš ${MAX_RADKU_CSV}.`, `Too many rows – the browser can hold at most ${MAX_RADKU_CSV}.`),
-      );
-    }
+    if (varovani) return nastavChybu(varovani);
     const c = api.importujTabulku(n, tabulka);
     if (c) nastavChybu(c);
     else zavrit();
@@ -118,7 +124,7 @@ export function ImportCsv({ soubor, bajty, zavrit }: { soubor: string; bajty: Ui
             </tbody>
           </table>
         </div>
-        {chyba && <p className="mt-2 text-[#a4262c]">{chyba}</p>}
+        {(chyba || varovani) && <p className="mt-2 text-[#a4262c]">{chyba || varovani}</p>}
       </div>
       <Paticka>
         <Tlacitko primarni prvni akce={importovat} zakazano={moc || !tabulka.data.length}>

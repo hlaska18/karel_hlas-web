@@ -1813,7 +1813,7 @@ export const t: Record<Lang, Dict> = {
           nadpis: "Cookies a co zůstane v prohlížeči",
           odstavce: [
             "Web nenastavuje žádnou cookie. Ani vlastní, ani cizí – proto tu nenajdeš lištu, kterou by bylo potřeba odklikávat. Změřeno na všech stránkách včetně virtuálního Windows a SQL hřiště.",
-            "Do prohlížeče se ukládají dvě věci, a obě až ve chvíli, kdy si o ně sám řekneš: zvolený světlý nebo tmavý režim a stav simulátorů (Windows, macOS, kurz SQL), tedy tvoje rozdělaná práce i jméno, pod kterým ses přihlásil(a). Nic z toho se neodesílá na server a nikdo jiný se k tomu nedostane.",
+            "Do prohlížeče se ukládají dvě věci, a obě až ve chvíli, kdy si o ně sám řekneš: zvolený světlý nebo tmavý režim a stav simulátorů (Windows, macOS, kurz SQL), tedy tvoje rozdělaná práce i jméno, pod kterým ses přihlásil(a). Nic z toho se neodesílá na server. Kdo ale po tobě usedne ke stejnému počítači a prohlížeči, uvidí to taky – i tabulky, které sis nahrál(a) do kurzu SQL. Na sdíleném počítači proto nenahrávej skutečné známky ani jména a po práci v kurzu SQL použij Nápověda → Nový žák, nebo smaž data webu v prohlížeči.",
             "Souhlas se na tohle nevyžaduje, protože bez toho uložení by ta funkce nefungovala – motiv by se zapomněl při každém načtení a práce v prostředí by zmizela. Smažeš to v nastavení prohlížeče (historie → data webů).",
           ],
         },
@@ -2386,7 +2386,7 @@ export const t: Record<Lang, Dict> = {
           nadpis: "Cookies and what stays in your browser",
           odstavce: [
             "This site sets no cookies at all – neither its own nor anyone else's. That is why there is no consent bar to click away. Measured across every page, including the virtual Windows and the SQL playground.",
-            "Two things are stored in your browser, and both only once you ask for them: the light or dark theme you picked, and the state of the simulators (Windows, macOS, the SQL course) – your unfinished work, including the name you signed in with. None of it is sent to a server, and nobody else can reach it.",
+            "Two things are stored in your browser, and both only once you ask for them: the light or dark theme you picked, and the state of the simulators (Windows, macOS, the SQL course) – your unfinished work, including the name you signed in with. None of it is sent to a server. But whoever sits down at the same computer and browser after you will see it too – including tables you uploaded to the SQL course. On a shared computer, don't upload real grades or names, and when you finish in the SQL course use Help → New Pupil, or clear the site's data in the browser.",
             "No consent is required for this, because without that storage the feature would not work – the theme would be forgotten on every load and your work in the environment would vanish. You can clear it in your browser settings (history → site data).",
           ],
         },

@@ -28,6 +28,7 @@ import { pisemka, LEKCE_PISEMKY, type Varianta } from "@/lib/dbb/pisemka";
 import { NAZEV_SIMULATORU, najdiKodySimulatoru, sloucitSimulatory } from "@/lib/postupSimulatoru";
 import { POVINNE_KLICE, KLIC_NAZVY_ULOH } from "@/lib/dbb/obnovaPostupu";
 import { stahni } from "@/lib/dbb/stahni";
+import { bezVzorce } from "@/lib/dbb/csv";
 import { cist, zapsat } from "@/lib/dbb/uloziste";
 import { t, jeAnglicky } from "@/lib/dbb/jazyk";
 
@@ -379,7 +380,7 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
     });
     const obsah = [hlava]
       .concat(radky, radkyPisemek)
-      .map((r) => r.map((b) => `"${b.replace(/"/g, '""')}"`).join(";"))
+      .map((r) => r.map((b) => `"${bezVzorce(b).replace(/"/g, '""')}"`).join(";"))
       .join("\r\n");
     // BOM, ať Excel pozná češtinu.
     stahni(t("prehled-tridy-sql.csv", "class-overview-sql.csv"), new Uint8Array(new TextEncoder().encode("\uFEFF" + obsah)), "text/csv");

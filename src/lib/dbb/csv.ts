@@ -44,13 +44,32 @@ export function odhadniOddelovac(text: string): Oddelovac {
   return pocty[","] > pocty[";"] ? "," : ";";
 }
 
-/** Rozdělí CSV na řádky a buňky (uvozovky, zdvojené uvozovky, zalomení v buňce). */
-export function parsujCsv(text: string, oddelovac: Oddelovac): string[][] {
+/**
+ * Rozdělí CSV na řádky a buňky (uvozovky, zdvojené uvozovky, zalomení v buňce).
+ *
+ * `maxRadku` a `maxSloupcu` hlídají zlomyslný nebo omylem obří soubor: parsování
+ * skončí, jakmile je neprázdných řádků víc než `maxRadku`, a buňky za
+ * `maxSloupcu` + 1 se zahodí. Jedna navíc stačí, aby import poznal „moc“ a řekl
+ * to – dřív se celá tabulka připravila, než se limit vůbec zkontroloval, a
+ * soubor s desetitisíci sloupců zamrazil kartu (Codex 29. 9. 2026).
+ */
+export function parsujCsv(
+  text: string,
+  oddelovac: Oddelovac,
+  maxRadku = Infinity,
+  maxSloupcu = Infinity,
+): string[][] {
   const radky: string[][] = [];
   let radek: string[] = [];
   let bunka = "";
   let vUvozovkach = false;
-  for (let i = 0; i < text.length; i++) {
+  const pridejBunku = () => {
+    if (radek.length <= maxSloupcu) radek.push(bunka);
+  };
+  const pridejRadek = () => {
+    if (radek.some((b) => b.trim() !== "")) radky.push(radek);
+  };
+  for (let i = 0; i < text.length && radky.length <= maxRadku; i++) {
     const c = text[i];
     if (vUvozovkach) {
       if (c === '"') {
@@ -62,24 +81,24 @@ export function parsujCsv(text: string, oddelovac: Oddelovac): string[][] {
     } else if (c === '"') {
       vUvozovkach = true;
     } else if (c === oddelovac) {
-      radek.push(bunka);
+      pridejBunku();
       bunka = "";
     } else if (c === "\n" || c === "\r") {
       if (c === "\r" && text[i + 1] === "\n") i++;
-      radek.push(bunka);
-      radky.push(radek);
+      pridejBunku();
+      pridejRadek();
       radek = [];
       bunka = "";
     } else {
       bunka += c;
     }
   }
-  if (bunka !== "" || radek.length) {
-    radek.push(bunka);
-    radky.push(radek);
+  if ((bunka !== "" || radek.length) && radky.length <= maxRadku) {
+    pridejBunku();
+    pridejRadek();
   }
-  // Prázdné řádky (i ty z ;;;; na konci Excelu) pryč.
-  return radky.filter((r) => r.some((b) => b.trim() !== ""));
+  // Prázdné řádky (i ty z ;;;; na konci Excelu) se nepočítají ani nevracejí.
+  return radky;
 }
 
 const bezDiakritiky = (s: string) => s.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -158,6 +177,9 @@ export function radkuCesky(n: number): string {
 /** Nejvíc řádků z jednoho CSV – víc se do prohlížeče stejně nevejde. */
 export const MAX_RADKU_CSV = 5000;
 
+/** Nejvíc sloupců z jednoho CSV – školní tabulka jich má pár, víc je chyba. */
+export const MAX_SLOUPCU_CSV = 100;
+
 /* ─────────────────────────────── export ─────────────────────────────── */
 
 export type NastaveniExportu = {
@@ -171,12 +193,30 @@ export type NastaveniExportu = {
 /** Výchozí nastavení pro český Excel: středník, desetinná čárka, hlavička. */
 export const EXPORT_PRO_EXCEL: NastaveniExportu = { oddelovac: ";", desetinnaCarka: true, hlavicka: true };
 
+const JAKO_CISLO = /^[-+]?\d+([.,]\d+)?$/;
+
+/**
+ * Text, který by Excel po otevření CSV vzal jako vzorec (začíná = + - @,
+ * tabulátorem nebo CR), dostane na začátek apostrof – Excel ho pak ukáže jako
+ * obyčejný text. Jinak by si žák mohl dát do jména třeba =HYPERLINK(…) a vzorec
+ * by se spustil učiteli v přehledu třídy (Codex 29. 9. 2026, OWASP „CSV
+ * injection“). Čísla (-5, +420) nechává být, ať zůstanou čísly.
+ */
+export function bezVzorce(s: string): string {
+  if (!/^[=+\-@\t\r]/.test(s) || JAKO_CISLO.test(s)) return s;
+  return `'${s}`;
+}
+
 /** Tabulka nebo výsledek dotazu jako text CSV (řádky končí CRLF jako z Excelu). */
 export function doCsv(sloupce: string[], radky: unknown[][], n: NastaveniExportu): string {
   const bunka = (h: unknown): string => {
     if (h === null || h === undefined || h instanceof Uint8Array) return "";
     const s =
-      typeof h === "number" && n.desetinnaCarka && !Number.isInteger(h) ? String(h).replace(".", ",") : String(h);
+      typeof h === "number"
+        ? n.desetinnaCarka && !Number.isInteger(h)
+          ? String(h).replace(".", ",")
+          : String(h)
+        : bezVzorce(String(h));
     const uvozovky = /["\r\n]/.test(s) || s.indexOf(n.oddelovac) !== -1 || /^\s|\s$/.test(s);
     return uvozovky ? `"${s.replace(/"/g, '""')}"` : s;
   };

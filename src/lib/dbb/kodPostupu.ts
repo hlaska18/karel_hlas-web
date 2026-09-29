@@ -175,23 +175,28 @@ function sjednot<T>(a: T[], b: T[]): T[] {
  * a procvičování platí nejlepší výsledek.
  */
 export function sloucitPostupy(postupy: Postup[]): Postup[] {
-  const podleJmena: Record<string, Postup[]> = {};
+  // Map, ne obyčejný objekt: jméno „__proto__“ nebo „constructor“ v kódu od
+  // žáka by jinak sáhlo na zděděnou vlastnost a shodilo celý přehled třídy
+  // (Codex 29. 9. 2026). Ze stejného důvodu jsou níž objekty bez prototypu.
+  const podleJmena = new Map<string, Postup[]>();
   postupy.forEach((p) => {
     // Písemka se se zbytkem kurzu nesčítá – má svůj řádek.
     const k = normalizujJmeno(p.jmeno) + (p.pisemka ? `|${p.pisemka}` : "");
-    (podleJmena[k] = podleJmena[k] || []).push(p);
+    const skupina = podleJmena.get(k);
+    if (skupina) skupina.push(p);
+    else podleJmena.set(k, [p]);
   });
-  return Object.keys(podleJmena)
-    .map((k) => {
-      const kody = podleJmena[k].slice().sort((a, b) => (a.datum < b.datum ? -1 : a.datum > b.datum ? 1 : 0));
+  return Array.from(podleJmena.values())
+    .map((skupina) => {
+      const kody = skupina.slice().sort((a, b) => (a.datum < b.datum ? -1 : a.datum > b.datum ? 1 : 0));
       const posledni = kody[kody.length - 1];
       let hotove: number[] = [];
       let sede: number[] = [];
       const zelene: number[] = [];
-      const sady: Record<string, SkoreSady> = {};
+      const sady: Record<string, SkoreSady> = Object.create(null);
       let ulohy: string[] = [];
       let klice: string[] = [];
-      const nazvyUloh: Record<string, string> = {};
+      const nazvyUloh: Record<string, string> = Object.create(null);
       let navic = 0;
       kody.forEach((p) => {
         hotove = sjednot(hotove, p.hotove);
