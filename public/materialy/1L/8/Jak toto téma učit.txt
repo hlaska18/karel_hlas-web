@@ -20,7 +20,7 @@ KURZ SQL: LEKCE 1–13                        (45 min, počítače)
 -----------------------------------------------------------
 Interaktivní kurz na karelhlas.vercel.app/sql. Na počítači
 se otevře jako napodobenina programu DB Browser for SQLite
-(celý kurz má 19 lekcí), na telefonu a tabletu jako webová
+(celý kurz má 22 lekcí), na telefonu a tabletu jako webová
 stránka (lekce 1–13). Postup se v obou sčítá.
 
 Lekce 1–13 vedou od prvního SELECTu po mazání dat. Žák píše

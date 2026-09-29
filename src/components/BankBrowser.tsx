@@ -147,13 +147,13 @@ const TOOL_POZNAMKA: Record<string, Record<Lang, string>> = {
     cs:
       "Virtuální počítače jsou tu nové a pořád se dolaďují – když něco nefunguje, jak má, dej vědět. " +
       "Windows jsou na práci se soubory od základu, macOS navazuje a ukazuje jen to, čím se od nich liší. " +
-      "Vlastní pracovní listy k nim zatím nejsou; nejblíž má pracovní list \u201eOperační systém\u201c " +
-      "v Digitální gramotnosti, který na simulaci odkazuje, ale metodika s ní ještě nepočítá.",
+      "Vlastní pracovní listy k nim nejsou. V Digitální gramotnosti na ně odkazují hodiny 1 (Operační systém) " +
+      "a 6 (Příkazový řádek): Windows jako náhrada, když není po ruce školní počítač, Mac jako bonus pro rychlíky.",
     en:
       "The virtual computers are new here and still being polished – tell me if something misbehaves. " +
       "Windows covers working with files from the ground up; macOS follows on and shows only what differs. " +
-      "They have no worksheets of their own yet; the closest is the \u201eOperating system\u201c worksheet under " +
-      "Digital literacy, which points at the simulation, though the methodology does not build on it yet.",
+      "They have no worksheets of their own. Under Digital literacy, lessons 1 (Operating system) and 6 " +
+      "(Command line) point to them: Windows as a stand-in when no school computer is at hand, the Mac as a bonus for fast finishers.",
   },
 };
 

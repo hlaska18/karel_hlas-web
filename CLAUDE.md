@@ -165,15 +165,29 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Logo v hlavičce zabalí všechny rozbalené složky, lekce a dlaždice
   (src/lib/zabalit.ts, událost web:zabalit-vse).
 
+### Šíření a audit webu (28.–29. 9. 2026)
+- Karel 29. 9. poprvé sdílel web ve FB skupinách „Učitelský kabinet: Učit
+  jinak“ a „Učíme informatiku“. Rada 29. 9.: do listopadu nic nestavět,
+  jen opravovat chyby od skutečných uživatelů, pushovat večer mimo výuku;
+  vyhodnocení začátkem listopadu (kritérium 5 cizích učitelů).
+- Audit podle 42 bodů SEO/výkon s Codexem: náhledy pro sdílení podstránek
+  skládá `sdileni()` v src/lib/sdileni.ts (Open Graph i X), canonical
+  /soukromi, public/llms.txt, sitemap bez lastModified, odebrán Upstash.
+  Karel nechce: vlastní doménu (zatím), stránkování hledání, změnu psacího
+  stroje, AI asistenta ani nové hledání.
+- Cizí weby do banky jen přes `_zdroj.json` ve vlastní složce (test hlídá,
+  že `_nastroj.json` míří jen dovnitř webu). Linuxhrou.cz je v 1L/11.
+- Vercel: úložiště nasazení (10 GB zdarma) plnily kopie webu (~100 MB)
+  z každého pushe; retence nastavená na 1 den. Pushovat radši jednou denně.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
   z Wordu 25. 9.); formátování sedí.
-- Úlohy simulátoru macOS by měl jednou projít někdo se skutečným Macem.
 - Hláška „Zkopíruj ho do Teams“ ve VysledkySimulatoru.tsx je sdílená
   s Windows – neměnit bez Karlova pokynu.
-- Dřívější rada zvažovala další velký projekt: A) simulátor sítí,
-  B) interaktivní Python (Pyodide), C) jiné. Nerozhodnuto.
+- Další velký projekt (simulátor sítí, Python/Pyodide, cvičná pošta) rada
+  23. 9. zamítla; znovu se otevře, až se ozve 5 cizích učitelů.
 - Lokální kopie: ~/CascadeProjects/karel_hlas-web (git stash obsahuje staré
   rozdělané změny z doby commitu d074ba4 – nejspíš nepotřebné).
 - Karlův Mac: Node 22.23.3 (nainstalováno 25. 9. 2026).

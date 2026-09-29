@@ -125,9 +125,10 @@ export default async function SqlPage({
             </p>
             <p>
               <Proza>
-                <b>Když nestihnou.</b> Nic se neztratí, postup i rozepsané dotazy se ukládají
-                v prohlížeči a žák pokračuje doma tam, kde skončil. Na počítači, kde se maže profil,
-                projde hotové lekce znovu za pár minut.
+                <b>Když nestihnou.</b> Nic se neztratí: postup i rozepsané dotazy zůstávají
+                v prohlížeči, takže na stejném počítači žák pokračuje tam, kde skončil. Na jiném
+                počítači, třeba doma, vloží kód postupu (Moje výsledky → Pokračovat z kódu) a hotové
+                lekce se mu odškrtnou; rozepsané lekce a dotazy se nepřenesou.
               </Proza>
             </p>
             <p>
