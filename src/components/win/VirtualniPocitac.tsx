@@ -95,14 +95,22 @@ function Obrazovka() {
     };
   }, [faze, nastavPlochu, poslat]);
 
-  /* Systémové klávesové zkratky. */
+  /* Systémové klávesové zkratky.
+   *
+   * Skutečné Ctrl+Shift+Esc (Správce úloh) a Ctrl+Esc (Start) si na Windows
+   * vezme operační systém dřív, než dorazí do prohlížeče – otevřel by se
+   * správce nebo Start žákova VLASTNÍHO počítače. Simulace proto má vlastní
+   * zkratky, které prohlížeč propustí na Windows, Linuxu i Macu: Shift+F8
+   * a Shift+F4 (Codex 29. 9. 2026; na Macu s klávesou Fn). Skutečné zkratky
+   * zůstávají – na Macu a Linuxu do prohlížeče dojdou – a u tlačítek je
+   * v závorce napsané, jak to jde ve skutečných Windows (Karel 29. 9.). */
   useEffect(() => {
     if (faze !== "bezi") return;
     const naKlavesu = (e: KeyboardEvent) => {
-      if (e.ctrlKey && e.shiftKey && e.key === "Escape") {
+      if ((e.ctrlKey && e.shiftKey && e.key === "Escape") || (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key === "F8")) {
         e.preventDefault();
         poslat({ typ: "okno/otevri", app: "spravce-uloh" });
-      } else if (e.ctrlKey && e.key === "Escape") {
+      } else if ((e.ctrlKey && e.key === "Escape") || (e.shiftKey && !e.ctrlKey && !e.altKey && !e.metaKey && e.key === "F4")) {
         e.preventDefault();
         nastavPanel((p) => (p === "start" ? null : "start"));
       } else if (e.key === "Escape") {

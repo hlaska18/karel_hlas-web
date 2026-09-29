@@ -11,6 +11,7 @@
  */
 
 import { pisemka } from "@/lib/dbb/pisemka";
+import { ulozDoProhlizece } from "@/lib/ulozeni";
 
 const PREDVADENI = "dbb-predvadeni";
 const PREDPONA = "predvadeni:";
@@ -53,12 +54,8 @@ export function cist(k: string): string | null {
 }
 
 export function zapsat(k: string, hodnota: string): boolean {
-  try {
-    localStorage.setItem(klic(k), hodnota);
-    return true;
-  } catch {
-    return false;
-  }
+  // Selhání ohlásí i pruh `UpozorneniUlozeni` nahoře (plné nebo zakázané úložiště).
+  return ulozDoProhlizece(klic(k), hodnota);
 }
 
 export function smazat(k: string): void {

@@ -71,6 +71,9 @@ export function HlavniPanel({
     {
       id: "spravce",
       nazev: "Správce úloh",
+      // V simulaci Shift+F8; skutečná zkratka Windows je v závorce u úlohy
+      // a v bublině tlačítka Start – do nabídky se nevejde.
+      zkratka: "Shift+F8",
       akce: () => spust("spravce-uloh"),
     },
     { id: "cara", cara: true },
@@ -126,6 +129,7 @@ export function HlavniPanel({
         <div className="flex items-center gap-1">
           <TlacitkoPanelu
             popis="Start"
+            tip="Start – Shift+F4 (ve skutečných Windows klávesa Windows nebo Ctrl+Esc)"
             aktivni={otevreny === "start"}
             onClick={() => nastavOtevreny(otevreny === "start" ? null : "start")}
           >
@@ -246,11 +250,14 @@ export function HlavniPanel({
 function TlacitkoPanelu({
   children,
   popis,
+  tip,
   aktivni,
   onClick,
 }: {
   children: React.ReactNode;
   popis: string;
+  /** Delší bublina (např. se zkratkou); jinak stačí `popis`. */
+  tip?: string;
   aktivni?: boolean;
   onClick: () => void;
 }) {
@@ -258,7 +265,7 @@ function TlacitkoPanelu({
     <button
       type="button"
       aria-label={popis}
-      title={popis}
+      title={tip ?? popis}
       onClick={onClick}
       className={`flex h-10 w-10 items-center justify-center rounded transition-colors ${
         aktivni ? "bg-win-zvyrazneny" : "hover:bg-win-zvyrazneny"

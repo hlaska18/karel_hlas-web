@@ -16,6 +16,7 @@
 
 import type { Slozka } from "@/lib/win/fs";
 import { vytvorDiskMac } from "./seed";
+import { ulozDoProhlizece } from "@/lib/ulozeni";
 
 export const KLIC_ULOZISTE = "macos-vyuka-stav";
 export const VERZE_ULOZISTE = 1;
@@ -299,9 +300,10 @@ export function ulozMac(stav: StavMac): void {
       uvitano: stav.uvitano,
       pozicePlochy: stav.pozicePlochy,
     };
-    window.localStorage.setItem(KLIC_ULOZISTE, JSON.stringify(ulozeny));
+    // Selhání (plné nebo zakázané úložiště) ohlásí pruh `UpozorneniUlozeni`.
+    ulozDoProhlizece(KLIC_ULOZISTE, JSON.stringify(ulozeny));
   } catch {
-    // Zakázané úložiště nevadí – prostředí běží dál, jen se nic nezachová.
+    /* JSON.stringify nepadá; pro jistotu nic */
   }
 }
 

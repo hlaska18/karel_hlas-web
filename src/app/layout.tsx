@@ -4,6 +4,7 @@ import "./globals.css";
 import { Providers } from "@/components/Providers";
 import { SkipLink } from "@/components/SkipLink";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import { UpozorneniUlozeni } from "@/components/UpozorneniUlozeni";
 import { SITE, SOCIALS } from "@/lib/content";
 
 /* Nadpisy jedou na systémovém písmu (řada je v tailwind.config.ts). Na Macu
@@ -137,6 +138,7 @@ export default function RootLayout({
         />
         <Analytics />
         <SmoothScroll />
+        <UpozorneniUlozeni />
       </body>
     </html>
   );

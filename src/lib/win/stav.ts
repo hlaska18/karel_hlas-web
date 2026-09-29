@@ -19,6 +19,7 @@
 import type { Slozka, Uzel } from "./fs";
 import { diskProScenar, scenarPodleId, VYCHOZI_SCENAR } from "./scenare";
 import type { AppId } from "./typy";
+import { ulozDoProhlizece } from "@/lib/ulozeni";
 
 /**
  * Klíč místního úložiště.
@@ -281,12 +282,9 @@ export function uloz(stav: Stav): void {
     splneno: stav.splneno,
     reklamaBezi: stav.reklamaBezi,
   };
-  try {
-    window.localStorage.setItem(KLIC_ULOZISTE, JSON.stringify(ulozeny));
-  } catch {
-    // Plné nebo zakázané úložiště (anonymní okno) – prostředí běží dál,
-    // jen se po zavření karty nic nezachová.
-  }
+  // Plné nebo zakázané úložiště (anonymní okno): prostředí běží dál, jen se
+  // po zavření karty nic nezachová – `ulozDoProhlizece` na to upozorní pruhem.
+  ulozDoProhlizece(KLIC_ULOZISTE, JSON.stringify(ulozeny));
 }
 
 export function zapomen(): void {

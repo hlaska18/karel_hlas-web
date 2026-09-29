@@ -19,6 +19,7 @@ import {
 import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky, sameResult, sqlErrorCs } from "@/lib/sqlExercise";
 import { createDb, forkDb, type SqlDb, type SqlResult } from "@/lib/sqljs";
 import { sazba } from "@/lib/sazba";
+import { ulozDoProhlizece } from "@/lib/ulozeni";
 
 /** Příkaz, který data mění – nic nevrací a živou databázi po sobě přepíše. */
 const isMutation = (q: string) => /^\s*(insert|update|delete)\b/i.test(q);
@@ -46,11 +47,7 @@ function loadSet(key: string): Set<number> {
 }
 
 function saveSet(key: string, value: Set<number>) {
-  try {
-    localStorage.setItem(key, JSON.stringify([...value]));
-  } catch {
-    /* ignore */
-  }
+  ulozDoProhlizece(key, JSON.stringify([...value]));
 }
 
 function loadDrafts(): Record<string, string> {
@@ -133,11 +130,7 @@ export function SqlPlayground() {
   function setSql(value: string) {
     setDrafts((prev) => {
       const next = { ...prev, [draftKey]: value };
-      try {
-        localStorage.setItem(DRAFT_KEY, JSON.stringify(next));
-      } catch {
-        /* ignore */
-      }
+      ulozDoProhlizece(DRAFT_KEY, JSON.stringify(next));
       return next;
     });
   }

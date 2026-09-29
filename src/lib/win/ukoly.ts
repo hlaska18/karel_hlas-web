@@ -455,7 +455,7 @@ export const UKOLY: Ukol[] = [
       "Klikni pravým tlačítkem na hlavní panel dole a vyber Správce úloh.",
       "Prohlédni si seznam běžících programů.",
       "Najdi sloupec Procesor a přečti, kolik procent se zrovna používá.",
-      "Ve skutečných Windows ho otevře i zkratka Ctrl+Shift+Esc – tady ji ale nezkoušej. Tuhle zkratku si zabere skutečný systém dřív, než se klávesa dostane do prohlížeče, takže by ti vyskočil správce tvého VLASTNÍHO počítače.",
+      "Tady ho otevře i zkratka Shift+F8 (ve skutečných Windows Ctrl+Shift+Esc). Skutečnou zkratku tu nezkoušej – zabere si ji tvůj opravdový systém dřív, než se klávesa dostane do prohlížeče, takže by ti vyskočil správce tvého VLASTNÍHO počítače.",
       "Tady se dá ukončit program, který přestal reagovat – a taky tady poznáš, co běží na pozadí, aniž bys to spustil.",
     ],
     hotovo: (s) => s.stopy.includes("spustil:spravce-uloh"),
