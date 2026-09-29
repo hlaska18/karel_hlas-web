@@ -192,6 +192,63 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - **Všechno musí fungovat i na Linuxu** (Karel): cíl Firefox 111 nemá
   `inert`, proto `.sbalitelny[inert] { visibility: hidden }` v globals.css.
 
+## Ikony dlaždic (témata v bance a předměty)
+
+Dvě sady „skleněných“ 3D ikon ve stejném stylu: matné smaragdové sklo,
+jeden zelený tón, světlo zleva shora, bílý odlesk, **průhledné pozadí,
+žádný rám ani vržený stín**. Ikona „plave“ přímo na dlaždici a jedna verze
+slouží pro světlý i tmavý režim.
+
+| Sada | Soubory | Velikost | Kde se kreslí |
+|---|---|---|---|
+| Témata banky | public/images/tools/glass/*.png | 512 × 512 RGBA | dlaždice v bance (BankBrowser.tsx), ukázky v úvodu |
+| Předměty | public/images/subjects/*.png | 384 × 384 RGBA | karty „Pro ostatní předměty“ (CrossSubject.tsx, rámeček 56 px) |
+
+**Jak ikony vznikly**
+- Témata: generované v Higgsfieldu (styl „frosted-emerald“), pozadí se
+  ořezalo na průhledné. Přesné zadání generátoru v repozitáři zapsané
+  není – novou ikonu porovnej se stávajícími a drž styl.
+- Předměty: sedm ikon generováním obrázku a lokálním ořezem pozadí (commit
+  e7fa606). Hudební výchova se kreslila skriptem
+  scripts/vyrob-ikonu-hudebni-vychovy.py, protože generátor nebyl po ruce:
+  tvar z masky, výška ze vzdálenosti od okraje (distance_transform_edt),
+  Lambertovo nasvícení + odlesk, kreslení v 8× a zmenšení. Paleta
+  odečtená ze sady: tělo #5cba86, stín #1e5c3c, světlo #f2fff7.
+
+**Požadavky na novou ikonu (aby zapadla do sady)**
+- PNG s průhledným pozadím, čtverec (témata 512, předměty 384).
+- Objekt zabírá ~80 % rámu (sada má 74–86 %), vycentrovaný.
+- Bez vrženého stínu – na dlaždici svítil jako šmouha vpravo dole.
+- Tvar pokud možno **vypouklý** (na tom stojí odstraňovač stínu i masky).
+
+**Dočištění: scripts/odstran-stin-ikony.py**
+- Odstraní vržený stín a srovná objekt do rámu (PODIL_V_RAMU = 0.80).
+- Bez přepínače: rozpětí plně krycích pixelů v každém řádku a sloupci –
+  jen pro vypouklé tvary (kotouče databáze, dokument, notebook).
+- `--obrys`: morfologický obrys pro zakřivené a vícedílné tvary (had
+  Pythonu). Na průsvitných okrajích ukusuje (Wordu ukousl roh) – nepoužívat
+  paušálně.
+- Nefunguje: práh alfy (stín a spáry mají stejné krytí), „největší souvislá
+  část“, zaplavení od okraje.
+- Po každém běhu se na výsledek podívej ve zvětšení; v 112 px dlaždici je
+  stín k nerozeznání od stínování ikony (tak se jeden u Pythonu přehlédl).
+- Spouštět z kořene: `python3 scripts/odstran-stin-ikony.py [--obrys] soubor.png`
+  (potřebuje Pillow, numpy, scipy).
+
+**Masky: scripts/vyrob-masky-ikon.py** – dělá z ikon malé alfa masky pro
+CSS `mask-image`. Teď je nic nepoužívá (silueta byla na 26 px
+nepoznatelná, ukázky se vrátily k barevné ikoně), skript zůstal pro případ
+potřeby. Zapsané v něm: kontrastní křivka na měkkou alfu a díry pro detaily
+nesené barvou (důlky palety).
+
+**Zapojení do webu**
+- Téma: cestu přidej do `TOOL_ICON` v src/lib/bankLabels.ts; vykresluje
+  src/components/ToolGlassIcon.tsx přes next/image s `sizes` (jinak Next
+  na retině stahuje zbytečně velkou verzi). Bez ikony se ukáže lucide.
+- Předmět: soubor `public/images/subjects/<id>.png` a `icon: "<id>"`
+  u předmětu v src/lib/content.ts.
+- Najetí myší: `group-hover:scale-105` (dlaždice se nadzvedne a zezelená).
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
