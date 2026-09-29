@@ -1,0 +1,11 @@
+[
+  {
+    "cs": "Linuxhrou.cz – linuxový terminál hrou",
+    "en": "Linuxhrou.cz – learn the Linux terminal through play",
+    "url": "https://linuxhrou.cz",
+    "note": {
+      "cs": "Web jiného autora, psaný pro děti. Skutečný linuxový terminál v prohlížeči (pískoviště) s 90 úkoly ve třech kampaních, od prvních příkazů po práva k souborům a procesy – úkol se kontroluje podle toho, co se v systému opravdu stalo. K tomu odznaky, žebříček, tahák příkazů, návody (instalace Linuxu, výběr distribuce) a tři hry v Pythonu. Pískoviště chce přihlášení vymyšleným jménem a heslem, hry v Pythonu ne. Hodí se jako pokračování příkazového řádku ve Windows.",
+      "en": "A site by another author, written for children. A real Linux terminal in the browser (a sandbox) with 90 tasks in three campaigns, from first commands to file permissions and processes – each task is checked against what actually happened in the system. Plus badges, a leaderboard, a command cheat sheet, guides (installing Linux, choosing a distribution) and three Python games. The sandbox needs a login with a made-up name and password; the Python games do not. The site is in Czech."
+    }
+  }
+]
