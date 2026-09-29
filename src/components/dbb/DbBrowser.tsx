@@ -1168,7 +1168,7 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   }, [predvadeni, zavriDatabazi]);
 
   // Zavření nebo obnovení stránky s neuloženými změnami: prohlížeč se zeptá.
-  // F5 a Ctrl+R zachytí program, ale ne křížek karty, Ctrl+W ani F5 v adresním řádku.
+  // F5 zachytí program, ale ne křížek karty, Ctrl+W, Ctrl+R ani F5 v adresním řádku.
   useEffect(() => {
     const priOdchodu = (e: BeforeUnloadEvent) => {
       if (!zmenenoRef.current) return undefined;
@@ -1481,9 +1481,12 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
   const zkratky = useRef<(e: KeyboardEvent) => void>(() => undefined);
   zkratky.current = (e: KeyboardEvent) => {
     const ctrl = e.ctrlKey || e.metaKey;
-    const spousteci = e.key === "F5" || (ctrl && (e.key === "r" || e.key === "R")) || (ctrl && e.key === "Enter");
-    // F5 a Ctrl+R by jinak znovu načetly stránku a neuložené změny by
-    // zmizely – blokují se vždycky, i nad dialogem.
+    // Ctrl+R (⌘+R) schválně NE: kdo jím chtěl obnovit stránku, spustil by
+    // znovu třeba UPDATE (Codex 29. 9. 2026). Kurz ho neučí; obnovení s
+    // nezapsanými změnami hlídá dotaz prohlížeče (beforeunload níž).
+    const spousteci = e.key === "F5" || (ctrl && e.key === "Enter");
+    // F5 by jinak znovu načetla stránku a neuložené změny by zmizely –
+    // blokuje se vždycky, i nad dialogem.
     if (spousteci) e.preventDefault();
     if (dialog) return;
     if (spousteci) {
