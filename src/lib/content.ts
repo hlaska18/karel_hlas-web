@@ -1633,6 +1633,19 @@ export const t: Record<Lang, Dict> = {
             },
           ],
         },
+        {
+          subject: "Biologie a geologie",
+          icon: "biologie-geologie",
+          what: "3D modely, na kterých si žák otočí tělo zvířete, rostlinu nebo buňku a najde, kde která část leží.",
+          tools: [
+            {
+              name: "Živý svět ve 3D",
+              url: "https://zivy-svet-ve-3d.karelrejthar.chatgpt.site/",
+              why: "Interaktivní atlas 3D modelů: hospodářská zvířata (skot, prase, kur, kůň), plodiny (pšenice, kukuřice, brambor, cukrová řepa, slunečnice), člověk a rostlinná i živočišná buňka. Model jde otáčet a přibližovat, kliknutím vybrat jednu část nebo zapnout celou soustavu (trávicí, cévní, dýchací…) a ukázat ji samostatně. Do hodiny se hodí na stavbu těla a orgánové soustavy – žák vidí, kde co v těle leží a jak to souvisí, což z obrázku v učebnici poznat nejde.",
+              note: "Zdarma, bez účtu, česky. Modely se načítají přímo z webu, nic se neposílá jinam. Autorem je Karel Rejthar. Modely pocházejí z otevřených zdrojů a licence je uvedená u každého atlasu. Web se sám označuje jako pracovní katalog bez odborné revize, takže české názvy částí si před hodinou projdi.",
+            },
+          ],
+        },
       ],
     },
     nastroje: {
@@ -2203,6 +2216,19 @@ export const t: Record<Lang, Dict> = {
               url: "https://gesture-synth-weld.vercel.app/",
               why: "Playing chords with your hands in front of the camera. The left hand sets the scale degree (fingers I–VII) and major or minor by tilt, the right hand the inversion and seventh; hand height is volume. It suits exactly what is hard to explain from the board – that a chord has a degree, a quality and an inversion. A pupil plays I–IV–V–I, hears major turn to minor as a turn of the palm, and discovers through inversions that it is still the same chord. Key and timbre are selectable (strings, horns, three synths), so you can also show the same harmony in a different colour.",
               note: "Free, no account, but it needs camera permission and decent light. The interface is in English. Hand tracking runs in the browser (Google's MediaPipe) – the camera image is never uploaded, only the model is downloaded once. Created by Eric Wei. There is also a one-handed mode.",
+            },
+          ],
+        },
+        {
+          subject: "Biology and geology",
+          icon: "biologie-geologie",
+          what: "3D models a pupil can turn around – an animal's body, a plant or a cell – to find where each part lies.",
+          tools: [
+            {
+              name: "Živý svět ve 3D (Living World in 3D)",
+              url: "https://zivy-svet-ve-3d.karelrejthar.chatgpt.site/",
+              why: "An interactive atlas of 3D models: farm animals (cattle, pig, chicken, horse), crops (wheat, maize, potato, sugar beet, sunflower), the human body and plant and animal cells. You can rotate and zoom a model, click to pick one part or switch on a whole system (digestive, circulatory, respiratory…) and show it on its own. In a lesson it suits body structure and organ systems – pupils see where things sit in the body and how they connect, which a textbook picture cannot show.",
+              note: "Free, no account. The site is in Czech. Models load straight from the site, nothing is sent elsewhere. Created by Karel Rejthar. The models come from open sources, with the licence stated for each atlas. The site calls itself a working catalogue without expert review, so check the Czech part names before the lesson.",
             },
           ],
         },
