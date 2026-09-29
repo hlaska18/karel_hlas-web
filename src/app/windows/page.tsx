@@ -1,19 +1,18 @@
 import type { Metadata } from "next";
 import { OdkazNaWeb, VirtualniPocitac } from "@/components/win/VirtualniPocitac";
-import { OG_SPOLECNE } from "@/lib/sdileni";
+import { sdileni } from "@/lib/sdileni";
 
 export const metadata: Metadata = {
   title: "Virtuální Windows 11",
   description:
     "Výuková simulace Windows 11 přímo v prohlížeči: plocha, Průzkumník souborů, Nastavení, Poznámkový blok, Malování, Kalkulačka, příkazový řádek i PowerShell. Pro hodiny informatiky na střední škole – nic se neinstaluje a práce zůstává v prohlížeči žáka.",
   alternates: { canonical: "/windows" },
-  openGraph: {
-    ...OG_SPOLECNE,
+  ...sdileni({
     title: "Virtuální Windows 11 – výuková simulace",
     description:
       "Plocha, Průzkumník, Nastavení a příkazový řádek k procvičování práce se soubory. Otevře se rovnou, nic se neinstaluje.",
     url: "/windows",
-  },
+  }),
 };
 
 /**

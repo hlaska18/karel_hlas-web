@@ -2,7 +2,7 @@
 
 > Veřejná banka hotových materiálů do hodin informatiky pro střední školy (pracovní listy, testy, plány hodin a metodika ve Wordu, zdarma ke stažení a úpravě) a výukové simulátory, které běží přímo v prohlížeči bez instalace a bez účtu. Připravuje Karel Hlas, učitel na SPŠ Tábor. Web je česky, s anglickou verzí na /en.
 
-Materiály jsou pod licencí CC BY-NC-SA 4.0. Témata banky: digitální gramotnost, operační systémy, internet a bezpečnost, Word, Excel, grafika a multimédia, umělá inteligence, Power BI, databáze, Python. U každého tématu jsou lekce; učitelské soubory (řešení, testy, plány) jsou označené „učitelé“.
+Karlovy vlastní materiály jsou pod licencí CC BY-NC-SA 4.0. Výjimkou je cvičebnice „100 příkladů pro Office“ (Word, Excel, Power BI): web ji jen zpřístupňuje, autory má uvedené u sebe a podmínky si určují oni. Témata banky: digitální gramotnost, operační systémy, internet a bezpečnost, Word, Excel, grafika a multimédia, umělá inteligence, Power BI, databáze, Python. U každého tématu jsou lekce; učitelské soubory (řešení, testy, plány) jsou označené „učitelé“.
 
 ## Hlavní stránky
 
