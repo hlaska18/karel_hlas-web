@@ -432,6 +432,10 @@ export function SqlPlayground() {
             }
           }}
           spellCheck={false}
+          // Klávesnice telefonu by jinak zvětšila první písmeno a „opravila“ text
+          // v apostrofech – WHERE zanr = 'poezie' by pak nic nenašlo (Codex 29. 9.).
+          autoCapitalize="none"
+          autoCorrect="off"
           rows={4}
           aria-label="Tvůj SQL dotaz"
           placeholder="Sem napiš svůj SQL dotaz…"
