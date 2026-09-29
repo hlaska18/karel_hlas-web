@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { VirtualniMac } from "@/components/mac/MacOS";
+import { OG_SPOLECNE } from "@/lib/sdileni";
 
 export const metadata: Metadata = {
   title: "Virtuální macOS",
@@ -8,11 +9,11 @@ export const metadata: Metadata = {
     "Výuková simulace macOS přímo v prohlížeči: plocha, horní lišta, Dock, Finder, Terminál a Vynutit ukončení. Pro hodiny informatiky na střední škole – ukazuje, čím se Mac liší od Windows. Nic se neinstaluje a práce zůstává v prohlížeči žáka.",
   alternates: { canonical: "/macos" },
   openGraph: {
+    ...OG_SPOLECNE,
     title: "Virtuální macOS – výuková simulace",
     description:
       "Finder, Dock a horní lišta k procvičení rozdílů proti Windows. Otevře se rovnou, nic se neinstaluje.",
     url: "/macos",
-    type: "website",
   },
 };
 

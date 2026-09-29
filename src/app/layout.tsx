@@ -41,8 +41,10 @@ export const metadata: Metadata = {
   },
   openGraph: {
     title: "Materiály do výuky – Karel Hlas",
+    // Na Facebooku je vidět jen začátek popisu, tak v něm jsou i simulátory –
+    // na ty se ze sdílení kliká nejvíc a v obrázku náhledu nejsou.
     description:
-      "Hotové materiály do hodin ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika. Grafika a multimédia, umělá inteligence, internet a bezpečnost, digitální gramotnost, databáze.",
+      "Hotové materiály do hodin ke stažení a úpravě – pracovní listy, testy, plány hodin a metodika. K tomu simulátory Windows 11 a macOS a kurz SQL přímo v prohlížeči.",
     url: SITE.url,
     siteName: "Karel Hlas",
     locale: "cs_CZ",
@@ -53,7 +55,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Materiály do výuky – Karel Hlas",
     description:
-      "Hotové materiály do hodin ke stažení a úpravě – grafika a multimédia, umělá inteligence, internet a bezpečnost, digitální gramotnost, databáze.",
+      "Hotové materiály do hodin ke stažení a úpravě. K tomu simulátory Windows 11 a macOS a kurz SQL přímo v prohlížeči.",
     // Obrázek generuje src/app/twitter-image.tsx (next/og).
   },
   robots: {

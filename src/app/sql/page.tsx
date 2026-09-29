@@ -6,6 +6,7 @@ import {
   GraduationCap,
 } from "lucide-react";
 import { SITE } from "@/lib/content";
+import { OG_SPOLECNE } from "@/lib/sdileni";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Mark } from "@/components/Mark";
@@ -26,6 +27,15 @@ export const metadata: Metadata = {
   description:
     "Interaktivní kurz základů databází a SQL uvnitř napodobeniny programu DB Browser for SQLite: 13 lekcí od SELECTu po zápis dat, 6 lekcí o práci s programem – soubor, zápis změn, vlastní tabulka – a navíc detektivka a procvičování na jiných datech. Úkoly se kontrolují samy, přímo v prohlížeči, nic se neinstaluje.",
   alternates: { canonical: "/sql" },
+  // Bez vlastního openGraph sdílel Facebook u /sql titulek, popis i adresu
+  // homepage – odkaz na kurz vypadal jako odkaz na úvod webu.
+  openGraph: {
+    ...OG_SPOLECNE,
+    title: "Kurz SQL ve virtuálním DB Browseru",
+    description:
+      "Základy databází a SQL přímo v prohlížeči: 22 lekcí v napodobenině programu DB Browser, úkoly se kontrolují samy. Nic se neinstaluje.",
+    url: "/sql",
+  },
 };
 
 /**
