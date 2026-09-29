@@ -12,6 +12,9 @@ import { NotFoundContent } from "@/components/NotFoundContent";
  */
 export const metadata: Metadata = {
   title: "Stránka nenalezena",
+  // Next sám přidá noindex; bez tohohle zůstal vedle něj i zděděný
+  // „index, follow“ z layoutu – dva odporující si tagy.
+  robots: { index: false, follow: true },
 };
 
 export default function NotFound() {

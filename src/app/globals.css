@@ -238,6 +238,9 @@
   .tw-caret {
     animation: caretBlink 1.05s steps(1, end) infinite;
   }
+  .tw-caret::before {
+    content: "_";
+  }
   .tw-caret--typing {
     animation: none;
   }
@@ -887,7 +890,9 @@
   font-weight: 700;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: rgb(113 113 122);
+  /* zinc-600, ne zinc-500: drobné písmo na světle zeleném pozadí mělo
+     kontrast 4,2 (PageSpeed 29. 9. 2026), teď 6,7. */
+  color: rgb(82 82 91);
   cursor: pointer;
 }
 .dark .osa__prepinac {
@@ -895,7 +900,8 @@
 }
 .osa__prepinac--aktivni {
   background: rgb(16 185 129 / 0.12);
-  color: rgb(4 120 87);
+  /* emerald-800 (kontrast 6,0); emerald-700 měl na podbarvení jen 4,3. */
+  color: rgb(6 95 70);
 }
 .dark .osa__prepinac--aktivni {
   background: rgb(52 211 153 / 0.14);

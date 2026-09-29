@@ -15,7 +15,6 @@
     "coverage": "vitest run --coverage"
   },
   "dependencies": {
-    "@upstash/redis": "^1.39.0",
     "@vercel/analytics": "^2.0.1",
     "fflate": "^0.8.3",
     "lucide-react": "1.48.0",

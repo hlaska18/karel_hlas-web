@@ -1,3 +1,8 @@
+ZASTARALÉ (29. 9. 2026): ukládání postupu na server je od září 2026 zrušené
+(účty i úložiště smazané, viz NAVRH-ZPRACOVANI-UDAJU.md) a knihovna
+@upstash/redis je z projektu odebraná. Návod níž zůstává jen pro historii.
+
+
 ÚLOŽIŠTĚ POSTUPU NA VERCELU (nastavení krok za krokem)
 
 Tenhle návod je pro Karla. Je potřeba jen jednou, než se zapne ukládání

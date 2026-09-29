@@ -72,11 +72,11 @@ export function Typewriter({
       <span className="tw-drzak col-start-1 row-start-1 select-none">{text}</span>
       <span className="tw-vrstva col-start-1 row-start-1">
         {shown}
+        {/* Podtržítko kreslí CSS (`.tw-caret::before`), ne text – jinak ho
+            vyhledávače četly jako součást nadpisu („…informatiky_“). */}
         <span
           className={`tw-caret text-accent-700 dark:text-accent-400 ${done ? "" : "tw-caret--typing"}`}
-        >
-          _
-        </span>
+        />
       </span>
     </span>
   );
