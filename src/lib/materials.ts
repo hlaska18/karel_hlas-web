@@ -216,6 +216,7 @@ const NAME_EN: Record<string, string> = {
   "Závěrečný výstup a obhajoba": "Final piece and defence",
   // Umělá inteligence: hostované materiály nahrazene odkazem na kurz Elements of AI
   "Kurz Elements of AI": "The Elements of AI course",
+  "Online nástroje": "Online tools",
   "Hodnocení, testy a řešení": "Assessment, tests and solutions",
   "Výstupy k posouzení": "Outputs to assess",
   Obrázky: "Images",

@@ -1,0 +1,29 @@
+[
+  {
+    "cs": "Coolors – barevné palety a kontrast",
+    "en": "Coolors – colour palettes and contrast",
+    "url": "https://coolors.co/",
+    "note": {
+      "cs": "Web jiného autora. Generátor palet (další paletu dá mezerník), kontrola kontrastu textu a pozadí a výběr barev z fotky. Funguje bez přihlášení, účet je potřeba až na ukládání palet. Anglicky, ovládání je jednoduché. Hodí se k hodinám 7 a 8: vyber nejvýše čtyři barvy a ověř, že je text čitelný.",
+      "en": "A site by another author. A palette generator (press space for the next one), a text-and-background contrast checker and colour picking from a photo. Works without signing in; an account is only needed to save palettes. Fits lessons 7 and 8: pick at most four colours and check the text is readable."
+    }
+  },
+  {
+    "cs": "Coblis – jak tvůj obrázek vidí barvoslepý",
+    "en": "Coblis – how a colour-blind person sees your image",
+    "url": "https://www.color-blindness.com/coblis-color-blindness-simulator/",
+    "note": {
+      "cs": "Web jiného autora. Nahraješ obrázek a uvidíš ho tak, jak ho vidí lidé s různými poruchami barvocitu. Podle autorů se obrázek zpracuje jen v prohlížeči a na server se nenahrává. Bez přihlášení, anglicky. Vyzkoušej na své infografice z hodiny 7: poznáš sloupce od sebe i bez barev?",
+      "en": "A site by another author. Upload an image and see it the way people with different colour vision deficiencies do. According to the authors the image is processed in the browser and never uploaded to the server. No sign-in. Try it on your infographic from lesson 7: can you still tell the bars apart without colour?"
+    }
+  },
+  {
+    "cs": "Method of Action – hry na barvy a vektory",
+    "en": "Method of Action – games for colour and vectors",
+    "url": "https://method.ac/",
+    "note": {
+      "cs": "Web jiného autora, zdarma a bez registrace. Hra Color cvičí barevné harmonie, Bézier Game pero na křivky a Boolean Game sjednocení a odečítání tvarů, tedy přesně to, co se dělá v Inkscapu v hodině 5. Anglicky, na počítači s myší. Pro rychlíky.",
+      "en": "A site by another author, free and with no sign-up. The Color game practises colour harmonies, the Bézier Game the pen tool and the Boolean Game uniting and subtracting shapes – exactly what lesson 5 does in Inkscape. Needs a computer with a mouse. For fast finishers."
+    }
+  }
+]
