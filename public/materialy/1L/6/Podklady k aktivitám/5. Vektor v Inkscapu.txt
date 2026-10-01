@@ -3,6 +3,7 @@ VEKTOROVÁ TVORBA — INKSCAPE
 CÍL
 Vytvoř jednoduchou piktogramovou značku pro fiktivní školní klub.
 Musí být čitelná ve velikosti 16 px i 2 m.
+Než začneš, napiš jednou větou, pro jaký klub značka je a co má říct.
 
 POSTUP
 1. Nastav plátno 800 × 800 px.
@@ -14,6 +15,7 @@ POSTUP
 
 KONTROLA ČITELNOSTI
 Zmenši náhled na 16 px. Pokud značku nepoznáš, zjednoduš ji a uveď, co jsi odebral/a.
+Pak ji ukaž spolužákovi na pět sekund. Pozná, pro jaký klub je?
 
 OTÁZKY
 1. Kolik kB má tvůj svg a kolik png? Čím je rozdíl způsoben?

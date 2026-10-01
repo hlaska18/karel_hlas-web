@@ -8,21 +8,50 @@ DATA (fiktivní školní průzkum, 120 respondentů)
   Zdroj: vlastní třídní průzkum, květen 2026, nereprezentativní vzorek jedné školy.
 
 ÚKOL
-Vytvoř jednu infografiku formátu A4 na výšku, která poctivě zobrazí obojí.
+Vyber si JEDNU sadu dat a udělej z ní infografiku: jeden graf, nadpis
+se zjištěním, zdroj a poznámka o omezení. Stačí jeden snímek.
+
+1. PRO KOHO
+   Než začneš, napiš dvě věty:
+     Určeno pro: …        (kdo to uvidí a kde, třeba nástěnka na chodbě)
+     Čtenář má pochopit: … (jedna věta, hlavní zjištění)
+
+2. GRAF V EXCELU
+   Přepiš data do Excelu (školní účet Office 365), označ je a vlož
+   sloupcový graf (Vložení → Grafy). Graf zkopíruj do PowerPointu na jeden
+   snímek a doplň nadpis, zdroj a poznámku o omezení.
+   Canva je volitelná: kdo má školní přístup, smí v ní snímek poskládat.
+   Graf ale udělej v Excelu a zkontroluj osu.
+
+3. TEST PĚTI SEKUND
+   Ukaž infografiku spolužákovi na pět sekund a pak ji zakryj.
+   Spolužák řekne jen tyhle tři věty:
+     „Nejdřív jsem se podíval/a na …“
+     „Hlavní je podle mě …“
+     „Nejasné mi bylo …“
+   Nehodnotí, jestli je to hezké. Porovnej jeho „hlavní“ se svou větou
+   „Čtenář má pochopit“. Když se liší, oprav jednu věc.
+   Zapiš: co řekl spolužák a co jsi opravil/a.
+
+TŘI OTÁZKY NA ROZVRŽENÍ
+  Kam se podíváš nejdřív?      Tam patří hlavní zjištění. (hierarchie)
+  Co k sobě patří?             Popisek u svého grafu. (blízkost)
+  Co vystoupí?                 Jedna věc, ne všechno. (kontrast)
 
 POVINNÉ PRVKY
 1. Nadpis, který říká zjištění, ne jen téma.
-2. Oba grafy se správně přiřazenými hodnotami.
+2. Graf se správně přiřazenými hodnotami.
 3. Uvedený zdroj, velikost vzorku a datum.
 4. Nejvýše dva druhy písma a nejvýše čtyři barvy.
 5. Poznámka o omezení dat (jedna škola, malý vzorek).
 
 ZAKÁZANÉ POSTUPY
   useknutá osa, která zveličí rozdíl
-  3D efekt u koláčového grafu
+  3D efekt (Excel ho nabízí mezi typy grafů, nepoužívej ho)
   procenta, která nedávají 100 %, bez vysvětlení
   dekorace, která nenese informaci
 
 EXPORT
-Ulož jako infografika.pdf a infografika.png (šířka alespoň 1500 px).
+Ulož jako infografika.pdf a infografika.png (v PowerPointu Soubor →
+Uložit jako, typ PDF, pak znovu typ PNG).
 Zapiš, který formát bys poslal/a na nástěnku a který do e-mailu, a proč.

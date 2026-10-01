@@ -2,6 +2,9 @@
 
 Pracuj se souborem Obrázky/foto_original.png. Původní soubor nepřepisuj.
 
+PRO KOHO: Než začneš, napiš jednou větou, k čemu fotka bude a co má
+říct (třeba plakát na den otevřených dveří).
+
 ÚKOLY
 1. Ořez na poměr 16:9 tak, aby slunce nebylo přesně uprostřed.
 2. Uprav jas a kontrast (Barvy → Jas a kontrast). Zapiš hodnoty, které jsi použil/a.

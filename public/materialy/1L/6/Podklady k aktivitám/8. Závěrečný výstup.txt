@@ -1,5 +1,12 @@
 ZÁVĚREČNÝ VÝSTUP — VYBER JEDNU VARIANTU
 
+Téma si zvol sám/sama: svůj sport, kapelu, obor, kroužek. Varianta určuje,
+co musí výstup obsahovat.
+
+NEŽ ZAČNEŠ, NAPIŠ DVĚ VĚTY
+   Určeno pro: …        (kdo to uvidí a kde)
+   Čtenář má pochopit: … (jedna věta, hlavní sdělení)
+
 A) PLAKÁT NA ŠKOLNÍ AKCI
    Fiktivní akce podle vlastní volby. Musí obsahovat upravenou fotografii
    a alespoň jeden vektorový prvek. Formát A3 na výšku.
@@ -15,8 +22,17 @@ C) INFOGRAFIKA Z VLASTNÍCH DAT
 POVINNÉ PRVKY U VŠECH VARIANT
 1. Správně zvolený typ grafiky pro každý prvek.
 2. Export ve formátu a rozlišení, které odpovídá zamýšlenému použití.
-3. Vyplněný technický list.
+3. Vyplněný technický list včetně zápisu z testu pěti sekund.
 4. Tři věty obhajoby.
+
+TEST PĚTI SEKUND (v půlce práce)
+   Ukaž výstup spolužákovi na pět sekund a pak ho zakryj.
+   Spolužák řekne jen tyhle tři věty:
+     „Nejdřív jsem se podíval/a na …“
+     „Hlavní je podle mě …“
+     „Nejasné mi bylo …“
+   Porovnej jeho „hlavní“ se svou větou „Čtenář má pochopit“.
+   Když se liší, oprav jednu věc.
 
 TECHNICKÝ LIST
    Rozměry výstupu v pixelech nebo mm:
@@ -24,6 +40,8 @@ TECHNICKÝ LIST
    Velikosti odevzdaných souborů:
    Použité nástroje:
    Původ použitých obrázků a jejich licence:
+   Test pěti sekund – co řekl spolužák a co jsem opravil/a:
+   Použil/a jsem AI? Na co a v jakém nástroji:
 
 TŘI VĚTY OBHAJOBY
    1. Co jsem zvolil/a.
@@ -34,3 +52,10 @@ PRAVIDLA PŮVODU
 Použij vlastní tvorbu nebo obrázky z balíčku. Cizí obrázek smíš použít jen tehdy,
 pokud ověříš licenci a uvedeš autora podle jejích podmínek.
 Fotografie spolužáků jen s jejich souhlasem.
+
+PRAVIDLO PRO AI
+AI smíš použít, třeba na nápad, text nebo obrázek. Do technického listu
+napiš, na co a v jakém nástroji. Obhajuješ svoje volby, takže musíš umět
+říct, proč jsi výsledek z AI vzal/a nebo upravil/a. Nepřiznané použití AI
+se hodnotí jako zamlčený původ (Poctivost obsahu 0 bodů).
+Pokud to pravidla školy nebo podmínky nástroje nedovolují, AI nepoužívej.

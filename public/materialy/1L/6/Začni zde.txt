@@ -12,7 +12,7 @@ MAPA HODIN
 4. Úprava fotografie v GIMPu           GIMP
 5. Vektorová značka v Inkscapu         Inkscape
 6. Zvuk a video                        Laboratoř – vzorkování zvuku
-7. Infografika a prezentace            Canva
+7. Infografika a prezentace            Excel a PowerPoint
 8. Závěrečný výstup a obhajoba         dle volby studenta
 
 Bonus – co se do osmi hodin nevešlo: RGB a CMYK, ztrátová komprese zvuku,
@@ -21,12 +21,26 @@ metadata fotografie. Nepovinné.
 POTŘEBNÝ SOFTWARE
 Hodiny 1, 2, 3 a 6 vystačí s běžným prohlížečem a přehrávačem — nic se
 neinstaluje. Laboratoře běží offline, obrázky mají vepsané v sobě.
-Hodina 4 vyžaduje GIMP, hodina 5 Inkscape, hodina 7 přístup do Canvy.
+Hodina 4 vyžaduje GIMP, hodina 5 Inkscape, hodina 7 Excel a PowerPoint
+(školní účet Office 365; Canva je volitelná).
 Ke každé z nich je v metodice náhradní varianta pro případ, že nástroj
 není k dispozici.
 
 K hodině 6 sežeň sluchátka. Bez nich rozdíl mezi vzorkovacími frekvencemi
 ve třídě neuslyší nikdo.
+
+CO SE ZMĚNILO (ŘÍJEN 2026)
+Na základě zpětné vazby od učitele grafiky:
+- Hodiny 7 a 8 stojí na smyčce: pro koho to je → udělej → test pěti
+  sekund u spolužáka s pevnými větami → oprav.
+- Hodina 7: tři principy rozvržení (hierarchie, blízkost, kontrast) se
+  nejdřív ptají otázkou; jen jedna sada dat a jeden graf v Excelu místo
+  Canvy. Test pěti sekund na ukázce B na začátku hodiny 7 a na konci
+  hodiny 8 ukáže, jestli blok zabral.
+- Hodina 8: věta „Určeno pro…“, vlastní téma uvnitř variant, pravidlo
+  pro AI (smí se, ale přizná se v technickém listu) a v rubrice nové
+  kritérium Srozumitelnost (0–2 body).
+- Hodiny 4 a 5: na začátku úkolu jedna věta, pro koho výstup je.
 
 NEŽ ZAČNEŠ UČIT
 Otevři Pro učitele/Plány hodin a metodika.docx — je v ní průběh všech osmi
