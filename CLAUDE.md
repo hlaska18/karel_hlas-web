@@ -25,6 +25,8 @@ konci práce ho aktualizuj, ať ví i další relace.
   které používá, např. src/components/postup/VysledkySimulatoru.tsx).
 - Web je one-page: nové věci patří do sekcí homepage, ne na samostatné stránky.
 - Nespouštěj prettier na celé soubory. .claude/launch.json neměň natrvalo.
+- Ve výuce a materiálech vždy jen **Office 365**, nikdy LibreOffice (ani jako
+  příklad – v hodině 5 Digitální gramotnosti je místo něj VLC).
 - Před velkým rozhodnutím nebo pushem Karel rád „pošle věc do rady“
   (skill llm-council): 5 poradců, anonymní vzájemné hodnocení, verdikt.
   Pak obvykle řekne „udělej vše, co rada napsala“.
@@ -200,6 +202,23 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Simulátor Windows: Správce úloh Shift+F8, Start Shift+F4; skutečné
   zkratky Windows jsou v závorce u úlohy a v bublině Startu (Karel 29. 9.).
 - Na iPhonu ověřeno 30. 9.: simulátory ukazují „jen na počítači“.
+
+### Grafika a multimédia podle D. Tyla (1. 10. 2026)
+- Podnět Dominika Tyla (učitel grafiky) prošel dvěma radami a Codexem.
+  Hodiny 7 a 8 (1L/6) stojí na smyčce pro koho → udělej → test pěti sekund
+  u spolužáka (tři pevné věty) → oprav. H7: tři principy (hierarchie,
+  blízkost a kontrast, poctivý graf) nejdřív otázkou, jedna sada dat,
+  graf v Excelu + snímek v PowerPointu, Canva volitelně. H8: „Určeno pro…“,
+  vlastní téma uvnitř variant, pravidlo pro AI (přizná se v technickém
+  listu), v rubrice kritérium Srozumitelnost. Měření: 5s test na ukázce B
+  na začátku h7 a na konci h8. H4 a H5 jen věta „pro koho“.
+- Každá hodina = 5 souborů (pptx s poznámkami, Plány hodin a metodika,
+  Digitální pracovní sešit, Hodnocení, zadání .txt) – měnit vždy všechny.
+  Texty v .docx/.pptx mají pevné mezery; po úpravě spustit
+  `zpracuj_ooxml` ze scripts/pevne-mezery.py.
+- Soubor „7. Infografika v Canvě.txt“ se schválně nepřejmenoval.
+  „Co se změnilo“ je v Začni zde.txt a v `_popis.json` (popis v bance).
+- Hodiny grafiky zatím nikdo neodučil (Kontrola úplnosti.txt).
 
 ## Otevřené / nápady (nic naléhavého)
 
