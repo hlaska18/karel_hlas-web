@@ -179,6 +179,8 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   že `_nastroj.json` míří jen dovnitř webu). Linuxhrou.cz je v 1L/11.
 - Vercel: úložiště nasazení (10 GB zdarma) plnily kopie webu (~100 MB)
   z každého pushe; retence nastavená na 1 den. Pushovat radši jednou denně.
+  Ověřeno 1. 10.: Deployment Storage 7,9 GB → 535 MB, Functions Storage
+  7,6 GB → 323 MB (koš se do limitu nepočítá).
 - Bezpečnost (Codex + rada 29. 9.): SRI u všech knihoven z CDN, export do
   Excelu přes `bezVzorce()` (src/lib/dbb/csv.ts, i ve sdíleném přehledu
   Windows/macOS), limity CSV importu, Ctrl+R v DB Browseru nespouští SQL.
