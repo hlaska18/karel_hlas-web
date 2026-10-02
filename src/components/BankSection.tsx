@@ -18,13 +18,15 @@ import { SectionJump } from "@/components/SectionJump";
 // na ni vedl na přihlášení osobním účtem Microsoft a kolegům házel chybu.
 // Licence webu se na cizí dílo nevztahuje, a text to musí říct nahlas —
 // jinak by si někdo odnesl, že smí dál šířit i cvičebnici pod CC BY-NC-SA.
+// Totéž platí pro Sbírku úloh v Excelu (1L/4) z Katedry informatiky PF JU.
 const STR: Record<Lang, { license: string }> = {
   cs: {
     license:
       "Moje materiály zde volně použij i uprav pro svou výuku. Platí licence CC BY-NC-SA 4.0: " +
       "uveď autora, nepoužívej komerčně a co z nich vytvoříš, sdílej dál za stejných podmínek. " +
       "Výjimkou je cvičebnice „100 příkladů pro Office“ (Word, Excel, Power BI) – tu jen zpřístupňuju, " +
-      "protože odkaz na ni přestal fungovat. Autory má uvedené u sebe a její podmínky si určují oni.",
+      "protože odkaz na ni přestal fungovat. Autory má uvedené u sebe a její podmínky si určují oni. " +
+      "Výjimkou je i Sbírka úloh v Excelu z Katedry informatiky PF JU – úlohy nejsou moje, jen jsem je upravil a doplnil řešení.",
   },
   en: {
     license:
@@ -32,7 +34,8 @@ const STR: Record<Lang, { license: string }> = {
       "teaching under CC BY-NC-SA 4.0: credit the author, no commercial use, and share whatever you " +
       "build on the same terms. The one exception is the workbook “100 příkladů pro Office” (Word, Excel, " +
       "Power BI): it is hosted here only because the original link stopped working. Its authors are " +
-      "credited with it and they set its terms.",
+      "credited with it and they set its terms. The Excel exercise collection from the Department of Computer Science, " +
+      "Faculty of Education, University of South Bohemia is not mine either – I only cleaned it up and added solutions.",
   },
 };
 

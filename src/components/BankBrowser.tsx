@@ -789,7 +789,7 @@ function MaterialRow({
      vlastní pozadí. Soubor přitom zůstává přístupný všem (`audience` se
      nemění), jde jen o to, aby bylo vidět, co je co (Karel 25. 9. 2026). */
   const jeReseniUlohy =
-    /^(Word|Excel|PowerBI) › Úlohy › /.test(it.group?.cs ?? "") &&
+    /^((Word|Excel|PowerBI) › Úlohy|Sbírka úloh) › /.test(it.group?.cs ?? "") &&
     /^řešení/i.test(it.label.cs);
   const ucitelske = it.audience === "teacher" || jeReseniUlohy;
   return (
@@ -1259,6 +1259,14 @@ function ToolFolders({
       u.items.find((i) => i.groupAuthor)?.groupAuthor ??
       u.deti.map(autor).find((a) => a !== undefined);
 
+    /** Popis složky, která sama soubory nemá – nesou ho za ni její potomci. */
+    const popisZPotomku = (u: Uzel): BankItem["groupPopis"] => {
+      const hledej = (v: Uzel): BankItem["groupPopis"] =>
+        v.items.find((i) => i.popisySlozek?.[u.cesta])?.popisySlozek?.[u.cesta] ??
+        v.deti.map(hledej).find((p) => p !== undefined);
+      return hledej(u);
+    };
+
     // Rekurzivně, ne na dvě úrovně: hloubka je věc složek na disku, ne kódu.
     const naKartu = (u: Uzel): Karta => ({
       name: u.name,
@@ -1266,7 +1274,8 @@ function ToolFolders({
       author: autor(u),
       // Jen z PŘÍMÝCH souborů složky: `_popis.json` se do podsložek nedědí,
       // takže popis Wordu nesmí vyskočit i u každé jednotlivé úlohy.
-      popis: u.items.find((i) => i.groupPopis)?.groupPopis,
+      popis:
+        u.items.find((i) => i.groupPopis)?.groupPopis ?? popisZPotomku(u),
       deti: u.deti.map(naKartu),
     });
 

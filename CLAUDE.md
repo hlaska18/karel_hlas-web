@@ -220,6 +220,16 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   „Co se změnilo“ je v Začni zde.txt a v `_popis.json` (popis v bance).
 - Hodiny grafiky zatím nikdo neodučil (Kontrola úplnosti.txt).
 
+### Excel: Sbírka úloh (2. 10. 2026)
+- `public/materialy/1L/4/Sbírka úloh/` (+ `_stejne.txt` v 1S/3 a 1P/3): 8 sešitů
+  z Katedry informatiky PF JU (Leipert, Bureš…), každý `Zadání.xlsx` +
+  `Řešení.xlsx` (štítek „učitelé“). Zadání byla vyčištěná od řešení (originály
+  a skripty mimo repo). Pokročilé sešity mají „(pokročilé)“ v názvu složky.
+- Pozor na název: slovo „databáz…“ ve složce by ji přesunulo do tématu
+  Databáze (`toolOf`), proto „5 – Řazení, funkce DSUMA a souhrny“.
+- Složka bez vlastních souborů teď ukáže svůj `_popis.json` (`popisySlozek`).
+- Licenční věta pod bankou má výjimku i pro tuto sbírku. Karel: autorům nepsat.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

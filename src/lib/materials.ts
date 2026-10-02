@@ -217,6 +217,16 @@ const NAME_EN: Record<string, string> = {
   // Umělá inteligence: hostované materiály nahrazene odkazem na kurz Elements of AI
   "Kurz Elements of AI": "The Elements of AI course",
   "Online nástroje": "Online tools",
+  // Excel: sbírka úloh z Katedry informatiky PF JU (vedle cvičebnice)
+  "Sbírka úloh": "Exercise collection",
+  "1 – Formát a obsah buněk, listy": "1 – Cell formatting and content, sheets",
+  "2 – Funkce a výrazy": "2 – Functions and expressions",
+  "3 – Logické funkce": "3 – Logical functions",
+  "4 – Kombinace podmínek (pokročilé)": "4 – Combining conditions (advanced)",
+  "5 – Řazení, funkce DSUMA a souhrny (pokročilé)": "5 – Sorting, DSUM and subtotals (advanced)",
+  "6 – Kontingenční tabulky (pokročilé)": "6 – PivotTables (advanced)",
+  "7 – Kontingenční tabulky s datovým modelem (pokročilé)": "7 – PivotTables with the Data Model (advanced)",
+  "8 – Grafy (pokročilé)": "8 – Charts (advanced)",
   "Hodnocení, testy a řešení": "Assessment, tests and solutions",
   "Výstupy k posouzení": "Outputs to assess",
   Obrázky: "Images",
@@ -282,6 +292,12 @@ export type BankItem = {
   popis?: { cs: string; en: string };
   /** Popis celé složky z `_popis.json` (klíč `složka`). Nedědí se do podsložek. */
   groupPopis?: { cs: string; en: string };
+  /**
+   * Popisy nadřazených složek, které samy žádný soubor nemají (`Sbírka úloh`
+   * jen sdružuje podsložky). Klíč = `groupSort` té složky. Jinak by jejich
+   * `_popis.json` neměl kde vyjít – karta bere popis jen z přímých souborů.
+   */
+  popisySlozek?: Record<string, { cs: string; en: string }>;
   /**
    * Vlastní vysvětlivka u převzatého odkazu (z `note` v `_zdroj.json`).
    * Nahradí obecné „Převzatý materiál – otevři u zdroje“ tam, kde je potřeba
@@ -590,6 +606,7 @@ export function getBankItems(): BankItem[] {
         group?: { cs: string; en: string },
         groupAuthor?: string,
         groupSort?: string,
+        popisyPredku?: Record<string, Popis>,
       ) => {
         /**
          * `_popis.json` téhle složky. SCHVÁLNĚ SE NEDĚDÍ do podsložek:
@@ -622,6 +639,13 @@ export function getBankItems(): BankItem[] {
           return;
         }
         ents.sort((a, b) => byName(a.name, b.name));
+        // Složka bez vlastních souborů (jen podsložky): svůj popis předá
+        // dětem, aby se ukázal na její kartě. Viz `popisySlozek`.
+        const maSoubory = ents.some((x) => x.isFile());
+        const popisyDetem =
+          popisSlozky && !maSoubory && groupSort
+            ? { ...(popisyPredku ?? {}), [groupSort]: popisSlozky }
+            : popisyPredku;
         for (const e of ents) {
           if (e.isDirectory()) {
             if (isSourceDir(path.join(absDir, e.name))) continue;
@@ -665,7 +689,7 @@ export function getBankItems(): BankItem[] {
               /* běžná složka – jede se dál */
             }
             if (jeOdkaz) continue;
-            walk(path.join(absDir, e.name), [...segs, e.name], aud, grp, author, grpSort);
+            walk(path.join(absDir, e.name), [...segs, e.name], aud, grp, author, grpSort, popisyDetem);
           } else if (e.isFile() && e.name === "_nastroj.json") {
             // Nástroj, který běží tady na webu – ve složce tématu není soubor
             // ke stažení, ale odkaz dovnitř webu (např. /windows).
@@ -838,6 +862,7 @@ export function getBankItems(): BankItem[] {
               groupSort,
               popis: popisySouboru[file],
               groupPopis: popisSlozky,
+              popisySlozek: popisyPredku,
               courseIds: [courseId],
               coursesLabel: { cs: "", en: "" },
             });
