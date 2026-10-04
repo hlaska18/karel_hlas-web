@@ -69,11 +69,9 @@ podmínku, kdy ji otevřít znovu. Vychází z auditu ze 4. 10. 2026.
 
 - Úpravy simulátoru Windows a jeho sdílených částí
   (`src/components/postup/VysledkySimulatoru.tsx`,
-  `src/lib/postupSimulatoru.ts`) dělat jen na Karlův výslovný pokyn. Z auditu
-  tam čekají: cíl odkazu „Přeskočit na obsah“ na `/windows`, ochrana proti
-  dvěma otevřeným záložkám (u macOS a SQL hotová) a přísnější kontrola kódu
-  postupu simulátorů v `postupSimulatoru.ts` (u kurzu SQL hotová,
-  `src/lib/dbb/kodPostupu.ts`).
+  `src/lib/postupSimulatoru.ts`) dělat jen na Karlův výslovný pokyn.
+  Body z auditu (cíl „Přeskočit na obsah“, ochrana dvou karet, přísnější
+  kontrola kódu postupu) Karel povolil 5. 10. 2026 a jsou hotové.
 
 ## Co z auditu se dělá průběžně, ne najednou
 

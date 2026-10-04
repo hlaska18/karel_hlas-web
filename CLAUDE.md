@@ -265,7 +265,7 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 ### Úpravy podle auditu (4.–5. 10. 2026)
 - Audit webu (Downloads/Audit_webu_Karel_Hlas_2026-10-04.txt) Karel chtěl
   udělat celý. Vynechané body: oslovování učitelů (5.8, 8.2 – Karel nikoho
-  nekontaktuje) a všechno, co sahá do simulátoru Windows (jen na jeho pokyn).
+  nekontaktuje).
 - Hotovo: README a WINDOWS.md podle skutečnosti, GitHub Actions „Kontrola“
   (Node 22: npm ci, test, build), `lang` a „Přeskočit na obsah“ na /sql
   a /macos, přesnější texty (hledání, počty, AI Hub, Ideogram, Firefly,
@@ -276,6 +276,9 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   v kurzu SQL, náhledy z vlastní kopie knihoven (`public/vendor`,
   `src/lib/knihovny.ts`, CDN záloha) s rušením stahování, náhledy
   vyčleněné do `src/components/bank/Nahled.tsx`.
+- Windows (Karel povolil 5. 10.): „Přeskočit na obsah“ míří na `#main`,
+  hlídač dvou karet (`win11-vyuka-karta` v win/system.tsx) a přísnější
+  `dekodujSimulator` (jen id úloh `a-z0-9-`, platné datum, celkem do 500).
 - Známé limity a co se dělá průběžně: **ZNAME-LIMITY.md**. Návrh výukové
   cesty Pythonem a AI (neodučený, k Karlově recenzi): `navrhy/`.
 - Nový nástroj k předmětu: ověř podmínky na webu provozovatele a dej mu

@@ -62,20 +62,36 @@ export function zakodujSimulator(p: PostupSimulatoru): string {
   return PREDPONA[p.simulator] + naBase64Url(JSON.stringify({ j: p.jmeno, d: p.datum, h: p.splneno, c: p.celkem }));
 }
 
+/*
+ * Kontrola obsahu kódu (audit 4. 10. 2026, stejně jako u kurzu SQL). Kód je
+ * přehled, ne důkaz – jde o to, aby poškozený nebo upravený kód neshodil
+ * Přehled třídy a neukázal nesmysl. Platné starší kódy projdou beze změny.
+ */
+const MAX_DELKA_KODU = 10000;
+/** Id úlohy: malá písmena, číslice a pomlčky (`cmd-dir`, `dvojkova-2026`). */
+const ID_ULOHY = /^[a-z0-9-]{1,40}$/;
+
 /** Přečte kód; poškozený nebo cizí text vrátí jako null. */
 export function dekodujSimulator(kod: string): PostupSimulatoru | null {
   const m = /(WIN1|MAC1)-([A-Za-z0-9_-]+)/.exec(kod);
-  if (!m) return null;
+  if (!m || m[2].length > MAX_DELKA_KODU) return null;
   const simulator: Simulator = m[1] === "WIN1" ? "windows" : "macos";
   try {
     const d = JSON.parse(zBase64Url(m[2])) as { j?: unknown; d?: unknown; h?: unknown; c?: unknown };
-    if (typeof d.j !== "string" || !Array.isArray(d.h)) return null;
+    if (!d || typeof d !== "object" || typeof d.j !== "string" || !Array.isArray(d.h)) return null;
+    const splneno: string[] = [];
+    for (const h of d.h.slice(0, 200)) {
+      // Jen platná id úloh, bez opakování – cokoli jiného by v přehledu
+      // vytvořilo neexistující „úlohu“.
+      if (typeof h === "string" && ID_ULOHY.test(h) && splneno.indexOf(h) === -1) splneno.push(h);
+    }
+    const c = Number(d.c);
     return {
       simulator,
-      jmeno: d.j.slice(0, 60),
-      datum: String(d.d || "").slice(0, 10),
-      splneno: d.h.map(String).slice(0, 200),
-      celkem: Math.max(0, Number(d.c) || 0),
+      jmeno: d.j.trim().slice(0, 60),
+      datum: typeof d.d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d.d) ? d.d : "",
+      splneno,
+      celkem: Number.isFinite(c) && c > 0 ? Math.min(Math.floor(c), 500) : 0,
     };
   } catch {
     return null;

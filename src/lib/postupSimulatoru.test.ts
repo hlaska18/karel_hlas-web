@@ -75,3 +75,30 @@ describe("přihlášení jménem", () => {
     expect(stejneJmeno("Adam Novák", "Eva Nováková")).toBe(false);
   });
 });
+
+describe("dekodujSimulator – poškozené a upravené kódy (audit 4. 10. 2026)", () => {
+  const kodZ = (obsah: unknown) =>
+    "WIN1-" +
+    btoa(unescape(encodeURIComponent(JSON.stringify(obsah))))
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_")
+      .replace(/=+$/, "");
+
+  it("propustí jen platná id úloh, bez opakování", () => {
+    const p = dekodujSimulator(kodZ({ j: " Eva ", d: "2026-10-05", h: ["cmd-dir", "cmd-dir", "<b>x</b>", 5, "kos"], c: 33 }));
+    expect(p).toEqual({ simulator: "windows", jmeno: "Eva", datum: "2026-10-05", splneno: ["cmd-dir", "kos"], celkem: 33 });
+  });
+
+  it("nesmyslné datum a počet úloh se zahodí", () => {
+    const p = dekodujSimulator(kodZ({ j: "Eva", d: "zítra", h: [], c: -5 }));
+    expect(p?.datum).toBe("");
+    expect(p?.celkem).toBe(0);
+    expect(dekodujSimulator(kodZ({ j: "Eva", d: "2026-10-05", h: [], c: 1e9 }))?.celkem).toBe(500);
+  });
+
+  it("obří nebo rozbitý kód vrátí null", () => {
+    expect(dekodujSimulator("WIN1-" + "A".repeat(20000))).toBeNull();
+    expect(dekodujSimulator(kodZ([1, 2]))).toBeNull();
+    expect(dekodujSimulator(kodZ({ j: 1, h: [] }))).toBeNull();
+  });
+});
