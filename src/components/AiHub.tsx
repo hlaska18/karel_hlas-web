@@ -146,7 +146,7 @@ type Texty = ReturnType<typeof useLang>["tr"]["aihub"];
 
 function Karta({ v, a }: { v: Vystup; a: Texty }) {
   return (
-    <li className="povrch rounded-karta p-5">
+    <li className="povrch dlazdice rounded-karta p-5">
       <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
         <h3 className="text-lg font-semibold text-zinc-900 dark:text-white">
           {v.nazev}
@@ -328,7 +328,7 @@ function KartaNastroje({
   const idPodrobnosti = `nastroj-${nastroj.name.replace(/\W+/g, "-").toLowerCase()}`;
 
   return (
-    <div className="povrch flex w-full flex-col rounded-karta p-5">
+    <div className="povrch dlazdice flex w-full flex-col rounded-karta p-5">
       <a
         href={nastroj.url}
         target="_blank"
