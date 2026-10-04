@@ -42,6 +42,7 @@ import {
   NAHLED_STR,
   PPTX,
   TEXT,
+  XLSX,
   canPreview,
   opensInBrowser,
 } from "@/lib/nahled";
@@ -1822,11 +1823,125 @@ function DocxView({
 }
 
 /**
- * Náhled .pptx – textový přepis snímků. Nevykresluje grafiku (to by znamenalo
- * těžkou knihovnu nebo cizí službu); ukazuje, CO na snímcích je, aby se učitel
- * mohl rozhodnout, jestli si prezentaci stáhne.
+ * Náhled .xlsx – listy, textová pole, obrázky a grafy vykreslené přímo
+ * v prohlížeči vlastním kódem (`xlsxPreview`). Soubor nikam neodchází.
+ */
+function XlsxView({ href, lang }: { href: string; lang: Lang }) {
+  const n = NAHLED_STR[lang];
+  const ref = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    let alive = true;
+    let dispose: (() => void) | undefined;
+    setState("loading");
+    import("@/lib/xlsxPreview")
+      .then((m) => {
+        if (!ref.current) throw new Error("Náhled byl zavřen před dokončením načítání");
+        return m.renderXlsx(href, ref.current, { truncated: n.xlsxTruncated, sheetError: n.xlsxSheetError });
+      })
+      .then((cleanup) => {
+        if (!alive) cleanup();
+        else {
+          dispose = cleanup;
+          setState("ready");
+        }
+      })
+      .catch((err) => {
+        if (!alive) return;
+        console.error(`Sešit se nepodařilo vykreslit (${href}):`, err);
+        setState("error");
+      });
+    return () => {
+      alive = false;
+      dispose?.();
+    };
+  }, [href, n]);
+
+  return (
+    <div className="relative h-[78vh] w-full overflow-hidden rounded-ovladac bg-white">
+      {state === "loading" && (
+        <p className="absolute inset-0 flex items-center justify-center gap-2 text-sm text-zinc-600">
+          <Loader2 className="h-4 w-4 animate-spin" /> {n.xlsxLoading}
+        </p>
+      )}
+      {state === "error" && (
+        <p className="absolute inset-0 flex items-center justify-center px-6 text-center text-sm text-zinc-600">
+          {n.xlsxError}
+        </p>
+      )}
+      <div ref={ref} className="h-full" />
+    </div>
+  );
+}
+
+/**
+ * Náhled .pptx – snímky vykreslené přímo v prohlížeči (`renderPptx`, stejně
+ * jako Word přes docx-preview), pod každým poznámky pro vyučujícího. Když
+ * vykreslení selže (starý prohlížeč, nečekaný obsah), ukáže se textový přepis.
  */
 function PptxView({
+  href,
+  lang,
+  loadingText,
+  errorText,
+}: {
+  href: string;
+  lang: Lang;
+  loadingText: string;
+  errorText: string;
+}) {
+  const n = NAHLED_STR[lang];
+  const ref = useRef<HTMLDivElement>(null);
+  const [state, setState] = useState<"loading" | "ready" | "text">("loading");
+
+  useEffect(() => {
+    let alive = true;
+    let dispose: (() => void) | undefined;
+    setState("loading");
+    import("@/lib/pptxPreview")
+      .then((m) => {
+        if (!ref.current) throw new Error("Náhled byl zavřen před dokončením načítání");
+        return m.renderPptx(href, ref.current, n.pptxNotes);
+      })
+      .then((cleanup) => {
+        if (!alive) cleanup();
+        else {
+          dispose = cleanup;
+          setState("ready");
+        }
+      })
+      .catch((err) => {
+        if (!alive) return;
+        console.error(`Prezentaci se nepodařilo vykreslit (${href}):`, err);
+        setState("text");
+      });
+    return () => {
+      alive = false;
+      dispose?.();
+    };
+  }, [href, n.pptxNotes]);
+
+  if (state === "text") {
+    return <PptxTextView href={href} lang={lang} loadingText={loadingText} errorText={errorText} />;
+  }
+  return (
+    <div className="relative h-[78vh] w-full overflow-auto rounded-ovladac bg-zinc-300 py-3 text-zinc-800 dark:bg-zinc-700 dark:text-zinc-100">
+      {state === "loading" && (
+        <p className="absolute inset-0 flex items-center justify-center gap-2 text-sm text-zinc-600 dark:text-zinc-200">
+          <Loader2 className="h-4 w-4 animate-spin" /> {loadingText}
+        </p>
+      )}
+      <div ref={ref} />
+    </div>
+  );
+}
+
+/**
+ * Záložní náhled .pptx – textový přepis snímků, když se snímky nepodaří
+ * vykreslit. Ukazuje aspoň, CO na snímcích je.
+ */
+function PptxTextView({
   href,
   lang,
   loadingText,
@@ -2072,6 +2187,7 @@ export function PreviewModal({
   const isText = TEXT.includes(item.ext);
   const isCode = CODE.includes(item.ext);
   const isPptx = PPTX.includes(item.ext);
+  const isXlsx = XLSX.includes(item.ext);
   const label = L(item.label, lang);
 
   const panelRef = useRef<HTMLDivElement | null>(null);
@@ -2201,6 +2317,8 @@ export function PreviewModal({
               loadingText={n.pptxLoading}
               errorText={n.pptxError}
             />
+          ) : isXlsx ? (
+            <XlsxView href={item.href} lang={lang} />
           ) : isCode ? (
             <CodeView
               href={item.href}

@@ -36,8 +36,10 @@ export const CODE = [
   "sh",
   "xml",
 ];
-/** PowerPoint: vypíšeme text snímků a poznámky (viz `pptxPreview`). */
+/** PowerPoint: vykreslíme snímky a pod ně poznámky (viz `pptxPreview`), záložně text. */
 export const PPTX = ["pptx"];
+/** Excel: vlastní vykreslení listů, kreseb a grafů (viz `xlsxPreview`). */
+export const XLSX = ["xlsx", "xlsm"];
 
 /**
  * Otevře prohlížeč tenhle typ přímo v záložce? U .docx, .pptx nebo .zip ne –
@@ -55,6 +57,7 @@ export function canPreview(ext: string): boolean {
     TEXT.includes(ext) ||
     DOCX.includes(ext) ||
     PPTX.includes(ext) ||
+    XLSX.includes(ext) ||
     CODE.includes(ext)
   );
 }
@@ -79,6 +82,10 @@ export const NAHLED_STR: Record<Lang, {
   pptxNotes: string;
   codeLoading: string;
   codeError: string;
+  xlsxLoading: string;
+  xlsxError: string;
+  xlsxTruncated: (rows: number, cols: number) => string;
+  xlsxSheetError: string;
 }> = {
   cs: {
     previewTitle: "Náhled",
@@ -94,6 +101,11 @@ export const NAHLED_STR: Record<Lang, {
     pptxNotes: "Poznámky pro vyučujícího",
     codeLoading: "Načítám náhled kódu…",
     codeError: "Náhled kódu se nepodařilo vykreslit – stáhni si soubor tlačítkem výše.",
+    xlsxLoading: "Načítám sešit…",
+    xlsxError: "Sešit se nepodařilo vykreslit – stáhni si ho tlačítkem výše.",
+    xlsxSheetError: "Tenhle list se v náhledu nepodařilo vykreslit – uvidíš ho po stažení.",
+    xlsxTruncated: (r, c) =>
+      `Náhled ukazuje jen začátek listu${r ? `, dalších ${r} řádků` : ""}${c ? `${r ? " a" : ","} ${c} sloupců` : ""} uvidíš po stažení.`,
   },
   en: {
     previewTitle: "Preview",
@@ -109,5 +121,10 @@ export const NAHLED_STR: Record<Lang, {
     pptxNotes: "Speaker notes",
     codeLoading: "Loading code preview…",
     codeError: "Code preview failed to render – use the download button above.",
+    xlsxLoading: "Loading workbook…",
+    xlsxError: "Could not render the workbook – use the download button above.",
+    xlsxSheetError: "This sheet could not be rendered in the preview – you will see it after download.",
+    xlsxTruncated: (r, c) =>
+      `The preview shows only the start of the sheet${r ? `; ${r} more rows` : ""}${c ? `${r ? " and" : ";"} ${c} more columns` : ""} after download.`,
   },
 };

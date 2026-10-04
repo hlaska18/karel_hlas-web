@@ -230,6 +230,23 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Složka bez vlastních souborů teď ukáže svůj `_popis.json` (`popisySlozek`).
 - Licenční věta pod bankou má výjimku i pro tuto sbírku. Karel: autorům nepsat.
 
+### Náhled Excelu a PowerPointu v bance (4. 10. 2026)
+- Karel chce v náhledu vidět, „co tam skutečně je“, jako u Wordu
+  (docx-preview). Vše se kreslí v prohlížeči, soubor nikam neodchází
+  (cizí prohlížeč Microsoftu Karel nechce).
+- Excel: vlastní vykreslování `src/lib/xlsxPreview.ts` (JSZip + SSF ze
+  SheetJS z CDN se SRI). Umí formáty čísel česky, styly, sloučené buňky,
+  podmíněné formátování (kromě typu vzorec), tabulky, kontingenční tabulky,
+  komentáře, obrázky, tvary a textová pole, grafy (sloupcový, pruhový,
+  spojnicový, plošný, XY, výsečový, vedlejší osa, spojnice trendu s R²,
+  chybové úsečky), skryté řádky a sloupce, záložky listů.
+  Vzorce nepřepočítává (bere uložené hodnoty), list ořízne na 600 × 60
+  (žlutá poznámka). Bez Calibri zmenší písmo na 0,9 (měření na canvasu).
+  Ověřeno na všech 84 sešitech tématu Excel proti PDF z Excelu.
+- PowerPoint: `pptx-preview` (CDN, SRI); `normalizePptx` předtím kopíruje
+  `a:defRPr` do `a:rPr` (jinak malé nadpisy). Pod snímkem rozbalovací
+  poznámky. Když selže, zůstane starý textový náhled (`PptxTextView`).
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
