@@ -91,6 +91,30 @@ export function upravNazev(zadano: string): { nazev: string } | { chyba: string 
 /** Největší soubor, který jde nahrát z počítače – prohlížeč má na úložiště jen pár MB. */
 export const MAX_NAHRANI = 2 * 1024 * 1024;
 
+/**
+ * Kolik znaků zabere disk v úložišti prohlížeče: soubory se ukládají jako
+ * base64 (o třetinu víc než bajty) uvnitř JSON. Odhad stačí – jde o to
+ * varovat dřív, než se import tiše neuloží.
+ */
+export function velikostDisku(disk: Disk): number {
+  let n = 2;
+  for (const nazev of Object.keys(disk)) n += nazev.length + 24 + Math.ceil(disk[nazev].bajty.length / 3) * 4;
+  return n;
+}
+
+/**
+ * Kolik znaků si disk kurzu dovolí. Chrome pustí do `localStorage` jednoho
+ * webu kolem 10 milionů znaků, Firefox a Safari jen kolem 5 MB, a o místo se
+ * dělí se simulátory. 4 miliony znaků = zhruba 3 MB databází dohromady
+ * (audit 4. 10. 2026: 12 souborů po 2 MB se do úložiště vejít nemůže).
+ */
+export const ROZPOCET_DISKU = 4_000_000;
+
+/** Vejde se disk do rozpočtu? */
+export function vejdeSe(disk: Disk): boolean {
+  return velikostDisku(disk) <= ROZPOCET_DISKU;
+}
+
 /** Je to soubor SQLite? Každý začíná hlavičkou „SQLite format 3“ a nulou. */
 export function jeSqlite(bajty: Uint8Array): boolean {
   const hlavicka = "SQLite format 3\u0000";

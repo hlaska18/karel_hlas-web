@@ -25,6 +25,7 @@ import {
   ulozDisk,
   jeSqlite,
   volnyNazev,
+  vejdeSe,
   type Disk,
 } from "@/lib/dbb/soubory";
 import { stahni } from "@/lib/dbb/stahni";
@@ -456,7 +457,16 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       if (nazvy.length >= MAX_SOUBORU) return t("Databází je moc. Nějakou starou smaž ikonou koše v okně Otevřít databázi.", "There are too many databases. Delete an old one with the bin icon in the Open Database window.");
       const cisty = puvodniNazev.replace(/[\\/:*?"<>|]/g, "_");
       const nazev = volnyNazev(cisty.toLowerCase() === KNIHOVNA ? t("knihovna z počítače.db", "knihovna from computer.db") : cisty, nazvy);
-      ulozNaDisk({ ...diskRef.current, [nazev]: { bajty, zmeneno: Date.now() } });
+      const novyDisk = { ...diskRef.current, [nazev]: { bajty, zmeneno: Date.now() } };
+      // Dřív než se import tiše neuloží: každý soubor zvlášť limit splní,
+      // ale dohromady se do úložiště prohlížeče vejít nemusí.
+      if (!vejdeSe(novyDisk)) {
+        return t(
+          "Do prohlížeče se už další databáze nevejde – místo na disku kurzu došlo. Nějakou starou otevři, ulož si ji (Soubor → Uložit kopii do počítače…) a pak ji smaž ikonou koše v okně Otevřít databázi.",
+          "There is no more room in the browser for another database – the course's disk is full. Open an old one, save it (File → Save a Copy to This Computer…) and then delete it with the bin icon in the Open Database window.",
+        );
+      }
+      ulozNaDisk(novyDisk);
       otevritDialog(null);
       zavriDatabazi(() => otevri(nazev));
       status(t(`Soubor ${nazev} je nahraný z počítače.`, `The file ${nazev} has been uploaded from your computer.`));

@@ -79,6 +79,8 @@ export function dekoduj(kod: string): Postup | null {
   const i = k.indexOf(PREDPONA);
   if (i === -1) return null;
   const telo = k.slice(i + PREDPONA.length).split(/\s/)[0];
+  // Nesmyslně dlouhý kód (vložený omylem nebo schválně) se ani nedekóduje.
+  if (!telo || telo.length > MAX_DELKA_KODU) return null;
   try {
     const d = JSON.parse(zBase64Url(telo)) as {
       j: string;
@@ -92,16 +94,18 @@ export function dekoduj(kod: string): Postup | null {
       v?: Record<string, unknown>;
       p?: string;
     };
-    if (typeof d.j !== "string" || !Array.isArray(d.h)) return null;
+    if (!d || typeof d !== "object" || typeof d.j !== "string" || !Array.isArray(d.h)) return null;
+    const hotove = cislaLekci(d.h);
     return {
-      jmeno: d.j,
-      datum: String(d.d || ""),
-      hotove: d.h.map(Number),
-      sede: (d.s || []).map(Number),
-      navic: Number(d.n || 0),
+      jmeno: d.j.trim().slice(0, 60),
+      datum: typeof d.d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d.d) ? d.d : "",
+      hotove,
+      // Šedá fajfka jen u lekce, která je opravdu hotová.
+      sede: cislaLekci(d.s).filter((l) => hotove.indexOf(l) !== -1),
+      navic: celeCislo(d.n, 1000),
       sady: skoreSad(d.x),
-      ulohy: Array.isArray(d.u) ? d.u.map(String) : [],
-      klice: Array.isArray(d.k) ? d.k.map(String).slice(0, 200) : [],
+      ulohy: kratkeTexty(d.u, 100, 40).filter((u) => u.indexOf("u-") === 0),
+      klice: kratkeTexty(d.k, 200, 80),
       nazvyUloh: nazvy(d.v),
       ...(d.p === "A" || d.p === "B" ? { pisemka: d.p as Varianta } : {}),
     };
@@ -110,15 +114,55 @@ export function dekoduj(kod: string): Postup | null {
   }
 }
 
-/** Skóre sad z kódu – jen dvojice a trojice čísel. */
+/*
+ * Kontrola obsahu kódu (audit 4. 10. 2026). Kód je přehled, ne důkaz – jde
+ * o to, aby poškozený nebo upravený kód neshodil Přehled třídy a neukázal
+ * nesmysl (NaN, záporné body, tisíc lekcí). Platné starší kódy projdou beze
+ * změny.
+ */
+const MAX_DELKA_KODU = 20000;
+
+/** Konečné nezáporné celé číslo do `max`; jinak 0. */
+function celeCislo(x: unknown, max: number): number {
+  const n = Number(x);
+  return Number.isFinite(n) && n >= 0 ? Math.min(Math.floor(n), max) : 0;
+}
+
+/** Čísla lekcí: kladná celá čísla do 999, bez opakování, nejvýš 100 položek. */
+function cislaLekci(x: unknown): number[] {
+  if (!Array.isArray(x)) return [];
+  const vysledek: number[] = [];
+  for (const h of x.slice(0, 100)) {
+    const n = Number(h);
+    if (Number.isInteger(n) && n > 0 && n < 1000 && vysledek.indexOf(n) === -1) vysledek.push(n);
+  }
+  return vysledek;
+}
+
+/** Krátké texty ze seznamu: nejvýš `pocet` položek, každá nejvýš `delka` znaků. */
+function kratkeTexty(x: unknown, pocet: number, delka: number): string[] {
+  if (!Array.isArray(x)) return [];
+  return x
+    .slice(0, pocet)
+    .filter((v) => typeof v === "string" || typeof v === "number")
+    .map((v) => String(v).slice(0, delka));
+}
+
+/** Skóre sad z kódu – jen dvojice a trojice nezáporných celých čísel. */
 function skoreSad(x: unknown): Record<string, SkoreSady> {
   const vysledek: Record<string, SkoreSady> = {};
-  if (!x || typeof x !== "object") return vysledek;
-  Object.keys(x as object).forEach((id) => {
-    const s = (x as Record<string, unknown>)[id];
-    if (!Array.isArray(s) || s.length < 2) return;
-    vysledek[id] = s.length > 2 ? [Number(s[0]) || 0, Number(s[1]) || 0, Number(s[2]) || 0] : [Number(s[0]) || 0, Number(s[1]) || 0];
-  });
+  if (!x || typeof x !== "object" || Array.isArray(x)) return vysledek;
+  Object.keys(x as object)
+    .slice(0, 40)
+    .forEach((id) => {
+      if (id.length > 40) return;
+      const s = (x as Record<string, unknown>)[id];
+      if (!Array.isArray(s) || s.length < 2) return;
+      const celkem = celeCislo(s[1], 1000);
+      // Samostatně ani s řešením nemůže být víc než celkem.
+      const sam = Math.min(celeCislo(s[0], 1000), celkem);
+      vysledek[id] = s.length > 2 ? [sam, celkem, Math.min(celeCislo(s[2], 1000), celkem)] : [sam, celkem];
+    });
   return vysledek;
 }
 
@@ -130,8 +174,8 @@ export function skoreSadyText(s: SkoreSady, sReseni: string): string {
 /** Názvy úloh z kódu – jen krátké texty, cokoli jiného se zahodí. */
 function nazvy(v: unknown): Record<string, string> {
   const vysledek: Record<string, string> = {};
-  if (!v || typeof v !== "object") return vysledek;
-  Object.keys(v as object).forEach((k) => {
+  if (!v || typeof v !== "object" || Array.isArray(v)) return vysledek;
+  Object.keys(v as object).slice(0, 100).forEach((k) => {
     const n = (v as Record<string, unknown>)[k];
     if (k.indexOf("u-") === 0 && typeof n === "string") vysledek[k] = n.slice(0, 60);
   });

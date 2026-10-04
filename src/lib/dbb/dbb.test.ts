@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import { rozdelPrikazy, druhPrikazu, prikazNaPozici, pocetRadku, zakomentujZmeny } from "@/lib/dbb/prikazy";
 import { KURZ, hlavniTabulka, lekceHotova, povinne, coSKnihovnou, rozdelSkore } from "@/lib/dbb/kurz";
 import { LESSONS } from "@/lib/sqlExercise";
-import { naBase64, zBase64, upravNazev, velikost } from "@/lib/dbb/soubory";
+import { naBase64, zBase64, upravNazev, velikost, velikostDisku, vejdeSe, ROZPOCET_DISKU } from "@/lib/dbb/soubory";
 import { zvyrazni } from "@/lib/dbb/zvyrazneni";
 import { chybaCesky } from "@/lib/dbb/chyby";
 import { podminkaFiltru } from "@/components/dbb/KartaData";
@@ -291,5 +291,20 @@ describe("skóre podle hodin", () => {
   it("rozdělí lekce na dotazy 1–13 a program 14–19", () => {
     expect(rozdelSkore([1, 2, 3, 4, 5, 6, 7, 8, 9])).toEqual({ dotazy: [9, 13], program: [0, 6] });
     expect(rozdelSkore([13, 14, 19, 20])).toEqual({ dotazy: [1, 13], program: [2, 6] });
+  });
+});
+
+describe("rozpočet disku v prohlížeči", () => {
+  const soubor = (n: number) => ({ bajty: new Uint8Array(n), zmeneno: 0 });
+  it("velikost odpovídá base64 v JSON (o třetinu víc než bajty)", () => {
+    const n = velikostDisku({ "a.db": soubor(3000) });
+    expect(n).toBeGreaterThan(4000);
+    expect(n).toBeLessThan(4100);
+  });
+  it("dvě databáze po 1,4 MB se vejdou, tři po 2 MB ne", () => {
+    const MB = 1024 * 1024;
+    expect(vejdeSe({ "a.db": soubor(1.4 * MB), "b.db": soubor(1.4 * MB) })).toBe(true);
+    expect(vejdeSe({ "a.db": soubor(2 * MB), "b.db": soubor(2 * MB), "c.db": soubor(2 * MB) })).toBe(false);
+    expect(ROZPOCET_DISKU).toBe(4_000_000);
   });
 });
