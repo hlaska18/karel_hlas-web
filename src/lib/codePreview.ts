@@ -1,6 +1,6 @@
 /**
  * Klientský náhled souborů s kódem: zvýraznění syntaxe přes highlight.js
- * (lazy z CDN, stejně jako docx-preview u Wordu). Nic se neposílá na cizí službu –
+ * (lazy z vlastní kopie, CDN je záloha – `knihovny.ts`). Nic se neposílá na cizí službu –
  * soubor si stáhne prohlížeč a obarví ho lokálně.
  *
  * Pozn. k tématu: highlight.js CSS téma z CDN je vždy jen JEDNO (buď světlé, nebo
@@ -9,16 +9,7 @@
  * proměnných a pod `.dark` se přepnou na tmavou paletu (GitHub light/dark).
  */
 
-// Oficiální browser-build highlight.js (vystaví globální `window.hljs` a obsahuje
-// „common" sadu jazyků: python, sql, javascript, typescript, json, xml/html, css,
-// java, c, cpp, bash… – tedy vše, co v bance potřebujeme).
-const HLJS_URL = "https://cdn.jsdelivr.net/npm/@highlightjs/cdn-assets@11.9.0/highlight.min.js";
-// Kontrola integrity (SRI) jako u sql.js, JSZipu a docx-preview: kdyby CDN
-// poslalo jiný soubor, prohlížeč ho nespustí. Bez ní by podvržený skript běžel
-// s oprávněními webu (Codex 29. 9. 2026). SHA-256 souboru ověřené proti
-// seznamu jsDelivr; při změně verze spočítat znovu:
-//   curl -s URL | openssl dgst -sha384 -binary | openssl base64 -A
-const HLJS_SRI = "sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp";
+import { nactiKnihovnu } from "@/lib/knihovny";
 
 type HljsGlobal = {
   highlight: (
@@ -47,27 +38,6 @@ const LANG_BY_EXT: Record<string, string> = {
   sh: "bash",
 };
 
-const scriptCache = new Map<string, Promise<void>>();
-
-function loadScript(src: string, integrity: string): Promise<void> {
-  const cached = scriptCache.get(src);
-  if (cached) return cached;
-  const p = new Promise<void>((resolve, reject) => {
-    const s = document.createElement("script");
-    s.src = src;
-    s.integrity = integrity;
-    s.crossOrigin = "anonymous";
-    s.async = true;
-    s.onload = () => resolve();
-    s.onerror = () => {
-      scriptCache.delete(src);
-      reject(new Error(`Nepodařilo se načíst ${src}`));
-    };
-    document.head.appendChild(s);
-  });
-  scriptCache.set(src, p);
-  return p;
-}
 
 const STYLE_ID = "hljs-dual-theme";
 
@@ -136,7 +106,9 @@ function ensureStyles(): void {
  * dangerouslySetInnerHTML. Zároveň zajistí načtení inline tématu.
  */
 export async function highlightCode(code: string, ext: string): Promise<string> {
-  await loadScript(HLJS_URL, HLJS_SRI);
+  // Oficiální browser-build highlight.js („common“ sada jazyků: python, sql,
+  // javascript, json, xml/html, css, java, c, cpp, bash…) – `knihovny.ts`.
+  await nactiKnihovnu("hljs");
   ensureStyles();
   const hljs = (window as unknown as { hljs?: HljsGlobal }).hljs;
   if (!hljs) throw new Error("highlight.js se nenačetlo");

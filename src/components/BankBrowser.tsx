@@ -1777,12 +1777,15 @@ function DocxView({
   useEffect(() => {
     let alive = true;
     let dispose: (() => void) | undefined;
+    // Zavření náhledu zruší i rozběhnuté stahování souboru (audit 4. 10. 2026)
+    // – pomalý dokument pak nemůže dobíhat zbytečně ani přepsat novější náhled.
+    const zruseni = new AbortController();
     setState("loading");
     import("@/lib/docxPreview")
       .then((m) => {
         if (!ref.current)
           throw new Error("Náhled byl zavřen před dokončením načítání");
-        return m.renderDocx(href, ref.current);
+        return m.renderDocx(href, ref.current, zruseni.signal);
       })
       .then((cleanup) => {
         // Náhled se mohl mezitím zavřít – sledování velikosti hned odpojíme.
@@ -1802,6 +1805,7 @@ function DocxView({
       });
     return () => {
       alive = false;
+      zruseni.abort();
       dispose?.();
     };
   }, [href]);
@@ -1835,11 +1839,17 @@ function XlsxView({ href, lang }: { href: string; lang: Lang }) {
   useEffect(() => {
     let alive = true;
     let dispose: (() => void) | undefined;
+    const zruseni = new AbortController();
     setState("loading");
     import("@/lib/xlsxPreview")
       .then((m) => {
         if (!ref.current) throw new Error("Náhled byl zavřen před dokončením načítání");
-        return m.renderXlsx(href, ref.current, { truncated: n.xlsxTruncated, sheetError: n.xlsxSheetError, sheetLabel: n.xlsxSheetLabel });
+        return m.renderXlsx(
+          href,
+          ref.current,
+          { truncated: n.xlsxTruncated, sheetError: n.xlsxSheetError, sheetLabel: n.xlsxSheetLabel },
+          zruseni.signal,
+        );
       })
       .then((cleanup) => {
         if (!alive) cleanup();
@@ -1855,6 +1865,7 @@ function XlsxView({ href, lang }: { href: string; lang: Lang }) {
       });
     return () => {
       alive = false;
+      zruseni.abort();
       dispose?.();
     };
   }, [href, n]);
@@ -1899,11 +1910,12 @@ function PptxView({
   useEffect(() => {
     let alive = true;
     let dispose: (() => void) | undefined;
+    const zruseni = new AbortController();
     setState("loading");
     import("@/lib/pptxPreview")
       .then((m) => {
         if (!ref.current) throw new Error("Náhled byl zavřen před dokončením načítání");
-        return m.renderPptx(href, ref.current, n.pptxNotes);
+        return m.renderPptx(href, ref.current, n.pptxNotes, zruseni.signal);
       })
       .then((cleanup) => {
         if (!alive) cleanup();
@@ -1919,6 +1931,7 @@ function PptxView({
       });
     return () => {
       alive = false;
+      zruseni.abort();
       dispose?.();
     };
   }, [href, n.pptxNotes]);
@@ -2120,10 +2133,11 @@ function CodeView({
 
   useEffect(() => {
     let alive = true;
+    const zruseni = new AbortController();
     setState("loading");
     (async () => {
       try {
-        const res = await fetch(href);
+        const res = await fetch(href, { signal: zruseni.signal });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
         const text = await res.text();
         const { highlightCode } = await import("@/lib/codePreview");
@@ -2138,6 +2152,7 @@ function CodeView({
     })();
     return () => {
       alive = false;
+      zruseni.abort();
     };
   }, [href, ext]);
 

@@ -1,0 +1,47 @@
+[
+  {
+    "id": "jszip",
+    "balik": "jszip",
+    "verze": "3.10.1",
+    "soubor": "dist/jszip.min.js",
+    "sri": "sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG",
+    "globalni": "JSZip",
+    "licence": "LICENSE.markdown"
+  },
+  {
+    "id": "docx",
+    "balik": "docx-preview",
+    "verze": "0.3.2",
+    "soubor": "dist/docx-preview.min.js",
+    "sri": "sha384-WbeDqP/pDz1XLGS3CK6UwoSPLG1dRLX4FQqEEWWBMc4j8KM3s5eojZQGdW9Of0xV",
+    "globalni": "docx",
+    "licence": "LICENSE"
+  },
+  {
+    "id": "pptx",
+    "balik": "pptx-preview",
+    "verze": "1.0.7",
+    "soubor": "dist/pptx-preview.umd.js",
+    "sri": "sha384-CwntHHT2FbwZXuCmbf6K93YaEB9xRVVLaqFJ7pdMykeQABb/3MA0sbt2lGbgi1Mr",
+    "globalni": "pptxPreview",
+    "licence": "package.json"
+  },
+  {
+    "id": "ssf",
+    "balik": "ssf",
+    "verze": "0.11.2",
+    "soubor": "ssf.js",
+    "sri": "sha384-DZW5XjxYscUY8wmZ+FkNSPvFmmSOJ07T1DeLGpSZy2fpINvrITb4tDIc9yLlbrw0",
+    "globalni": "SSF",
+    "licence": "LICENSE"
+  },
+  {
+    "id": "hljs",
+    "balik": "@highlightjs/cdn-assets",
+    "verze": "11.9.0",
+    "soubor": "highlight.min.js",
+    "sri": "sha384-F/bZzf7p3Joyp5psL90p/p89AZJsndkSoGwRpXcZhleCWhd8SnRuoYo4d0yirjJp",
+    "globalni": "hljs",
+    "licence": "LICENSE"
+  }
+]

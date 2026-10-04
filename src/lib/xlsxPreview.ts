@@ -12,15 +12,12 @@
  *   - formátované tabulky (záhlaví a pruhy), komentáře (červený roh),
  *   - kresby: textová pole a tvary, obrázky a grafy (vlastní SVG).
  *
- * Nic se nikam neposílá, knihovny jdou z CDN se SRI jako u Wordu.
+ * Nic se nikam neposílá, knihovny jdou z vlastní kopie (CDN je záloha) jako u Wordu.
  * Zjednodušeno: vzorce se nepočítají (bere se hodnota, kterou uložil Excel),
  * podmíněné formátování „vzorcem“ se vynechá a velké listy se oříznou.
  */
 
-const JSZIP_URL = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
-const JSZIP_SRI = "sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG";
-const SSF_URL = "https://cdn.jsdelivr.net/npm/ssf@0.11.2/ssf.js";
-const SSF_SRI = "sha384-DZW5XjxYscUY8wmZ+FkNSPvFmmSOJ07T1DeLGpSZy2fpINvrITb4tDIc9yLlbrw0";
+import { nactiKnihovnu } from "@/lib/knihovny";
 
 const MAX_ROWS = 600;
 const MAX_COLS = 60;
@@ -30,28 +27,6 @@ type JsZipFile = { async(type: "string" | "uint8array"): Promise<string | Uint8A
 type JsZip = { file(path: string): JsZipFile | null; files: Record<string, unknown> };
 type JsZipGlobal = { loadAsync(data: ArrayBuffer): Promise<JsZip> };
 type SsfGlobal = { format(fmt: string, v: number, o?: Record<string, unknown>): string; is_date(fmt: string): boolean };
-
-const scripts = new Map<string, Promise<void>>();
-function loadScript(src: string, integrity: string, global: string): Promise<void> {
-  if ((window as unknown as Record<string, unknown>)[global]) return Promise.resolve();
-  const cached = scripts.get(src);
-  if (cached) return cached;
-  const p = new Promise<void>((resolve, reject) => {
-    const s = document.createElement("script");
-    s.src = src;
-    s.async = true;
-    s.integrity = integrity;
-    s.crossOrigin = "anonymous";
-    s.onload = () => resolve();
-    s.onerror = () => {
-      scripts.delete(src);
-      reject(new Error(`Nepodařilo se načíst ${src}`));
-    };
-    document.head.appendChild(s);
-  });
-  scripts.set(src, p);
-  return p;
-}
 
 // ---------------------------------------------------------------- XML
 
@@ -1996,12 +1971,13 @@ export async function renderXlsx(
   url: string,
   container: HTMLElement,
   strings: { truncated: (rows: number, cols: number) => string; sheetError: string; sheetLabel: string },
+  signal?: AbortSignal,
 ): Promise<() => void> {
-  await Promise.all([loadScript(JSZIP_URL, JSZIP_SRI, "JSZip"), loadScript(SSF_URL, SSF_SRI, "SSF")]);
+  await Promise.all([nactiKnihovnu("jszip"), nactiKnihovnu("ssf")]);
   const JSZip = (window as unknown as { JSZip?: JsZipGlobal }).JSZip;
   const ssf = (window as unknown as { SSF?: SsfGlobal }).SSF;
   if (!JSZip || !ssf) throw new Error("Knihovny pro náhled se nenačetly");
-  const res = await fetch(url);
+  const res = await fetch(url, { signal });
   if (!res.ok) throw new Error(`Soubor se nepodařilo stáhnout (${res.status})`);
   const zip = await JSZip.loadAsync(await res.arrayBuffer());
 

@@ -1,7 +1,7 @@
 /**
  * Klientský náhled .pptx – stejně jako Word se vykresluje přímo v prohlížeči.
  *
- * Snímky kreslí knihovna pptx-preview (lazy z CDN se SRI, soubor nikam
+ * Snímky kreslí knihovna pptx-preview (lazy z vlastní kopie, CDN je záloha – `knihovny.ts`; soubor nikam
  * neodchází – cizí prohlížeč Microsoftu rada u Wordu zamítla). Karel chtěl
  * vidět, co na snímcích „skutečně je“, ne textový výpis (2. 10. 2026).
  * Pod každý snímek se přidají poznámky pro vyučujícího, které knihovna
@@ -10,8 +10,7 @@
  * Když vykreslení selže, náhled spadne zpátky na textový přepis (`readPptx`).
  */
 
-const JSZIP_URL = "https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js";
-const JSZIP_SRI = "sha384-+mbV2IY1Zk/X1p/nWllGySJSUN8uMs+gUAN10Or95UBH0fpj6GfKgPmgC5EXieXG";
+import { nactiKnihovnu } from "@/lib/knihovny";
 
 export type Slide = {
   no: number;
@@ -32,56 +31,12 @@ type JsZipInstance = {
 };
 type JsZipGlobal = { loadAsync(data: ArrayBuffer): Promise<JsZipInstance> };
 
-const PPTX_URL = "https://cdn.jsdelivr.net/npm/pptx-preview@1.0.7/dist/pptx-preview.umd.js";
-const PPTX_SRI = "sha384-CwntHHT2FbwZXuCmbf6K93YaEB9xRVVLaqFJ7pdMykeQABb/3MA0sbt2lGbgi1Mr";
-
 type PptxGlobal = {
   init(
     el: HTMLElement,
     opts: { width: number; height: number },
   ): { preview(data: ArrayBuffer): Promise<unknown> };
 };
-
-let scriptPromise: Promise<void> | undefined;
-let pptxPromise: Promise<void> | undefined;
-
-function loadPptxPreview(): Promise<void> {
-  if (pptxPromise) return pptxPromise;
-  pptxPromise = new Promise<void>((resolve, reject) => {
-    if ((window as unknown as { pptxPreview?: unknown }).pptxPreview) return resolve();
-    const s = document.createElement("script");
-    s.src = PPTX_URL;
-    s.async = true;
-    s.integrity = PPTX_SRI;
-    s.crossOrigin = "anonymous";
-    s.onload = () => resolve();
-    s.onerror = () => {
-      pptxPromise = undefined;
-      reject(new Error("Nepodařilo se načíst pptx-preview"));
-    };
-    document.head.appendChild(s);
-  });
-  return pptxPromise;
-}
-
-function loadJsZip(): Promise<void> {
-  if (scriptPromise) return scriptPromise;
-  scriptPromise = new Promise<void>((resolve, reject) => {
-    if ((window as unknown as { JSZip?: unknown }).JSZip) return resolve();
-    const s = document.createElement("script");
-    s.src = JSZIP_URL;
-    s.async = true;
-    s.integrity = JSZIP_SRI;
-    s.crossOrigin = "anonymous";
-    s.onload = () => resolve();
-    s.onerror = () => {
-      scriptPromise = undefined;
-      reject(new Error("Nepodařilo se načíst JSZip"));
-    };
-    document.head.appendChild(s);
-  });
-  return scriptPromise;
-}
 
 /** Text z OOXML: každý `<a:t>` je kus textu, `<a:p>` odstavec (= řádek). */
 function textLines(xml: string): string[] {
@@ -116,7 +71,7 @@ export async function readPptx(url: string): Promise<Slide[]> {
 
 /** Text snímků, poznámky a poměr stran snímku (výška / šířka). */
 async function readPptxData(data: ArrayBuffer): Promise<{ slides: Slide[]; ratio: number }> {
-  await loadJsZip();
+  await nactiKnihovnu("jszip");
   const JSZip = (window as unknown as { JSZip?: JsZipGlobal }).JSZip;
   if (!JSZip) throw new Error("JSZip se nenačetlo");
   const zip = await JSZip.loadAsync(data);
@@ -162,7 +117,7 @@ const NS_A = "http://schemas.openxmlformats.org/drawingml/2006/main";
  * pak vyšel drobný a netučný. Pro PowerPoint je to totéž, jen zapsané v běhu.
  */
 async function normalizePptx(data: ArrayBuffer): Promise<ArrayBuffer> {
-  await loadJsZip();
+  await nactiKnihovnu("jszip");
   const JSZip = (window as unknown as { JSZip?: JsZipGlobal }).JSZip;
   if (!JSZip) throw new Error("JSZip se nenačetlo");
   const zip = await JSZip.loadAsync(data);
@@ -210,11 +165,12 @@ export async function renderPptx(
   url: string,
   container: HTMLElement,
   notesLabel: string,
+  signal?: AbortSignal,
 ): Promise<() => void> {
-  const res = await fetch(url);
+  const res = await fetch(url, { signal });
   if (!res.ok) throw new Error(`Soubor se nepodařilo stáhnout (${res.status})`);
   const data = await res.arrayBuffer();
-  const [{ slides, ratio }] = await Promise.all([readPptxData(data.slice(0)), loadPptxPreview()]);
+  const [{ slides, ratio }] = await Promise.all([readPptxData(data.slice(0)), nactiKnihovnu("pptx")]);
   const g = (window as unknown as { pptxPreview?: PptxGlobal }).pptxPreview;
   if (!g) throw new Error("pptx-preview se nenačetlo");
 

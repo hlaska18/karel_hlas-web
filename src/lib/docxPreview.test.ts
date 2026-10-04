@@ -1,19 +1,29 @@
 // @vitest-environment jsdom
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
-type Win = typeof window & { docx?: { renderAsync: ReturnType<typeof vi.fn> } };
+type Win = typeof window & {
+  docx?: { renderAsync: ReturnType<typeof vi.fn> };
+  JSZip?: unknown;
+};
 
 /**
  * jsdom does not actually fetch/execute <script src>, so we intercept the
  * append and decide whether the "load" succeeds (fires onload) or fails
- * (fires onerror) to exercise both branches of the lazy CDN loader.
+ * (fires onerror). A successful load also exposes the library's global, as
+ * the real script would – `docx` only when `docxGlobal` is given, so a test
+ * can simulate a script that loads but never defines its global.
  */
-function stubScriptLoading(mode: "load" | "error") {
+function stubScriptLoading(mode: "load" | "error", docxGlobal?: Win["docx"]) {
   return vi.spyOn(document.head, "appendChild").mockImplementation(((node: Node) => {
     const s = node as HTMLScriptElement;
     queueMicrotask(() => {
-      if (mode === "error") s.onerror?.(new Event("error"));
-      else s.onload?.(new Event("load"));
+      if (mode === "error") {
+        s.onerror?.(new Event("error"));
+        return;
+      }
+      if (s.src.includes("jszip")) (window as Win).JSZip = {};
+      if (s.src.includes("docx-preview") && docxGlobal) (window as Win).docx = docxGlobal;
+      s.onload?.(new Event("load"));
     });
     return node;
   }) as typeof document.head.appendChild);
@@ -28,6 +38,7 @@ async function freshRenderDocx() {
 describe("renderDocx", () => {
   beforeEach(() => {
     delete (window as Win).docx;
+    delete (window as Win).JSZip;
   });
 
   afterEach(() => {
@@ -35,11 +46,10 @@ describe("renderDocx", () => {
     vi.unstubAllGlobals();
   });
 
-  it("loads the CDN scripts, fetches the file, and renders into the container", async () => {
+  it("loads the libraries from the site's own copy, fetches the file, and renders", async () => {
     const renderDocx = await freshRenderDocx();
     const renderAsync = vi.fn().mockResolvedValue(undefined);
-    const append = stubScriptLoading("load");
-    (window as Win).docx = { renderAsync };
+    const append = stubScriptLoading("load", { renderAsync });
 
     const blob = new Blob(["doc"]);
     vi.stubGlobal(
@@ -52,11 +62,12 @@ describe("renderDocx", () => {
 
     await renderDocx("/materialy/a.docx", container);
 
-    expect(fetch).toHaveBeenCalledWith("/materialy/a.docx");
-    // Both JSZip and docx-preview scripts are requested.
+    expect(fetch).toHaveBeenCalledWith("/materialy/a.docx", { signal: undefined });
+    // Both JSZip and docx-preview come from /vendor (own copy), not the CDN.
     const srcs = append.mock.calls.map((c) => (c[0] as HTMLScriptElement).src);
-    expect(srcs.some((s) => s.includes("jszip"))).toBe(true);
-    expect(srcs.some((s) => s.includes("docx-preview"))).toBe(true);
+    expect(srcs.some((s) => s.includes("/vendor/jszip@"))).toBe(true);
+    expect(srcs.some((s) => s.includes("/vendor/docx-preview@"))).toBe(true);
+    expect(srcs.some((s) => s.includes("cdn.jsdelivr.net"))).toBe(false);
     expect(container.innerHTML).toBe("");
     expect(renderAsync).toHaveBeenCalledWith(
       blob,
@@ -68,8 +79,7 @@ describe("renderDocx", () => {
 
   it("caches each script so it is only appended once across calls", async () => {
     const renderDocx = await freshRenderDocx();
-    const append = stubScriptLoading("load");
-    (window as Win).docx = { renderAsync: vi.fn().mockResolvedValue(undefined) };
+    const append = stubScriptLoading("load", { renderAsync: vi.fn().mockResolvedValue(undefined) });
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({ ok: true, status: 200, blob: () => Promise.resolve(new Blob()) }),
@@ -82,14 +92,17 @@ describe("renderDocx", () => {
     expect(append).toHaveBeenCalledTimes(2);
   });
 
-  it("rejects when a CDN script fails to load", async () => {
+  it("falls back to the CDN and rejects when both fail to load", async () => {
     const renderDocx = await freshRenderDocx();
-    stubScriptLoading("error");
+    const append = stubScriptLoading("error");
     vi.stubGlobal("fetch", vi.fn());
 
     await expect(renderDocx("/materialy/a.docx", document.createElement("div"))).rejects.toThrow(
       /Nepodařilo se načíst/,
     );
+    const srcs = append.mock.calls.map((c) => (c[0] as HTMLScriptElement).src);
+    expect(srcs[0]).toContain("/vendor/jszip@");
+    expect(srcs[1]).toContain("cdn.jsdelivr.net/npm/jszip@");
   });
 
   it("throws when the docx-preview global never appears", async () => {
@@ -105,8 +118,7 @@ describe("renderDocx", () => {
 
   it("throws a helpful error when the file download fails", async () => {
     const renderDocx = await freshRenderDocx();
-    stubScriptLoading("load");
-    (window as Win).docx = { renderAsync: vi.fn() };
+    stubScriptLoading("load", { renderAsync: vi.fn() });
     vi.stubGlobal("fetch", vi.fn().mockResolvedValue({ ok: false, status: 404 }));
 
     await expect(
