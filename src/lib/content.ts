@@ -1309,6 +1309,8 @@ type Dict = {
     /** Uvozuje odkaz na licenci, proto končí bez tečky. */
     rights: string;
     affiliation: string;
+    /** Přiznání AI u ikon – Karel to učí v hodině 8 grafiky, web to má dodržet. */
+    ikonyAI: string;
     licenseName: string;
     /** Odkaz na text licence – česká i anglická verze mají vlastní „deed“. */
     licenseHref: string;
@@ -1900,6 +1902,7 @@ export const t: Record<Lang, Dict> = {
       // ten rozdíl mezi soukromou stránkou a výstupem školy.
       affiliation:
         "Materiály vznikají a ověřují se ve výuce na Střední průmyslové škole strojní a stavební Tábor.",
+      ikonyAI: "Ikony témat a předmětů vznikly s pomocí AI.",
       licenseName: "CC BY-NC-SA 4.0",
       licenseHref: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.cs",
       analytics: "Návštěvnost měřím anonymně, bez cookies.",
@@ -2478,6 +2481,7 @@ export const t: Record<Lang, Dict> = {
       rights: "Materials shared under",
       affiliation:
         "The materials are created and classroom-tested at Střední průmyslová škola strojní a stavební Tábor (Secondary Technical School, Tábor, Czechia).",
+      ikonyAI: "The topic and subject icons were made with the help of AI.",
       licenseName: "CC BY-NC-SA 4.0",
       licenseHref: "https://creativecommons.org/licenses/by-nc-sa/4.0/deed.en",
       analytics: "Traffic is measured anonymously, without cookies.",

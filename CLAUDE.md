@@ -247,6 +247,21 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   `a:defRPr` do `a:rPr` (jinak malé nadpisy). Pod snímkem rozbalovací
   poznámky. Když selže, zůstane starý textový náhled (`PptxTextView`).
 
+### Ikony témat a předmětů (4. 10. 2026)
+- Nová jednotná sada z Higgsfieldu: matné pískované smaragdové sklo podle
+  původní ikony databáze, čelem, zjednodušené tvary (čitelné v 56 px).
+  Mozek u umělé inteligence je z původní sady (Karel). Python = logo Pythonu
+  ve dvou odstínech zelené, matematika ±, chemie baňka, hudební výchova dvě
+  noty, strojírenství ozubené kolo, Power BI sloupce bez podstavy.
+- **Postup, zadání a skript: scripts/ikony/README.md** (`normalizuj.py`
+  ořízne, vyčistí a opticky vyrovná). Novou ikonu dělej jen tak, motiv
+  neměň bez Karla a ukaž mu varianty ve skutečné velikosti na webu.
+- V patičce věta „Ikony … vznikly s pomocí AI“ (`footer.ikonyAI`).
+- Po výměně PNG pod stejným jménem drží lokální server staré ikony –
+  smazat `.next/cache/images` a `.next/dev/cache/images`. Produkce ikony
+  posílá s `max-age=0`, tam to nehrozí.
+- Ikony jsou do listopadu zmrazené (rada 29. 9.: nic nestavět).
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

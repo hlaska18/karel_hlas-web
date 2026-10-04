@@ -11,8 +11,11 @@ import { TOOL_ICON } from "@/lib/bankLabels";
 export function ToolGlassIcon({
   tool,
   className = "h-full w-full object-contain",
-  hoverClassName = "group-hover:scale-105",
-  sizes = "(min-width: 1024px) 152px, 96px",
+  hoverClassName = "motion-safe:group-hover:scale-105",
+  // Dlaždice: na mobilu 80 px (w-20), od 640 px až 152 px (max-w-[9.5rem]).
+  // Dřív tu bylo „od 1024 px“, takže tablet dostal 96px obrázek do 152px
+  // rámečku (Codex 4. 10. 2026).
+  sizes = "(min-width: 640px) 152px, 80px",
 }: {
   tool: string;
   className?: string;

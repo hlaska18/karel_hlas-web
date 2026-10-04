@@ -68,6 +68,9 @@ export function Footer() {
           <p className="max-w-[34rem] text-xs text-zinc-600 dark:text-zinc-400">
             {tr.footer.affiliation}
           </p>
+          <p className="text-xs text-zinc-600 dark:text-zinc-400">
+            {tr.footer.ikonyAI}
+          </p>
           {/* Vercel Analytics neukládá cookies ani neidentifikuje návštěvníka,
               takže souhlas nepotřebuje – ale mlčet se o měření nemá. */}
           {/* Odkaz stojí hned za větou o měření: kdo se nad ní pozastaví,
