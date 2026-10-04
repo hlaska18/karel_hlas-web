@@ -109,11 +109,13 @@ export default function RootLayout({
   return (
     // lang="cs" je výchozí: na /en ho níž přepíše skript ještě před vykreslením.
     // Nastavit ho rovnou správně by šlo jen dvěma kořenovými layouty (route
-    // groups) – to jsem zkusil a Next 14 při nich neumí vlastní 404 pro neznámé
-    // adresy, takže by web přišel o vlastní chybovou stránku. Zůstává tedy
-    // skript + `useEffect` v LanguageProvider; v surovém HTML ze serveru je
-    // pořád "cs", což je pro čtečky i vyhledávače v pořádku až od chvíle, kdy
-    // běží JS. Až projekt přejde na Next 15, dá se to udělat pořádně.
+    // groups). Vlastní 404 by pak v Nextu 16 potřebovala `global-not-found`,
+    // který je pořád experimentální (`experimental.globalNotFound`) – na
+    // ostrém webu ho nechceme. Zůstává tedy skript + `useEffect`
+    // v LanguageProvider; v surovém HTML ze serveru je na /en pořád "cs" a
+    // správně je až od chvíle, kdy běží JS (viz ZNAME-LIMITY.md). Kurz SQL
+    // s `?z=en` si jazyk nastavuje sám podle toho, která podoba je vidět
+    // (`ObalProgramu` v components/dbb/PodleSirky.tsx).
     <html lang="cs" suppressHydrationWarning>
       <body
         className="font-sans antialiased selection:bg-accent-700 selection:text-white"

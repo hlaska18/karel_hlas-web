@@ -20,6 +20,7 @@ import {
   JenVeWebu,
   TlacitkoDoProgramu,
   UlohaVeWebu,
+  HlavniWebu,
 } from "@/components/dbb/PodleSirky";
 
 export const metadata: Metadata = {
@@ -87,7 +88,7 @@ export default async function SqlPage({
         </nav>
       </header>
 
-      <main id="main" className="container-page py-10 sm:py-14">
+      <HlavniWebu className="container-page py-10 sm:py-14">
         <p className="text-sm font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
           Interaktivní kurz
         </p>
@@ -193,7 +194,7 @@ export default async function SqlPage({
             Otevřít SQLBolt <ExternalLink className="h-4 w-4" />
           </a>
         </section>
-      </main>
+      </HlavniWebu>
       </ObalWebu>
       </PodobaKurzu>
     </LanguageProvider>

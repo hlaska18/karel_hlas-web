@@ -18,6 +18,7 @@
 
 import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
 import { jePocitac } from "@/components/JenNaPocitaci";
+import { jeAnglicky } from "@/lib/dbb/jazyk";
 
 export type Podoba = "program" | "web";
 
@@ -92,20 +93,61 @@ export function PodobaKurzu({ children }: { children: ReactNode }) {
  */
 export function ObalProgramu({ children }: { children: ReactNode }) {
   const { podoba } = usePodoba();
+  // Jazyk stránky podle toho, co je vidět: program je s `?z=en` anglicky,
+  // webová podoba vždy česky. Bez toho zůstalo <html lang="cs"> i nad
+  // anglickým programem a čtečka ho četla česky (audit 4. 10. 2026).
+  // `jeAnglicky()` čte adresu, takže na serveru je vždy „cs“ – do atributu
+  // se proto propíše až po připojení, jinak by se HTML ze serveru a z
+  // prohlížeče lišilo.
+  const [en, nastavEn] = useState(false);
+  useEffect(() => nastavEn(jeAnglicky()), []);
+  useEffect(() => {
+    document.documentElement.lang = podoba === "program" && en ? "en" : "cs";
+  }, [podoba, en]);
   const trida =
     podoba === null
       ? "hidden vyska-obrazovky w-full overflow-hidden lg:block"
       : podoba === "program"
         ? "vyska-obrazovky w-full overflow-hidden"
         : "hidden";
-  return <div className={trida}>{podoba === "program" ? children : null}</div>;
+  // Cíl „Přeskočit na obsah“ nese jen ta podoba, která je vidět – dvě stejná
+  // `id="main"` (jedno skryté) by odkaz poslala do neviditelné větve.
+  return (
+    <div
+      id={podoba === "program" ? "main" : undefined}
+      tabIndex={podoba === "program" ? -1 : undefined}
+      lang={en ? "en" : "cs"}
+      className={`${trida} focus:outline-none`}
+    >
+      {podoba === "program" ? children : null}
+    </div>
+  );
+}
+
+/** Hlavní obsah webové podoby – `id="main"` jen když je webová podoba vidět. */
+export function HlavniWebu({ children, className }: { children: ReactNode; className?: string }) {
+  const { podoba } = usePodoba();
+  return (
+    <main
+      id={podoba === "program" ? undefined : "main"}
+      tabIndex={-1}
+      className={`${className ?? ""} focus:outline-none`}
+    >
+      {children}
+    </main>
+  );
 }
 
 /** Obal webové podoby. Obsah je v HTML vždycky – kvůli vyhledávačům. */
 export function ObalWebu({ children }: { children: ReactNode }) {
   const { podoba } = usePodoba();
   const trida = podoba === null ? "lg:hidden" : podoba === "web" ? "" : "hidden";
-  return <div className={trida}>{children}</div>;
+  // Webová podoba je jen česky, i když přišel z anglického webu (`?z=en`).
+  return (
+    <div lang="cs" className={trida}>
+      {children}
+    </div>
+  );
 }
 
 /**

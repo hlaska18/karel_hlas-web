@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import { usePathname } from "next/navigation";
 
 /**
@@ -13,7 +14,14 @@ import { usePathname } from "next/navigation";
  */
 export function SkipLink() {
   const pathname = usePathname() ?? "/";
-  const en = pathname === "/en" || pathname.startsWith("/en/");
+  // Kurz SQL je anglicky s `?z=en`. Parametr se čte až v prohlížeči:
+  // `useSearchParams` v kořenovém layoutu by stránkám vzal statické
+  // vykreslení.
+  const [sqlEn, nastavSqlEn] = useState(false);
+  useEffect(() => {
+    nastavSqlEn(pathname === "/sql" && new URLSearchParams(window.location.search).get("z") === "en");
+  }, [pathname]);
+  const en = pathname === "/en" || pathname.startsWith("/en/") || sqlEn;
 
   return (
     <a

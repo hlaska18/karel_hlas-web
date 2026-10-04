@@ -32,7 +32,11 @@ export default function StrankaMacOS() {
       */}
       <JenNaPocitaci
         jinak={
-          <div className="flex vyska-obrazovky w-full flex-col items-center justify-center gap-4 px-6 text-center">
+          <main
+            id="main"
+            tabIndex={-1}
+            className="flex vyska-obrazovky w-full flex-col items-center justify-center gap-4 px-6 text-center focus:outline-none"
+          >
             <h1 className="font-display text-2xl font-bold tracking-nadpis">Virtuální macOS</h1>
             <p className="max-w-sm text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
               Tohle prostředí běží jen na počítači s myší – na telefonu ani na tabletu se
@@ -44,10 +48,12 @@ export default function StrankaMacOS() {
             >
               Zpět na web
             </Link>
-          </div>
+          </main>
         }
       >
-        <main className="vyska-obrazovky w-full overflow-hidden">
+        {/* `id="main"`: cíl odkazu „Přeskočit na obsah“ z kořenového layoutu
+            (audit 4. 10. 2026 – dřív tu chyběl a odkaz nikam nevedl). */}
+        <main id="main" tabIndex={-1} className="vyska-obrazovky w-full overflow-hidden focus:outline-none">
           <VirtualniMac />
         </main>
       </JenNaPocitaci>
