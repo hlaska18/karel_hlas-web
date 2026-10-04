@@ -7,6 +7,7 @@ import {
   fmtSize,
   tileSubtitle,
   countByKind,
+  countBreakdown,
 } from "@/lib/bankLabels";
 import type { BankItem } from "@/lib/materials";
 
@@ -164,5 +165,22 @@ describe("countByKind", () => {
       it({ external: true }),
     ]);
     expect(c).toEqual({ soubory: 2, nastroje: 1, odkazy: 1 });
+  });
+});
+
+describe("countBreakdown", () => {
+  it("téma jen s odkazy hlásí odkazy, ne materiály", () => {
+    const items = [makeItem({ external: true }), makeItem({ external: true })];
+    expect(countBreakdown(items, "cs")).toBe("2 odkazy");
+    expect(countBreakdown(items, "en")).toBe("2 links");
+  });
+
+  it("vypíše všechny nenulové druhy", () => {
+    const items = [makeItem(), makeItem(), makeItem({ interactive: true }), makeItem({ external: true })];
+    expect(countBreakdown(items, "cs")).toBe("2 materiály · 1 nástroj v prohlížeči · 1 odkaz");
+  });
+
+  it("prázdný výsledek je nula materiálů", () => {
+    expect(countBreakdown([], "cs")).toBe("0 materiálů");
   });
 });

@@ -20,7 +20,7 @@ import type { Lang } from "@/lib/content";
 import type { BankItem } from "@/lib/materials";
 import { zaznamenejStazeni } from "@/lib/mereni";
 import { fmtSize, countMaterials } from "@/lib/bankLabels";
-import { SITE } from "@/lib/content";
+import { SITE, overenoText } from "@/lib/content";
 import { Reveal } from "@/components/Reveal";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionJump } from "@/components/SectionJump";
@@ -285,7 +285,10 @@ function SubjectTile({
                     </p>
                     {/* Co učitele zaskočí – účty, jazyk, expirace, limity. */}
                     <p className="mt-0.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-                      {sazba(t.note, lang)}
+                      {sazba(t.note, lang)}{" "}
+                      <span className="whitespace-nowrap">
+                        · {overenoText(t.overeno, lang)}
+                      </span>
                     </p>
                   </li>
                 ))}

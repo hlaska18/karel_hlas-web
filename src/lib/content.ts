@@ -1219,7 +1219,14 @@ type Dict = {
       what: string;
       icon: string;
       tool?: string;
-      tools?: { name: string; url: string; why: string; note: string }[];
+      tools?: {
+        name: string;
+        url: string;
+        why: string;
+        note: string;
+        /** Kdy jsem nástroj naposledy ověřil („2026-10“). Bez údaje platí `OVERENO_PUVODNE`. */
+        overeno?: string;
+      }[];
     }[];
   };
   /**
@@ -1259,6 +1266,8 @@ type Dict = {
         /** Na co to učitel reálně nasadí – konkrétní situace z jeho týdne. */
         pouziti: string;
         note: string;
+        /** Kdy jsem nástroj naposledy ověřil („2026-10“). Bez údaje platí `OVERENO_PUVODNE`. */
+        overeno?: string;
       }[];
     }[];
   };
@@ -1324,6 +1333,21 @@ type Dict = {
   };
   ui: { theme: string };
 };
+
+/**
+ * Kdy byly ověřené nástroje bez vlastního údaje `overeno` – celý původní
+ * výběr pro předměty i AI Hub jsem procházel v srpnu 2026. Nový nebo znovu
+ * prověřený nástroj dostane vlastní datum (audit 4. 10. 2026: jedno společné
+ * datum stárne u všech naráz).
+ */
+export const OVERENO_PUVODNE = "2026-08";
+
+/** „Ověřeno 8/2026“ / „Checked 8/2026“. */
+export function overenoText(overeno: string | undefined, lang: Lang): string {
+  const [rok, mesic] = (overeno ?? OVERENO_PUVODNE).split("-");
+  const kdy = `${Number(mesic)}/${rok}`;
+  return lang === "en" ? `Checked ${kdy}` : `Ověřeno ${kdy}`;
+}
 
 export const t: Record<Lang, Dict> = {
   cs: {
@@ -1428,7 +1452,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Jak si s AI ušetřit čas kolem hodiny",
       badge: "Nová sekce",
       intro:
-        "Návody na učitelovu vlastní práci, ne na hodinu: čím si pomoct při přípravě a co potom – při opravování, vyhodnocování a reflexi. Nic teoretického a nic pro studenty. Tipy na AI, které nikdo nezkusil, najdeš na internetu tisíckrát; sem se dostane jen postup, u kterého dokážu napsat, na čem jsem ho zkusil, kolik času ušetřil a jestli se vůbec vyplatil.",
+        "Nástroje na učitelovu vlastní práci kolem hodiny – na přípravu, opravování, vyhodnocování a reflexi – a k nim pár věcí, které jde pustit rovnou žákům. Ověřené postupy sem budou přibývat postupně: dostane se sem jen takový, u kterého dokážu napsat, na čem jsem ho zkusil, kolik času opravdu ušetřil a jestli se vůbec vyplatil. Tipy, které nikdo nezkusil, za ověřené nevydávám.",
       labelCil: "Co bylo potřeba udělat",
       labelNastroj: "AI nástroj a postup",
       labelOvereni: "Na čem jsem to zkusil",
@@ -1453,7 +1477,7 @@ export const t: Record<Lang, Dict> = {
       intro:
         "Digitální dovednosti se podle nových osnov učí napříč předměty, ne jen v informatice. Klikni na svůj předmět – najdeš u něj nástroje do hodiny a u každého je napsané, jestli potřebuje účet, jestli je česky a co tě při první hodině zaskočí. Cvičebnici k Wordu a Excelu najdeš v bance materiálů nahoře.",
       note:
-        "Nástroje jsou ověřené k srpnu 2026 – u cloudových služeb se podmínky mění, před hodinou si je proklikni. Učíš jiný předmět a něco ve výuce používáš? Napiš mi, rád to sem doplním a uvedu tě jako autora.",
+        "U každého nástroje je, kdy jsem ho naposledy ověřil – u cloudových služeb se podmínky mění, před hodinou si je proklikni. Učíš jiný předmět a něco ve výuce používáš? Napiš mi, rád to sem doplním a uvedu tě jako autora.",
       inviteTitle: "Chybí tu tvůj předmět?",
       inviteText: "Napiš mi, co ve svých hodinách používáš.",
       // Dřív tu byly jen odkazy k autorovi; od nahrání cvičebnice k Office
@@ -1667,12 +1691,12 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Microsoft Copilot",
               url: "https://copilot.microsoft.com",
-              why: "Nejblíž tomu, co škola nejspíš už má – přihlásíš se školním účtem a zůstaneš v prostředí Microsoftu.",
+              why: "Nejblíž tomu, co škola nejspíš už má: se školním účtem Microsoft 365 je to Copilot Chat a zůstaneš v prostředí Microsoftu.",
               navod:
                 "Přihlas se školním účtem, ne osobním – ochrana dat platí jen u toho školního. Do prvního zadání dej vždycky tři věci: kdo jsi, pro koho to je a kolik na to máš času („Učím informatiku v prvním ročníku SŠ, potřebuju aktivitu na 20 minut na…“). Bez nich dostaneš obecnou vatu, kterou stejně přepíšeš.",
               pouziti:
                 "Na přípravy, které se opakují: z osnovy tématu vygeneruješ pět kontrolních otázek na konec hodiny, zadání navíc pro rychlíky nebo shrnutí na tabuli. Práce žáků do něj neposílej – ani se školním účtem k tomu není důvod.",
-              note: "Zdarma, česky. Se školním účtem nabízí Microsoft ochranu dat, ale zapíná ji správce – ověř si u něj, jak to má vaše škola nastavené.",
+              note: "Zdarma, česky. Jestli máš se školním účtem Copilot Chat zapnutý, s ochranou dat a pro koho (učitelé, žáci), rozhoduje správce školního Microsoft 365 – ověř si u něj, jak to má vaše škola nastavené. Osobní Copilot a další placené funkce jsou jiná věc.",
             },
             {
               name: "Google Gemini",
@@ -1734,7 +1758,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Ideogram",
               url: "https://ideogram.ai",
-              why: "Z generátorů obrázků nejlíp zvládá čitelný text uvnitř obrázku – použitelné na plakát nebo nadpis.",
+              why: "Generátor obrázků, který umí do obrázku vložit krátký čitelný nápis – hodí se na plakát nebo nadpis.",
               navod:
                 "Text, který má být v obrázku, dej do popisu v uvozovkách – jinak si ho model přepíše po svém. Sahej po něm jen tam, kde má být nápis součástí obrázku; na běžnou ilustraci ti stačí Zoner a nemusíš zakládat účet.",
               pouziti:
@@ -1744,11 +1768,11 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Adobe Firefly",
               url: "https://firefly.adobe.com",
-              why: "Trénovaný na licencovaném obsahu, takže je u výstupů nejmenší riziko sporu o autorská práva.",
+              why: "Adobe uvádí, že model trénuje na licencovaném obsahu (Adobe Stock) a na dílech, u kterých autorská práva vypršela.",
               navod:
-                "Přihlas se účtem Adobe a hlídej si kredity – po vyčerpání měsíčního přídělu generování zpomalí. Ber ho na obrázky, které půjdou ven ze školy (web, ročenka, plakát na dveře), právě kvůli tomu nižšímu riziku.",
+                "Přihlas se účtem Adobe a hlídej si kredity – po vyčerpání měsíčního přídělu generování zpomalí. Ber ho na obrázky, které půjdou ven ze školy (web, ročenka, plakát na dveře): u nich se hodí vědět, z čeho model podle výrobce vychází.",
               pouziti:
-                "Obrázky, které opustí školu: web školy, ročenka, plakát na den otevřených dveří. Tam se nižší nejistota kolem práv vyplatí víc než rychlost.",
+                "Obrázky, které opustí školu: web školy, ročenka, plakát na den otevřených dveří. Tam se původ trénovacích dat řeší víc než rychlost.",
               note: "Chce účet Adobe, zdarma s měsíčním přídělem kreditů. Anglicky.",
             },
             {
@@ -2019,7 +2043,7 @@ export const t: Record<Lang, Dict> = {
       heading: "Using AI to save time around the lesson",
       badge: "New section",
       intro:
-        "Guides for a teacher's own work, not for the lesson: what helps when preparing, and what comes afterwards — marking, evaluating and reflecting. Nothing theoretical and nothing aimed at students. AI tips nobody has actually tried are all over the internet; nothing gets in here until I can say what I tried it on, how much time it saved, and whether it was worth it at all.",
+        "Tools for a teacher's own work around the lesson – preparing, marking, evaluating and reflecting – plus a few things you can hand straight to students. Tested methods will be added gradually: one only gets in once I can say what I tried it on, how much time it really saved, and whether it was worth it at all. Tips nobody has tried are not presented as tested.",
       labelCil: "What needed doing",
       labelNastroj: "AI tool and method",
       labelOvereni: "What I tried it on",
@@ -2044,7 +2068,7 @@ export const t: Record<Lang, Dict> = {
       intro:
         "Under the revised Czech curriculum, digital skills are taught across all subjects, not only in computer science. Open your subject and you will find tools for the lesson, each with a note on whether it needs an account, whether it is in Czech, and what will catch you out the first time. The Word and Excel workbook lives in the materials bank above.",
       note:
-        "Tools verified as of August 2026 – cloud services change their terms, so click through before the lesson. Teach another subject and use something good in class? Email me and I will add it here, credited to you.",
+        "Each tool shows when I last checked it – cloud services change their terms, so click through before the lesson. Teach another subject and use something good in class? Email me and I will add it here, credited to you.",
       inviteTitle: "Missing your subject?",
       inviteText: "Tell me what you use in your lessons.",
       // Not „to download": this section only links to the author so far.
@@ -2254,12 +2278,12 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Microsoft Copilot",
               url: "https://copilot.microsoft.com",
-              why: "Closest to what your school probably already has – you sign in with the school account and stay inside Microsoft.",
+              why: "Closest to what your school probably already has: with a school Microsoft 365 account it is Copilot Chat, and you stay inside Microsoft.",
               navod:
                 "Sign in with the school account, not a personal one – the data protection only applies to the school one. Always give your first prompt three things: who you are, who it is for, and how long you have. Without them you get generic filler you will rewrite anyway.",
               pouziti:
                 "For the prep that repeats: turn a topic outline into five check questions for the end of the lesson, an extra task for the fast finishers, or a summary for the board. Do not put pupils' work into it – even with a school account there is no reason to.",
-              note: "Free. With a school account Microsoft offers data protection, but an administrator switches it on – check how your school has it set.",
+              note: "Free. Whether your school account has Copilot Chat switched on, with data protection, and for whom (teachers, students) is up to your school's Microsoft 365 administrator – check how your school has it set. Personal Copilot and other paid features are a different thing.",
             },
             {
               name: "Google Gemini",
@@ -2321,7 +2345,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Ideogram",
               url: "https://ideogram.ai",
-              why: "Of the image generators it handles legible text inside the picture best – usable for a poster or a heading.",
+              why: "An image generator that can put short, legible lettering inside the picture – handy for a poster or a heading.",
               navod:
                 "Put the text you want inside the image in quotation marks – otherwise the model rewrites it its own way. Reach for it only when the lettering is part of the picture; for an ordinary illustration Zoner is enough.",
               pouziti:
@@ -2331,11 +2355,11 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Adobe Firefly",
               url: "https://firefly.adobe.com",
-              why: "Trained on licensed content, so its output carries the lowest risk of a copyright dispute.",
+              why: "Adobe states the model is trained on licensed content (Adobe Stock) and on works whose copyright has expired.",
               navod:
-                "Sign in with an Adobe account and watch your credits – once the monthly allowance runs out, generating slows down. Use it for images that leave the school, precisely because of that lower risk.",
+                "Sign in with an Adobe account and watch your credits – once the monthly allowance runs out, generating slows down. Use it for images that leave the school, where it helps to know what the model is built on according to its maker.",
               pouziti:
-                "Images that leave the school: the school website, a yearbook, an open-day poster. There the lower uncertainty about rights matters more than speed.",
+                "Images that leave the school: the school website, a yearbook, an open-day poster. There the origin of the training data matters more than speed.",
               note: "Needs an Adobe account, free with a monthly credit allowance. In English.",
             },
             {

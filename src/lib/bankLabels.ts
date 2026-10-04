@@ -173,6 +173,22 @@ export function tileSubtitle(c: TileCounts, lang: Lang): string {
 }
 
 /**
+ * Počet nad otevřeným tématem nebo výsledky hledání. Na rozdíl od dlaždice
+ * je tu místo, takže se vypíšou všechny nenulové druhy. Dřív tu stálo
+ * `countMaterials(results.length)` a téma se dvěma odkazy (Umělá inteligence)
+ * hlásilo po otevření „2 materiály“, zatímco jeho dlaždice „2 odkazy“
+ * (audit 4. 10. 2026).
+ */
+export function countBreakdown(items: BankItem[], lang: Lang): string {
+  const c = countByKind(items);
+  const casti: string[] = [];
+  if (c.soubory > 0) casti.push(countMaterials(c.soubory, lang));
+  if (c.nastroje > 0) casti.push(countTools(c.nastroje, lang));
+  if (c.odkazy > 0) casti.push(countLinks(c.odkazy, lang));
+  return casti.length ? casti.join(" · ") : countMaterials(0, lang);
+}
+
+/**
  * Velikost souboru pro popisek. Česky s desetinnou čárkou („3,2 MB"),
  * anglicky s tečkou. Prázdný řetězec u nulové velikosti.
  */

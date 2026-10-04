@@ -22,6 +22,7 @@ import { useState } from "react";
 import { AiHubSouhvezdi } from "@/components/AiHubSouhvezdi";
 import { useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
+import { overenoText } from "@/lib/content";
 import { SectionHeader } from "@/components/SectionHeader";
 import { SectionJump } from "@/components/SectionJump";
 import {
@@ -318,6 +319,7 @@ function KartaNastroje({
     navod: string;
     pouziti: string;
     note: string;
+    overeno?: string;
   };
   labelNavod: string;
   labelPouziti: string;
@@ -372,7 +374,8 @@ function KartaNastroje({
             </p>
           </div>
           <p className="mt-3 text-xs leading-relaxed text-zinc-500 dark:text-zinc-400">
-            {sazba(nastroj.note, lang)}
+            {sazba(nastroj.note, lang)}{" "}
+            <span className="whitespace-nowrap">· {overenoText(nastroj.overeno, lang)}</span>
           </p>
         </div>
       )}

@@ -50,6 +50,7 @@ import type { BankItem } from "@/lib/materials";
 import { zaznamenejStazeni } from "@/lib/mereni";
 import {
   TOOL_ORDER,
+  countBreakdown,
   countByKind,
   countLinks,
   countMaterials,
@@ -87,7 +88,7 @@ const STR: Record<
   }
 > = {
   cs: {
-    searchPlaceholder: "Hledat materiál, téma, nástroj…",
+    searchPlaceholder: "Hledat v materiálech do informatiky…",
     back: "Zpět na témata",
     searchResults: "Výsledky hledání: ",
     empty: "Nic neodpovídá. Zkus jiné slovo nebo se vrať na témata.",
@@ -111,7 +112,7 @@ const STR: Record<
     openSource: "Otevřít u zdroje",
   },
   en: {
-    searchPlaceholder: "Search material, topic, tool…",
+    searchPlaceholder: "Search computer science materials…",
     back: "Back to topics",
     searchResults: "Search results: ",
     empty: "Nothing matches. Try another word or go back to topics.",
@@ -577,7 +578,7 @@ export function BankBrowser({
                 : tool
                   ? `${toolLabel(tool, lang)}: `
                   : ""}
-              {countMaterials(results.length, lang)}
+              {countBreakdown(results, lang)}
             </p>
           </div>
 
