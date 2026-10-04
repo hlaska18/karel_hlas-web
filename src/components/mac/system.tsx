@@ -77,11 +77,39 @@ export function MacProvider({ children }: { children: ReactNode }) {
    * Proto se ukládá až od chvíle, kdy TENHLE efekt uvidí přesně ten stav,
    * který načítací efekt poslal.
    */
+  /*
+   * Hlídač dvou karet, stejný jako v kurzu SQL (audit 4. 10. 2026). Dvě
+   * otevřené karty by každá ukládala svou kopii disku a pozdější zápis by
+   * potichu přepsal práci z té druhé. Nejnovější karta vyhrává, starší se
+   * zastaví a nic neukládá. Přes localStorage a událost `storage` –
+   * BroadcastChannel starší Safari neumí.
+   */
+  const kartaId = useRef(`${Date.now()}-${Math.random().toString(36).slice(2)}`);
+  const [jinaKarta, nastavJinouKartu] = useState(false);
+  const jinaKartaRef = useRef(false);
+  useEffect(() => {
+    const k = "macos-vyuka-karta";
+    try {
+      localStorage.setItem(k, kartaId.current);
+    } catch {
+      /* bez úložiště se nic neukládá, takže není co hlídat */
+    }
+    const posluchac = (e: StorageEvent) => {
+      if (e.key === k && e.newValue && e.newValue !== kartaId.current) {
+        jinaKartaRef.current = true;
+        nastavJinouKartu(true);
+      }
+    };
+    window.addEventListener("storage", posluchac);
+    return () => window.removeEventListener("storage", posluchac);
+  }, []);
+
   useEffect(() => {
     if (!nacteno.current) {
       if (cekaSeNa.current !== null && stav === cekaSeNa.current) nacteno.current = true;
       return;
     }
+    if (jinaKartaRef.current) return;
     ulozMac(stav);
   }, [stav]);
 
@@ -106,7 +134,35 @@ export function MacProvider({ children }: { children: ReactNode }) {
     [stav, plocha, spust, stopa],
   );
 
-  return <MacContext.Provider value={hodnota}>{children}</MacContext.Provider>;
+  return (
+    <MacContext.Provider value={hodnota}>
+      {children}
+      {jinaKarta && (
+        <div className="fixed inset-0 z-[400] flex items-center justify-center bg-black/40 p-6">
+          <div
+            role="alertdialog"
+            aria-labelledby="mac-jina-karta"
+            className="max-w-[440px] rounded-xl bg-white px-5 py-4 text-[13px] leading-relaxed text-zinc-900 shadow-2xl"
+          >
+            <p id="mac-jina-karta" className="text-[14px] font-semibold">
+              macOS máš otevřený v jiné kartě
+            </p>
+            <p className="mt-2">
+              Aby se ti práce nepřepsala, tahle karta se zastavila a nic neukládá. Pracuj v té
+              novější – tuhle můžeš zavřít.
+            </p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="mt-3 rounded-md bg-[#0a84ff] px-3 py-1.5 text-[12px] font-medium text-white hover:brightness-110"
+            >
+              Pokračovat tady (načte macOS znovu)
+            </button>
+          </div>
+        </div>
+      )}
+    </MacContext.Provider>
+  );
 }
 
 export function useMac(): Kontext {
