@@ -19,7 +19,7 @@ ve světlém i tmavém režimu, ne zvětšené.
   zelené), Power BI = tři sloupce bez podstavy, matematika = ±,
   chemie = baňka, hudební výchova = dvě noty, strojírenství = ozubené kolo,
   Excel = list s ohnutým rohem a mřížkou (ladí s Wordem), grafika = paleta
-  se štětcem.
+  se štětcem, angličtina = dvě bubliny rozhovoru.
   Motiv neměň bez Karlova souhlasu; dvě varianty ukaž vedle sebe.
 
 ## Výroba (Higgsfield, GPT Image 2.5)

@@ -1,0 +1,20 @@
+[
+  {
+    "cs": "Python Tutor – krokování kódu",
+    "en": "Python Tutor – step through code",
+    "url": "https://pythontutor.com/visualize.html",
+    "note": {
+      "cs": "Web jiného autora. Vložíš krátký program a projdeš ho krok za krokem: u každého řádku vidíš, jaké hodnoty mají proměnné a co se volá. Hodí se na první cykly, seznamy a funkce – žák uvidí, proč mu program dělá něco jiného, než čekal. Zdarma, bez účtu, anglicky, s reklamou. Kód se spouští na jejich serveru (nejvýš asi 10 sekund), takže je to pomůcka na krátké ukázky, ne náhrada vývojového prostředí.",
+      "en": "A site by another author. Paste a short program and step through it: for every line you see the values of the variables and what is being called. Good for first loops, lists and functions – the student sees why the program does something other than expected. Free, no account, with ads. The code runs on their server (up to about 10 seconds), so it is for short examples, not a replacement for a development environment."
+    }
+  },
+  {
+    "cs": "JupyterLite – Python v prohlížeči bez instalace",
+    "en": "JupyterLite – Python in the browser without installing",
+    "url": "https://jupyterlite.readthedocs.io/en/stable/_static/lab/index.html",
+    "note": {
+      "cs": "Oficiální ukázka projektu Jupyter. Notebooky s Pythonem běží celé v prohlížeči, bez serveru a bez účtu. Práce se ukládá do úložiště prohlížeče, takže na jiném počítači není – notebook je potřeba stáhnout. Neumí všechno, co plný Jupyter, a některé knihovny nefungují; před hodinou si ověř, že tvoje úloha poběží. Anglicky.",
+      "en": "The official Jupyter project demo. Python notebooks run entirely in the browser, with no server and no account. Work is saved in the browser's storage, so it is not on another computer – download the notebook. It cannot do everything full Jupyter can and some libraries do not work; check your task runs before the lesson."
+    }
+  }
+]

@@ -1,0 +1,20 @@
+[
+  {
+    "cs": "Teachable Machine – vlastní model z příkladů",
+    "en": "Teachable Machine – your own model from examples",
+    "url": "https://teachablemachine.withgoogle.com",
+    "note": {
+      "cs": "Web Googlu. Žák nasbírá z webkamery dvě třídy příkladů (třeba dva předměty na lavici, ne obličeje spolužáků), natrénuje model a hned ho zkouší. Nejnázornější ukázka, co je trénovací sada a co se stane, když je jednostranná: model natrénovaný na jednom pozadí jinde selže. Zdarma, běží v prohlížeči a k trénování účet nepotřebuje; uložení modelu do cloudu chce účet Google. Anglicky.",
+      "en": "A Google site. The student collects two classes of examples from the webcam (two objects on the desk, say – not classmates' faces), trains a model and tries it straight away. The clearest way to show what a training set is and what happens when it is one-sided: a model trained on one background fails elsewhere. Free, runs in the browser and needs no account for training; saving the model to the cloud needs a Google account."
+    }
+  },
+  {
+    "cs": "TensorFlow Playground – neuronová síť na hraní",
+    "en": "TensorFlow Playground – a neural network to tinker with",
+    "url": "https://playground.tensorflow.org/",
+    "note": {
+      "cs": "Web Googlu. Malá neuronová síť přímo v prohlížeči: měníš data, šum, počet vrstev a rychlost učení a sleduješ chybu na trénovacích a testovacích datech. Je na tom vidět, že model, který se naučí trénovací data nazpaměť, na nových datech selže. Pro pokročilé a technické lyceum. Zdarma, bez účtu, open source, anglicky.",
+      "en": "A Google site. A small neural network right in the browser: change the data, noise, number of layers and learning rate and watch the loss on training and test data. It shows that a model which memorises the training data fails on new data. For advanced students. Free, no account, open source."
+    }
+  }
+]
