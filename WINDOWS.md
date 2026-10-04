@@ -26,23 +26,18 @@ které si žák sám napíše v Poznámkovém bloku.
 
 VSTUP A POSTUP
 --------------
-Cesta dovnitř: zamykací obrazovka → kód od vyučujícího → plocha.
+Cesta dovnitř: zamykací obrazovka → žák napíše své jméno → plocha.
 
-Kód je ORGANIZAČNÍ ZÁVORA, NE ZABEZPEČENÍ, a je to tak i napsané na
-obrazovce. Ověřuje se v prohlížeči, takže si ho kdokoli přečte ve zdrojovém
-kódu stránky – smysl má jediný: držet pohromadě třídu a odradit náhodného
-kolemjdoucího. Nechrání žádné údaje, protože tu žádné nejsou.
+Vstupní kódy (SPSTABOR, kódy tříd, WIN11, MACOS) Karel 25. 9. 2026 zrušil:
+nic nechránily ani neukládaly. Jméno slouží jen k tomu, aby učitel poznal,
+čí je kód postupu (viz níž). Přihlášení si pamatuje `sessionStorage`
+(`src/lib/win/pristup.ts`), takže po obnovení stránky se žák nepřihlašuje
+znovu.
 
-Kódy jsou v `src/lib/win/pristup.ts`. Společný je `SPSTABOR` a platí do Windows
-i do macOS (od 21. 9. 2026; dřívější `WIN11` a `OS2026` už neplatí). Vedle něj
-je kód pro každou třídu (`1LA-2026`, `1LB-2026`, `1S-2026`, `1P-2026`).
-Značky oborů jsou tytéž, jaké používá banka materiálů, takže není potřeba
-pamatovat si dvojí. Nová třída = jeden řádek navíc a nahrát web. Zadávání
-odpouští mezery, pomlčky, velikost písmen i diakritiku, takže projde
-i „SPŠ Tábor".
-
-POZOR: kód se ověřuje v prohlížeči, takže nový kód platí AŽ PO NASAZENÍ.
-Zapsat ho do souboru nestačí.
+Výsledek předá žák učiteli KÓDEM POSTUPU (`src/lib/postupSimulatoru.ts`):
+krátký text se jménem a splněnými úlohami, který vloží třeba do Teams.
+Učitel kódy vloží do přehledu a vidí, kdo co splnil. Kód je orientační
+přehled, ne důkaz – dá se přepsat, nic nepodepisuje.
 
 ÚČTY ŽÁKŮ TU NEJSOU. Dřív existovaly – žák si mohl založit přezdívku
 s heslem a jeho splněné úlohy se ukládaly na server, aby mohl pokračovat
@@ -93,20 +88,17 @@ níž, proč na sdíleném počítači.
 
 KDE SE UKLÁDÁ PRÁCE ŽÁKA
 ------------------------
-Všechno, co žák v prostředí vytvoří, je v jeho prohlížeči (localStorage).
-Klíč závisí na tom, jestli je přihlášený:
-
-  bez účtu     win11-vyuka-stav
-  s účtem      win11-vyuka-stav:<přezdívka>
+Všechno, co žák v prostředí vytvoří, je v jeho prohlížeči (localStorage)
+pod klíčem  win11-vyuka-stav  (`KLIC_ULOZISTE` v `src/lib/win/stav.ts`).
 
 To znamená:
 
  - práce přežije obnovení stránky, přestávku i vypnutí prohlížeče,
- - na JINÉM počítači po ní nezbyde nic – i u přihlášeného žáka se přenáší
-   jenom seznam splněných úloh, ne jeho soubory,
+ - na JINÉM počítači po ní nezbyde nic – přenést jde jen kód postupu se
+   seznamem splněných úloh, ne soubory,
  - v anonymním okně se nic neuloží,
- - ty jako učitel nevidíš, CO kdo vytvořil. Na server jde jen přezdívka
-   a seznam splněných úloh, a dnes není nic, čím by sis to přečetl.
+ - ty jako učitel nevidíš, CO kdo vytvořil, jen to, co je v kódu postupu.
+   Na server nejde nic.
 
 Vyčistit prostředí (vrátit výchozí stav): Start → Napájení → Vypnout a pak
 Zapnout znovu NEZABERE – to jen zhasne obrazovku. Stav se maže smazáním dat
@@ -116,24 +108,19 @@ webu v prohlížeči (Ctrl+Shift+Del → Data webů), nebo z konzole:
     .filter(k => k.startsWith("win11-vyuka-stav"))
     .forEach(k => localStorage.removeItem(k))
 
-POZOR na dvě věci. Smazání dat webu v prohlížeči vymaže i stavy ostatních
-tříd, které na tom počítači pracovaly – na sdíleném školním PC je to
-hrubý nástroj. A samotný  localStorage.removeItem("win11-vyuka-stav")
-smaže jen stav BEZ účtu; přihlášenému žákovi nechá ten jeho jmenný, proto
-je výš ten delší příkaz.
-
-Postup uložený na serveru si žák smaže sám: ve virtuálních Windows
-Nastavení → Účty. Smaže se tím celý záznam včetně hesla.
+POZOR: smazání dat webu v prohlížeči vymaže i práci ostatních tříd, které
+na tom počítači pracovaly (i v macOS a kurzu SQL) – na sdíleném školním PC
+je to hrubý nástroj. Delší příkaz výš maže jen Windows.
 
 
 ÚKOLOVNÍK
 ---------
-Vpravo dole je odkládací panel „Úkoly". 34 úkolů v šesti skupinách. Nic
+Vpravo dole je odkládací panel „Úkoly". 33 úkolů v sedmi skupinách. Nic
 nezakazuje ani nevynucuje – jen se sám odškrtne, když je výsledek na počítači
 vidět. Kontroluje se výsledek, ne cesta k němu: složku jde založit myší
 i příkazem  md  a platí obojí.
 
-Prvních 26 je na rozjezd – jeden krok, jedna nabídka. Skupina DELŠÍ ÚLOHY
+Prvních 25 je na rozjezd – jeden krok, jedna nabídka. Skupina DELŠÍ ÚLOHY
 je jinde: odpověď se zapisuje názvem složky, takže se kontroluje, jestli žák
 došel ke správnému číslu, ne jestli prošel správnou cestu.
 

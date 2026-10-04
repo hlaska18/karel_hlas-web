@@ -1,0 +1,32 @@
+# Po každém pushi na main (a u pull requestu) spustí testy a produkční
+# sestavení na Node 22 – stejné verzi, jakou používá Vercel. Výsledek je
+# vidět u commitu na GitHubu (zelená fajfka / červený křížek). Nasazení na
+# Vercel to nezastaví, jen včas řekne, že se něco rozbilo.
+name: Kontrola
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: kontrola-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  testy-a-build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - run: npm run build

@@ -1,60 +1,73 @@
-# Karel Hlas — osobní web
+# Materiály do výuky – Karel Hlas
 
-Osobní stránka Mgr. Karla Hlase, učitele informatiky a angličtiny na SPŠ Tábor.
-Bilingvní (CZ/EN), světlý i tmavý režim, minimalistický design se smaragdovým akcentem.
+Web [karelhlas.vercel.app](https://karelhlas.vercel.app): veřejná dvojjazyčná
+(CZ/EN) banka výukových materiálů pro učitele informatiky a nástroje, které
+běží přímo v prohlížeči. Světlý i tmavý režim, jedna stránka se sekcemi
+(banka, ostatní předměty, AI Hub, o mně, kontakt).
 
 ## Technologie
 
-- [Next.js 14](https://nextjs.org/) (App Router) + TypeScript
-- [Tailwind CSS](https://tailwindcss.com/)
-- [next-themes](https://github.com/pacocoursey/next-themes) — světlý/tmavý režim
-- [Framer Motion](https://www.framer.com/motion/) — jemné animace
-- [lucide-react](https://lucide.dev/) — ikony
+- [Next.js 16](https://nextjs.org/) (App Router), React 19, TypeScript
+- [Tailwind CSS 3](https://tailwindcss.com/), [next-themes](https://github.com/pacocoursey/next-themes), [lucide-react](https://lucide.dev/)
+- [sql.js](https://sql.js.org/) pro kurz SQL (vlastní kopie v `public/sqljs/`, CDN jako záloha)
+- [Vitest](https://vitest.dev/) pro testy
+- nasazení na [Vercel](https://vercel.com/) – push na `main` jde rovnou na web
+
+Před úpravou Next.js si přečti [`AGENTS.md`](AGENTS.md): Next 16 má oproti
+starším verzím změny a dokumentace k nainstalované verzi je v
+`node_modules/next/dist/docs/`.
 
 ## Spuštění lokálně
 
+Potřebuješ **Node 22** (stejně jako Vercel, viz `engines` v `package.json`).
+
 ```bash
-npm install      # jen poprvé
+npm ci           # instalace přesně podle package-lock.json
 npm run dev      # vývojový server na http://localhost:3000
+npm test         # testy (Vitest)
+npm run build    # produkční sestavení včetně kontroly TypeScriptu
 ```
 
-Produkční build a spuštění:
+Testy a sestavení se po každém pushi spouštějí i na GitHubu
+(`.github/workflows/kontrola.yml`, Node 22). Výsledek je vidět u commitu;
+nasazení na Vercel to nezastaví.
 
-```bash
-npm run build
-npm start
-```
+## Stránky
 
-## Samostatné stránky
-
-Kromě jednostránkového webu (`/` a `/en`) jsou tu dva nástroje do hodin:
-
-| Stránka | Co to je | Kde se upravuje |
+| Adresa | Co to je | Kde se upravuje |
 | --- | --- | --- |
-| `/sql` | Interaktivní kurz SQL v prohlížeči | `src/lib/sqlExercise.ts` |
-| `/windows` | Výuková simulace Windows 11 (vstup na kód, společný `SPSTABOR`) | `src/lib/win/`, `src/components/win/` — podrobně v [`WINDOWS.md`](WINDOWS.md) |
+| `/`, `/en` | jednostránkový web (česky, anglicky) | `src/components/Site.tsx`, texty v `src/lib/content.ts` |
+| `/windows` | výuková simulace Windows 11 | `src/lib/win/`, `src/components/win/` – podrobně v [`WINDOWS.md`](WINDOWS.md) |
+| `/macos` | výuková simulace macOS (srovnání s Windows) | `src/lib/mac/`, `src/components/mac/` |
+| `/sql` | kurz SQL v DB Browseru (`?z=en` anglicky) | `src/lib/dbb/`, `src/components/dbb/` |
+| `/soukromi` | co web ukládá | `src/app/soukromi/` |
 
-## Co kde upravit
+Do simulátorů i kurzu SQL se žák přihlásí jen svým jménem. Práce se ukládá
+do prohlížeče (`localStorage`) a učiteli ji žák předá **kódem postupu**
+(`src/lib/postupSimulatoru.ts`, `src/lib/dbb/kodPostupu.ts`). Účty ani
+vstupní kódy web nemá. Simulátory i kurz běží jen na počítači s myší.
 
-| Co | Soubor |
+## Jak přidat obsah
+
+| Co | Kde |
 | --- | --- |
-| **Texty (CZ i EN)**, kontakt, odkazy, sociální sítě | `src/lib/content.ts` |
-| **Odkaz na Odevzdávárnu** | `SUBMIT_URL` v `src/lib/content.ts` |
-| **Profilová fotka** | ulož jako `public/images/karel.jpg` |
-| Barvy / akcent | `tailwind.config.ts` (paleta `accent`) |
-| Pořadí sekcí | `src/app/page.tsx` |
+| **Materiál do banky** | soubor do `public/materialy/<kurz>/<téma>/` – podrobně v [`MATERIALY.md`](MATERIALY.md) |
+| Anglický název souboru nebo složky | `NAME_EN` v `src/lib/materials.ts` |
+| Popis složky nebo souboru | `_popis.json` ve složce |
+| Autor převzatých materiálů | `_autor.txt` ve složce |
+| Odkaz na cizí web v bance | `_zdroj.json` ve vlastní složce |
+| Nástroj tady na webu (laboratoř, simulátor) | `_nastroj.json` |
+| Které skupiny tvoří kartu lekce | `LESSON_CONFIG` v `src/components/BankBrowser.tsx` |
+| Nástroje pro ostatní předměty, AI Hub, texty sekcí | `src/lib/content.ts` |
+| Ověřený výstup do AI Hubu | `public/ai-hub/<slug>/vystup.json` |
+| Ikony témat a předmětů | [`scripts/ikony/README.md`](scripts/ikony/README.md) |
+| Barvy | `tailwind.config.ts` (paleta `accent`) |
 
-Vše podstatné (jména, telefon, e-mail, kabinet, odkazy) je na jednom místě
-v `src/lib/content.ts`, takže úpravy nevyžadují zásah do komponent.
+Banka čte složky při sestavení, takže nový soubor se na webu objeví po pushi
+(asi za minutu).
 
-## Nasazení (doména karelhlas.xyz)
+## Další dokumenty
 
-Nejjednodušší je [Vercel](https://vercel.com/):
-
-1. Nahraj projekt na GitHub.
-2. Na Vercelu „Import Project" → vyber repozitář (Next.js se rozpozná sám).
-3. V nastavení projektu přidej doménu `karelhlas.xyz` a u registrátora
-   nastav DNS podle pokynů Vercelu.
-
-> Poznámka: lokálně běží na Node 19. Pro nasazení i další vývoj doporučuji
-> přejít na **Node 20 LTS**.
+- [`CLAUDE.md`](CLAUDE.md) – předávka mezi relacemi: pravidla, rozhodnutí, historie změn
+- [`WINDOWS.md`](WINDOWS.md) – simulace Windows
+- [`MATERIALY.md`](MATERIALY.md) – jak přidávat materiály

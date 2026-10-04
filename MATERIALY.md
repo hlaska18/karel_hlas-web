@@ -24,10 +24,12 @@ PODSLOŽKY:
    public/materialy/1L/5/_ucitel/Python - metodické listy/MetodL00.pdf
  - Podsložka "_zaci/" = materiály s odznakem "Pro žáky" (vidí je všichni).
 
-ODZNAKY (jen v učitelském pohledu): u každého materiálu se ukáže "Pro učitele",
-"Pro žáky", nebo "Pro učitele i žáky". Přiřadí se automaticky podle názvu
-(metodika→učitel, pracovní list/úloha/žák→žáci, jinak oba) nebo přes složky
-_ucitel/_zaci. Když chceš jinak, napiš mi a nastavím to natvrdo.
+ODZNAKY: materiál jen pro učitele má štítek "učitelé", materiál jen pro žáky
+štítek "žáci". Většina materiálů je pro oba a štítek nemá. Přiřadí se
+automaticky podle názvu (metodika→učitel, pracovní list/úloha/žák→žáci,
+jinak oba) nebo přes složky _ucitel/_zaci. Řešení úloh z cvičebnic a Sbírky
+úloh mají štítek "učitelé" taky. Když chceš jinak, napiš mi a nastavím to
+natvrdo.
 
 ANGLICKÁ VERZE: názvy viditelných materiálů/složek mají anglický překlad
 (tabulka v src/lib/materials.ts). Nový materiál se v EN verzi zobrazí česky,
