@@ -531,6 +531,40 @@
   background: transparent;
 }
 
+/* Náhled Excelu v bance: klasický posuvník, který je vidět POŘÁD. macOS jinak
+   kreslí jen překryvný posuvník, co se ukáže až při posouvání, a bez touchpadu
+   se list nedal posunout do strany (Karel 4. 10. 2026). Vlastní
+   ::-webkit-scrollbar v Chromu i Safari překryvný režim vypne. Standardní
+   scrollbar-width/color se nastavují jen tam, kde ::-webkit-scrollbar není
+   (Firefox) – Chrome by jimi jinak vlastní vzhled přebil. */
+.nahled-posuv::-webkit-scrollbar {
+  width: 14px;
+  height: 14px;
+}
+
+.nahled-posuv::-webkit-scrollbar-track,
+.nahled-posuv::-webkit-scrollbar-corner {
+  background: #f1f1f1;
+}
+
+.nahled-posuv::-webkit-scrollbar-thumb {
+  background-clip: padding-box;
+  background-color: rgba(0, 0, 0, 0.35);
+  border: 3px solid transparent;
+  border-radius: 8px;
+}
+
+.nahled-posuv::-webkit-scrollbar-thumb:hover {
+  background-color: rgba(0, 0, 0, 0.55);
+}
+
+@supports not selector(::-webkit-scrollbar) {
+  .nahled-posuv {
+    scrollbar-width: auto;
+    scrollbar-color: rgba(0, 0, 0, 0.4) #f1f1f1;
+  }
+}
+
 /* Sklo hlavního panelu, Startu a rozbalovacích panelů. */
 .win-sklo {
   background-color: rgb(var(--win-panel) / 0.82);

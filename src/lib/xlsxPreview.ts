@@ -1995,7 +1995,7 @@ function renderPie(svg: Element, g: Group, left: number, top: number, right: num
 export async function renderXlsx(
   url: string,
   container: HTMLElement,
-  strings: { truncated: (rows: number, cols: number) => string; sheetError: string },
+  strings: { truncated: (rows: number, cols: number) => string; sheetError: string; sheetLabel: string },
 ): Promise<() => void> {
   await Promise.all([loadScript(JSZIP_URL, JSZIP_SRI, "JSZip"), loadScript(SSF_URL, SSF_SRI, "SSF")]);
   const JSZip = (window as unknown as { JSZip?: JsZipGlobal }).JSZip;
@@ -2027,6 +2027,10 @@ export async function renderXlsx(
   tabs.style.cssText = "display:flex;flex-wrap:wrap;gap:4px;padding:6px 8px;background:#E7E7E7;border-bottom:1px solid #C8C8C8;font:13px system-ui,sans-serif;position:sticky;top:0;z-index:10";
   const view = document.createElement("div");
   view.style.cssText = "flex:1;overflow:auto;background:#fff;position:relative";
+  // Posuvníky vidět vždy (globals.css) a list jde po kliknutí posouvat šipkami.
+  view.className = "nahled-posuv";
+  view.tabIndex = 0;
+  view.setAttribute("aria-label", strings.sheetLabel);
   const note = document.createElement("p");
   note.style.cssText = "margin:0;padding:6px 10px;font:12px system-ui,sans-serif;color:#555;background:#FFF8E1;display:none";
   host.append(tabs, note, view);

@@ -86,6 +86,8 @@ export const NAHLED_STR: Record<Lang, {
   xlsxError: string;
   xlsxTruncated: (rows: number, cols: number) => string;
   xlsxSheetError: string;
+  /** Popisek posouvatelné plochy listu pro čtečku obrazovky. */
+  xlsxSheetLabel: string;
 }> = {
   cs: {
     previewTitle: "Náhled",
@@ -104,6 +106,7 @@ export const NAHLED_STR: Record<Lang, {
     xlsxLoading: "Načítám sešit…",
     xlsxError: "Sešit se nepodařilo vykreslit – stáhni si ho tlačítkem výše.",
     xlsxSheetError: "Tenhle list se v náhledu nepodařilo vykreslit – uvidíš ho po stažení.",
+    xlsxSheetLabel: "List sešitu",
     xlsxTruncated: (r, c) =>
       `Náhled ukazuje jen začátek listu${r ? `, dalších ${r} řádků` : ""}${c ? `${r ? " a" : ","} ${c} sloupců` : ""} uvidíš po stažení.`,
   },
@@ -124,6 +127,7 @@ export const NAHLED_STR: Record<Lang, {
     xlsxLoading: "Loading workbook…",
     xlsxError: "Could not render the workbook – use the download button above.",
     xlsxSheetError: "This sheet could not be rendered in the preview – you will see it after download.",
+    xlsxSheetLabel: "Worksheet",
     xlsxTruncated: (r, c) =>
       `The preview shows only the start of the sheet${r ? `; ${r} more rows` : ""}${c ? `${r ? " and" : ";"} ${c} more columns` : ""} after download.`,
   },

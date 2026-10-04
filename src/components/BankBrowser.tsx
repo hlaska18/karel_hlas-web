@@ -1838,7 +1838,7 @@ function XlsxView({ href, lang }: { href: string; lang: Lang }) {
     import("@/lib/xlsxPreview")
       .then((m) => {
         if (!ref.current) throw new Error("Náhled byl zavřen před dokončením načítání");
-        return m.renderXlsx(href, ref.current, { truncated: n.xlsxTruncated, sheetError: n.xlsxSheetError });
+        return m.renderXlsx(href, ref.current, { truncated: n.xlsxTruncated, sheetError: n.xlsxSheetError, sheetLabel: n.xlsxSheetLabel });
       })
       .then((cleanup) => {
         if (!alive) cleanup();
