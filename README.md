@@ -71,3 +71,4 @@ Banka čte složky při sestavení, takže nový soubor se na webu objeví po pu
 - [`CLAUDE.md`](CLAUDE.md) – předávka mezi relacemi: pravidla, rozhodnutí, historie změn
 - [`WINDOWS.md`](WINDOWS.md) – simulace Windows
 - [`MATERIALY.md`](MATERIALY.md) – jak přidávat materiály
+- [`ZNAME-LIMITY.md`](ZNAME-LIMITY.md) – známé limity a vědomé kompromisy (npm audit, SQL, CSP, úložiště)

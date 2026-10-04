@@ -262,6 +262,26 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   posílá s `max-age=0`, tam to nehrozí.
 - Ikony jsou do listopadu zmrazené (rada 29. 9.: nic nestavět).
 
+### Úpravy podle auditu (4.–5. 10. 2026)
+- Audit webu (Downloads/Audit_webu_Karel_Hlas_2026-10-04.txt) Karel chtěl
+  udělat celý. Vynechané body: oslovování učitelů (5.8, 8.2 – Karel nikoho
+  nekontaktuje) a všechno, co sahá do simulátoru Windows (jen na jeho pokyn).
+- Hotovo: README a WINDOWS.md podle skutečnosti, GitHub Actions „Kontrola“
+  (Node 22: npm ci, test, build), `lang` a „Přeskočit na obsah“ na /sql
+  a /macos, přesnější texty (hledání, počty, AI Hub, Ideogram, Firefly,
+  Copilot), datum ověření u každého nástroje (`overeno`, `overenoText`),
+  nástroje v bance (Python Tutor, JupyterLite, Teachable Machine, TensorFlow
+  Playground), sekce **Angličtina** a první vlna nástrojů k předmětům,
+  ochrana dvou karet v macOS, rozpočet úložiště a přísnější kód postupu
+  v kurzu SQL, náhledy z vlastní kopie knihoven (`public/vendor`,
+  `src/lib/knihovny.ts`, CDN záloha) s rušením stahování, náhledy
+  vyčleněné do `src/components/bank/Nahled.tsx`.
+- Známé limity a co se dělá průběžně: **ZNAME-LIMITY.md**. Návrh výukové
+  cesty Pythonem a AI (neodučený, k Karlově recenzi): `navrhy/`.
+- Nový nástroj k předmětu: ověř podmínky na webu provozovatele a dej mu
+  `overeno: "RRRR-MM"`. Druhá vlna z auditu (OneZoom, USGS, SimScale,
+  CyberChef, Photopea, diagrams.net, Content Credentials) čeká na zájem.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
