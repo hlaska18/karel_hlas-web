@@ -531,6 +531,14 @@
   background: transparent;
 }
 
+/* Skleněné ikony témat a předmětů: ve světlém režimu průsvitné sklo prosvítá
+   světle zelenou dlaždicí a ikony vypadaly tmavě a kalně. Projasnění o 20 %
+   vybral Karel ze tří úrovní na webu (4. 10. 2026); tmavý režim beze změny.
+   `:not(.dark)` platí i bez JS, kdy next-themes třídu nenastaví. */
+:root:not(.dark) .ikona-sklo {
+  filter: brightness(1.2) saturate(1.1);
+}
+
 /* Náhled Excelu v bance: klasický posuvník, který je vidět POŘÁD. macOS jinak
    kreslí jen překryvný posuvník, co se ukáže až při posouvání, a bez touchpadu
    se list nedal posunout do strany (Karel 4. 10. 2026). Vlastní

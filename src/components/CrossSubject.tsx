@@ -215,7 +215,7 @@ function SubjectTile({
           // Ikona se vykresluje v rámečku 56 × 56 px (h-14 w-14); ostrost
           // na Retině si prohlížeč dopočítá z `sizes` sám (Codex 27. 9. 2026).
           sizes="56px"
-            className="h-full w-full object-contain transition duration-300 motion-safe:group-hover:scale-105"
+            className="ikona-sklo h-full w-full object-contain transition duration-300 motion-safe:group-hover:scale-105"
           />
         </span>
         <span className="min-w-0 flex-1">

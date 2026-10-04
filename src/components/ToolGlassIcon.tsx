@@ -38,7 +38,7 @@ export function ToolGlassIcon({
       width={320}
       height={320}
       sizes={sizes}
-      className={`${className} transition duration-300 ${hoverClassName}`}
+      className={`ikona-sklo ${className} transition duration-300 ${hoverClassName}`}
     />
   );
 }
