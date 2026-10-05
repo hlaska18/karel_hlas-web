@@ -218,7 +218,8 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   `zpracuj_ooxml` ze scripts/pevne-mezery.py.
 - Soubor „7. Infografika v Canvě.txt“ se schválně nepřejmenoval.
   „Co se změnilo“ je v Začni zde.txt a v `_popis.json` (popis v bance).
-- Hodiny grafiky zatím nikdo neodučil (Kontrola úplnosti.txt).
+- Hodiny grafiky zatím nikdo neodučil (Kontrola úplnosti.txt). Karel je
+  podle tematického plánu odučí nejdřív za půl roku (kolem dubna 2027).
 
 ### Excel: Sbírka úloh (2. 10. 2026)
 - `public/materialy/1L/4/Sbírka úloh/` (+ `_stejne.txt` v 1S/3 a 1P/3): 8 sešitů
