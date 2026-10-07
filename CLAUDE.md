@@ -285,6 +285,9 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Nový nástroj k předmětu: ověř podmínky na webu provozovatele a dej mu
   `overeno: "RRRR-MM"`. Druhá vlna z auditu (OneZoom, USGS, SimScale,
   CyberChef, Photopea, diagrams.net, Content Credentials) čeká na zájem.
+- AI Hub, „Čím psát“: kniha Karla Klatovského „133 tipů – Jak využít AI
+  (nejen) ve školství“ (7. 10. 2026), jen odkaz na PDF u autora (licence
+  neuvedená, nehostovat). Autor je zmíněný v textu karty.
 
 ## Otevřené / nápady (nic naléhavého)
 
