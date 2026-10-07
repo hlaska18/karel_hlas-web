@@ -1828,6 +1828,17 @@ export const t: Record<Lang, Dict> = {
                 "Když nevíš, jak se AI zeptat. Rychleji než vymýšlet vlastní zadání tu najdeš hotové na rubriku k hodnocení, na rozdělení úkolu do tří obtížností nebo na zpětnou vazbu k žákovské práci.",
               note: "Zdarma, bez účtu, pod licencí MIT. Celé anglicky – prompt si musíš přeložit, nebo ho nechat přeložit rovnou tím chatem. Text odkazuje na Bing Chat, což je dnešní Copilot.",
             },
+            {
+              name: "133 tipů – Jak využít AI (nejen) ve školství",
+              url: "https://klatovsky.cz/133tipu.pdf",
+              why: "Česká kniha Karla Klatovského, autora učebnic Office a dlouholetého lektora pro školy. Krátké tipy na jednu stranu se snímky obrazovky, celé v prostředí Microsoftu, které škola nejspíš má.",
+              navod:
+                "Nečti ji od začátku. Projdi obsah a vyber si podle situace. Tipům z částí Nástroje a aplikace a Copilot většinou stačí školní Office 365 a Copilot Chat. Část Microsoft 365 Copilot přeskoč, dokud nevíš, že ho škola platí.",
+              pouziti:
+                "Když chceš vědět, jak konkrétní věc udělat krok za krokem: test nebo doplňovačka z PDF, paměťové kartičky, plán hodiny, slovní mrak, ale i titulky s překladem nebo předčítání textu žákům, kteří čtou pomaleji.",
+              note: "Zdarma, česky, PDF na webu autora (asi 40 MB, 144 stran). Celá kapitola Microsoft 365 Copilot (asi 40 tipů) chce placený doplněk; Copilot Chat ze školního Office 365 je zdarma. Snímky jsou z června 2026 – názvy a obrazovky se můžou měnit, autor sám píše, že nejde o oficiální dokumentaci.",
+              overeno: "2026-10",
+            },
           ],
         },
         {
@@ -2513,6 +2524,17 @@ export const t: Record<Lang, Dict> = {
               pouziti:
                 "For when you do not know how to ask. Faster than writing your own, you will find ready prompts for a marking rubric, for splitting a task into three difficulty levels, or for feedback on a pupil's work.",
               note: "Free, no account, MIT licence. English only – you will need to translate a prompt yourself, or have the chat tool translate it. The text refers to Bing Chat, which is today's Copilot.",
+            },
+            {
+              name: "133 Tips – How to Use AI (Not Only) in Schools",
+              url: "https://klatovsky.cz/133tipu.pdf",
+              why: "A Czech book by Karel Klatovský, author of Office textbooks and a long-time trainer for schools. Short one-page tips with screenshots, all within the Microsoft tools your school most likely already has.",
+              navod:
+                "Do not read it from the start. Go through the contents and pick by situation. Tips in the Tools and apps and Copilot parts mostly need nothing more than school Office 365 and Copilot Chat. Skip the Microsoft 365 Copilot part unless you know your school pays for it.",
+              pouziti:
+                "When you want to know how to do a specific thing step by step: a test or a gap-fill from a PDF, flashcards, a lesson plan, a word cloud, but also live captions with translation or having text read aloud to slower readers.",
+              note: "Free, PDF on the author's website (about 40 MB, 144 pages). Czech only. The whole Microsoft 365 Copilot chapter (about 40 tips) needs the paid add-on; Copilot Chat on a school Office 365 account is free. Screenshots are from June 2026 – names and screens may change, and the author himself notes it is not official documentation.",
+              overeno: "2026-10",
             },
           ],
         },
