@@ -134,6 +134,12 @@ export const BADGES: Badge[] = [
   // Nejnovější nahoře – seznam se čte odshora a nejčerstvější odznak má být
   // první, co člověk uvidí.
   {
+    src: "/images/badges/sciobot-workshop.png",
+    alt: "ScioBot: Microsoft Roadshow – Workshop ScioBot 2.0 v praxi",
+    href: "https://www.sciobot.cz/c/SB-6SZ2-M3GY-WY8A",
+    circle: true,
+  },
+  {
     src: "/images/badges/microsoft-elevate-educator-explorer.png",
     alt: "Microsoft Elevate: Educator – Explorer",
     href: "https://www.credly.com/badges/7b2e8616-3d8c-4e39-98fb-20dce274ed54/public_url",
