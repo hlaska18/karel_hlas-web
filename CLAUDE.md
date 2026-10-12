@@ -291,7 +291,9 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Stránka 404 u překlepů v adrese simulátoru (/windovs, /mac, /sqll…)
   nabídne tlačítko „Chtěl jsi simulátor Windows?“ (src/lib/preklep.ts,
   12. 10. 2026 podle Analytics: žáci adresu přepisují ručně). Schválně
-  tlačítko, ne přesměrování.
+  tlačítko, ne přesměrování. Vercel posílá 404 předpřipravenou, proto se
+  adresa čte až po hydrataci (jinak React chyba #418). Stejnou chybu má
+  zatím SkipLink na /en/… 404 (starší, neškodná).
 
 ## Otevřené / nápady (nic naléhavého)
 

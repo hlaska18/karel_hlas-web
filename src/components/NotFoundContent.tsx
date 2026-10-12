@@ -1,5 +1,6 @@
 "use client";
 
+import { useSyncExternalStore } from "react";
 import { usePathname } from "next/navigation";
 import { ArrowLeft, ArrowRight, Library } from "lucide-react";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
@@ -11,13 +12,23 @@ const SIMULATOR: Record<Simulator, { cs: string; en: string; href: string; hrefE
   sql: { cs: "Chtěl jsi kurz SQL?", en: "Looking for the SQL course?", href: "/sql", hrefEn: "/sql?z=en" },
 };
 
+const nic = () => () => {};
+
 /**
  * Obsah stránky 404. Jazyk se pozná z adresy (/en/… → angličtina), proto je to
  * klientská komponenta – a proto je oddělená od `not-found.tsx`: ten musí
  * zůstat serverový, aby mohl vyexportovat `metadata` s titulkem záložky.
+ *
+ * Adresa se čte až po hydrataci. Vercel posílá 404 jako předpřipravenou
+ * stránku (x-matched-path: /404), ve které skutečná adresa není – kdyby se
+ * četla hned, první vykreslení v prohlížeči by nesedělo s HTML ze serveru
+ * (React chyba #418). Tlačítko na simulátor a angličtina se proto objeví až
+ * s JavaScriptem.
  */
 export function NotFoundContent() {
-  const pathname = usePathname() ?? "/";
+  const poHydrataci = useSyncExternalStore(nic, () => true, () => false);
+  const adresa = usePathname() ?? "/";
+  const pathname = poHydrataci ? adresa : "/";
   const en = pathname === "/en" || pathname.startsWith("/en/");
 
   const t = en
