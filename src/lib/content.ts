@@ -137,7 +137,6 @@ export const BADGES: Badge[] = [
     src: "/images/badges/sciobot-workshop.png",
     alt: "ScioBot: Microsoft Roadshow – Workshop ScioBot 2.0 v praxi",
     href: "https://www.sciobot.cz/c/SB-6SZ2-M3GY-WY8A",
-    circle: true,
   },
   {
     src: "/images/badges/microsoft-elevate-educator-explorer.png",
