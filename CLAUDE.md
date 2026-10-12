@@ -288,6 +288,10 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - AI Hub, „Čím psát“: kniha Karla Klatovského „133 tipů – Jak využít AI
   (nejen) ve školství“ (7. 10. 2026), jen odkaz na PDF u autora (licence
   neuvedená, nehostovat). Autor je zmíněný v textu karty.
+- Stránka 404 u překlepů v adrese simulátoru (/windovs, /mac, /sqll…)
+  nabídne tlačítko „Chtěl jsi simulátor Windows?“ (src/lib/preklep.ts,
+  12. 10. 2026 podle Analytics: žáci adresu přepisují ručně). Schválně
+  tlačítko, ne přesměrování.
 
 ## Otevřené / nápady (nic naléhavého)
 

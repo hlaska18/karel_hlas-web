@@ -1,8 +1,15 @@
 "use client";
 
 import { usePathname } from "next/navigation";
-import { ArrowLeft, Library } from "lucide-react";
+import { ArrowLeft, ArrowRight, Library } from "lucide-react";
 import InteractiveHoverButton from "@/components/ui/interactive-hover-button";
+import { odhadniSimulator, type Simulator } from "@/lib/preklep";
+
+const SIMULATOR: Record<Simulator, { cs: string; en: string; href: string; hrefEn: string }> = {
+  windows: { cs: "Chtěl jsi simulátor Windows?", en: "Looking for the Windows simulator?", href: "/windows", hrefEn: "/windows" },
+  macos: { cs: "Chtěl jsi simulátor macOS?", en: "Looking for the macOS simulator?", href: "/macos", hrefEn: "/macos" },
+  sql: { cs: "Chtěl jsi kurz SQL?", en: "Looking for the SQL course?", href: "/sql", hrefEn: "/sql?z=en" },
+};
 
 /**
  * Obsah stránky 404. Jazyk se pozná z adresy (/en/… → angličtina), proto je to
@@ -27,6 +34,9 @@ export function NotFoundContent() {
         lessons: "Materiály do výuky",
       };
   const home = en ? "/en" : "/";
+  // Žáci adresu simulátoru přepisují z tabule (/windovs, /mac…) – viz preklep.ts.
+  const odhad = odhadniSimulator(pathname);
+  const nabidka = odhad ? SIMULATOR[odhad] : null;
 
   return (
     <main id="main" className="relative flex min-h-screen items-center justify-center overflow-hidden px-5">
@@ -44,6 +54,16 @@ export function NotFoundContent() {
           {t.title}
         </h1>
         <p className="mt-3 leading-relaxed text-zinc-600 dark:text-zinc-400">{t.desc}</p>
+
+        {nabidka && (
+          <a
+            href={en ? nabidka.hrefEn : nabidka.href}
+            className="mt-8 inline-flex min-h-[48px] items-center justify-center gap-2 rounded-full bg-accent-700 px-7 py-3 font-semibold text-white shadow-lg shadow-accent-700/30 transition hover:bg-accent-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent-600 dark:bg-accent-500 dark:text-zinc-950 dark:hover:bg-accent-400"
+          >
+            {en ? nabidka.en : nabidka.cs}
+            <ArrowRight aria-hidden className="h-4 w-4" />
+          </a>
+        )}
 
         <div className="mt-8 flex flex-wrap items-center justify-center gap-3">
           <InteractiveHoverButton href={home} text={t.home} icon={<ArrowLeft className="h-4 w-4" />} />
