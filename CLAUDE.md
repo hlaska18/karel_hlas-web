@@ -299,6 +299,10 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   https://karelhlas.vercel.app/, ověřená značkou `verification.google`
   v src/app/layout.tsx – nemazat. Pro Gemini a AI Overviews žádný zvláštní
   krok ani „certifikát“ neexistuje, stačí běžné indexování v Googlu.
+- Bing Webmaster Tools (13. 10. 2026, kvůli ChatGPT a Copilotu): import ze
+  Search Console selhal, web přidaný ručně a ověřený značkou `msvalidate.01`
+  ve stejném `verification` – nemazat. OAI-SearchBot, GPTBot i bingbot
+  robots.txt pouští.
 
 ## Otevřené / nápady (nic naléhavého)
 

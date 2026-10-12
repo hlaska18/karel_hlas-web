@@ -64,9 +64,13 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
-  // Ověření vlastnictví v Google Search Console (13. 10. 2026). Kód není
-  // tajný; po smazání by Search Console web přestal považovat za Karlův.
-  verification: { google: "a6gb8z3vDoD_eQJ6MMobF02yBmd8dCGMcnoCWvT_JiA" },
+  // Ověření vlastnictví v Google Search Console a Bing Webmaster Tools
+  // (13. 10. 2026; Bing kvůli vyhledávání v ChatGPT a Copilotu). Kódy nejsou
+  // tajné; po smazání by služby web přestaly považovat za Karlův.
+  verification: {
+    google: "a6gb8z3vDoD_eQJ6MMobF02yBmd8dCGMcnoCWvT_JiA",
+    other: { "msvalidate.01": "115015E867D61E48DB2F1C2B3B23E947" },
+  },
 };
 
 export const viewport: Viewport = {
