@@ -295,6 +295,11 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   adresa čte až po hydrataci (jinak React chyba #418). Stejnou chybu má
   zatím SkipLink na /en/… 404 (starší, neškodná).
 
+- Google Search Console (13. 10. 2026): služba „Předpona adresy URL“
+  https://karelhlas.vercel.app/, ověřená značkou `verification.google`
+  v src/app/layout.tsx – nemazat. Pro Gemini a AI Overviews žádný zvláštní
+  krok ani „certifikát“ neexistuje, stačí běžné indexování v Googlu.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

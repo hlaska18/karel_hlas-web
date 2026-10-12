@@ -64,6 +64,9 @@ export const metadata: Metadata = {
     follow: true,
     googleBot: { index: true, follow: true, "max-image-preview": "large" },
   },
+  // Ověření vlastnictví v Google Search Console (13. 10. 2026). Kód není
+  // tajný; po smazání by Search Console web přestal považovat za Karlův.
+  verification: { google: "a6gb8z3vDoD_eQJ6MMobF02yBmd8dCGMcnoCWvT_JiA" },
 };
 
 export const viewport: Viewport = {
