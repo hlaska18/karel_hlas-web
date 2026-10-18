@@ -2,10 +2,10 @@
   {
     "cs": "Python Tutor – krokování kódu",
     "en": "Python Tutor – step through code",
-    "url": "https://pythontutor.com/visualize.html",
+    "url": "https://pythontutor.com/index.html",
     "note": {
-      "cs": "Web jiného autora. Vložíš krátký program a projdeš ho krok za krokem: u každého řádku vidíš, jaké hodnoty mají proměnné a co se volá. Hodí se na první cykly, seznamy a funkce – žák uvidí, proč mu program dělá něco jiného, než čekal. Zdarma, bez účtu, anglicky, s reklamou. Kód se spouští na jejich serveru (nejvýš asi 10 sekund), takže je to pomůcka na krátké ukázky, ne náhrada vývojového prostředí.",
-      "en": "A site by another author. Paste a short program and step through it: for every line you see the values of the variables and what is being called. Good for first loops, lists and functions – the student sees why the program does something other than expected. Free, no account, with ads. The code runs on their server (up to about 10 seconds), so it is for short examples, not a replacement for a development environment."
+      "cs": "Web jiného autora. Na úvodní stránce klikni na „Start visualizing“, vlož krátký program a projdeš ho krok za krokem: u každého řádku vidíš, jaké hodnoty mají proměnné a co se volá. Hodí se na první cykly, seznamy a funkce – žák uvidí, proč mu program dělá něco jiného, než čekal. Zdarma, bez účtu, anglicky, s reklamou. Kód se spouští na jejich serveru (nejvýš asi 10 sekund), takže je to pomůcka na krátké ukázky, ne náhrada vývojového prostředí.",
+      "en": "A site by another author. On the home page click “Start visualizing”, paste a short program and step through it: for every line you see the values of the variables and what is being called. Good for first loops, lists and functions – the student sees why the program does something other than expected. Free, no account, with ads. The code runs on their server (up to about 10 seconds), so it is for short examples, not a replacement for a development environment."
     }
   },
   {
