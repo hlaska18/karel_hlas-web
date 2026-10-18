@@ -314,4 +314,7 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   23. 9. zamítla; znovu se otevře, až se ozve 5 cizích učitelů.
 - Lokální kopie: ~/CascadeProjects/karel_hlas-web (git stash obsahuje staré
   rozdělané změny z doby commitu d074ba4 – nejspíš nepotřebné).
-- Karlův Mac: Node 22.23.3 (nainstalováno 25. 9. 2026).
+- Karlův Mac: Node 22.23.3 (nainstalováno 25. 9. 2026). Vercel má od 18. 10. 2026
+  v nastavení projektu taky Node 22.x (dřív 24.x → varování). Přechod na
+  Node 24 = package.json engines + kontrola.yml + Mac najednou; Node 22 má
+  podporu do dubna 2027.
