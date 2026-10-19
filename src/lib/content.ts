@@ -88,31 +88,31 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
-    title: "AI ve školách až zázračně pomáhá. Dopad na výsledky žáků je tragický",
-    source: "Seznam Zprávy",
-    url: "https://www.seznamzpravy.cz/clanek/tech-technologie-veda-ai-ve-skolach-az-zazracne-pomaha-dopad-na-vysledky-zaku-je-tragicky-314538",
-    logo: { src: "/images/clanky/seznamzpravy.png", pomer: 1.652 },
-    jazyk: "cs",
-  },
-  {
-    title: "The Anthropic AI Course Schools Should Be Teaching",
-    source: "Lifewire",
-    url: "https://www.lifewire.com/anthropic-free-ai-fluency-course-11757129",
-    logo: { src: "/images/clanky/lifewire.png", pomer: 4.267 },
-    jazyk: "en",
-  },
-  {
-    title: "An Open Letter to TikTok and YouTube to Join Us in Supporting Teens",
-    source: "Meta Newsroom",
-    url: "https://about.fb.com/news/2026/08/open-letter-to-tiktok-and-youtube-to-join-us-in-supporting-teens/",
+    title: "Everything We Announced at Meta Connect 2026",
+    source: "Meta",
+    url: "https://www.meta.com/blog/meta-connect-2026-everything-we-announced/",
     logo: { src: "/images/clanky/meta.png", pomer: 1.506 },
     jazyk: "en",
   },
   {
-    title: "20 výzev a 10 myšlenek pro školní rok 2026/2027",
-    source: "RVP.cz",
-    url: "https://clanky.rvp.cz/clanek/24473/20-VYZEV-A-10-MYSLENEK-NEJEN-PRO-SKOLNI-ROK-2026-2027.html",
-    logo: { src: "/images/clanky/rvp.png", pomer: 1.842 },
+    title: "GPT‑6 Astra je tu. OpenAI věří, že začíná éra AGI",
+    source: "WIRED",
+    url: "https://www.wired.cz/clanky/gpt-6-astra-je-tu-openai-veri-ze-zacina-era-agi",
+    logo: { src: "/images/clanky/wired.png", pomer: 1 },
+    jazyk: "cs",
+  },
+  {
+    title: "Apple představil iPhone Duo. První skládací iPhone stojí 55 tisíc",
+    source: "WIRED",
+    url: "https://www.wired.cz/clanky/apple-predstavil-iphone-duo-prvni-skladaci-iphone-stoji-55-tisic",
+    logo: { src: "/images/clanky/wired.png", pomer: 1 },
+    jazyk: "cs",
+  },
+  {
+    title: "Bere AI práci matematikům? Týden ve vědě #122",
+    source: "WIRED",
+    url: "https://www.wired.cz/clanky/bere-ai-praci-matematikum-tyden-ve-vede-122",
+    logo: { src: "/images/clanky/wired.png", pomer: 1 },
     jazyk: "cs",
   },
 ];
