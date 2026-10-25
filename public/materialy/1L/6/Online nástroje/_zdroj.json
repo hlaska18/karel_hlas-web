@@ -25,5 +25,14 @@
       "cs": "Web jiného autora, zdarma a bez registrace. Hra Color cvičí barevné harmonie, Bézier Game pero na křivky a Boolean Game sjednocení a odečítání tvarů, tedy přesně to, co se dělá v Inkscapu v hodině 5. Anglicky, na počítači s myší. Pro rychlíky.",
       "en": "A site by another author, free and with no sign-up. The Color game practises colour harmonies, the Bézier Game the pen tool and the Boolean Game uniting and subtracting shapes – exactly what lesson 5 does in Inkscape. Needs a computer with a mouse. For fast finishers."
     }
+  },
+  {
+    "cs": "Tinkercad – 3D modelování v prohlížeči",
+    "en": "Tinkercad – 3D modelling in the browser",
+    "url": "https://www.tinkercad.com",
+    "note": {
+      "cs": "Web Autodesku, zdarma a česky. Model se skládá ze základních těles (kvádr, válec, koule), která se přidávají a odečítají, takže první výrobek zvládne žák za jednu hodinu. Hotový model jde stáhnout jako STL pro 3D tisk. Potřebuje účet: učitel si založí učitelský účet a třídu, žáci se do ní přihlásí kódem třídy a přezdívkou, bez e-mailu.",
+      "en": "An Autodesk site, free. A model is built from basic solids (box, cylinder, sphere) that are added and subtracted, so a student finishes a first object in one lesson. The finished model downloads as STL for 3D printing. Needs an account: the teacher creates a teacher account and a class, students join with the class code and a nickname, no e-mail."
+    }
   }
 ]
