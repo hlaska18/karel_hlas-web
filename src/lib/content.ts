@@ -1526,6 +1526,13 @@ export const t: Record<Lang, Dict> = {
               note: "Součást Office 365, nic dalšího se nezakládá: Zobrazení → Asistivní čtečka, ve Wordu na počítači i na webu. U češtiny umí předčítání, slabiky a překlad, slovní druhy ne.",
               overeno: "2026-10",
             },
+            {
+              name: "eKnihy zdarma",
+              url: "https://eknihyzdarma.cz/",
+              why: "Přes 3 400 e-knih ke stažení (EPUB, PDF, MOBI) – česká a světová klasika, sekce Povinná četba a Rozbory děl.",
+              note: "Zdarma, bez registrace, česky, s reklamou. Licenci u knih web neuvádí a vedle volných děl nabízí i české překlady, které můžou být ještě chráněné autorským zákonem. Na úvodní stránce mezi nejstahovanějšími bývají i tituly pro dospělé – žákům dávej odkaz rovnou na konkrétní knihu.",
+              overeno: "2026-10",
+            },
           ],
         },
         {
@@ -2263,6 +2270,13 @@ export const t: Record<Lang, Dict> = {
               url: "https://support.microsoft.com/en-us/accessibility/word/use-immersive-reader-in-word",
               why: "Reads the student's own text aloud, splits words into syllables and shows one line at a time – repetition and clumsy sentences become audible even when the eye skips them.",
               note: "Part of Office 365, nothing to sign up for: View → Immersive Reader, in desktop Word and Word for the web. For Czech it supports read aloud, syllables and translation, not parts of speech.",
+              overeno: "2026-10",
+            },
+            {
+              name: "eKnihy zdarma",
+              url: "https://eknihyzdarma.cz/",
+              why: "Over 3,400 e-books to download (EPUB, PDF, MOBI) – Czech and world classics, with Required Reading and Book Analysis sections.",
+              note: "Free, no sign-up, Czech, with ads. The site states no licence for its books and besides public-domain works it also offers Czech translations that may still be under copyright. The most-downloaded list on the home page can include adult titles – give students a link to a specific book.",
               overeno: "2026-10",
             },
           ],
