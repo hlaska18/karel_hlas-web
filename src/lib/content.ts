@@ -1612,6 +1612,13 @@ export const t: Record<Lang, Dict> = {
               note: "Zdarma a open source, běží v prohlížeči bez instalace a bez účtu. Video musí být MP4 (H.264) – MOV nebo AVI z telefonu je potřeba předem převést. Desktopový Tracker umí česky, u online verze jsem češtinu neověřil. Kameru povolovat nemusíš, stačí otevřít hotové video.",
               overeno: "2026-10",
             },
+            {
+              name: "Encyklopedie fyziky",
+              url: "http://fyzika.jreichl.com",
+              why: "Multimediální encyklopedie fyziky (Jaroslav Reichl): výklad středoškolské fyziky po tematických celcích, s obrázky, zvuky a videi – na opakování a samostudium.",
+              note: "Zdarma, bez účtu, česky, bez reklam. Web se od roku 2012 nemění a běží jen přes nezabezpečené HTTP (certifikát HTTPS vypršel), takže prohlížeč ukáže „Nezabezpečeno“ a přísnější školní filtr ho může zablokovat. Nic se na něm nezadává, čtení to neohrožuje.",
+              overeno: "2026-10",
+            },
           ],
         },
         {
@@ -2307,6 +2314,13 @@ export const t: Record<Lang, Dict> = {
               url: "https://opensourcephysics.github.io/tracker-online/",
               why: "Motion analysis from video: set the scale, click the object's position frame by frame and get a position–time graph.",
               note: "Free and open source, runs in the browser with no installation and no account. The video must be MP4 (H.264) – convert MOV or AVI from a phone first. No camera permission needed, just open a ready video.",
+              overeno: "2026-10",
+            },
+            {
+              name: "Encyklopedie fyziky",
+              url: "http://fyzika.jreichl.com",
+              why: "A multimedia physics encyclopedia (Jaroslav Reichl): secondary-school physics by topic, with pictures, sound and video – for revision and self-study.",
+              note: "Free, no account, no ads, Czech only. The site has not changed since 2012 and runs only over insecure HTTP (its HTTPS certificate has expired), so the browser shows “Not secure” and a strict school filter may block it. Nothing is entered on it, so reading is safe.",
               overeno: "2026-10",
             },
           ],
