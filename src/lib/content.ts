@@ -1131,6 +1131,18 @@ type Dict = {
     simNote: string;
     /** Štítek vpravo na tlačítku simulátoru. */
     simOpen: string;
+    /**
+     * Návod „Jak zadat simulátor žákům“ pod tlačítky simulátorů (rada
+     * 26. 10. 2026). Cizí učitelé simulátor zadávají přes Teams a adresa se
+     * jim slepila s textem úkolu (/windowsPostup:1.Přihlas… v Analytics).
+     * `zadatText` je zadání ke zkopírování: `{nazev}` a `{url}` se doplní,
+     * adresa stojí na vlastním řádku, aby se neslepila.
+     */
+    zadatTitle: string;
+    zadatKroky: string[];
+    zadatText: string;
+    zadatCopy: string;
+    zadatCopied: string;
     /** Popisek nad odkazy na čtení (komponenta `Ctenie`). */
     reading: string;
     ctaLessons: string;
@@ -1377,6 +1389,17 @@ export const t: Record<Lang, Dict> = {
       simMacos: "Virtuální macOS",
       simNote: "{tasks} · přihlášení jménem",
       simOpen: "Spustit",
+      zadatTitle: "Jak zadat simulátor žákům",
+      zadatKroky: [
+        "Zkopíruj hotové zadání níž a vlož ho do Teams nebo Classroomu. Adresa je v něm na samostatném řádku, aby se neslepila s textem.",
+        "Žáci pracují na počítači s myší (na telefonu simulátor nejde). Přihlásí se jménem a příjmením, nic se jim nezakládá. Úlohy jsou v tlačítku Úkoly vpravo dole a odškrtávají se samy.",
+        "Na konci hodiny klikne žák v panelu Úkoly na Moje výsledky a kód postupu ti pošle jako odpověď. Práce se ukládá jen v prohlížeči, takže ať ji dodělá na stejném počítači.",
+        "Kódy vlož ve stejném simulátoru do panelu Úkoly → Pro učitele: Přehled třídy. Stačí celé zprávy, kódy se v nich najdou samy. Přehled stáhneš do Excelu.",
+      ],
+      zadatText:
+        "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Vpravo dole klikni na Úkoly a plň úlohy – odškrtávají se samy.\n3. Na konci klikni v panelu Úkoly na Moje výsledky, zkopíruj kód postupu a pošli mi ho jako odpověď.\n",
+      zadatCopy: "Zkopírovat zadání",
+      zadatCopied: "Zkopírováno",
       reading: "Zajímavé články",
       ctaLessons: "Procházet materiály",
       ctaContact: "O mně",
@@ -2128,6 +2151,17 @@ export const t: Record<Lang, Dict> = {
       simMacos: "Virtual macOS",
       simNote: "{tasks} in Czech",
       simOpen: "Open",
+      zadatTitle: "How to assign a simulator to students",
+      zadatKroky: [
+        "Copy the ready-made assignment below and paste it into Teams or Classroom. The link sits on its own line so it does not merge with the text.",
+        "Students work on a computer with a mouse (the simulator does not run on phones). They sign in with their full name; no account is created. Tasks are under the Úkoly (Tasks) button bottom right and tick themselves off.",
+        "At the end of the lesson the student clicks Moje výsledky (My results) in the task panel and sends you the progress code as a reply. Work is saved only in the browser, so they should finish on the same computer.",
+        "Paste the codes in the same simulator under Úkoly → Pro učitele: Přehled třídy (class overview). Whole messages are fine; the codes are found automatically. You can download the overview for Excel.",
+      ],
+      zadatText:
+        "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Click Úkoly (Tasks) bottom right and work through the tasks – they tick themselves off.\n3. At the end click Moje výsledky (My results) in the task panel, copy the progress code and send it to me as a reply.\n\n(The simulator is in Czech.)\n",
+      zadatCopy: "Copy the assignment",
+      zadatCopied: "Copied",
       reading: "Interesting articles",
       ctaLessons: "Browse the materials",
       ctaContact: "About me",

@@ -304,6 +304,29 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   ve stejném `verification` – nemazat. OAI-SearchBot, GPTBot i bingbot
   robots.txt pouští.
 
+## REŽIM ÚDRŽBY do 28. 2. 2027 (rada 26. 10. 2026)
+
+- Vyhodnocení podzimního měření vyšlo „mezi tím“ (3 signály, ale jen z
+  Classroomu; simulátory ~25 lidí ve všední den, všechno cizí uživatelé).
+  Rada: web je služba pro cizí učitele → **nestavět nic nového, nešířit**,
+  strop ~2 h měsíčně jen na chyby od skutečných uživatelů.
+- **Simulátory Windows, macOS a kurz SQL do konce pololetí neměnit**: id,
+  pořadí ani texty úloh, formát kódu postupu (`postupSimulatoru.ts`,
+  `dbb/kodPostupu.ts`) – cizí učitelé je mají v zadáních v Teams a Classroomu
+  a čtou jimi odevzdané kódy. Pushovat jen večer mimo výuku; v lednu
+  (uzávěrka pololetí) jen nouzové opravy.
+- Měsíční rutina aktualizací dělá do 28. 2. jen opravné a bezpečnostní verze
+  a na kód simulátorů nesahá. Node 22 končí v dubnu 2027 → přechod na Node 24
+  v březnu.
+- Deník hodin rada zrušila. Stavbu znovu otevřít, až sám napíše cizí učitel,
+  nebo až Karel simulátor použije ve své hodině a narazí na mezeru.
+- Hotové z rady: návod „Jak zadat simulátor žákům“ s tlačítky „Zkopírovat
+  zadání“ pod dlaždicemi simulátorů v úvodu (`HeroSimulatory.tsx`, texty
+  `hero.zadat*`; adresa v zadání na samostatném řádku, ať se v Teams
+  neslepí), 404 i pro `/sq`. Měřit kliknutí na tlačítko 404 nejde – vlastní
+  události Vercel Analytics jsou jen v placeném Pro.
+- Meta popisy pro vyhledávače, nová sekce, Slovensko/RVP rada nedoporučila.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

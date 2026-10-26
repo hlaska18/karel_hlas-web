@@ -1,6 +1,7 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { vi } from "vitest";
 
 import { HeroSimulatory } from "@/components/HeroSimulatory";
 import { LanguageProvider } from "@/lib/i18n";
@@ -49,5 +50,16 @@ describe("HeroSimulatory", () => {
   it("odkaz není vnořený v jiném odkazu", () => {
     const { container } = vykresli("cs", 33, 14);
     expect(container.querySelector("a a")).toBeNull();
+  });
+
+  it("zkopíruje zadání s adresou na samostatném řádku (neslepí se s textem v Teams)", async () => {
+    const zapis = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText: zapis } });
+    vykresli("cs", 33, 14);
+    fireEvent.click(screen.getByRole("button", { name: /Zkopírovat zadání – Virtuální Windows 11/ }));
+    await waitFor(() => expect(zapis).toHaveBeenCalled());
+    const text: string = zapis.mock.calls[0][0];
+    expect(text).toMatch(/\n\nhttps:\/\/karelhlas\.vercel\.app\/windows\n\n/);
+    expect(text).toContain("Moje výsledky");
   });
 });

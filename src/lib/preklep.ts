@@ -57,6 +57,7 @@ export function odhadniSimulator(pathname: string): Simulator | null {
 
   if (slovo.startsWith("win") || blizkoZacatku(slovo, "windows") <= 2) return "windows";
   if (slovo.startsWith("mac") || blizkoZacatku(slovo, "macos") <= 1) return "macos";
-  if (slovo.startsWith("sql")) return "sql";
+  // „/sq“ = nedopsaný kurz SQL (Analytics 21.–25. 10. 2026).
+  if (slovo.startsWith("sq")) return "sql";
   return null;
 }

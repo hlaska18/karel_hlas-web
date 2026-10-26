@@ -24,6 +24,7 @@ describe("odhadniSimulator", () => {
     expect(odhadniSimulator("/macso")).toBe("macos");
     expect(odhadniSimulator("/makos")).toBe("macos");
     expect(odhadniSimulator("/sqll")).toBe("sql");
+    expect(odhadniSimulator("/sq")).toBe("sql");
   });
 
   it("jiné adresy nechá být", () => {

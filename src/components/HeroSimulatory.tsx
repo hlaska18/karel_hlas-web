@@ -1,7 +1,9 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { useLang } from "@/lib/i18n";
+import { SITE } from "@/lib/content";
 import { ZnakWindows } from "@/components/ZnakWindows";
 import { ZnakJablko } from "@/components/ZnakJablko";
 import type { Lang } from "@/lib/content";
@@ -35,6 +37,10 @@ const NATOCENI = ["-rotate-[3deg] translate-x-0", "rotate-[2deg] translate-x-6"]
 
 export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
   const { tr, lang } = useLang();
+  /** Které zadání se právě zkopírovalo (pro „Zkopírováno“), nebo které
+   *  se zkopírovat nepodařilo – pak se ukáže k ručnímu označení. */
+  const [zkopirovano, nastavZkopirovano] = useState<string | null>(null);
+  const [rucne, nastavRucne] = useState<string | null>(null);
 
   const simulatory = [
     {
@@ -92,6 +98,57 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
           );
         })}
       </ul>
+
+      {/* Jak zadat simulátor žákům (rada 26. 10. 2026): cizí učitelé ho
+          zadávají přes Teams a adresa se jim slepila s textem úkolu. Hotové
+          zadání má adresu na samostatném řádku. Rozbalovací, ať úvod zůstane
+          krátký; do simulátorů samotných to schválně nesahá. */}
+      <details className="mt-5 rounded-karta px-1 text-sm text-zinc-700 dark:text-zinc-300">
+        <summary className="cursor-pointer select-none pl-1 text-xs font-medium uppercase tracking-widest text-zinc-600 hover:text-accent-700 dark:text-zinc-400 dark:hover:text-accent-300">
+          {tr.hero.zadatTitle}
+        </summary>
+        <ol className="mt-3 list-decimal space-y-2 pl-6 leading-relaxed">
+          {tr.hero.zadatKroky.map((krok) => (
+            <li key={krok}>{krok}</li>
+          ))}
+        </ol>
+        <div className="mt-3 flex flex-wrap gap-2 pl-1">
+          {simulatory.map((s) => {
+            const text = tr.hero.zadatText.replace("{nazev}", s.nazev).replace("{url}", `${SITE.url}${s.href}`);
+            const kopiruj = async () => {
+              try {
+                await navigator.clipboard.writeText(text);
+                nastavRucne(null);
+                nastavZkopirovano(s.href);
+                setTimeout(() => nastavZkopirovano((k) => (k === s.href ? null : k)), 1500);
+              } catch {
+                /* schránka nemusí být dostupná – ukáže se text k ručnímu označení */
+                nastavRucne(text);
+              }
+            };
+            return (
+              <button
+                key={s.href}
+                type="button"
+                onClick={kopiruj}
+                className="rounded-ovladac border border-black/10 px-3 py-1.5 text-xs font-semibold transition hover:border-accent-500/40 hover:text-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70 dark:border-white/15 dark:hover:text-accent-300"
+              >
+                {zkopirovano === s.href ? tr.hero.zadatCopied : `${tr.hero.zadatCopy} – ${s.nazev}`}
+              </button>
+            );
+          })}
+        </div>
+        {rucne && (
+          <textarea
+            readOnly
+            value={rucne}
+            rows={9}
+            onFocus={(e) => e.currentTarget.select()}
+            aria-label={tr.hero.zadatTitle}
+            className="mt-3 w-full rounded-ovladac border border-black/10 bg-transparent p-2 font-mono text-xs dark:border-white/15"
+          />
+        )}
+      </details>
     </div>
   );
 }
