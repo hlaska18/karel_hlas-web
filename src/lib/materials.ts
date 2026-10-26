@@ -790,6 +790,9 @@ export function getBankItems(): BankItem[] {
                 external: true,
                 sourceNote: src.note,
                 sourceOrder: poradi,
+                // Složka jen s odkazy (Minecraft Education Edition) potřebuje
+                // úvodní text – jak hru rozchodit a jakou licenci škola potřebuje.
+                groupPopis: popisSlozky,
                 courseIds: [courseId],
                 coursesLabel: { cs: "", en: "" },
               });
