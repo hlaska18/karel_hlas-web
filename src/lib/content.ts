@@ -134,6 +134,11 @@ export const BADGES: Badge[] = [
   // Nejnovější nahoře – seznam se čte odshora a nejčerstvější odznak má být
   // první, co člověk uvidí.
   {
+    src: "/images/badges/minecraft-ambassador.png",
+    alt: "Minecraft Education: Minecraft Ambassador",
+    href: "https://education.minecraft.net/en-us/community/minecraft-ambassador",
+  },
+  {
     src: "/images/badges/sciobot-workshop.png",
     alt: "ScioBot: Microsoft Roadshow – Workshop ScioBot 2.0 v praxi",
     href: "https://www.sciobot.cz/c/SB-6SZ2-M3GY-WY8A",
