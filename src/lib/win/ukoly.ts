@@ -15,6 +15,8 @@ import { existuje, jeSlozka, jeSoubor, najdiSlozku, najdiSoubor, rozloz } from "
 import type { Uzel } from "./fs";
 import { PRIPONA_ZASIFROVANO, VYZVA } from "./virus";
 import type { Stav } from "./stav";
+import { SCENAR_SIT } from "./scenare";
+import { DOMACI_WEBY, ROUTER, sitFunguje, type Porucha } from "./sit";
 
 export interface Ukol {
   id: string;
@@ -33,6 +35,11 @@ export interface Ukol {
   kroky: string[];
   skupina: string;
   hotovo: (stav: Stav) => boolean;
+  /**
+   * Úloha s poruchou (jen cvičení „Síť a poruchy“). Panel ukáže tlačítko,
+   * které počítač schválně pokazí, a místo kroků nápovědy po jedné.
+   */
+  porucha?: Porucha;
 }
 
 export const SKUPINY = [
@@ -614,9 +621,129 @@ export const UKOLY: Ukol[] = [
   },
 ];
 
+/* ───────────────────── Cvičení „Síť a poruchy“ ─────────────────────
+   Vlastní sada pro `?scenar=sit` (rada 31. 10. 2026). Výchozích 33 úloh
+   se nemění – cizí učitelé je mají v zadáních. Id mají předponu `sit-`,
+   ať se nikdy nepotkají s výchozími. */
+
+export const SKUPINY_SIT = ["Jak je počítač připojený", "Poruchy"] as const;
+
+/** Porucha je opravená, když ji žák spustil a pak síť sám zprovoznil. */
+const opraveno = (s: Stav, porucha: Porucha) =>
+  stopa(s, `porucha:${porucha}:opravena`) && Boolean(s.sit && sitFunguje(s.sit));
+
+export const UKOLY_SIT: Ukol[] = [
+  {
+    id: "sit-ipconfig",
+    skupina: "Jak je počítač připojený",
+    nazev: "Zjisti adresu, bránu a DNS",
+    popis: "Příkaz ipconfig /all vypíše, jakou adresu má počítač, přes který router jde do internetu a kdo mu překládá názvy webů.",
+    kroky: [
+      "Otevři Start a spusť Terminál.",
+      "Napiš ipconfig /all a zmáčkni Enter.",
+      "Najdi řádek Adresa IPv4 – to je adresa tohohle počítače v domácí síti.",
+      "Výchozí brána je router: přes něj jdou všechna data do internetu.",
+      "Servery DNS překládají názvy webů na adresy. Doma to obvykle dělá taky router.",
+    ],
+    hotovo: (s) => stopa(s, "prikaz:ipconfig-all"),
+  },
+  {
+    id: "sit-ping-brana",
+    skupina: "Jak je počítač připojený",
+    nazev: "Ověř spojení s routerem",
+    popis: "Příkaz ping pošle na adresu krátkou zprávu a čeká na odpověď. Zkus to s adresou výchozí brány.",
+    kroky: [
+      "Ve výpisu ipconfig najdi Výchozí brána.",
+      `Napiš ping a tu adresu, tady ping ${ROUTER}, a zmáčkni Enter.`,
+      "Čtyři řádky „Odpověď od…“ znamenají, že počítač s routerem mluví. Čas říká, jak dlouho cesta tam a zpátky trvala.",
+    ],
+    hotovo: (s) => stopa(s, "ping:brana:ok"),
+  },
+  {
+    id: "sit-ping-internet",
+    skupina: "Jak je počítač připojený",
+    nazev: "Ověř spojení se serverem v internetu",
+    popis: "Teď ping na server mimo domácí síť, třeba ping skola.example.",
+    kroky: [
+      "V Terminálu napiš ping skola.example a zmáčkni Enter.",
+      "V hranatých závorkách je adresa, na kterou se název přeložil.",
+      "Porovnej čas s pingem na router: do internetu je cesta delší.",
+    ],
+    hotovo: (s) => stopa(s, "ping:internet:ok"),
+  },
+  {
+    id: "sit-nslookup",
+    skupina: "Jak je počítač připojený",
+    nazev: "Přelož název webu na adresu",
+    popis: "Příkaz nslookup se zeptá serveru DNS, jaká adresa patří k názvu. Zkus nslookup skola.example.",
+    kroky: [
+      "V Terminálu napiš nslookup skola.example a zmáčkni Enter.",
+      "Server a Address nahoře je server DNS, kterého se počítač ptal.",
+      `Dole je odpověď: název a jeho adresa (${DOMACI_WEBY["skola.example"]}). Stejnou adresu ukázal ping v hranatých závorkách.`,
+    ],
+    hotovo: (s) => stopa(s, "nslookup:ok"),
+  },
+  {
+    id: "sit-tracert",
+    skupina: "Jak je počítač připojený",
+    nazev: "Projdi cestu k serveru",
+    popis: "Příkaz tracert vypíše routery, přes které data cestou k serveru projdou.",
+    kroky: [
+      "V Terminálu napiš tracert skola.example a zmáčkni Enter.",
+      `První řádek je tvůj router (${ROUTER}), další jsou routery poskytovatele internetu.`,
+      "Poslední řádek je samotný server.",
+    ],
+    hotovo: (s) => stopa(s, "tracert:ok"),
+  },
+  {
+    id: "sit-verejna",
+    skupina: "Jak je počítač připojený",
+    nazev: "Porovnej vnitřní a veřejnou adresu",
+    popis: "Otevři v Edge stránku mojeip.example. Ukáže adresu, pod kterou tě vidí weby. Je stejná jako v ipconfig?",
+    kroky: [
+      "Otevři Edge (na hlavním panelu).",
+      "Do adresního řádku napiš mojeip.example a zmáčkni Enter.",
+      "Porovnej adresu na stránce s Adresou IPv4 z ipconfig a přečti si, proč se liší.",
+    ],
+    hotovo: (s) => stopa(s, "web:mojeip.example"),
+  },
+  {
+    id: "sit-porucha-brana",
+    skupina: "Poruchy",
+    nazev: "Porucha: nejde internet",
+    popis:
+      "Klikni na Pokazit počítač. Pak nepůjde žádný web. Příkazy v Terminálu zjisti, proč, a oprav to v Nastavení.",
+    kroky: [
+      "Začni příkazem ipconfig. Je Výchozí brána stejná jako adresa routeru 192.168.1.1?",
+      "Ping na router projde, ping na skola.example ne. Data tedy z domácí sítě nemají kudy odejít.",
+      "Oprav to v Nastavení → Síť a internet → Ethernet → Přiřazení IP → Upravit. Doma bývá správně Automaticky (DHCP).",
+    ],
+    porucha: "brana",
+    hotovo: (s) => opraveno(s, "brana"),
+  },
+  {
+    id: "sit-porucha-dns",
+    skupina: "Poruchy",
+    nazev: "Porucha: weby podle názvu nejdou",
+    popis:
+      "Klikni na Pokazit počítač. Pak se weby neotevřou podle názvu. Příkazy v Terminálu zjisti, proč, a oprav to v Nastavení.",
+    kroky: [
+      `Zkus ping ${DOMACI_WEBY["skola.example"]} (adresa serveru skola.example) a pak ping skola.example. Co z toho projde?`,
+      "Když projde adresa a název ne, internet funguje, ale nikdo nepřeloží název na adresu. Podívej se na Servery DNS v ipconfig /all.",
+      "Oprav to v Nastavení → Síť a internet → Ethernet → Přiřazení serveru DNS → Upravit. Doma bývá správně Automaticky (DHCP).",
+    ],
+    porucha: "dns",
+    hotovo: (s) => opraveno(s, "dns"),
+  },
+];
+
+export const ukolyPro = (scenar: string): Ukol[] => (scenar === SCENAR_SIT ? UKOLY_SIT : UKOLY);
+
+export const skupinyPro = (scenar: string): readonly string[] => (scenar === SCENAR_SIT ? SKUPINY_SIT : SKUPINY);
+
 /** Ids úkolů, které jsou podle aktuálního stavu splněné. */
 export function vyhodnot(stav: Stav): string[] {
-  return UKOLY.filter((u) => {
+  return ukolyPro(stav.scenar).filter((u) => {
     try {
       return u.hotovo(stav);
     } catch {
@@ -627,9 +754,10 @@ export function vyhodnot(stav: Stav): string[] {
 }
 
 /** Kolik úkolů je hotovo z kolika. */
-export function postup(splneno: string[]): { hotovo: number; celkem: number } {
+export function postup(splneno: string[], scenar?: string): { hotovo: number; celkem: number } {
+  const ukoly = scenar ? ukolyPro(scenar) : UKOLY;
   return {
-    hotovo: UKOLY.filter((u) => splneno.includes(u.id)).length,
-    celkem: UKOLY.length,
+    hotovo: ukoly.filter((u) => splneno.includes(u.id)).length,
+    celkem: ukoly.length,
   };
 }

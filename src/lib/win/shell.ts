@@ -32,6 +32,7 @@ import {
 } from "./fs";
 import { cislo, datumCas } from "./format";
 import { KAPACITA_DISKU, OBSAZENO_SYSTEMEM } from "./nazvy";
+import { ipconfig, nslookup, ping, tracert, type SitStav } from "./sit";
 
 export type Rezim = "cmd" | "powershell";
 
@@ -39,6 +40,8 @@ export interface Kontext {
   disk: Slozka;
   cesta: string[];
   jmenoUctu: string;
+  /** Domácí síť cvičení `?scenar=sit`. Bez ní běží příkazy ve školní síti. */
+  sit?: SitStav;
 }
 
 export interface Vysledek {
@@ -268,26 +271,14 @@ function cmdStrom(ctx: Kontext, argumenty: string[]): Vysledek {
   return { vystup: radky };
 }
 
-const IPCONFIG = [
-  "",
-  "Konfigurace protokolu IP systému Windows",
-  "",
-  "",
-  "Adaptér sítě Ethernet Ethernet:",
-  "",
-  "   Přípona DNS podle připojení . . . : skola.local",
-  "   Místní IPv6 adresa Link-local  . . : fe80::14c2:8b3f:9a21:5d07%12",
-  "   Adresa IPv4. . . . . . . . . . . .: 10.20.3.147",
-  "   Maska podsítě  . . . . . . . . . .: 255.255.255.0",
-  "   Výchozí brána  . . . . . . . . . .: 10.20.3.1",
-  "",
-];
+/** Školní počítač, ve cvičení sítě domácí (stejně jako v `ipconfig /all`). */
+const nazevPocitace = (ctx: Kontext) => (ctx.sit ? "DOMACI-PC" : "SPST-UCEBNA-14");
 
 function systeminfo(ctx: Kontext): string[] {
   const pocet = pocetPolozek(ctx.disk);
   return [
     "",
-    "Název hostitele:                          SPST-UCEBNA-14",
+    `Název hostitele:                          ${nazevPocitace(ctx)}`,
     "Název operačního systému:                 Microsoft Windows 11 Education",
     "Verze operačního systému:                 10.0.26100 Build 26100",
     "Výrobce operačního systému:               Microsoft Corporation",
@@ -446,31 +437,20 @@ export function spust(radek: string, ctx: Kontext, rezim: Rezim): Vysledek {
     case "ver":
       return { vystup: ["", "Microsoft Windows [Verze 10.0.26100.2033]", ""] };
     case "hostname":
-      return { vystup: ["SPST-UCEBNA-14"] };
+      return { vystup: [nazevPocitace(ctx)] };
     case "whoami":
-      return { vystup: [`spst-ucebna-14\\${ctx.jmenoUctu.toLowerCase().replace(/\s+/g, "")}`] };
+      return { vystup: [`${nazevPocitace(ctx).toLowerCase()}\\${ctx.jmenoUctu.toLowerCase().replace(/\s+/g, "")}`] };
     case "ipconfig":
-      return { vystup: IPCONFIG, stopy: ["prikaz:ipconfig"] };
+      return ipconfig(ctx.sit, argumenty);
     case "systeminfo":
       return { vystup: systeminfo(ctx) };
-    case "ping": {
-      const kam = argumenty.find((a) => !jePrepinac(a)) ?? "";
-      if (!kam) return { vystup: ["Chybná syntaxe příkazu."] };
-      return {
-        vystup: [
-          "",
-          `Příkaz PING na ${kam} [10.20.3.1] s délkou 32 bajtů:`,
-          "Odpověď od 10.20.3.1: bajty=32 čas=2ms TTL=64",
-          "Odpověď od 10.20.3.1: bajty=32 čas=1ms TTL=64",
-          "Odpověď od 10.20.3.1: bajty=32 čas=2ms TTL=64",
-          "Odpověď od 10.20.3.1: bajty=32 čas=1ms TTL=64",
-          "",
-          `Statistika ping pro ${kam}:`,
-          "    Pakety: Odeslané = 4, Přijaté = 4, Ztracené = 0 (0% ztráta),",
-          "",
-        ],
-      };
-    }
+    // Síťové příkazy jsou samostatné programy Windows – jdou v cmd i v PowerShellu.
+    case "ping":
+      return ping(ctx.sit, argumenty);
+    case "nslookup":
+      return nslookup(ctx.sit, argumenty);
+    case "tracert":
+      return tracert(ctx.sit, argumenty);
     default:
       break;
   }

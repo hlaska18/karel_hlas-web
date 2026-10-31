@@ -19,6 +19,7 @@ import {
   type Stav,
 } from "./stav";
 import { APLIKACE, type AppId } from "./typy";
+import { aktivniPorucha, chybyPriZmene, sitFunguje, sitSPoruchou, type Porucha, type SitStav } from "./sit";
 
 export type { Prichyceni };
 
@@ -50,7 +51,11 @@ export type Akce =
   | { typ: "virus/zastav" }
   /** Vtíravé okno: dokud běží, po zavření se vrací. */
   | { typ: "reklama/spust" }
-  | { typ: "reklama/zastav" };
+  | { typ: "reklama/zastav" }
+  // Jen cvičení „Síť a poruchy“ (`?scenar=sit`).
+  | { typ: "sit/nastav"; sit: SitStav }
+  | { typ: "sit/porucha"; porucha: Porucha }
+  | { typ: "napoveda"; id: string };
 
 /**
  * Aplikace, které běží jen v jedné kopii. Spuštění „podruhé" jen přepne na
@@ -284,11 +289,46 @@ export function reducer(stav: Stav, akce: Akce): Stav {
     case "reklama/zastav":
       return stav.reklamaBezi ? { ...stav, reklamaBezi: false } : stav;
 
+    case "sit/nastav": {
+      if (!stav.sit) return stav;
+      const pred = stav.sit;
+      const po = akce.sit;
+      let stopy = pridejStopu(stav.stopy, "sit:zmena");
+      // Porucha je opravená jen tehdy, když ji opravil žák – ne když se
+      // počítač vrátil do výchozího stavu (`system/reset` stopu nepřidá).
+      const porucha = aktivniPorucha(pred, stav.stopy);
+      if (porucha && aktivniPorucha(po, stav.stopy) !== porucha && sitFunguje(po)) {
+        stopy = pridejStopu(stopy, `porucha:${porucha}:opravena`);
+      }
+      const chyby = { ...stav.chyby };
+      for (const id of chybyPriZmene(pred, po, stav.stopy)) chyby[id] = Math.min(99, (chyby[id] ?? 0) + 1);
+      return { ...stav, sit: po, stopy, chyby };
+    }
+
+    case "sit/porucha":
+      if (!stav.sit) return stav;
+      return {
+        ...stav,
+        sit: sitSPoruchou(akce.porucha),
+        stopy: pridejStopu(stav.stopy, `porucha:${akce.porucha}:spustena`),
+      };
+
+    case "napoveda": {
+      const napovedy = { ...stav.napovedy };
+      napovedy[akce.id] = (napovedy[akce.id] ?? 0) + 1;
+      return { ...stav, napovedy };
+    }
+
     case "system/reset":
       // Vrátí disk do stavu, ve kterém hodina začínala – z TÉHOŽ scénáře,
       // ne z výchozího. Odškrtané úlohy zůstávají: úklid počítače není důvod
       // přijít o hodinu práce, a splněný úkol už je splněný.
-      return { ...vychoziStav(stav.scenar), splneno: stav.splneno, stopy: stav.stopy };
+      return {
+        ...vychoziStav(stav.scenar),
+        splneno: stav.splneno,
+        stopy: stav.stopy,
+        ...(stav.sit ? { chyby: stav.chyby, napovedy: stav.napovedy } : {}),
+      };
 
     default:
       return stav;

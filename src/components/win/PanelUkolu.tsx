@@ -23,7 +23,8 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ListChecks } from "lucide-react";
 import { useSystem } from "./system";
-import { SKUPINY, UKOLY, postup } from "@/lib/win/ukoly";
+import { postup, skupinyPro, ukolyPro, type Ukol } from "@/lib/win/ukoly";
+import { aktivniPorucha, CHYBY_SITE } from "@/lib/win/sit";
 import { MojeVysledkySimulatoru, PrehledTridySimulatoru, type Vzhled } from "@/components/postup/VysledkySimulatoru";
 
 /** Barvy oken Moje výsledky a Přehled třídy – ať vypadají jako Windows. */
@@ -44,23 +45,25 @@ export function PanelUkolu() {
   const [otevreny, nastavOtevreny] = useState(false);
   /** Otevřené okno: Moje výsledky, nebo Přehled třídy (pro učitele). */
   const [okno, nastavOkno] = useState<null | "vysledky" | "prehled">(null);
-  const [rozbaleneSkupiny, nastavSkupiny] = useState<string[]>([SKUPINY[0]]);
+  const [rozbaleneSkupiny, nastavSkupiny] = useState<string[]>(() => [skupinyPro(stav.scenar)[0]]);
   const [rozbaleneUkoly, nastavUkoly] = useState<string[]>([]);
 
-  const { hotovo, celkem } = postup(stav.splneno);
+  // Cvičení „Síť a poruchy“ (`?scenar=sit`) má vlastní sadu úloh i kód WSIT1-.
+  const { hotovo, celkem } = postup(stav.splneno, stav.scenar);
   const podleSkupin = useMemo(
     () =>
-      SKUPINY.map((skupina) => ({
+      skupinyPro(stav.scenar).map((skupina) => ({
         skupina,
-        ukoly: UKOLY.filter((u) => u.skupina === skupina),
+        ukoly: ukolyPro(stav.scenar).filter((u) => u.skupina === skupina),
       })),
-    [],
+    [stav.scenar],
   );
 
   const okna =
     okno === "vysledky" ? (
       <MojeVysledkySimulatoru
-        simulator="windows"
+        simulator={stav.sit ? "sit" : "windows"}
+        chyby={stav.chyby}
         jmeno={stav.nastaveni.jmenoUctu}
         nastavJmeno={(jmeno) => poslat({ typ: "nastaveni/zmen", zmena: { jmenoUctu: jmeno } })}
         splneno={stav.splneno}
@@ -198,7 +201,8 @@ export function PanelUkolu() {
                           />
                         </button>
 
-                        {navod && (
+                        {navod && u.porucha && <Porucha ukol={u} />}
+                        {navod && !u.porucha && (
                           <div className="mb-1.5 ml-[2.4rem] mr-2 border-l-2 border-win-akcent pl-3">
                             <p className="text-[11px] leading-snug text-win-slaby">{u.popis}</p>
                             <ol className="mt-1.5 list-decimal space-y-1.5 pl-4 text-[11px] leading-snug marker:text-win-slaby">
@@ -236,5 +240,60 @@ export function PanelUkolu() {
       </aside>
       {okna}
     </>
+  );
+}
+
+/** Které chyby patří k poruše – jejich radu žák uvidí u úlohy. */
+const CHYBY_PORUCHY: Record<string, string[]> = { brana: ["db", "rr"], dns: ["id", "rr"] };
+
+/**
+ * Úloha s poruchou: místo návodu tlačítko, které počítač schválně pokazí,
+ * a nápovědy po jedné. Počet otevřených nápověd vidí jen žák – do kódu
+ * postupu nejde (rada 31. 10. 2026: počítaná nápověda by se stala trestem).
+ */
+function Porucha({ ukol }: { ukol: Ukol }) {
+  const { stav, poslat } = useSystem();
+  const porucha = ukol.porucha!;
+  const bezi = stav.sit ? aktivniPorucha(stav.sit, stav.stopy) === porucha : false;
+  const otevreno = Math.min(stav.napovedy?.[ukol.id] ?? 0, ukol.kroky.length);
+  const rady = CHYBY_PORUCHY[porucha].filter((id) => stav.chyby?.[id]);
+
+  return (
+    <div className="mb-1.5 ml-[2.4rem] mr-2 border-l-2 border-win-akcent pl-3 text-[11px] leading-snug">
+      <p className="text-win-slaby">{ukol.popis}</p>
+      {bezi ? (
+        <p className="mt-1.5 font-semibold">Tento počítač je schválně pokažený – najdi proč.</p>
+      ) : (
+        <button
+          type="button"
+          onClick={() => poslat({ typ: "sit/porucha", porucha })}
+          className="mt-1.5 rounded bg-win-akcent px-2.5 py-1 font-semibold text-win-akcent-text hover:opacity-90"
+        >
+          Pokazit počítač
+        </button>
+      )}
+      {otevreno > 0 && (
+        <ol className="mt-1.5 list-decimal space-y-1.5 pl-4 marker:text-win-slaby">
+          {ukol.kroky.slice(0, otevreno).map((k, i) => (
+            <li key={i}>{k}</li>
+          ))}
+        </ol>
+      )}
+      {otevreno < ukol.kroky.length && (
+        <button
+          type="button"
+          onClick={() => poslat({ typ: "napoveda", id: ukol.id })}
+          className="mt-1.5 text-win-akcent hover:underline"
+        >
+          {otevreno ? "Další nápověda" : "Nápověda"} ({otevreno + 1}/{ukol.kroky.length})
+        </button>
+      )}
+      {rady.map((id) => (
+        <p key={id} className="mt-1.5 text-win-slaby">
+          {CHYBY_SITE[id].rada}
+        </p>
+      ))}
+      <p className="mt-1.5 text-win-slaby">Nápovědy vidíš jen ty, učitel je v kódu postupu nedostane.</p>
+    </div>
   );
 }

@@ -149,6 +149,25 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
           />
         )}
       </details>
+
+      {/* Co je nového (31. 10. 2026): simulátory mají cizí učitelé v zadáních,
+          ať vidí, co se změnilo a že výchozí úlohy a kódy zůstaly. */}
+      <details className="mt-3 rounded-karta px-1 text-sm text-zinc-700 dark:text-zinc-300">
+        <summary className="cursor-pointer select-none pl-1 text-xs font-medium uppercase tracking-widest text-zinc-600 hover:text-accent-700 dark:text-zinc-400 dark:hover:text-accent-300">
+          {tr.hero.novinkyTitle}
+        </summary>
+        <ul className="mt-3 list-disc space-y-2 pl-6 leading-relaxed">
+          {tr.hero.novinky.map((n) => (
+            <li key={n}>{n}</li>
+          ))}
+        </ul>
+        <Link
+          href="/windows?scenar=sit"
+          className="ml-1 mt-3 inline-block rounded-ovladac border border-black/10 px-3 py-1.5 text-xs font-semibold transition hover:border-accent-500/40 hover:text-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70 dark:border-white/15 dark:hover:text-accent-300"
+        >
+          {tr.hero.novinkySit}
+        </Link>
+      </details>
     </div>
   );
 }

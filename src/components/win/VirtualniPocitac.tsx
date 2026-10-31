@@ -208,7 +208,7 @@ function Obrazovka() {
           <Prihlaseni
             jmenoUctu={n.jmenoUctu}
             tapetaId={n.tapeta}
-            rozdelano={postup(stav.splneno)}
+            rozdelano={postup(stav.splneno, stav.scenar)}
             onHotovo={(jmeno, nacisto) => {
               // Přihlášení jménem (od 25. 9. 2026 místo kódu). Jméno je
               // jméno účtu – ukazuje se ve Startu, v Nastavení a nese ho

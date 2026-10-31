@@ -27,7 +27,8 @@ describe("HeroSimulatory", () => {
   it("vede na oba simulátory", () => {
     vykresli("cs", 33, 14);
     const odkazy = screen.getAllByRole("link").map((a) => a.getAttribute("href"));
-    expect(odkazy).toEqual(["/windows", "/macos"]);
+    // Třetí odkaz je v „Co je nového“: cvičení Síť a poruchy (31. 10. 2026).
+    expect(odkazy).toEqual(["/windows", "/macos", "/windows?scenar=sit"]);
   });
 
   it("ukáže předaný počet úloh, správně vyskloňovaný, a že se vstupuje jménem", () => {

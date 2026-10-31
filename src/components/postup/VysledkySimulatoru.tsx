@@ -9,7 +9,8 @@
  *
  * Okna jsou společná pro oba simulátory, vzhled si ale každý předá sám
  * (`Vzhled`) – ve Windows vypadají jako Windows, na Macu jako Mac. Přehled
- * třídy rozumí kódům ze všech tří simulátorů: WIN1-, MAC1- i SQLKURZ1-.
+ * třídy rozumí kódům ze všech tří simulátorů: WIN1-, MAC1- i SQLKURZ1-,
+ * a od 31. 10. 2026 i WSIT1- ze cvičení „Síť a poruchy“ (`?scenar=sit`).
  */
 
 import { useState, type ReactNode } from "react";
@@ -30,7 +31,8 @@ import {
 import { najdiKody, sloucitPostupy } from "@/lib/dbb/kodPostupu";
 import { bezVzorce } from "@/lib/dbb/csv";
 import { stahni } from "@/lib/dbb/stahni";
-import { UKOLY as UKOLY_WIN } from "@/lib/win/ukoly";
+import { UKOLY as UKOLY_WIN, UKOLY_SIT } from "@/lib/win/ukoly";
+import { CHYBY_SITE } from "@/lib/win/sit";
 import { UKOLY_MAC } from "@/lib/mac/ukoly";
 
 /** Třídy, kterými si simulátor okna obarví. */
@@ -56,7 +58,19 @@ type UkolKratce = { id: string; nazev: string };
 const UKOLY: Record<Simulator, UkolKratce[]> = {
   windows: UKOLY_WIN.map((u) => ({ id: u.id, nazev: u.nazev })),
   macos: UKOLY_MAC.map((u) => ({ id: u.id, nazev: u.nazev })),
+  sit: UKOLY_SIT.map((u) => ({ id: u.id, nazev: u.nazev })),
 };
+
+const PREDPONA_KODU: Record<Simulator, string> = { windows: "WIN1-…", macos: "MAC1-…", sit: "WSIT1-…" };
+
+/** Chyby při opravě sítě jako popis chování. Starý kód bez pole = „neměřeno“. */
+function chybySlovy(chyby: Record<string, number> | undefined): string {
+  if (!chyby) return "neměřeno";
+  const texty = Object.keys(CHYBY_SITE)
+    .filter((id) => chyby[id])
+    .map((id) => `${CHYBY_SITE[id].text}${chyby[id] > 1 ? ` (${chyby[id]}×)` : ""}`);
+  return texty.length ? texty.join("; ") : "nic z měřeného";
+}
 
 /** Kolik z úloh simulátoru je splněných (jen úlohy, které pořád existují). */
 function hotovychZ(simulator: Simulator, splneno: string[]): number {
@@ -158,6 +172,7 @@ export function MojeVysledkySimulatoru({
   otevriPrehled,
   zavri,
   vzhled,
+  chyby,
 }: {
   simulator: Simulator;
   jmeno: string;
@@ -168,6 +183,8 @@ export function MojeVysledkySimulatoru({
   otevriPrehled: () => void;
   zavri: () => void;
   vzhled: Vzhled;
+  /** Jen cvičení `sit`: chyby při opravě sítě, nesou se v kódu jako `ch`. */
+  chyby?: Record<string, number>;
 }) {
   const [upravovane, nastavUpravovane] = useState(jmeno === VYCHOZI_JMENO ? "" : jmeno);
   const [zkopirovano, nastavZkopirovano] = useState(false);
@@ -183,6 +200,7 @@ export function MojeVysledkySimulatoru({
     datum: dnes(),
     splneno: splneno.filter((id) => UKOLY[simulator].some((u) => u.id === id)),
     celkem,
+    ...(simulator === "sit" ? { chyby: chyby || {} } : {}),
   };
   const kod = zakodujSimulator(postup);
 
@@ -267,7 +285,7 @@ export function MojeVysledkySimulatoru({
             if (e.key === "Enter") nactiKod();
           }}
           spellCheck={false}
-          placeholder={simulator === "windows" ? "WIN1-…" : "MAC1-…"}
+          placeholder={PREDPONA_KODU[simulator]}
           aria-label="Kód postupu z jiného počítače"
           className={`h-[28px] min-w-0 flex-1 rounded-[4px] px-2 font-mono text-[11px] ${vzhled.pole}`}
         />
@@ -303,10 +321,20 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
   const bunka = `border-b px-2 py-1 ${vzhled.linka}`;
 
   const csv = () => {
-    const radky: string[][] = [["Simulátor", "Jméno", "Datum", "Hotovo", "Celkem", "Splněné úlohy"]];
+    // Sloupec „Při opravě sítě“ jen tehdy, když jsou v textu kódy WSIT1 – jinak zůstává CSV jako dřív.
+    const sit = simulatory.some((z) => z.simulator === "sit");
+    const radky: string[][] = [["Simulátor", "Jméno", "Datum", "Hotovo", "Celkem", "Splněné úlohy", ...(sit ? ["Při opravě sítě"] : [])]];
     simulatory.forEach((z) => {
       const nazvy = UKOLY[z.simulator].filter((u) => z.splneno.indexOf(u.id) !== -1).map((u) => u.nazev);
-      radky.push([NAZEV_SIMULATORU[z.simulator], z.jmeno, z.datum, String(nazvy.length), String(UKOLY[z.simulator].length), nazvy.join(" | ")]);
+      radky.push([
+        NAZEV_SIMULATORU[z.simulator],
+        z.jmeno,
+        z.datum,
+        String(nazvy.length),
+        String(UKOLY[z.simulator].length),
+        nazvy.join(" | "),
+        ...(sit ? [z.simulator === "sit" ? chybySlovy(z.chyby) : ""] : []),
+      ]);
     });
     sql.forEach((z) => {
       radky.push([
@@ -316,6 +344,7 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
         z.pisemka ? String(((z.sady || {})[PISEMKA_SADA[z.pisemka]] || [0])[0]) : `Dotazy ${pocet(z.hotove, 1, 13)}/13, Program ${pocet(z.hotove, 14, 19)}/6`,
         z.pisemka ? "16" : "19",
         "",
+        ...(sit ? [""] : []),
       ]);
     });
     // Jméno píše žák – bez `bezVzorce` by si mohl dát třeba =HYPERLINK(…) a
@@ -341,6 +370,7 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
               <th className={`${bunka} font-normal`}>Datum</th>
               <th className={`${bunka} font-normal`}>Hotovo</th>
               <th className={`${bunka} font-normal`}>Úlohy</th>
+              {simulator === "sit" && <th className={`${bunka} font-normal`}>Při opravě sítě</th>}
             </tr>
           </thead>
           <tbody>
@@ -354,6 +384,7 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
                 <td className={bunka}>
                   <Dlazdice simulator={simulator} splneno={z.splneno} vzhled={vzhled} mala />
                 </td>
+                {simulator === "sit" && <td className={`${bunka} ${z.chyby ? "" : vzhled.slaby}`}>{chybySlovy(z.chyby)}</td>}
               </tr>
             ))}
           </tbody>
@@ -379,9 +410,19 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
                   })}
                 </span>
               </td>
+              {simulator === "sit" && <td />}
             </tr>
           </tfoot>
         </table>
+        {simulator === "sit" && (
+          <p className={`mt-1 ${vzhled.slaby}`}>
+            Při opravě sítě se sleduje jen to, co žák udělal, ne co si myslí. Počet žáků:{" "}
+            {Object.keys(CHYBY_SITE)
+              .map((id) => `${CHYBY_SITE[id].text} – ${zaci.filter((z) => z.chyby && z.chyby[id]).length}`)
+              .join(" · ")}
+            . Nápovědy, které si žák otevřel, se do kódu nepočítají.
+          </p>
+        )}
       </section>
     );
   };
@@ -390,15 +431,19 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
     <Okno titulek="Přehled třídy (pro učitele)" zavri={zavri} sirka={860} vzhled={vzhled}>
       <p>
         Vlož kódy postupu od žáků – klidně celé zprávy z Teams, kódy se v textu najdou samy. Rozumí kódům z Windows (WIN1-),
-        z macOS (MAC1-) i z kurzu SQL (SQLKURZ1-). Kódy téhož žáka se sčítají. Kód je shrnutí, ne důkaz: vzniká v prohlížeči
+        z macOS (MAC1-), ze cvičení Windows – síť (WSIT1-) i z kurzu SQL (SQLKURZ1-). Kódy téhož žáka se sčítají. Kód je shrnutí, ne důkaz: vzniká v prohlížeči
         žáka a dá se upravit.
+      </p>
+      <p className={`mt-2 ${vzhled.slaby}`}>
+        Co je nového (listopad 2026): ve Windows přibylo samostatné cvičení Síť a poruchy (adresa /windows?scenar=sit, kódy
+        WSIT1-). Výchozích 33 úloh Windows ani kódy WIN1- se nezměnily.
       </p>
       <textarea
         value={text}
         onChange={(e) => nastavText(e.target.value)}
         spellCheck={false}
         aria-label="Kódy postupu od žáků"
-        placeholder="WIN1-…  MAC1-…  SQLKURZ1-…"
+        placeholder="WIN1-…  MAC1-…  WSIT1-…  SQLKURZ1-…"
         className={`mt-2 h-[90px] w-full resize-none rounded-[4px] p-2 font-mono text-[11px] ${vzhled.pole}`}
       />
       {!simulatory.length && !sql.length ? (
@@ -406,6 +451,7 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
       ) : (
         <>
           {sekce("windows")}
+          {sekce("sit")}
           {sekce("macos")}
           {sql.length > 0 && (
             <section className="mt-4">

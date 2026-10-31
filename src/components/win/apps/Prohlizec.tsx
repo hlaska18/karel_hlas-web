@@ -27,7 +27,7 @@ import {
 import { IkonoveTlacitko } from "../ui";
 import { useOkno, useSystem } from "../system";
 import { jeSoubor, najdi, pripona, rozloz, sloz, vloz, volneJmeno, najdiSlozku } from "@/lib/win/fs";
-import { DOMOVSKA, chybovaStranka, najdiStranku, nahledPdf, STRANKY } from "@/lib/win/web";
+import { DOMOVSKA, DOMOVSKA_SIT, chybovaStranka, najdiStranku, nahledPdf, strankaSit, STRANKY, STRANKY_SIT } from "@/lib/win/web";
 
 interface Karta {
   id: number;
@@ -36,10 +36,12 @@ interface Karta {
 }
 
 export function Prohlizec() {
-  const { stav, poslat } = useSystem();
+  const { stav, poslat, stopa } = useSystem();
   const { arg, nastavTitul } = useOkno();
+  // Cvičení „Síť a poruchy“ má vlastní domácí „internet“ (`strankaSit`).
+  const domovska = stav.sit ? DOMOVSKA_SIT : DOMOVSKA;
   const [karty, nastavKarty] = useState<Karta[]>(() => [
-    { id: 1, historie: [arg ?? DOMOVSKA], index: 0 },
+    { id: 1, historie: [arg ?? domovska], index: 0 },
   ]);
   const [aktivni, nastavAktivni] = useState(1);
   const [adresniRadek, nastavAdresniRadek] = useState("");
@@ -59,11 +61,17 @@ export function Prohlizec() {
       if (pripona(jmeno) === "pdf") return { titulek: jmeno, html: nahledPdf(jmeno) };
       return { titulek: jmeno, html: uzel.obsah };
     }
+    if (stav.sit) return strankaSit(adresa, stav.sit);
     const stranka = najdiStranku(adresa);
     return stranka
       ? { titulek: stranka.titulek, html: stranka.telo }
       : { titulek: "Stránka není dostupná", html: chybovaStranka(adresa) };
-  }, [adresa, stav.disk]);
+  }, [adresa, stav.disk, stav.sit]);
+
+  const otevrenaSit = "adresa" in obsah ? obsah.adresa : null;
+  useEffect(() => {
+    if (otevrenaSit) stopa(`web:${otevrenaSit}`);
+  }, [otevrenaSit, stopa]);
 
   const stranka = najdiStranku(adresa);
 
@@ -143,7 +151,7 @@ export function Prohlizec() {
           aria-label="Nová karta"
           onClick={() => {
             const id = Math.max(0, ...karty.map((k) => k.id)) + 1;
-            nastavKarty((s) => [...s, { id, historie: [DOMOVSKA], index: 0 }]);
+            nastavKarty((s) => [...s, { id, historie: [domovska], index: 0 }]);
             nastavAktivni(id);
           }}
           className="mb-1 flex h-6 w-6 items-center justify-center rounded hover:bg-win-zvyrazneny"
@@ -175,7 +183,7 @@ export function Prohlizec() {
         <IkonoveTlacitko aria-label="Aktualizovat" onClick={() => jdi(adresa)}>
           <RotateCw className="h-4 w-4" />
         </IkonoveTlacitko>
-        <IkonoveTlacitko aria-label="Domovská stránka" onClick={() => jdi(DOMOVSKA)}>
+        <IkonoveTlacitko aria-label="Domovská stránka" onClick={() => jdi(domovska)}>
           <House className="h-4 w-4" />
         </IkonoveTlacitko>
         <form
@@ -238,7 +246,7 @@ export function Prohlizec() {
       {/* Rychlé odkazy – ať žák nemusí adresy opisovat z tabule */}
       <div className="flex h-8 shrink-0 items-center gap-2 border-t border-win-linka px-3 text-[11px] text-win-slaby">
         <span>Dostupné stránky:</span>
-        {STRANKY.map((s) => (
+        {(stav.sit ? STRANKY_SIT : STRANKY).map((s) => (
           <button
             key={s.adresa}
             type="button"

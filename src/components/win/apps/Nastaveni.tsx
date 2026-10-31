@@ -38,6 +38,7 @@ import { velikost } from "@/lib/win/fs";
 import { APLIKACE, type AppId } from "@/lib/win/typy";
 import { zapomen, type Nastaveni as TypNastaveni } from "@/lib/win/stav";
 import { zapamatujPrihlaseni } from "@/lib/win/pristup";
+import { OddilSitDomaci } from "./NastaveniSite";
 
 type Oddil =
   | "system"
@@ -156,7 +157,8 @@ export function Nastaveni() {
             />
           )}
           {oddil === "zarizeni" && <OddilZarizeni n={n} zmen={zmen} />}
-          {oddil === "sit" && <OddilSit n={n} zmen={zmen} />}
+          {oddil === "sit" &&
+            (stav.sit ? <OddilSitDomaci sit={stav.sit} /> : <OddilSit n={n} zmen={zmen} />)}
           {oddil === "prizpusobeni" && (
             <OddilPrizpusobeni
               n={n}
@@ -384,7 +386,7 @@ function Obnoveni() {
    * obrazovce. Proto tu není žádná nová akce v reduceru – nebyla by k čemu.
    */
   const zacniOdZacatku = () => {
-    zapomen();
+    zapomen(stav.scenar);
     zapamatujPrihlaseni(false, "windows");
     window.location.reload();
   };

@@ -1152,6 +1152,14 @@ type Dict = {
     zadatText: string;
     zadatCopy: string;
     zadatCopied: string;
+    /**
+     * „Co je nového v simulátorech“ pod návodem k zadání (31. 10. 2026, cvičení
+     * Síť a poruchy). Cizí učitelé mají simulátory v zadáních, ať vidí, co se
+     * změnilo a co ne. Nejnovější položka nahoře.
+     */
+    novinkyTitle: string;
+    novinky: string[];
+    novinkySit: string;
     /** Popisek nad odkazy na čtení (komponenta `Ctenie`). */
     reading: string;
     ctaLessons: string;
@@ -1409,6 +1417,14 @@ export const t: Record<Lang, Dict> = {
         "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Vpravo dole klikni na Úkoly a plň úlohy – odškrtávají se samy.\n3. Na konci klikni v panelu Úkoly na Moje výsledky, zkopíruj kód postupu a pošli mi ho jako odpověď.\n",
       zadatCopy: "Zkopírovat zadání",
       zadatCopied: "Zkopírováno",
+      novinkyTitle: "Co je nového v simulátorech",
+      novinky: [
+        "Listopad 2026 – Windows: nové samostatné cvičení Síť a poruchy. Žák v Terminálu zjistí adresu, bránu a DNS (ipconfig /all), vyzkouší ping, nslookup a tracert a porovná vnitřní a veřejnou adresu. Pak opraví dva schválně pokažené počítače: jednou nejde internet, podruhé se weby neotevřou podle názvu. Nápovědy si odkrývá po jedné a vidí je jen on.",
+        "Cvičení má vlastní adresu a vlastní kód postupu WSIT1-. Přehled třídy u něj ukáže i to, co žák při opravě udělal vedle (třeba při poruše brány měnil server DNS) – jako popis toho, co udělal, ne známku.",
+        "Windows: ping odpovídá ze skutečné adresy cíle (dřív odpovídal vždycky z brány), nově fungují nslookup, tracert a ipconfig /all. Adresy v „internetu“ jsou z rozsahů vyhrazených pro ukázky.",
+        "Beze změny: výchozí úlohy Windows i macOS a kódy postupu WIN1- a MAC1-. Starší kódy Přehled třídy čte stejně jako dřív.",
+      ],
+      novinkySit: "Otevřít cvičení Síť a poruchy",
       reading: "Zajímavé články",
       ctaLessons: "Procházet materiály",
       ctaContact: "O mně",
@@ -2171,6 +2187,14 @@ export const t: Record<Lang, Dict> = {
         "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Click Úkoly (Tasks) bottom right and work through the tasks – they tick themselves off.\n3. At the end click Moje výsledky (My results) in the task panel, copy the progress code and send it to me as a reply.\n\n(The simulator is in Czech.)\n",
       zadatCopy: "Copy the assignment",
       zadatCopied: "Copied",
+      novinkyTitle: "What is new in the simulators",
+      novinky: [
+        "November 2026 – Windows: a new separate exercise, Network and faults. In the Terminal students find the address, gateway and DNS (ipconfig /all), try ping, nslookup and tracert, and compare the private and public address. Then they fix two deliberately broken computers: once the internet does not work, once websites do not open by name. Hints are revealed one at a time and only the student sees them.",
+        "The exercise has its own address and its own progress code WSIT1-. For it the class overview also shows what the student did wrong while fixing (for example changed the DNS server when the gateway was broken) – as a description of what they did, not a grade.",
+        "Windows: ping now replies from the real target address (it used to always reply from the gateway); nslookup, tracert and ipconfig /all now work. Addresses on the “internet” come from ranges reserved for documentation.",
+        "Unchanged: the default Windows and macOS tasks and the WIN1- and MAC1- progress codes. The class overview reads older codes exactly as before.",
+      ],
+      novinkySit: "Open the Network and faults exercise",
       reading: "Interesting articles",
       ctaLessons: "Browse the materials",
       ctaContact: "About me",

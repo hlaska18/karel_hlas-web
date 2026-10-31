@@ -41,6 +41,13 @@ export type Scenar = {
 
 export const VYCHOZI_SCENAR = "vychozi";
 
+/**
+ * Cvičení „Síť a poruchy“ (rada 31. 10. 2026). Na rozdíl od ostatních scénářů
+ * nemění jen disk: má domácí síť, vlastní úlohy, vlastní úložiště a vlastní
+ * kód postupu (WSIT1-). Výchozích 33 úloh se ho netýká.
+ */
+export const SCENAR_SIT = "sit";
+
 /** Přidá uzly do složky. `vloz` vrací nový strom, proto `reduce`. */
 function pridej(disk: Slozka, kam: string, uzly: Uzel[]): Slozka {
   const cesta = rozloz(kam);
@@ -141,6 +148,13 @@ export const SCENARE: Scenar[] = [
     // Používá se přesně ta funkce, kterou spouští cvičný vir za běhu, takže
     // se dopad nemůže rozejít podle toho, kudy k němu žák přišel.
     uprav: (disk) => zasifruj(disk),
+  },
+  {
+    id: SCENAR_SIT,
+    nazev: "Síť a poruchy",
+    popis:
+      "Domácí počítač za routerem. Žák zjistí adresu, bránu a DNS, ověří spojení příkazy ping, nslookup a tracert a opraví dvě schválně pokažená nastavení sítě. Vlastní úlohy a vlastní kód postupu (WSIT1-).",
+    uprav: (disk) => disk,
   },
 ];
 

@@ -13,17 +13,25 @@
  */
 
 import { normalizujJmeno } from "@/lib/dbb/kodPostupu";
+import { CHYBY_SITE } from "@/lib/win/sit";
 
-export type Simulator = "windows" | "macos";
+/**
+ * `sit` je cvičení „Síť a poruchy“ v simulátoru Windows (`/windows?scenar=sit`,
+ * od 31. 10. 2026). Má vlastní předponu WSIT1-, takže ho starší Přehled třídy
+ * vůbec nenajde a kódy WIN1- se nemíchají s jinou sadou úloh.
+ */
+export type Simulator = "windows" | "macos" | "sit";
 
 export const NAZEV_SIMULATORU: Record<Simulator, string> = {
   windows: "Windows",
   macos: "macOS",
+  sit: "Windows – síť",
 };
 
 const PREDPONA: Record<Simulator, string> = {
   windows: "WIN1-",
   macos: "MAC1-",
+  sit: "WSIT1-",
 };
 
 /** Jméno účtu, dokud se žák nepřihlásí svým. */
@@ -38,6 +46,11 @@ export type PostupSimulatoru = {
   splneno: string[];
   /** Kolik úloh simulátor měl, když kód vznikl. */
   celkem: number;
+  /**
+   * Jen cvičení `sit`: chyby při opravě sítě (id z `CHYBY_SITE` → kolikrát).
+   * Starší kódy pole nemají – Přehled pak píše „neměřeno“, ne nulu.
+   */
+  chyby?: Record<string, number>;
 };
 
 const dva = (n: number) => (n < 10 ? `0${n}` : String(n));
@@ -59,7 +72,20 @@ function zBase64Url(text: string): string {
 }
 
 export function zakodujSimulator(p: PostupSimulatoru): string {
-  return PREDPONA[p.simulator] + naBase64Url(JSON.stringify({ j: p.jmeno, d: p.datum, h: p.splneno, c: p.celkem }));
+  const data: Record<string, unknown> = { j: p.jmeno, d: p.datum, h: p.splneno, c: p.celkem };
+  if (p.chyby) data.ch = p.chyby;
+  return PREDPONA[p.simulator] + naBase64Url(JSON.stringify(data));
+}
+
+/** Chyby z kódu: jen známá id a celá čísla 0–99, cokoli jiného se zahodí. */
+function prectiChyby(ch: unknown): Record<string, number> {
+  const chyby: Record<string, number> = {};
+  if (!ch || typeof ch !== "object" || Array.isArray(ch)) return chyby;
+  Object.keys(CHYBY_SITE).forEach((id) => {
+    const n = (ch as Record<string, unknown>)[id];
+    if (typeof n === "number" && Number.isFinite(n) && n > 0) chyby[id] = Math.min(Math.floor(n), 99);
+  });
+  return chyby;
 }
 
 /*
@@ -73,11 +99,11 @@ const ID_ULOHY = /^[a-z0-9-]{1,40}$/;
 
 /** Přečte kód; poškozený nebo cizí text vrátí jako null. */
 export function dekodujSimulator(kod: string): PostupSimulatoru | null {
-  const m = /(WIN1|MAC1)-([A-Za-z0-9_-]+)/.exec(kod);
+  const m = /(WSIT1|WIN1|MAC1)-([A-Za-z0-9_-]+)/.exec(kod);
   if (!m || m[2].length > MAX_DELKA_KODU) return null;
-  const simulator: Simulator = m[1] === "WIN1" ? "windows" : "macos";
+  const simulator: Simulator = m[1] === "WIN1" ? "windows" : m[1] === "WSIT1" ? "sit" : "macos";
   try {
-    const d = JSON.parse(zBase64Url(m[2])) as { j?: unknown; d?: unknown; h?: unknown; c?: unknown };
+    const d = JSON.parse(zBase64Url(m[2])) as { j?: unknown; d?: unknown; h?: unknown; c?: unknown; ch?: unknown };
     if (!d || typeof d !== "object" || typeof d.j !== "string" || !Array.isArray(d.h)) return null;
     const splneno: string[] = [];
     for (const h of d.h.slice(0, 200)) {
@@ -86,13 +112,16 @@ export function dekodujSimulator(kod: string): PostupSimulatoru | null {
       if (typeof h === "string" && ID_ULOHY.test(h) && splneno.indexOf(h) === -1) splneno.push(h);
     }
     const c = Number(d.c);
-    return {
+    const postup: PostupSimulatoru = {
       simulator,
       jmeno: d.j.trim().slice(0, 60),
       datum: typeof d.d === "string" && /^\d{4}-\d{2}-\d{2}$/.test(d.d) ? d.d : "",
       splneno,
       celkem: Number.isFinite(c) && c > 0 ? Math.min(Math.floor(c), 500) : 0,
     };
+    // Kódy WIN1 a MAC1 klíč `chyby` nedostanou nikdy – musí se číst přesně jako dřív.
+    if (simulator === "sit" && d.ch !== undefined) postup.chyby = prectiChyby(d.ch);
+    return postup;
   } catch {
     return null;
   }
@@ -101,7 +130,7 @@ export function dekodujSimulator(kod: string): PostupSimulatoru | null {
 /** Všechny kódy simulátorů z vloženého textu (třeba celé vlákno z Teams). */
 export function najdiKodySimulatoru(text: string): PostupSimulatoru[] {
   const vysledek: PostupSimulatoru[] = [];
-  const re = /(?:WIN1|MAC1)-[A-Za-z0-9_-]+/g;
+  const re = /(?:WSIT1|WIN1|MAC1)-[A-Za-z0-9_-]+/g;
   let m: RegExpExecArray | null;
   while ((m = re.exec(text))) {
     const p = dekodujSimulator(m[0]);
@@ -126,13 +155,24 @@ export function sloucitSimulatory(postupy: PostupSimulatoru[]): PostupSimulatoru
       const posledni = kody[kody.length - 1];
       const splneno: string[] = [];
       kody.forEach((p) => p.splneno.forEach((id) => splneno.indexOf(id) === -1 && splneno.push(id)));
-      return {
+      const sloucene: PostupSimulatoru = {
         simulator: posledni.simulator,
         jmeno: posledni.jmeno,
         datum: posledni.datum,
         splneno,
         celkem: Math.max(...kody.map((p) => p.celkem)),
       };
+      // Chyby: u každé nejvyšší počet. Každý další kód z téhož počítače nese
+      // celý dosavadní součet, sčítání by chyby započítalo vícekrát.
+      const sChybami = kody.filter((p) => p.chyby);
+      if (sChybami.length) {
+        const chyby: Record<string, number> = {};
+        sChybami.forEach((p) =>
+          Object.keys(p.chyby!).forEach((id) => (chyby[id] = Math.max(chyby[id] ?? 0, p.chyby![id]))),
+        );
+        sloucene.chyby = chyby;
+      }
+      return sloucene;
     })
     .sort((a, b) => (a.simulator !== b.simulator ? (a.simulator < b.simulator ? 1 : -1) : a.jmeno.localeCompare(b.jmeno, "cs")));
 }

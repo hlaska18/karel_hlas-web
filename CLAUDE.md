@@ -327,6 +327,39 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   události Vercel Analytics jsou jen v placeném Pro.
 - Meta popisy pro vyhledávače, nová sekce, Slovensko/RVP rada nedoporučila.
 
+### Cvičení „Síť a poruchy“ ve Windows (31. 10. 2026)
+- **Výjimka z režimu údržby:** Karel se vědomě rozhodl stavět hned (inspirace
+  eduKuba.cz), strop ~2 h měsíčně tím překročil. Rada 31. 10. řekla jak:
+  samostatná sada, výchozí nic nerozbít.
+- Adresa `/windows?scenar=sit` (`SCENAR_SIT` v src/lib/win/scenare.ts), vlastní
+  úložiště `win11-vyuka-sit`, 8 úloh `UKOLY_SIT` s předponou `sit-`
+  (ukoly.ts, `ukolyPro`/`skupinyPro`), vlastní kód **WSIT1-** (Simulator `sit`
+  v postupSimulatoru.ts). Výchozích 33 úloh, jejich texty a kód WIN1-/MAC1-
+  se nezměnily – hlídá to `postupSimulatoru.zmrazene.test.ts` (kódy z 31. 10.
+  se nesmí přegenerovat).
+- Síť je v src/lib/win/sit.ts: domácí síť 192.168.1.x, router 192.168.1.1,
+  internet jen 198.51.100.x a 203.0.113.x, weby `skola.example`,
+  `zpravy.example`, `mojeip.example` (veřejná 203.0.113.57, CGNAT jen větou).
+  Bez `sit` (výchozí simulace) příkazy pracují se školní sítí 10.20.x a
+  `ipconfig` dává přesně starý výpis. Opravy pravdivosti platí i ve výchozí
+  simulaci: ping odpovídá z adresy cíle (dřív vždy z brány), nově nslookup,
+  tracert, ipconfig /all.
+- Poruchy: tlačítko „Pokazit počítač“ v panelu (`sit/porucha`), oprava
+  v Nastavení → Síť a internet → Upravit (`NastaveniSite.tsx`, `sit/nastav`).
+  Úloha se splní jen stopou `porucha:X:opravena` (reset ji nedá). Nápovědy
+  po jedné, počet jen u žáka (`napovedy`), NE v kódu. Tři chyby `db`, `id`,
+  `rr` (`CHYBY_SITE`) jdou v kódu jako `ch`; Přehled třídy je píše jako popis
+  chování, u kódu bez pole „neměřeno“. Sebehodnocení 1–5 rada vyškrtla.
+- Přehled třídy (sdílený s macOS) má jen přidanou sekci „Windows – síť“
+  a sloupec v CSV, jen když jsou v textu kódy WSIT1. Na úvodní stránce je
+  „Co je nového v simulátorech“ (`hero.novinky` v content.ts, cs i en).
+- **Ověřit na skutečných českých Windows** (psáno podle znalosti, ne opsáno):
+  nslookup (časový limit, neexistující doména), tracert (nelze přeložit
+  název), tvar řádku statistiky ping, popisky v Nastavení Ethernet
+  („Přiřazení IP“, „Upravit nastavení IP/DNS“, „Upřednostňovaný server DNS“).
+- Návrat zpět: na Vercelu „Redeploy“ předchozího nasazení. Termín 18. 12.,
+  pushovat večer mimo výuku.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
