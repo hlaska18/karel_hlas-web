@@ -88,32 +88,36 @@ export type Clanek = {
  */
 export const CLANKY: Clanek[] = [
   {
+    title: "What Are Autonomous AI Agents? 2026 Examples",
+    source: "DevelopersMatrix",
+    url: "https://developersmatrix.com/blog/autonomous-ai-agents-examples-2026",
+    logo: { src: "/images/clanky/developersmatrix.png", pomer: 1.376 },
+    jazyk: "en",
+  },
+  {
+    title: "AI Agents: Complete Overview (2026)",
+    source: "CogitX",
+    url: "https://cogitx.ai/blog/ai-agents-complete-overview-2026",
+    logo: { src: "/images/clanky/cogitx.png", pomer: 1.766 },
+    jazyk: "en",
+  },
+  {
+    title: "AI agent trends 2026 report",
+    source: "Google Cloud",
+    url: "https://cloud.google.com/resources/content/ai-agent-trends-2026",
+    pozor: {
+      cs: "report až po vyplnění firemního formuláře",
+      en: "report behind a business sign-up form",
+    },
+    logo: { src: "/images/clanky/googlecloud.png", pomer: 1.243 },
+    jazyk: "en",
+  },
+  {
     title: "Everything We Announced at Meta Connect 2026",
     source: "Meta",
     url: "https://www.meta.com/blog/meta-connect-2026-everything-we-announced/",
     logo: { src: "/images/clanky/meta.png", pomer: 1.506 },
     jazyk: "en",
-  },
-  {
-    title: "GPT‑6 Astra je tu. OpenAI věří, že začíná éra AGI",
-    source: "WIRED",
-    url: "https://www.wired.cz/clanky/gpt-6-astra-je-tu-openai-veri-ze-zacina-era-agi",
-    logo: { src: "/images/clanky/wired.png", pomer: 1 },
-    jazyk: "cs",
-  },
-  {
-    title: "Apple představil iPhone Duo. První skládací iPhone stojí 55 tisíc",
-    source: "WIRED",
-    url: "https://www.wired.cz/clanky/apple-predstavil-iphone-duo-prvni-skladaci-iphone-stoji-55-tisic",
-    logo: { src: "/images/clanky/wired.png", pomer: 1 },
-    jazyk: "cs",
-  },
-  {
-    title: "Bere AI práci matematikům? Týden ve vědě #122",
-    source: "WIRED",
-    url: "https://www.wired.cz/clanky/bere-ai-praci-matematikum-tyden-ve-vede-122",
-    logo: { src: "/images/clanky/wired.png", pomer: 1 },
-    jazyk: "cs",
   },
 ];
 
