@@ -1607,13 +1607,6 @@ export const t: Record<Lang, Dict> = {
               note: "Zdarma, bez účtu. Rozhraní je česky jen zčásti, přihlašování zůstává anglicky.",
             },
             {
-              name: "CODAP",
-              url: "https://codap.concord.org/app/",
-              why: "Průzkum vlastních naměřených dat: vybereš řádky v tabulce a hned je vidíš v grafu, a naopak. Na tom se dá ukázat, které body výsledek táhnou a že vztah dvou veličin ještě neříká, co je příčina.",
-              note: "Zdarma, bez účtu; práci uložíš jako soubor do počítače, na Google Disk jen s účtem Google. Rozhraní anglicky, česky jsem ho nenašel. Na počítači; na tabletu s omezeními, na telefonu ne.",
-              overeno: "2026-10",
-            },
-            {
               name: "Realistické učebnice – matematika",
               url: "http://www.realisticky.cz/ucebnice.php?id=2",
               why: "Středoškolská matematika rozepsaná po vyučovacích hodinách: ke každé lekce s výkladem a příklady. Autor Martin Krynický je učitel, učebnice průběžně aktualizuje.",
@@ -1632,7 +1625,7 @@ export const t: Record<Lang, Dict> = {
         {
           subject: "Fyzika",
           icon: "fyzika",
-          what: "Simulace, na kterých žák mění jednu veličinu a sleduje, co to udělá.",
+          what: "Simulace, na kterých žák mění jednu veličinu a sleduje, co to udělá. K tomu rozbor vlastního měření.",
           tools: [
             {
               name: "PhET",
@@ -1657,6 +1650,13 @@ export const t: Record<Lang, Dict> = {
               url: "https://opensourcephysics.github.io/tracker-online/",
               why: "Rozbor pohybu z videa: nastavíš měřítko, klikáš polohu předmětu snímek po snímku a dostaneš graf polohy na čase.",
               note: "Zdarma a open source, běží v prohlížeči bez instalace a bez účtu. Video musí být MP4 (H.264) – MOV nebo AVI z telefonu je potřeba předem převést. Desktopový Tracker umí česky, u online verze jsem češtinu neověřil. Kameru povolovat nemusíš, stačí otevřít hotové video.",
+              overeno: "2026-10",
+            },
+            {
+              name: "CODAP",
+              url: "https://codap.concord.org/app/",
+              why: "Průzkum vlastních naměřených dat: vybereš řádky v tabulce a hned je vidíš v grafu, a naopak. Na tom se dá ukázat, které body výsledek táhnou a že vztah dvou veličin ještě neříká, co je příčina.",
+              note: "Zdarma, bez účtu; práci uložíš jako soubor do počítače, na Google Disk jen s účtem Google. Rozhraní anglicky, česky jsem ho nenašel. Na počítači; na tabletu s omezeními, na telefonu ne.",
               overeno: "2026-10",
             },
             {
@@ -2353,13 +2353,6 @@ export const t: Record<Lang, Dict> = {
               note: "Free, no account. Czech localisation is only partial.",
             },
             {
-              name: "CODAP",
-              url: "https://codap.concord.org/app/",
-              why: "Exploring your own measured data: select rows in the table and see them in the graph at once, and the other way round. It shows which points drive the result and that a relationship between two quantities does not prove cause.",
-              note: "Free, no account; save your work as a file, or to Google Drive with a Google account. Interface in English. On a computer; limited on tablets, not on phones.",
-              overeno: "2026-10",
-            },
-            {
               name: "Realistické učebnice – matematika",
               url: "http://www.realisticky.cz/ucebnice.php?id=2",
               why: "Secondary-school maths written out lesson by lesson: each lesson has an explanation and exercises. The author, Martin Krynický, is a teacher and keeps the books updated.",
@@ -2378,7 +2371,7 @@ export const t: Record<Lang, Dict> = {
         {
           subject: "Physics",
           icon: "fyzika",
-          what: "Simulations where students change one variable and watch what happens.",
+          what: "Simulations where students change one variable and watch what happens. Plus analysing their own measurements.",
           tools: [
             {
               name: "PhET",
@@ -2403,6 +2396,13 @@ export const t: Record<Lang, Dict> = {
               url: "https://opensourcephysics.github.io/tracker-online/",
               why: "Motion analysis from video: set the scale, click the object's position frame by frame and get a position–time graph.",
               note: "Free and open source, runs in the browser with no installation and no account. The video must be MP4 (H.264) – convert MOV or AVI from a phone first. No camera permission needed, just open a ready video.",
+              overeno: "2026-10",
+            },
+            {
+              name: "CODAP",
+              url: "https://codap.concord.org/app/",
+              why: "Exploring your own measured data: select rows in the table and see them in the graph at once, and the other way round. It shows which points drive the result and that a relationship between two quantities does not prove cause.",
+              note: "Free, no account; save your work as a file, or to Google Drive with a Google account. Interface in English. On a computer; limited on tablets, not on phones.",
               overeno: "2026-10",
             },
             {
