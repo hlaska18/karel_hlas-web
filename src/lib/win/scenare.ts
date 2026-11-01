@@ -21,6 +21,7 @@ import { vloz, rozloz, type Slozka, type Uzel } from "./fs";
 import { FOTO_GRAF, FOTO_SNIMEK, FOTO_VYLET } from "./obrazky";
 import { binarni, slozka, soubor, vytvorDisk } from "./seed";
 import { zasifruj } from "./virus";
+import { STITEK } from "./sit";
 
 const DOMOV = "C:\\Users\\Zak";
 
@@ -90,6 +91,27 @@ Přípona není vlastnost obsahu — je to jen konec názvu. Když ji někdo zm�
 soubor se nezmění, jen ho přestane otevírat správný program.
 `;
 
+/* ─────────────────── Síť a poruchy ─────────────────── */
+
+/** Dopis k novému routeru (scénář „Nový router“). Údaje sedí se štítkem v `sit.ts`. */
+const POKYNY_POSKYTOVATELE = `Vítejte u ukázkového poskytovatele internetu
+
+V balíčku je router DR-300, napájecí adaptér a síťový kabel.
+
+1) Napájecí adaptér zapojte do zásuvky a do routeru.
+2) Kabel z datové zásuvky na zdi zapojte do portu WAN.
+   Porty LAN 1–4 jsou pro vaše zařízení.
+3) Když svítí kontrolka Internet, je router připojený.
+4) Počítač připojte kabelem do portu LAN, nebo přes Wi-Fi.
+   Název a heslo Wi-Fi najdete na štítku na spodní straně routeru.
+
+Nastavení routeru: v prohlížeči otevřete ${STITEK.sprava}.
+Uživatel a heslo jsou také na štítku.
+Doporučujeme hned změnit heslo ke správě i heslo k Wi-Fi.
+
+(Ukázkový dopis do výukové simulace.)
+`;
+
 /* ─────────────────────── Seznam ─────────────────────── */
 
 export const SCENARE: Scenar[] = [
@@ -154,7 +176,7 @@ export const SCENARE: Scenar[] = [
     nazev: "Síť a poruchy",
     popis:
       "Domácí počítač za routerem. Žák zjistí adresu, bránu a DNS, ověří spojení příkazy ping, nslookup a tracert a opraví dvě schválně pokažená nastavení sítě. Vlastní úlohy a vlastní kód postupu (WSIT1-).",
-    uprav: (disk) => disk,
+    uprav: (disk) => pridej(disk, `${DOMOV}\\Desktop`, [soubor("Pokyny od poskytovatele.txt", POKYNY_POSKYTOVATELE, 5)]),
   },
 ];
 

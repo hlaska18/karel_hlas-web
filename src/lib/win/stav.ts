@@ -18,7 +18,7 @@
 
 import type { Slozka, Uzel } from "./fs";
 import { diskProScenar, scenarPodleId, SCENAR_SIT, VYCHOZI_SCENAR } from "./scenare";
-import { VYCHOZI_SIT, type SitStav } from "./sit";
+import { doplnSit, VYCHOZI_SIT, type SitStav } from "./sit";
 import type { AppId } from "./typy";
 import { ulozDoProhlizece } from "@/lib/ulozeni";
 
@@ -290,7 +290,8 @@ export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
       reklamaBezi: ulozeny.reklamaBezi ?? vychoziStav(scenar).reklamaBezi,
       ...(scenar === SCENAR_SIT
         ? {
-            sit: ulozeny.sit ?? VYCHOZI_SIT,
+            // Stav z doby před routerem a kabely (31. 10. 2026) se doplní.
+            sit: doplnSit(ulozeny.sit),
             chyby: ulozeny.chyby ?? {},
             napovedy: ulozeny.napovedy ?? {},
           }

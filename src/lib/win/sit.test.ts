@@ -4,7 +4,20 @@ import { vychoziStav, type Stav } from "@/lib/win/stav";
 import { SCENAR_SIT } from "@/lib/win/scenare";
 import { UKOLY, UKOLY_SIT, postup, vyhodnot } from "@/lib/win/ukoly";
 import { strankaSit } from "@/lib/win/web";
-import { VYCHOZI_SIT, diagnoza, ipconfig, nslookup, ping, sitSPoruchou, tracert, type SitStav } from "@/lib/win/sit";
+import {
+  APIPA,
+  CIZI,
+  STITEK,
+  VYCHOZI_SIT,
+  diagnoza,
+  doplnSit,
+  ipconfig,
+  nslookup,
+  ping,
+  sitSPoruchou,
+  tracert,
+  type SitStav,
+} from "@/lib/win/sit";
 import {
   dekodujSimulator,
   najdiKodySimulatoru,
@@ -61,7 +74,7 @@ describe("příkazy sítě ve výchozí simulaci (škola)", () => {
 
 describe("domácí síť a poruchy", () => {
   it("výchozí domácí síť funguje", () => {
-    expect(diagnoza(VYCHOZI_SIT)).toEqual({ lan: true, internet: true, dns: true });
+    expect(diagnoza(VYCHOZI_SIT)).toEqual({ medium: true, lan: true, wan: true, internet: true, dns: true });
     expect(ping(VYCHOZI_SIT, ["skola.example"]).stopy).toContain("ping:internet:ok");
     expect(strankaSit("skola.example", VYCHOZI_SIT).adresa).toBe("skola.example");
   });
@@ -76,11 +89,50 @@ describe("domácí síť a poruchy", () => {
 
   it("porucha DNS: adresa projde, název ne", () => {
     const sit = sitSPoruchou("dns");
-    expect(diagnoza(sit)).toEqual({ lan: true, internet: true, dns: false });
+    expect(diagnoza(sit)).toMatchObject({ lan: true, internet: true, dns: false });
     expect(ping(sit, ["203.0.113.10"]).stopy).toContain("ping:internet:ok");
     expect(ping(sit, ["skola.example"]).stopy ?? []).not.toContain("ping:internet:ok");
     expect(strankaSit("skola.example", sit).html).toContain("ERR_NAME_NOT_RESOLVED");
     expect(strankaSit("203.0.113.10", sit).adresa).toBe("skola.example");
+  });
+});
+
+describe("kabely, DHCP a poskytovatel", () => {
+  it("bez kabelu ipconfig hlásí odpojené médium a nic nejde", () => {
+    const sit = sitSPoruchou("kabel");
+    expect(ipconfig(sit, []).vystup.join("\n")).toContain("Médium odpojeno");
+    expect(ipconfig(sit, []).vystup.join("\n")).not.toContain("Adresa IPv4");
+    expect(ping(sit, ["192.168.1.1"]).stopy ?? []).not.toContain("ping:brana:ok");
+  });
+
+  it("vypnuté DHCP: počítač si dá adresu 169.254.x.x a bez brány", () => {
+    const sit = sitSPoruchou("dhcp");
+    const v = ipconfig(sit, []).vystup.join("\n");
+    expect(v).toContain(APIPA);
+    expect(diagnoza(sit).lan).toBe(false);
+    // Ruční adresa síť rozjede, ale poruchu neopraví – router dál nepřiděluje.
+    const obejito: SitStav = { ...sit, ip: { prirazeni: "rucne", adresa: "192.168.1.50", maska: "255.255.255.0", brana: "192.168.1.1" } };
+    expect(diagnoza(obejito).internet).toBe(true);
+  });
+
+  it("bez kabelu WAN odpoví router, dál nic, a názvy se nepřeloží", () => {
+    const sit = sitSPoruchou("wan");
+    expect(ping(sit, ["192.168.1.1"]).stopy).toContain("ping:brana:ok");
+    expect(ping(sit, ["203.0.113.10"]).vystup.join("\n")).toContain("Vypršel časový limit žádosti.");
+    expect(ping(sit, ["skola.example"]).vystup.join("\n")).toContain("nemohla najít hostitele");
+    expect(tracert(sit, ["203.0.113.10"]).vystup.join("\n")).toContain("192.168.1.1");
+  });
+
+  it("zablokované zařízení na ping neodpoví", () => {
+    const sit: SitStav = { ...VYCHOZI_SIT, router: { ...VYCHOZI_SIT.router, zarizeni: [...VYCHOZI_SIT.router.zarizeni, CIZI] } };
+    expect(ping(sit, [CIZI.adresa]).vystup.join("\n")).toContain("bajty=32");
+    const blok: SitStav = { ...sit, router: { ...sit.router, blokovane: [CIZI.mac] } };
+    expect(ping(blok, [CIZI.adresa]).vystup.join("\n")).toContain("není dostupný");
+  });
+
+  it("starší uložený stav bez routeru se doplní", () => {
+    const stary = { ip: VYCHOZI_SIT.ip, dns: VYCHOZI_SIT.dns } as Partial<SitStav>;
+    expect(doplnSit(stary)).toEqual(VYCHOZI_SIT);
   });
 });
 
@@ -111,9 +163,102 @@ describe("úlohy s poruchou v reduceru", () => {
   it("ruční nastavení, se kterým síť přestane fungovat, je chyba rr", () => {
     const s = proved(vychoziStav(SCENAR_SIT), {
       typ: "sit/nastav",
-      sit: { ip: { prirazeni: "rucne", adresa: "192.168.1.23", maska: "255.255.255.0", brana: "192.168.1.100" }, dns: dhcp.dns },
+      sit: { ...dhcp, ip: { prirazeni: "rucne", adresa: "192.168.1.23", maska: "255.255.255.0", brana: "192.168.1.100" } },
     });
     expect(s.chyby).toEqual({ rr: 1 });
+  });
+
+  it("vytažený kabel u ruční adresy není chyba ručního nastavení", () => {
+    let s = proved(vychoziStav(SCENAR_SIT), {
+      typ: "sit/nastav",
+      sit: { ...dhcp, ip: { prirazeni: "rucne", adresa: "192.168.1.40", maska: "255.255.255.0", brana: "192.168.1.1" } },
+    });
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, lan: null } } });
+    expect(s.chyby).toEqual({});
+  });
+
+  it("poruchy kabel, DHCP a WAN se opraví u routeru", () => {
+    let s = proved(vychoziStav(SCENAR_SIT), { typ: "sit/porucha", porucha: "kabel" });
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, lan: 3 } } });
+    expect(vyhodnot(s)).toContain("sit-porucha-kabel");
+
+    s = proved(s, { typ: "sit/porucha", porucha: "dhcp" });
+    // Obejít to ruční adresou nestačí.
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, ip: { prirazeni: "rucne", adresa: "192.168.1.50", maska: "255.255.255.0", brana: "192.168.1.1" } } });
+    expect(vyhodnot(s)).not.toContain("sit-porucha-dhcp");
+    // S ruční adresou se dostane do správy a zapne DHCP – ale hotovo je až s Automaticky.
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, router: { ...s.sit!.router, dhcp: true } } });
+    expect(vyhodnot(s)).not.toContain("sit-porucha-dhcp");
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, ip: dhcp.ip } });
+    expect(vyhodnot(s)).toContain("sit-porucha-dhcp");
+
+    s = proved(s, { typ: "sit/porucha", porucha: "wan" });
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, wan: true } } });
+    expect(vyhodnot(s)).toContain("sit-porucha-wan");
+  });
+});
+
+describe("scénáře Nový router a Cizí zařízení", () => {
+  it("výchozí zapojená síť úlohy routeru nesplní, dokud scénář nezačne", () => {
+    const s = vychoziStav(SCENAR_SIT);
+    s.stopy = ["overeno:ipconfig-adresa", "overeno:router-prihlaseni"];
+    expect(vyhodnot(s).filter((id) => id.startsWith("sit-router"))).toEqual([]);
+  });
+
+  it("nový router: zapojit, připojit počítač, správa, heslo, Wi-Fi", () => {
+    let s = proved(vychoziStav(SCENAR_SIT), { typ: "stopa", klic: "overeno:ipconfig-adresa" }, { typ: "sit/situace", situace: "router" });
+    // Stará ověření po novém začátku neplatí.
+    expect(s.stopy).not.toContain("overeno:ipconfig-adresa");
+    expect(ipconfig(s.sit, []).vystup.join("\n")).toContain("Médium odpojeno");
+    // Novou Wi-Fi zatím nikdo nezná – v routeru je jen počítač na kabelu.
+    expect(s.sit!.router.zarizeni.map((z) => z.nazev)).toEqual(["DOMACI-PC"]);
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { napajeni: true, wan: true, lan: null } } });
+    expect(vyhodnot(s)).toContain("sit-router-zapoj");
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, lan: 2 } } });
+    for (const k of ipconfig(s.sit, []).stopy ?? []) s = proved(s, { typ: "stopa", klic: k });
+    expect(vyhodnot(s)).toContain("sit-router-pc");
+    s = proved(s, { typ: "stopa", klic: "overeno:router-prihlaseni" });
+    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, router: { ...s.sit!.router, adminHeslo: "nove-heslo-1" } } });
+    s = proved(s, {
+      typ: "sit/nastav",
+      sit: { ...s.sit!, router: { ...s.sit!.router, wifi: { nazev: "Doma", zabezpeceni: "wpa3", heslo: "dlouhe-heslo-12" } } },
+    });
+    const hotove = vyhodnot(s);
+    expect(hotove).toEqual(expect.arrayContaining(["sit-router-sprava", "sit-router-heslo", "sit-router-wifi"]));
+  });
+
+  it("Wi-Fi s továrním heslem nebo jen WPA2 úlohu nesplní", () => {
+    let s = proved(vychoziStav(SCENAR_SIT), { typ: "sit/situace", situace: "router" });
+    s = proved(s, {
+      typ: "sit/nastav",
+      sit: { ...s.sit!, router: { ...s.sit!.router, wifi: { nazev: "Doma", zabezpeceni: "wpa2", heslo: "dlouhe-heslo-12" } } },
+    });
+    expect(vyhodnot(s)).not.toContain("sit-router-wifi");
+    s = proved(s, {
+      typ: "sit/nastav",
+      sit: { ...s.sit!, router: { ...s.sit!.router, wifi: { nazev: "Doma", zabezpeceni: "wpa3", heslo: STITEK.wifiHeslo } } },
+    });
+    expect(vyhodnot(s)).not.toContain("sit-router-wifi");
+  });
+
+  it("cizí zařízení: zablokovat, heslo, WPS, hosté", () => {
+    let s = proved(vychoziStav(SCENAR_SIT), { typ: "sit/situace", situace: "cizi" });
+    expect(s.sit!.router.zarizeni).toContainEqual(CIZI);
+    const r = s.sit!.router;
+    s = proved(s, {
+      typ: "sit/nastav",
+      sit: {
+        ...s.sit!,
+        router: {
+          ...r,
+          blokovane: [CIZI.mac],
+          wifi: { ...r.wifi, zabezpeceni: "wpa2-wpa3", heslo: "jine-dlouhe-heslo" },
+          wps: false,
+          host: { zapnuto: true, heslo: "pro-navstevu" },
+        },
+      },
+    });
+    expect(vyhodnot(s)).toEqual(expect.arrayContaining(["sit-cizi-zablokuj", "sit-cizi-heslo", "sit-cizi-wps", "sit-cizi-host"]));
   });
 });
 
@@ -121,6 +266,7 @@ describe("sada úloh a kód WSIT1", () => {
   it("cvičení má vlastní úlohy, výchozí sada se nemění", () => {
     expect(UKOLY).toHaveLength(33);
     expect(UKOLY_SIT.every((u) => u.id.startsWith("sit-"))).toBe(true);
+    expect(new Set(UKOLY_SIT.map((u) => u.id)).size).toBe(UKOLY_SIT.length);
     expect(postup([], SCENAR_SIT).celkem).toBe(UKOLY_SIT.length);
     // Ve výchozím scénáři se úlohy sítě neodškrtnou, ani když stopa sedí.
     const s = vychoziStav();

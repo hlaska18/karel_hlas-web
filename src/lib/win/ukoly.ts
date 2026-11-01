@@ -16,7 +16,7 @@ import type { Uzel } from "./fs";
 import { PRIPONA_ZASIFROVANO, VYZVA } from "./virus";
 import type { Stav } from "./stav";
 import { SCENAR_SIT } from "./scenare";
-import { DOMACI_WEBY, ROUTER, sitFunguje, type Porucha } from "./sit";
+import { CIZI, DOMACI_WEBY, ROUTER, STITEK, sitFunguje, type Porucha, type Situace } from "./sit";
 
 export interface Ukol {
   id: string;
@@ -40,6 +40,8 @@ export interface Ukol {
    * které počítač schválně pokazí, a místo kroků nápovědy po jedné.
    */
   porucha?: Porucha;
+  /** Úloha ze scénáře, který začíná tlačítkem (nový router, cizí zařízení). */
+  situace?: Situace;
 }
 
 export const SKUPINY = [
@@ -626,7 +628,27 @@ export const UKOLY: Ukol[] = [
    se nemění – cizí učitelé je mají v zadáních. Id mají předponu `sit-`,
    ať se nikdy nepotkají s výchozími. */
 
-export const SKUPINY_SIT = ["Jak je počítač připojený", "Poruchy"] as const;
+export const SKUPINY_SIT = ["Jak je počítač připojený", "Nový router", "Poruchy", "Cizí zařízení ve Wi-Fi"] as const;
+
+/** Úvod scénáře v panelu úkolů: co se stane po kliknutí na tlačítko. */
+export const SITUACE: Record<Situace, { popis: string; tlacitko: string }> = {
+  router: {
+    popis:
+      "Od poskytovatele přišel nový router. Je v krabici, nic není zapojené. Pokyny od poskytovatele jsou na ploše, údaje k routeru na štítku.",
+    tlacitko: "Vybalit nový router",
+  },
+  cizi: {
+    popis:
+      "Doma je pomalý internet. Wi-Fi má slabé heslo a v síti je zařízení, které nikdo z rodiny nezná.",
+    tlacitko: "Začít: pomalý internet",
+  },
+};
+
+/** Úlohy scénáře se počítají až po jeho spuštění – výchozí síť je už zapojená. */
+const vSituaci = (s: Stav, situace: Situace) => stopa(s, `situace:${situace}:spustena`);
+const silneHeslo = (heslo: string) => heslo.length >= 12;
+const dobreZabezpeceni = (s: Stav) =>
+  Boolean(s.sit && (s.sit.router.wifi.zabezpeceni === "wpa3" || s.sit.router.wifi.zabezpeceni === "wpa2-wpa3"));
 
 /** Porucha je opravená, když ji žák spustil a pak síť sám zprovoznil. */
 const opraveno = (s: Stav, porucha: Porucha) =>
@@ -708,11 +730,114 @@ export const UKOLY_SIT: Ukol[] = [
     hotovo: (s) => stopa(s, "web:mojeip.example"),
   },
   {
+    id: "sit-router-zapoj",
+    skupina: "Nový router",
+    situace: "router",
+    nazev: "Zapoj router",
+    popis: "Napájení do zásuvky a kabel od poskytovatele do portu WAN. Kontrolky ukážou, jestli má router internet.",
+    kroky: [
+      "V panelu Úkoly klikni na Router a kabely.",
+      "Zapoj napájecí adaptér routeru – rozsvítí se kontrolka Napájení.",
+      "Kabel z datové zásuvky poskytovatele patří do portu WAN (je odlišený od portů LAN).",
+      "Když svítí kontrolka Internet, má router spojení s poskytovatelem.",
+    ],
+    hotovo: (s) => vSituaci(s, "router") && Boolean(s.sit?.kabely.napajeni && s.sit.kabely.wan),
+  },
+  {
+    id: "sit-router-pc",
+    skupina: "Nový router",
+    situace: "router",
+    nazev: "Připoj počítač kabelem a ověř adresu",
+    popis: "Kabel od počítače do kteréhokoli portu LAN. Pak v Terminálu ověř, že počítač od routeru dostal adresu.",
+    kroky: [
+      "V okně Router a kabely zapoj kabel od počítače do portu LAN 1–4.",
+      "V Terminálu napiš ipconfig.",
+      `Adresa začínající 192.168.1. a Výchozí brána ${ROUTER} znamenají, že adresu přidělil router (DHCP).`,
+      "Kdyby tam stálo Médium odpojeno, kabel nikam nevede.",
+    ],
+    hotovo: (s) => vSituaci(s, "router") && stopa(s, "overeno:ipconfig-adresa"),
+  },
+  {
+    id: "sit-router-sprava",
+    skupina: "Nový router",
+    situace: "router",
+    nazev: "Přihlas se do správy routeru",
+    popis: `Router se nastavuje přes webovou stránku na své adrese. Otevři v Edge ${ROUTER} a přihlas se údaji ze štítku.`,
+    kroky: [
+      `Otevři Edge a do adresního řádku napiš ${ROUTER}.`,
+      "Uživatelské jméno a heslo jsou na štítku na spodní straně routeru (okno Router a kabely).",
+      "Správa routeru je vidět jen z domácí sítě – z internetu se na ni nikdo nedostane.",
+    ],
+    hotovo: (s) => vSituaci(s, "router") && stopa(s, "overeno:router-prihlaseni"),
+  },
+  {
+    id: "sit-router-heslo",
+    skupina: "Nový router",
+    situace: "router",
+    nazev: "Změň heslo ke správě routeru",
+    popis: "Heslo ze štítku si přečte každý, kdo vezme router do ruky – třeba návštěva. Nastav vlastní.",
+    kroky: [
+      "Ve správě routeru otevři Správa.",
+      "Zadej nové heslo (aspoň 8 znaků) a ulož.",
+      "Nové heslo si zapamatuj – bez něj se do správy dostaneš jen obnovením továrního nastavení.",
+    ],
+    hotovo: (s) =>
+      vSituaci(s, "router") && Boolean(s.sit && s.sit.router.adminHeslo !== STITEK.adminHeslo && s.sit.router.adminHeslo.length >= 8),
+  },
+  {
+    id: "sit-router-wifi",
+    skupina: "Nový router",
+    situace: "router",
+    nazev: "Nastav Wi-Fi",
+    popis: "Vlastní název sítě, zabezpečení WPA3 a heslo aspoň 12 znaků.",
+    kroky: [
+      "Ve správě routeru otevři Wi-Fi.",
+      "Dej síti vlastní název. Nemusí prozrazovat, čí je (ne Novakovi-Tabor-12).",
+      "Zabezpečení WPA3, nebo WPA2/WPA3, když doma máte i starší zařízení. Otevřená síť znamená, že se připojí kdokoli.",
+      "Heslo aspoň 12 znaků. Delší heslo je silnější než krátké se speciálními znaky.",
+    ],
+    hotovo: (s) =>
+      vSituaci(s, "router") &&
+      Boolean(
+        s.sit &&
+          s.sit.router.wifi.nazev !== STITEK.wifiNazev &&
+          s.sit.router.wifi.heslo !== STITEK.wifiHeslo &&
+          silneHeslo(s.sit.router.wifi.heslo) &&
+          dobreZabezpeceni(s),
+      ),
+  },
+  {
+    id: "sit-porucha-kabel",
+    skupina: "Poruchy",
+    nazev: "Porucha: počítač nemá síť",
+    popis: "Klikni na Pokazit síť. Pak počítač nebude v síti vůbec. Zjisti proč a oprav to.",
+    kroky: [
+      "Začni příkazem ipconfig. Co stojí u adaptéru Ethernet místo adresy?",
+      "Médium odpojeno znamená, že kabel nikam nevede. Podívej se na router: svítí kontrolka u některého portu LAN?",
+      "V okně Router a kabely zapoj kabel od počítače do portu LAN.",
+    ],
+    porucha: "kabel",
+    hotovo: (s) => opraveno(s, "kabel"),
+  },
+  {
+    id: "sit-porucha-dhcp",
+    skupina: "Poruchy",
+    nazev: "Porucha: počítač nedostal adresu",
+    popis: "Klikni na Pokazit síť. Kabel je zapojený, a stejně nic nejde. Zjisti proč a oprav to.",
+    kroky: [
+      "V ipconfig se podívej na adresu. Začíná 169.254?",
+      "Adresu 169.254.x.x si Windows dají samy, když jim nikdo žádnou nepřidělil. Doma adresy přiděluje router (server DHCP).",
+      `S adresou 169.254 se do správy routeru nedostaneš. Dej počítači dočasně ručně adresu mimo rozsah DHCP, třeba 192.168.1.200, masku 255.255.255.0 a bránu ${ROUTER} (Nastavení → Síť a internet → Přiřazení IP). Pak se přihlas do správy routeru, v části Síť LAN zapni server DHCP a v počítači vrať Automaticky (DHCP). Ruční adresa by jinak pomohla jen tomuhle počítači – ostatní zařízení doma by adresu pořád nedostala.`,
+    ],
+    porucha: "dhcp",
+    hotovo: (s) => opraveno(s, "dhcp"),
+  },
+  {
     id: "sit-porucha-brana",
     skupina: "Poruchy",
     nazev: "Porucha: nejde internet",
     popis:
-      "Klikni na Pokazit počítač. Pak nepůjde žádný web. Příkazy v Terminálu zjisti, proč, a oprav to v Nastavení.",
+      "Klikni na Pokazit počítač. Pak nepůjde žádný web. Příkazy v Terminálu zjisti proč a oprav to v Nastavení.",
     kroky: [
       "Začni příkazem ipconfig. Je Výchozí brána stejná jako adresa routeru 192.168.1.1?",
       "Ping na router projde, ping na skola.example ne. Data tedy z domácí sítě nemají kudy odejít.",
@@ -722,11 +847,24 @@ export const UKOLY_SIT: Ukol[] = [
     hotovo: (s) => opraveno(s, "brana"),
   },
   {
+    id: "sit-porucha-wan",
+    skupina: "Poruchy",
+    nazev: "Porucha: router nemá internet",
+    popis: "Klikni na Pokazit síť. Weby nepůjdou, i když počítač vypadá v pořádku. Zjisti, kde cesta končí.",
+    kroky: [
+      `Ping na router (${ROUTER}) projde? A ping ${DOMACI_WEBY["skola.example"]}?`,
+      "Když router odpovídá a dál nic, je chyba mezi routerem a poskytovatelem. Zkus i tracert – kde trasa skončí?",
+      "Podívej se na router: svítí kontrolka Internet? Zkontroluj kabel z datové zásuvky do portu WAN.",
+    ],
+    porucha: "wan",
+    hotovo: (s) => opraveno(s, "wan"),
+  },
+  {
     id: "sit-porucha-dns",
     skupina: "Poruchy",
     nazev: "Porucha: weby podle názvu nejdou",
     popis:
-      "Klikni na Pokazit počítač. Pak se weby neotevřou podle názvu. Příkazy v Terminálu zjisti, proč, a oprav to v Nastavení.",
+      "Klikni na Pokazit počítač. Pak se weby neotevřou podle názvu. Příkazy v Terminálu zjisti proč a oprav to v Nastavení.",
     kroky: [
       `Zkus ping ${DOMACI_WEBY["skola.example"]} (adresa serveru skola.example) a pak ping skola.example. Co z toho projde?`,
       "Když projde adresa a název ne, internet funguje, ale nikdo nepřeloží název na adresu. Podívej se na Servery DNS v ipconfig /all.",
@@ -734,6 +872,60 @@ export const UKOLY_SIT: Ukol[] = [
     ],
     porucha: "dns",
     hotovo: (s) => opraveno(s, "dns"),
+  },
+  {
+    id: "sit-cizi-zablokuj",
+    skupina: "Cizí zařízení ve Wi-Fi",
+    situace: "cizi",
+    nazev: "Najdi cizí zařízení a zablokuj ho",
+    popis: "Ve správě routeru je seznam všeho, co je v síti připojené. Které zařízení k vám nepatří?",
+    kroky: [
+      `Přihlas se do správy routeru (${ROUTER}) a otevři Připojená zařízení.`,
+      "Porovnej seznam s tím, co doma máte: tento počítač, telefon, televize.",
+      "Cizí zařízení zablokuj. Pozor: blokování podle MAC adresy obejde každý, kdo si adresu změní – proto patří ke zablokování i nové heslo.",
+    ],
+    hotovo: (s) => vSituaci(s, "cizi") && Boolean(s.sit?.router.blokovane.includes(CIZI.mac)),
+  },
+  {
+    id: "sit-cizi-heslo",
+    skupina: "Cizí zařízení ve Wi-Fi",
+    situace: "cizi",
+    nazev: "Změň heslo k Wi-Fi",
+    popis: "Heslo 12345678 uhodne každý za pár vteřin. Nastav heslo aspoň 12 znaků a lepší zabezpečení.",
+    kroky: [
+      "Ve správě routeru otevři Wi-Fi.",
+      "Heslo aspoň 12 znaků, zabezpečení WPA3 nebo WPA2/WPA3.",
+      "Po změně hesla se odpojí všechna zařízení v domě a musí se připojit znovu s novým heslem. Cizí zařízení už heslo nezná.",
+    ],
+    hotovo: (s) =>
+      vSituaci(s, "cizi") && Boolean(s.sit && s.sit.router.wifi.heslo !== "12345678" && silneHeslo(s.sit.router.wifi.heslo) && dobreZabezpeceni(s)),
+  },
+  {
+    id: "sit-cizi-wps",
+    skupina: "Cizí zařízení ve Wi-Fi",
+    situace: "cizi",
+    nazev: "Vypni WPS",
+    popis: "WPS připojí zařízení bez hesla – tlačítkem na routeru nebo osmimístným PINem. PIN se dá uhodnout.",
+    kroky: [
+      "Ve správě routeru otevři Wi-Fi.",
+      "Vypni WPS a ulož. Zařízení se pak připojují jen heslem.",
+    ],
+    hotovo: (s) => vSituaci(s, "cizi") && s.sit?.router.wps === false,
+  },
+  {
+    id: "sit-cizi-host",
+    skupina: "Cizí zařízení ve Wi-Fi",
+    situace: "cizi",
+    nazev: "Zřiď síť pro hosty",
+    popis: "Návštěva dostane vlastní Wi-Fi s vlastním heslem. Do internetu se dostane, k vašim zařízením ne.",
+    kroky: [
+      "Ve správě routeru otevři Síť pro hosty.",
+      "Zapni ji a nastav heslo (aspoň 8 znaků), jiné než od hlavní Wi-Fi.",
+      "Heslo pro hosty můžeš klidně dát návštěvě. Heslo k hlavní síti zůstane jen rodině.",
+    ],
+    hotovo: (s) =>
+      vSituaci(s, "cizi") &&
+      Boolean(s.sit?.router.host.zapnuto && s.sit.router.host.heslo.length >= 8 && s.sit.router.host.heslo !== s.sit.router.wifi.heslo),
   },
 ];
 

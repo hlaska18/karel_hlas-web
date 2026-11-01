@@ -36,12 +36,54 @@ export interface NastaveniDns {
   server: string;
 }
 
+/** Co je zapojené kabely (pohled na router). */
+export interface Kabely {
+  /** Napájecí adaptér routeru je v zásuvce. */
+  napajeni: boolean;
+  /** Kabel z datové zásuvky poskytovatele vede do portu WAN. */
+  wan: boolean;
+  /** Do kterého portu LAN (1–4) vede kabel od počítače, `null` = nikam. */
+  lan: number | null;
+}
+
+export type Zabezpeceni = "otevrena" | "wpa2" | "wpa2-wpa3" | "wpa3";
+
+export interface Zarizeni {
+  nazev: string;
+  mac: string;
+  adresa: string;
+  pripojeni: "kabel" | "wifi";
+  /** Cizí zařízení ve scénáři „Cizí zařízení ve Wi-Fi“. */
+  cizi?: boolean;
+}
+
+/** Nastavení routeru – mění se ve správě routeru (Edge → 192.168.1.1). */
+export interface Router {
+  adminHeslo: string;
+  wifi: { nazev: string; zabezpeceni: Zabezpeceni; heslo: string };
+  wps: boolean;
+  host: { zapnuto: boolean; heslo: string };
+  /** Router přiděluje adresy (server DHCP). */
+  dhcp: boolean;
+  zarizeni: Zarizeni[];
+  /** MAC adresy zablokovaných zařízení. */
+  blokovane: string[];
+}
+
 export interface SitStav {
   ip: NastaveniIp;
   dns: NastaveniDns;
+  kabely: Kabely;
+  router: Router;
+  /** Právě spuštěná porucha (tlačítko v panelu úkolů), než ji žák opraví. */
+  porucha?: Porucha;
 }
 
-export type Porucha = "brana" | "dns";
+/** Poruchy seřazené tak, jak se hledají: odspodu, od kabelu k názvům. */
+export type Porucha = "kabel" | "dhcp" | "brana" | "wan" | "dns";
+
+/** Scénáře, které začínají jinak nastaveným routerem. */
+export type Situace = "router" | "cizi";
 
 /* ───────────────────── Domácí síť ───────────────────── */
 
@@ -50,43 +92,150 @@ const DOMACI_PC = "192.168.1.23";
 const MASKA = "255.255.255.0";
 /** Veřejná adresa domácnosti – pod ní router vystupuje do internetu. */
 export const VEREJNA_ADRESA = "203.0.113.57";
+/** Adresa, kterou si Windows dají samy, když jim nikdo nepřidělí jinou (APIPA). */
+export const APIPA = "169.254.23.115";
+export const MAC_PC = "3C-52-82-1A-07-C4";
 
-/** Co by počítači přidělil router (DHCP). */
-const DHCP: { adresa: string; maska: string; brana: string; dns: string } = {
-  adresa: DOMACI_PC,
-  maska: MASKA,
-  brana: ROUTER,
-  dns: ROUTER,
+/**
+ * Štítek na spodní straně routeru. Router je smyšlený – žádný skutečný
+ * nevypadá úplně stejně, ale údaje na štítku mívá každý.
+ */
+export const STITEK = {
+  model: "DR-300 (ukázkový domácí router)",
+  sprava: ROUTER,
+  uzivatel: "admin",
+  adminHeslo: "Q7m-4kzR",
+  wifiNazev: "DR300-4F2A",
+  wifiHeslo: "vk82-mr7q-x4tz",
+  mac: "58-D5-6E-4F-2A-10",
 };
+
+/** Kdo je doma připojený (telefon a televize odpovídají i na ping). */
+const RODINA: Zarizeni[] = [
+  { nazev: "DOMACI-PC", mac: MAC_PC, adresa: DOMACI_PC, pripojeni: "kabel" },
+  { nazev: "Telefon-mama", mac: "8A-2C-41-07-B3-5E", adresa: "192.168.1.12", pripojeni: "wifi" },
+  { nazev: "Televize-obyvak", mac: "F0-99-B6-21-4C-08", adresa: "192.168.1.20", pripojeni: "wifi" },
+];
+
+/** Cizí zařízení ve scénáři „Cizí zařízení ve Wi-Fi“. */
+export const CIZI: Zarizeni = {
+  nazev: "android-5c1e",
+  mac: "A6-1F-33-9C-50-E2",
+  adresa: "192.168.1.37",
+  pripojeni: "wifi",
+  cizi: true,
+};
+
+const TOVARNI_ROUTER: Router = {
+  adminHeslo: STITEK.adminHeslo,
+  wifi: { nazev: STITEK.wifiNazev, zabezpeceni: "wpa2", heslo: STITEK.wifiHeslo },
+  wps: true,
+  host: { zapnuto: false, heslo: "" },
+  dhcp: true,
+  zarizeni: RODINA,
+  blokovane: [],
+};
+
+const ZAPOJENO: Kabely = { napajeni: true, wan: true, lan: 1 };
 
 export const VYCHOZI_SIT: SitStav = {
   ip: { prirazeni: "dhcp", adresa: DOMACI_PC, maska: MASKA, brana: ROUTER },
   dns: { prirazeni: "dhcp", server: ROUTER },
+  kabely: ZAPOJENO,
+  router: TOVARNI_ROUTER,
 };
 
-/**
- * Pokažený počítač pro úlohy s poruchou. Obě poruchy jsou z praxe: ruční
- * nastavení, které někdo opsal špatně, nebo zbylo po jiné síti.
- */
-export function sitSPoruchou(porucha: Porucha): SitStav {
-  if (porucha === "brana") {
-    return {
-      ip: { prirazeni: "rucne", adresa: DOMACI_PC, maska: MASKA, brana: "192.168.1.254" },
-      // Ruční IP ve Windows vyžaduje i ruční DNS – proto ruční, ale správně.
-      dns: { prirazeni: "rucne", server: ROUTER },
-    };
-  }
+/** Uložený stav ze starší verze (bez kabelů a routeru) doplní výchozími. */
+export function doplnSit(sit: Partial<SitStav> | undefined): SitStav {
   return {
-    ip: { prirazeni: "dhcp", adresa: DOMACI_PC, maska: MASKA, brana: ROUTER },
-    dns: { prirazeni: "rucne", server: "192.168.1.53" },
+    ...VYCHOZI_SIT,
+    ...sit,
+    kabely: { ...ZAPOJENO, ...sit?.kabely },
+    router: { ...TOVARNI_ROUTER, ...sit?.router },
   };
 }
 
+/**
+ * Pokažená síť pro úlohy s poruchou. Všechny jsou z praxe: vypadlý kabel,
+ * vypnutý server DHCP, ruční nastavení opsané špatně nebo zbylé po jiné síti,
+ * výpadek u poskytovatele (tady vytažený kabel WAN).
+ */
+export function sitSPoruchou(porucha: Porucha): SitStav {
+  const zaklad = { ...VYCHOZI_SIT, porucha };
+  switch (porucha) {
+    case "kabel":
+      return { ...zaklad, kabely: { ...ZAPOJENO, lan: null } };
+    case "wan":
+      return { ...zaklad, kabely: { ...ZAPOJENO, wan: false } };
+    case "dhcp":
+      return { ...zaklad, router: { ...TOVARNI_ROUTER, dhcp: false } };
+    case "brana":
+      return {
+        ...zaklad,
+        ip: { prirazeni: "rucne", adresa: DOMACI_PC, maska: MASKA, brana: "192.168.1.254" },
+        // Ruční IP ve Windows vyžaduje i ruční DNS – proto ruční, ale správně.
+        dns: { prirazeni: "rucne", server: ROUTER },
+      };
+    case "dns":
+      return { ...zaklad, dns: { prirazeni: "rucne", server: "192.168.1.53" } };
+  }
+}
+
+/** Začátek scénáře: nový router v krabici, nebo síť, ve které je někdo cizí. */
+export function sitProSituaci(situace: Situace): SitStav {
+  if (situace === "router") {
+    // Telefon a televize novou Wi-Fi ještě neznají – připojený je jen počítač na kabelu.
+    return {
+      ...VYCHOZI_SIT,
+      kabely: { napajeni: false, wan: false, lan: null },
+      router: { ...TOVARNI_ROUTER, zarizeni: RODINA.filter((z) => z.mac === MAC_PC) },
+    };
+  }
+  return {
+    ...VYCHOZI_SIT,
+    router: {
+      ...TOVARNI_ROUTER,
+      wifi: { nazev: "Novakovi", zabezpeceni: "wpa2", heslo: "12345678" },
+      zarizeni: [...RODINA, CIZI],
+    },
+  };
+}
+
+/** Svítí kontrolky na routeru? */
+export function kontrolky(sit: SitStav): { napajeni: boolean; internet: boolean; wifi: boolean; lan: number | null } {
+  const k = sit.kabely;
+  return {
+    napajeni: k.napajeni,
+    internet: k.napajeni && k.wan,
+    wifi: k.napajeni,
+    lan: k.napajeni ? k.lan : null,
+  };
+}
+
+export interface Ucinne {
+  /** Kabel vede do zapnutého routeru (Windows: médium připojeno). */
+  medium: boolean;
+  /** Adresa 169.254.x.x – počítači nikdo nepřidělil adresu. */
+  apipa: boolean;
+  adresa: string;
+  maska: string;
+  brana: string;
+  dns: string;
+}
+
 /** Hodnoty, se kterými počítač opravdu pracuje (DHCP, nebo ruční). */
-export function ucinne(sit: SitStav): { adresa: string; maska: string; brana: string; dns: string } {
-  const ip = sit.ip.prirazeni === "dhcp" ? DHCP : sit.ip;
-  const dns = sit.dns.prirazeni === "dhcp" ? DHCP.dns : sit.dns.server;
-  return { adresa: ip.adresa, maska: ip.maska, brana: ip.brana, dns };
+export function ucinne(sit: SitStav): Ucinne {
+  const medium = sit.kabely.napajeni && sit.kabely.lan !== null;
+  if (!medium) return { medium, apipa: false, adresa: "", maska: "", brana: "", dns: "" };
+  const dnsRucne = sit.dns.prirazeni === "rucne" ? sit.dns.server : "";
+  if (sit.ip.prirazeni === "rucne") {
+    const { adresa, maska, brana } = sit.ip;
+    return { medium, apipa: false, adresa, maska, brana, dns: dnsRucne || ROUTER };
+  }
+  if (!sit.router.dhcp) {
+    return { medium, apipa: true, adresa: APIPA, maska: "255.255.0.0", brana: "", dns: dnsRucne };
+  }
+  return { medium, apipa: false, adresa: DOMACI_PC, maska: MASKA, brana: ROUTER, dns: dnsRucne || ROUTER };
 }
 
 const IPV4 = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
@@ -109,17 +258,14 @@ function vDomaciSiti(ip: string): boolean {
   return c[0] === 192 && c[1] === 168 && c[2] === 1 && c[3] >= 2 && c[3] <= 254;
 }
 
-/** Zařízení, která v domácí síti opravdu existují. */
-const DOMACI_ZARIZENI: Record<string, { ttl: number }> = {
-  [ROUTER]: { ttl: 64 },
-  "192.168.1.12": { ttl: 64 }, // telefon
-  "192.168.1.20": { ttl: 64 }, // televize
-};
-
 export interface Diagnoza {
+  /** Kabel od počítače vede do zapnutého routeru. */
+  medium: boolean;
   /** Počítač má adresu ze správné sítě a dosáhne na router. */
   lan: boolean;
-  /** Brána je router – pakety do internetu mají kudy odejít. */
+  /** Router má spojení s poskytovatelem (kabel WAN). */
+  wan: boolean;
+  /** Brána je router a router je připojený – pakety do internetu projdou. */
   internet: boolean;
   /** Server DNS odpovídá – názvy webů se přeloží na adresy. */
   dns: boolean;
@@ -127,13 +273,15 @@ export interface Diagnoza {
 
 export function diagnoza(sit: SitStav): Diagnoza {
   const u = ucinne(sit);
-  const lan = vDomaciSiti(u.adresa) && u.adresa !== ROUTER && u.maska === MASKA;
-  const internet = lan && u.brana === ROUTER;
-  // Server DNS v domácí síti odpovídá jen tehdy, když je to router. Veřejný
-  // server (třeba ten od poskytovatele) funguje, když vede cesta do internetu.
+  const lan = u.medium && vDomaciSiti(u.adresa) && u.adresa !== ROUTER && u.maska === MASKA;
+  const wan = sit.kabely.napajeni && sit.kabely.wan;
+  const internet = lan && u.brana === ROUTER && wan;
+  // Server DNS v domácí síti odpovídá jen tehdy, když je to router – a ten
+  // názvy jen předává dál, takže bez spojení s poskytovatelem nepřeloží nic.
+  // Veřejný server funguje, když vede cesta do internetu.
   // Zjednodušeno: simulace bere každou veřejnou adresu jako fungující server DNS.
-  const dns = jeIpv4(u.dns) && ((u.dns === ROUTER && lan) || (!soukroma(u.dns) && internet));
-  return { lan, internet, dns };
+  const dns = jeIpv4(u.dns) && ((u.dns === ROUTER && lan && wan) || (!soukroma(u.dns) && internet));
+  return { medium: u.medium, lan, wan, internet, dns };
 }
 
 /** Funguje síť tak, jak má (stránky v internetu se otevřou podle názvu)? */
@@ -141,6 +289,9 @@ export const sitFunguje = (sit: SitStav) => {
   const d = diagnoza(sit);
   return d.internet && d.dns;
 };
+
+/** Je správa routeru z počítače dostupná (Edge → 192.168.1.1)? */
+export const spravaDostupna = (sit: SitStav) => diagnoza(sit).lan;
 
 /* ───────────────────── Názvy a adresy ───────────────────── */
 
@@ -188,6 +339,9 @@ interface Svet {
   dns: string[];
   dhcp: boolean;
   serverDhcp: string;
+  /** Kabel zapojený do zapnutého routeru. */
+  medium: boolean;
+  apipa: boolean;
   d: Diagnoza;
   /** Přeloží název na adresu, nebo `null`, když takový web není. */
   preloz: (nazev: string) => string | null;
@@ -214,7 +368,9 @@ function svet(sit: SitStav | undefined): Svet {
       dns: ["10.20.0.5", "10.20.0.6"],
       dhcp: true,
       serverDhcp: "10.20.0.2",
-      d: { lan: true, internet: true, dns: true },
+      medium: true,
+      apipa: false,
+      d: { medium: true, lan: true, wan: true, internet: true, dns: true },
       preloz: (n) => SKOLNI_WEBY[n] ?? (n.endsWith(".local") ? null : ukazkovaAdresa(n)),
       mistni: (ip) => (ip === "10.20.3.1" ? 64 : ip.startsWith("10.20.") ? 128 : null),
       jeMistni: (ip) => ip.startsWith("10.20.3."),
@@ -229,16 +385,24 @@ function svet(sit: SitStav | undefined): Svet {
     nazevPc: "DOMACI-PC",
     adapter: "Realtek PCIe GbE Family Controller",
     pripona: "",
-    mac: "3C-52-82-1A-07-C4",
+    mac: MAC_PC,
     adresa: u.adresa,
     maska: u.maska,
     brana: u.brana,
-    dns: [u.dns],
+    dns: u.dns ? [u.dns] : [],
     dhcp: sit.ip.prirazeni === "dhcp",
     serverDhcp: ROUTER,
+    medium: u.medium,
+    apipa: u.apipa,
     d,
     preloz: (n) => DOMACI_WEBY[n] ?? (n.endsWith(".example") || n.endsWith(".local") ? null : ukazkovaAdresa(n)),
-    mistni: (ip) => (ip === u.adresa ? 128 : DOMACI_ZARIZENI[ip]?.ttl ?? null),
+    // Odpoví router a zařízení, která jsou právě v síti (zablokované ne).
+    mistni: (ip) => {
+      if (ip === u.adresa) return 128;
+      if (ip === ROUTER) return 64;
+      const z = sit.router.zarizeni.find((x) => x.adresa === ip && x.mac !== MAC_PC);
+      return z && !sit.router.blokovane.includes(z.mac) ? 64 : null;
+    },
     jeMistni: (ip) => /^192\.168\.1\.\d+$/.test(ip),
     vnitrni: [],
     cesta: [ROUTER, ...PRES_POSKYTOVATELE],
@@ -285,27 +449,39 @@ export function ipconfig(sit: SitStav | undefined, argumenty: string[]): Vyslede
     );
   }
   vystup.push("", "Adaptér sítě Ethernet Ethernet:", "");
-  vystup.push(`${tecky("Přípona DNS podle připojení")}${s.pripona}`);
-  if (vse) {
+  const popisAdapteru = () => {
+    if (!vse) return;
     vystup.push(
       `${tecky("Popis")}${s.adapter}`,
       `${tecky("Fyzická adresa")}${s.mac}`,
       `${tecky("Protokol DHCP povolen")}${s.dhcp ? "Ano" : "Ne"}`,
       `${tecky("Automatická konfigurace povolena")}Ano`,
     );
+  };
+  const stopy = vse ? ["prikaz:ipconfig", "prikaz:ipconfig-all"] : ["prikaz:ipconfig"];
+  // Kabel nikam nevede (nebo router nemá proud): Windows adresu vůbec nevypíše.
+  if (!s.medium) {
+    vystup.push(`${tecky("Stav média")}Médium odpojeno`, `${tecky("Přípona DNS podle připojení")}${s.pripona}`);
+    popisAdapteru();
+    vystup.push("");
+    return { vystup, stopy };
   }
+  vystup.push(`${tecky("Přípona DNS podle připojení")}${s.pripona}`);
+  popisAdapteru();
   vystup.push(`${tecky("Místní IPv6 adresa Link-local")}fe80::14c2:8b3f:9a21:5d07%12`);
-  vystup.push(`${tecky("Adresa IPv4")}${s.adresa}${vse ? "(Upřednostňováno)" : ""}`);
+  vystup.push(`${tecky(s.apipa ? "Adresa IPv4 automatické konfigurace" : "Adresa IPv4")}${s.adresa}${vse ? "(Upřednostňováno)" : ""}`);
   vystup.push(`${tecky("Maska podsítě")}${s.maska}`);
   vystup.push(`${tecky("Výchozí brána")}${s.brana}`);
   if (vse) {
-    if (s.dhcp) vystup.push(`${tecky("Server DHCP")}${s.serverDhcp}`);
-    vystup.push(`${tecky("Servery DNS")}${s.dns[0]}`);
+    if (s.dhcp && !s.apipa) vystup.push(`${tecky("Server DHCP")}${s.serverDhcp}`);
+    if (s.dns.length) vystup.push(`${tecky("Servery DNS")}${s.dns[0]}`);
     for (const dalsi of s.dns.slice(1)) vystup.push(`${" ".repeat(SIRKA)}${dalsi}`);
     vystup.push(`${tecky("NetBIOS přes TCP/IP")}Povoleno`);
   }
   vystup.push("");
-  return { vystup, stopy: vse ? ["prikaz:ipconfig", "prikaz:ipconfig-all"] : ["prikaz:ipconfig"] };
+  // Úloha „Připoj počítač“: ověřit si v ipconfig, že počítač adresu dostal.
+  if (s.domaci && s.d.lan) stopy.push("overeno:ipconfig-adresa");
+  return { vystup, stopy };
 }
 
 const jePrepinac = (a: string) => a.startsWith("/") || a.startsWith("-");
@@ -381,12 +557,15 @@ export function ping(sit: SitStav | undefined, argumenty: string[]): VysledekSit
   }
 
   // Do internetu se jde přes bránu. Špatná brána = pakety nemají kudy.
-  if (!s.d.internet) return nedostupny();
+  // Správná brána bez spojení s poskytovatelem: router pakety vezme, ale
+  // dál je poslat nemůže a odpověď nepřijde.
+  const casovyLimit = (): VysledekSite => ({
+    vystup: [...zacatek, ...Array(4).fill("Vypršel časový limit žádosti."), ...statistika(0, [])],
+  });
+  if (!s.d.internet) return s.brana === ROUTER && s.domaci ? casovyLimit() : nedostupny();
   if (s.vnitrni.includes(c.ip)) return odpovez(127, [1, 1, 1, 1], []);
   // Soukromá adresa mimo vlastní síť: router ji pošle dál a nikdo neodpoví.
-  if (soukroma(c.ip)) {
-    return { vystup: [...zacatek, ...Array(4).fill("Vypršel časový limit žádosti."), ...statistika(0, [])] };
-  }
+  if (soukroma(c.ip)) return casovyLimit();
   return odpovez(55, [12, 11, 13, 12], ["ping:internet:ok"]);
 }
 
@@ -456,6 +635,17 @@ export function tracert(sit: SitStav | undefined, argumenty: string[]): Vysledek
     vystup.push("", "Trasování bylo dokončeno.", "");
     return { vystup };
   }
+  if (!s.d.internet && s.domaci && s.brana === ROUTER) {
+    // Router odpoví, za ním už nikdo – kabel k poskytovateli nevede.
+    vystup.push(
+      radek(1, `${ms(1)}${ms(1)}${ms(1)}`, ROUTER),
+      "  2     *        *        *     Vypršel časový limit žádosti.",
+      "  3     *        *        *     Vypršel časový limit žádosti.",
+      "(Zjednodušeno – skutečný tracert by takhle zkoušel až 30 směrování.)",
+      "",
+    );
+    return { vystup };
+  }
   if (!s.d.internet) {
     vystup.push(`  1     ${s.adresa}  hlásí: Cílový hostitel není dostupný.`, "", "Trasování bylo dokončeno.", "");
     return { vystup };
@@ -506,23 +696,47 @@ export const CHYBY_SITE: Record<string, { text: string; rada: string }> = {
   },
 };
 
-/** Která porucha je právě spuštěná a ještě neopravená. */
-export function aktivniPorucha(sit: SitStav, stopy: string[]): Porucha | null {
+/** Trvá ještě závada, kterou porucha způsobila? */
+function zavada(sit: SitStav, porucha: Porucha): boolean {
   const d = diagnoza(sit);
-  if (stopy.includes("porucha:brana:spustena") && !d.internet) return "brana";
-  if (stopy.includes("porucha:dns:spustena") && d.internet && !d.dns) return "dns";
-  return null;
+  switch (porucha) {
+    case "kabel":
+      return sit.kabely.lan === null;
+    case "wan":
+      return !sit.kabely.wan;
+    case "dhcp":
+      // Dočasná ruční adresa (kvůli přístupu do správy) musí zase zmizet.
+      return !sit.router.dhcp || sit.ip.prirazeni !== "dhcp";
+    case "brana":
+      return !d.internet;
+    case "dns":
+      return d.internet && !d.dns;
+  }
+}
+
+/**
+ * Opravil žák právě spuštěnou poruchu? Závada musí zmizet A síť musí
+ * fungovat. Obejít poruchu jinudy (ruční adresa místo zapnutého DHCP)
+ * opravou není – ostatní zařízení v domě by adresu pořád nedostala.
+ */
+export function opravenaPorucha(sit: SitStav): Porucha | null {
+  return sit.porucha && !zavada(sit, sit.porucha) && sitFunguje(sit) ? sit.porucha : null;
+}
+
+/** Která porucha je právě spuštěná a ještě neopravená. */
+export function aktivniPorucha(sit: SitStav): Porucha | null {
+  return sit.porucha && zavada(sit, sit.porucha) ? sit.porucha : null;
 }
 
 /** Jaké chyby zapsat po uložení nového nastavení sítě. */
-export function chybyPriZmene(pred: SitStav, po: SitStav, stopy: string[]): string[] {
+export function chybyPriZmene(pred: SitStav, po: SitStav): string[] {
   const chyby: string[] = [];
-  const porucha = aktivniPorucha(pred, stopy);
+  const porucha = aktivniPorucha(pred);
   const zmenaDns = JSON.stringify(pred.dns) !== JSON.stringify(po.dns);
   const zmenaIp = JSON.stringify(pred.ip) !== JSON.stringify(po.ip);
   if (porucha === "brana" && zmenaDns && !zmenaIp) chyby.push("db");
   if (porucha === "dns" && zmenaIp && !zmenaDns) chyby.push("id");
   const rucne = po.ip.prirazeni === "rucne" || po.dns.prirazeni === "rucne";
-  if (rucne && sitFunguje(pred) && !sitFunguje(po)) chyby.push("rr");
+  if ((zmenaIp || zmenaDns) && rucne && sitFunguje(pred) && !sitFunguje(po)) chyby.push("rr");
   return chyby;
 }

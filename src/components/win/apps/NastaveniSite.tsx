@@ -12,7 +12,7 @@ import { useState } from "react";
 import { Globe } from "lucide-react";
 import { Dialog, Pole, Rozbalovac, Tlacitko } from "../ui";
 import { useSystem } from "../system";
-import { diagnoza, jeIpv4, ucinne, type Prirazeni, type SitStav } from "@/lib/win/sit";
+import { ROUTER, diagnoza, jeIpv4, ucinne, type Prirazeni, type SitStav } from "@/lib/win/sit";
 
 const PRIRAZENI: { id: Prirazeni; nazev: string }[] = [
   { id: "dhcp", nazev: "Automaticky (DHCP)" },
@@ -97,10 +97,11 @@ function UpravitIp({ sit, onUlozit, onZrusit }: { sit: SitStav; onUlozit: (s: Si
 
   const ulozit = () => {
     const nova: SitStav = {
+      ...sit,
       ip: { ...ip, adresa: ip.adresa.trim(), maska: ip.maska.trim(), brana: ip.brana.trim() },
       // Ruční adresa IP ve Windows nejde s automatickým DNS – DNS se přepne
       // na ručně a ponechá server, který počítač právě používá.
-      dns: rucne && sit.dns.prirazeni === "dhcp" ? { prirazeni: "rucne", server: ucinne(sit).dns } : sit.dns,
+      dns: rucne && sit.dns.prirazeni === "dhcp" ? { prirazeni: "rucne", server: ucinne(sit).dns || ROUTER } : sit.dns,
     };
     onUlozit(nova);
   };

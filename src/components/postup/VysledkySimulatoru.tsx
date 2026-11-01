@@ -436,7 +436,8 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
       </p>
       <p className={`mt-2 ${vzhled.slaby}`}>
         Co je nového (listopad 2026): ve Windows přibylo samostatné cvičení Síť a poruchy (adresa /windows?scenar=sit, kódy
-        WSIT1-). Výchozích 33 úloh Windows ani kódy WIN1- se nezměnily.
+        WSIT1-). Přibyl v něm nový router, další poruchy a zabezpečení Wi-Fi – úloh je 20 místo 8, dřívější kódy WSIT1- platí
+        dál. Výchozích 33 úloh Windows ani kódy WIN1- se nezměnily.
       </p>
       <textarea
         value={text}

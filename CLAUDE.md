@@ -360,6 +360,33 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Návrat zpět: na Vercelu „Redeploy“ předchozího nasazení. Termín 18. 12.,
   pushovat večer mimo výuku.
 
+### Router, další poruchy a Wi-Fi ve cvičení sítě (1. 11. 2026)
+- Karel chtěl „něco jako síťovou dílnu na eduKuba“ – postavené vlastní
+  návrh, ne kopie. Úloh WSIT1 je 20 místo 8 (kód je podle id, staré platí).
+  Skupiny `SKUPINY_SIT`: Jak je počítač připojený, Nový router, Poruchy,
+  Cizí zařízení ve Wi-Fi.
+- `SitStav` má `kabely` (napájení, WAN, port LAN počítače) a `router`
+  (heslo správy, Wi-Fi, WPS, síť pro hosty, DHCP, zařízení, blokované MAC);
+  starší uložený stav doplní `doplnSit`. Smyšlený router DR-300, údaje ze
+  štítku v `STITEK` (správa admin / Q7m-4kzR).
+- Scénáře (`situace` u úlohy, `SITUACE` v ukoly.ts) startuje tlačítko nahoře
+  ve skupině (`sit/situace`): nastaví síť (`sitProSituaci`), smaže stopy
+  `overeno:` a zapíše `situace:X:spustena` – bez ní se úlohy routeru na
+  zapojené síti nesplní. Nový router zná jen počítač na kabelu.
+- „Router a kabely“ (`RouterAKabely.tsx`, tlačítko v panelu úloh): kontrolky,
+  porty, štítek. Správa routeru na 192.168.1.1 je React komponenta
+  `SpravaRouteru.tsx` místo iframe (iframe je bez skriptů); dostupná jen
+  s adresou z domácí sítě. Formuláře připomínají „cvičné heslo“.
+- Nové poruchy (`Pokazit síť`): kabel (lan null → Médium odpojeno), dhcp
+  (APIPA 169.254.23.115, bez brány; oprava = ručně dočasně .200 → správa →
+  zapnout DHCP → zpět Automaticky, ruční obejití se nepočítá), wan (router
+  odpoví, dál časový limit). Silné heslo Wi-Fi = aspoň 12 znaků + WPA3 nebo
+  WPA2/WPA3.
+- Do pokynů na plochu přibyl „Pokyny od poskytovatele.txt“ (jen na novém disku).
+- **Ověřit na skutečných českých Windows:** „Stav média … Médium odpojeno“,
+  „Adresa IPv4 automatické konfigurace“, ping bez sítě „Selhání obecné.“,
+  stav v Nastavení u APIPA („Žádné připojení k síti“?).
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

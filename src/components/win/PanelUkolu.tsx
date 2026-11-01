@@ -23,8 +23,9 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ListChecks } from "lucide-react";
 import { useSystem } from "./system";
-import { postup, skupinyPro, ukolyPro, type Ukol } from "@/lib/win/ukoly";
-import { aktivniPorucha, CHYBY_SITE } from "@/lib/win/sit";
+import { SITUACE, postup, skupinyPro, ukolyPro, type Ukol } from "@/lib/win/ukoly";
+import { aktivniPorucha, CHYBY_SITE, type Situace } from "@/lib/win/sit";
+import { RouterAKabely } from "./RouterAKabely";
 import { MojeVysledkySimulatoru, PrehledTridySimulatoru, type Vzhled } from "@/components/postup/VysledkySimulatoru";
 
 /** Barvy oken Moje výsledky a Přehled třídy – ať vypadají jako Windows. */
@@ -44,7 +45,7 @@ export function PanelUkolu() {
   const { stav, poslat } = useSystem();
   const [otevreny, nastavOtevreny] = useState(false);
   /** Otevřené okno: Moje výsledky, nebo Přehled třídy (pro učitele). */
-  const [okno, nastavOkno] = useState<null | "vysledky" | "prehled">(null);
+  const [okno, nastavOkno] = useState<null | "vysledky" | "prehled" | "router">(null);
   const [rozbaleneSkupiny, nastavSkupiny] = useState<string[]>(() => [skupinyPro(stav.scenar)[0]]);
   const [rozbaleneUkoly, nastavUkoly] = useState<string[]>([]);
 
@@ -74,6 +75,8 @@ export function PanelUkolu() {
       />
     ) : okno === "prehled" ? (
       <PrehledTridySimulatoru zavri={() => nastavOkno(null)} vzhled={VZHLED} />
+    ) : okno === "router" && stav.sit ? (
+      <RouterAKabely sit={stav.sit} zavri={() => nastavOkno(null)} />
     ) : null;
 
   if (!otevreny) {
@@ -151,6 +154,7 @@ export function PanelUkolu() {
                     {hotoveVeSkupine}/{ukoly.length}
                   </span>
                 </button>
+                {rozbalena && ukoly[0]?.situace && <StartSituace situace={ukoly[0].situace} />}
                 {rozbalena &&
                   ukoly.map((u) => {
                     const splneno = stav.splneno.includes(u.id);
@@ -220,6 +224,16 @@ export function PanelUkolu() {
           })}
         </div>
 
+        {stav.sit && (
+          // Fyzický router vedle počítače: kabely, kontrolky, štítek.
+          <button
+            type="button"
+            onClick={() => nastavOkno("router")}
+            className="shrink-0 border-t border-win-linka px-4 py-2 text-left text-[12px] text-win-akcent hover:bg-win-zvyrazneny"
+          >
+            Router a kabely – podívat se, co je zapojené
+          </button>
+        )}
         <footer className="shrink-0 border-t border-win-linka px-4 py-2 text-[11px] text-win-slaby">
           Úkoly se odškrtávají samy podle toho, co je v počítači vidět.
           {/* Kód postupu místo vstupního kódu (25. 9. 2026): na konci hodiny
@@ -244,7 +258,53 @@ export function PanelUkolu() {
 }
 
 /** Které chyby patří k poruše – jejich radu žák uvidí u úlohy. */
-const CHYBY_PORUCHY: Record<string, string[]> = { brana: ["db", "rr"], dns: ["id", "rr"] };
+const CHYBY_PORUCHY: Partial<Record<string, string[]>> = { brana: ["db", "rr"], dns: ["id", "rr"] };
+
+/** Poruchy v počítači (Nastavení) a poruchy v síti (kabely, router). */
+const V_POCITACI = ["brana", "dns"];
+
+/**
+ * Začátek scénáře (nový router, cizí zařízení): tlačítko postaví síť od
+ * začátku. Úlohy skupiny se počítají až potom – výchozí síť je zapojená.
+ */
+function StartSituace({ situace }: { situace: Situace }) {
+  const { stav, poslat } = useSystem();
+  const [ptamSe, nastavPtamSe] = useState(false);
+  const spusteno = stav.stopy.includes(`situace:${situace}:spustena`);
+  const { popis, tlacitko } = SITUACE[situace];
+  const spust = () => {
+    poslat({ typ: "sit/situace", situace });
+    nastavPtamSe(false);
+  };
+  return (
+    <div className="mb-1.5 ml-7 mr-2 rounded border border-win-linka px-2.5 py-2 text-[11px] leading-snug">
+      <p className="text-win-slaby">{popis}</p>
+      {!spusteno ? (
+        <button
+          type="button"
+          onClick={spust}
+          className="mt-1.5 rounded bg-win-akcent px-2.5 py-1 font-semibold text-win-akcent-text hover:opacity-90"
+        >
+          {tlacitko}
+        </button>
+      ) : ptamSe ? (
+        <span className="mt-1.5 flex flex-wrap items-center gap-2">
+          Router se vrátí na začátek scénáře.
+          <button type="button" onClick={spust} className="text-win-akcent hover:underline">
+            Ano, znovu
+          </button>
+          <button type="button" onClick={() => nastavPtamSe(false)} className="hover:underline">
+            Ne
+          </button>
+        </span>
+      ) : (
+        <button type="button" onClick={() => nastavPtamSe(true)} className="mt-1.5 text-win-akcent hover:underline">
+          Začít scénář znovu
+        </button>
+      )}
+    </div>
+  );
+}
 
 /**
  * Úloha s poruchou: místo návodu tlačítko, které počítač schválně pokazí,
@@ -254,22 +314,25 @@ const CHYBY_PORUCHY: Record<string, string[]> = { brana: ["db", "rr"], dns: ["id
 function Porucha({ ukol }: { ukol: Ukol }) {
   const { stav, poslat } = useSystem();
   const porucha = ukol.porucha!;
-  const bezi = stav.sit ? aktivniPorucha(stav.sit, stav.stopy) === porucha : false;
+  const bezi = stav.sit ? aktivniPorucha(stav.sit) === porucha : false;
   const otevreno = Math.min(stav.napovedy?.[ukol.id] ?? 0, ukol.kroky.length);
-  const rady = CHYBY_PORUCHY[porucha].filter((id) => stav.chyby?.[id]);
+  const rady = (CHYBY_PORUCHY[porucha] ?? []).filter((id) => stav.chyby?.[id]);
+  const pocitac = V_POCITACI.includes(porucha);
 
   return (
     <div className="mb-1.5 ml-[2.4rem] mr-2 border-l-2 border-win-akcent pl-3 text-[11px] leading-snug">
       <p className="text-win-slaby">{ukol.popis}</p>
       {bezi ? (
-        <p className="mt-1.5 font-semibold">Tento počítač je schválně pokažený – najdi proč.</p>
+        <p className="mt-1.5 font-semibold">
+          {pocitac ? "Tento počítač je schválně pokažený – najdi proč." : "Tahle síť je schválně pokažená – najdi proč."}
+        </p>
       ) : (
         <button
           type="button"
           onClick={() => poslat({ typ: "sit/porucha", porucha })}
           className="mt-1.5 rounded bg-win-akcent px-2.5 py-1 font-semibold text-win-akcent-text hover:opacity-90"
         >
-          Pokazit počítač
+          {pocitac ? "Pokazit počítač" : "Pokazit síť"}
         </button>
       )}
       {otevreno > 0 && (

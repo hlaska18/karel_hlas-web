@@ -19,7 +19,15 @@ import {
   type Stav,
 } from "./stav";
 import { APLIKACE, type AppId } from "./typy";
-import { aktivniPorucha, chybyPriZmene, sitFunguje, sitSPoruchou, type Porucha, type SitStav } from "./sit";
+import {
+  chybyPriZmene,
+  opravenaPorucha,
+  sitProSituaci,
+  sitSPoruchou,
+  type Porucha,
+  type SitStav,
+  type Situace,
+} from "./sit";
 
 export type { Prichyceni };
 
@@ -55,6 +63,7 @@ export type Akce =
   // Jen cvičení „Síť a poruchy“ (`?scenar=sit`).
   | { typ: "sit/nastav"; sit: SitStav }
   | { typ: "sit/porucha"; porucha: Porucha }
+  | { typ: "sit/situace"; situace: Situace }
   | { typ: "napoveda"; id: string };
 
 /**
@@ -290,20 +299,35 @@ export function reducer(stav: Stav, akce: Akce): Stav {
       return stav.reklamaBezi ? { ...stav, reklamaBezi: false } : stav;
 
     case "sit/nastav": {
+      // Jakákoli změna sítě: Nastavení ve Windows, kabely u routeru, správa routeru.
       if (!stav.sit) return stav;
       const pred = stav.sit;
-      const po = akce.sit;
+      let po = akce.sit;
       let stopy = pridejStopu(stav.stopy, "sit:zmena");
       // Porucha je opravená jen tehdy, když ji opravil žák – ne když se
       // počítač vrátil do výchozího stavu (`system/reset` stopu nepřidá).
-      const porucha = aktivniPorucha(pred, stav.stopy);
-      if (porucha && aktivniPorucha(po, stav.stopy) !== porucha && sitFunguje(po)) {
-        stopy = pridejStopu(stopy, `porucha:${porucha}:opravena`);
+      const opravena = opravenaPorucha(po);
+      if (opravena) {
+        stopy = pridejStopu(stopy, `porucha:${opravena}:opravena`);
+        po = { ...po, porucha: undefined };
       }
       const chyby = { ...stav.chyby };
-      for (const id of chybyPriZmene(pred, po, stav.stopy)) chyby[id] = Math.min(99, (chyby[id] ?? 0) + 1);
+      for (const id of chybyPriZmene(pred, po)) chyby[id] = Math.min(99, (chyby[id] ?? 0) + 1);
       return { ...stav, sit: po, stopy, chyby };
     }
+
+    case "sit/situace":
+      if (!stav.sit) return stav;
+      return {
+        ...stav,
+        sit: sitProSituaci(akce.situace),
+        // Doklady „ověřeno“ (ipconfig s adresou, přihlášení do routeru) platí
+        // jen pro tenhle router – po novém začátku se musí udělat znovu.
+        stopy: pridejStopu(
+          stav.stopy.filter((s) => !s.startsWith("overeno:")),
+          `situace:${akce.situace}:spustena`,
+        ),
+      };
 
     case "sit/porucha":
       if (!stav.sit) return stav;

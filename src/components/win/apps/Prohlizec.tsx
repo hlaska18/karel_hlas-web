@@ -27,6 +27,7 @@ import {
 import { IkonoveTlacitko } from "../ui";
 import { useOkno, useSystem } from "../system";
 import { jeSoubor, najdi, pripona, rozloz, sloz, vloz, volneJmeno, najdiSlozku } from "@/lib/win/fs";
+import { SpravaRouteru } from "./SpravaRouteru";
 import { DOMOVSKA, DOMOVSKA_SIT, chybovaStranka, najdiStranku, nahledPdf, strankaSit, STRANKY, STRANKY_SIT } from "@/lib/win/web";
 
 interface Karta {
@@ -218,15 +219,19 @@ export function Prohlizec() {
 
       {/* Stránka */}
       <div className="relative min-h-0 flex-1 bg-white">
-        <iframe
-          key={`${karta.id}-${adresa}`}
-          title={obsah.titulek}
-          srcDoc={obsah.html}
-          // Prázdný sandbox = žádné skripty a cizí původ. Vlastní HTML se
-          // vykreslí, ale nemůže sáhnout na nic mimo svůj rám.
-          sandbox=""
-          className="h-full w-full border-0"
-        />
+        {"router" in obsah && obsah.router && stav.sit ? (
+          <SpravaRouteru key={karta.id} sit={stav.sit} />
+        ) : (
+          <iframe
+            key={`${karta.id}-${adresa}`}
+            title={obsah.titulek}
+            srcDoc={obsah.html}
+            // Prázdný sandbox = žádné skripty a cizí původ. Vlastní HTML se
+            // vykreslí, ale nemůže sáhnout na nic mimo svůj rám.
+            sandbox=""
+            className="h-full w-full border-0"
+          />
+        )}
         {stazeno && (
           <div className="win-vyjezd absolute right-3 top-3 w-72 rounded-lg border border-win-linka bg-win-povrch p-3 shadow-[var(--win-stin-nabidka)]">
             <div className="mb-1 flex items-center justify-between">

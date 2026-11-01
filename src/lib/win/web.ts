@@ -10,7 +10,7 @@
  * složky Stažené soubory a chybová stránka učí číst hlášku místo panikaření.
  */
 
-import { DOMACI_WEBY, VEREJNA_ADRESA, diagnoza, jeIpv4, type SitStav } from "./sit";
+import { DOMACI_WEBY, ROUTER, VEREJNA_ADRESA, diagnoza, jeIpv4, type SitStav } from "./sit";
 
 export interface Stranka {
   adresa: string;
@@ -249,9 +249,24 @@ const bezZnacek = (text: string) => text.replace(/[<>&"]/g, "");
  * Server jde otevřít i přímo adresou (`203.0.113.10`) – to se hodí při
  * poruše DNS, kdy název nefunguje, ale cesta do internetu ano.
  */
-export function strankaSit(adresa: string, sit: SitStav): { titulek: string; html: string; adresa: string | null } {
+export function strankaSit(
+  adresa: string,
+  sit: SitStav,
+): { titulek: string; html: string; adresa: string | null; router?: true } {
   const cista = adresa.trim().toLowerCase().replace(/^https?:\/\//, "").replace(/\/$/, "");
   const d = diagnoza(sit);
+  // Správa routeru: interaktivní stránka (`SpravaRouteru.tsx`), dostupná jen z domácí sítě.
+  if (cista === ROUTER) {
+    if (d.lan) return { titulek: "Správa routeru", html: "", adresa: null, router: true };
+    return {
+      titulek: "Stránka není dostupná",
+      adresa: null,
+      html: `${styl}<main><h1>Tato stránka není dostupná</h1>
+        <p>Počítač se k routeru <code>${ROUTER}</code> nedostal.</p>
+        <p>Vede od počítače kabel do zapnutého routeru? Má počítač adresu z domácí sítě? Pomůže <code>ipconfig</code>.</p>
+        <p style="color:#666">Zjednodušeno – skutečný prohlížeč tu ukáže kód chyby.</p></main>`,
+    };
+  }
   const jeAdresa = jeIpv4(cista);
   const nazev = jeAdresa ? Object.keys(DOMACI_WEBY).find((n) => DOMACI_WEBY[n] === cista) : cista;
   const stranka = STRANKY_SIT.find((s) => s.adresa === nazev);
