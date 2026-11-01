@@ -507,6 +507,21 @@
   border-radius: 4px;
 }
 
+/* Pole bez `outline-none` by jinak dostala zelený rámeček webu (Přehled třídy,
+   správa routeru). Stejně jako `.mac` níž. Posuvník a zaškrtávátko nejsou pole,
+   ty rámeček mít mají. */
+.win input:focus-visible,
+.win textarea:focus-visible {
+  outline: none;
+}
+.win input[type="range"]:focus-visible,
+.win input[type="checkbox"]:focus-visible,
+.win input[type="radio"]:focus-visible {
+  outline: 2px solid rgb(var(--win-text));
+  outline-offset: 1px;
+  border-radius: 4px;
+}
+
 /* Posuvník ve stylu Windows 11 – tenký, bez šipek, zesvětlí se při najetí. */
 .win-posuv {
   scrollbar-width: thin;
