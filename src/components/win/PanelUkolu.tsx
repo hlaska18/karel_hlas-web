@@ -303,8 +303,8 @@ function StartDomov() {
   return (
     <div className="mb-1.5 ml-7 mr-2 rounded border border-win-linka px-2.5 py-2 text-[11px] leading-snug">
       <p className="text-win-slaby">
-        Tyhle úlohy se dělají doma, kde je počítač za routerem. Terminál, Nastavení a prohlížeč pak ukážou domácí síť. Zpátky
-        do školy ho vrátíš tlačítkem dole.
+        Teď je počítač ve školní síti. Tyhle úlohy jsou o domácí síti, tak ho v simulaci přenes domů. Terminál, Nastavení a
+        prohlížeč pak ukážou domácí síť. Zpátky do školy ho vrátíš tlačítkem dole.
       </p>
       <button
         type="button"
