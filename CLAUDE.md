@@ -397,6 +397,9 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   do výchozích 33 nejde: změnil by se počet v kódech WIN1- u cizích učitelů.
 - První vstup do cvičení ve stejné kartě jde přes přihlášení
   (`jePrihlasen` + `nacti` ve VirtualniPocitac.tsx), jinak by byl kód pod „Žák“.
+- Zelený rámeček kolem polí v tmavém motivu: `.dark :focus-visible` přebíjel
+  průhlednou barvu z `outline-none` (Tailwind 3). Pravidlo je teď `:where(.dark)`
+  (globals.css), stejná váha, fokus klávesnicí na odkazech a tlačítkách zůstává.
 
 ## Otevřené / nápady (nic naléhavého)
 

@@ -59,7 +59,10 @@
     outline-offset: 3px;
     border-radius: 4px;
   }
-  .dark :focus-visible {
+  /* `:where`, ať má pravidlo stejnou váhu jako to výš. S vyšší vahou
+     přebíjelo průhlednou barvu z `outline-none`, takže v tmavém motivu dostalo
+     zelený rámeček každé pole, třeba příkazová řádka v simulátoru Windows. */
+  :where(.dark) :focus-visible {
     outline-color: #14b28b;
   }
 
