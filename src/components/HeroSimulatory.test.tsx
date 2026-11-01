@@ -18,7 +18,7 @@ import type { Lang } from "@/lib/content";
 function vykresli(lang: Lang, windows: number, macos: number) {
   return render(
     <LanguageProvider lang={lang}>
-      <HeroSimulatory ulohy={{ windows, macos }} />
+      <HeroSimulatory ulohy={{ windows, macos, sit: 20 }} />
     </LanguageProvider>,
   );
 }
@@ -27,8 +27,8 @@ describe("HeroSimulatory", () => {
   it("vede na oba simulátory", () => {
     vykresli("cs", 33, 14);
     const odkazy = screen.getAllByRole("link").map((a) => a.getAttribute("href"));
-    // Třetí odkaz je v „Co je nového“: cvičení Síť a poruchy (31. 10. 2026).
-    expect(odkazy).toEqual(["/windows", "/macos", "/windows?scenar=sit"]);
+    // Cvičení Síť a poruchy má dlaždici a odkaz v „Co je nového“.
+    expect(odkazy).toEqual(["/windows", "/macos", "/windows?scenar=sit", "/windows?scenar=sit"]);
   });
 
   it("ukáže předaný počet úloh, správně vyskloňovaný, a že se vstupuje jménem", () => {

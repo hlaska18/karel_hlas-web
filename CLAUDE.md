@@ -387,6 +387,14 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   „Adresa IPv4 automatické konfigurace“, ping bez sítě „Selhání obecné.“,
   stav v Nastavení u APIPA („Žádné připojení k síti“?).
 
+### Programování a dlaždice cvičení sítě (1. 11. 2026)
+- Dlaždice Python se v bance jmenuje **Programování** (Programming). Klíč tématu
+  zůstal `Python`, protože je v adresách `?tema=Python`. Ikona `python.png` má
+  motiv `</>`, vybral ji Karel ze tří návrhů.
+- Cvičení sítě má v úvodu vlastní dlaždici (`simSit` v HeroSimulatory.tsx) a tím
+  i tlačítko „Zkopírovat zadání“. Dřív k němu vedl jen odkaz v rozbaleném „Co je
+  nového“ a Karel ho nenašel: běžné /windows ho neukazuje.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

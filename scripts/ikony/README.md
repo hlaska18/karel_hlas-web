@@ -15,8 +15,7 @@ ve světlém i tmavém režimu, ne zvětšené.
   zjednodušený mozek zase „moc jednoduchý“ – mozek zůstal z původní sady.
 - Předloha stylu = původní ikona databáze (`databaze.png`). Nová ikona
   vzniká s ní jako referencí, jinak do sady nesedne.
-- Motivy: databáze = válce, Python = logo Pythonu (dva hadi, dva odstíny
-  zelené), Power BI = tři sloupce bez podstavy, matematika = ±,
+- Motivy: databáze = válce, programování (soubor python.png) = značka </> (Karel 1. 11. 2026), Power BI = tři sloupce bez podstavy, matematika = ±,
   chemie = baňka, hudební výchova = dvě noty, strojírenství = ozubené kolo,
   Excel = list s ohnutým rohem a mřížkou (ladí s Wordem), grafika = paleta
   se štětcem, angličtina = dvě bubliny rozhovoru.

@@ -53,7 +53,8 @@ export const TOOL_LABEL: Record<string, { cs: string; en: string }> = {
   "Operační systémy": { cs: "Operační systémy", en: "Operating systems" },
   Word: { cs: "Word", en: "Word" },
   Excel: { cs: "Excel", en: "Excel" },
-  Python: { cs: "Python", en: "Python" },
+  // Klíč zůstává „Python“: je v adresách ?tema=Python, které si lidé mohli uložit.
+  Python: { cs: "Programování", en: "Programming" },
   "Grafika a multimédia": { cs: "Grafika a multimédia", en: "Graphics & multimedia" },
   "Internet a bezpečnost": { cs: "Internet a bezpečnost", en: "Internet & online safety" },
   "Umělá inteligence": { cs: "Umělá inteligence", en: "Artificial intelligence" },
