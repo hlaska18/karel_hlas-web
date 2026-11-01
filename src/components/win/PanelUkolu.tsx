@@ -25,6 +25,7 @@ import { Check, ChevronDown, ListChecks } from "lucide-react";
 import { useSystem } from "./system";
 import { SITUACE, postup, skupinyPro, ukolyPro, type Ukol } from "@/lib/win/ukoly";
 import { aktivniPorucha, CHYBY_SITE, type Situace } from "@/lib/win/sit";
+import { SCENAR_SIT, VYCHOZI_SCENAR } from "@/lib/win/scenare";
 import { RouterAKabely } from "./RouterAKabely";
 import { MojeVysledkySimulatoru, PrehledTridySimulatoru, type Vzhled } from "@/components/postup/VysledkySimulatoru";
 
@@ -224,6 +225,26 @@ export function PanelUkolu() {
           })}
         </div>
 
+        {/* Vstup do cvičení přímo ze simulátoru (Karel 1. 11. 2026). Celé načtení
+            stránky, protože scénář se čte z adresy jen při startu. Úlohy, jejich
+            pořadí ani kód WIN1- se tím nemění, cvičení má vlastní postup. */}
+        {stav.scenar === VYCHOZI_SCENAR && (
+          <a
+            href={`/windows?scenar=${SCENAR_SIT}`}
+            className="shrink-0 border-t border-win-linka px-4 py-2 text-[12px] text-win-akcent hover:bg-win-zvyrazneny"
+          >
+            <span className="font-semibold">Cvičení navíc: Síť a poruchy</span> ({ukolyPro(SCENAR_SIT).length} úloh) – router,
+            poruchy, Wi-Fi
+          </a>
+        )}
+        {stav.sit && (
+          <a
+            href="/windows"
+            className="shrink-0 border-t border-win-linka px-4 py-2 text-[12px] text-win-akcent hover:bg-win-zvyrazneny"
+          >
+            Zpět na běžné úlohy Windows
+          </a>
+        )}
         {stav.sit && (
           // Fyzický router vedle počítače: kabely, kontrolky, štítek.
           <button

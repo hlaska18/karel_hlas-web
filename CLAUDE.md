@@ -391,9 +391,12 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Dlaždice Python se v bance jmenuje **Programování** (Programming). Klíč tématu
   zůstal `Python`, protože je v adresách `?tema=Python`. Ikona `python.png` má
   motiv `</>`, vybral ji Karel ze tří návrhů.
-- Cvičení sítě má v úvodu vlastní dlaždici (`simSit` v HeroSimulatory.tsx) a tím
-  i tlačítko „Zkopírovat zadání“. Dřív k němu vedl jen odkaz v rozbaleném „Co je
-  nového“ a Karel ho nenašel: běžné /windows ho neukazuje.
+- Do cvičení sítě se vstupuje **přímo ze simulátoru Windows**: panel Úkoly →
+  „Cvičení navíc: Síť a poruchy“ (PanelUkolu.tsx), zpět „Zpět na běžné úlohy
+  Windows“. Karel výslovně nechce samostatnou dlaždici v úvodu. Sloučit úlohy
+  do výchozích 33 nejde: změnil by se počet v kódech WIN1- u cizích učitelů.
+- První vstup do cvičení ve stejné kartě jde přes přihlášení
+  (`jePrihlasen` + `nacti` ve VirtualniPocitac.tsx), jinak by byl kód pod „Žák“.
 
 ## Otevřené / nápady (nic naléhavého)
 

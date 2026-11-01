@@ -22,7 +22,7 @@ import type { Lang } from "@/lib/content";
  * se do simulátorů vstupuje jménem, bez kódu.
  */
 
-export type PoctyUloh = { windows: number; macos: number; sit: number };
+export type PoctyUloh = { windows: number; macos: number };
 
 /** Anglicky „tasks“, ne „exercises“ jako na dlaždici – kratší řádek
  *  se v kartě široké 22 rem neořízne. */
@@ -54,14 +54,6 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
       nazev: tr.hero.simMacos,
       pocet: ulohy.macos,
       znak: <ZnakJablko className="h-7 w-7" />,
-    },
-    {
-      // Vlastní dlaždice: cvičení není v běžném /windows a schované jen
-      // v „Co je nového“ se nedalo najít (Karel 1. 11. 2026).
-      href: "/windows?scenar=sit",
-      nazev: tr.hero.simSit,
-      pocet: ulohy.sit,
-      znak: <ZnakWindows className="h-6 w-6" />,
     },
   ];
 

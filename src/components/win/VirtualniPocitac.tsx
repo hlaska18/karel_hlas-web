@@ -30,7 +30,8 @@ import { Fotky } from "./apps/Fotky";
 import { Prohlizec } from "./apps/Prohlizec";
 import { Reklama } from "./apps/Reklama";
 import { vybranyAkcent } from "@/lib/win/akcenty";
-import { MERITKO, VYCHOZI_NASTAVENI, vychoziStav } from "@/lib/win/stav";
+import { MERITKO, VYCHOZI_NASTAVENI, nacti, vychoziStav } from "@/lib/win/stav";
+import { scenarZAdresy } from "@/lib/win/scenare";
 import { postup } from "@/lib/win/ukoly";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import type { AppId } from "@/lib/win/typy";
@@ -58,7 +59,9 @@ function Obrazovka() {
 
   /* Rozběhnuté sezení si pamatuje karta – obnovení stránky nevrací na zámek. */
   useEffect(() => {
-    if (jePrihlasen("windows")) nastavFazi("bezi");
+    // Bez uloženého postupu (první vstup do cvičení sítě ve stejné kartě) jde
+    // žák přes přihlášení, jinak by kód postupu odešel pod jménem „Žák“.
+    if (jePrihlasen("windows") && nacti(scenarZAdresy())) nastavFazi("bezi");
   }, []);
 
   /* Rozměry plochy: okna se kladou a přichytávají vůči ní, ne vůči stránce. */
