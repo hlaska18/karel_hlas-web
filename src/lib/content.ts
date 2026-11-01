@@ -1571,7 +1571,7 @@ export const t: Record<Lang, Dict> = {
         {
           subject: "Angličtina",
           icon: "anglictina",
-          what: "Vlastní psaný a mluvený projev v odborné angličtině: napsat pracovní e-mail nebo popis výrobku, dostat zpětnou vazbu, opravit a nahrát.",
+          what: "Vlastní psaný projev v odborné angličtině: napsat pracovní e-mail nebo popis výrobku, dostat zpětnou vazbu a opravit ho.",
           tools: [
             {
               name: "Write & Improve (Cambridge)",
@@ -1585,13 +1585,6 @@ export const t: Record<Lang, Dict> = {
               url: "https://languagetool.org/",
               why: "Kontrola gramatiky, pravopisu a stylu anglického textu – podnět k vlastní opravě. Žák u jedné opravy vysvětlí, proč ji přijal, a u jiné, proč ne.",
               note: "Základní kontrola zdarma a bez účtu, plná verze placená. Text se odesílá do jejich služby, takže nevkládej nic osobního. Češtinu nepodporuje.",
-              overeno: "2026-10",
-            },
-            {
-              name: "AudioMass",
-              url: "https://audiomass.co/",
-              why: "Nahraje a upraví krátký mluvený projev – popis výrobku nebo bezpečnostní postup. Žák si ho poslechne, upraví formulace a natočí druhý pokus. Výslovnost nehodnotí, to zůstává na učiteli.",
-              note: "Zdarma, bez účtu, open source. Podle autora běží jen v prohlížeči a zvuk nikam neodesílá. Export do MP3 nebo WAV. Anglicky; na nahrávání je potřeba mikrofon, na úpravu hotové nahrávky ne.",
               overeno: "2026-10",
             },
           ],
@@ -2324,7 +2317,7 @@ export const t: Record<Lang, Dict> = {
         {
           subject: "English",
           icon: "anglictina",
-          what: "Students' own written and spoken output in technical English: write a work email or a product description, get feedback, revise and record it.",
+          what: "Students' own written output in technical English: write a work email or a product description, get feedback and revise it.",
           tools: [
             {
               name: "Write & Improve (Cambridge)",
@@ -2338,13 +2331,6 @@ export const t: Record<Lang, Dict> = {
               url: "https://languagetool.org/",
               why: "Checks grammar, spelling and style of an English text – a prompt for students' own revision. They explain why they accepted one suggestion and rejected another.",
               note: "Basic check free and without an account, the full version is paid. Text is sent to their service, so do not paste anything personal. It does not support Czech.",
-              overeno: "2026-10",
-            },
-            {
-              name: "AudioMass",
-              url: "https://audiomass.co/",
-              why: "Records and edits a short spoken piece – a product description or a safety procedure. Students listen, rework the wording and record a second take. It does not assess pronunciation; that stays with the teacher.",
-              note: "Free, no account, open source. According to its author it runs only in the browser and sends the audio nowhere. Exports MP3 or WAV. Recording needs a microphone; editing a ready recording does not.",
               overeno: "2026-10",
             },
           ],
