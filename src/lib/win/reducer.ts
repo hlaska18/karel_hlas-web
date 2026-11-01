@@ -19,11 +19,13 @@ import {
   type Stav,
 } from "./stav";
 import { APLIKACE, type AppId } from "./typy";
+import { sPokyny } from "./scenare";
 import {
   chybyPriZmene,
   opravenaPorucha,
   sitProSituaci,
   sitSPoruchou,
+  VYCHOZI_SIT,
   type Porucha,
   type SitStav,
   type Situace,
@@ -60,7 +62,9 @@ export type Akce =
   /** Vtíravé okno: dokud běží, po zavření se vrací. */
   | { typ: "reklama/spust" }
   | { typ: "reklama/zastav" }
-  // Jen cvičení „Síť a poruchy“ (`?scenar=sit`).
+  // Síťové úlohy: počítač doma za routerem, nebo zpátky ve škole.
+  | { typ: "sit/domov" }
+  | { typ: "sit/skola" }
   | { typ: "sit/nastav"; sit: SitStav }
   | { typ: "sit/porucha"; porucha: Porucha }
   | { typ: "sit/situace"; situace: Situace }
@@ -316,25 +320,30 @@ export function reducer(stav: Stav, akce: Akce): Stav {
       return { ...stav, sit: po, stopy, chyby };
     }
 
+    case "sit/domov":
+      return stav.sit ? stav : { ...stav, sit: VYCHOZI_SIT, stopy: stopyDoma(stav) };
+
+    case "sit/skola":
+      return { ...stav, sit: undefined, stopy: bezScenare(stav.stopy) };
+
     case "sit/situace":
-      if (!stav.sit) return stav;
       return {
         ...stav,
+        disk: akce.situace === "router" ? sPokyny(stav.disk) : stav.disk,
         sit: sitProSituaci(akce.situace),
         // Doklady „ověřeno“ (ipconfig s adresou, přihlášení do routeru) platí
         // jen pro tenhle router – po novém začátku se musí udělat znovu.
         stopy: pridejStopu(
-          stav.stopy.filter((s) => !s.startsWith("overeno:")),
+          bezScenare(stopyDoma(stav)).filter((s) => !s.startsWith("overeno:")),
           `situace:${akce.situace}:spustena`,
         ),
       };
 
     case "sit/porucha":
-      if (!stav.sit) return stav;
       return {
         ...stav,
         sit: sitSPoruchou(akce.porucha),
-        stopy: pridejStopu(stav.stopy, `porucha:${akce.porucha}:spustena`),
+        stopy: pridejStopu(bezScenare(stopyDoma(stav)), `porucha:${akce.porucha}:spustena`),
       };
 
     case "napoveda": {
@@ -351,13 +360,30 @@ export function reducer(stav: Stav, akce: Akce): Stav {
         ...vychoziStav(stav.scenar),
         splneno: stav.splneno,
         stopy: stav.stopy,
-        ...(stav.sit ? { chyby: stav.chyby, napovedy: stav.napovedy } : {}),
+        ...(stav.chyby ? { chyby: stav.chyby } : {}),
+        ...(stav.napovedy ? { napovedy: stav.napovedy } : {}),
       };
 
     default:
       return stav;
   }
 }
+
+/**
+ * Stopy při příchodu na domácí síť: příkazy spuštěné ve škole se nepočítají,
+ * úlohy mluví o domácí adrese a routeru. Když už žák doma je, nic se nemaže.
+ */
+function stopyDoma(stav: Stav): string[] {
+  if (stav.sit) return stav.stopy;
+  const skolni = ["prikaz:ipconfig-all", "ping:brana:ok", "ping:internet:ok", "nslookup:ok", "tracert:ok"];
+  return stav.stopy.filter((s) => !skolni.includes(s));
+}
+
+/**
+ * Vyměněná síť ukončí běžící scénář. Jinak by porucha se zapojenými kabely
+ * odškrtla „Zapoj router“ ve scénáři, který žák předtím jen spustil.
+ */
+const bezScenare = (stopy: string[]) => stopy.filter((s) => !/^situace:.*:spustena$/.test(s));
 
 /** Stopy se neopakují – seznam je množina, ne historie. */
 function pridejStopu(stopy: string[], klic: string): string[] {

@@ -391,15 +391,25 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Dlaždice Python se v bance jmenuje **Programování** (Programming). Klíč tématu
   zůstal `Python`, protože je v adresách `?tema=Python`. Ikona `python.png` má
   motiv `</>`, vybral ji Karel ze tří návrhů.
-- Do cvičení sítě se vstupuje **přímo ze simulátoru Windows**: panel Úkoly →
-  „Cvičení navíc: Síť a poruchy“ (PanelUkolu.tsx), zpět „Zpět na běžné úlohy
-  Windows“. Karel výslovně nechce samostatnou dlaždici v úvodu. Sloučit úlohy
-  do výchozích 33 nejde: změnil by se počet v kódech WIN1- u cizích učitelů.
-- První vstup do cvičení ve stejné kartě jde přes přihlášení
+- Karel výslovně nechce samostatnou dlaždici cvičení sítě v úvodu.
+- První vstup na `?scenar=sit` ve stejné kartě jde přes přihlášení
   (`jePrihlasen` + `nacti` ve VirtualniPocitac.tsx), jinak by byl kód pod „Žák“.
 - Zelený rámeček kolem polí v tmavém motivu: `.dark :focus-visible` přebíjel
   průhlednou barvu z `outline-none` (Tailwind 3). Pravidlo je teď `:where(.dark)`
   (globals.css), stejná váha, fokus klávesnicí na odkazech a tlačítkách zůstává.
+  Pole ve Windows bez `outline-none` hlídá `.win input/textarea:focus-visible`.
+
+### Síťové úlohy v běžném seznamu Windows (1. 11. 2026)
+- Karel: „Úkoly navíc ve Windows přidej normálně do úkolů.“ Na `/windows` je pod
+  výchozími skupinami „Navíc: síť“ s 20 úlohami (`ukolyNavic`), bez přepínání adresy.
+- **Do „x/33“ se nepočítají a `c` v kódu zůstává 33**: cizí učitelé čtou x/33.
+  Sloučený počet 53 je Karlova volba, zatím nechtěl. Kód WIN1- nese id `sit-*` (a `ch`),
+  Přehled je přes `oddelSit` ukáže v sekci Windows – síť a sečte se starým WSIT1-.
+- Počítač je ve škole (`stav.sit` chybí, výpisy 10.20.x), dokud žák neklikne
+  „Přenést počítač domů“, „Vybalit“ nebo „Pokazit“; zpět „Vrátit počítač do školy“.
+  Bez `stav.sit` se síťové úlohy nepočítají, školní příkazy se při přenosu smažou
+  (`stopyDoma`). Výměna sítě ukončí běžící scénář (`bezScenare`).
+- `/windows?scenar=sit` funguje dál (vlastní úložiště, WSIT1-), nevede na něj odkaz.
 
 ## Otevřené / nápady (nic naléhavého)
 

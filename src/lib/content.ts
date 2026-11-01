@@ -1159,7 +1159,6 @@ type Dict = {
      */
     novinkyTitle: string;
     novinky: string[];
-    novinkySit: string;
     /** Popisek nad odkazy na čtení (komponenta `Ctenie`). */
     reading: string;
     ctaLessons: string;
@@ -1419,13 +1418,12 @@ export const t: Record<Lang, Dict> = {
       zadatCopied: "Zkopírováno",
       novinkyTitle: "Co je nového v simulátorech",
       novinky: [
-        "Listopad 2026 – Windows: nové samostatné cvičení Síť a poruchy. V simulátoru Windows ho otevřeš v panelu Úkoly vpravo dole tlačítkem Cvičení navíc: Síť a poruchy (přímá adresa je /windows?scenar=sit). Žák v Terminálu zjistí adresu, bránu a DNS (ipconfig /all), vyzkouší ping, nslookup a tracert a porovná vnitřní a veřejnou adresu. Pak opraví dva schválně pokažené počítače: jednou nejde internet, podruhé se weby neotevřou podle názvu. Nápovědy si odkrývá po jedné a vidí je jen on.",
-        "Ve stejném cvičení navíc: Nový router (zapojit kabely podle kontrolek, přihlásit se do správy routeru údaji ze štítku, změnit heslo správy a nastavit Wi-Fi s WPA3), tři další poruchy (vytažený kabel, router nepřiděluje adresy, router nemá internet) a Cizí zařízení ve Wi-Fi (zablokovat ho, silné heslo, vypnout WPS, síť pro hosty). Router i jeho správa jsou smyšlené, žák v nich vymýšlí jen cvičná hesla. Úloh je teď 20 místo 8, dřívější kódy WSIT1- platí dál.",
-        "Cvičení má vlastní adresu a vlastní kód postupu WSIT1-. Přehled třídy u něj ukáže i to, co žák při opravě udělal vedle (třeba při poruše brány měnil server DNS) – jako popis toho, co udělal, ne známku.",
+        "Listopad 2026 – Windows: v panelu Úkoly přibylo pod běžnými úlohami 20 úloh navíc o síti. Žák tlačítkem přenese počítač domů za router, v Terminálu zjistí adresu, bránu a DNS (ipconfig /all), vyzkouší ping, nslookup a tracert a porovná vnitřní a veřejnou adresu. Pak opraví dva schválně pokažené počítače: jednou nejde internet, podruhé se weby neotevřou podle názvu. Nápovědy si odkrývá po jedné a vidí je jen on.",
+        "Dál tam jsou: Nový router (zapojit kabely podle kontrolek, přihlásit se do správy routeru údaji ze štítku, změnit heslo správy a nastavit Wi-Fi s WPA3), tři další poruchy (vytažený kabel, router nepřiděluje adresy, router nemá internet) a Cizí zařízení ve Wi-Fi (zablokovat ho, silné heslo, vypnout WPS, síť pro hosty). Router i jeho správa jsou smyšlené, žák v nich vymýšlí jen cvičná hesla.",
+        "Síťové úlohy se do „x/33“ nepočítají. Kód postupu WIN1- je nese s sebou a Přehled třídy je ukáže v sekci Windows – síť, dřívější kódy WSIT1- platí dál. Ukáže i to, co žák při opravě udělal vedle (třeba při poruše brány měnil server DNS) – jako popis toho, co udělal, ne známku.",
         "Windows: ping odpovídá ze skutečné adresy cíle (dřív odpovídal vždycky z brány), nově fungují nslookup, tracert a ipconfig /all. Adresy v „internetu“ jsou z rozsahů vyhrazených pro ukázky.",
-        "Beze změny: výchozí úlohy Windows i macOS a kódy postupu WIN1- a MAC1-. Starší kódy Přehled třídy čte stejně jako dřív.",
+        "Beze změny: výchozích 33 úloh Windows, úlohy macOS a kódy, které už žáci odevzdali. Starší kódy Přehled třídy čte stejně jako dřív.",
       ],
-      novinkySit: "Otevřít cvičení Síť a poruchy",
       reading: "Zajímavé články",
       ctaLessons: "Procházet materiály",
       ctaContact: "O mně",
@@ -2167,13 +2165,12 @@ export const t: Record<Lang, Dict> = {
       zadatCopied: "Copied",
       novinkyTitle: "What is new in the simulators",
       novinky: [
-        "November 2026 – Windows: a new separate exercise, Network and faults. In the Windows simulator it opens from the task panel at the bottom right with the Extra exercise: Network and faults button (direct address /windows?scenar=sit). In the Terminal students find the address, gateway and DNS (ipconfig /all), try ping, nslookup and tracert, and compare the private and public address. Then they fix two deliberately broken computers: once the internet does not work, once websites do not open by name. Hints are revealed one at a time and only the student sees them.",
-        "Also in the same exercise: New router (plug in the cables by the status lights, log in to the router admin with the details from the label, change the admin password and set up Wi-Fi with WPA3), three more faults (unplugged cable, the router hands out no addresses, the router has no internet) and A stranger on the Wi-Fi (block the device, a strong password, turn off WPS, a guest network). The router and its admin pages are made up; students only invent practice passwords there. There are now 20 tasks instead of 8; earlier WSIT1- codes still work.",
-        "The exercise has its own address and its own progress code WSIT1-. For it the class overview also shows what the student did wrong while fixing (for example changed the DNS server when the gateway was broken) – as a description of what they did, not a grade.",
+        "November 2026 – Windows: the task panel now has 20 extra network tasks below the regular ones. With one button students take the computer home behind a router, and in the Terminal they find the address, gateway and DNS (ipconfig /all), try ping, nslookup and tracert, and compare the private and public address. Then they fix two deliberately broken computers: once the internet does not work, once websites do not open by name. Hints are revealed one at a time and only the student sees them.",
+        "Also there: New router (plug in the cables by the status lights, log in to the router admin with the details from the label, change the admin password and set up Wi-Fi with WPA3), three more faults (unplugged cable, the router hands out no addresses, the router has no internet) and A stranger on the Wi-Fi (block the device, a strong password, turn off WPS, a guest network). The router and its admin pages are made up; students only invent practice passwords there.",
+        "The network tasks do not count towards “x/33”. The WIN1- progress code carries them and the class overview shows them in the Windows – network section; earlier WSIT1- codes still work. It also shows what the student did wrong while fixing (for example changed the DNS server when the gateway was broken) – as a description of what they did, not a grade.",
         "Windows: ping now replies from the real target address (it used to always reply from the gateway); nslookup, tracert and ipconfig /all now work. Addresses on the “internet” come from ranges reserved for documentation.",
-        "Unchanged: the default Windows and macOS tasks and the WIN1- and MAC1- progress codes. The class overview reads older codes exactly as before.",
+        "Unchanged: the 33 default Windows tasks, the macOS tasks and codes students have already submitted. The class overview reads older codes exactly as before.",
       ],
-      novinkySit: "Open the Network and faults exercise",
       reading: "Interesting articles",
       ctaLessons: "Browse the materials",
       ctaContact: "About me",

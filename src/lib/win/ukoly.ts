@@ -933,9 +933,17 @@ export const ukolyPro = (scenar: string): Ukol[] => (scenar === SCENAR_SIT ? UKO
 
 export const skupinyPro = (scenar: string): readonly string[] => (scenar === SCENAR_SIT ? SKUPINY_SIT : SKUPINY);
 
+/**
+ * Úlohy navíc v běžném seznamu (Karel 1. 11. 2026): síťové úlohy jsou v panelu
+ * pod výchozími, ale nepočítají se do nich. „x/33“ a kód WIN1- čtou cizí učitelé.
+ */
+export const ukolyNavic = (scenar: string): Ukol[] => (scenar === SCENAR_SIT ? [] : UKOLY_SIT);
+
 /** Ids úkolů, které jsou podle aktuálního stavu splněné. */
 export function vyhodnot(stav: Stav): string[] {
-  return ukolyPro(stav.scenar).filter((u) => {
+  return [...ukolyPro(stav.scenar), ...ukolyNavic(stav.scenar)].filter((u) => {
+    // Síťové úlohy platí jen na domácí síti. `ipconfig /all` ve škole se nepočítá.
+    if (u.id.startsWith("sit-") && !stav.sit) return false;
     try {
       return u.hotovo(stav);
     } catch {

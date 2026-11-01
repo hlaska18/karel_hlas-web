@@ -23,9 +23,9 @@
 import { useMemo, useState } from "react";
 import { Check, ChevronDown, ListChecks } from "lucide-react";
 import { useSystem } from "./system";
-import { SITUACE, postup, skupinyPro, ukolyPro, type Ukol } from "@/lib/win/ukoly";
+import { SITUACE, SKUPINY_SIT, postup, skupinyPro, ukolyNavic, ukolyPro, type Ukol } from "@/lib/win/ukoly";
 import { aktivniPorucha, CHYBY_SITE, type Situace } from "@/lib/win/sit";
-import { SCENAR_SIT, VYCHOZI_SCENAR } from "@/lib/win/scenare";
+import { SCENAR_SIT } from "@/lib/win/scenare";
 import { RouterAKabely } from "./RouterAKabely";
 import { MojeVysledkySimulatoru, PrehledTridySimulatoru, type Vzhled } from "@/components/postup/VysledkySimulatoru";
 
@@ -52,19 +52,26 @@ export function PanelUkolu() {
 
   // Cvičení „Síť a poruchy“ (`?scenar=sit`) má vlastní sadu úloh i kód WSIT1-.
   const { hotovo, celkem } = postup(stav.splneno, stav.scenar);
-  const podleSkupin = useMemo(
-    () =>
-      skupinyPro(stav.scenar).map((skupina) => ({
+  // Síťové úlohy jsou v běžném seznamu, ale do „x/33“ se nepočítají (Karel 1. 11. 2026).
+  const navic = ukolyNavic(stav.scenar);
+  const hotovoNavic = navic.filter((u) => stav.splneno.includes(u.id)).length;
+  const podleSkupin = useMemo(() => {
+    const zakladni = ukolyPro(stav.scenar);
+    const dalsi = ukolyNavic(stav.scenar);
+    return [
+      ...skupinyPro(stav.scenar).map((skupina) => ({ skupina, ukoly: zakladni.filter((u) => u.skupina === skupina), prvniNavic: false })),
+      ...(dalsi.length ? SKUPINY_SIT : []).map((skupina, i) => ({
         skupina,
-        ukoly: ukolyPro(stav.scenar).filter((u) => u.skupina === skupina),
+        ukoly: dalsi.filter((u) => u.skupina === skupina),
+        prvniNavic: i === 0,
       })),
-    [stav.scenar],
-  );
+    ];
+  }, [stav.scenar]);
 
   const okna =
     okno === "vysledky" ? (
       <MojeVysledkySimulatoru
-        simulator={stav.sit ? "sit" : "windows"}
+        simulator={stav.scenar === SCENAR_SIT ? "sit" : "windows"}
         chyby={stav.chyby}
         jmeno={stav.nastaveni.jmenoUctu}
         nastavJmeno={(jmeno) => poslat({ typ: "nastaveni/zmen", zmena: { jmenoUctu: jmeno } })}
@@ -131,11 +138,19 @@ export function PanelUkolu() {
         </header>
 
         <div className="win-posuv min-h-0 flex-1 overflow-auto p-2">
-          {podleSkupin.map(({ skupina, ukoly }) => {
+          {podleSkupin.map(({ skupina, ukoly, prvniNavic }) => {
             const hotoveVeSkupine = ukoly.filter((u) => stav.splneno.includes(u.id)).length;
             const rozbalena = rozbaleneSkupiny.includes(skupina);
             return (
               <section key={skupina} className="mb-1">
+                {prvniNavic && (
+                  <p className="mx-2 mb-1 mt-3 flex justify-between border-t border-win-linka pt-2 text-[11px] text-win-slaby">
+                    <span>Navíc: síť</span>
+                    <span>
+                      {hotovoNavic}/{navic.length}
+                    </span>
+                  </p>
+                )}
                 <button
                   type="button"
                   onClick={() =>
@@ -155,6 +170,7 @@ export function PanelUkolu() {
                     {hotoveVeSkupine}/{ukoly.length}
                   </span>
                 </button>
+                {rozbalena && prvniNavic && !stav.sit && <StartDomov />}
                 {rozbalena && ukoly[0]?.situace && <StartSituace situace={ukoly[0].situace} />}
                 {rozbalena &&
                   ukoly.map((u) => {
@@ -225,19 +241,7 @@ export function PanelUkolu() {
           })}
         </div>
 
-        {/* Vstup do cvičení přímo ze simulátoru (Karel 1. 11. 2026). Celé načtení
-            stránky, protože scénář se čte z adresy jen při startu. Úlohy, jejich
-            pořadí ani kód WIN1- se tím nemění, cvičení má vlastní postup. */}
-        {stav.scenar === VYCHOZI_SCENAR && (
-          <a
-            href={`/windows?scenar=${SCENAR_SIT}`}
-            className="shrink-0 border-t border-win-linka px-4 py-2 text-[12px] text-win-akcent hover:bg-win-zvyrazneny"
-          >
-            <span className="font-semibold">Cvičení navíc: Síť a poruchy</span> ({ukolyPro(SCENAR_SIT).length} úloh) – router,
-            poruchy, Wi-Fi
-          </a>
-        )}
-        {stav.sit && (
+        {stav.scenar === SCENAR_SIT && (
           <a
             href="/windows"
             className="shrink-0 border-t border-win-linka px-4 py-2 text-[12px] text-win-akcent hover:bg-win-zvyrazneny"
@@ -253,6 +257,15 @@ export function PanelUkolu() {
             className="shrink-0 border-t border-win-linka px-4 py-2 text-left text-[12px] text-win-akcent hover:bg-win-zvyrazneny"
           >
             Router a kabely – podívat se, co je zapojené
+          </button>
+        )}
+        {stav.sit && stav.scenar !== SCENAR_SIT && (
+          <button
+            type="button"
+            onClick={() => poslat({ typ: "sit/skola" })}
+            className="shrink-0 border-t border-win-linka px-4 py-2 text-left text-[12px] text-win-akcent hover:bg-win-zvyrazneny"
+          >
+            Vrátit počítač do školy
           </button>
         )}
         <footer className="shrink-0 border-t border-win-linka px-4 py-2 text-[11px] text-win-slaby">
@@ -283,6 +296,26 @@ const CHYBY_PORUCHY: Partial<Record<string, string[]>> = { brana: ["db", "rr"], 
 
 /** Poruchy v počítači (Nastavení) a poruchy v síti (kabely, router). */
 const V_POCITACI = ["brana", "dns"];
+
+/** Síťové úlohy běží na domácí síti, běžný počítač simulátoru stojí ve škole. */
+function StartDomov() {
+  const { poslat } = useSystem();
+  return (
+    <div className="mb-1.5 ml-7 mr-2 rounded border border-win-linka px-2.5 py-2 text-[11px] leading-snug">
+      <p className="text-win-slaby">
+        Tyhle úlohy se dělají doma, kde je počítač za routerem. Terminál, Nastavení a prohlížeč pak ukážou domácí síť. Zpátky
+        do školy ho vrátíš tlačítkem dole.
+      </p>
+      <button
+        type="button"
+        onClick={() => poslat({ typ: "sit/domov" })}
+        className="mt-1.5 rounded bg-win-akcent px-2.5 py-1 font-semibold text-win-akcent-text hover:opacity-90"
+      >
+        Přenést počítač domů
+      </button>
+    </div>
+  );
+}
 
 /**
  * Začátek scénáře (nový router, cizí zařízení): tlačítko postaví síť od

@@ -189,7 +189,10 @@ export interface Stav {
   virusBezi: boolean;
   /** Běží vtíravé okno? Dokud ano, po zavření se vrací. */
   reklamaBezi: boolean;
-  /** Domácí síť – jen ve cvičení `?scenar=sit`, jinak chybí. */
+  /**
+   * Domácí síť. Chybí, dokud žák nezačne síťové úlohy: do té doby je počítač ve
+   * škole a příkazy vypisují školní síť. Ve cvičení `?scenar=sit` je od začátku.
+   */
   sit?: SitStav;
   /**
    * Chyby při opravě sítě (id z `CHYBY_SITE` → kolikrát). Nesou se v kódu
@@ -276,6 +279,8 @@ export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
         nastaveni: { ...VYCHOZI_NASTAVENI, ...ulozeny.nastaveni },
         stopy: ulozeny.stopy ?? [],
         splneno: ulozeny.splneno ?? [],
+        ...(ulozeny.chyby ? { chyby: ulozeny.chyby } : {}),
+        ...(ulozeny.napovedy ? { napovedy: ulozeny.napovedy } : {}),
       };
     }
 
@@ -288,14 +293,10 @@ export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
       splneno: ulozeny.splneno ?? [],
       // `??` schválně: starší uložený stav tohle pole nemá a pak platí scénář.
       reklamaBezi: ulozeny.reklamaBezi ?? vychoziStav(scenar).reklamaBezi,
-      ...(scenar === SCENAR_SIT
-        ? {
-            // Stav z doby před routerem a kabely (31. 10. 2026) se doplní.
-            sit: doplnSit(ulozeny.sit),
-            chyby: ulozeny.chyby ?? {},
-            napovedy: ulozeny.napovedy ?? {},
-          }
-        : {}),
+      // Stav z doby před routerem a kabely (31. 10. 2026) se doplní.
+      ...(scenar === SCENAR_SIT || ulozeny.sit ? { sit: doplnSit(ulozeny.sit) } : {}),
+      ...(scenar === SCENAR_SIT || ulozeny.chyby ? { chyby: ulozeny.chyby ?? {} } : {}),
+      ...(scenar === SCENAR_SIT || ulozeny.napovedy ? { napovedy: ulozeny.napovedy ?? {} } : {}),
     };
   } catch {
     // Rozbitý nebo cizí obsah v úložišti nesmí shodit celé prostředí.
@@ -315,11 +316,9 @@ export function uloz(stav: Stav): void {
     splneno: stav.splneno,
     reklamaBezi: stav.reklamaBezi,
   };
-  if (stav.sit) {
-    ulozeny.sit = stav.sit;
-    ulozeny.chyby = stav.chyby;
-    ulozeny.napovedy = stav.napovedy;
-  }
+  if (stav.sit) ulozeny.sit = stav.sit;
+  if (stav.chyby) ulozeny.chyby = stav.chyby;
+  if (stav.napovedy) ulozeny.napovedy = stav.napovedy;
   // Plné nebo zakázané úložiště (anonymní okno): prostředí běží dál, jen se
   // po zavření karty nic nezachová – `ulozDoProhlizece` na to upozorní pruhem.
   ulozDoProhlizece(klicUloziste(stav.scenar), JSON.stringify(ulozeny));

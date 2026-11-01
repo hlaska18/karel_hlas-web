@@ -47,8 +47,9 @@ export type PostupSimulatoru = {
   /** Kolik úloh simulátor měl, když kód vznikl. */
   celkem: number;
   /**
-   * Jen cvičení `sit`: chyby při opravě sítě (id z `CHYBY_SITE` → kolikrát).
-   * Starší kódy pole nemají – Přehled pak píše „neměřeno“, ne nulu.
+   * Chyby při opravě sítě (id z `CHYBY_SITE` → kolikrát). Nese je WSIT1 a WIN1
+   * žáka, který dělal síťové úlohy. Jiné kódy pole nemají – Přehled pak píše
+   * „neměřeno“, ne nulu.
    */
   chyby?: Record<string, number>;
 };
@@ -119,8 +120,8 @@ export function dekodujSimulator(kod: string): PostupSimulatoru | null {
       splneno,
       celkem: Number.isFinite(c) && c > 0 ? Math.min(Math.floor(c), 500) : 0,
     };
-    // Kódy WIN1 a MAC1 klíč `chyby` nedostanou nikdy – musí se číst přesně jako dřív.
-    if (simulator === "sit" && d.ch !== undefined) postup.chyby = prectiChyby(d.ch);
+    // Kód bez `ch` a kód MAC1 klíč `chyby` nedostanou nikdy – musí se číst přesně jako dřív.
+    if (simulator !== "macos" && d.ch !== undefined) postup.chyby = prectiChyby(d.ch);
     return postup;
   } catch {
     return null;
@@ -140,12 +141,27 @@ export function najdiKodySimulatoru(text: string): PostupSimulatoru[] {
 }
 
 /**
+ * Síťové úlohy jsou od 1. 11. 2026 v běžném seznamu Windows, takže je nese
+ * i kód WIN1-. Přehled je ukáže stejně jako z kódu WSIT1-, „x/33“ zůstává čisté.
+ * Výsledný `celkem` Přehled nečte, bere počet ze seznamu úloh.
+ */
+function oddelSit(p: PostupSimulatoru): PostupSimulatoru[] {
+  const sitove = p.splneno.filter((id) => id.startsWith("sit-"));
+  if (p.simulator !== "windows" || (!sitove.length && !p.chyby)) return [p];
+  const { chyby, ...bezChyb } = p;
+  return [
+    { ...bezChyb, splneno: p.splneno.filter((id) => !id.startsWith("sit-")) },
+    { ...bezChyb, simulator: "sit", splneno: sitove, celkem: 0, ...(chyby ? { chyby } : {}) },
+  ];
+}
+
+/**
  * Sloučí kódy téhož žáka v témže simulátoru: splněné úlohy se sčítají
  * (škola i domov), jméno a datum jsou z nejnovějšího kódu.
  */
 export function sloucitSimulatory(postupy: PostupSimulatoru[]): PostupSimulatoru[] {
   const skupiny: Record<string, PostupSimulatoru[]> = {};
-  postupy.forEach((p) => {
+  postupy.flatMap(oddelSit).forEach((p) => {
     const k = `${p.simulator}|${normalizujJmeno(p.jmeno)}`;
     (skupiny[k] = skupiny[k] || []).push(p);
   });

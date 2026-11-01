@@ -61,6 +61,10 @@ const UKOLY: Record<Simulator, UkolKratce[]> = {
   sit: UKOLY_SIT.map((u) => ({ id: u.id, nazev: u.nazev })),
 };
 
+/** Co smí být v kódu: kód WIN1- nese i síťové úlohy z běžného seznamu. */
+const vKodu = (simulator: Simulator, id: string) =>
+  UKOLY[simulator].some((u) => u.id === id) || (simulator === "windows" && UKOLY.sit.some((u) => u.id === id));
+
 const PREDPONA_KODU: Record<Simulator, string> = { windows: "WIN1-…", macos: "MAC1-…", sit: "WSIT1-…" };
 
 /** Chyby při opravě sítě jako popis chování. Starý kód bez pole = „neměřeno“. */
@@ -183,7 +187,7 @@ export function MojeVysledkySimulatoru({
   otevriPrehled: () => void;
   zavri: () => void;
   vzhled: Vzhled;
-  /** Jen cvičení `sit`: chyby při opravě sítě, nesou se v kódu jako `ch`. */
+  /** Chyby při opravě sítě, nesou se v kódu jako `ch`. */
   chyby?: Record<string, number>;
 }) {
   const [upravovane, nastavUpravovane] = useState(jmeno === VYCHOZI_JMENO ? "" : jmeno);
@@ -198,9 +202,9 @@ export function MojeVysledkySimulatoru({
     simulator,
     jmeno: upravovane.trim(),
     datum: dnes(),
-    splneno: splneno.filter((id) => UKOLY[simulator].some((u) => u.id === id)),
+    splneno: splneno.filter((id) => vKodu(simulator, id)),
     celkem,
-    ...(simulator === "sit" ? { chyby: chyby || {} } : {}),
+    ...(simulator === "sit" ? { chyby: chyby || {} } : chyby ? { chyby } : {}),
   };
   const kod = zakodujSimulator(postup);
 
@@ -210,14 +214,15 @@ export function MojeVysledkySimulatoru({
       nastavObnovu({ ok: false, text: "Tohle není kód postupu. Vlož celý kód, jak jsi ho poslal(a) do Teams." });
       return;
     }
-    if (p.simulator !== simulator) {
+    // Kód WSIT1- ze dřívějšího samostatného cvičení patří do běžných úloh Windows.
+    if (p.simulator !== simulator && !(simulator === "windows" && p.simulator === "sit")) {
       nastavObnovu({
         ok: false,
         text: `Tohle je kód ze simulátoru ${NAZEV_SIMULATORU[p.simulator]}. Vlož ho tam – tady je ${NAZEV_SIMULATORU[simulator]}.`,
       });
       return;
     }
-    const ids = p.splneno.filter((id) => UKOLY[simulator].some((u) => u.id === id));
+    const ids = p.splneno.filter((id) => vKodu(simulator, id));
     obnov(ids);
     if (!platne && p.jmeno) {
       nastavUpravovane(p.jmeno);
@@ -254,6 +259,14 @@ export function MojeVysledkySimulatoru({
       <div className="mt-3">
         <Dlazdice simulator={simulator} splneno={splneno} vzhled={vzhled} />
       </div>
+      {simulator === "windows" && hotovychZ("sit", splneno) > 0 && (
+        <div className="mt-2">
+          <p className="mb-1 font-semibold">
+            Navíc, síť: {hotovychZ("sit", splneno)}/{UKOLY.sit.length}
+          </p>
+          <Dlazdice simulator="sit" splneno={splneno} vzhled={vzhled} />
+        </div>
+      )}
       <p className={`mt-1 ${vzhled.slaby}`}>Zelená = splněná úloha. Číslo je pořadí v panelu Úkoly, po najetí myší se ukáže název.</p>
 
       <p className="mt-4 font-semibold">Kód postupu pro učitele</p>
@@ -435,9 +448,9 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
         žáka a dá se upravit.
       </p>
       <p className={`mt-2 ${vzhled.slaby}`}>
-        Co je nového (listopad 2026): ve Windows přibylo samostatné cvičení Síť a poruchy (adresa /windows?scenar=sit, kódy
-        WSIT1-). Přibyl v něm nový router, další poruchy a zabezpečení Wi-Fi – úloh je 20 místo 8, dřívější kódy WSIT1- platí
-        dál. Výchozích 33 úloh Windows ani kódy WIN1- se nezměnily.
+        Co je nového (listopad 2026): ve Windows přibylo v panelu Úkoly 20 úloh navíc o síti (router, poruchy, Wi-Fi). Kód WIN1-
+        je nese s sebou a Přehled je ukáže v sekci Windows – síť. Výchozích 33 úloh se nezměnilo, „x/33“ počítá dál jen je.
+        Dřívější kódy WSIT1- platí dál.
       </p>
       <textarea
         value={text}

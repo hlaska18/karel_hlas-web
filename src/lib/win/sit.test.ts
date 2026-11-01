@@ -4,6 +4,7 @@ import { vychoziStav, type Stav } from "@/lib/win/stav";
 import { SCENAR_SIT } from "@/lib/win/scenare";
 import { UKOLY, UKOLY_SIT, postup, vyhodnot } from "@/lib/win/ukoly";
 import { strankaSit } from "@/lib/win/web";
+import { najdiSlozku, rozloz } from "@/lib/win/fs";
 import {
   APIPA,
   CIZI,
@@ -304,5 +305,89 @@ describe("sada úloh a kód WSIT1", () => {
     expect(zaci).toHaveLength(1);
     expect(zaci[0].chyby).toEqual({ db: 3 });
     expect(zaci[0].splneno).toEqual(["sit-ipconfig", "sit-tracert"]);
+  });
+});
+
+describe("síťové úlohy v běžném seznamu Windows", () => {
+  const sitove = (s: Stav) => vyhodnot(s).filter((id) => id.startsWith("sit-"));
+
+  it("výchozí počítač je ve škole a výchozí počet zůstává 33", () => {
+    const s = vychoziStav();
+    expect(s.sit).toBeUndefined();
+    expect(UKOLY).toHaveLength(33);
+    expect(postup(UKOLY_SIT.map((u) => u.id), s.scenar)).toEqual({ hotovo: 0, celkem: 33 });
+  });
+
+  it("příkazy spuštěné ve škole se nepočítají ani po přenesení domů", () => {
+    let s = proved(vychoziStav(), { typ: "stopa", klic: "prikaz:ipconfig-all" }, { typ: "stopa", klic: "prikaz:ipconfig" });
+    expect(sitove(s)).toEqual([]);
+    s = proved(s, { typ: "sit/domov" });
+    expect(s.sit).toEqual(VYCHOZI_SIT);
+    expect(sitove(s)).toEqual([]);
+    // Výchozí úloha o ipconfig tím o svůj doklad nepřijde.
+    expect(s.stopy).toContain("prikaz:ipconfig");
+    s = proved(s, { typ: "stopa", klic: "prikaz:ipconfig-all" });
+    expect(sitove(s)).toEqual(["sit-ipconfig"]);
+  });
+
+  it("porucha i scénář přenesou počítač domů samy a návrat do školy síť vypne", () => {
+    expect(proved(vychoziStav(), { typ: "sit/porucha", porucha: "dns" }).sit?.porucha).toBe("dns");
+    const s = proved(vychoziStav(), { typ: "sit/situace", situace: "router" });
+    expect(s.sit?.kabely.wan).toBe(false);
+    expect(proved(s, { typ: "sit/skola" }).sit).toBeUndefined();
+  });
+
+  it("porucha ukončí scénář, takže neodškrtne „Zapoj router“", () => {
+    for (const start of [vychoziStav(), vychoziStav(SCENAR_SIT)]) {
+      const s = proved(start, { typ: "sit/situace", situace: "router" }, { typ: "sit/porucha", porucha: "kabel" });
+      expect(s.stopy).not.toContain("situace:router:spustena");
+      expect(vyhodnot(s)).not.toContain("sit-router-zapoj");
+    }
+    // Ve scénáři samotném se počítá dál.
+    const s = proved(vychoziStav(), { typ: "sit/situace", situace: "router" });
+    const zapojeno = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, napajeni: true, wan: true } } });
+    expect(vyhodnot(zapojeno)).toContain("sit-router-zapoj");
+  });
+
+  it("nový router dá na plochu dopis od poskytovatele jen jednou", () => {
+    const plocha = (s: Stav) => {
+      const slozka = najdiSlozku(s.disk, rozloz("C:\\Users\\Zak\\Desktop"));
+      return (slozka?.deti ?? []).filter((d) => d.jmeno === "Pokyny od poskytovatele.txt").length;
+    };
+    expect(plocha(vychoziStav())).toBe(0);
+    const s = proved(vychoziStav(), { typ: "sit/situace", situace: "router" }, { typ: "sit/situace", situace: "router" });
+    expect(plocha(s)).toBe(1);
+  });
+
+  it("kód WIN1 se síťovými úlohami: Přehled počítá „x/33“ zvlášť a chyby ukáže u sítě", () => {
+    const kod = zakodujSimulator({
+      simulator: "windows",
+      jmeno: "Jana Nováková",
+      datum: "2026-11-01",
+      splneno: ["kos", "sit-ipconfig"],
+      celkem: 33,
+      chyby: { db: 1 },
+    });
+    expect(kod.startsWith("WIN1-")).toBe(true);
+    const zaci = sloucitSimulatory(najdiKodySimulatoru(kod));
+    const win = zaci.find((z) => z.simulator === "windows")!;
+    const sit = zaci.find((z) => z.simulator === "sit")!;
+    expect(win.splneno).toEqual(["kos"]);
+    expect(win.celkem).toBe(33);
+    expect(win.chyby).toBeUndefined();
+    expect(sit.splneno).toEqual(["sit-ipconfig"]);
+    expect(sit.chyby).toEqual({ db: 1 });
+  });
+
+  it("kód WIN1 a dřívější WSIT1 téhož žáka se u sítě sečtou", () => {
+    const win = zakodujSimulator({ simulator: "windows", jmeno: "Jana", datum: "2026-11-02", splneno: ["sit-tracert"], celkem: 33 });
+    const stary = zakodujSimulator({ simulator: "sit", jmeno: "Jana", datum: "2026-11-01", splneno: ["sit-ipconfig"], celkem: 20 });
+    const sit = sloucitSimulatory(najdiKodySimulatoru(`${win} ${stary}`)).find((z) => z.simulator === "sit")!;
+    expect(sit.splneno.slice().sort()).toEqual(["sit-ipconfig", "sit-tracert"]);
+  });
+
+  it("kód bez síťových úloh zůstane jediný řádek jako dřív", () => {
+    const kod = zakodujSimulator({ simulator: "windows", jmeno: "Jana", datum: "2026-11-01", splneno: ["kos"], celkem: 33 });
+    expect(sloucitSimulatory(najdiKodySimulatoru(kod))).toHaveLength(1);
   });
 });

@@ -161,12 +161,6 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
             <li key={n}>{n}</li>
           ))}
         </ul>
-        <Link
-          href="/windows?scenar=sit"
-          className="ml-1 mt-3 inline-block rounded-ovladac border border-black/10 px-3 py-1.5 text-xs font-semibold transition hover:border-accent-500/40 hover:text-accent-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500/70 dark:border-white/15 dark:hover:text-accent-300"
-        >
-          {tr.hero.novinkySit}
-        </Link>
       </details>
     </div>
   );
