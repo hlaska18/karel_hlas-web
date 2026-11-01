@@ -1560,15 +1560,6 @@ export const t: Record<Lang, Dict> = {
               note: "Zdarma a bez přihlášení, celé česky. Na stránkách běží reklama. Učitelská zóna se třídami a zadáváním úkolů účet chce, samotné procvičování ne.",
             },
             {
-              name: "Subformer",
-              url: "https://subformer.com/cs-CZ",
-              why: "Dabing a titulky k videu do více než 130 jazyků, s klonováním hlasu.",
-              // Jediný nástroj v celé téhle sekci, který zdarma vůbec nejde –
-              // ostatní mají aspoň základ zdarma. Proto to stojí hned v první
-              // větě.
-              note: "Placené: plány od 5,49 $ měsíčně a nevyužité kredity na konci období propadají. Chce účet, rozhraní je česky. Je to jediný placený nástroj v téhle sekci, a pro hodinu to znamená, že video zpracuješ ty, ne žáci.",
-            },
-            {
               name: "Asistivní čtečka ve Wordu",
               url: "https://support.microsoft.com/cs-cz/accessibility/word/use-immersive-reader-in-word",
               why: "Přečte žákovi jeho vlastní text nahlas, rozdělí slova na slabiky a nechá číst po jednom řádku – opakování a krkolomné věty se tak slyší, i když je oko přehlédne.",
@@ -2320,12 +2311,6 @@ export const t: Record<Lang, Dict> = {
               url: "https://agilefingers.com/cs",
               why: "Touch typing – a course from the basics, copy practice, games and a speed test.",
               note: "Free and no sign-in, fully in Czech. The site runs ads. The teacher zone with classes and assignments needs an account; plain practice does not.",
-            },
-            {
-              name: "Subformer",
-              url: "https://subformer.com/cs-CZ",
-              why: "Dubbing and subtitles for video in over 130 languages, with voice cloning.",
-              note: "Paid: plans from $5.49 a month, and unused credits expire at the end of each period. Needs an account; the interface is in Czech. It is the only paid tool in this section, which in practice means you process the video, not your pupils.",
             },
             {
               name: "Immersive Reader in Word",
