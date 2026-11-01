@@ -1544,8 +1544,15 @@ export const t: Record<Lang, Dict> = {
         {
           subject: "Český jazyk",
           icon: "cesky-jazyk",
-          what: "Práce s vlastním textem: ověřit jazykovou variantu v korpusu, nechat si text přečíst nahlas a opravit ho. K tomu psaní všemi deseti.",
+          what: "Četba a práce s vlastním textem: e-knihy ke stažení, nechat si text přečíst nahlas a opravit ho. K tomu psaní všemi deseti.",
           tools: [
+            {
+              name: "eKnihy zdarma",
+              url: "https://eknihyzdarma.cz/",
+              why: "Přes 3 400 e-knih ke stažení (EPUB, PDF, MOBI) – česká a světová klasika, sekce Povinná četba a Rozbory děl.",
+              note: "Zdarma, bez registrace, česky, s reklamou. Licenci u knih web neuvádí a vedle volných děl nabízí i české překlady, které můžou být ještě chráněné autorským zákonem. Na úvodní stránce mezi nejstahovanějšími bývají i tituly pro dospělé – žákům dávej odkaz rovnou na konkrétní knihu.",
+              overeno: "2026-10",
+            },
             {
               name: "AgileFingers",
               url: "https://agilefingers.com/cs",
@@ -1562,24 +1569,10 @@ export const t: Record<Lang, Dict> = {
               note: "Placené: plány od 5,49 $ měsíčně a nevyužité kredity na konci období propadají. Chce účet, rozhraní je česky. Je to jediný placený nástroj v téhle sekci, a pro hodinu to znamená, že video zpracuješ ty, ne žáci.",
             },
             {
-              name: "SyD – srovnání jazykových variant",
-              url: "https://syd.korpus.cz/",
-              why: "Porovná, jak často se dvě varianty (filozofie × filosofie, tvar slova, slovosled) objevují v psaném a v mluveném jazyce.",
-              note: "Zdarma, bez registrace, česky. Provozuje ho Český národní korpus. Četnost ale neříká, co je spisovné ani co se hodí do seminární práce – to musí žák zdůvodnit sám.",
-              overeno: "2026-10",
-            },
-            {
               name: "Asistivní čtečka ve Wordu",
               url: "https://support.microsoft.com/cs-cz/accessibility/word/use-immersive-reader-in-word",
               why: "Přečte žákovi jeho vlastní text nahlas, rozdělí slova na slabiky a nechá číst po jednom řádku – opakování a krkolomné věty se tak slyší, i když je oko přehlédne.",
               note: "Součást Office 365, nic dalšího se nezakládá: Zobrazení → Asistivní čtečka, ve Wordu na počítači i na webu. U češtiny umí předčítání, slabiky a překlad, slovní druhy ne.",
-              overeno: "2026-10",
-            },
-            {
-              name: "eKnihy zdarma",
-              url: "https://eknihyzdarma.cz/",
-              why: "Přes 3 400 e-knih ke stažení (EPUB, PDF, MOBI) – česká a světová klasika, sekce Povinná četba a Rozbory děl.",
-              note: "Zdarma, bez registrace, česky, s reklamou. Licenci u knih web neuvádí a vedle volných děl nabízí i české překlady, které můžou být ještě chráněné autorským zákonem. Na úvodní stránce mezi nejstahovanějšími bývají i tituly pro dospělé – žákům dávej odkaz rovnou na konkrétní knihu.",
               overeno: "2026-10",
             },
           ],
@@ -2313,8 +2306,15 @@ export const t: Record<Lang, Dict> = {
         {
           subject: "Czech language",
           icon: "cesky-jazyk",
-          what: "Working with your own text: checking a language variant in the corpus, hearing the text read aloud and revising it. Plus touch typing.",
+          what: "Reading and working with your own text: e-books to download, hearing the text read aloud and revising it. Plus touch typing.",
           tools: [
+            {
+              name: "eKnihy zdarma",
+              url: "https://eknihyzdarma.cz/",
+              why: "Over 3,400 e-books to download (EPUB, PDF, MOBI) – Czech and world classics, with Required Reading and Book Analysis sections.",
+              note: "Free, no sign-up, Czech, with ads. The site states no licence for its books and besides public-domain works it also offers Czech translations that may still be under copyright. The most-downloaded list on the home page can include adult titles – give students a link to a specific book.",
+              overeno: "2026-10",
+            },
             {
               name: "AgileFingers",
               url: "https://agilefingers.com/cs",
@@ -2328,24 +2328,10 @@ export const t: Record<Lang, Dict> = {
               note: "Paid: plans from $5.49 a month, and unused credits expire at the end of each period. Needs an account; the interface is in Czech. It is the only paid tool in this section, which in practice means you process the video, not your pupils.",
             },
             {
-              name: "SyD – comparing language variants",
-              url: "https://syd.korpus.cz/",
-              why: "Compares how often two variants (spelling, word form, word order) occur in written and in spoken Czech.",
-              note: "Free, no registration, in Czech. Run by the Czech National Corpus. Frequency does not tell you what is standard or what suits a term paper – the student has to argue that.",
-              overeno: "2026-10",
-            },
-            {
               name: "Immersive Reader in Word",
               url: "https://support.microsoft.com/en-us/accessibility/word/use-immersive-reader-in-word",
               why: "Reads the student's own text aloud, splits words into syllables and shows one line at a time – repetition and clumsy sentences become audible even when the eye skips them.",
               note: "Part of Office 365, nothing to sign up for: View → Immersive Reader, in desktop Word and Word for the web. For Czech it supports read aloud, syllables and translation, not parts of speech.",
-              overeno: "2026-10",
-            },
-            {
-              name: "eKnihy zdarma",
-              url: "https://eknihyzdarma.cz/",
-              why: "Over 3,400 e-books to download (EPUB, PDF, MOBI) – Czech and world classics, with Required Reading and Book Analysis sections.",
-              note: "Free, no sign-up, Czech, with ads. The site states no licence for its books and besides public-domain works it also offers Czech translations that may still be under copyright. The most-downloaded list on the home page can include adult titles – give students a link to a specific book.",
               overeno: "2026-10",
             },
           ],
