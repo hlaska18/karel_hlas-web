@@ -24,6 +24,7 @@ import {
   Wifi,
   WifiOff,
   HardDrive,
+  House,
   RefreshCw,
   ShieldCheck
 } from "lucide-react";
@@ -184,6 +185,16 @@ export function HlavniPanel({
             n.zarovnaniPanelu === "stred" ? "absolute right-2" : "ml-auto"
           }`}
         >
+          {/* Kde počítač je: bez tohohle by doma a ve škole vypadal panel stejně. */}
+          {stav.sit && (
+            <span
+              title="Počítač je doma, na domácí síti. Zpátky do školy ho vrátíš v panelu Úkoly."
+              className="mr-1 flex h-8 items-center gap-1.5 rounded bg-win-akcent px-2.5 text-[12px] font-semibold text-win-akcent-text"
+            >
+              <House className="h-4 w-4" strokeWidth={1.9} />
+              Doma
+            </span>
+          )}
           <button
             type="button"
             aria-label="Skryté ikony"
@@ -422,7 +433,7 @@ function RychlaNastaveni({ zavri }: { zavri: () => void }) {
   const dlazdice = [
     {
       id: "wifi",
-      nazev: n.wifi ? "SPST-ZACI" : "Wi-Fi",
+      nazev: n.wifi ? (stav.sit ? stav.sit.router.wifi.nazev : "SPST-ZACI") : "Wi-Fi",
       zapnuto: n.wifi && !n.rezimVLetadle,
       ikona: <Wifi className="h-5 w-5" />,
       akce: () => zmen({ wifi: !n.wifi, rezimVLetadle: false }),

@@ -410,6 +410,9 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   Bez `stav.sit` se síťové úlohy nepočítají, školní příkazy se při přenosu smažou
   (`stopyDoma`). Výměna sítě ukončí běžící scénář (`bezScenare`).
 - `/windows?scenar=sit` funguje dál (vlastní úložiště, WSIT1-), nevede na něj odkaz.
+- Doma je to vidět: tapeta `tapetaPlochy` v obrazky.ts (večer s domem, Karel vybral ze
+  tří; není v `TAPETY`, ukáže se jen místo výchozí, žákovu volbu nepřepíše), štítek
+  „Doma“ na hlavním panelu, název DOMACI-PC v Nastavení, domácí Wi-Fi v rychlém nastavení.
 
 ## Otevřené / nápady (nic naléhavého)
 

@@ -243,13 +243,14 @@ function OddilSystem({
   obsazeno: number;
   onInformace: () => void;
 }) {
+  const { stav } = useSystem();
   useEffect(() => {
     if (podstranka === "Informace") onInformace();
   }, [podstranka, onInformace]);
 
   if (podstranka === "Informace") {
     const udaje: [string, string][] = [
-      ["Název zařízení", "SPST-UCEBNA-14"],
+      ["Název zařízení", stav.sit ? "DOMACI-PC" : "SPST-UCEBNA-14"],
       ["Procesor", "Intel(R) Core(TM) i5-13400  2.50 GHz"],
       ["Nainstalovaná paměť RAM", "16,0 GB (využitelné: 15,7 GB)"],
       ["ID zařízení", "8F2C41A9-77B0-4E13-9D5A-2C0146BB3E71"],

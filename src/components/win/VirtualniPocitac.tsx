@@ -211,6 +211,7 @@ function Obrazovka() {
           <Prihlaseni
             jmenoUctu={n.jmenoUctu}
             tapetaId={n.tapeta}
+            doma={Boolean(stav.sit)}
             rozdelano={postup(stav.splneno, stav.scenar)}
             onHotovo={(jmeno, nacisto) => {
               // Přihlášení jménem (od 25. 9. 2026 místo kódu). Jméno je

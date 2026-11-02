@@ -11,7 +11,7 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Loader2, UserRound } from "lucide-react";
 import { Ikona } from "./Ikona";
-import { TAPETY, vybranaTapeta } from "@/lib/win/obrazky";
+import { tapetaPlochy } from "@/lib/win/obrazky";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { scenarPodleId, scenarZAdresy, VYCHOZI_SCENAR } from "@/lib/win/scenare";
 import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru";
@@ -33,11 +33,14 @@ type Faze = "zamek" | "jmeno" | "vitejte";
 export function Prihlaseni({
   jmenoUctu,
   tapetaId,
+  doma,
   rozdelano,
   onHotovo,
 }: {
   jmenoUctu: string;
   tapetaId: string;
+  /** Počítač je doma (síťové úlohy): zámek má stejnou tapetu jako plocha. */
+  doma: boolean;
   /** Kolik úloh je na tomhle počítači splněných (rozdělaná práce). */
   rozdelano: { hotovo: number; celkem: number };
   /** Přihlášení jménem; `nacisto` = začít bez rozdělané práce předchozího. */
@@ -70,7 +73,7 @@ export function Prihlaseni({
   const volba = useRef<{ jmeno: string; nacisto: boolean }>({ jmeno: "", nacisto: false });
   const [cas, nastavCas] = useState<Date | null>(null);
   const pole = useRef<HTMLInputElement>(null);
-  const tapeta = vybranaTapeta(tapetaId) ?? TAPETY[0];
+  const tapeta = tapetaPlochy(tapetaId, doma);
 
   useEffect(() => {
     nastavCas(new Date());

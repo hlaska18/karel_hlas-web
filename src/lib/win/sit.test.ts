@@ -5,6 +5,7 @@ import { SCENAR_SIT } from "@/lib/win/scenare";
 import { UKOLY, UKOLY_SIT, postup, vyhodnot } from "@/lib/win/ukoly";
 import { strankaSit } from "@/lib/win/web";
 import { najdiSlozku, rozloz } from "@/lib/win/fs";
+import { TAPETY, tapetaPlochy } from "@/lib/win/obrazky";
 import {
   APIPA,
   CIZI,
@@ -347,6 +348,15 @@ describe("síťové úlohy v běžném seznamu Windows", () => {
     const s = proved(vychoziStav(), { typ: "sit/situace", situace: "router" });
     const zapojeno = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, napajeni: true, wan: true } } });
     expect(vyhodnot(zapojeno)).toContain("sit-router-zapoj");
+  });
+
+  it("doma má plocha vlastní tapetu, ale žákovu volbu nepřepíše", () => {
+    expect(tapetaPlochy("zavoj", false).id).toBe("zavoj");
+    expect(tapetaPlochy("zavoj", true).id).toBe("doma");
+    expect(tapetaPlochy("hory", true).id).toBe("hory");
+    expect(TAPETY.some((t) => t.id === "doma")).toBe(false);
+    // Úloha na přizpůsobení čte nastavení a to se přenosem domů nemění.
+    expect(proved(vychoziStav(), { typ: "sit/domov" }).nastaveni.tapeta).toBe("zavoj");
   });
 
   it("nový router dá na plochu dopis od poskytovatele jen jednou", () => {

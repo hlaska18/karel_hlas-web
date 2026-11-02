@@ -99,6 +99,36 @@ export const TAPETY: Tapeta[] = [
   { id: "papir", nazev: "Papír", url: svgUrl(PAPIR), svetla: true },
 ];
 
+/** Počítač doma: večer, dům s rozsvícenými okny (Karel vybral ze tří návrhů). */
+const DOMA = ram(`
+  <defs>
+    <linearGradient id="n" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#3b2252"/>
+      <stop offset="50%" stop-color="#b4543f"/>
+      <stop offset="100%" stop-color="#f2a65a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1600" height="900" fill="url(#n)"/>
+  <path d="M0 900 L0 690 C300 620 640 640 900 690 C1160 740 1400 700 1600 650 L1600 900 Z" fill="#2a1a2e"/>
+  <g fill="#1d1220">
+    <path d="M1010 720 L1010 590 L1125 500 L1240 590 L1240 720 Z"/>
+    <rect x="1185" y="505" width="26" height="60"/>
+  </g>
+  <g fill="#ffd27a">
+    <rect x="1042" y="610" width="52" height="46"/>
+    <rect x="1156" y="610" width="52" height="46"/>
+  </g>
+`);
+
+/**
+ * Tapeta počítače doma. Není v `TAPETY`, v Nastavení se vybrat nedá: ukazuje jen,
+ * kde počítač je. Ukáže se místo výchozí, žákova vlastní tapeta zůstává.
+ */
+export const tapetaPlochy = (id: string, doma: boolean): Tapeta => {
+  if (doma && id === "zavoj") return { id: "doma", nazev: "Doma", url: svgUrl(DOMA), svetla: false };
+  return vybranaTapeta(id);
+};
+
 export const vybranaTapeta = (id: string): Tapeta =>
   TAPETY.find((t) => t.id === id) ?? TAPETY[0];
 
