@@ -1638,6 +1638,20 @@ export const t: Record<Lang, Dict> = {
               note: "Zdarma, bez účtu. Výchozí je angličtina; češtinu přepneš v nabídce Možnosti → Change Language, ale překlad není úplný.",
             },
             {
+              name: "oPhysics",
+              url: "https://ophysics.com/",
+              why: "Simulace v GeoGebře od kinematiky přes vlny a světlo po elektřinu a tekutiny, u každé krátký popis. Autor Tom Walsh je učitel fyziky v důchodu.",
+              note: "Zdarma, bez účtu, bez reklam, anglicky. Autor dovoluje použití pro neziskovou výuku. Simulace se načítají z geogebra.org, školní filtr ji musí pouštět.",
+              overeno: "2026-11",
+            },
+            {
+              name: "Fyzika ve škole (Vaščák)",
+              url: "https://www.vascak.cz/physicsanimations.php?l=cz",
+              why: "Animace a simulace po kapitolách od mechaniky po jadernou fyziku. Třeba u Ohmova zákona nastavíš napětí a odpor a hned vidíš proud na měřáku i v grafu. Autor Vladimír Vaščák.",
+              note: "Zdarma, bez účtu, česky i anglicky. V bočních sloupcích běží reklama, při promítání ji uvidí celá třída. Web si nejdřív vyžádá souhlas s cookies; odmítneš ho přes Manage options → Confirm choices. Autor dovoluje z animací dělat videa a snímky obrazovky.",
+              overeno: "2026-11",
+            },
+            {
               name: "GeoGebra",
               url: "https://www.geogebra.org/calculator",
               why: "Zpracování naměřených dat, graf a regrese.",
@@ -2381,6 +2395,20 @@ export const t: Record<Lang, Dict> = {
               url: "https://www.falstad.com/circuit/",
               why: "Electric circuits with live voltage and current traces.",
               note: "Free, no account. English by default; Czech can be switched on but is incomplete.",
+            },
+            {
+              name: "oPhysics",
+              url: "https://ophysics.com/",
+              why: "GeoGebra simulations from kinematics through waves and light to electricity and fluids, each with a short description. By Tom Walsh, a retired physics teacher.",
+              note: "Free, no account, no ads, in English. The author allows use for non-profit education. Simulations load from geogebra.org, so a school filter must allow it.",
+              overeno: "2026-11",
+            },
+            {
+              name: "Physics at School (Vaščák)",
+              url: "https://www.vascak.cz/physicsanimations.php?l=en",
+              why: "Animations and simulations by chapter, from mechanics to nuclear physics. In Ohm's law, for example, you set voltage and resistance and see the current on the meter and in the graph. By Vladimír Vaščák.",
+              note: "Free, no account, in English and Czech. Ads run in the side columns, and the whole class sees them when projected. The site first asks for cookie consent; decline with Manage options → Confirm choices. The author allows videos and screenshots made from the animations.",
+              overeno: "2026-11",
             },
             {
               name: "GeoGebra",

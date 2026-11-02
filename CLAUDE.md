@@ -414,6 +414,12 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   tří; není v `TAPETY`, ukáže se jen místo výchozí, žákovu volbu nepřepíše), štítek
   „Doma“ na hlavním panelu, název DOMACI-PC v Nastavení, domácí Wi-Fi v rychlém nastavení.
 
+### Fyzika: oPhysics a Vaščák (kolega Petr, 2. 11. 2026)
+- Doporučil je Karlův kolega, učitel fyziky s PhD. Ověřeno v prohlížeči: oPhysics bez
+  reklam, simulace z geogebra.org. Vaščák: reklama v bočních sloupcích (Google, i
+  bulvární), souhlas s cookies. Česky funguje `?l=cz` (`?l=cs` dá angličtinu); Petr psal,
+  že funguje jen anglicky, u mě se česky otevřely katalog a dvě animace.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
