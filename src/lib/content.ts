@@ -1883,14 +1883,14 @@ export const t: Record<Lang, Dict> = {
           icon: "kniha",
           tools: [
             {
-              name: "133 tipů – Jak využít AI (nejen) ve školství",
+              name: "133 tipů – Jak využít AI",
               url: "https://klatovsky.cz/133tipu.pdf",
-              why: "Česká kniha Karla Klatovského, autora učebnic Office a dlouholetého lektora pro školy. Krátké tipy na jednu stranu se snímky obrazovky, celé v prostředí Microsoftu, které škola nejspíš má.",
+              why: "Kniha Karla Klatovského, autora učebnic Office. Krátké tipy se snímky obrazovky, celé v prostředí Microsoftu.",
               navod:
                 "Nečti ji od začátku. Projdi obsah a vyber si podle situace. Tipům z částí Nástroje a aplikace a Copilot většinou stačí školní Office 365 a Copilot Chat. Část Microsoft 365 Copilot přeskoč, dokud nevíš, že ho škola platí.",
               pouziti:
                 "Když chceš vědět, jak konkrétní věc udělat krok za krokem: test nebo doplňovačka z PDF, paměťové kartičky, plán hodiny, slovní mrak, ale i titulky s překladem nebo předčítání textu žákům, kteří čtou pomaleji.",
-              note: "Zdarma, česky, PDF na webu autora (asi 40 MB, 144 stran). Celá kapitola Microsoft 365 Copilot (asi 40 tipů) chce placený doplněk; Copilot Chat ze školního Office 365 je zdarma. Snímky jsou z června 2026 – názvy a obrazovky se můžou měnit, autor sám píše, že nejde o oficiální dokumentaci.",
+              note: "Celý název: 133 tipů – Jak využít AI (nejen) ve školství. Autor je dlouholetý lektor pro školy. Zdarma, česky, PDF na webu autora (asi 40 MB, 144 stran). Celá kapitola Microsoft 365 Copilot (asi 40 tipů) chce placený doplněk; Copilot Chat ze školního Office 365 je zdarma. Snímky jsou z června 2026 – názvy a obrazovky se můžou měnit, autor sám píše, že nejde o oficiální dokumentaci.",
               overeno: "2026-10",
             },
           ],
@@ -1923,7 +1923,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "ChatGPT",
               url: "https://chatgpt.com",
-              why: "Nejrozšířenější, takže ho žáci nejspíš už znají. Zvládne text i obrázky a česky mluví dobře.",
+              why: "Nejrozšířenější, takže ho žáci nejspíš už znají. Zvládne text i obrázky a česky mluví dobře. Zkusíš ho i bez účtu.",
               navod:
                 "Zkusíš ho i bez účtu, jen se ti neuloží historie. Nejrychlejší zisk pro učitele není psaní od nuly, ale úpravy: vlož vlastní hotové zadání a nech si k němu udělat variantu B, klíč nebo tři těžší otázky. S cizím textem si poradí líp než s prázdnou stránkou.",
               pouziti:
@@ -1990,7 +1990,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Gamma",
               url: "https://gamma.app",
-              why: "Z osnovy udělá celou prezentaci i s obsahem, ne jen prázdnou šablonu.",
+              why: "Z osnovy po bodech udělá celou prezentaci i s obsahem, ne jen prázdnou šablonu. Fakta si po ní vždycky projdi.",
               navod:
                 "Vlož osnovu po bodech, ne jedno téma – z bodů postaví strukturu, ze samotného tématu si obsah vymyslí. Výstup ber jako první verzi a projdi fakta: doplňuje je i tam, kde jsi nic nezadal.",
               pouziti:
@@ -2007,7 +2007,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Teachable Machine",
               url: "https://teachablemachine.withgoogle.com",
-              why: "Žák natrénuje z webkamery vlastní model za pár minut. Nejnázornější způsob, jak ukázat, co je trénovací sada – a co se stane, když je jednostranná.",
+              why: "Žák natrénuje z webkamery vlastní model za pár minut. Názorně ukáže, co je trénovací sada a co udělá, když je jednostranná.",
               navod:
                 "Get Started → Image Project → Standard. Nasbírej dvě třídy asi po třiceti snímcích z webkamery, natrénuj a hned zkoušej. Nejsilnější moment hodiny přijde, když model natrénuješ schválně jen na jednom žákovi a pak před třídou ukážeš, že ostatní nepozná.",
               pouziti:
@@ -2017,7 +2017,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Experiments with Google",
               url: "https://experiments.withgoogle.com",
-              why: "Sbírka hravých pokusů, ze které se dá vybrat pětiminutová ukázka na začátek hodiny.",
+              why: "Sbírka hravých pokusů, ze které se dá vybrat pětiminutová ukázka na začátek hodiny. Kvalita se kus od kusu liší.",
               navod:
                 "Nevybírej za pochodu před třídou – projdi si to předem a vyber jeden pokus. Do hodiny o strojovém učení sedí Quick, Draw!: žáci kreslí, model hádá a je na tom vidět, z čeho se učí a kde má mezery.",
               pouziti:
@@ -2650,14 +2650,14 @@ export const t: Record<Lang, Dict> = {
           icon: "kniha",
           tools: [
             {
-              name: "133 Tips – How to Use AI (Not Only) in Schools",
+              name: "133 Tips – How to Use AI",
               url: "https://klatovsky.cz/133tipu.pdf",
-              why: "A Czech book by Karel Klatovský, author of Office textbooks and a long-time trainer for schools. Short one-page tips with screenshots, all within the Microsoft tools your school most likely already has.",
+              why: "A Czech book by Karel Klatovský, author of Office textbooks. Short tips with screenshots, all within Microsoft tools.",
               navod:
                 "Do not read it from the start. Go through the contents and pick by situation. Tips in the Tools and apps and Copilot parts mostly need nothing more than school Office 365 and Copilot Chat. Skip the Microsoft 365 Copilot part unless you know your school pays for it.",
               pouziti:
                 "When you want to know how to do a specific thing step by step: a test or a gap-fill from a PDF, flashcards, a lesson plan, a word cloud, but also live captions with translation or having text read aloud to slower readers.",
-              note: "Free, PDF on the author's website (about 40 MB, 144 pages). Czech only. The whole Microsoft 365 Copilot chapter (about 40 tips) needs the paid add-on; Copilot Chat on a school Office 365 account is free. Screenshots are from June 2026 – names and screens may change, and the author himself notes it is not official documentation.",
+              note: "Full title: 133 Tips – How to Use AI (Not Only) in Schools. The author is a long-time trainer for schools. Free, PDF on the author's website (about 40 MB, 144 pages). Czech only. The whole Microsoft 365 Copilot chapter (about 40 tips) needs the paid add-on; Copilot Chat on a school Office 365 account is free. Screenshots are from June 2026 – names and screens may change, and the author himself notes it is not official documentation.",
               overeno: "2026-10",
             },
           ],
@@ -2670,7 +2670,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Microsoft Copilot",
               url: "https://copilot.microsoft.com",
-              why: "Closest to what your school probably already has: with a school Microsoft 365 account it is Copilot Chat, and you stay inside Microsoft.",
+              why: "Closest to what your school probably has: with a school Microsoft 365 account it is Copilot Chat, inside Microsoft.",
               navod:
                 "Sign in with the school account, not a personal one – the data protection only applies to the school one. Always give your first prompt three things: who you are, who it is for, and how long you have. Without them you get generic filler you will rewrite anyway.",
               pouziti:
@@ -2680,7 +2680,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Google Gemini",
               url: "https://gemini.google.com",
-              why: "The choice for schools on Google Workspace; it stays in the same account as Drive and Classroom.",
+              why: "For schools on Google Workspace: same account as Drive and Classroom, and it can work with your Drive files.",
               navod:
                 "Sign in with the school Google account. The real advantage is that you can grant it access to your Drive – then you paste nothing and simply ask it to turn an existing handout into an outline, questions or a summary.",
               pouziti:
@@ -2690,7 +2690,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "ChatGPT",
               url: "https://chatgpt.com",
-              why: "The most widely used one, so your pupils likely know it already. Handles both text and images.",
+              why: "The most widely used one, so your pupils likely know it already. Handles both text and images; try it without an account.",
               navod:
                 "You can try it without an account; you just lose your history. The fastest win is not writing from scratch but editing: paste your own finished assignment and ask for a variant B, an answer key, or three harder questions.",
               pouziti:
@@ -2700,7 +2700,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Prompts for Education",
               url: "https://github.com/microsoft/prompts-for-edu",
-              why: "Not a chatbot but a ready-made collection of prompts for one – from Microsoft, in separate folders for teachers, pupils and school leadership.",
+              why: "Not a chatbot but ready-made prompts for one, from Microsoft, in folders for teachers, pupils and school leadership.",
               navod:
                 "Open the Educators folder and pick by situation, not by subject. The prompts are templates with square brackets where you fill in your subject, year group and lesson length – leave those out and you get generic filler. Then paste the finished prompt into Copilot or ChatGPT above.",
               pouziti:
@@ -2757,7 +2757,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Gamma",
               url: "https://gamma.app",
-              why: "Turns an outline into a whole deck including the content, not just an empty template.",
+              why: "Turns a bulleted outline into a whole deck including the content, not just a template. Check the facts afterwards.",
               navod:
                 "Give it a bulleted outline rather than a single topic – from bullets it builds your structure, from a bare topic it invents its own. Treat the result as a first draft and check the facts.",
               pouziti:
@@ -2774,7 +2774,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Teachable Machine",
               url: "https://teachablemachine.withgoogle.com",
-              why: "A pupil trains their own model from the webcam in minutes. The clearest way to show what a training set is – and what happens when it is one-sided.",
+              why: "A pupil trains a model from the webcam in minutes. Shows what a training set is and what one-sidedness does to it.",
               navod:
                 "Get Started → Image Project → Standard. Collect two classes of about thirty webcam shots each, train, and test right away. The strongest moment comes when you deliberately train it on one pupil only and then show that it fails to recognise anyone else.",
               pouziti:
@@ -2784,7 +2784,7 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Experiments with Google",
               url: "https://experiments.withgoogle.com",
-              why: "A collection of playful experiments to pick a five-minute opener from.",
+              why: "A collection of playful experiments to pick a five-minute opener from. Quality varies, so try yours in advance.",
               navod:
                 "Do not browse it in front of the class – go through it beforehand and pick one. For a lesson on machine learning, Quick, Draw! fits: pupils draw, the model guesses, and you can see what it learned from.",
               pouziti:

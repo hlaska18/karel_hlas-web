@@ -344,7 +344,10 @@ function KartaNastroje({
         </span>
         <ExternalLink className="mt-0.5 h-3.5 w-3.5 shrink-0 text-zinc-400 transition group-hover:text-accent-700 dark:group-hover:text-accent-300" />
       </a>
-      <p className="mt-2 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
+      {/* Stejná výška karet (Karel 3. 11. 2026): popisky jsou psané na stejnou
+          délku a tady mají stejně řádků podle šířky sloupce. Roztáhnout to přes
+          mřížku nejde, rozbalení jedné karty by natáhlo sousední. */}
+      <p className="mt-2 min-h-[4.875em] text-sm leading-relaxed text-zinc-600 sm:min-h-[6.5em] md:min-h-[4.875em] lg:min-h-[6.5em] xl:min-h-[4.875em] dark:text-zinc-400">
         {sazba(nastroj.why, lang)}
       </p>
 

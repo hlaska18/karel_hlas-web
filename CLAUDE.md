@@ -426,6 +426,11 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   jsou karty a klikací je celá karta. Adresa `?predmet=fyzika#jinam` (klíč je `icon`, stejný
   v obou jazycích). Výška dlaždic je teď z CSS (`auto-rows-fr`), měření v JS je pryč.
 
+### AI Hub: stejně velké karty (3. 11. 2026)
+- Popisek karty nástroje (`why`) drž na 100–125 znacích (cs i en) a název na jednom řádku,
+  jinak karta vyčnívá nebo zeje prázdnotou. Kniha má proto na kartě zkrácený název, celý
+  je v poznámce. Výšku drží `min-h` podle šířky v `KartaNastroje`, ne mřížka (rozbalení).
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
