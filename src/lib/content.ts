@@ -1242,6 +1242,7 @@ type Dict = {
     materialsLabel: string;
     toolsLabel: string;
     download: string;
+    back: string;
     /**
      * Dlaždice = PŘEDMĚT. `tool` odkazuje na téma v bance (vlastní materiály),
      * `tools` jsou ověřené externí nástroje – u každého je `note` s tím, co
@@ -1538,6 +1539,7 @@ export const t: Record<Lang, Dict> = {
       materialsLabel: "Materiály k předmětu",
       toolsLabel: "Nástroje do hodin",
       download: "Stáhnout",
+      back: "Zpět na předměty",
       items: [
         {
           subject: "Český jazyk",
@@ -2297,6 +2299,7 @@ export const t: Record<Lang, Dict> = {
       materialsLabel: "Materials for this subject",
       toolsLabel: "Tools for lessons",
       download: "Download",
+      back: "Back to subjects",
       items: [
         {
           subject: "Czech language",

@@ -1,10 +1,11 @@
 "use client";
 
 import { Mlhovina } from "@/components/Mlhovina";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useRef, useState, type RefObject } from "react";
 import { useZabalit } from "@/lib/zabalit";
 import Image from "next/image";
 import {
+  ArrowLeft,
   ArrowRight,
   ChevronDown,
   Download,
@@ -27,6 +28,17 @@ import { SectionJump } from "@/components/SectionJump";
 
 type Subject = ReturnType<typeof useLang>["tr"]["cross"]["items"][number];
 
+/** Materiály předmětu z banky. Dedup přes obory už udělal getBankItems. */
+function souboryPredmetu(item: Subject, items: BankItem[]) {
+  // Vlastní soubory napřed, odkaz na cizí zdroj až za nimi: hlavní věc je to,
+  // co si učitel stáhne, ne rozcestník.
+  return item.tool
+    ? items
+        .filter((i) => i.tool === item.tool)
+        .sort((a, b) => Number(a.external ?? false) - Number(b.external ?? false))
+    : [];
+}
+
 /**
  * „Nejen do informatiky" – dlaždice PŘEDMĚTŮ, ne témat informatiky.
  *
@@ -34,7 +46,9 @@ type Subject = ReturnType<typeof useLang>["tr"]["cross"]["items"][number];
  * řekli, že nadpis „Word – práce s textem" čtou jako název programu, kdežto
  * „ČEŠTINA" na dlaždici je věta „někdo myslel na mě".
  *
- * Dlaždice se rozbalí na místě (one-page), uvnitř jsou dvě různé věci:
+ * Klik na dlaždici vymění mřížku za obsah předmětu, stejně jako dlaždice témat
+ * v bance (one-page). Rozbalování na místě přestalo stačit, jak nástrojů
+ * přibývá (Karel 3. 11. 2026). Uvnitř jsou dvě různé věci:
  *  - MATERIÁLY – Karlovy vlastní soubory, vedou do banky,
  *  - NÁSTROJE – cizí služby, vedou ven. U každé je poznámka s tím, co
  *    učitele zaskočí (účet, jazyk, expirace odkazu, limity) – to je ta část,
@@ -43,42 +57,74 @@ type Subject = ReturnType<typeof useLang>["tr"]["cross"]["items"][number];
 export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
   const { tr, lang } = useLang();
   const c = tr.cross;
-  const [open, setOpen] = useState<string | null>(null);
-  useZabalit(() => setOpen(null));
+  // Klíčem je `icon`: na rozdíl od názvu předmětu je stejný v obou jazycích,
+  // takže adresa ?predmet=fyzika přežije i přepnutí jazyka.
+  const [otevreny, setOtevreny] = useState<string | null>(null);
   const mrizkaRef = useRef<HTMLUListElement | null>(null);
+  const detailRef = useRef<HTMLDivElement | null>(null);
+  const nadpisRef = useRef<HTMLHeadingElement | null>(null);
+  // Kam po přepnutí pohledu s fokusem. Jen z kliknutí, ne ze sdíleného odkazu.
+  const fokusPoZmene = useRef<{ kam: "detail" } | { kam: "dlazdice"; icon: string } | null>(null);
 
-  // Všechny dlaždice stejně vysoké (Karel 28. 9. 2026). Mřížka to udělat
-  // nemůže – rozbalení jedné dlaždice by natáhlo celý řádek –, a pevná výška
-  // by na některé šířce text ořízla nebo nechala díru. Proto se změří
-  // nejvyšší ZÁHLAVÍ (sbalená část) a stejná výška se dá všem přes
-  // proměnnou --vyska-dlazdice. Přepočítá se při každé změně šířky i po
-  // načtení písma. Dlaždice s výzvou má i okraje (+2 px), proto `data-okraj`.
+  const zapisDoAdresy = (icon: string | null) => {
+    try {
+      const url = new URL(window.location.href);
+      if (icon) {
+        url.searchParams.set("predmet", icon);
+        // Zkopírovaná adresa pak přistane u předmětu, ne v úvodu stránky.
+        url.hash = "jinam";
+      } else {
+        url.searchParams.delete("predmet");
+      }
+      window.history.replaceState(window.history.state, "", url.pathname + url.search + url.hash);
+    } catch {
+      /* bez History API zůstane adresa, jak byla */
+    }
+  };
+  const otevri = (icon: string) => {
+    fokusPoZmene.current = { kam: "detail" };
+    setOtevreny(icon);
+    zapisDoAdresy(icon);
+  };
+  const zpet = () => {
+    if (otevreny) fokusPoZmene.current = { kam: "dlazdice", icon: otevreny };
+    setOtevreny(null);
+    zapisDoAdresy(null);
+  };
+  useZabalit(() => {
+    setOtevreny(null);
+    zapisDoAdresy(null);
+  });
+
   useEffect(() => {
-    const ul = mrizkaRef.current;
-    if (!ul || !("ResizeObserver" in window)) return;
-    let posledni = -1;
-    const vyrovnej = () => {
-      const prvky = Array.from(ul.querySelectorAll<HTMLElement>("[data-vyrovnat]"));
-      if (!prvky.length) return;
-      ul.style.removeProperty("--vyska-dlazdice");
-      const max = Math.max(
-        ...prvky.map((p) => p.offsetHeight - (p.dataset.okraj ? 2 : 0)),
-      );
-      posledni = max;
-      ul.style.setProperty("--vyska-dlazdice", `${max}px`);
-    };
-    const ro = new ResizeObserver(() => {
-      const w = ul.offsetWidth;
-      if (w === sirka && posledni >= 0) return;
-      sirka = w;
-      vyrovnej();
-    });
-    let sirka = -1;
-    ro.observe(ul);
-    vyrovnej();
-    document.fonts?.ready.then(vyrovnej).catch(() => {});
-    return () => ro.disconnect();
-  }, [lang]);
+    const cil = fokusPoZmene.current;
+    fokusPoZmene.current = null;
+    if (!cil) return;
+    if (cil.kam === "detail") {
+      // Mřížka zmizela a stránka se zkrátila: bez posunu by učitel od spodních
+      // dlaždic skončil někde pod obsahem předmětu.
+      detailRef.current?.scrollIntoView({ block: "start" });
+      nadpisRef.current?.focus({ preventScroll: true });
+    } else {
+      mrizkaRef.current
+        ?.querySelector<HTMLElement>(`[data-predmet="${CSS.escape(cil.icon)}"]`)
+        ?.focus();
+    }
+  }, [otevreny]);
+
+  // Sdílený odkaz: ?predmet=fyzika rovnou otevře předmět.
+  useEffect(() => {
+    try {
+      const p = new URLSearchParams(window.location.search).get("predmet");
+      if (p && tr.cross.items.some((it) => it.icon === p)) setOtevreny(p);
+    } catch {
+      /* ignore */
+    }
+    // Jen po načtení; po přepnutí jazyka přijde nová stránka.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const predmet = c.items.find((it) => it.icon === otevreny);
 
   return (
     <section id="jinam" className="sekce">
@@ -100,22 +146,15 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
         />
 
         {/* Mlhovina pod dlaždicemi – matné sklo potřebuje, co rozmazat.
-            Výška a posun nahoru v pixelech, NE v procentech mřížky: dlaždice
-            se rozbaluje na místě, mřížka roste a mlhovina s výškou v % se
-            s ní v každém snímku natahovala a posouvala – tři velká rozmazaná
-            SVG a sklo nad nimi se přepočítávaly a web sekal (Karel 30. 9.).
-            Šířka v % zůstává, ta se mění jen se šířkou okna. */}
-        <div className="relative isolate mt-8">
+            Mřížka se při otevření předmětu jen schová (`hidden`): po návratu
+            se dlaždice znovu neodhalují s animací a fokus má kam skočit. */}
+        <div hidden={Boolean(predmet)} className="relative isolate mt-8">
         <Mlhovina varianta={5} className="-left-[12%] -top-[130px] h-[1000px] w-[125%]" />
-        <ul ref={mrizkaRef} className="grid items-start gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {/* `auto-rows-fr`: všechny dlaždice stejně vysoké (Karel 28. 9. 2026). */}
+        <ul ref={mrizkaRef} className="grid auto-rows-fr gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {c.items.map((it, i) => (
-            <Reveal as="li" key={it.subject} delay={0.05 * i} className="flex">
-              <SubjectTile
-                item={it}
-                items={items}
-                open={open === it.subject}
-                onToggle={() => setOpen((cur) => (cur === it.subject ? null : it.subject))}
-              />
+            <Reveal as="li" key={it.icon} delay={0.05 * i} className="flex">
+              <SubjectTile item={it} items={items} onOpen={() => otevri(it.icon)} />
             </Reveal>
           ))}
 
@@ -124,9 +163,7 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           <Reveal as="li" delay={0.05 * c.items.length} className="flex">
             <a
               href={`mailto:${SITE.email}`}
-              data-vyrovnat
-              data-okraj
-              className="povrch dlazdice group flex min-h-[calc(var(--vyska-dlazdice,0px)+2px)] w-full flex-col justify-center rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 dark:border-white/15"
+              className="povrch dlazdice group flex w-full flex-col justify-center rounded-karta border border-dashed border-black/10 p-5 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 dark:border-white/15"
             >
               <span className="flex items-center gap-3">
                 <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-ovladac bg-black/[0.04] text-zinc-600 dark:bg-white/5 dark:text-zinc-400">
@@ -136,10 +173,6 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
                   {c.inviteTitle}
                 </span>
               </span>
-              {/* E-mail je součástí věty, ne samostatný řádek pod ní. Jako dva
-                  bloky byla tahle dlaždice o 27 px vyšší než ostatní v mřížce
-                  a v řádku vyčnívala; `items-start` na mřížce zůstat musí,
-                  protože dlaždice předmětu se rozbaluje. */}
               <span className="mt-3 text-sm leading-relaxed text-zinc-600 dark:text-zinc-400">
                 {c.inviteText}{" "}
                 <span className="inline-flex items-center gap-1 font-semibold text-zinc-700 transition group-hover:gap-1.5 group-hover:text-accent-700 dark:text-zinc-300 dark:group-hover:text-accent-300">
@@ -151,6 +184,19 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
           </Reveal>
         </ul>
         </div>
+
+        {predmet && (
+          <div ref={detailRef} className="mt-8 scroll-mt-24">
+            <button
+              type="button"
+              onClick={zpet}
+              className="inline-flex items-center gap-1.5 rounded-full glass-soft px-3.5 py-2 text-sm font-medium text-zinc-700 transition hover:text-accent-700 dark:text-zinc-200 dark:hover:text-accent-400"
+            >
+              <ArrowLeft className="h-4 w-4" /> {c.back}
+            </button>
+            <DetailPredmetu item={predmet} items={items} nadpisRef={nadpisRef} />
+          </div>
+        )}
 
         <p className="mt-8 flex items-start gap-2 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
           <Info className="mt-0.5 h-3.5 w-3.5 shrink-0" />
@@ -166,144 +212,147 @@ export function CrossSubject({ items = [] }: { items?: BankItem[] }) {
 function SubjectTile({
   item,
   items,
-  open,
-  onToggle,
+  onOpen,
 }: {
   item: Subject;
   items: BankItem[];
-  open: boolean;
-  onToggle: () => void;
+  onOpen: () => void;
+}) {
+  /**
+   * Je co otevírat? Předmět, který nemá ani materiály, ani nástroje, se
+   * otevírat nesmí – otevřel by se prázdný pohled. Stalo se to ve chvíli,
+   * kdy z češtiny odešla dlaždice Wordu a nic jiného v ní nezbylo.
+   */
+  const maObsah = souboryPredmetu(item, items).length > 0 || (item.tools?.length ?? 0) > 0;
+
+  // Stejné gesto jako u dlaždic témat v bance: nadzvednutí a smaragdová záře.
+  const Zahlavi = maObsah ? "button" : "div";
+  return (
+    <Zahlavi
+      {...(maObsah ? { type: "button" as const, onClick: onOpen } : {})}
+      data-predmet={item.icon}
+      className="povrch dlazdice group flex w-full items-center gap-3 rounded-karta p-5 text-left transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15 active:scale-[0.99] active:duration-100"
+    >
+      <span className="flex h-14 w-14 shrink-0 items-center justify-center">
+        <Image
+          src={`/images/subjects/${item.icon}.png`}
+          alt=""
+          width={224}
+          height={224}
+          // Ikona se vykresluje v rámečku 56 × 56 px (h-14 w-14); ostrost
+          // na Retině si prohlížeč dopočítá z `sizes` sám (Codex 27. 9. 2026).
+          sizes="56px"
+          className="ikona-sklo h-full w-full object-contain transition duration-300 motion-safe:group-hover:scale-105"
+        />
+      </span>
+      <span className="min-w-0 flex-1">
+        <span className="block font-display text-lg font-semibold tracking-podnadpis text-zinc-900 dark:text-white">
+          {item.subject}
+        </span>
+        <span className="mt-1 block text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+          {item.what}
+        </span>
+      </span>
+    </Zahlavi>
+  );
+}
+
+/** Obsah otevřeného předmětu: název, materiály a nástroje do hodin. */
+function DetailPredmetu({
+  item,
+  items,
+  nadpisRef,
+}: {
+  item: Subject;
+  items: BankItem[];
+  nadpisRef: RefObject<HTMLHeadingElement | null>;
 }) {
   const { tr, lang } = useLang();
   const c = tr.cross;
-  // Materiály toho tématu z banky – dedup přes obory už udělal getBankItems.
-  // Vlastní soubory napřed, odkaz na cizí zdroj až za nimi: hlavní věc je to,
-  // co si učitel stáhne, ne rozcestník.
-  const files = item.tool
-    ? items
-        .filter((i) => i.tool === item.tool)
-        .sort((a, b) => Number(a.external ?? false) - Number(b.external ?? false))
-    : [];
+  const files = souboryPredmetu(item, items);
+  const pocetNastroju = item.tools?.length ?? 0;
 
-  /**
-   * Je co rozbalovat? Předmět, který nemá ani materiály, ani nástroje, se
-   * rozbalovat nesmí – šipka by otevřela prázdný panel. Stalo se to ve chvíli,
-   * kdy z češtiny odešla dlaždice Wordu a nic jiného v ní nezbylo.
-   */
-  const maObsah = files.length > 0 || (item.tools?.length ?? 0) > 0;
-
-  // Stejné gesto jako u dlaždic témat v bance: nadzvednutí a smaragdová záře.
-  // Karta se rozbaluje, takže nadzvednutí platí i otevřené – chová se pak jako
-  // jeden kus, ne jako panel, co se rozjel.
-  const Zahlavi = maObsah ? "button" : "div";
-  const panelId = useId();
   return (
-    <div className="povrch dlazdice flex w-full flex-col rounded-karta transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15">
-      <Zahlavi
-        {...(maObsah
-          ? { type: "button" as const, onClick: onToggle, "aria-expanded": open, "aria-controls": panelId }
-          : {})}
-        data-vyrovnat
-        className="group flex min-h-[var(--vyska-dlazdice,0px)] w-full items-center gap-3 p-5 text-left transition active:scale-[0.99] active:duration-100"
-      >
+    <>
+      <div className="mt-5 flex items-center gap-3">
         <span className="flex h-14 w-14 shrink-0 items-center justify-center">
           <Image
             src={`/images/subjects/${item.icon}.png`}
             alt=""
             width={224}
             height={224}
-          // Ikona se vykresluje v rámečku 56 × 56 px (h-14 w-14); ostrost
-          // na Retině si prohlížeč dopočítá z `sizes` sám (Codex 27. 9. 2026).
-          sizes="56px"
-            className="ikona-sklo h-full w-full object-contain transition duration-300 motion-safe:group-hover:scale-105"
+            sizes="56px"
+            className="ikona-sklo h-full w-full object-contain"
           />
         </span>
-        <span className="min-w-0 flex-1">
-          <span className="block font-display text-lg font-semibold tracking-podnadpis text-zinc-900 dark:text-white">
+        <div className="min-w-0">
+          {/* `tabIndex={-1}`: sem skočí fokus po otevření předmětu. */}
+          <h3
+            ref={nadpisRef}
+            tabIndex={-1}
+            className="font-display text-xl font-semibold tracking-podnadpis text-zinc-900 dark:text-white"
+          >
             {item.subject}
-          </span>
-          {/* Spodní hranice tří řádků, a to jen od `lg`. Ve třech sloupcích
-              je sloupec 352 px široký a dva popisky se tam vejdou na dva
-              řádky místo tří – karty pak byly o 22 px nižší než sousedi.
-              Na užších šířkách jsou tři řádky tak jako tak, takže tam se
-              nic nemění. `em` je vázané na velikost písma (leading-relaxed
-              1,625 × 3), takže to přežije i změnu typografie, a není to
-              matematická funkce, kterou by starý cíl neuměl.
-              Vyrovnat to přes `items-stretch` na mřížce NELZE: dlaždice se
-              rozbaluje a rozbalení jedné by natáhlo celý řádek. */}
-          <span className="mt-1 block text-sm leading-relaxed text-zinc-600 dark:text-zinc-300 lg:min-h-[4.875em]">
+          </h3>
+          <p className="mt-0.5 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
             {item.what}
-          </span>
-        </span>
-        {maObsah && (
-          <ChevronDown
-            className={`h-5 w-5 shrink-0 text-zinc-600 transition-transform ${open ? "rotate-180" : ""}`}
-          />
-        )}
-      </Zahlavi>
-
-      <div
-        className={`grid transition-[grid-template-rows] duration-300 ease-out ${
-          open && maObsah ? "grid-rows-[1fr]" : "grid-rows-[0fr]"
-        }`}
-      >
-        {/* Sbalený obsah je `inert`: jinak by do schovaných odkazů dál
-            skákal Tab a četla je čtečka (Codex 27. 9. 2026). */}
-        <div id={panelId} inert={!(open && maObsah)} className="sbalitelny overflow-hidden">
-          <div className="space-y-4 border-t border-black/10 px-5 py-4 dark:border-white/10">
-          {item.tool && files.length > 0 && (
-            <div>
-              <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
-                {c.materialsLabel}
-              </p>
-              {/* Dřív tu byl jen odkaz „Otevřít materiály“ – učitel netušil, co za
-                  ním je. Teď jsou soubory vidět rovnou, i s autorem, a odkaz do
-                  banky tu není: složka ukazuje celé téma, takže by vedl na tu
-                  samou dvojici souborů o sekci výš. */}
-              <MaterialFolder name={item.tool} items={files} lang={lang} c={c} />
-            </div>
-          )}
-
-          {item.tools && item.tools.length > 0 && (
-            <div>
-              <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
-                {c.toolsLabel}
-              </p>
-              <ul className="mt-2 space-y-3">
-                {item.tools.map((t) => (
-                  <li key={t.name}>
-                    <a
-                      href={t.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-900 transition hover:text-accent-700 dark:text-accent-400 dark:text-white dark:hover:text-accent-300"
-                    >
-                      {t.name} <ExternalLink className="h-3.5 w-3.5 shrink-0" />
-                    </a>
-                    <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-                      {t.why}
-                    </p>
-                    {/* Co učitele zaskočí – účty, jazyk, expirace, limity. */}
-                    <p className="mt-0.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
-                      {sazba(t.note, lang)}{" "}
-                      <span className="whitespace-nowrap">
-                        · {overenoText(t.overeno, lang)}
-                      </span>
-                    </p>
-                  </li>
-                ))}
-              </ul>
-            </div>
-            )}
-          </div>
+          </p>
         </div>
       </div>
-    </div>
+
+      {item.tool && files.length > 0 && (
+        <div className="mt-6">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
+            {c.materialsLabel}
+          </p>
+          {/* Dřív tu byl jen odkaz „Otevřít materiály“ – učitel netušil, co za
+              ním je. Teď jsou soubory vidět rovnou, i s autorem, a odkaz do
+              banky tu není: složka ukazuje celé téma, takže by vedl na tu
+              samou dvojici souborů o sekci výš. */}
+          <MaterialFolder name={item.tool} items={files} lang={lang} c={c} />
+        </div>
+      )}
+
+      {pocetNastroju > 0 && (
+        <div className="mt-6">
+          <p className="text-[0.7rem] font-semibold uppercase tracking-widest text-zinc-600 dark:text-zinc-400">
+            {c.toolsLabel} · {pocetNastroju}
+          </p>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {item.tools?.map((t) => (
+              // Celá karta je klikací přes `after:`, ale název odkazu pro
+              // čtečku zůstává krátký – jen jméno nástroje.
+              <li
+                key={t.name}
+                className="povrch relative rounded-karta p-4 transition hover:-translate-y-0.5 hover:shadow-lg hover:shadow-accent-600/15"
+              >
+                <a
+                  href={t.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-1.5 text-sm font-semibold text-zinc-900 transition after:absolute after:inset-0 after:rounded-karta hover:text-accent-700 dark:text-white dark:hover:text-accent-300"
+                >
+                  {t.name} <ExternalLink className="h-3.5 w-3.5 shrink-0" />
+                </a>
+                <p className="mt-1 text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
+                  {t.why}
+                </p>
+                {/* Co učitele zaskočí – účty, jazyk, expirace, limity. */}
+                <p className="mt-1.5 text-xs leading-relaxed text-zinc-600 dark:text-zinc-400">
+                  {sazba(t.note, lang)}{" "}
+                  <span className="whitespace-nowrap">· {overenoText(t.overeno, lang)}</span>
+                </p>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+    </>
   );
 }
 
 /**
- * Rolovací složka s materiály přímo v dlaždici předmětu.
+ * Rolovací složka s materiály v otevřeném předmětu.
  *
  * Vědomě jednodušší než složka v bance: žádný náhled v modálu, jen co to je,
  * od koho a stáhnout. Učitel, který sem přijde z „Český jazyk", potřebuje

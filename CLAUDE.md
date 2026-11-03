@@ -420,6 +420,12 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   bulvární), souhlas s cookies. Česky funguje `?l=cz` (`?l=cs` dá angličtinu); Petr psal,
   že funguje jen anglicky, u mě se česky otevřely katalog a dvě animace.
 
+### Ostatní předměty: otevření jako u témat (3. 11. 2026)
+- Karel: rolovací nabídka přestává stačit, nástrojů přibývá. Klik na dlaždici předmětu
+  schová mřížku a ukáže obsah předmětu s „Zpět na předměty“ (`CrossSubject.tsx`), nástroje
+  jsou karty a klikací je celá karta. Adresa `?predmet=fyzika#jinam` (klíč je `icon`, stejný
+  v obou jazycích). Výška dlaždic je teď z CSS (`auto-rows-fr`), měření v JS je pryč.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
