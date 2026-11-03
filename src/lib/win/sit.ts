@@ -522,13 +522,13 @@ export function ping(sit: SitStav | undefined, argumenty: string[]): VysledekSit
     const radky = [
       "",
       `Statistika ping pro ${c.ip}:`,
-      `    Pakety: Odeslané = 4, Přijaté = ${prijato}, Ztracené = ${4 - prijato} (${Math.round(((4 - prijato) / 4) * 100)}% ztráta),`,
+      `    Pakety: Odeslané = 4, Přijaté = ${prijato}, Ztracené = ${4 - prijato} (ztráta ${Math.round(((4 - prijato) / 4) * 100)}%),`,
     ];
     if (casy.length) {
       const min = Math.min(...casy);
       const max = Math.max(...casy);
       const prumer = Math.round(casy.reduce((a, b) => a + b, 0) / casy.length);
-      radky.push("Přibližná doba cesty v milisekundách:", `    Minimum = ${min}ms, Maximum = ${max}ms, Průměr = ${prumer}ms`);
+      radky.push("Přibližná doba do přijetí odezvy v milisekundách:",`    Minimum = ${min}ms, Maximum = ${max}ms, Průměr = ${prumer}ms`);
     }
     return [...radky, ""];
   };

@@ -459,6 +459,10 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Správa routeru se otevírá v Prohlížeči dílny na 192.168.1.1, ne vlastní záložkou (návrh ji měl).
 - Plány hodin 4 a 6 (.docx) dílnu nezmiňují, to je na Karlovi. **Ověřit na českých Windows** zůstává
   ze sekcí výše. V Přehledu je věta „jsem … vyndal“ (hlas Karla), `hero.novinky` taky.
+- Hlášky proti českým výpisům z webu (3. 11.): ping opravený podle Wikipedie a dsl.cz (Karel povolil
+  i pro `/windows`, `sit.ts` je sdílený). Jediný český `ipconfig /all` je z Windows 7 a liší se u IPv6,
+  „(Preferované)“, směrování IP, NetBIOS a stavu média; to čeká na fotky z Windows 11 od Karla.
+  Firefox 111 s dílnou nikdo nezkoušel.
 
 ## Otevřené / nápady (nic naléhavého)
 

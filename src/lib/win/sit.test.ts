@@ -222,3 +222,17 @@ describe("simulátor Windows po přesunu sítě do dílny", () => {
     expect(sloucitSimulatory(najdiKodySimulatoru(kod))).toHaveLength(1);
   });
 });
+
+describe("znění statistiky pingu podle českých Windows", () => {
+  it("píše ztrátu i dobu odezvy jako skutečný výpis", () => {
+    const vystup = ping(VYCHOZI_SIT, ["203.0.113.10"]).vystup;
+    expect(vystup).toContain("    Pakety: Odeslané = 4, Přijaté = 4, Ztracené = 0 (ztráta 0%),");
+    expect(vystup).toContain("Přibližná doba do přijetí odezvy v milisekundách:");
+  });
+
+  it("u nedostupného cíle píše ztrátu stejně a dobu odezvy vynechá", () => {
+    const vystup = ping(sitSPoruchou("wan"), ["203.0.113.10"]).vystup;
+    expect(vystup).toContain("    Pakety: Odeslané = 4, Přijaté = 0, Ztracené = 4 (ztráta 100%),");
+    expect(vystup.join("\n")).not.toContain("Přibližná doba");
+  });
+});
