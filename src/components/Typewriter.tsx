@@ -17,7 +17,7 @@ export function Typewriter({
   text,
   // Rychle schválně: nadpis nese hlavní sdělení, takže se nesmí „louskat".
   // Celý se dopíše zhruba do 1,3 s – pohyb zaujme, ale čtení nezdržuje.
-  speedMs = 40,
+  speedMs = 25,
   startDelayMs = 150,
   className = "",
 }: {

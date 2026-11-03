@@ -431,6 +431,15 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   jinak karta vyčnívá nebo zeje prázdnotou. Kniha má proto na kartě zkrácený název, celý
   je v poznámce. Výšku drží `min-h` podle šířky v `KartaNastroje`, ne mřížka (rozbalení).
 
+### Rychlost úvodní stránky: jen aktuální jazyk (3. 11. 2026)
+- Texty `t` jdou do `LanguageProvider` jako prop ze serveru (`tr={t[lang]}`), ne importem,
+  takže v JavaScriptu nejsou oba jazyky. Klientská komponenta nesmí importovat `t` jako hodnotu.
+- Banka přes `polozkyProJazyk` (materials.ts). Na /en zůstává české `label` a `group`, skládají
+  se podle nich lekce a složky. Důsledek: na české stránce nenajde hledání anglický název.
+- `LangToggle` bez předběžného načítání, psací stroj 25 ms na znak.
+- Největší zbytek: položky banky v HTML (~300 KB nekomprimovaně, 361 položek). Zásadní úspora
+  by bylo načítat je až po otevření tématu nebo hledání; zatím neudělané.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

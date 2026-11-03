@@ -7,7 +7,7 @@ import { t } from "@/lib/content";
 
 const wrapper = (lang: "cs" | "en") =>
   function Wrapper({ children }: { children: ReactNode }) {
-    return <LanguageProvider lang={lang}>{children}</LanguageProvider>;
+    return <LanguageProvider lang={lang} tr={t[lang]}>{children}</LanguageProvider>;
   };
 
 describe("useLang", () => {

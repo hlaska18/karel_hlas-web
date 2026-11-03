@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { sdileni } from "@/lib/sdileni";
 
 import { Soukromi } from "@/components/Soukromi";
+import { t } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "What this site stores",
@@ -20,5 +21,5 @@ export const metadata: Metadata = {
 };
 
 export default function SoukromiPageEn() {
-  return <Soukromi lang="en" />;
+  return <Soukromi lang="en" tr={t.en} />;
 }

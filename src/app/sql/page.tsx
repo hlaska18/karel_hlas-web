@@ -5,7 +5,7 @@ import {
   ExternalLink,
   GraduationCap,
 } from "lucide-react";
-import { SITE } from "@/lib/content";
+import { SITE, t } from "@/lib/content";
 import { sdileni } from "@/lib/sdileni";
 import { LanguageProvider } from "@/lib/i18n";
 import { ThemeToggle } from "@/components/ThemeToggle";
@@ -62,7 +62,7 @@ export default async function SqlPage({
   const zEn = parametry.z === "en";
   const domu = zEn ? "/en" : "/";
   return (
-    <LanguageProvider lang="cs">
+    <LanguageProvider lang="cs" tr={t.cs}>
       <PodobaKurzu>
       <ObalProgramu>
         <VirtualniDbBrowser domu={domu} />

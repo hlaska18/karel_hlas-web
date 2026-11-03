@@ -31,7 +31,7 @@ export function Site({
   const crossTools = new Set(t[lang].cross.items.map((i) => i.tool).filter(Boolean));
 
   return (
-    <LanguageProvider lang={lang}>
+    <LanguageProvider lang={lang} tr={t[lang]}>
       <Header />
       <main id="main">
         {/* Počty úloh se berou ze skutečných seznamů úloh tady na serveru,

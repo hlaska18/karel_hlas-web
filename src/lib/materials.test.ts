@@ -3,6 +3,7 @@ import {
   TOOL_ORDER,
   getBankItems,
   getBankToolCounts,
+  polozkyProJazyk,
   type BankItem,
 } from "@/lib/materials";
 import { countByKind } from "@/lib/bankLabels";
@@ -374,5 +375,30 @@ describe("cvičebnice 100 příkladů pro Office", () => {
     for (const it of items) {
       expect(it.href, it.label.cs).not.toMatch(/onedrive\.live\.com/);
     }
+  });
+});
+
+describe("polozkyProJazyk", () => {
+  it("česká stránka nedostane angličtinu", () => {
+    const json = JSON.stringify(polozkyProJazyk(items, "cs"));
+    expect(json).not.toContain('"en":');
+    expect(polozkyProJazyk(items, "cs").length).toBe(items.length);
+  });
+
+  it("anglická stránka má česky jen názvy, podle kterých se skládají lekce", () => {
+    for (const it of polozkyProJazyk(items, "en")) {
+      expect(it.label.cs).toBeTruthy();
+      expect(it.label.en).toBeTruthy();
+      expect(it.topicLabel.cs).toBeUndefined();
+      expect(it.coursesLabel.cs).toBeUndefined();
+      expect(it.popis?.cs).toBeUndefined();
+      expect(it.sourceNote?.cs).toBeUndefined();
+    }
+  });
+
+  it("nemění původní položky", () => {
+    const pred = JSON.stringify(items);
+    polozkyProJazyk(items, "cs");
+    expect(JSON.stringify(items)).toBe(pred);
   });
 });

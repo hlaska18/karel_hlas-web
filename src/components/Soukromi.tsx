@@ -5,7 +5,7 @@ import Link from "next/link";
 
 import { LanguageProvider, useLang } from "@/lib/i18n";
 import { sazba } from "@/lib/sazba";
-import type { Lang } from "@/lib/content";
+import type { Lang, t } from "@/lib/content";
 
 /**
  * Stránka o zpracování údajů.
@@ -71,9 +71,9 @@ function Obsah() {
   );
 }
 
-export function Soukromi({ lang }: { lang: Lang }) {
+export function Soukromi({ lang, tr }: { lang: Lang; tr: (typeof t)["cs"] }) {
   return (
-    <LanguageProvider lang={lang}>
+    <LanguageProvider lang={lang} tr={tr}>
       <Obsah />
     </LanguageProvider>
   );

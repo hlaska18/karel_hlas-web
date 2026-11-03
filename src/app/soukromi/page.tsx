@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { sdileni } from "@/lib/sdileni";
 
 import { Soukromi } from "@/components/Soukromi";
+import { t } from "@/lib/content";
 
 export const metadata: Metadata = {
   title: "Co web ukládá",
@@ -21,5 +22,5 @@ export const metadata: Metadata = {
 };
 
 export default function SoukromiPage() {
-  return <Soukromi lang="cs" />;
+  return <Soukromi lang="cs" tr={t.cs} />;
 }

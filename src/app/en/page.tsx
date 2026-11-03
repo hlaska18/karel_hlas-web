@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import { Site } from "@/components/Site";
-import { getBankItems } from "@/lib/materials";
+import { getBankItems, polozkyProJazyk } from "@/lib/materials";
 import { getVystupy } from "@/lib/aihub";
 
 export const metadata: Metadata = {
@@ -36,5 +36,5 @@ export const metadata: Metadata = {
 };
 
 export default function HomeEn() {
-  return <Site lang="en" items={getBankItems()} vystupy={getVystupy()} />;
+  return <Site lang="en" items={polozkyProJazyk(getBankItems(), "en")} vystupy={getVystupy()} />;
 }

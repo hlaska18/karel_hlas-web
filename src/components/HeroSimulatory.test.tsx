@@ -5,7 +5,7 @@ import { vi } from "vitest";
 
 import { HeroSimulatory } from "@/components/HeroSimulatory";
 import { LanguageProvider } from "@/lib/i18n";
-import type { Lang } from "@/lib/content";
+import { t, type Lang } from "@/lib/content";
 
 /**
  * Tlačítka simulátorů v úvodu.
@@ -17,7 +17,7 @@ import type { Lang } from "@/lib/content";
 
 function vykresli(lang: Lang, windows: number, macos: number) {
   return render(
-    <LanguageProvider lang={lang}>
+    <LanguageProvider lang={lang} tr={t[lang]}>
       <HeroSimulatory ulohy={{ windows, macos }} />
     </LanguageProvider>,
   );

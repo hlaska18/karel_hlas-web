@@ -2,7 +2,7 @@ import fs from "fs";
 import path from "path";
 import { COURSES } from "@/lib/content";
 import { TOOL_ORDER } from "@/lib/bankLabels";
-import type { Material, Audience } from "@/lib/content";
+import type { Material, Audience, Lang } from "@/lib/content";
 
 /**
  * Načte materiály ze složek public/materialy/<kurz>/<čísloTématu>/…
@@ -537,6 +537,34 @@ function pracovniSoubor(file: string, segs: string[]): Popis | null {
   if (!vUloze) return null;
   if (!PRACOVNI_SOUBOR.test(jmeno)) return null;
   return { cs: `Pracovní soubor (${file})`, en: `Working file (${file})` };
+}
+
+/**
+ * Banka pro jednu jazykovou verzi stránky: do prohlížeče jde jen její jazyk,
+ * druhá verze přijde s přechodem na její adresu.
+ *
+ * Výjimka je /en: české `label` a `group` tam zůstávají, protože BankBrowser
+ * podle nich skládá lekce a složky a měření stahování posílá český název.
+ */
+export function polozkyProJazyk(items: BankItem[], lang: Lang): BankItem[] {
+  type Pole = { cs: string; en: string };
+  const jen = (pole: Pole) => ({ [lang]: pole[lang] }) as Pole;
+  const zakladni = lang === "cs" ? jen : (pole: Pole) => pole;
+  return items.map((it) => ({
+    ...it,
+    label: zakladni(it.label),
+    topicLabel: jen(it.topicLabel),
+    coursesLabel: jen(it.coursesLabel),
+    ...(it.group && { group: zakladni(it.group) }),
+    ...(it.popis && { popis: jen(it.popis) }),
+    ...(it.groupPopis && { groupPopis: jen(it.groupPopis) }),
+    ...(it.sourceNote && { sourceNote: jen(it.sourceNote) }),
+    ...(it.popisySlozek && {
+      popisySlozek: Object.fromEntries(
+        Object.entries(it.popisySlozek).map(([k, v]) => [k, jen(v)]),
+      ),
+    }),
+  }));
 }
 
 export function getBankItems(): BankItem[] {

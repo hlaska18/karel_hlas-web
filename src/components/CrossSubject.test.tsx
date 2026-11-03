@@ -3,6 +3,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import { cleanup, fireEvent, render, screen } from "@testing-library/react";
 
 import { CrossSubject } from "@/components/CrossSubject";
+import { t } from "@/lib/content";
 import { LanguageProvider } from "@/lib/i18n";
 
 /** Klik na předmět vymění mřížku za jeho obsah, stejně jako témata v bance. */
@@ -10,7 +11,7 @@ import { LanguageProvider } from "@/lib/i18n";
 function vykresli() {
   Element.prototype.scrollIntoView = vi.fn();
   return render(
-    <LanguageProvider lang="cs">
+    <LanguageProvider lang="cs" tr={t.cs}>
       <CrossSubject />
     </LanguageProvider>,
   );

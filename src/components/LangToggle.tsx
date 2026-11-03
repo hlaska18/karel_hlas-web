@@ -20,6 +20,8 @@ export function LangToggle({ counterpartPath }: { counterpartPath?: string }) {
   return (
     <Link
       href={href}
+      // Druhý jazyk se stáhne až po kliknutí, ne dopředu.
+      prefetch={false}
       hrefLang={lang === "cs" ? "en" : "cs"}
       aria-label={label}
       title={label}
