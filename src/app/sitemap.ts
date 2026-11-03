@@ -38,5 +38,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "monthly",
       priority: 0.7,
     },
+    {
+      // Síťová dílna: cvičná domácí síť, vstup z banky (Digitální gramotnost).
+      url: `${SITE.url}/sitova-dilna`,
+      changeFrequency: "monthly",
+      priority: 0.7,
+    },
   ];
 }

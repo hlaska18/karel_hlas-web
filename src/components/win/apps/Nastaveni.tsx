@@ -38,7 +38,6 @@ import { velikost } from "@/lib/win/fs";
 import { APLIKACE, type AppId } from "@/lib/win/typy";
 import { zapomen, type Nastaveni as TypNastaveni } from "@/lib/win/stav";
 import { zapamatujPrihlaseni } from "@/lib/win/pristup";
-import { OddilSitDomaci } from "./NastaveniSite";
 
 type Oddil =
   | "system"
@@ -157,8 +156,7 @@ export function Nastaveni() {
             />
           )}
           {oddil === "zarizeni" && <OddilZarizeni n={n} zmen={zmen} />}
-          {oddil === "sit" &&
-            (stav.sit ? <OddilSitDomaci sit={stav.sit} /> : <OddilSit n={n} zmen={zmen} />)}
+          {oddil === "sit" && <OddilSit n={n} zmen={zmen} />}
           {oddil === "prizpusobeni" && (
             <OddilPrizpusobeni
               n={n}
@@ -250,7 +248,7 @@ function OddilSystem({
 
   if (podstranka === "Informace") {
     const udaje: [string, string][] = [
-      ["Název zařízení", stav.sit ? "DOMACI-PC" : "SPST-UCEBNA-14"],
+      ["Název zařízení", "SPST-UCEBNA-14"],
       ["Procesor", "Intel(R) Core(TM) i5-13400  2.50 GHz"],
       ["Nainstalovaná paměť RAM", "16,0 GB (využitelné: 15,7 GB)"],
       ["ID zařízení", "8F2C41A9-77B0-4E13-9D5A-2C0146BB3E71"],
@@ -387,7 +385,7 @@ function Obnoveni() {
    * obrazovce. Proto tu není žádná nová akce v reduceru – nebyla by k čemu.
    */
   const zacniOdZacatku = () => {
-    zapomen(stav.scenar);
+    zapomen();
     zapamatujPrihlaseni(false, "windows");
     window.location.reload();
   };

@@ -10,7 +10,7 @@
  * Okna jsou společná pro oba simulátory, vzhled si ale každý předá sám
  * (`Vzhled`) – ve Windows vypadají jako Windows, na Macu jako Mac. Přehled
  * třídy rozumí kódům ze všech tří simulátorů: WIN1-, MAC1- i SQLKURZ1-,
- * a od 31. 10. 2026 i WSIT1- ze cvičení „Síť a poruchy“ (`?scenar=sit`).
+ * a WSIT1- ze Síťové dílny (`/sitova-dilna`). Dílna tahle okna používá taky.
  */
 
 import { useState, type ReactNode } from "react";
@@ -31,7 +31,8 @@ import {
 import { najdiKody, sloucitPostupy } from "@/lib/dbb/kodPostupu";
 import { bezVzorce } from "@/lib/dbb/csv";
 import { stahni } from "@/lib/dbb/stahni";
-import { UKOLY as UKOLY_WIN, UKOLY_SIT } from "@/lib/win/ukoly";
+import { UKOLY as UKOLY_WIN } from "@/lib/win/ukoly";
+import { UKOLY_SIT } from "@/lib/dilna/ukoly";
 import { CHYBY_SITE } from "@/lib/win/sit";
 import { UKOLY_MAC } from "@/lib/mac/ukoly";
 
@@ -214,8 +215,8 @@ export function MojeVysledkySimulatoru({
       nastavObnovu({ ok: false, text: "Tohle není kód postupu. Vlož celý kód, jak jsi ho poslal(a) do Teams." });
       return;
     }
-    // Kód WSIT1- ze dřívějšího samostatného cvičení patří do běžných úloh Windows.
-    if (p.simulator !== simulator && !(simulator === "windows" && p.simulator === "sit")) {
+    // Kód WIN1- z doby, kdy síť byla ve Windows, nese id `sit-*`: platí i v dílně.
+    if (p.simulator !== simulator && !(simulator === "sit" && p.simulator === "windows")) {
       nastavObnovu({
         ok: false,
         text: `Tohle je kód ze simulátoru ${NAZEV_SIMULATORU[p.simulator]}. Vlož ho tam – tady je ${NAZEV_SIMULATORU[simulator]}.`,
@@ -262,12 +263,12 @@ export function MojeVysledkySimulatoru({
       {simulator === "windows" && hotovychZ("sit", splneno) > 0 && (
         <div className="mt-2">
           <p className="mb-1 font-semibold">
-            Navíc, síť: {hotovychZ("sit", splneno)}/{UKOLY.sit.length}
+            Ze Síťové dílny: {hotovychZ("sit", splneno)}/{UKOLY.sit.length}
           </p>
           <Dlazdice simulator="sit" splneno={splneno} vzhled={vzhled} />
         </div>
       )}
-      <p className={`mt-1 ${vzhled.slaby}`}>Zelená = splněná úloha. Číslo je pořadí v panelu Úkoly, po najetí myší se ukáže název.</p>
+      <p className={`mt-1 ${vzhled.slaby}`}>Zelená = splněná úloha. Číslo je pořadí v panelu {simulator === "sit" ? "Zakázky" : "Úkoly"}, po najetí myší se ukáže název.</p>
 
       <p className="mt-4 font-semibold">Kód postupu pro učitele</p>
       <p className={vzhled.slaby}>Zkopíruj ho do Teams. Když Teams nejde, vyfoť celé tohle okno.</p>
@@ -444,13 +445,13 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
     <Okno titulek="Přehled třídy (pro učitele)" zavri={zavri} sirka={860} vzhled={vzhled}>
       <p>
         Vlož kódy postupu od žáků – klidně celé zprávy z Teams, kódy se v textu najdou samy. Rozumí kódům z Windows (WIN1-),
-        z macOS (MAC1-), ze cvičení Windows – síť (WSIT1-) i z kurzu SQL (SQLKURZ1-). Kódy téhož žáka se sčítají. Kód je shrnutí, ne důkaz: vzniká v prohlížeči
+        z macOS (MAC1-), ze Síťové dílny (WSIT1-) i z kurzu SQL (SQLKURZ1-). Kódy téhož žáka se sčítají. Kód je shrnutí, ne důkaz: vzniká v prohlížeči
         žáka a dá se upravit.
       </p>
       <p className={`mt-2 ${vzhled.slaby}`}>
-        Co je nového (listopad 2026): ve Windows přibylo v panelu Úkoly 20 úloh navíc o síti (router, poruchy, Wi-Fi). Kód WIN1-
-        je nese s sebou a Přehled je ukáže v sekci Windows – síť. Výchozích 33 úloh se nezměnilo, „x/33“ počítá dál jen je.
-        Dřívější kódy WSIT1- platí dál.
+        Co je nového (listopad 2026): síťové úlohy jsem ze simulátoru Windows vyndal. Je jich 20 a jsou v nové Síťové dílně
+        v tématu Digitální gramotnost. Výchozích 33 úloh Windows se nezměnilo. Dřívější kódy se síťovými úlohami (WSIT1- i WIN1-)
+        platí dál, Přehled je ukáže v sekci Síťová dílna.
       </p>
       <textarea
         value={text}

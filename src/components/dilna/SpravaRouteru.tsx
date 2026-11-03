@@ -1,15 +1,14 @@
 "use client";
 
 /**
- * Správa routeru – webová stránka routeru na 192.168.1.1 (cvičení „Síť
- * a poruchy“). Otevírá se v Edge místo obyčejné stránky, protože se v ní
- * vyplňují formuláře. Každý router má správu uspořádanou jinak; přihlášení,
- * Wi-Fi, síť pro hosty, připojená zařízení, DHCP a heslo ke správě ale mívá
- * každý.
+ * Správa routeru: webová stránka routeru na 192.168.1.1 v prohlížeči dílny.
+ * Je to komponenta místo obyčejné stránky, protože se v ní vyplňují formuláře.
+ * Vypadá schválně jako cizí web, ne jako dílna. Každý router má správu
+ * uspořádanou jinak; přihlášení, Wi-Fi, síť pro hosty, připojená zařízení,
+ * DHCP a heslo ke správě ale mívá každý.
  */
 
 import { useState } from "react";
-import { useSystem } from "../system";
 import { ROUTER, VEREJNA_ADRESA, STITEK, diagnoza, type Router, type SitStav, type Zabezpeceni } from "@/lib/win/sit";
 
 type Cast = "prehled" | "wifi" | "host" | "zarizeni" | "lan" | "sprava";
@@ -30,15 +29,22 @@ const ZABEZPECENI: { id: Zabezpeceni; nazev: string }[] = [
   { id: "wpa3", nazev: "WPA3-Personal" },
 ];
 
-const pole = "h-8 w-full rounded border border-[#c8ccd0] px-2 text-[13px] text-[#1a1a1a] outline-none focus:border-[#0f4c81]";
+const pole = "h-8 w-full rounded border border-[#c8ccd0] bg-white px-2 text-[13px] text-[#1a1a1a] outline-none focus:border-[#0f4c81]";
 const tlacitko = "h-8 rounded bg-[#0f4c81] px-4 text-[13px] font-semibold text-white hover:bg-[#0c3d68] disabled:opacity-40";
 
-export function SpravaRouteru({ sit }: { sit: SitStav }) {
-  const { poslat, stopa } = useSystem();
+export function SpravaRouteru({
+  sit,
+  onStopa,
+  onZmena,
+}: {
+  sit: SitStav;
+  onStopa: (stopa: string) => void;
+  onZmena: (zmena: Partial<Router>) => void;
+}) {
   const [prihlasen, nastavPrihlasen] = useState(false);
   const [cast, nastavCast] = useState<Cast>("prehled");
   const router = sit.router;
-  const uloz = (zmena: Partial<Router>) => poslat({ typ: "sit/nastav", sit: { ...sit, router: { ...router, ...zmena } } });
+  const uloz = onZmena;
 
   if (!prihlasen) {
     return (
@@ -46,7 +52,7 @@ export function SpravaRouteru({ sit }: { sit: SitStav }) {
         heslo={router.adminHeslo}
         onPrihlasen={() => {
           nastavPrihlasen(true);
-          stopa("overeno:router-prihlaseni");
+          onStopa("overeno:router-prihlaseni");
         }}
       />
     );

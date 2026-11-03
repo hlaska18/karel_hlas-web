@@ -26,6 +26,19 @@ const nextConfig = {
   async headers() {
     return [{ source: "/:path*", headers: securityHeaders }];
   },
+  // Síť se 3. 11. 2026 přestěhovala ze simulátoru Windows do vlastní dílny.
+  // Starý odkaz může být v zadáních, proto vede dál. Dočasné přesměrování:
+  // prohlížeč si ho nezapamatuje, kdyby se adresa ještě měnila.
+  async redirects() {
+    return [
+      {
+        source: "/windows",
+        has: [{ type: "query", key: "scenar", value: "sit" }],
+        destination: "/sitova-dilna",
+        permanent: false,
+      },
+    ];
+  },
 };
 
 export default nextConfig;

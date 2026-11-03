@@ -64,7 +64,6 @@ export function Terminal() {
       disk: stav.disk,
       cesta: karta.cesta,
       jmenoUctu: stav.nastaveni.jmenoUctu,
-      sit: stav.sit,
     }, karta.rezim);
 
     if (vysledek.ukoncit) {

@@ -7,7 +7,7 @@
  * postupu (`lib/postupSimulatoru.ts`), stejně jako v kurzu SQL.
  */
 
-export type Prostredi = "windows" | "macos";
+export type Prostredi = "windows" | "macos" | "dilna";
 
 /**
  * Klíč v `sessionStorage`: po obnovení stránky se nepřihlašuje znovu.

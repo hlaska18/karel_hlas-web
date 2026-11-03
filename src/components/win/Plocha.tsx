@@ -28,7 +28,7 @@ import {
 } from "@/lib/win/fs";
 import { typSouboru, znamaPripona } from "@/lib/win/typy";
 import { KOS, POCITAC, smazDoKose, vloz_ze_schranky } from "@/lib/win/operace";
-import { tapetaPlochy } from "@/lib/win/obrazky";
+import { vybranaTapeta } from "@/lib/win/obrazky";
 
 const PLOCHA = ["C:", "Users", "Zak", "Desktop"];
 
@@ -57,7 +57,7 @@ export function Plocha() {
     [slozka, stav.nastaveni.skrytePolozky],
   );
 
-  const tapeta = tapetaPlochy(stav.nastaveni.tapeta, Boolean(stav.sit));
+  const tapeta = vybranaTapeta(stav.nastaveni.tapeta);
 
   const otevri = (uzel: Uzel) => {
     const cesta = sloz([...PLOCHA, uzel.jmeno]);

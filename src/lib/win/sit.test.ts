@@ -1,15 +1,13 @@
 import { describe, expect, it } from "vitest";
-import { reducer, type Akce } from "@/lib/win/reducer";
-import { vychoziStav, type Stav } from "@/lib/win/stav";
-import { SCENAR_SIT } from "@/lib/win/scenare";
-import { UKOLY, UKOLY_SIT, postup, vyhodnot } from "@/lib/win/ukoly";
-import { strankaSit } from "@/lib/win/web";
-import { najdiSlozku, rozloz } from "@/lib/win/fs";
-import { TAPETY, tapetaPlochy } from "@/lib/win/obrazky";
+import { reducer } from "@/lib/win/reducer";
+import { vychoziStav } from "@/lib/win/stav";
+import { SCENARE } from "@/lib/win/scenare";
+import { UKOLY, postup, vyhodnot } from "@/lib/win/ukoly";
+import { UKOLY_SIT } from "@/lib/dilna/ukoly";
+import { strankaSit } from "@/lib/dilna/stranky";
 import {
   APIPA,
   CIZI,
-  STITEK,
   VYCHOZI_SIT,
   diagnoza,
   doplnSit,
@@ -26,8 +24,6 @@ import {
   sloucitSimulatory,
   zakodujSimulator,
 } from "@/lib/postupSimulatoru";
-
-const proved = (stav: Stav, ...akce: Akce[]): Stav => akce.reduce(reducer, stav);
 
 /** Výpis ipconfig z doby před cvičením sítě (shell.ts, commit 7919196). */
 const STARY_IPCONFIG = [
@@ -138,142 +134,12 @@ describe("kabely, DHCP a poskytovatel", () => {
   });
 });
 
-describe("úlohy s poruchou v reduceru", () => {
-  const dhcp: SitStav = VYCHOZI_SIT;
-
-  it("oprava porucha brány splní úlohu, špatný krok se zapíše jako chyba", () => {
-    let s = proved(vychoziStav(SCENAR_SIT), { typ: "sit/porucha", porucha: "brana" });
-    expect(vyhodnot(s)).not.toContain("sit-porucha-brana");
-    // Žák nejdřív sahá na DNS – to je při poruše brány vedle.
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, dns: { prirazeni: "rucne", server: "198.51.100.53" } } });
-    expect(s.chyby).toEqual({ db: 1 });
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, ip: dhcp.ip } });
-    expect(s.stopy).toContain("porucha:brana:opravena");
-    expect(vyhodnot(s)).toContain("sit-porucha-brana");
-  });
-
-  it("vrácení do výchozího stavu poruchu neopraví za žáka a chyby nesmaže", () => {
-    let s = proved(vychoziStav(SCENAR_SIT), { typ: "sit/porucha", porucha: "dns" });
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, ip: { ...s.sit!.ip, prirazeni: "rucne", brana: "192.168.1.2" } } });
-    expect(s.chyby).toEqual({ id: 1 });
-    s = proved(s, { typ: "napoveda", id: "sit-porucha-dns" }, { typ: "system/reset" });
-    expect(vyhodnot(s)).not.toContain("sit-porucha-dns");
-    expect(s.chyby).toEqual({ id: 1 });
-    expect(s.napovedy).toEqual({ "sit-porucha-dns": 1 });
-  });
-
-  it("ruční nastavení, se kterým síť přestane fungovat, je chyba rr", () => {
-    const s = proved(vychoziStav(SCENAR_SIT), {
-      typ: "sit/nastav",
-      sit: { ...dhcp, ip: { prirazeni: "rucne", adresa: "192.168.1.23", maska: "255.255.255.0", brana: "192.168.1.100" } },
-    });
-    expect(s.chyby).toEqual({ rr: 1 });
-  });
-
-  it("vytažený kabel u ruční adresy není chyba ručního nastavení", () => {
-    let s = proved(vychoziStav(SCENAR_SIT), {
-      typ: "sit/nastav",
-      sit: { ...dhcp, ip: { prirazeni: "rucne", adresa: "192.168.1.40", maska: "255.255.255.0", brana: "192.168.1.1" } },
-    });
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, lan: null } } });
-    expect(s.chyby).toEqual({});
-  });
-
-  it("poruchy kabel, DHCP a WAN se opraví u routeru", () => {
-    let s = proved(vychoziStav(SCENAR_SIT), { typ: "sit/porucha", porucha: "kabel" });
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, lan: 3 } } });
-    expect(vyhodnot(s)).toContain("sit-porucha-kabel");
-
-    s = proved(s, { typ: "sit/porucha", porucha: "dhcp" });
-    // Obejít to ruční adresou nestačí.
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, ip: { prirazeni: "rucne", adresa: "192.168.1.50", maska: "255.255.255.0", brana: "192.168.1.1" } } });
-    expect(vyhodnot(s)).not.toContain("sit-porucha-dhcp");
-    // S ruční adresou se dostane do správy a zapne DHCP – ale hotovo je až s Automaticky.
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, router: { ...s.sit!.router, dhcp: true } } });
-    expect(vyhodnot(s)).not.toContain("sit-porucha-dhcp");
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, ip: dhcp.ip } });
-    expect(vyhodnot(s)).toContain("sit-porucha-dhcp");
-
-    s = proved(s, { typ: "sit/porucha", porucha: "wan" });
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, wan: true } } });
-    expect(vyhodnot(s)).toContain("sit-porucha-wan");
-  });
-});
-
-describe("scénáře Nový router a Cizí zařízení", () => {
-  it("výchozí zapojená síť úlohy routeru nesplní, dokud scénář nezačne", () => {
-    const s = vychoziStav(SCENAR_SIT);
-    s.stopy = ["overeno:ipconfig-adresa", "overeno:router-prihlaseni"];
-    expect(vyhodnot(s).filter((id) => id.startsWith("sit-router"))).toEqual([]);
-  });
-
-  it("nový router: zapojit, připojit počítač, správa, heslo, Wi-Fi", () => {
-    let s = proved(vychoziStav(SCENAR_SIT), { typ: "stopa", klic: "overeno:ipconfig-adresa" }, { typ: "sit/situace", situace: "router" });
-    // Stará ověření po novém začátku neplatí.
-    expect(s.stopy).not.toContain("overeno:ipconfig-adresa");
-    expect(ipconfig(s.sit, []).vystup.join("\n")).toContain("Médium odpojeno");
-    // Novou Wi-Fi zatím nikdo nezná – v routeru je jen počítač na kabelu.
-    expect(s.sit!.router.zarizeni.map((z) => z.nazev)).toEqual(["DOMACI-PC"]);
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { napajeni: true, wan: true, lan: null } } });
-    expect(vyhodnot(s)).toContain("sit-router-zapoj");
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, lan: 2 } } });
-    for (const k of ipconfig(s.sit, []).stopy ?? []) s = proved(s, { typ: "stopa", klic: k });
-    expect(vyhodnot(s)).toContain("sit-router-pc");
-    s = proved(s, { typ: "stopa", klic: "overeno:router-prihlaseni" });
-    s = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, router: { ...s.sit!.router, adminHeslo: "nove-heslo-1" } } });
-    s = proved(s, {
-      typ: "sit/nastav",
-      sit: { ...s.sit!, router: { ...s.sit!.router, wifi: { nazev: "Doma", zabezpeceni: "wpa3", heslo: "dlouhe-heslo-12" } } },
-    });
-    const hotove = vyhodnot(s);
-    expect(hotove).toEqual(expect.arrayContaining(["sit-router-sprava", "sit-router-heslo", "sit-router-wifi"]));
-  });
-
-  it("Wi-Fi s továrním heslem nebo jen WPA2 úlohu nesplní", () => {
-    let s = proved(vychoziStav(SCENAR_SIT), { typ: "sit/situace", situace: "router" });
-    s = proved(s, {
-      typ: "sit/nastav",
-      sit: { ...s.sit!, router: { ...s.sit!.router, wifi: { nazev: "Doma", zabezpeceni: "wpa2", heslo: "dlouhe-heslo-12" } } },
-    });
-    expect(vyhodnot(s)).not.toContain("sit-router-wifi");
-    s = proved(s, {
-      typ: "sit/nastav",
-      sit: { ...s.sit!, router: { ...s.sit!.router, wifi: { nazev: "Doma", zabezpeceni: "wpa3", heslo: STITEK.wifiHeslo } } },
-    });
-    expect(vyhodnot(s)).not.toContain("sit-router-wifi");
-  });
-
-  it("cizí zařízení: zablokovat, heslo, WPS, hosté", () => {
-    let s = proved(vychoziStav(SCENAR_SIT), { typ: "sit/situace", situace: "cizi" });
-    expect(s.sit!.router.zarizeni).toContainEqual(CIZI);
-    const r = s.sit!.router;
-    s = proved(s, {
-      typ: "sit/nastav",
-      sit: {
-        ...s.sit!,
-        router: {
-          ...r,
-          blokovane: [CIZI.mac],
-          wifi: { ...r.wifi, zabezpeceni: "wpa2-wpa3", heslo: "jine-dlouhe-heslo" },
-          wps: false,
-          host: { zapnuto: true, heslo: "pro-navstevu" },
-        },
-      },
-    });
-    expect(vyhodnot(s)).toEqual(expect.arrayContaining(["sit-cizi-zablokuj", "sit-cizi-heslo", "sit-cizi-wps", "sit-cizi-host"]));
-  });
-});
-
 describe("sada úloh a kód WSIT1", () => {
-  it("cvičení má vlastní úlohy, výchozí sada se nemění", () => {
+  it("dílna má vlastní úlohy, výchozí sada se nemění", () => {
     expect(UKOLY).toHaveLength(33);
+    expect(UKOLY_SIT).toHaveLength(20);
     expect(UKOLY_SIT.every((u) => u.id.startsWith("sit-"))).toBe(true);
     expect(new Set(UKOLY_SIT.map((u) => u.id)).size).toBe(UKOLY_SIT.length);
-    expect(postup([], SCENAR_SIT).celkem).toBe(UKOLY_SIT.length);
-    // Ve výchozím scénáři se úlohy sítě neodškrtnou, ani když stopa sedí.
-    const s = vychoziStav();
-    s.stopy = ["prikaz:ipconfig-all"];
-    expect(vyhodnot(s)).not.toContain("sit-ipconfig");
   });
 
   it("kód nese chyby, staré kódy je nedostanou", () => {
@@ -309,64 +175,19 @@ describe("sada úloh a kód WSIT1", () => {
   });
 });
 
-describe("síťové úlohy v běžném seznamu Windows", () => {
-  const sitove = (s: Stav) => vyhodnot(s).filter((id) => id.startsWith("sit-"));
-
-  it("výchozí počítač je ve škole a výchozí počet zůstává 33", () => {
+describe("simulátor Windows po přesunu sítě do dílny", () => {
+  it("nemá síťové úlohy ani síťový scénář a počítá dál 33", () => {
     const s = vychoziStav();
-    expect(s.sit).toBeUndefined();
-    expect(UKOLY).toHaveLength(33);
-    expect(postup(UKOLY_SIT.map((u) => u.id), s.scenar)).toEqual({ hotovo: 0, celkem: 33 });
+    expect(s).not.toHaveProperty("sit");
+    expect(UKOLY.some((u) => u.id.startsWith("sit-"))).toBe(false);
+    expect(SCENARE.some((c) => c.id === "sit")).toBe(false);
+    expect(postup(UKOLY_SIT.map((u) => u.id))).toEqual({ hotovo: 0, celkem: 33 });
   });
 
-  it("příkazy spuštěné ve škole se nepočítají ani po přenesení domů", () => {
-    let s = proved(vychoziStav(), { typ: "stopa", klic: "prikaz:ipconfig-all" }, { typ: "stopa", klic: "prikaz:ipconfig" });
-    expect(sitove(s)).toEqual([]);
-    s = proved(s, { typ: "sit/domov" });
-    expect(s.sit).toEqual(VYCHOZI_SIT);
-    expect(sitove(s)).toEqual([]);
-    // Výchozí úloha o ipconfig tím o svůj doklad nepřijde.
-    expect(s.stopy).toContain("prikaz:ipconfig");
-    s = proved(s, { typ: "stopa", klic: "prikaz:ipconfig-all" });
-    expect(sitove(s)).toEqual(["sit-ipconfig"]);
-  });
-
-  it("porucha i scénář přenesou počítač domů samy a návrat do školy síť vypne", () => {
-    expect(proved(vychoziStav(), { typ: "sit/porucha", porucha: "dns" }).sit?.porucha).toBe("dns");
-    const s = proved(vychoziStav(), { typ: "sit/situace", situace: "router" });
-    expect(s.sit?.kabely.wan).toBe(false);
-    expect(proved(s, { typ: "sit/skola" }).sit).toBeUndefined();
-  });
-
-  it("porucha ukončí scénář, takže neodškrtne „Zapoj router“", () => {
-    for (const start of [vychoziStav(), vychoziStav(SCENAR_SIT)]) {
-      const s = proved(start, { typ: "sit/situace", situace: "router" }, { typ: "sit/porucha", porucha: "kabel" });
-      expect(s.stopy).not.toContain("situace:router:spustena");
-      expect(vyhodnot(s)).not.toContain("sit-router-zapoj");
-    }
-    // Ve scénáři samotném se počítá dál.
-    const s = proved(vychoziStav(), { typ: "sit/situace", situace: "router" });
-    const zapojeno = proved(s, { typ: "sit/nastav", sit: { ...s.sit!, kabely: { ...s.sit!.kabely, napajeni: true, wan: true } } });
-    expect(vyhodnot(zapojeno)).toContain("sit-router-zapoj");
-  });
-
-  it("doma má plocha vlastní tapetu, ale žákovu volbu nepřepíše", () => {
-    expect(tapetaPlochy("zavoj", false).id).toBe("zavoj");
-    expect(tapetaPlochy("zavoj", true).id).toBe("doma");
-    expect(tapetaPlochy("hory", true).id).toBe("hory");
-    expect(TAPETY.some((t) => t.id === "doma")).toBe(false);
-    // Úloha na přizpůsobení čte nastavení a to se přenosem domů nemění.
-    expect(proved(vychoziStav(), { typ: "sit/domov" }).nastaveni.tapeta).toBe("zavoj");
-  });
-
-  it("nový router dá na plochu dopis od poskytovatele jen jednou", () => {
-    const plocha = (s: Stav) => {
-      const slozka = najdiSlozku(s.disk, rozloz("C:\\Users\\Zak\\Desktop"));
-      return (slozka?.deti ?? []).filter((d) => d.jmeno === "Pokyny od poskytovatele.txt").length;
-    };
-    expect(plocha(vychoziStav())).toBe(0);
-    const s = proved(vychoziStav(), { typ: "sit/situace", situace: "router" }, { typ: "sit/situace", situace: "router" });
-    expect(plocha(s)).toBe(1);
+  it("splněné síťové úlohy ve starém uložení postup Windows nezkazí", () => {
+    const s = { ...vychoziStav(), stopy: ["prikaz:ipconfig-all"], splneno: ["sit-ipconfig"] };
+    expect(vyhodnot(s).some((id) => id.startsWith("sit-"))).toBe(false);
+    expect(reducer(s, { typ: "stopa", klic: "prikaz:ipconfig" }).stopy).toContain("prikaz:ipconfig");
   });
 
   it("kód WIN1 se síťovými úlohami: Přehled počítá „x/33“ zvlášť a chyby ukáže u sítě", () => {

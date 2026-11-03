@@ -1,15 +1,14 @@
 /**
- * Síť virtuálního počítače: odkud příkazy ipconfig, ping, nslookup a tracert
- * berou, co vypsat.
+ * Síť: odkud příkazy ipconfig, ping, nslookup a tracert berou, co vypsat.
  *
  * Dva světy, každý drží jedna funkce níž:
  *
- * - ŠKOLA (výchozí /windows). Počítač v učebně, síť 10.20.x.x, nic se v ní
+ * - ŠKOLA (simulátor Windows). Počítač v učebně, síť 10.20.x.x, nic se v ní
  *   nedá pokazit. Dřív `ping` na cokoli odpovídal ze školní brány 10.20.3.1,
  *   i `ping seznam.cz` – to nebyla pravda (rada 31. 10. 2026).
- * - DOMOV (cvičení `?scenar=sit`). Domácí síť 192.168.1.x za routerem, kterou
- *   jde v Nastavení pokazit a opravit: ruční přiřazení IP se špatnou bránou,
- *   ruční server DNS, který neexistuje.
+ * - DOMOV (Síťová dílna, `/sitova-dilna`). Domácí síť 192.168.1.x za routerem,
+ *   kterou jde pokazit a opravit: ruční přiřazení IP se špatnou bránou, ruční
+ *   server DNS, který neexistuje, kabely, vypnutý server DHCP.
  *
  * Pravidla obsahu (CLAUDE.md): adresy v internetu jen z ukázkových rozsahů
  * 198.51.100.x a 203.0.113.x, domácí síť 192.168.1.x, škola 10.x. Názvy webů
@@ -44,6 +43,10 @@ export interface Kabely {
   wan: boolean;
   /** Do kterého portu LAN (1–4) vede kabel od počítače, `null` = nikam. */
   lan: number | null;
+  /** Omyl při zapojování: kabel od poskytovatele v portu LAN (1–4). */
+  poskytovatelVLan?: number | null;
+  /** Omyl při zapojování: kabel od počítače v portu WAN. */
+  pocitacVeWan?: boolean;
 }
 
 export type Zabezpeceni = "otevrena" | "wpa2" | "wpa2-wpa3" | "wpa3";
@@ -57,7 +60,7 @@ export interface Zarizeni {
   cizi?: boolean;
 }
 
-/** Nastavení routeru – mění se ve správě routeru (Edge → 192.168.1.1). */
+/** Nastavení routeru – mění se ve správě routeru (prohlížeč → 192.168.1.1). */
 export interface Router {
   adminHeslo: string;
   wifi: { nazev: string; zabezpeceni: Zabezpeceni; heslo: string };
@@ -75,7 +78,7 @@ export interface SitStav {
   dns: NastaveniDns;
   kabely: Kabely;
   router: Router;
-  /** Právě spuštěná porucha (tlačítko v panelu úkolů), než ji žák opraví. */
+  /** Právě spuštěná porucha (tlačítko v zakázce), než ji žák opraví. */
   porucha?: Porucha;
 }
 
@@ -202,13 +205,14 @@ export function sitProSituaci(situace: Situace): SitStav {
 }
 
 /** Svítí kontrolky na routeru? */
-export function kontrolky(sit: SitStav): { napajeni: boolean; internet: boolean; wifi: boolean; lan: number | null } {
+export function kontrolky(sit: SitStav): { napajeni: boolean; internet: boolean; wifi: boolean; lan: number[] } {
   const k = sit.kabely;
+  const porty = [k.lan, k.poskytovatelVLan].filter((p): p is number => typeof p === "number");
   return {
     napajeni: k.napajeni,
     internet: k.napajeni && k.wan,
     wifi: k.napajeni,
-    lan: k.napajeni ? k.lan : null,
+    lan: k.napajeni ? porty : [],
   };
 }
 
@@ -225,9 +229,12 @@ export interface Ucinne {
 
 /** Hodnoty, se kterými počítač opravdu pracuje (DHCP, nebo ruční). */
 export function ucinne(sit: SitStav): Ucinne {
-  const medium = sit.kabely.napajeni && sit.kabely.lan !== null;
+  const veWan = Boolean(sit.kabely.pocitacVeWan);
+  const medium = sit.kabely.napajeni && (sit.kabely.lan !== null || veWan);
   if (!medium) return { medium, apipa: false, adresa: "", maska: "", brana: "", dns: "" };
   const dnsRucne = sit.dns.prirazeni === "rucne" ? sit.dns.server : "";
+  // Port WAN adresy nepřiděluje, ten je sám dostává od poskytovatele.
+  if (veWan) return { medium, apipa: true, adresa: APIPA, maska: "255.255.0.0", brana: "", dns: dnsRucne };
   if (sit.ip.prirazeni === "rucne") {
     const { adresa, maska, brana } = sit.ip;
     return { medium, apipa: false, adresa, maska, brana, dns: dnsRucne || ROUTER };
@@ -246,7 +253,7 @@ export function jeIpv4(text: string): boolean {
 }
 
 /** Soukromé rozsahy (10/8, 172.16/12, 192.168/16) a vlastní stroj. */
-function soukroma(ip: string): boolean {
+export function soukroma(ip: string): boolean {
   const [a, b] = ip.split(".").map(Number);
   return a === 10 || a === 127 || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168);
 }
@@ -290,7 +297,7 @@ export const sitFunguje = (sit: SitStav) => {
   return d.internet && d.dns;
 };
 
-/** Je správa routeru z počítače dostupná (Edge → 192.168.1.1)? */
+/** Je správa routeru z počítače dostupná (prohlížeč → 192.168.1.1)? */
 export const spravaDostupna = (sit: SitStav) => diagnoza(sit).lan;
 
 /* ───────────────────── Názvy a adresy ───────────────────── */
@@ -479,7 +486,7 @@ export function ipconfig(sit: SitStav | undefined, argumenty: string[]): Vyslede
     vystup.push(`${tecky("NetBIOS přes TCP/IP")}Povoleno`);
   }
   vystup.push("");
-  // Úloha „Připoj počítač“: ověřit si v ipconfig, že počítač adresu dostal.
+  // Zakázka „Připoj počítač“: ověřit si v ipconfig, že počítač adresu dostal.
   if (s.domaci && s.d.lan) stopy.push("overeno:ipconfig-adresa");
   return { vystup, stopy };
 }
@@ -552,7 +559,7 @@ export function ping(sit: SitStav | undefined, argumenty: string[]): VysledekSit
   if (s.jeMistni(c.ip)) {
     const ttl = s.mistni(c.ip);
     if (ttl === null) return nedostupny();
-    // Úloha „Ověř spojení s routerem“: doma je to router i při špatně zadané bráně.
+    // Zakázka „Ověř spojení s routerem“: doma je to router i při špatně zadané bráně.
     return odpovez(ttl, [1, 1, 2, 1], c.ip === (s.domaci ? ROUTER : s.brana) ? ["ping:brana:ok"] : []);
   }
 

@@ -21,7 +21,6 @@ import { existuje, vloz, rozloz, type Slozka, type Uzel } from "./fs";
 import { FOTO_GRAF, FOTO_SNIMEK, FOTO_VYLET } from "./obrazky";
 import { binarni, slozka, soubor, vytvorDisk } from "./seed";
 import { zasifruj } from "./virus";
-import { STITEK } from "./sit";
 
 const DOMOV = "C:\\Users\\Zak";
 
@@ -41,16 +40,6 @@ export type Scenar = {
 };
 
 export const VYCHOZI_SCENAR = "vychozi";
-
-/**
- * Cvičení „Síť a poruchy“ (rada 31. 10. 2026). Na rozdíl od ostatních scénářů
- * nemění jen disk: má domácí síť, vlastní úlohy, vlastní úložiště a vlastní
- * kód postupu (WSIT1-). Výchozích 33 úloh se ho netýká.
- *
- * Od 1. 11. 2026 jsou tytéž úlohy i v běžném seznamu na `/windows` a nikde na
- * tuhle adresu nevede odkaz. Zůstává kvůli odkazům a rozdělané práci z té doby.
- */
-export const SCENAR_SIT = "sit";
 
 /** Přidá uzly do složky. `vloz` vrací nový strom, proto `reduce`. */
 function pridej(disk: Slozka, kam: string, uzly: Uzel[]): Slozka {
@@ -95,32 +84,6 @@ soubor se nezmění, jen ho přestane otevírat správný program.
 `;
 
 /* ─────────────────── Síť a poruchy ─────────────────── */
-
-/** Dopis k novému routeru (scénář „Nový router“). Údaje sedí se štítkem v `sit.ts`. */
-const POKYNY_POSKYTOVATELE = `Vítejte u ukázkového poskytovatele internetu
-
-V balíčku je router DR-300, napájecí adaptér a síťový kabel.
-
-1) Napájecí adaptér zapojte do zásuvky a do routeru.
-2) Kabel z datové zásuvky na zdi zapojte do portu WAN.
-   Porty LAN 1–4 jsou pro vaše zařízení.
-3) Když svítí kontrolka Internet, je router připojený.
-4) Počítač připojte kabelem do portu LAN, nebo přes Wi-Fi.
-   Název a heslo Wi-Fi najdete na štítku na spodní straně routeru.
-
-Nastavení routeru: v prohlížeči otevřete ${STITEK.sprava}.
-Uživatel a heslo jsou také na štítku.
-Doporučujeme hned změnit heslo ke správě i heslo k Wi-Fi.
-
-(Ukázkový dopis do výukové simulace.)
-`;
-
-/** Dá dopis k novému routeru na plochu, když tam ještě není. */
-export function sPokyny(disk: Slozka): Slozka {
-  const plocha = `${DOMOV}\\Desktop`;
-  const jmeno = "Pokyny od poskytovatele.txt";
-  return existuje(disk, rozloz(`${plocha}\\${jmeno}`)) ? disk : pridej(disk, plocha, [soubor(jmeno, POKYNY_POSKYTOVATELE, 5)]);
-}
 
 /* ─────────────────────── Seznam ─────────────────────── */
 
@@ -180,13 +143,6 @@ export const SCENARE: Scenar[] = [
     // Používá se přesně ta funkce, kterou spouští cvičný vir za běhu, takže
     // se dopad nemůže rozejít podle toho, kudy k němu žák přišel.
     uprav: (disk) => zasifruj(disk),
-  },
-  {
-    id: SCENAR_SIT,
-    nazev: "Síť a poruchy",
-    popis:
-      "Domácí počítač za routerem. Žák zjistí adresu, bránu a DNS, ověří spojení příkazy ping, nslookup a tracert a opraví dvě schválně pokažená nastavení sítě. Vlastní úlohy a vlastní kód postupu (WSIT1-).",
-    uprav: sPokyny,
   },
 ];
 

@@ -16,16 +16,16 @@ import { normalizujJmeno } from "@/lib/dbb/kodPostupu";
 import { CHYBY_SITE } from "@/lib/win/sit";
 
 /**
- * `sit` je cvičení „Síť a poruchy“ v simulátoru Windows (`/windows?scenar=sit`,
- * od 31. 10. 2026). Má vlastní předponu WSIT1-, takže ho starší Přehled třídy
- * vůbec nenajde a kódy WIN1- se nemíchají s jinou sadou úloh.
+ * `sit` je Síťová dílna (`/sitova-dilna`, od 3. 11. 2026; předtím úlohy
+ * v simulátoru Windows). Má vlastní předponu WSIT1-, takže se kódy WIN1-
+ * nemíchají s jinou sadou úloh.
  */
 export type Simulator = "windows" | "macos" | "sit";
 
 export const NAZEV_SIMULATORU: Record<Simulator, string> = {
   windows: "Windows",
   macos: "macOS",
-  sit: "Windows – síť",
+  sit: "Síťová dílna",
 };
 
 const PREDPONA: Record<Simulator, string> = {
@@ -141,8 +141,9 @@ export function najdiKodySimulatoru(text: string): PostupSimulatoru[] {
 }
 
 /**
- * Síťové úlohy jsou od 1. 11. 2026 v běžném seznamu Windows, takže je nese
- * i kód WIN1-. Přehled je ukáže stejně jako z kódu WSIT1-, „x/33“ zůstává čisté.
+ * Síťové úlohy byly od 1. do 3. 11. 2026 v běžném seznamu Windows, takže je
+ * z té doby nese i kód WIN1- (a kdo je má uložené, nese je dál). Přehled je
+ * ukáže stejně jako z kódu WSIT1-, „x/33“ zůstává čisté.
  * Výsledný `celkem` Přehled nečte, bere počet ze seznamu úloh.
  */
 function oddelSit(p: PostupSimulatoru): PostupSimulatoru[] {

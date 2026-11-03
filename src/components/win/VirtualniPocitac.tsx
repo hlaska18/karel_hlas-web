@@ -59,8 +59,8 @@ function Obrazovka() {
 
   /* Rozběhnuté sezení si pamatuje karta – obnovení stránky nevrací na zámek. */
   useEffect(() => {
-    // Bez uloženého postupu (první vstup do cvičení sítě ve stejné kartě) jde
-    // žák přes přihlášení, jinak by kód postupu odešel pod jménem „Žák“.
+    // Bez uloženého postupu jde žák přes přihlášení, jinak by kód postupu
+    // odešel pod jménem „Žák“.
     if (jePrihlasen("windows") && nacti(scenarZAdresy())) nastavFazi("bezi");
   }, []);
 
@@ -211,8 +211,7 @@ function Obrazovka() {
           <Prihlaseni
             jmenoUctu={n.jmenoUctu}
             tapetaId={n.tapeta}
-            doma={Boolean(stav.sit)}
-            rozdelano={postup(stav.splneno, stav.scenar)}
+            rozdelano={postup(stav.splneno)}
             onHotovo={(jmeno, nacisto) => {
               // Přihlášení jménem (od 25. 9. 2026 místo kódu). Jméno je
               // jméno účtu – ukazuje se ve Startu, v Nastavení a nese ho

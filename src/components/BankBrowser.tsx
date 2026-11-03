@@ -173,6 +173,22 @@ const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
     },
     cta: { cs: "Spustit kurz", en: "Start the course" },
   },
+  "Digitální gramotnost": {
+    cesta: "/sitova-dilna",
+    popis: {
+      cs: "Síťová dílna: oprav porouchaný internet, zapoj nový router a vyžeň cizí zařízení z Wi-Fi. Přímo v prohlížeči, nic se neinstaluje.",
+      en: "Network Workshop: fix a broken internet connection, plug in a new router and kick a stranger off the Wi-Fi. Right in your browser, nothing to install. The workshop is in Czech.",
+    },
+    cta: { cs: "Otevřít dílnu", en: "Open the workshop" },
+  },
+  "Internet a bezpečnost": {
+    cesta: "/sitova-dilna",
+    popis: {
+      cs: "Zabezpeč domácí Wi-Fi v Síťové dílně: heslo, WPS, síť pro hosty a cizí zařízení.",
+      en: "Secure a home Wi-Fi in the Network Workshop: password, WPS, guest network and a stranger's device. The workshop is in Czech.",
+    },
+    cta: { cs: "Otevřít dílnu", en: "Open the workshop" },
+  },
   // Operační systémy tu schválně NEJSOU. Pruh umí jen jeden odkaz, a od chvíle,
   // kdy k Windows přibyl macOS, by jeden z nich zamlčel – přitom oba stojí
   // hned pod ním ve výpisu, každý s vlastním popisem, co v něm žák najde.

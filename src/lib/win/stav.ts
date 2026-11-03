@@ -17,8 +17,7 @@
  */
 
 import type { Slozka, Uzel } from "./fs";
-import { diskProScenar, scenarPodleId, SCENAR_SIT, VYCHOZI_SCENAR } from "./scenare";
-import { doplnSit, VYCHOZI_SIT, type SitStav } from "./sit";
+import { diskProScenar, scenarPodleId, VYCHOZI_SCENAR } from "./scenare";
 import type { AppId } from "./typy";
 import { ulozDoProhlizece } from "@/lib/ulozeni";
 
@@ -32,16 +31,6 @@ import { ulozDoProhlizece } from "@/lib/ulozeni";
  * cvičné a `Nastavení → Obnovit` ho vrátí do výchozího stavu.
  */
 export const KLIC_ULOZISTE = "win11-vyuka-stav";
-
-/**
- * Cvičení „Síť a poruchy“ (`?scenar=sit`) si ukládá postup ZVLÁŠŤ (rada
- * 31. 10. 2026). Má vlastní úlohy a vlastní kód postupu; kdyby sdílelo klíč
- * s výchozím prostředím, žák cizího učitele by přepnutím adresy přepsal
- * rozdělanou práci, na kterou učitel čeká.
- */
-export const KLIC_ULOZISTE_SIT = "win11-vyuka-sit";
-
-export const klicUloziste = (scenar: string) => (scenar === SCENAR_SIT ? KLIC_ULOZISTE_SIT : KLIC_ULOZISTE);
 
 /** Zvedni při nekompatibilní změně tvaru dat – starý stav se pak zahodí. */
 export const VERZE_ULOZISTE = 1;
@@ -189,21 +178,6 @@ export interface Stav {
   virusBezi: boolean;
   /** Běží vtíravé okno? Dokud ano, po zavření se vrací. */
   reklamaBezi: boolean;
-  /**
-   * Domácí síť. Chybí, dokud žák nezačne síťové úlohy: do té doby je počítač ve
-   * škole a příkazy vypisují školní síť. Ve cvičení `?scenar=sit` je od začátku.
-   */
-  sit?: SitStav;
-  /**
-   * Chyby při opravě sítě (id z `CHYBY_SITE` → kolikrát). Nesou se v kódu
-   * postupu cvičení `sit`, učitel je uvidí v Přehledu třídy.
-   */
-  chyby?: Record<string, number>;
-  /**
-   * Kolik nápověd si žák u úlohy otevřel. Jen pro žáka – do kódu postupu
-   * schválně NEJDE (rada: počítaná nápověda by se stala trestem).
-   */
-  napovedy?: Record<string, number>;
 }
 
 /** Výchozí velikost a poloha okna podle aplikace. */
@@ -223,9 +197,7 @@ export const VYCHOZI_OKNO: Record<AppId, { w: number; h: number }> = {
 };
 
 export function vychoziStav(scenar: string = VYCHOZI_SCENAR): Stav {
-  const sit = scenar === SCENAR_SIT ? { sit: VYCHOZI_SIT, chyby: {}, napovedy: {} } : {};
   return {
-    ...sit,
     virusBezi: false,
     // Výchozí scénář nastupuje rovnou s běžícím vtíravým oknem; `uklid`
     // a `poviru` ne, tam by jen překáželo.
@@ -256,13 +228,13 @@ export function vychoziStav(scenar: string = VYCHOZI_SCENAR): Stav {
  */
 type Ulozeny = Pick<
   Stav,
-  "verze" | "scenar" | "disk" | "kos" | "nastaveni" | "stopy" | "splneno" | "reklamaBezi" | "sit" | "chyby" | "napovedy"
+  "verze" | "scenar" | "disk" | "kos" | "nastaveni" | "stopy" | "splneno" | "reklamaBezi"
 >;
 
 export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
   if (typeof window === "undefined") return null;
   try {
-    const syrove = window.localStorage.getItem(klicUloziste(scenar));
+    const syrove = window.localStorage.getItem(KLIC_ULOZISTE);
     if (!syrove) return null;
     const ulozeny = JSON.parse(syrove) as Ulozeny;
     if (ulozeny?.verze !== VERZE_ULOZISTE || !ulozeny.disk) return null;
@@ -279,8 +251,6 @@ export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
         nastaveni: { ...VYCHOZI_NASTAVENI, ...ulozeny.nastaveni },
         stopy: ulozeny.stopy ?? [],
         splneno: ulozeny.splneno ?? [],
-        ...(ulozeny.chyby ? { chyby: ulozeny.chyby } : {}),
-        ...(ulozeny.napovedy ? { napovedy: ulozeny.napovedy } : {}),
       };
     }
 
@@ -293,10 +263,6 @@ export function nacti(scenar: string = VYCHOZI_SCENAR): Stav | null {
       splneno: ulozeny.splneno ?? [],
       // `??` schválně: starší uložený stav tohle pole nemá a pak platí scénář.
       reklamaBezi: ulozeny.reklamaBezi ?? vychoziStav(scenar).reklamaBezi,
-      // Stav z doby před routerem a kabely (31. 10. 2026) se doplní.
-      ...(scenar === SCENAR_SIT || ulozeny.sit ? { sit: doplnSit(ulozeny.sit) } : {}),
-      ...(scenar === SCENAR_SIT || ulozeny.chyby ? { chyby: ulozeny.chyby ?? {} } : {}),
-      ...(scenar === SCENAR_SIT || ulozeny.napovedy ? { napovedy: ulozeny.napovedy ?? {} } : {}),
     };
   } catch {
     // Rozbitý nebo cizí obsah v úložišti nesmí shodit celé prostředí.
@@ -316,18 +282,15 @@ export function uloz(stav: Stav): void {
     splneno: stav.splneno,
     reklamaBezi: stav.reklamaBezi,
   };
-  if (stav.sit) ulozeny.sit = stav.sit;
-  if (stav.chyby) ulozeny.chyby = stav.chyby;
-  if (stav.napovedy) ulozeny.napovedy = stav.napovedy;
   // Plné nebo zakázané úložiště (anonymní okno): prostředí běží dál, jen se
   // po zavření karty nic nezachová – `ulozDoProhlizece` na to upozorní pruhem.
-  ulozDoProhlizece(klicUloziste(stav.scenar), JSON.stringify(ulozeny));
+  ulozDoProhlizece(KLIC_ULOZISTE, JSON.stringify(ulozeny));
 }
 
-export function zapomen(scenar: string = VYCHOZI_SCENAR): void {
+export function zapomen(): void {
   if (typeof window === "undefined") return;
   try {
-    window.localStorage.removeItem(klicUloziste(scenar));
+    window.localStorage.removeItem(KLIC_ULOZISTE);
   } catch {
     /* nevadí */
   }

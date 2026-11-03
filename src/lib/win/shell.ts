@@ -32,7 +32,7 @@ import {
 } from "./fs";
 import { cislo, datumCas } from "./format";
 import { KAPACITA_DISKU, OBSAZENO_SYSTEMEM } from "./nazvy";
-import { ipconfig, nslookup, ping, tracert, type SitStav } from "./sit";
+import { ipconfig, nslookup, ping, tracert } from "./sit";
 
 export type Rezim = "cmd" | "powershell";
 
@@ -40,8 +40,6 @@ export interface Kontext {
   disk: Slozka;
   cesta: string[];
   jmenoUctu: string;
-  /** Domácí síť cvičení `?scenar=sit`. Bez ní běží příkazy ve školní síti. */
-  sit?: SitStav;
 }
 
 export interface Vysledek {
@@ -272,13 +270,13 @@ function cmdStrom(ctx: Kontext, argumenty: string[]): Vysledek {
 }
 
 /** Školní počítač, ve cvičení sítě domácí (stejně jako v `ipconfig /all`). */
-const nazevPocitace = (ctx: Kontext) => (ctx.sit ? "DOMACI-PC" : "SPST-UCEBNA-14");
+const NAZEV_POCITACE = "SPST-UCEBNA-14";
 
 function systeminfo(ctx: Kontext): string[] {
   const pocet = pocetPolozek(ctx.disk);
   return [
     "",
-    `Název hostitele:                          ${nazevPocitace(ctx)}`,
+    `Název hostitele:                          ${NAZEV_POCITACE}`,
     "Název operačního systému:                 Microsoft Windows 11 Education",
     "Verze operačního systému:                 10.0.26100 Build 26100",
     "Výrobce operačního systému:               Microsoft Corporation",
@@ -437,20 +435,20 @@ export function spust(radek: string, ctx: Kontext, rezim: Rezim): Vysledek {
     case "ver":
       return { vystup: ["", "Microsoft Windows [Verze 10.0.26100.2033]", ""] };
     case "hostname":
-      return { vystup: [nazevPocitace(ctx)] };
+      return { vystup: [NAZEV_POCITACE] };
     case "whoami":
-      return { vystup: [`${nazevPocitace(ctx).toLowerCase()}\\${ctx.jmenoUctu.toLowerCase().replace(/\s+/g, "")}`] };
+      return { vystup: [`${NAZEV_POCITACE.toLowerCase()}\\${ctx.jmenoUctu.toLowerCase().replace(/\s+/g, "")}`] };
     case "ipconfig":
-      return ipconfig(ctx.sit, argumenty);
+      return ipconfig(undefined, argumenty);
     case "systeminfo":
       return { vystup: systeminfo(ctx) };
     // Síťové příkazy jsou samostatné programy Windows – jdou v cmd i v PowerShellu.
     case "ping":
-      return ping(ctx.sit, argumenty);
+      return ping(undefined, argumenty);
     case "nslookup":
-      return nslookup(ctx.sit, argumenty);
+      return nslookup(undefined, argumenty);
     case "tracert":
-      return tracert(ctx.sit, argumenty);
+      return tracert(undefined, argumenty);
     default:
       break;
   }

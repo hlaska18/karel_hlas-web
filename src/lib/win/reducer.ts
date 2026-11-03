@@ -19,17 +19,6 @@ import {
   type Stav,
 } from "./stav";
 import { APLIKACE, type AppId } from "./typy";
-import { sPokyny } from "./scenare";
-import {
-  chybyPriZmene,
-  opravenaPorucha,
-  sitProSituaci,
-  sitSPoruchou,
-  VYCHOZI_SIT,
-  type Porucha,
-  type SitStav,
-  type Situace,
-} from "./sit";
 
 export type { Prichyceni };
 
@@ -63,12 +52,7 @@ export type Akce =
   | { typ: "reklama/spust" }
   | { typ: "reklama/zastav" }
   // Síťové úlohy: počítač doma za routerem, nebo zpátky ve škole.
-  | { typ: "sit/domov" }
-  | { typ: "sit/skola" }
-  | { typ: "sit/nastav"; sit: SitStav }
-  | { typ: "sit/porucha"; porucha: Porucha }
-  | { typ: "sit/situace"; situace: Situace }
-  | { typ: "napoveda"; id: string };
+
 
 /**
  * Aplikace, které běží jen v jedné kopii. Spuštění „podruhé" jen přepne na
@@ -302,56 +286,6 @@ export function reducer(stav: Stav, akce: Akce): Stav {
     case "reklama/zastav":
       return stav.reklamaBezi ? { ...stav, reklamaBezi: false } : stav;
 
-    case "sit/nastav": {
-      // Jakákoli změna sítě: Nastavení ve Windows, kabely u routeru, správa routeru.
-      if (!stav.sit) return stav;
-      const pred = stav.sit;
-      let po = akce.sit;
-      let stopy = pridejStopu(stav.stopy, "sit:zmena");
-      // Porucha je opravená jen tehdy, když ji opravil žák – ne když se
-      // počítač vrátil do výchozího stavu (`system/reset` stopu nepřidá).
-      const opravena = opravenaPorucha(po);
-      if (opravena) {
-        stopy = pridejStopu(stopy, `porucha:${opravena}:opravena`);
-        po = { ...po, porucha: undefined };
-      }
-      const chyby = { ...stav.chyby };
-      for (const id of chybyPriZmene(pred, po)) chyby[id] = Math.min(99, (chyby[id] ?? 0) + 1);
-      return { ...stav, sit: po, stopy, chyby };
-    }
-
-    case "sit/domov":
-      return stav.sit ? stav : { ...stav, sit: VYCHOZI_SIT, stopy: stopyDoma(stav) };
-
-    case "sit/skola":
-      return { ...stav, sit: undefined, stopy: bezScenare(stav.stopy) };
-
-    case "sit/situace":
-      return {
-        ...stav,
-        disk: akce.situace === "router" ? sPokyny(stav.disk) : stav.disk,
-        sit: sitProSituaci(akce.situace),
-        // Doklady „ověřeno“ (ipconfig s adresou, přihlášení do routeru) platí
-        // jen pro tenhle router – po novém začátku se musí udělat znovu.
-        stopy: pridejStopu(
-          bezScenare(stopyDoma(stav)).filter((s) => !s.startsWith("overeno:")),
-          `situace:${akce.situace}:spustena`,
-        ),
-      };
-
-    case "sit/porucha":
-      return {
-        ...stav,
-        sit: sitSPoruchou(akce.porucha),
-        stopy: pridejStopu(bezScenare(stopyDoma(stav)), `porucha:${akce.porucha}:spustena`),
-      };
-
-    case "napoveda": {
-      const napovedy = { ...stav.napovedy };
-      napovedy[akce.id] = (napovedy[akce.id] ?? 0) + 1;
-      return { ...stav, napovedy };
-    }
-
     case "system/reset":
       // Vrátí disk do stavu, ve kterém hodina začínala – z TÉHOŽ scénáře,
       // ne z výchozího. Odškrtané úlohy zůstávají: úklid počítače není důvod
@@ -360,30 +294,12 @@ export function reducer(stav: Stav, akce: Akce): Stav {
         ...vychoziStav(stav.scenar),
         splneno: stav.splneno,
         stopy: stav.stopy,
-        ...(stav.chyby ? { chyby: stav.chyby } : {}),
-        ...(stav.napovedy ? { napovedy: stav.napovedy } : {}),
       };
 
     default:
       return stav;
   }
 }
-
-/**
- * Stopy při příchodu na domácí síť: příkazy spuštěné ve škole se nepočítají,
- * úlohy mluví o domácí adrese a routeru. Když už žák doma je, nic se nemaže.
- */
-function stopyDoma(stav: Stav): string[] {
-  if (stav.sit) return stav.stopy;
-  const skolni = ["prikaz:ipconfig-all", "ping:brana:ok", "ping:internet:ok", "nslookup:ok", "tracert:ok"];
-  return stav.stopy.filter((s) => !skolni.includes(s));
-}
-
-/**
- * Vyměněná síť ukončí běžící scénář. Jinak by porucha se zapojenými kabely
- * odškrtla „Zapoj router“ ve scénáři, který žák předtím jen spustil.
- */
-const bezScenare = (stopy: string[]) => stopy.filter((s) => !/^situace:.*:spustena$/.test(s));
 
 /** Stopy se neopakují – seznam je množina, ne historie. */
 function pridejStopu(stopy: string[], klic: string): string[] {

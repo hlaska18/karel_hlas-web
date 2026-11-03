@@ -440,6 +440,26 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Největší zbytek: položky banky v HTML (~300 KB nekomprimovaně, 361 položek). Zásadní úspora
   by bylo načítat je až po otevření tématu nebo hledání; zatím neudělané.
 
+### Síťová dílna: vlastní prostředí místo sítě ve Windows (3. 11. 2026)
+- Karel: „z windows síť vyřadíme“. **`/sitova-dilna`** (`src/components/dilna/`, `src/lib/dilna/`) má
+  20 úloh se stejnými id `sit-*` jako dřív, kód zůstává **WSIT1-**. Vstup je banner v tématech
+  Digitální gramotnost a Internet a bezpečnost (`TOOL_INTERACTIVE`), bez dlaždice v úvodu. Návrh:
+  https://claude.ai/artifact/X2Vp54cXmxSDH9SVzZCewJ. Běží jen na počítači (`JenNaPocitaci`).
+- `/windows` je zase jen 33 úloh, bez domova, poruch a tapety. Terminál tam pracuje se školní sítí
+  10.20.x. Model sítě zůstal v `src/lib/win/sit.ts`, používá ho i dílna; `obrazky`, `pristup` a
+  `postupSimulatoru` jsou sdílené. Starší sekce výše popisují Windows před přesunem.
+- Staré věci žijí dál: `/windows?scenar=sit` přesměruje do dílny (next.config.mjs), rozdělaná práce
+  se jednou přenese z `win11-vyuka-stav` a `win11-vyuka-sit` do `sitova-dilna` (`nactiDilnu`),
+  Přehled třídy čte staré WSIT1- i WIN1- se síťovými úlohami, dílna je umí načíst, Windows WSIT1-
+  odmítne s vysvětlením.
+- Úloha o poruše se splní až po ověření (`overuje`, stopa `porucha:X:overena`). DNS se musí ověřit
+  názvem (`ping:nazev:ok`, nslookup, web), jinak by prošel ping na adresu. Prohlížeč na skryté
+  záložce nic neověřuje (`aktivni`). Tip ve schématu vyhodnocuje `lib/dilna/tipy.ts` podle toho,
+  co žák opravdu zjistil. Čáry při poruše schválně zůstávají plné, jinak by prozradily odpověď.
+- Správa routeru se otevírá v Prohlížeči dílny na 192.168.1.1, ne vlastní záložkou (návrh ji měl).
+- Plány hodin 4 a 6 (.docx) dílnu nezmiňují, to je na Karlovi. **Ověřit na českých Windows** zůstává
+  ze sekcí výše. V Přehledu je věta „jsem … vyndal“ (hlas Karla), `hero.novinky` taky.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované
