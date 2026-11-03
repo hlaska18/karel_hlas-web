@@ -10,6 +10,7 @@
 
 import { useZabalit } from "@/lib/zabalit";
 import {
+  BookOpen,
   ChevronDown,
   ExternalLink,
   Images,
@@ -60,6 +61,7 @@ function Pole({ popisek, text }: { popisek: string; text: string }) {
 }
 
 const IKONY = {
+  kniha: BookOpen,
   chat: MessageSquare,
   obraz: Images,
   trida: Sparkles,
