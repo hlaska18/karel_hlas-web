@@ -1136,12 +1136,13 @@ type Dict = {
     simulators: string;
     simWindows: string;
     simMacos: string;
+    simDilna: string;
     /** Řádek pod názvem simulátoru. `{tasks}` je počet úloh i se slovem. */
     simNote: string;
     /** Štítek vpravo na tlačítku simulátoru. */
     simOpen: string;
     /**
-     * Návod „Jak zadat simulátor žákům“ pod tlačítky simulátorů (rada
+     * Návod „Jak zadat simulátor nebo dílnu žákům“ pod tlačítky simulátorů (rada
      * 26. 10. 2026). Cizí učitelé simulátor zadávají přes Teams a adresa se
      * jim slepila s textem úkolu (/windowsPostup:1.Přihlas… v Analytics).
      * `zadatText` je zadání ke zkopírování: `{nazev}` a `{url}` se doplní,
@@ -1150,10 +1151,12 @@ type Dict = {
     zadatTitle: string;
     zadatKroky: string[];
     zadatText: string;
+    /** Totéž pro Síťovou dílnu: nemá tlačítko Úkoly ani Moje výsledky. */
+    zadatTextDilna: string;
     zadatCopy: string;
     zadatCopied: string;
     /**
-     * „Co je nového v simulátorech“ pod návodem k zadání (31. 10. 2026, cvičení
+     * „Co je nového v simulátorech a dílnách“ pod návodem k zadání (31. 10. 2026, cvičení
      * Síť a poruchy). Cizí učitelé mají simulátory v zadáních, ať vidí, co se
      * změnilo a co ne. Nejnovější položka nahoře.
      */
@@ -1401,23 +1404,26 @@ export const t: Record<Lang, Dict> = {
         "Pro střední školy. Moje soubory si stáhneš i upravíš zdarma; virtuální Windows a macOS běží rovnou v prohlížeči. Cvičebnice k Office je tu celá i s řešeními a autoři jsou u ní uvedení.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · všechny ročníky SŠ",
-      simulators: "Simulátory v prohlížeči",
+      simulators: "Simulátory a dílny v prohlížeči",
       simWindows: "Virtuální Windows 11",
       simMacos: "Virtuální macOS",
+      simDilna: "Síťová dílna",
       simNote: "{tasks} · přihlášení jménem",
       simOpen: "Spustit",
-      zadatTitle: "Jak zadat simulátor žákům",
+      zadatTitle: "Jak zadat simulátor nebo dílnu žákům",
       zadatKroky: [
         "Zkopíruj hotové zadání níž a vlož ho do Teams nebo Classroomu. Adresa je v něm na samostatném řádku, aby se neslepila s textem.",
-        "Žáci pracují na počítači s myší (na telefonu simulátor nejde). Přihlásí se jménem a příjmením, nic se jim nezakládá. Úlohy jsou v tlačítku Úkoly vpravo dole a odškrtávají se samy.",
-        "Na konci hodiny klikne žák v panelu Úkoly na Moje výsledky a kód postupu ti pošle jako odpověď. Práce se ukládá jen v prohlížeči, takže ať ji dodělá na stejném počítači.",
-        "Kódy vlož ve stejném simulátoru do panelu Úkoly → Pro učitele: Přehled třídy. Stačí celé zprávy, kódy se v nich najdou samy. Přehled stáhneš do Excelu.",
+        "Žáci pracují na počítači s myší (na telefonu to nejde). Přihlásí se jménem a příjmením, nic se jim nezakládá. V simulátoru jsou úlohy v tlačítku Úkoly vpravo dole, v dílně zakázky v levém panelu. Odškrtávají se samy.",
+        "Na konci hodiny ti žák pošle kód postupu jako odpověď. V simulátoru ho najde v panelu Úkoly pod Moje výsledky, v dílně pod tlačítkem Kód postupu nahoře. Práce se ukládá jen v prohlížeči, takže ať ji dodělá na stejném počítači.",
+        "Kódy vlož do Přehledu třídy. V simulátoru je v panelu Úkoly, v dílně dole v levém panelu (Pro učitele: Přehled třídy). Stačí celé zprávy, kódy se v nich najdou samy. Přehled stáhneš do Excelu.",
       ],
       zadatText:
         "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Vpravo dole klikni na Úkoly a plň úlohy – odškrtávají se samy.\n3. Na konci klikni v panelu Úkoly na Moje výsledky, zkopíruj kód postupu a pošli mi ho jako odpověď.\n",
+      zadatTextDilna:
+        "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Vlevo vyber zakázku a plň ji – hotové se odškrtávají samy.\n3. Na konci klikni nahoře na Kód postupu, zkopíruj ho a pošli mi ho jako odpověď.\n",
       zadatCopy: "Zkopírovat zadání",
       zadatCopied: "Zkopírováno",
-      novinkyTitle: "Co je nového v simulátorech",
+      novinkyTitle: "Co je nového v simulátorech a dílnách",
       novinky: [
         "Listopad 2026: síťové úlohy jsem ze simulátoru Windows vyndal. Je z nich nová Síťová dílna v tématu Digitální gramotnost, se schématem domácí sítě, Terminálem, routerem zezadu a správou routeru.",
         "V dílně je 20 zakázek: Jak je počítač připojený, Nový router, pět poruch a Cizí zařízení ve Wi-Fi. U poruchy si žák tipne, kde je chyba, doloží to příkazy, opraví ji a opravu musí ověřit. Obálka ve schématu ukazuje, kam až data došla. Nápovědy si odkrývá po jedné a vidí je jen on. Router i jeho správa jsou smyšlené, žák v nich vymýšlí jen cvičná hesla.",
@@ -2170,23 +2176,26 @@ export const t: Record<Lang, Dict> = {
         "For secondary schools. My own files are free to download and edit; virtual Windows and macOS run right in the browser. The Office workbook is here in full, solutions included, with its authors credited.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · all secondary years",
-      simulators: "Simulators in the browser",
+      simulators: "Simulators and workshops in the browser",
       simWindows: "Virtual Windows 11",
       simMacos: "Virtual macOS",
+      simDilna: "Network Workshop",
       simNote: "{tasks} in Czech",
       simOpen: "Open",
-      zadatTitle: "How to assign a simulator to students",
+      zadatTitle: "How to assign a simulator or workshop",
       zadatKroky: [
         "Copy the ready-made assignment below and paste it into Teams or Classroom. The link sits on its own line so it does not merge with the text.",
-        "Students work on a computer with a mouse (the simulator does not run on phones). They sign in with their full name; no account is created. Tasks are under the Úkoly (Tasks) button bottom right and tick themselves off.",
-        "At the end of the lesson the student clicks Moje výsledky (My results) in the task panel and sends you the progress code as a reply. Work is saved only in the browser, so they should finish on the same computer.",
-        "Paste the codes in the same simulator under Úkoly → Pro učitele: Přehled třídy (class overview). Whole messages are fine; the codes are found automatically. You can download the overview for Excel.",
+        "Students work on a computer with a mouse (it does not run on phones). They sign in with their full name; no account is created. In a simulator, tasks are under the Úkoly (Tasks) button bottom right; in the workshop, jobs are in the left panel. They tick themselves off.",
+        "At the end of the lesson the student sends you the progress code as a reply. In a simulator it is under Moje výsledky (My results) in the task panel; in the workshop under the Kód postupu (Progress code) button at the top. Work is saved only in the browser, so they should finish on the same computer.",
+        "Paste the codes into Pro učitele: Přehled třídy (class overview). In a simulator it is in the task panel; in the workshop at the bottom of the left panel. Whole messages are fine; the codes are found automatically. You can download the overview for Excel.",
       ],
       zadatText:
         "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Click Úkoly (Tasks) bottom right and work through the tasks – they tick themselves off.\n3. At the end click Moje výsledky (My results) in the task panel, copy the progress code and send it to me as a reply.\n\n(The simulator is in Czech.)\n",
+      zadatTextDilna:
+        "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Pick a job on the left (Zakázky) and work through it – finished jobs tick themselves off.\n3. At the end click Kód postupu (Progress code) at the top, copy the code and send it to me as a reply.\n\n(The workshop is in Czech.)\n",
       zadatCopy: "Copy the assignment",
       zadatCopied: "Copied",
-      novinkyTitle: "What is new in the simulators",
+      novinkyTitle: "New in simulators and workshops",
       novinky: [
         "November 2026: I took the network tasks out of the Windows simulator. They are now a new Network Workshop in the Digital literacy topic, with a diagram of a home network, a Terminal, the back of a router and the router admin pages. The workshop is in Czech.",
         "It has 20 jobs: How the computer is connected, New router, five faults and A stranger on the Wi-Fi. With a fault, students guess where the problem is, back it up with commands, fix it and must verify the fix. An envelope in the diagram shows how far the data got. Hints are revealed one at a time and only the student sees them. The router and its admin pages are made up; students only invent practice passwords there.",

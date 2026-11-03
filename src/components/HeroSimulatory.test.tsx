@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, expect, it } from "vitest";
-import { fireEvent, render, screen, waitFor } from "@testing-library/react";
+import { cleanup, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { vi } from "vitest";
 
 import { HeroSimulatory } from "@/components/HeroSimulatory";
@@ -15,19 +15,42 @@ import { t, type Lang } from "@/lib/content";
  * Právě ručně psané „34 úloh" se jednou rozjelo se skutečností.
  */
 
-function vykresli(lang: Lang, windows: number, macos: number) {
+function vykresli(lang: Lang, windows: number, macos: number, dilna = 20) {
   return render(
     <LanguageProvider lang={lang} tr={t[lang]}>
-      <HeroSimulatory ulohy={{ windows, macos }} />
+      <HeroSimulatory ulohy={{ windows, macos, dilna }} />
     </LanguageProvider>,
   );
 }
 
 describe("HeroSimulatory", () => {
-  it("vede na oba simulátory", () => {
+  it("vede na oba simulátory a pod nimi do dílny", () => {
     vykresli("cs", 33, 14);
     const odkazy = screen.getAllByRole("link").map((a) => a.getAttribute("href"));
-    expect(odkazy).toEqual(["/windows", "/macos"]);
+    expect(odkazy).toEqual(["/windows", "/macos", "/sitova-dilna"]);
+  });
+
+  it("dílna ukáže předaný počet zakázek a z angličtiny vede zpět na /en", () => {
+    vykresli("cs", 33, 14, 3);
+    expect(screen.getAllByRole("link")[2].textContent).toContain("3 zakázky · přihlášení jménem");
+    cleanup();
+    vykresli("en", 33, 14, 20);
+    const dilna = screen.getAllByRole("link")[2];
+    expect(dilna.getAttribute("href")).toBe("/sitova-dilna?z=en");
+    expect(dilna.textContent).toContain("20 jobs in Czech");
+  });
+
+  it("dílna má vlastní zadání, protože tlačítko Úkoly nemá", async () => {
+    const zapis = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText: zapis } });
+    vykresli("cs", 33, 14);
+    expect(screen.getAllByRole("button", { name: /Zkopírovat zadání/ })).toHaveLength(3);
+    fireEvent.click(screen.getByRole("button", { name: /Zkopírovat zadání – Síťová dílna/ }));
+    await waitFor(() => expect(zapis).toHaveBeenCalled());
+    const text: string = zapis.mock.calls[0][0];
+    expect(text).toMatch(/\n\nhttps:\/\/karelhlas\.vercel\.app\/sitova-dilna\n\n/);
+    expect(text).toContain("Kód postupu");
+    expect(text).not.toMatch(/Úkoly|Moje výsledky/);
   });
 
   it("ukáže předaný počet úloh, správně vyskloňovaný, a že se vstupuje jménem", () => {

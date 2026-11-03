@@ -6,11 +6,12 @@ import { useLang } from "@/lib/i18n";
 import { SITE } from "@/lib/content";
 import { ZnakWindows } from "@/components/ZnakWindows";
 import { ZnakJablko } from "@/components/ZnakJablko";
+import { ZnakDilna } from "@/components/ZnakDilna";
 import type { Lang } from "@/lib/content";
 
 /**
- * Tlačítka na oba simulátory v pravém sloupci úvodu – nahradila ukázku
- * materiálů (tři náhodné soubory z banky).
+ * Tlačítka na oba simulátory a Síťovou dílnu v pravém sloupci úvodu – nahradila
+ * ukázku materiálů (tři náhodné soubory z banky).
  *
  * Vzhled drží stoh článků pod nimi: stejná skleněná karta, čtverec se
  * značkou vlevo, štítek vpravo a natočení, které se při najetí srovná.
@@ -22,13 +23,20 @@ import type { Lang } from "@/lib/content";
  * se do simulátorů vstupuje jménem, bez kódu.
  */
 
-export type PoctyUloh = { windows: number; macos: number };
+export type PoctyUloh = { windows: number; macos: number; dilna: number };
 
 /** Anglicky „tasks“, ne „exercises“ jako na dlaždici – kratší řádek
  *  se v kartě široké 22 rem neořízne. */
 function pocetUloh(n: number, lang: Lang): string {
   if (lang === "en") return `${n} ${n === 1 ? "task" : "tasks"}`;
   const slovo = n === 1 ? "úloha" : n >= 2 && n <= 4 ? "úlohy" : "úloh";
+  return `${n} ${slovo}`;
+}
+
+/** Dílna má zakázky, ne úlohy – stejně jí říká i panel v dílně. */
+function pocetZakazek(n: number, lang: Lang): string {
+  if (lang === "en") return `${n} ${n === 1 ? "job" : "jobs"}`;
+  const slovo = n === 1 ? "zakázka" : n >= 2 && n <= 4 ? "zakázky" : "zakázek";
   return `${n} ${slovo}`;
 }
 
@@ -42,18 +50,29 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
   const [zkopirovano, nastavZkopirovano] = useState<string | null>(null);
   const [rucne, nastavRucne] = useState<string | null>(null);
 
-  const simulatory = [
+  const karty = [
     {
       href: "/windows",
       nazev: tr.hero.simWindows,
-      pocet: ulohy.windows,
+      pocet: pocetUloh(ulohy.windows, lang),
+      zadani: tr.hero.zadatText,
       znak: <ZnakWindows className="h-6 w-6" />,
     },
     {
       href: "/macos",
       nazev: tr.hero.simMacos,
-      pocet: ulohy.macos,
+      pocet: pocetUloh(ulohy.macos, lang),
+      zadani: tr.hero.zadatText,
       znak: <ZnakJablko className="h-7 w-7" />,
+    },
+    {
+      /* `?z=en` vede odkaz zpět na /en. */
+      href: lang === "en" ? "/sitova-dilna?z=en" : "/sitova-dilna",
+      nazev: tr.hero.simDilna,
+      pocet: pocetZakazek(ulohy.dilna, lang),
+      /* Dílna má vlastní zadání: tlačítko Úkoly ani Moje výsledky v ní nejsou. */
+      zadani: tr.hero.zadatTextDilna,
+      znak: <ZnakDilna className="h-6 w-6" />,
     },
   ];
 
@@ -65,8 +84,8 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
       </p>
 
       <ul className="space-y-4">
-        {simulatory.map((s, i) => {
-          const poznamka = tr.hero.simNote.replace("{tasks}", pocetUloh(s.pocet, lang));
+        {karty.map((s, i) => {
+          const poznamka = tr.hero.simNote.replace("{tasks}", s.pocet);
           return (
             <li key={s.href}>
               {/* Stejná dvě gesta jako u stohu článků: najetí kamkoli do
@@ -113,8 +132,8 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
           ))}
         </ol>
         <div className="mt-3 flex flex-wrap gap-2 pl-1">
-          {simulatory.map((s) => {
-            const text = tr.hero.zadatText.replace("{nazev}", s.nazev).replace("{url}", `${SITE.url}${s.href}`);
+          {karty.map((s) => {
+            const text = s.zadani.replace("{nazev}", s.nazev).replace("{url}", `${SITE.url}${s.href}`);
             const kopiruj = async () => {
               try {
                 await navigator.clipboard.writeText(text);

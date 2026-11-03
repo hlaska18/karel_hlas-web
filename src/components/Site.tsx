@@ -13,6 +13,7 @@ import type { Vystup } from "@/lib/aihubLabels";
 import { getBankStats } from "@/lib/heroPick";
 import { UKOLY } from "@/lib/win/ukoly";
 import { UKOLY_MAC } from "@/lib/mac/ukoly";
+import { UKOLY_SIT } from "@/lib/dilna/ukoly";
 import { t } from "@/lib/content";
 
 /** Celý web na jedné stránce (one-page). Jazyk přichází z adresy (/ nebo /en). */
@@ -37,7 +38,7 @@ export function Site({
         {/* Počty úloh se berou ze skutečných seznamů úloh tady na serveru,
             ať se do prohlížeče nemusí posílat celé simulace. */}
         <Hero
-          ulohy={{ windows: UKOLY.length, macos: UKOLY_MAC.length }}
+          ulohy={{ windows: UKOLY.length, macos: UKOLY_MAC.length, dilna: UKOLY_SIT.length }}
           stats={getBankStats(items)}
         />
         <BankSection items={items} />

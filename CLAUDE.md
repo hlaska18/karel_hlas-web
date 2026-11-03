@@ -443,7 +443,10 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 ### Síťová dílna: vlastní prostředí místo sítě ve Windows (3. 11. 2026)
 - Karel: „z windows síť vyřadíme“. **`/sitova-dilna`** (`src/components/dilna/`, `src/lib/dilna/`) má
   20 úloh se stejnými id `sit-*` jako dřív, kód zůstává **WSIT1-**. Vstup je banner v tématech
-  Digitální gramotnost a Internet a bezpečnost (`TOOL_INTERACTIVE`), bez dlaždice v úvodu. Návrh:
+  Digitální gramotnost a Internet a bezpečnost (`TOOL_INTERACTIVE`) a od 3. 11. na Karlovo přání
+  karta pod simulátory v úvodu (`HeroSimulatory.tsx`, „Simulátory a dílny v prohlížeči“; nahrazuje
+  starší „nechce dlaždici“). „Jak zadat simulátor nebo dílnu žákům“ má pro dílnu vlastní zadání
+  (`zadatTextDilna`), protože tlačítko Úkoly ani Moje výsledky v ní nejsou. Návrh:
   https://claude.ai/artifact/X2Vp54cXmxSDH9SVzZCewJ. Běží jen na počítači (`JenNaPocitaci`).
 - `/windows` je zase jen 33 úloh, bez domova, poruch a tapety. Terminál tam pracuje se školní sítí
   10.20.x. Model sítě zůstal v `src/lib/win/sit.ts`, používá ho i dílna; `obrazky`, `pristup` a
@@ -463,6 +466,9 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   i pro `/windows`, `sit.ts` je sdílený). Jediný český `ipconfig /all` je z Windows 7 a liší se u IPv6,
   „(Preferované)“, směrování IP, NetBIOS a stavu média; to čeká na fotky z Windows 11 od Karla.
   Firefox 111 s dílnou nikdo nezkoušel.
+- Na ostrém webu prošlo 3. 11. (commit 315c4a1): všech 20 zakázek, kódy, Přehled třídy, omezit pohyb,
+  telefon. Známé a záměrně neměněné: hledání ve Startu Windows chce přesnou diakritiku („terminal“ ani
+  „cmd“ nic nenajde, Enter výsledek neotevře); bylo to tak už dřív, Karel zatím nerozhodl.
 
 ## Otevřené / nápady (nic naléhavého)
 

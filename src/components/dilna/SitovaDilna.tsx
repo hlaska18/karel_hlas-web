@@ -15,6 +15,7 @@
 import { useCallback, useEffect, useReducer, useState } from "react";
 import Link from "next/link";
 import { ArrowLeft, Check, ChevronDown } from "lucide-react";
+import { ZnakDilna } from "@/components/ZnakDilna";
 import { MojeVysledkySimulatoru, PrehledTridySimulatoru, type Vzhled } from "@/components/postup/VysledkySimulatoru";
 import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
@@ -60,14 +61,7 @@ const POZADI_HLASKY: Record<Hlaska["druh"], string> = {
 };
 
 function Logo() {
-  return (
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#6fe3c2" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-      <rect x="9" y="3" width="6" height="5" rx="1" />
-      <rect x="3" y="16" width="6" height="5" rx="1" />
-      <rect x="15" y="16" width="6" height="5" rx="1" />
-      <path d="M12 8v4M6 16v-4h12v4" />
-    </svg>
-  );
+  return <ZnakDilna className="h-6 w-6 text-[#6fe3c2]" />;
 }
 
 function OdkazZpet({ className }: { className: string }) {
