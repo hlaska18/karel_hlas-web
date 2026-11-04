@@ -286,7 +286,7 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   `overeno: "RRRR-MM"`. Druhá vlna z auditu (OneZoom, USGS, SimScale,
   CyberChef, Photopea, diagrams.net, Content Credentials) čeká na zájem.
 - AI Hub, „Kde se to naučit“ (vlastní kategorie od 3. 11.): kniha Karla Klatovského „133 tipů – Jak využít AI
-  (nejen) ve školství“ (7. 10. 2026), jen odkaz na PDF u autora (licence
+  (nejen) ve školství“ (7. 10. 2026), jen odkaz na online příručku u autora klatovsky.cz/ai/ (s www je 404; PDF má 40 MB a v Safari se dlouho otevírá; licence
   neuvedená, nehostovat). Autor je zmíněný v textu karty.
 - Stránka 404 u překlepů v adrese simulátoru (/windovs, /mac, /sqll…)
   nabídne tlačítko „Chtěl jsi simulátor Windows?“ (src/lib/preklep.ts,

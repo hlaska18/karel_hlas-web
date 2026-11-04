@@ -1890,13 +1890,13 @@ export const t: Record<Lang, Dict> = {
           tools: [
             {
               name: "133 tipů – Jak využít AI",
-              url: "https://klatovsky.cz/133tipu.pdf",
-              why: "Kniha Karla Klatovského, autora učebnic Office. Krátké tipy se snímky obrazovky, celé v prostředí Microsoftu.",
+              url: "https://klatovsky.cz/ai/",
+              why: "Online příručka Karla Klatovského, autora učebnic Office. Tipy hledáš podle tématu i nástroje, vše v prostředí Microsoftu.",
               navod:
-                "Nečti ji od začátku. Projdi obsah a vyber si podle situace. Tipům z částí Nástroje a aplikace a Copilot většinou stačí školní Office 365 a Copilot Chat. Část Microsoft 365 Copilot přeskoč, dokud nevíš, že ho škola platí.",
+                "Nečti ji od začátku. Napiš do hledání, co potřebuješ, nebo vyber téma, třeba Příprava výuky. Tipům z částí Nástroje a aplikace a Copilot většinou stačí školní Office 365 a Copilot Chat. Část Microsoft 365 Copilot přeskoč, dokud nevíš, že ho škola platí.",
               pouziti:
                 "Když chceš vědět, jak konkrétní věc udělat krok za krokem: test nebo doplňovačka z PDF, paměťové kartičky, plán hodiny, slovní mrak, ale i titulky s překladem nebo předčítání textu žákům, kteří čtou pomaleji.",
-              note: "Celý název: 133 tipů – Jak využít AI (nejen) ve školství. Autor je dlouholetý lektor pro školy. Zdarma, česky, PDF na webu autora (asi 40 MB, 144 stran). Celá kapitola Microsoft 365 Copilot (asi 40 tipů) chce placený doplněk; Copilot Chat ze školního Office 365 je zdarma. Snímky jsou z června 2026 – názvy a obrazovky se můžou měnit, autor sám píše, že nejde o oficiální dokumentaci.",
+              note: "Celý název: 133 tipů – Jak využít AI (nejen) ve školství. Autor je dlouholetý lektor pro školy. Zdarma, česky, bez účtu, na webu autora. Otevře se hned; celá kniha je tam i ke stažení jako PDF (asi 40 MB, 144 stran), to se otevírá déle. Celá kapitola Microsoft 365 Copilot (asi 40 tipů) chce placený doplněk; Copilot Chat ze školního Office 365 je zdarma. Snímky jsou z června 2026 – názvy a obrazovky se můžou měnit, autor sám píše, že nejde o oficiální dokumentaci.",
               overeno: "2026-10",
             },
             {
@@ -2671,13 +2671,13 @@ export const t: Record<Lang, Dict> = {
           tools: [
             {
               name: "133 Tips – How to Use AI",
-              url: "https://klatovsky.cz/133tipu.pdf",
-              why: "A Czech book by Karel Klatovský, author of Office textbooks. Short tips with screenshots, all within Microsoft tools.",
+              url: "https://klatovsky.cz/ai/",
+              why: "An online handbook by Karel Klatovský, author of Office textbooks. Find tips by topic or tool, all within Microsoft tools.",
               navod:
-                "Do not read it from the start. Go through the contents and pick by situation. Tips in the Tools and apps and Copilot parts mostly need nothing more than school Office 365 and Copilot Chat. Skip the Microsoft 365 Copilot part unless you know your school pays for it.",
+                "Do not read it from the start. Type what you need into the search or pick a topic, such as Příprava výuky (lesson preparation). Tips in the Tools and apps and Copilot parts mostly need nothing more than school Office 365 and Copilot Chat. Skip the Microsoft 365 Copilot part unless you know your school pays for it.",
               pouziti:
                 "When you want to know how to do a specific thing step by step: a test or a gap-fill from a PDF, flashcards, a lesson plan, a word cloud, but also live captions with translation or having text read aloud to slower readers.",
-              note: "Full title: 133 Tips – How to Use AI (Not Only) in Schools. The author is a long-time trainer for schools. Free, PDF on the author's website (about 40 MB, 144 pages). Czech only. The whole Microsoft 365 Copilot chapter (about 40 tips) needs the paid add-on; Copilot Chat on a school Office 365 account is free. Screenshots are from June 2026 – names and screens may change, and the author himself notes it is not official documentation.",
+              note: "Full title: 133 Tips – How to Use AI (Not Only) in Schools. The author is a long-time trainer for schools. Free, no account, on the author's website. It opens straight away; the whole book is also there to download as a PDF (about 40 MB, 144 pages), which takes longer to open. Czech only. The whole Microsoft 365 Copilot chapter (about 40 tips) needs the paid add-on; Copilot Chat on a school Office 365 account is free. Screenshots are from June 2026 – names and screens may change, and the author himself notes it is not official documentation.",
               overeno: "2026-10",
             },
             {
