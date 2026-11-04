@@ -1902,9 +1902,9 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Superhuman AI Prompts",
               url: "https://gpt-prompts-directory.netlify.app",
-              why: "Přes tisíc hotových zadání pro AI, z toho 48 ke vzdělávání: plán hodiny, rubrika, test. Doplníš jen svoje údaje.",
+              why: "Přes tisíc hotových zadání pro AI, z toho 48 ke vzdělávání: plán hodiny, rubrika, test. Doplníš třeba předmět a ročník.",
               navod:
-                "Pod nadpisem Categories klikni na Education. Zkopíruj zadání a údaje v hranatých závorkách, třeba [subject] a [grade level], nahraď svými. Vlož ho do Copilotu se školním účtem a na konec připiš „Odpověz česky“.",
+                "Pod nadpisem Categories klikni na Education. Zkopíruj zadání a místa v hranatých závorkách, třeba [subject] a [grade level], nahraď předmětem a ročníkem. Vlož ho do Copilotu se školním účtem a na konec připiš „Odpověz česky“.",
               pouziti:
                 "Když chceš rychlý první návrh, který pak upravíš: plán hodiny s časy, výstupní lístky, kritéria hodnocení, sadu komentářů k písemné práci nebo aktivitu do třídy.",
               note: "Zdarma a bez účtu. Stránka nabízí odběr newsletteru, k zadáním ho nepotřebuješ. Zadání jsou anglicky a s českým RVP nepočítají, takže ho doplň do kontextu. Knihovna mluví o ChatGPT, ale jsou to obyčejné texty, které jdou vložit i do Copilotu. Některá zadání chtějí odpovědi žáků: vkládej je bez jmen. Provozuje ji newsletter Superhuman AI.",
@@ -2683,9 +2683,9 @@ export const t: Record<Lang, Dict> = {
             {
               name: "Superhuman AI Prompts",
               url: "https://gpt-prompts-directory.netlify.app",
-              why: "Over a thousand ready-made AI prompts, 48 of them for education: lesson plan, rubric, quiz. You only fill in your details.",
+              why: "Over a thousand ready-made AI prompts, 48 of them for education: lesson plan, rubric, quiz. You fill in subject and year.",
               navod:
-                "Under Categories, click Education. Copy a prompt and replace the details in square brackets, such as [subject] and [grade level], with your own. Paste it into Copilot with your school account.",
+                "Under Categories, click Education. Copy a prompt and replace the places in square brackets, such as [subject] and [grade level], with your subject and year. Paste it into Copilot with your school account.",
               pouziti:
                 "When you want a quick first draft to rework: a lesson plan with timings, exit tickets, assessment criteria, a set of comments on written work or a classroom activity.",
               note: "Free, no account. The page offers a newsletter you do not need for the prompts. The prompts do not assume any particular national curriculum, so add yours to the context. The library talks about ChatGPT, but they are plain text you can paste into Copilot too. Some prompts ask for student responses: paste them without names. It is run by the Superhuman AI newsletter.",
