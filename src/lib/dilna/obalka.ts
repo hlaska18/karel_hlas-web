@@ -57,6 +57,33 @@ function cestaNaAdresu(sit: SitStav, ip: string): CestaObalky {
   return { zastavky: NA_SERVER, selhala: false, zprava: "Obálka došla na server a zpátky." };
 }
 
+/**
+ * Poloha zastávek na ose schématu v úsecích. Kabel i přípojka jsou stejně dlouhé,
+ * `pul` je jen půlka kabelu, takže stejná délka znamená stejnou rychlost obálky.
+ */
+const USEK: Record<Zastavka, number> = { pc: 0, pul: 1, router: 2, net: 4 };
+export const USEKU_NA_SIRKU = USEK.net;
+
+/** Délka cesty z počítače přes zastávky v úsecích. */
+export function delkaCesty(zastavky: Zastavka[]): number {
+  return zastavky.reduce((soucet, kde, i) => soucet + Math.abs(USEK[kde] - USEK[i ? zastavky[i - 1] : "pc"]), 0);
+}
+
+/**
+ * Celá cesta jako jeden pohyb: body s podílem času podle ujeté délky, ať obálka
+ * nikde nepřidá ani nezastaví. `cervenaOd` je podíl času, od kterého je červená:
+ * při neúspěchu poslední dva úseky cesty.
+ */
+export function pohybObalky(zastavky: Zastavka[], selhala: boolean) {
+  const delka = delkaCesty(zastavky);
+  const body = [{ usek: USEK.pc, podil: 0 }];
+  zastavky.forEach((_, i) => {
+    body.push({ usek: USEK[zastavky[i]], podil: delkaCesty(zastavky.slice(0, i + 1)) / delka });
+  });
+  const cervenaOd = selhala ? body[Math.max(body.length - 3, 0)].podil : null;
+  return { body, cervenaOd };
+}
+
 /** Dotaz do telefonního seznamu: k serveru DNS a zpátky. */
 function cestaKDns(sit: SitStav, nasel: boolean): CestaObalky {
   const d = diagnoza(sit);

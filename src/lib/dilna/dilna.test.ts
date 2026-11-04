@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { cestaObalky } from "@/lib/dilna/obalka";
+import { cestaObalky, delkaCesty, pohybObalky } from "@/lib/dilna/obalka";
 import { STRANKY_SIT, strankaSit } from "@/lib/dilna/stranky";
 import { nactiDilnu, overuje, reducerDilny, vychoziDilna, type AkceDilny, type StavDilny } from "@/lib/dilna/stav";
 import { VYSVETLENI, vyhodnotTip, type CastSite } from "@/lib/dilna/tipy";
@@ -299,5 +299,22 @@ describe("přenos rozdělané práce ze simulátoru Windows", () => {
     uloziste.set("sitova-dilna", "{nesmysl");
     uloziste.set("win11-vyuka-stav", "null");
     expect(nactiDilnu()).toEqual(vychoziDilna());
+  });
+});
+
+describe("pohyb obálky", () => {
+  const NA_SERVER = ["pul", "router", "net", "router", "pul", "pc"] as const;
+
+  it("jede stejnou rychlostí: podíl času odpovídá ujeté délce, i na delší přípojce", () => {
+    expect(delkaCesty([...NA_SERVER])).toBe(8);
+    const { body } = pohybObalky([...NA_SERVER], false);
+    expect(body.map((b) => b.podil)).toEqual([0, 1 / 8, 2 / 8, 4 / 8, 6 / 8, 7 / 8, 1]);
+    expect(body.map((b) => b.usek)).toEqual([0, 1, 2, 4, 2, 1, 0]);
+  });
+
+  it("zčervená až na posledních dvou úsecích cesty", () => {
+    expect(pohybObalky([...NA_SERVER], false).cervenaOd).toBeNull();
+    expect(pohybObalky(["pul", "router", "pul", "pc"], true).cervenaOd).toBe(0.5);
+    expect(pohybObalky(["pul", "pc"], true).cervenaOd).toBe(0);
   });
 });

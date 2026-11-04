@@ -8,7 +8,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { ROUTER, ipconfig, jeIpv4, nslookup, ping, tracert, type SitStav } from "@/lib/win/sit";
-import { cestaObalky, type CestaObalky, type Zastavka } from "@/lib/dilna/obalka";
+import { cestaObalky, delkaCesty, type CestaObalky } from "@/lib/dilna/obalka";
 import type { Dukaz } from "@/lib/dilna/tipy";
 import type { Obalka } from "./Schema";
 
@@ -18,7 +18,7 @@ const UVOD = [
   "Cvičná konzole dílny. Zjednodušeno: umí ipconfig, ping, nslookup, tracert a cls.",
   "",
 ];
-const KROK_MS = 720;
+const USEK_MS = 540;
 
 type Radek = { text: string; vstup?: boolean };
 
@@ -105,19 +105,14 @@ export function Terminal({
     }
 
     nastavBezi(true);
-    const zastavky: Zastavka[] = cesta.zastavky;
-    onObalka({ kde: "pc", cervena: false });
-    zastavky.forEach((kde, i) => {
-      casovace.current.push(
-        window.setTimeout(() => onObalka({ kde, cervena: cesta.selhala && i >= zastavky.length - 2 }), 60 + i * KROK_MS),
-      );
-    });
+    const trvani = delkaCesty(cesta.zastavky) * USEK_MS;
+    onObalka({ zastavky: cesta.zastavky, selhala: cesta.selhala, trvani });
     casovace.current.push(
       window.setTimeout(() => {
         onObalka(null);
         nastavBezi(false);
         konec();
-      }, 60 + zastavky.length * KROK_MS),
+      }, trvani),
     );
   };
 

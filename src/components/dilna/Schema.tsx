@@ -8,24 +8,27 @@
  * ukazuje jen při vybalování routeru, kde je to vidět i doopravdy.
  *
  * Mřížka je souměrná, střed routeru je proto přesně v polovině šířky. Z toho se
- * počítá poloha obálky. Přechod `left` s „omezit pohyb“ není: obálka skáče.
+ * počítá poloha obálky. Jede jako jedna animace `transform` na celou cestu: běží
+ * mimo hlavní vlákno a na zastávkách nezaškobrtne (přechody `left` po úsecích se
+ * na Windows sekaly). S „omezit pohyb“ obálka skáče po zastávkách.
  */
 
-import type { ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { MAC_PC, ROUTER, ucinne, type SitStav } from "@/lib/win/sit";
 import type { CastSite } from "@/lib/dilna/tipy";
-import type { Zastavka } from "@/lib/dilna/obalka";
+import { USEKU_NA_SIRKU, pohybObalky, type Zastavka } from "@/lib/dilna/obalka";
 
-const POLOHA: Record<Zastavka, string> = {
-  pc: "85px",
-  pul: "calc(42.5px + 25%)",
-  router: "50%",
-  net: "calc(100% - 85px)",
-};
+/** Střed krajních částí schématu a polovina šířky obálky. */
+const OKRAJ = 85;
+const PUL_OBALKY = 15;
+const BARVA = "#6fe3c2";
+const BARVA_SELHANI = "#ff9d8a";
 
 export interface Obalka {
-  kde: Zastavka;
-  cervena: boolean;
+  zastavky: Zastavka[];
+  selhala: boolean;
+  /** Jak dlouho cesta trvá v milisekundách. */
+  trvani: number;
 }
 
 export function Schema({
@@ -106,18 +109,7 @@ export function Schema({
             <span className="block font-mono text-[12px] text-[#a6bdb4]">203.0.113.10</span>
           </Cast>
 
-          {obalka && (
-            <div
-              aria-hidden="true"
-              className="pointer-events-none absolute top-1/2 flex h-6 w-[30px] -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-[5px] transition-[left] duration-700 ease-linear motion-reduce:transition-none"
-              style={{ left: POLOHA[obalka.kde], background: obalka.cervena ? "#ff9d8a" : "#6fe3c2" }}
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06201a" strokeWidth="2" strokeLinejoin="round">
-                <rect x="3" y="6" width="18" height="12" rx="1.5" />
-                <path d="M3 7l9 7 9-7" />
-              </svg>
-            </div>
-          )}
+          {obalka && <JedouciObalka obalka={obalka} />}
         </div>
       </div>
 
@@ -125,6 +117,64 @@ export function Schema({
         Zjednodušeno. Domácí router je ve skutečnosti router, přepínač a Wi-Fi v jedné krabici. Obálka = paket.
       </p>
     </section>
+  );
+}
+
+function JedouciObalka({ obalka }: { obalka: Obalka }) {
+  const drzak = useRef<HTMLDivElement>(null);
+  const telo = useRef<HTMLDivElement>(null);
+
+  /* Před vykreslením, ať obálka neblikne mimo svou cestu. */
+  useLayoutEffect(() => {
+    const d = drzak.current;
+    const t = telo.current;
+    const sirka = d?.parentElement?.clientWidth;
+    if (!d || !t || !sirka || typeof d.animate !== "function") return;
+    const omezit = window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+    const { body, cervenaOd } = pohybObalky(obalka.zastavky, obalka.selhala);
+    const krok = (sirka - 2 * OKRAJ) / USEKU_NA_SIRKU;
+    const moznosti = { duration: obalka.trvani, fill: "forwards" as const };
+    const pohyb = d.animate(
+      body.map((b) => ({
+        offset: b.podil,
+        easing: omezit ? "step-start" : "linear",
+        transform: `translate(${OKRAJ + b.usek * krok - PUL_OBALKY}px, -50%)`,
+      })),
+      moznosti,
+    );
+    // Barva zvlášť: změna pozadí ve stejné animaci by pohyb vrátila na hlavní vlákno.
+    const barva =
+      cervenaOd === null
+        ? null
+        : t.animate(
+            [
+              { offset: 0, backgroundColor: cervenaOd === 0 ? BARVA_SELHANI : BARVA },
+              { offset: cervenaOd, backgroundColor: cervenaOd === 0 ? BARVA_SELHANI : BARVA },
+              { offset: cervenaOd, backgroundColor: BARVA_SELHANI },
+              { offset: 1, backgroundColor: BARVA_SELHANI },
+            ],
+            moznosti,
+          );
+    return () => {
+      pohyb.cancel();
+      barva?.cancel();
+    };
+  }, [obalka]);
+
+  return (
+    <div
+      ref={drzak}
+      aria-hidden="true"
+      className="pointer-events-none absolute left-0 top-1/2"
+      style={{ transform: `translate(${OKRAJ - PUL_OBALKY}px, -50%)` }}
+    >
+      <div ref={telo} className="flex h-6 w-[30px] items-center justify-center rounded-[5px]" style={{ background: BARVA }}>
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#06201a" strokeWidth="2" strokeLinejoin="round">
+          <rect x="3" y="6" width="18" height="12" rx="1.5" />
+          <path d="M3 7l9 7 9-7" />
+        </svg>
+      </div>
+    </div>
   );
 }
 

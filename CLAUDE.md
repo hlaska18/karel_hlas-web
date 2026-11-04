@@ -469,6 +469,9 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Na ostrém webu prošlo 3. 11. (commit 315c4a1): všech 20 zakázek, kódy, Přehled třídy, omezit pohyb,
   telefon. Známé a záměrně neměněné: hledání ve Startu Windows chce přesnou diakritiku („terminal“ ani
   „cmd“ nic nenajde, Enter výsledek neotevře); bylo to tak už dřív, Karel zatím nerozhodl.
+- Obálka ve schématu (4. 11.): na Windows se sekala, proto jedna animace `transform` na celou cestu
+  (`pohybObalky` v `lib/dilna/obalka.ts`, `JedouciObalka` v `Schema.tsx`), stejná rychlost na kabelu i
+  přípojce. Dřív `left` po úsecích s časovači a přípojka jela dvakrát rychleji. Na Windows ověřuje Karel.
 
 ## Otevřené / nápady (nic naléhavého)
 
