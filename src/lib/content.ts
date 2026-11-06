@@ -1962,10 +1962,10 @@ export const t: Record<Lang, Dict> = {
               url: "https://chatveskole.cz/databaze-ai-asistentu/",
               why: "22 hotových českých asistentů od spolku AI dětem: kritéria hodnocení, slovní hodnocení, plán hodiny, kvíz z chemie.",
               navod:
-                "Vyber skupinu, třeba AI asistenti pro hodnocení, a otevři asistenta. Tlačítko tě pošle do ChatGPT, u části asistentů i do Gemini. Kde je Zobrazit systémový prompt, zkopíruj ho a vlož do Copilotu se školním účtem jako první zprávu.",
+                "Vyber skupinu, třeba AI asistenti pro hodnocení, a otevři asistenta. Polovina má systémový prompt: zkopíruj ho a vlož jako první zprávu do kterékoli AI, nejlíp do Copilotu se školním účtem. Ostatní otevřeš jako GPT v ChatGPT, část z nich i jako Gem v Gemini.",
               pouziti:
                 "Když chceš z výukového cíle udělat kritéria hodnocení a sebehodnoticí škálu pro žáky, napsat slovní hodnocení nebo naplánovat hodinu. Oboroví asistenti (zeměpisný kvíz, chemické prvky) jsou pro žáky.",
-              note: "Zdarma, česky. Web je bez účtu, asistenti chtějí účet ChatGPT (stačí bezplatný), Gemy účet Google. Podmínky ChatGPT žádají věk 13+ a u nezletilých souhlas rodiče. Jména žáků do asistentů nevkládej, ani u slovního hodnocení. Stejný spolek provozuje Tiny, databázi průběžně doplňuje.",
+              note: "Zdarma, česky. Web je bez účtu. GPT chtějí účet ChatGPT (stačí bezplatný), Gemy účet Google, systémový prompt vložíš kamkoli. Podmínky ChatGPT žádají věk 13+ a u nezletilých souhlas rodiče. Jména žáků do asistentů nevkládej, ani u slovního hodnocení. Stejný spolek provozuje Tiny, databázi průběžně doplňuje.",
               overeno: "2026-11",
             },
           ],
@@ -2776,10 +2776,10 @@ export const t: Record<Lang, Dict> = {
               url: "https://chatveskole.cz/databaze-ai-asistentu/",
               why: "22 ready-made Czech assistants from the nonprofit AI dětem: marking criteria, written feedback, lesson plans, a chemistry quiz.",
               navod:
-                "Pick a group, such as the assessment assistants, and open one. The button takes you to ChatGPT, and for some assistants to Gemini too. Where you can show the system prompt, copy it and paste it into Copilot with your school account as the first message.",
+                "Pick a group, such as the assessment assistants, and open one. Half of them include a system prompt: copy it and paste it as the first message into any AI, ideally Copilot with your school account. The rest open as GPTs in ChatGPT, some also as Gems in Gemini.",
               pouziti:
                 "Turning a learning goal into marking criteria and a self-assessment scale for pupils, drafting written feedback or planning a lesson. The subject assistants (a geography quiz, chemical elements) are for pupils.",
-              note: "Free, all in Czech. The site needs no account; the assistants need a ChatGPT account (the free one is enough), the Gems a Google account. ChatGPT's terms require age 13+ and parental consent for minors. Do not paste pupils' names, not even for written feedback. The same nonprofit runs Tiny and keeps adding to the database.",
+              note: "Free, all in Czech. The site needs no account. The GPTs need a ChatGPT account (the free one is enough), the Gems a Google account, and a system prompt works anywhere. ChatGPT's terms require age 13+ and parental consent for minors. Do not paste pupils' names, not even for written feedback. The same nonprofit runs Tiny and keeps adding to the database.",
               overeno: "2026-11",
             },
           ],
