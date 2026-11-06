@@ -1957,6 +1957,17 @@ export const t: Record<Lang, Dict> = {
                 "Když nevíš, jak se AI zeptat. Rychleji než vymýšlet vlastní zadání tu najdeš hotové na rubriku k hodnocení, na rozdělení úkolu do tří obtížností nebo na zpětnou vazbu k žákovské práci.",
               note: "Zdarma, bez účtu, pod licencí MIT. Celé anglicky – prompt si musíš přeložit, nebo ho nechat přeložit rovnou tím chatem. Text odkazuje na Bing Chat, což je dnešní Copilot.",
             },
+            {
+              name: "Databáze AI asistentů",
+              url: "https://chatveskole.cz/databaze-ai-asistentu/",
+              why: "22 hotových českých asistentů od spolku AI dětem: kritéria hodnocení, slovní hodnocení, plán hodiny, kvíz z chemie.",
+              navod:
+                "Vyber skupinu, třeba AI asistenti pro hodnocení, a otevři asistenta. Tlačítko tě pošle do ChatGPT, u části asistentů i do Gemini. Kde je Zobrazit systémový prompt, zkopíruj ho a vlož do Copilotu se školním účtem jako první zprávu.",
+              pouziti:
+                "Když chceš z výukového cíle udělat kritéria hodnocení a sebehodnoticí škálu pro žáky, napsat slovní hodnocení nebo naplánovat hodinu. Oboroví asistenti (zeměpisný kvíz, chemické prvky) jsou pro žáky.",
+              note: "Zdarma, česky. Web je bez účtu, asistenti chtějí účet ChatGPT (stačí bezplatný), Gemy účet Google. Podmínky ChatGPT žádají věk 13+ a u nezletilých souhlas rodiče. Jména žáků do asistentů nevkládej, ani u slovního hodnocení. Stejný spolek provozuje Tiny, databázi průběžně doplňuje.",
+              overeno: "2026-11",
+            },
           ],
         },
         {
@@ -2013,6 +2024,17 @@ export const t: Record<Lang, Dict> = {
               pouziti:
                 "První verze prezentace k tématu, které učíš poprvé. Dá ti strukturu a rozvržení snímků; obsah pak přepíšeš po svém, ale nezačínáš od prázdné stránky.",
               note: "Chce účet, zdarma s omezeným počtem kreditů. Anglicky.",
+            },
+            {
+              name: "Macaly",
+              url: "https://www.macaly.com",
+              why: "Napíšeš, co chceš, a AI ti postaví a zveřejní web nebo jednoduchou aplikaci. Třeba procvičovací kvíz nebo stránku k tématu.",
+              navod:
+                "Klikni na Get started a založ si účet, bezplatný tarif je bez platební karty. Popiš, co má stránka umět, pro koho je a co na ní má být. Výsledek si prohlédni, další zprávou ho oprav a teprve pak ho zveřejni.",
+              pouziti:
+                "Když chceš pro třídu jednoduchou stránku nebo nástroj: procvičovací kvíz, rozcestník k tématu nebo stránku projektu. Žákům na tom ukážeš i to, jak dnes vzniká web s pomocí AI.",
+              note: "Provozuje česká firma Langtail z Prahy, rozhraní je anglicky. Účet je jen od 18 let, takže je to nástroj pro tebe, ne pro žáky. Zdarma máš jednu zveřejněnou aplikaci na adrese Macaly a omezené kredity, vlastní doména je od 10 $ měsíčně. Když aplikace sbírá data formulářem nebo přihlášením, odpovídáš za ně ty, proto ať do ní žáci nic osobního nezadávají.",
+              overeno: "2026-11",
             },
           ],
         },
@@ -2749,6 +2771,17 @@ export const t: Record<Lang, Dict> = {
                 "For when you do not know how to ask. Faster than writing your own, you will find ready prompts for a marking rubric, for splitting a task into three difficulty levels, or for feedback on a pupil's work.",
               note: "Free, no account, MIT licence. English only – you will need to translate a prompt yourself, or have the chat tool translate it. The text refers to Bing Chat, which is today's Copilot.",
             },
+            {
+              name: "AI assistant database",
+              url: "https://chatveskole.cz/databaze-ai-asistentu/",
+              why: "22 ready-made Czech assistants from the nonprofit AI dětem: marking criteria, written feedback, lesson plans, a chemistry quiz.",
+              navod:
+                "Pick a group, such as the assessment assistants, and open one. The button takes you to ChatGPT, and for some assistants to Gemini too. Where you can show the system prompt, copy it and paste it into Copilot with your school account as the first message.",
+              pouziti:
+                "Turning a learning goal into marking criteria and a self-assessment scale for pupils, drafting written feedback or planning a lesson. The subject assistants (a geography quiz, chemical elements) are for pupils.",
+              note: "Free, all in Czech. The site needs no account; the assistants need a ChatGPT account (the free one is enough), the Gems a Google account. ChatGPT's terms require age 13+ and parental consent for minors. Do not paste pupils' names, not even for written feedback. The same nonprofit runs Tiny and keeps adding to the database.",
+              overeno: "2026-11",
+            },
           ],
         },
         {
@@ -2805,6 +2838,17 @@ export const t: Record<Lang, Dict> = {
               pouziti:
                 "A first draft of a deck for a topic you are teaching for the first time. It gives you the structure and the slide layout; you rewrite the content yourself, but not from a blank page.",
               note: "Needs an account, free with limited credits. In English.",
+            },
+            {
+              name: "Macaly",
+              url: "https://www.macaly.com",
+              why: "Describe what you want and the AI builds and publishes a website or a simple app, such as a revision quiz or a topic page.",
+              navod:
+                "Click Get started and create an account; the free plan needs no card. Describe what the page should do, who it is for and what goes on it. Look at the result, fix it with another message and only then publish it.",
+              pouziti:
+                "When you want a simple page or tool for your class: a revision quiz, a hub for a topic or a project page. It also shows pupils how websites get built with AI today.",
+              note: "Run by Langtail, a Czech company in Prague; the interface is in English. Accounts are 18+ only, so it is a tool for you, not for pupils. The free plan gives you one published app on a Macaly address and limited credits; your own domain starts at $10 a month. If the app collects data through a form or sign-in, you are responsible for it, so pupils should not enter anything personal.",
+              overeno: "2026-11",
             },
           ],
         },
