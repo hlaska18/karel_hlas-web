@@ -2018,9 +2018,20 @@ export const t: Record<Lang, Dict> = {
         },
         {
           kategorie: "Co pustit žákům",
-          what: "Dvě věci, které nejsou o generování, ale o tom, aby žák pochopil, jak se AI učí.",
+          what: "Chatbot, se kterým se žák učí pod tvým dohledem, a dvě věci, na kterých pochopí, jak se AI učí.",
           icon: "trida",
           tools: [
+            {
+              name: "Tiny",
+              url: "https://www.tiny.school/",
+              why: "Žák si píše s chatbotem, který se ptá a odpověď neprozradí. Ty vidíš všechny rozhovory živě a po hodině dostaneš shrnutí.",
+              navod:
+                "Školu zaregistruješ na teacher.tiny.school, registraci potvrdí ředitel (tři měsíce jde Tiny používat i bez ověření). Pak vyber jednoho z jedenácti Tinybotů, třeba Opakovacího parťáka, jednou větou napiš téma a žákům dej kód hodiny.",
+              pouziti:
+                "Opakování před písemkou, kdy každý žák procvičuje svým tempem, nebo rozhovor s historickou postavou. Ze shrnutí poznáš, kde se třída zasekla. Stejný spolek dělá i Mapu informatických konceptů navázanou na RVP (tiny.school/mapa), hodí se, když chceš chatbotovi zadat téma přesně.",
+              note: "Zdarma, rozhraní česky, provozuje český neziskový spolek AI dětem. Žák potřebuje účet přes školní Office 365, Google nebo školní e-mail. Pro žáky od 11 let, mladší 13 let jen se souhlasem rodičů. Data jsou v EU a podle provozovatele se na nich AI netrénuje; běží na modelech OpenAI a Google. Do chatu ať žáci nepíšou jména ani citlivé údaje.",
+              overeno: "2026-11",
+            },
             {
               name: "Teachable Machine",
               url: "https://teachablemachine.withgoogle.com",
@@ -2799,9 +2810,20 @@ export const t: Record<Lang, Dict> = {
         },
         {
           kategorie: "For putting in front of a class",
-          what: "Two things that are not about generating, but about pupils understanding how AI learns.",
+          what: "A chatbot pupils learn with while you watch, and two things that show them how AI learns.",
           icon: "trida",
           tools: [
+            {
+              name: "Tiny",
+              url: "https://www.tiny.school/",
+              why: "Each pupil chats with a bot that asks questions instead of giving answers. You watch every chat live and get a summary.",
+              navod:
+                "Register your school at teacher.tiny.school; the head teacher confirms it (you can use Tiny unverified for three months). Then pick one of the eleven Tinybots, such as the revision buddy, describe the topic in one sentence and give pupils the lesson code.",
+              pouziti:
+                "Revision before a test, with every pupil practising at their own pace, or a conversation with a historical figure. The summary shows where the class got stuck. The same nonprofit also makes a map of informatics concepts linked to the Czech curriculum (tiny.school/mapa), handy when you want to give the bot a precise topic.",
+              note: "Free, run by AI dětem, a Czech nonprofit. Site in Czech, Slovak and English. Pupils need an account through a school Office 365, Google or school email. For pupils aged 11 and up, under 13 only with parental consent. Data stays in the EU and the operator says it is not used to train AI; it runs on OpenAI and Google models. Pupils should not type names or sensitive details into the chat.",
+              overeno: "2026-11",
+            },
             {
               name: "Teachable Machine",
               url: "https://teachablemachine.withgoogle.com",
