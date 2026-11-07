@@ -45,7 +45,7 @@ describe("HeroSimulatory", () => {
     Object.assign(navigator, { clipboard: { writeText: zapis } });
     vykresli("cs", 33, 14);
     expect(screen.getAllByRole("button", { name: /Zkopírovat zadání/ })).toHaveLength(3);
-    fireEvent.click(screen.getByRole("button", { name: /Zkopírovat zadání – Síťová dílna/ }));
+    fireEvent.click(screen.getByRole("button", { name: /Zkopírovat zadání – NETLAB/ }));
     await waitFor(() => expect(zapis).toHaveBeenCalled());
     const text: string = zapis.mock.calls[0][0];
     expect(text).toMatch(/\n\nhttps:\/\/karelhlas\.vercel\.app\/sitova-dilna\n\n/);

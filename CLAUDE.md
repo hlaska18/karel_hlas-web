@@ -472,6 +472,19 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Obálka ve schématu (4. 11.): na Windows se sekala, proto jedna animace `transform` na celou cestu
   (`pohybObalky` v `lib/dilna/obalka.ts`, `JedouciObalka` v `Schema.tsx`), stejná rychlost na kabelu i
   přípojce. Dřív `left` po úsecích s časovači a přípojka jela dvakrát rychleji. Na Windows ověřuje Karel.
+- **Název NETLAB** (7. 11. 2026, Karel): Síťová dílna se navenek jmenuje NETLAB, s podtitulem „síťová dílna“.
+  Adresa `/sitova-dilna` (je v zadáních), kód WSIT1-, úložiště i názvy souborů a komponent zůstaly; `/netlab`
+  přesměrovává (next.config.mjs). Upozornění na NETLAB+ (nástroj akademií Cisco) Karel zná. Název ALGOLABu zatím
+  neřešený, návrh byl „Algoritmická dílna“.
+
+### AI Hub a banka (6.–7. 11. 2026)
+- AI Hub má pátou kategorii „Čím si postavit vlastní nástroj“ (vibecoding, ikona `stavba` = Wrench v AiHub.tsx)
+  s Macaly (účet jen od 18 let, proto pro učitele). Dál přibyly Tiny, Databáze AI asistentů (chatveskole.cz,
+  11 z 22 asistentů má systémový prompt), Macaly.
+- Banka Programování: složka `Vibecoding` s lekcí AI dětem (Macaly, 8.–9. r. ZŠ a SŠ; rozpor s 18+ je v popisu).
+  Lekce Minecraftu mají v `_zdroj.json` popis, co se žák učí (z API education.minecraft.net, plány jsou pro 8–10 let).
+  Základy CodeBuilderu (svět 4e025a45…) se na webu Minecraftu dohledat nepodařilo, popis čeká na Karla.
+
 
 ## Otevřené / nápady (nic naléhavého)
 

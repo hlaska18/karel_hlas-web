@@ -119,7 +119,7 @@ function Prihlaseni({ stav, onHotovo }: { stav: StavDilny; onHotovo: (jmeno: str
     <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto p-6">
       <div className="mb-5 flex items-center gap-3">
         <Logo />
-        <h1 className="text-[24px] font-semibold">Síťová dílna</h1>
+        <h1 className="text-[24px] font-semibold">NETLAB</h1>
       </div>
       <p className="mb-5 max-w-md text-center text-[14px] leading-normal text-[#c5d6cf]">
         Cvičná domácí síť, nic se nestane. Oprav porouchaný internet, zapoj nový router a vyžeň cizí zařízení z Wi-Fi.
@@ -268,8 +268,8 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
       <header className="flex h-14 shrink-0 items-center justify-between border-b border-white/10 px-5">
         <div className="flex items-center gap-3">
           <Logo />
-          <strong className="text-[17px]">Síťová dílna</strong>
-          <span className="text-[13px] text-[#a6bdb4]">cvičná domácí síť, nic se nestane</span>
+          <strong className="text-[17px]">NETLAB</strong>
+          <span className="text-[13px] text-[#a6bdb4]">síťová dílna, cvičná domácí síť, nic se nestane</span>
         </div>
         <div className="flex items-center gap-3.5 text-[13px] text-[#a6bdb4]">
           <span>

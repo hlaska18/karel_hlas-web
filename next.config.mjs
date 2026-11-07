@@ -37,6 +37,8 @@ const nextConfig = {
         destination: "/sitova-dilna",
         permanent: false,
       },
+      // Krátká adresa NETLABu (od 7. 11. 2026). Hlavní zůstává /sitova-dilna, je v zadáních.
+      { source: "/netlab", destination: "/sitova-dilna", permanent: false },
     ];
   },
 };

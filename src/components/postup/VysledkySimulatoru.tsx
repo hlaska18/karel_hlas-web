@@ -263,7 +263,7 @@ export function MojeVysledkySimulatoru({
       {simulator === "windows" && hotovychZ("sit", splneno) > 0 && (
         <div className="mt-2">
           <p className="mb-1 font-semibold">
-            Ze Síťové dílny: {hotovychZ("sit", splneno)}/{UKOLY.sit.length}
+            Z NETLABu: {hotovychZ("sit", splneno)}/{UKOLY.sit.length}
           </p>
           <Dlazdice simulator="sit" splneno={splneno} vzhled={vzhled} />
         </div>
@@ -445,13 +445,13 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
     <Okno titulek="Přehled třídy (pro učitele)" zavri={zavri} sirka={860} vzhled={vzhled}>
       <p>
         Vlož kódy postupu od žáků – klidně celé zprávy z Teams, kódy se v textu najdou samy. Rozumí kódům z Windows (WIN1-),
-        z macOS (MAC1-), ze Síťové dílny (WSIT1-) i z kurzu SQL (SQLKURZ1-). Kódy téhož žáka se sčítají. Kód je shrnutí, ne důkaz: vzniká v prohlížeči
+        z macOS (MAC1-), z NETLABu (WSIT1-) i z kurzu SQL (SQLKURZ1-). Kódy téhož žáka se sčítají. Kód je shrnutí, ne důkaz: vzniká v prohlížeči
         žáka a dá se upravit.
       </p>
       <p className={`mt-2 ${vzhled.slaby}`}>
-        Co je nového (listopad 2026): síťové úlohy jsem ze simulátoru Windows vyndal. Je jich 20 a jsou v nové Síťové dílně
+        Co je nového (listopad 2026): síťové úlohy jsem ze simulátoru Windows vyndal. Je jich 20 a jsou v nové síťové dílně NETLAB
         v tématu Digitální gramotnost. Výchozích 33 úloh Windows se nezměnilo. Dřívější kódy se síťovými úlohami (WSIT1- i WIN1-)
-        platí dál, Přehled je ukáže v sekci Síťová dílna.
+        platí dál, Přehled je ukáže v sekci NETLAB.
       </p>
       <textarea
         value={text}

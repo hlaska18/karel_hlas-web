@@ -176,16 +176,16 @@ const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
   "Digitální gramotnost": {
     cesta: "/sitova-dilna",
     popis: {
-      cs: "Síťová dílna: oprav porouchaný internet, zapoj nový router a vyžeň cizí zařízení z Wi-Fi. Přímo v prohlížeči, nic se neinstaluje.",
-      en: "Network Workshop: fix a broken internet connection, plug in a new router and kick a stranger off the Wi-Fi. Right in your browser, nothing to install. The workshop is in Czech.",
+      cs: "NETLAB, síťová dílna: oprav porouchaný internet, zapoj nový router a vyžeň cizí zařízení z Wi-Fi. Přímo v prohlížeči, nic se neinstaluje.",
+      en: "NETLAB, a network workshop: fix a broken internet connection, plug in a new router and kick a stranger off the Wi-Fi. Right in your browser, nothing to install. The workshop is in Czech.",
     },
     cta: { cs: "Otevřít dílnu", en: "Open the workshop" },
   },
   "Internet a bezpečnost": {
     cesta: "/sitova-dilna",
     popis: {
-      cs: "Zabezpeč domácí Wi-Fi v Síťové dílně: heslo, WPS, síť pro hosty a cizí zařízení.",
-      en: "Secure a home Wi-Fi in the Network Workshop: password, WPS, guest network and a stranger's device. The workshop is in Czech.",
+      cs: "Zabezpeč domácí Wi-Fi v NETLABu: heslo, WPS, síť pro hosty a cizí zařízení.",
+      en: "Secure a home Wi-Fi in NETLAB: password, WPS, guest network and a stranger's device. The workshop is in Czech.",
     },
     cta: { cs: "Otevřít dílnu", en: "Open the workshop" },
   },

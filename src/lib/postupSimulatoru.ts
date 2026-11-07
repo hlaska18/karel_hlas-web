@@ -25,7 +25,7 @@ export type Simulator = "windows" | "macos" | "sit";
 export const NAZEV_SIMULATORU: Record<Simulator, string> = {
   windows: "Windows",
   macos: "macOS",
-  sit: "Síťová dílna",
+  sit: "NETLAB",
 };
 
 const PREDPONA: Record<Simulator, string> = {

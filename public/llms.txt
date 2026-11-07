@@ -10,7 +10,7 @@ Karlovy vlastní materiály jsou pod licencí CC BY-NC-SA 4.0. Výjimkou je cvi�
 - [Kurz SQL ve virtuálním DB Browseru](https://karelhlas.vercel.app/sql): základy databází a SQL v napodobenině programu DB Browser for SQLite, úkoly se kontrolují samy. Anglicky: /sql?z=en.
 - [Virtuální Windows 11](https://karelhlas.vercel.app/windows): simulace Windows 11 k procvičení práce se soubory, Nastavení a příkazového řádku.
 - [Virtuální macOS](https://karelhlas.vercel.app/macos): simulace macOS k porovnání s Windows (Finder, Dock, Terminál).
-- [Síťová dílna](https://karelhlas.vercel.app/sitova-dilna): cvičná domácí síť (ipconfig, ping, nslookup, tracert, nový router, poruchy, zabezpečení Wi-Fi).
+- [NETLAB](https://karelhlas.vercel.app/sitova-dilna): síťová dílna, cvičná domácí síť (ipconfig, ping, nslookup, tracert, nový router, poruchy, zabezpečení Wi-Fi).
 - [English version](https://karelhlas.vercel.app/en): the same material bank in English.
 
 ## Další
