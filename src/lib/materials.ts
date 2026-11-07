@@ -217,6 +217,7 @@ const NAME_EN: Record<string, string> = {
   // Umělá inteligence: hostované materiály nahrazene odkazem na kurz Elements of AI
   "Kurz Elements of AI": "The Elements of AI course",
   "Online nástroje": "Online tools",
+  "Vibecoding": "Vibe coding",
   // Excel: sbírka úloh z Katedry informatiky PF JU (vedle cvičebnice)
   "Sbírka úloh": "Exercise collection",
   "1 – Formát a obsah buněk, listy": "1 – Cell formatting and content, sheets",
