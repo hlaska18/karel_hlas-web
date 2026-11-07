@@ -1293,7 +1293,7 @@ type Dict = {
     items: {
       kategorie: string;
       what: string;
-      icon: "kniha" | "chat" | "obraz" | "trida";
+      icon: "kniha" | "chat" | "obraz" | "trida" | "stavba";
       tools: {
         name: string;
         url: string;
@@ -2025,6 +2025,13 @@ export const t: Record<Lang, Dict> = {
                 "První verze prezentace k tématu, které učíš poprvé. Dá ti strukturu a rozvržení snímků; obsah pak přepíšeš po svém, ale nezačínáš od prázdné stránky.",
               note: "Chce účet, zdarma s omezeným počtem kreditů. Anglicky.",
             },
+          ],
+        },
+        {
+          kategorie: "Čím si postavit vlastní nástroj",
+          what: "Popíšeš, co potřebuješ, a AI ti postaví web, kvíz nebo malou aplikaci pro třídu. Tomu se říká vibecoding.",
+          icon: "stavba",
+          tools: [
             {
               name: "Macaly",
               url: "https://www.macaly.com",
@@ -2839,6 +2846,13 @@ export const t: Record<Lang, Dict> = {
                 "A first draft of a deck for a topic you are teaching for the first time. It gives you the structure and the slide layout; you rewrite the content yourself, but not from a blank page.",
               note: "Needs an account, free with limited credits. In English.",
             },
+          ],
+        },
+        {
+          kategorie: "For building your own tool",
+          what: "Describe what you need and the AI builds a website, a quiz or a small app for your class. This is called vibe coding.",
+          icon: "stavba",
+          tools: [
             {
               name: "Macaly",
               url: "https://www.macaly.com",

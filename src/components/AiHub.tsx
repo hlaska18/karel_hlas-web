@@ -17,6 +17,7 @@ import {
   Info,
   MessageSquare,
   Sparkles,
+  Wrench,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -65,6 +66,7 @@ const IKONY = {
   chat: MessageSquare,
   obraz: Images,
   trida: Sparkles,
+  stavba: Wrench,
 } as const;
 
 /**
