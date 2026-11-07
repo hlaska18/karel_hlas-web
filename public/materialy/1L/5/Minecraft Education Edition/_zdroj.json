@@ -13,8 +13,8 @@
     "en": "Fun coding basics: Lesson 1 – Basic movement",
     "url": "https://education.minecraft.net/world/a1135370-adac-4b58-9fce-9910eee84676",
     "note": {
-      "cs": "Svět z knihovny Minecraft Education. Na jeho stránce ho stáhneš tlačítkem Download (.mcworld) a dvojklikem naimportuješ do hry. Potřebuje Minecraft Education a přihlášení školním účtem.",
-      "en": "A world from the Minecraft Education library. Download it on its page (.mcworld) and double-click to import it into the game. Needs Minecraft Education and a school account."
+      "cs": "Žák se naučí pohybovat ve světě, otevře Code Builder (klávesa C) a bloky MakeCode posílá Agenta, robota pomocníka, krok za krokem. Pojem: posloupnost příkazů. Asi 45 minut.",
+      "en": "Pupils learn to move around the world, open Code Builder (the C key) and use MakeCode blocks to send the Agent, a helper robot, step by step. Concept: sequencing. About 45 minutes."
     }
   },
   {
@@ -22,8 +22,8 @@
     "en": "Fun coding basics: Lesson 2 – Sea turtles",
     "url": "https://education.minecraft.net/world/e29bf77c-3e27-4827-87db-29ea5ac41d04",
     "note": {
-      "cs": "Svět z knihovny Minecraft Education. Na jeho stránce ho stáhneš tlačítkem Download (.mcworld) a dvojklikem naimportuješ do hry. Potřebuje Minecraft Education a přihlášení školním účtem.",
-      "en": "A world from the Minecraft Education library. Download it on its page (.mcworld) and double-click to import it into the game. Needs Minecraft Education and a school account."
+      "cs": "Na Galapágách žák s Agentem opravuje hnízdiště mořských želv a uklízí odpadky. Nejdřív plán v pseudokódu, pak kód, test a hledání chyb. Pojmy: opakující se vzor a cyklus. Asi 45 minut.",
+      "en": "In the Galapagos, pupils use the Agent to repair a sea turtle nesting ground and clear up rubbish. First a plan in pseudocode, then code, testing and debugging. Concepts: patterns and loops. About 45 minutes."
     }
   },
   {
@@ -31,8 +31,8 @@
     "en": "Fun coding basics: Lesson 3 – Saving polar bears",
     "url": "https://education.minecraft.net/world/270cdb74-27ff-4eba-b27c-fbf306186350",
     "note": {
-      "cs": "Svět z knihovny Minecraft Education. Na jeho stránce ho stáhneš tlačítkem Download (.mcworld) a dvojklikem naimportuješ do hry. Potřebuje Minecraft Education a přihlášení školním účtem.",
-      "en": "A world from the Minecraft Education library. Download it on its page (.mcworld) and double-click to import it into the game. Needs Minecraft Education and a school account."
+      "cs": "V Arktidě žák vede Agenta k mláděti ledního medvěda, které se ztratilo rodině, a cestou zdolává propast. Pojmy: cyklus a podmínka, testování a hledání chyb. Asi 45 minut.",
+      "en": "In the Arctic, pupils guide the Agent to a polar bear cub separated from its family, crossing a chasm on the way. Concepts: loops and conditionals, testing and debugging. About 45 minutes."
     }
   },
   {
@@ -40,8 +40,8 @@
     "en": "Fun coding basics: Lesson 4 – Panda habitat",
     "url": "https://education.minecraft.net/world/cd8187f4-9f54-4b74-a6fd-9e0aff3723f1",
     "note": {
-      "cs": "Svět z knihovny Minecraft Education. Na jeho stránce ho stáhneš tlačítkem Download (.mcworld) a dvojklikem naimportuješ do hry. Potřebuje Minecraft Education a přihlášení školním účtem.",
-      "en": "A world from the Minecraft Education library. Download it on its page (.mcworld) and double-click to import it into the game. Needs Minecraft Education and a school account."
+      "cs": "Panda zabloudila do města. Žák ji s Agentem přestěhuje a v novém domově postaví ochranný plot a úkryt z bambusu. Pojmy: cyklus a vnořený cyklus. Asi hodina.",
+      "en": "A panda has wandered into a town. Pupils use the Agent to move it and build a bamboo border and hideaway in its new home. Concepts: loops and nested loops. About an hour."
     }
   },
   {
@@ -49,8 +49,8 @@
     "en": "Fun coding basics: Lesson 5 – Grey wolf",
     "url": "https://education.minecraft.net/world/f9769fe4-80ca-4213-90b5-b06b04a3e3db",
     "note": {
-      "cs": "Svět z knihovny Minecraft Education. Na jeho stránce ho stáhneš tlačítkem Download (.mcworld) a dvojklikem naimportuješ do hry. Potřebuje Minecraft Education a přihlášení školním účtem.",
-      "en": "A world from the Minecraft Education library. Download it on its page (.mcworld) and double-click to import it into the game. Needs Minecraft Education and a school account."
+      "cs": "Lekce o soužití lidí a vlků: žák s Agentem zabezpečí kurník, přežene ovce, vlka odplaší a vyčistí okolí. Pojmy: cyklus a vnořený cyklus. Asi hodina.",
+      "en": "A lesson about people and wolves living side by side: pupils use the Agent to secure the chicken coop, move the sheep, scare the wolf off and clear the area. Concepts: loops and nested loops. About an hour."
     }
   },
   {
@@ -58,8 +58,8 @@
     "en": "Fun coding basics: Lesson 6 – Biome review",
     "url": "https://education.minecraft.net/world/01ef64da-e6e6-4e8c-a0d6-93192ccb549b",
     "note": {
-      "cs": "Svět z knihovny Minecraft Education. Na jeho stránce ho stáhneš tlačítkem Download (.mcworld) a dvojklikem naimportuješ do hry. Potřebuje Minecraft Education a přihlášení školním účtem.",
-      "en": "A world from the Minecraft Education library. Download it on its page (.mcworld) and double-click to import it into the game. Needs Minecraft Education and a school account."
+      "cs": "Opakování celého bloku ve skupinách v jednom společném světě. Ve čtyřech biomech staví most, plot a věž, procházejí bludiště a uklízejí odpadky, nebo si vymyslí vlastní úkol. Svět nemá reset ani ukazatel splnění. Přes 3 hodiny.",
+      "en": "A review of the whole block in groups sharing one world. In four biomes they build a bridge, a fence and a tower, solve a maze and clear rubbish, or invent their own task. The world has no reset and no completion signs. More than 3 hours."
     }
   }
 ]
