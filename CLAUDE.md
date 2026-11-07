@@ -477,6 +477,16 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   přesměrovává (next.config.mjs). Upozornění na NETLAB+ (nástroj akademií Cisco) Karel zná. Název ALGOLABu zatím
   neřešený, návrh byl „Algoritmická dílna“.
 
+### Přihlášení kódem postupu ve Windows a na Macu (7. 11. 2026)
+- Karel: kdo je tu poprvé, napíše jméno, kdo pokračuje, vloží místo jména kód postupu. Pole na přihlašovací
+  obrazovce bere obojí (`kodPriPrihlaseni` v postupSimulatoru.ts, i celý řádek z Teams). Jméno se vezme z kódu,
+  splněné úlohy se odškrtnou, soubory a plocha se nepřenesou (kód je nenese) – říká to i text pod polem.
+  Cizí kód (WIN1 na Macu…), useknutý kód a kód bez jména odmítne s vysvětlením. Rozdělaná práce pod jiným jménem
+  se zeptá „Je tvoje?“ jako u jména. Formát kódu ani úlohy se nezměnily. NETLAB a kurz SQL to zatím nemají.
+- Na úvodu „Simulátory a laby v prohlížeči“, „Jak zadat simulátor nebo lab žákům“, „Co je nového v simulátorech
+  a labech“ (Karel: dílny → laby). Karty Windows a macOS mají `simNoteKod` „jménem či kódem“ (delší text se na
+  kartě usekl), NETLAB `simNote` „přihlášení jménem“. Novinky Karel chce přepisovat, ne přidávat.
+
 ### AI Hub a banka (6.–7. 11. 2026)
 - AI Hub má pátou kategorii „Čím si postavit vlastní nástroj“ (vibecoding, ikona `stavba` = Wrench v AiHub.tsx)
   s Macaly (účet jen od 18 let, proto pro učitele). Dál přibyly Tiny, Databáze AI asistentů (chatveskole.cz,

@@ -14,7 +14,9 @@ import { Ikona } from "./Ikona";
 import { vybranaTapeta } from "@/lib/win/obrazky";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { scenarPodleId, scenarZAdresy, VYCHOZI_SCENAR } from "@/lib/win/scenare";
-import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru";
+import { VYCHOZI_JMENO, jmenoPlatne, kodPriPrihlaseni, splnenychUloh, stejneJmeno, vypadaJakoKod } from "@/lib/postupSimulatoru";
+import { UKOLY } from "@/lib/win/ukoly";
+import { UKOLY_SIT } from "@/lib/dilna/ukoly";
 
 /**
  * Kroky: zámek → jméno → vítejte.
@@ -27,7 +29,14 @@ import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru"
  * Když na počítači zůstala rozdělaná práce pod jiným jménem (jiný žák,
  * předchozí hodina), obrazovka se zeptá, jestli je jeho. Bez výchozího
  * tlačítka – Enter nesmí potichu převzít cizí práci.
+ *
+ * Místo jména jde vložit kód postupu (Karel 7. 11. 2026): kdo pokračuje
+ * z jiného počítače, přihlásí se jménem z kódu a splněné úlohy se mu
+ * odškrtnou (`kodPriPrihlaseni`). Soubory a plocha se nepřenesou.
  */
+
+/** Úlohy, které smí kód WIN1- nést – stejně jako „Pokračovat z kódu“. */
+const patriDoWindows = (id: string) => UKOLY.some((u) => u.id === id) || UKOLY_SIT.some((u) => u.id === id);
 type Faze = "zamek" | "jmeno" | "vitejte";
 
 export function Prihlaseni({
@@ -40,8 +49,11 @@ export function Prihlaseni({
   tapetaId: string;
   /** Kolik úloh je na tomhle počítači splněných (rozdělaná práce). */
   rozdelano: { hotovo: number; celkem: number };
-  /** Přihlášení jménem; `nacisto` = začít bez rozdělané práce předchozího. */
-  onHotovo: (jmeno: string, nacisto: boolean) => void;
+  /**
+   * Přihlášení jménem; `nacisto` = začít bez rozdělané práce předchozího,
+   * `zKodu` = splněné úlohy z kódu postupu vloženého místo jména.
+   */
+  onHotovo: (jmeno: string, nacisto: boolean, zKodu: string[]) => void;
 }) {
   const [faze, nastavFazi] = useState<Faze>("zamek");
   /**
@@ -67,7 +79,7 @@ export function Prihlaseni({
   const [hlaska, nastavHlasku] = useState("");
   /** Rozdělaná práce patří jinému jménu – ptáme se, čí je. */
   const [ptaSe, nastavPtaSe] = useState(false);
-  const volba = useRef<{ jmeno: string; nacisto: boolean }>({ jmeno: "", nacisto: false });
+  const volba = useRef<{ jmeno: string; nacisto: boolean; zKodu: string[] }>({ jmeno: "", nacisto: false, zKodu: [] });
   const [cas, nastavCas] = useState<Date | null>(null);
   const pole = useRef<HTMLInputElement>(null);
   const tapeta = vybranaTapeta(tapetaId);
@@ -96,13 +108,18 @@ export function Prihlaseni({
     if (faze === "vitejte") {
       // Krátká pauza jako při skutečném přihlašování – ne kvůli efektu,
       // ale aby bylo poznat, že se přechází do jiného prostředí.
-      const id = window.setTimeout(() => onHotovo(volba.current.jmeno, volba.current.nacisto), 1400);
+      const id = window.setTimeout(() => onHotovo(volba.current.jmeno, volba.current.nacisto, volba.current.zKodu), 1400);
       return () => window.clearTimeout(id);
     }
   }, [faze, onHotovo]);
 
+  /** Vložený kód postupu místo jména; `null` = pole obsahuje jméno. */
+  const kod = kodPriPrihlaseni(jmeno, "windows", patriDoWindows);
+  /** Jméno, pod kterým se žák přihlásí – napsané, nebo z kódu. */
+  const jmenoPrihlaseni = kod?.ok ? kod.jmeno : jmeno.trim().slice(0, 60);
+
   const prihlas = (nacisto: boolean) => {
-    volba.current = { jmeno: jmeno.trim(), nacisto };
+    volba.current = { jmeno: jmenoPrihlaseni, nacisto, zKodu: kod?.ok ? kod.splneno : [] };
     nastavPtaSe(false);
     nastavFazi("vitejte");
   };
@@ -110,7 +127,13 @@ export function Prihlaseni({
   /** Přihlášení jménem. Běží celé v prohlížeči – nic se neodesílá. */
   const odesliJmeno = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!jmenoPlatne(jmeno)) {
+    if (kod && !kod.ok) {
+      nastavHlasku(kod.hlaska);
+      nastavChybu(true);
+      window.setTimeout(() => nastavChybu(false), 700);
+      return;
+    }
+    if (!jmenoPlatne(jmenoPrihlaseni)) {
       nastavHlasku("Napiš své jméno a příjmení.");
       nastavChybu(true);
       window.setTimeout(() => nastavChybu(false), 700);
@@ -118,7 +141,7 @@ export function Prihlaseni({
     }
     nastavHlasku("");
     // Rozdělaná práce pod jiným jménem: zeptat se, čí je.
-    const cizi = jmenoUctu !== VYCHOZI_JMENO && !stejneJmeno(jmenoUctu, jmeno) && rozdelano.hotovo > 0;
+    const cizi = jmenoUctu !== VYCHOZI_JMENO && !stejneJmeno(jmenoUctu, jmenoPrihlaseni) && rozdelano.hotovo > 0;
     if (cizi) {
       nastavPtaSe(true);
       return;
@@ -185,9 +208,13 @@ export function Prihlaseni({
           }`}
         >
           <Ikona klic="uzivatel" velikost={112} className="drop-shadow-lg" />
-          <h1 className="mt-4 text-[26px] font-light">{jmeno.trim() || "Přihlášení"}</h1>
+          <h1 className="mt-4 max-w-full truncate text-[26px] font-light">
+            {kod?.ok ? kod.jmeno : vypadaJakoKod(jmeno) ? "Kód postupu" : jmeno.trim() || "Přihlášení"}
+          </h1>
           <p className="mt-1 max-w-[320px] text-center text-[13px] leading-relaxed text-white/75">
-            Napiš své jméno a příjmení. Objeví se v kódu postupu, který na konci hodiny pošleš učiteli.
+            {kod?.ok
+              ? `Pokračuješ z kódu postupu: ${splnenychUloh(kod.splneno.length)}.`
+              : "Jsi tu poprvé? Napiš své jméno a příjmení. Pokračuješ v rozdělané práci? Vlož místo jména svůj kód postupu."}
           </p>
 
           <div className="mt-5 flex w-full max-w-[300px] items-center gap-2 rounded-md border border-white/40 bg-black/35 px-3 backdrop-blur">
@@ -198,12 +225,14 @@ export function Prihlaseni({
               onChange={(e) => {
                 nastavJmeno(e.target.value);
                 nastavPtaSe(false);
+                nastavHlasku("");
               }}
-              placeholder="Jméno a příjmení"
-              aria-label="Jméno a příjmení"
+              placeholder="Jméno, nebo kód postupu"
+              aria-label="Jméno a příjmení, nebo kód postupu"
               autoComplete="off"
               spellCheck={false}
-              maxLength={60}
+              // Kód postupu je delší než jméno, jméno se zkrátí na 60 znaků v `jmenoPrihlaseni`.
+              maxLength={4000}
               className="h-11 min-w-0 flex-1 bg-transparent text-[15px] text-white outline-none placeholder:text-white/50"
             />
             <button
@@ -217,7 +246,7 @@ export function Prihlaseni({
           </div>
 
           <p
-            className={`mt-3 h-5 text-[13px] transition-opacity ${
+            className={`mt-3 min-h-5 text-center text-[13px] transition-opacity ${
               hlaska ? "text-[#ff9a9a] opacity-100" : "opacity-0"
             }`}
           >
@@ -257,7 +286,7 @@ export function Prihlaseni({
             (panel Úkoly → Moje výsledky).{" "}
             {/* Druhá půlka téhož faktu, a pro žáka ta praktičtější. */}
             <strong className="font-semibold text-white/80">
-              Na jiném počítači práci nenajdeš – pokračuješ tam z kódu postupu.
+              Na jiném počítači vlož místo jména kód postupu – odškrtnou se ti splněné úlohy. Soubory a plocha se nepřenesou.
             </strong>{" "}
             {/* Odkaz je tady schválně, ne až v patičce webu: tvrzení „nic se
                 neodesílá" má být doložitelné právě ve chvíli, kdy ho žák čte. */}
@@ -277,6 +306,9 @@ export function Prihlaseni({
         <div className="relative z-10 flex flex-col items-center text-white">
           <Ikona klic="uzivatel" velikost={112} className="drop-shadow-lg" />
           <h1 className="mt-4 text-[26px] font-light">{volba.current.jmeno || jmenoUctu}</h1>
+          {volba.current.zKodu.length > 0 && (
+            <p className="mt-1 text-[13px] text-white/75">Načteno z kódu: {splnenychUloh(volba.current.zKodu.length)}</p>
+          )}
           <div className="mt-6 flex items-center gap-3 text-[15px]">
             <Loader2 className="h-5 w-5 animate-spin" />
             Vítejte
@@ -286,3 +318,4 @@ export function Prihlaseni({
     </div>
   );
 }
+

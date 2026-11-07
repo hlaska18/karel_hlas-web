@@ -2,7 +2,9 @@ import { describe, expect, it } from "vitest";
 import {
   dekodujSimulator,
   jmenoPlatne,
+  kodPriPrihlaseni,
   najdiKodySimulatoru,
+  splnenychUloh,
   sloucitSimulatory,
   stejneJmeno,
   textKopieSimulatoru,
@@ -100,5 +102,30 @@ describe("dekodujSimulator – poškozené a upravené kódy (audit 4. 10. 2026)
     expect(dekodujSimulator("WIN1-" + "A".repeat(20000))).toBeNull();
     expect(dekodujSimulator(kodZ([1, 2]))).toBeNull();
     expect(dekodujSimulator(kodZ({ j: 1, h: [] }))).toBeNull();
+  });
+});
+
+describe("kód postupu místo jména při přihlášení (7. 11. 2026)", () => {
+  const patri = (id: string) => id !== "neexistuje";
+
+  it("jméno kód nepřipomíná", () => {
+    expect(kodPriPrihlaseni("Šárka Řeháková", "macos", patri)).toBeNull();
+  });
+
+  it("platný kód dá jméno a splněné úlohy, i vložený s celým řádkem z Teams", () => {
+    const p = zak({ splneno: ["zavri-okno-finderu", "neexistuje"] });
+    const radek = textKopieSimulatoru(p, zakodujSimulator(p), 1, 14);
+    expect(kodPriPrihlaseni(radek, "macos", patri)).toEqual({ ok: true, jmeno: "Šárka Řeháková", splneno: ["zavri-okno-finderu"] });
+  });
+
+  it("kód z jiného simulátoru, useknutý kód a kód bez jména odmítne", () => {
+    const win = zakodujSimulator(zak({ simulator: "windows" }));
+    expect(kodPriPrihlaseni(win, "macos", patri)).toMatchObject({ ok: false });
+    expect(kodPriPrihlaseni("MAC1-abc", "macos", patri)).toMatchObject({ ok: false });
+    expect(kodPriPrihlaseni(zakodujSimulator(zak({ jmeno: "Žák" })), "macos", patri)).toMatchObject({ ok: false });
+  });
+
+  it("skloňuje počet úloh", () => {
+    expect([0, 1, 3, 5].map(splnenychUloh)).toEqual(["0 splněných úloh", "1 splněná úloha", "3 splněné úlohy", "5 splněných úloh"]);
   });
 });

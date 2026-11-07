@@ -53,13 +53,14 @@ describe("HeroSimulatory", () => {
     expect(text).not.toMatch(/Úkoly|Moje výsledky/);
   });
 
-  it("ukáže předaný počet úloh, správně vyskloňovaný, a že se vstupuje jménem", () => {
+  it("ukáže předaný počet úloh, správně vyskloňovaný, a že se vstupuje jménem nebo kódem postupu", () => {
     vykresli("cs", 7, 3);
     const [win, mac] = screen.getAllByRole("link");
-    expect(win.textContent).toContain("7 úloh · přihlášení jménem");
-    expect(mac.textContent).toContain("3 úlohy · přihlášení jménem");
-    // Vstupní kódy jsou od 25. 9. 2026 zrušené – na úvodu už nesmí být.
-    expect(win.textContent).not.toMatch(/kód/);
+    expect(win.textContent).toContain("7 úloh · jménem či kódem");
+    expect(mac.textContent).toContain("3 úlohy · jménem či kódem");
+    // Vstupní kódy od učitele jsou od 25. 9. 2026 zrušené. Kód postupu (od 7. 11. 2026)
+    // je žákův vlastní, ten tu být smí.
+    expect(win.textContent).not.toMatch(/vstupní|od učitele|od vyučující/i);
   });
 
   it("anglicky řekne, že prostředí je česky", () => {

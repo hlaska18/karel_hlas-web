@@ -212,7 +212,7 @@ function Obrazovka() {
             jmenoUctu={n.jmenoUctu}
             tapetaId={n.tapeta}
             rozdelano={postup(stav.splneno)}
-            onHotovo={(jmeno, nacisto) => {
+            onHotovo={(jmeno, nacisto, zKodu) => {
               // Přihlášení jménem (od 25. 9. 2026 místo kódu). Jméno je
               // jméno účtu – ukazuje se ve Startu, v Nastavení a nese ho
               // kód postupu. „Začít načisto“ = rozdělaná práce patřila
@@ -225,6 +225,8 @@ function Obrazovka() {
               } else {
                 poslat({ typ: "nastaveni/zmen", zmena: { jmenoUctu: jmeno } });
               }
+              // Kód postupu vložený místo jména: splněné úlohy z jiného počítače.
+              if (zKodu.length) poslat({ typ: "ukoly/splneno", ids: zKodu });
               zapamatujPrihlaseni(true, "windows");
               nastavFazi("bezi");
             }}

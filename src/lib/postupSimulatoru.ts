@@ -207,3 +207,37 @@ export function jmenoPlatne(jmeno: string): boolean {
   const j = jmeno.trim();
   return j.length >= 2 && !stejneJmeno(j, VYCHOZI_JMENO);
 }
+
+/** „1 splněná úloha“, „3 splněné úlohy“, „12 splněných úloh“. */
+export function splnenychUloh(n: number): string {
+  if (n === 1) return "1 splněná úloha";
+  if (n >= 2 && n <= 4) return `${n} splněné úlohy`;
+  return `${n} splněných úloh`;
+}
+
+/** Napsal žák na přihlašovací obrazovce místo jména kód postupu? */
+export const vypadaJakoKod = (text: string) => /(?:WSIT1|WIN1|MAC1)-/.test(text);
+
+export type KodPriPrihlaseni = { ok: true; jmeno: string; splneno: string[] } | { ok: false; hlaska: string };
+
+/**
+ * Kód postupu místo jména na přihlašovací obrazovce Windows a macOS (Karel
+ * 7. 11. 2026): kdo je tu poprvé, napíše jméno, kdo pokračuje z jiného
+ * počítače, vloží kód. Jméno se vezme z kódu a splněné úlohy se odškrtnou.
+ * Soubory a plocha se nepřenesou – kód je nenese.
+ *
+ * `null` = text kód nepřipomíná, je to jméno. `patri` vybere úlohy, které
+ * do simulátoru patří (stejně jako „Pokračovat z kódu“ v Mých výsledcích).
+ */
+export function kodPriPrihlaseni(text: string, simulator: Simulator, patri: (id: string) => boolean): KodPriPrihlaseni | null {
+  if (!vypadaJakoKod(text)) return null;
+  const p = najdiKodySimulatoru(text)[0];
+  if (!p) return { ok: false, hlaska: "Tohle není celý kód postupu. Vlož ho celý, jak jsi ho zkopíroval(a)." };
+  if (p.simulator !== simulator) {
+    return { ok: false, hlaska: `Tohle je kód postupu pro ${NAZEV_SIMULATORU[p.simulator]}, tady je ${NAZEV_SIMULATORU[simulator]}.` };
+  }
+  if (!jmenoPlatne(p.jmeno)) {
+    return { ok: false, hlaska: "V kódu chybí jméno. Přihlas se jménem a kód vlož potom v Úkoly → Moje výsledky." };
+  }
+  return { ok: true, jmeno: p.jmeno, splneno: p.splneno.filter(patri) };
+}

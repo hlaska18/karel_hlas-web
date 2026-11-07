@@ -55,6 +55,7 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
       href: "/windows",
       nazev: tr.hero.simWindows,
       pocet: pocetUloh(ulohy.windows, lang),
+      poznamka: tr.hero.simNoteKod,
       zadani: tr.hero.zadatText,
       znak: <ZnakWindows className="h-6 w-6" />,
     },
@@ -62,6 +63,7 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
       href: "/macos",
       nazev: tr.hero.simMacos,
       pocet: pocetUloh(ulohy.macos, lang),
+      poznamka: tr.hero.simNoteKod,
       zadani: tr.hero.zadatText,
       znak: <ZnakJablko className="h-7 w-7" />,
     },
@@ -70,6 +72,8 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
       href: lang === "en" ? "/sitova-dilna?z=en" : "/sitova-dilna",
       nazev: tr.hero.simDilna,
       pocet: pocetZakazek(ulohy.dilna, lang),
+      /* NETLAB přihlášení kódem postupu zatím nemá. */
+      poznamka: tr.hero.simNote,
       /* Dílna má vlastní zadání: tlačítko Úkoly ani Moje výsledky v ní nejsou. */
       zadani: tr.hero.zadatTextDilna,
       znak: <ZnakDilna className="h-6 w-6" />,
@@ -85,7 +89,7 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
 
       <ul className="space-y-4">
         {karty.map((s, i) => {
-          const poznamka = tr.hero.simNote.replace("{tasks}", s.pocet);
+          const poznamka = s.poznamka.replace("{tasks}", s.pocet);
           return (
             <li key={s.href}>
               {/* Stejná dvě gesta jako u stohu článků: najetí kamkoli do

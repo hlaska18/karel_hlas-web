@@ -9,17 +9,23 @@
  *
  * Když na počítači zůstala rozdělaná práce pod jiným jménem, obrazovka se
  * zeptá, čí je – bez výchozího tlačítka, Enter nesmí převzít cizí práci.
+ *
+ * Místo jména jde vložit kód postupu (Karel 7. 11. 2026): jméno se vezme
+ * z kódu a splněné úlohy se odškrtnou (`kodPriPrihlaseni`). Soubory a plocha
+ * se nepřenesou.
  */
 
 import { useEffect, useRef, useState } from "react";
 import { ArrowRight, Loader2 } from "lucide-react";
 import { datumSlovy, hodiny } from "@/lib/win/format";
 import { VYCHOZI_NASTAVENI, vychoziStavMac, zapomenMac } from "@/lib/mac/stav";
-import { postupMac } from "@/lib/mac/ukoly";
-import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru";
+import { UKOLY_MAC, postupMac } from "@/lib/mac/ukoly";
+import { VYCHOZI_JMENO, jmenoPlatne, kodPriPrihlaseni, splnenychUloh, stejneJmeno, vypadaJakoKod } from "@/lib/postupSimulatoru";
 import { useMac } from "./system";
 
 type Faze = "zamek" | "jmeno" | "vitejte";
+
+const patriDoMacu = (id: string) => UKOLY_MAC.some((u) => u.id === id);
 
 export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
   const { stav, poslat } = useMac();
@@ -70,9 +76,16 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
     }
   }, [faze, onHotovo]);
 
+  /** Vložený kód postupu místo jména; `null` = pole obsahuje jméno. */
+  const kod = kodPriPrihlaseni(jmeno, "macos", patriDoMacu);
+  /** Jméno, pod kterým se žák přihlásí – napsané, nebo z kódu. */
+  const jmenoPrihlaseni = kod?.ok ? kod.jmeno : jmeno.trim().slice(0, 60);
+  /** Co ukazuje nadpis a avatar, dokud žák píše. */
+  const jmenoNaZamku = kod?.ok ? kod.jmeno : vypadaJakoKod(jmeno) ? "" : jmeno;
+
   /** Přihlásí jménem; `nacisto` = rozdělaná práce patřila někomu jinému. */
   const prihlas = (nacisto: boolean) => {
-    const j = jmeno.trim();
+    const j = jmenoPrihlaseni;
     if (nacisto) {
       zapomenMac();
       // Čistý stav i do paměti – jinak by se hned uložil zpátky ten starý
@@ -80,20 +93,28 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
       poslat({ typ: "system/nacti", stav: vychoziStavMac() });
     }
     poslat({ typ: "nastaveni/zmen", zmena: { jmenoUctu: j } });
+    // Kód postupu vložený místo jména: splněné úlohy z jiného počítače.
+    if (kod?.ok && kod.splneno.length) poslat({ typ: "ukoly/splneno", ids: kod.splneno });
     nastavPtaSeCi(false);
     nastavFazi("vitejte");
   };
 
   const odesli = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!jmenoPlatne(jmeno)) {
+    if (kod && !kod.ok) {
+      nastavHlasku(kod.hlaska);
+      nastavChybu(true);
+      window.setTimeout(() => nastavChybu(false), 700);
+      return;
+    }
+    if (!jmenoPlatne(jmenoPrihlaseni)) {
       nastavHlasku("Napiš své jméno a příjmení.");
       nastavChybu(true);
       window.setTimeout(() => nastavChybu(false), 700);
       return;
     }
     nastavHlasku("");
-    const cizi = jmenoUctu !== VYCHOZI_JMENO && !stejneJmeno(jmenoUctu, jmeno) && rozdelano.hotovo > 0;
+    const cizi = jmenoUctu !== VYCHOZI_JMENO && !stejneJmeno(jmenoUctu, jmenoPrihlaseni) && rozdelano.hotovo > 0;
     if (cizi) {
       nastavPtaSeCi(true);
       return;
@@ -154,8 +175,10 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
               chyba ? "animate-[zatreseni_0.45s]" : ""
             }`}
           >
-            <AvatarZak jmeno={jmeno} />
-            <h1 className="mt-3 text-[20px] font-medium drop-shadow">{jmeno.trim() || "Přihlášení"}</h1>
+            <AvatarZak jmeno={jmenoNaZamku} />
+            <h1 className="mt-3 max-w-full truncate text-[20px] font-medium drop-shadow">
+              {jmenoNaZamku.trim() || (vypadaJakoKod(jmeno) ? "Kód postupu" : "Přihlášení")}
+            </h1>
 
             <div // Zaostřené pole se jen prosvětlí, jako na zamykací obrazovce Macu.
               className="mac-sklo-zaloha mt-5 flex w-[260px] items-center gap-2 rounded-full border border-white/40 bg-black/30 pl-4 pr-1 backdrop-blur transition-colors focus-within:border-white/75 focus-within:bg-black/40"
@@ -166,12 +189,14 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
                 onChange={(e) => {
                   nastavJmeno(e.target.value);
                   nastavPtaSeCi(false);
+                  nastavHlasku("");
                 }}
-                placeholder="Jméno a příjmení"
-                aria-label="Jméno a příjmení"
+                placeholder="Jméno, nebo kód postupu"
+                aria-label="Jméno a příjmení, nebo kód postupu z jiného počítače"
                 autoComplete="off"
                 spellCheck={false}
-                maxLength={60}
+                // Kód postupu je delší než jméno, jméno se zkrátí na 60 znaků v `jmenoPrihlaseni`.
+                maxLength={4000}
                 className="h-9 min-w-0 flex-1 bg-transparent text-[14px] text-white outline-none placeholder:text-white/50"
               />
               <button
@@ -185,11 +210,11 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
             </div>
 
             <p
-              className={`mt-3 h-5 text-[13px] transition-opacity ${
-                hlaska ? "text-[#ff9a9a] opacity-100" : "opacity-0"
+              className={`mt-3 min-h-5 text-center text-[13px] transition-opacity ${
+                hlaska ? "text-[#ff9a9a] opacity-100" : kod?.ok ? "text-white/80 opacity-100" : "opacity-0"
               }`}
             >
-              {hlaska || " "}
+              {hlaska || (kod?.ok ? `Pokračuješ z kódu postupu: ${splnenychUloh(kod.splneno.length)}.` : " ")}
             </p>
 
             {ptaSeCi && (
@@ -305,7 +330,7 @@ export function PrihlaseniMac({ onHotovo }: { onHotovo: () => void }) {
                 prohlížeči. Učiteli je pošleš sám kódem postupu (panel Úkoly →
                 Moje výsledky).{" "}
                 <strong className="font-semibold text-white/90">
-                  Na jiném počítači práci nenajdeš – pokračuješ tam z kódu postupu.
+                  Na jiném počítači vlož místo jména kód postupu – odškrtnou se ti splněné úlohy. Soubory a plocha se nepřenesou.
                 </strong>{" "}
                 <a
                   href="/soukromi"

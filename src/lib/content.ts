@@ -1137,12 +1137,14 @@ type Dict = {
     simWindows: string;
     simMacos: string;
     simDilna: string;
-    /** Řádek pod názvem simulátoru. `{tasks}` je počet úloh i se slovem. */
+    /** Řádek pod názvem NETLABu. `{tasks}` je počet úloh i se slovem. */
     simNote: string;
+    /** Totéž u Windows a macOS: od 7. 11. 2026 se tam dá přihlásit i kódem postupu. */
+    simNoteKod: string;
     /** Štítek vpravo na tlačítku simulátoru. */
     simOpen: string;
     /**
-     * Návod „Jak zadat simulátor nebo dílnu žákům“ pod tlačítky simulátorů (rada
+     * Návod „Jak zadat simulátor nebo lab žákům“ pod tlačítky simulátorů (rada
      * 26. 10. 2026). Cizí učitelé simulátor zadávají přes Teams a adresa se
      * jim slepila s textem úkolu (/windowsPostup:1.Přihlas… v Analytics).
      * `zadatText` je zadání ke zkopírování: `{nazev}` a `{url}` se doplní,
@@ -1156,7 +1158,7 @@ type Dict = {
     zadatCopy: string;
     zadatCopied: string;
     /**
-     * „Co je nového v simulátorech a dílnách“ pod návodem k zadání (31. 10. 2026, cvičení
+     * „Co je nového v simulátorech a labech“ pod návodem k zadání (31. 10. 2026, cvičení
      * Síť a poruchy). Cizí učitelé mají simulátory v zadáních, ať vidí, co se
      * změnilo a co ne. Nejnovější položka nahoře.
      */
@@ -1404,18 +1406,19 @@ export const t: Record<Lang, Dict> = {
         "Pro střední školy. Moje soubory si stáhneš i upravíš zdarma; virtuální Windows a macOS běží rovnou v prohlížeči. Cvičebnice k Office je tu celá i s řešeními a autoři jsou u ní uvedení.",
       byline: "Připravuje Karel Hlas · učitel informatiky na SPŠ Tábor",
       stats: "{files} souborů · {topics} témat · všechny ročníky SŠ",
-      simulators: "Simulátory a dílny v prohlížeči",
+      simulators: "Simulátory a laby v prohlížeči",
       simWindows: "Virtuální Windows 11",
       simMacos: "Virtuální macOS",
       simDilna: "NETLAB",
       simNote: "{tasks} · přihlášení jménem",
+      simNoteKod: "{tasks} · jménem či kódem",
       simOpen: "Spustit",
-      zadatTitle: "Jak zadat simulátor nebo dílnu žákům",
+      zadatTitle: "Jak zadat simulátor nebo lab žákům",
       zadatKroky: [
         "Zkopíruj hotové zadání níž a vlož ho do Teams nebo Classroomu. Adresa je v něm na samostatném řádku, aby se neslepila s textem.",
-        "Žáci pracují na počítači s myší (na telefonu to nejde). Přihlásí se jménem a příjmením, nic se jim nezakládá. V simulátoru jsou úlohy v tlačítku Úkoly vpravo dole, v dílně zakázky v levém panelu. Odškrtávají se samy.",
-        "Na konci hodiny ti žák pošle kód postupu jako odpověď. V simulátoru ho najde v panelu Úkoly pod Moje výsledky, v dílně pod tlačítkem Kód postupu nahoře. Práce se ukládá jen v prohlížeči, takže ať ji dodělá na stejném počítači.",
-        "Kódy vlož do Přehledu třídy. V simulátoru je v panelu Úkoly, v dílně dole v levém panelu (Pro učitele: Přehled třídy). Stačí celé zprávy, kódy se v nich najdou samy. Přehled stáhneš do Excelu.",
+        "Žáci pracují na počítači s myší (na telefonu to nejde). Přihlásí se jménem a příjmením, nic se jim nezakládá. V simulátoru jsou úlohy v tlačítku Úkoly vpravo dole, v NETLABu zakázky v levém panelu. Odškrtávají se samy.",
+        "Na konci hodiny ti žák pošle kód postupu jako odpověď. V simulátoru ho najde v panelu Úkoly pod Moje výsledky, v NETLABu pod tlačítkem Kód postupu nahoře. Práce se ukládá jen v prohlížeči. Na jiném počítači může v simulátoru pokračovat, když se místo jménem přihlásí kódem postupu.",
+        "Kódy vlož do Přehledu třídy. V simulátoru je v panelu Úkoly, v NETLABu dole v levém panelu (Pro učitele: Přehled třídy). Stačí celé zprávy, kódy se v nich najdou samy. Přehled stáhneš do Excelu.",
       ],
       zadatText:
         "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Vpravo dole klikni na Úkoly a plň úlohy – odškrtávají se samy.\n3. Na konci klikni v panelu Úkoly na Moje výsledky, zkopíruj kód postupu a pošli mi ho jako odpověď.\n",
@@ -1423,13 +1426,12 @@ export const t: Record<Lang, Dict> = {
         "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Vlevo vyber zakázku a plň ji – hotové se odškrtávají samy.\n3. Na konci klikni nahoře na Kód postupu, zkopíruj ho a pošli mi ho jako odpověď.\n",
       zadatCopy: "Zkopírovat zadání",
       zadatCopied: "Zkopírováno",
-      novinkyTitle: "Co je nového v simulátorech a dílnách",
+      novinkyTitle: "Co je nového v simulátorech a labech",
       novinky: [
-        "Listopad 2026: síťové úlohy jsem ze simulátoru Windows vyndal. Je z nich nová síťová dílna NETLAB v tématu Digitální gramotnost, se schématem domácí sítě, Terminálem, routerem zezadu a správou routeru.",
-        "V dílně je 20 zakázek: Jak je počítač připojený, Nový router, pět poruch a Cizí zařízení ve Wi-Fi. U poruchy si žák tipne, kde je chyba, doloží to příkazy, opraví ji a opravu musí ověřit. Obálka ve schématu ukazuje, kam až data došla. Nápovědy si odkrývá po jedné a vidí je jen on. Router i jeho správa jsou smyšlené, žák v nich vymýšlí jen cvičná hesla.",
-        "Rozdělaná práce se v tomtéž prohlížeči přenese do dílny sama. Kódy se síťovými úlohami (WSIT1- i WIN1-) Přehled třídy čte dál a ukáže je v sekci NETLAB, odkaz /windows?scenar=sit vede do dílny. Přehled ukáže i to, co žák při opravě udělal vedle (třeba při poruše brány měnil server DNS), jako popis toho, co udělal, ne známku.",
-        "Windows: ping odpovídá ze skutečné adresy cíle (dřív odpovídal vždycky z brány), nově fungují nslookup, tracert a ipconfig /all. Adresy v „internetu“ jsou z rozsahů vyhrazených pro ukázky.",
-        "Beze změny: výchozích 33 úloh Windows, úlohy macOS a kódy, které už žáci odevzdali. Starší kódy Přehled třídy čte stejně jako dřív.",
+        "Listopad 2026: ve Windows a na Macu jde v práci pokračovat rovnou při přihlášení. Kdo je tu poprvé, napíše jméno, kdo pokračuje z jiného počítače, vloží místo jména svůj kód postupu. Odškrtnou se mu splněné úlohy, soubory a plocha se nepřenesou.",
+        "Síťové úlohy jsem ze simulátoru Windows vyndal, jsou teď v NETLABu v tématu Digitální gramotnost: 20 zakázek se schématem domácí sítě, Terminálem a routerem. U pěti poruch si žák tipne, kde je chyba, doloží to příkazy, opraví ji a opravu ověří.",
+        "Kódy se síťovými úlohami (WSIT1- i WIN1-) Přehled třídy čte dál a ukáže je v sekci NETLAB. Rozdělaná práce se v tomtéž prohlížeči přenese do NETLABu sama.",
+        "Beze změny: 33 úloh Windows, úlohy macOS a formát kódu postupu. Kódy, které už žáci odevzdali, Přehled třídy čte stejně jako dřív.",
       ],
       reading: "Zajímavé články",
       ctaLessons: "Procházet materiály",
@@ -2227,32 +2229,32 @@ export const t: Record<Lang, Dict> = {
         "For secondary schools. My own files are free to download and edit; virtual Windows and macOS run right in the browser. The Office workbook is here in full, solutions included, with its authors credited.",
       byline: "Curated by Karel Hlas · CS teacher at SPŠ Tábor",
       stats: "{files} files · {topics} topics · all secondary years",
-      simulators: "Simulators and workshops in the browser",
+      simulators: "Simulators and labs in the browser",
       simWindows: "Virtual Windows 11",
       simMacos: "Virtual macOS",
       simDilna: "NETLAB",
       simNote: "{tasks} in Czech",
+      simNoteKod: "{tasks} in Czech",
       simOpen: "Open",
-      zadatTitle: "How to assign a simulator or workshop",
+      zadatTitle: "How to assign a simulator or lab",
       zadatKroky: [
         "Copy the ready-made assignment below and paste it into Teams or Classroom. The link sits on its own line so it does not merge with the text.",
-        "Students work on a computer with a mouse (it does not run on phones). They sign in with their full name; no account is created. In a simulator, tasks are under the Úkoly (Tasks) button bottom right; in the workshop, jobs are in the left panel. They tick themselves off.",
-        "At the end of the lesson the student sends you the progress code as a reply. In a simulator it is under Moje výsledky (My results) in the task panel; in the workshop under the Kód postupu (Progress code) button at the top. Work is saved only in the browser, so they should finish on the same computer.",
-        "Paste the codes into Pro učitele: Přehled třídy (class overview). In a simulator it is in the task panel; in the workshop at the bottom of the left panel. Whole messages are fine; the codes are found automatically. You can download the overview for Excel.",
+        "Students work on a computer with a mouse (it does not run on phones). They sign in with their full name; no account is created. In a simulator, tasks are under the Úkoly (Tasks) button bottom right; in NETLAB, jobs are in the left panel. They tick themselves off.",
+        "At the end of the lesson the student sends you the progress code as a reply. In a simulator it is under Moje výsledky (My results) in the task panel; in NETLAB under the Kód postupu (Progress code) button at the top. Work is saved only in the browser. On another computer, students can continue in a simulator by signing in with their progress code instead of their name.",
+        "Paste the codes into Pro učitele: Přehled třídy (class overview). In a simulator it is in the task panel; in NETLAB at the bottom of the left panel. Whole messages are fine; the codes are found automatically. You can download the overview for Excel.",
       ],
       zadatText:
         "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Click Úkoly (Tasks) bottom right and work through the tasks – they tick themselves off.\n3. At the end click Moje výsledky (My results) in the task panel, copy the progress code and send it to me as a reply.\n\n(The simulator is in Czech.)\n",
       zadatTextDilna:
-        "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Pick a job on the left (Zakázky) and work through it – finished jobs tick themselves off.\n3. At the end click Kód postupu (Progress code) at the top, copy the code and send it to me as a reply.\n\n(The workshop is in Czech.)\n",
+        "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Pick a job on the left (Zakázky) and work through it – finished jobs tick themselves off.\n3. At the end click Kód postupu (Progress code) at the top, copy the code and send it to me as a reply.\n\n(NETLAB is in Czech.)\n",
       zadatCopy: "Copy the assignment",
       zadatCopied: "Copied",
-      novinkyTitle: "New in simulators and workshops",
+      novinkyTitle: "New in simulators and labs",
       novinky: [
-        "November 2026: I took the network tasks out of the Windows simulator. They are now NETLAB, a new network workshop in the Digital literacy topic, with a diagram of a home network, a Terminal, the back of a router and the router admin pages. The workshop is in Czech.",
-        "It has 20 jobs: How the computer is connected, New router, five faults and A stranger on the Wi-Fi. With a fault, students guess where the problem is, back it up with commands, fix it and must verify the fix. An envelope in the diagram shows how far the data got. Hints are revealed one at a time and only the student sees them. The router and its admin pages are made up; students only invent practice passwords there.",
-        "Work in progress moves to the workshop by itself in the same browser. The class overview still reads codes with network tasks (WSIT1- and WIN1-) and shows them in the NETLAB section; the link /windows?scenar=sit leads to the workshop. The overview also shows what the student did wrong while fixing (for example changed the DNS server when the gateway was broken), as a description of what they did, not a grade.",
-        "Windows: ping now replies from the real target address (it used to always reply from the gateway); nslookup, tracert and ipconfig /all now work. Addresses on the “internet” come from ranges reserved for documentation.",
-        "Unchanged: the 33 default Windows tasks, the macOS tasks and codes students have already submitted. The class overview reads older codes exactly as before.",
+        "November 2026: in Windows and macOS, students can continue their work right at sign-in. First time here, they type their name; continuing from another computer, they paste their progress code instead of the name. Completed tasks are ticked off; files and the desktop do not carry over.",
+        "I took the network tasks out of the Windows simulator. They are now in NETLAB in the Digital literacy topic: 20 jobs with a diagram of a home network, a Terminal and a router. With five faults, students guess where the problem is, back it up with commands, fix it and verify the fix. NETLAB is in Czech.",
+        "The class overview still reads codes with network tasks (WSIT1- and WIN1-) and shows them in the NETLAB section. Work in progress moves to NETLAB by itself in the same browser.",
+        "Unchanged: the 33 Windows tasks, the macOS tasks and the progress code format. The class overview reads codes students have already submitted exactly as before.",
       ],
       reading: "Interesting articles",
       ctaLessons: "Browse the materials",
