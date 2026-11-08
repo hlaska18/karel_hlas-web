@@ -38,6 +38,7 @@ import type { BankItem } from "@/lib/materials";
 import { zaznamenejStazeni } from "@/lib/mereni";
 import {
   TOOL_ORDER,
+  SLOZKY_NA_KONEC,
   countBreakdown,
   countByKind,
   countLinks,
@@ -1248,6 +1249,11 @@ function ToolFolders({
         korenove.push(u);
       }
     }
+
+    // Pár složek patří na konec tématu (viz SLOZKY_NA_KONEC). Řazení je stabilní,
+    // ostatní si drží pořadí, ve kterém přišly.
+    const naKonec = (u: Uzel) => Number(SLOZKY_NA_KONEC.includes(u.cesta.split("/")[0]));
+    korenove.sort((a, b) => naKonec(a) - naKonec(b));
 
     // Rozlišující popisek se přidá JEN při skutečné kolizi. Složka, která je
     // celá učitelská (např. „Python – řešení testů"), ho nepotřebuje – že je

@@ -12,9 +12,9 @@
  * a prohlížeče by jen bralo místo.
  */
 
-import { useCallback, useEffect, useReducer, useState } from "react";
+import { useCallback, useEffect, useReducer, useRef, useState } from "react";
 import Link from "next/link";
-import { ArrowLeft, Check, ChevronDown } from "lucide-react";
+import { ArrowLeft, Check, ChevronDown, Play } from "lucide-react";
 import { ZnakDilna } from "@/components/ZnakDilna";
 import { MojeVysledkySimulatoru, PrehledTridySimulatoru, type Vzhled } from "@/components/postup/VysledkySimulatoru";
 import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru";
@@ -192,6 +192,8 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
   const [tipu, nastavTipu] = useState(0);
   /** Po novém začátku se Terminál a prohlížeč připojí znovu, s čistým výpisem. */
   const [zacatek, nastavZacatek] = useState(0);
+  /** Hlavní panel, po výběru zakázky se vrací nahoru (jinak pruh „spusť“ zajede pod okraj). */
+  const panel = useRef<HTMLElement>(null);
 
   const porucha = zakazka.porucha;
   const situace = zakazka.situace;
@@ -212,6 +214,7 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
   const vyber = (z: Zakazka) => {
     nastavVybranou(z.id);
     nastavSkupinu(z.skupina);
+    panel.current?.scrollTo({ top: 0 });
     nastavZalozku(z.zalozka ?? "terminal");
     nastavHlasku(null);
     nastavTip(null);
@@ -230,7 +233,7 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
       porucha
         ? { text: "Začni tím, co už víš ze zakázky. Příkazy piš do Terminálu.", druh: "info" }
         : situace === "router"
-          ? { text: "Vyber kabel a pak klikni na port, kam podle tebe patří.", druh: "info" }
+          ? { text: "Přetáhni konec kabelu do portu, kam podle tebe patří.", druh: "info" }
           : null,
     );
   };
@@ -337,7 +340,7 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
           </div>
         </nav>
 
-        <main className="flex min-w-0 flex-1 flex-col gap-2.5 overflow-y-auto px-5 pb-4 pt-3.5">
+        <main ref={panel} className="flex min-w-0 flex-1 flex-col gap-2.5 overflow-y-auto px-5 pb-4 pt-3.5">
           <section className="flex shrink-0 items-start justify-between gap-6">
             <div className="min-w-0">
               <div className="text-[12px] font-semibold uppercase tracking-[.06em] text-[#6fe3c2]">Zakázka · {zakazka.skupina}</div>
@@ -381,10 +384,24 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
           )}
 
           {ceka && (
-            <div className="flex shrink-0 items-center justify-between gap-4 rounded-xl border border-[#6fe3c2]/40 bg-[#123c30] px-4 py-3 text-[14px]">
-              <p>{situace ? SITUACE[situace].popis : "Síť je zatím v pořádku. Zakázka ji pokazí."}</p>
-              <button type="button" onClick={zacni} className={`${hlavni} shrink-0`}>
-                {situace ? SITUACE[situace].tlacitko : "Začít zakázku"}
+            // Karel 8. 11. 2026: po přepnutí na poruchu nebylo vidět, že se musí spustit.
+            // Proto výrazný pruh a nástroje pod ním zakryté, dokud zakázka neběží.
+            <div
+              role="status"
+              className="flex shrink-0 items-center justify-between gap-4 rounded-xl border-2 border-[#e5b73b] bg-[#2a2412] px-4 py-3 text-[14px]"
+            >
+              <div className="flex min-w-0 items-start gap-3">
+                <span className="mt-0.5 flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-[#e5b73b] text-[14px] font-bold text-[#2a2412]">
+                  1
+                </span>
+                <div className="min-w-0">
+                  <p className="text-[15px] font-semibold text-[#ffe7a6]">Zakázka ještě neběží. Nejdřív ji spusť.</p>
+                  <p className="text-[#e8dcc0]">{situace ? SITUACE[situace].popis : "Síť je zatím v pořádku. Po spuštění se pokazí a tvým úkolem je ji opravit."}</p>
+                </div>
+              </div>
+              <button type="button" onClick={zacni} className={`${hlavni} inline-flex shrink-0 items-center gap-1.5`}>
+                <Play className="h-4 w-4" aria-hidden="true" />
+                {situace ? SITUACE[situace].tlacitko : "Spustit zakázku"}
               </button>
             </div>
           )}
@@ -423,7 +440,16 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
             </div>
           )}
 
-          <section className="flex min-h-[380px] flex-1 flex-col rounded-[14px] border border-white/[.08] bg-[#0d1714]">
+          <section className="relative flex min-h-[380px] flex-1 flex-col rounded-[14px] border border-white/[.08] bg-[#0d1714]">
+            {ceka && (
+              <div className="absolute inset-0 z-10 flex flex-col items-center justify-center gap-3 rounded-[14px] bg-[#0d1714]/90 px-6 text-center">
+                <p className="text-[15px] font-semibold">Nástroje se odemknou, až zakázku spustíš.</p>
+                <button type="button" onClick={zacni} className={`${hlavni} inline-flex items-center gap-1.5`}>
+                  <Play className="h-4 w-4" aria-hidden="true" />
+                  {situace ? SITUACE[situace].tlacitko : "Spustit zakázku"}
+                </button>
+              </div>
+            )}
             <div role="tablist" aria-label="Nástroje" className="flex shrink-0 gap-1 border-b border-white/[.08] px-2.5">
               {ZALOZKY.map((z) => (
                 <button

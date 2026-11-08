@@ -34,6 +34,12 @@ import type { BankItem } from "@/lib/materials";
  * jako „aplikační software", proto stojí až za operačním systémem a sítěmi,
  * ne na začátku.
  */
+/**
+ * Kořenové složky (název na disku), které se v tématu řadí až na úplný konec,
+ * i za učitelské. Karel 8. 11. 2026: Vibecoding je doplněk Programování.
+ */
+export const SLOZKY_NA_KONEC: readonly string[] = ["Vibecoding"];
+
 export const TOOL_ORDER = [
   "Digitální gramotnost",
   "Operační systémy",
