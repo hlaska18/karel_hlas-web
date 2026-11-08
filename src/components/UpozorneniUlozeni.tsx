@@ -7,11 +7,14 @@
  */
 
 import { useEffect, useState } from "react";
+import { usePathname } from "next/navigation";
 import { UDALOST_ULOZENI } from "@/lib/ulozeni";
 
 export function UpozorneniUlozeni() {
   const [selhalo, nastav] = useState(false);
   const [skryto, nastavSkryto] = useState(false);
+  // ALGOLAB nemá Moje výsledky ani soubory ke stažení, kód je v panelu Moje práce.
+  const algolab = usePathname()?.startsWith("/algolab");
 
   useEffect(() => {
     const h = (e: Event) => {
@@ -31,8 +34,10 @@ export function UpozorneniUlozeni() {
     >
       <p className="max-w-3xl">
         <b>Tvoje práce se neukládá.</b> Úložiště prohlížeče je plné nebo zakázané (třeba
-        anonymní okno). Když stránku zavřeš nebo obnovíš, rozdělaná práce zmizí. Pošli si
-        kód postupu (Moje výsledky) nebo si soubor stáhni, dokud je okno otevřené.
+        anonymní okno). Když stránku zavřeš nebo obnovíš, rozdělaná práce zmizí.{" "}
+        {algolab
+          ? "Zkopíruj si kód postupu (tlačítko Moje práce nahoře), dokud je okno otevřené."
+          : "Pošli si kód postupu (Moje výsledky) nebo si soubor stáhni, dokud je okno otevřené."}
       </p>
       <button
         type="button"

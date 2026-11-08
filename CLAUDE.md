@@ -388,6 +388,7 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   stav v Nastavení u APIPA („Žádné připojení k síti“?).
 
 ### Programování a dlaždice cvičení sítě (1. 11. 2026)
+- Složka Vibecoding stojí v Programování úplně na konci (`SLOZKY_NA_KONEC` v bankLabels.ts, řadí BankBrowser).
 - Dlaždice Python se v bance jmenuje **Programování** (Programming). Klíč tématu
   zůstal `Python`, protože je v adresách `?tema=Python`. Ikona `python.png` má
   motiv `</>`, vybral ji Karel ze tří návrhů.
@@ -476,6 +477,11 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   Adresa `/sitova-dilna` (je v zadáních), kód WSIT1-, úložiště i názvy souborů a komponent zůstaly; `/netlab`
   přesměrovává (next.config.mjs). Upozornění na NETLAB+ (nástroj akademií Cisco) Karel zná. Název ALGOLABu zatím
   neřešený, návrh byl „Algoritmická dílna“.
+- **Router zezadu je scéna** (8. 11. 2026, Karel: „kabely jako kabely, ne políčka“): `RouterZezadu.tsx` kreslí
+  v SVG router, zdroje (zásuvka, datová zásuvka, počítač) a prověšené kabely; konec kabelu se **přetáhne** do portu,
+  přetažením na stůl se vytáhne. Klikání (konektor, pak port) zůstává pro klávesnici. Logika zapojení a hlášky se nezměnily.
+- Nespuštěná zakázka (porucha, nový router, cizí zařízení) má výrazný žlutý pruh „Zakázka ještě neběží. Nejdřív ji spusť.“
+  a nástroje pod ním jsou zakryté s tlačítkem Spustit; po výběru zakázky se hlavní panel vrátí nahoru.
 
 ### Přihlášení kódem postupu ve Windows a na Macu (7. 11. 2026)
 - Karel: kdo je tu poprvé, napíše jméno, kdo pokračuje, vloží místo jména kód postupu. Pole na přihlašovací
@@ -495,6 +501,18 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   Lekce Minecraftu mají v `_zdroj.json` popis, co se žák učí (z API education.minecraft.net, plány jsou pro 8–10 let).
   Základy CodeBuilderu (svět 4e025a45…) se na webu Minecraftu dohledat nepodařilo, popis čeká na Karla.
 
+### ALGOLAB: kostra a lekce batohu (4. 11. 2026)
+- Karel se rozhodl stavět (koncepce 8 hodin z jeho textu, `navrhy/ALGOLAB.md`, tam je i co musí
+  platit pro generátor a přehled hodiny 8; ty se zatím nestaví). Hotová je kostra a hodina 4:
+  **`/algolab`**, `src/components/algolab/`, `src/lib/algolab/` (`batoh.ts`, `vyzva.ts`, `stav.ts`).
+- Zatím schválně skryté: noindex, bez odkazu z úvodu a banky, mimo sitemap. O odkazu rozhoduje Karel
+  po ukázce. Bez přihlášení, stav v localStorage (`algolab-batoh`). Od 7. 11. (rada + Codex, opravy A1–A19) má panel „Moje práce“ (`Prace.tsx`): kód postupu **ALG1-** (`lib/algolab/kod.ts`, nese i reflexi), pokračování z kódu a „Začít celou lekci znovu“; druhá otevřená karta přestane ukládat a zeptá se (`ziJinde` v Algolab.tsx). Pruh o neukládání má pro /algolab vlastní text. Ve Vlastním pokusu (8. 11.) blok pravidel ukazuje seřazené úkoly s klíčem
+  (přínos, přínos : doba = Kč/h) a po tipu průchod krok za krokem se zbývajícími hodinami; karty ve Změň zadání mají větu, jak pravidlo postupuje. Přehledu třídy
+  a simulátorů se to nedotýká. Běží jen na počítači (`JenNaPocitaci`).
+- Zadání: stroj 10 h, pět zakázek, nejvýnosnější první 49, přínos za hodinu 50, optimum 51 (jediné,
+  Hřídele + Příruby). Pořadí řádků tabulky je od nejkratší zakázky, aby „nevejde se“ opisovalo nenulovou
+  hodnotu. Čísla výzvy dává `vygenerujVyzvu(seed)`: optimum jediné, obě pravidla ho minou, kapacita +1
+  výsledek zlepší (test přes 5000 seedů). Když se změní čísla v `batoh.ts`, musí se změnit i otázky v `Krokovani.tsx`.
 
 ## Otevřené / nápady (nic naléhavého)
 

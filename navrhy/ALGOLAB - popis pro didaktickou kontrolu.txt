@@ -1,0 +1,111 @@
+ALGOLAB: algoritmická dílna v prohlížeči
+Podklad k didaktické kontrole
+
+Blok osmi vyučovacích hodin o algoritmech a jejich efektivitě pro 3. ročník střední průmyslové školy. Žák pracuje v prohlížeči a algoritmy si sám vyzkouší, krokuje a porovnává, místo aby je jen poslouchal.
+
+Autor: Karel Hlas, SPŠ Tábor
+Rozsah: 8 × 45 min
+Stav: koncepce celá, hotová hodina 4
+
+
+CO ALGOLAB JE
+
+Webová aplikace na adrese karelhlas.vercel.app/algolab. Běží celá v prohlížeči, bez účtů a bez serveru. Rozdělaná práce žáka se ukládá jen v jeho prohlížeči a nikam se neodesílá. Kvůli práci s tabulkami a myší běží jen na počítači, na telefonu se nespustí.
+
+Zatím je stránka schválně skrytá: web na ni neodkazuje a vyhledávače ji neindexují. Postavená je jedna hodina (problém batohu), se žáky zatím odučená nebyla. Ostatní hodiny jsou rozmyšlené na úrovni tématu a činností, ale ještě nepostavené.
+
+Předpoklady: žák zná proměnné, podmínky, cykly a pole. Rekurzi vysvětluje až hodina 2.
+
+
+PLÁN OSMI HODIN
+
+1. Efektivita algoritmů – lineární a binární vyhledávání, proč binární potřebuje seřazená data (připravuje se)
+2. Rozděl a panuj – Merge Sort a Bubble Sort, rekurze (připravuje se)
+3. Dynamické programování – nejlevnější cesta mřížkou (připravuje se)
+4. Dynamické programování – problém batohu (HOTOVÁ, popsáno níž)
+5. Heuristiky – nejbližší soused a 2-opt u hledání trasy (připravuje se)
+6. Grafy a simulace – Dijkstrův algoritmus na hotové síti, náhodné výpadky spojů (připravuje se)
+7. Laboratoř efektivity – dvojice měří dva postupy na stejné úloze, počet operací (připravuje se)
+8. Závěrečné ověření – jediný známkovaný výstup bloku (popsaná)
+
+V hodině 7 se vždy porovnávají dva postupy na stejné úloze: lineární × binární vyhledávání, Bubble × Merge Sort, hrubá síla × dynamické programování u batohu, hrubá síla × nejbližší soused a 2-opt u tras (tam se vedle počtu operací porovnává i délka trasy). Hlavní měřítko je počet operací. Velikost vstupů je omezená, nad limitem aplikace jen odhadne.
+
+
+JAK JE STAVĚNÁ KAŽDÁ HODINA
+
+Všechny hodiny mají stejných pět fází. Žák je vidí nahoře v aplikaci a může se mezi nimi vracet.
+
+- Problém (5 min): úloha ze života, kterou žák pochopí bez teorie
+- Vlastní pokus (10 min): žák úlohu nejdřív řeší sám, intuitivně
+- Experiment (15 min): algoritmus krok za krokem a změny zadání
+- Výzva (10 min): stejný postup na nových číslech, bez pomoci aplikace
+- Reflexe (5 min): vlastní formulace, pak srovnání se vzorem a nové pojmy
+
+Výjimkou je hodina 6: zadání 5, pokus 7, krokovaný Dijkstra 8, simulace 10, interpretace 10, vyhodnocení 5 min.
+
+
+HODINA 4: PROBLÉM BATOHU
+
+Zadání pro žáka: stroj má do konce týdne 10 volných hodin a čeká na něj pět výrobních úkolů. Všechny se nestihnou. Žák rozhoduje, které stroj udělá, aby firma vydělala co nejvíc.
+
+Úkol                 Doba výroby   Přínos
+Držáky               2 h           11 tis. Kč
+Šrouby               3 h           13 tis. Kč
+Hřídele              5 h           26 tis. Kč
+Příruby              5 h           25 tis. Kč
+Ložisková pouzdra    7 h           36 tis. Kč
+
+Čísla jsou zvolená tak, aby obě pravidla, která žáky napadnou nejdřív, minula nejlepší řešení:
+- Nejvýnosnější první: 49 tis. Kč (pouzdra + šrouby)
+- Nejlepší přínos za hodinu: 50 tis. Kč (držáky + hřídele + šrouby)
+- Nejlepší plán (jediný): 51 tis. Kč (hřídele + příruby)
+
+Problém (5 min)
+Zadání a tabulka úkolů. Zjednodušení je přiznané: úkol se udělá celý a jen jednou, omezuje jen čas stroje v celých hodinách. Skutečné plánování řeší i termíny, přestavbu stroje a materiál.
+
+Vlastní pokus (10 min)
+Žák klikáním sestaví vlastní plán, aplikace hlídá kapacitu. Po potvrzení vidí dvě „hladová“ pravidla a nejdřív si tipne, které vydělá víc. Teprve pak vidí, jak obě pravidla postupují a kolik vydělají. Aplikace porovná i jeho plán a skončí otázkou: jak poznat, že lepší plán neexistuje?
+
+Experiment (15 min)
+A. Krokování tabulky. Tabulka 5 úkolů × 0–10 hodin (55 buněk) se vyplňuje po řádcích. U každé buňky aplikace ukáže výpočet („bez úkolu 26, s úkolem 25 + 0 = 25, větší je 26“). Na pěti vybraných buňkách se zastaví a hodnotu musí napsat žák. Po chybě dostane nápovědu, po třech chybách může řešení odkrýt. Nakonec žák hledá plán odzadu: od pravého dolního rohu u každého úkolu rozhodne, jestli v plánu je.
+B. Změň zadání. Žák mění kapacitu, doby a přínosy a sleduje výsledek tabulky i obou pravidel. Má tři úkoly, např. najít kapacitu, při které obě pravidla selžou. Posuvník ukazuje, jak roste počet všech kombinací (2^n) proti počtu buněk tabulky.
+
+Výzva (10 min)
+Nová náhodná čísla, aplikace nic nedoplní. Žák doplní tři buňky (úkol se vyplatí / nevyplatí / nevejde se), vybere, co znamená číslo v jedné buňce, a spočítá, o kolik vzroste zisk při hodině navíc. Generátor zaručuje, že nejlepší plán je jediný, obě pravidla ho minou a hodina navíc výsledek opravdu zlepší (ověřeno na 5000 variantách). Výzva se neznámkuje, správnost žák vidí hned.
+
+Reflexe (5 min)
+Otázka: „Proč nestačilo brát nejvýnosnější úkol, a jak může tabulka bez zkoušení všech plánů zaručit nejlepší výsledek?“ Vzorová odpověď se odkryje, až žák napíše vlastní (aspoň pár slov). Pak čtyři karty nových pojmů: problém batohu 0/1, hladové pravidlo, dílčí problém, dynamické programování.
+
+
+ZÁMĚRNÁ DIDAKTICKÁ ROZHODNUTÍ
+
+- Nejdřív vlastní pokus a tip, potom algoritmus. Žák má zažít, že intuice a jednoduchá pravidla selhávají, a teprve pak dostat postup, který nejlepší výsledek zaručí.
+- Aplikace nesmí všechno naservírovat. Krokování se na pěti buňkách zastaví a žák počítá sám, plán odzadu hledá také sám.
+- Pořadí řádků tabulky od nejkratšího úkolu. Kdyby šly dlouhé úkoly první, při „nevejde se“ by se opisovaly samé nuly a žák by si odnesl mylnou představu, že „nevejde se“ znamená nulu.
+- Zjednodušení jsou v aplikaci označená („Zjednodušeno.“). Zjednodušovat se smí, tvrdit nepravdu ne.
+- Kontext strojírenské výroby (výrobní úkoly, stroj, hodiny) místo klasického batohu s předměty.
+
+
+HODNOCENÍ
+
+Hodiny 1–7 jsou formativní a neznámkují se. Známku dává jen hodina 8 (zatím nepostavená):
+
+- Rozpoznání vhodné strategie u čtyř situací: 8 min, 20 bodů, automaticky
+- Dynamické programování (tři buňky, význam buňky, dopad kapacity +1): 12 min, 30 bodů, automaticky
+- Porovnání algoritmů: 12 min, 25 bodů, automaticky
+- Zdůvodnění a kontrola, 2–3 krátké odpovědi: 13 min, 25 bodů, učitel podle rubriky
+
+Rubrika ručně hodnocené části: výběr algoritmu 0/5/10, souvislost postupu a výsledku 0/5/10, podmínka nebo omezení 0/2/5 bodů. Hranice známek určuje učitel.
+
+Průběh: učitel pošle odkaz se zadáním, žák napíše jméno a dostane svou variantu čísel. Během práce nevidí správnost ani body. Na konci zkopíruje jednu zprávu s odpověďmi a kódem a pošle ji učiteli, který zprávy vloží do přehledu třídy.
+
+Omezení: bez serveru nejde ověřit totožnost žáka ani zabránit úpravě kódu. Je to nástroj pro běžné školní hodnocení, ne pro zabezpečenou zkoušku. Žák si může v jiné kartě spustit nástroje z lekcí, proto se boduje hlavně porozumění, ne výsledek, který spočítá počítač.
+
+
+NA CO SE PTÁM
+
+1. Je pořadí témat (efektivita → rozděl a panuj → dynamické programování → heuristiky → grafy) pro 3. ročník průmyslovky rozumné? Nechybí nebo nepřebývá něco?
+2. Stihne se hodina 4 reálně za 45 minut? Která fáze je podle vás nejvíc přetížená?
+3. Je krokování tabulky s pěti otázkami dost aktivní, nebo pořád moc „naservírované“?
+4. Je reflexní otázka formulovaná tak, aby žák uměl odpovědět, a jsou nové pojmy vysvětlené správně a srozumitelně?
+5. Je hodnocení v hodině 8 vyvážené (75 bodů automaticky, 25 bodů učitel) a dává rubrika smysl?
