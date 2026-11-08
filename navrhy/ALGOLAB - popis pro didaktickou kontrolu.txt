@@ -12,6 +12,8 @@ CO ALGOLAB JE
 
 Webová aplikace na adrese karelhlas.vercel.app/algolab. Běží celá v prohlížeči, bez účtů a bez serveru. Rozdělaná práce žáka se ukládá jen v jeho prohlížeči a nikam se neodesílá. Kvůli práci s tabulkami a myší běží jen na počítači, na telefonu se nespustí.
 
+Kód postupu: v panelu „Moje práce“ si žák zkopíruje kód (začíná ALG1-). Nese celou rozdělanou práci včetně odpovědi v reflexi. Žák si ho uloží třeba do OneNotu nebo pošle v Teams a na jiném počítači ho vloží a pokračuje, kde skončil. Před přepsáním rozdělané práce se aplikace zeptá. Ve stejném panelu jde začít celou lekci znovu, aby na sdíleném školním počítači další žák nepokračoval v cizí práci. Kód postupu je zatím jen pro žáka. Učitel podle něj hodiny 1–7 nehodnotí, odevzdání učiteli řeší až hodina 8.
+
 Zatím je stránka schválně skrytá: web na ni neodkazuje a vyhledávače ji neindexují. Postavená je jedna hodina (problém batohu), se žáky zatím odučená nebyla. Ostatní hodiny jsou rozmyšlené na úrovni tématu a činností, ale ještě nepostavené.
 
 Předpoklady: žák zná proměnné, podmínky, cykly a pole. Rekurzi vysvětluje až hodina 2.
