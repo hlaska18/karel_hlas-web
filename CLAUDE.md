@@ -514,6 +514,15 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   hodnotu. Čísla výzvy dává `vygenerujVyzvu(seed)`: optimum jediné, obě pravidla ho minou, kapacita +1
   výsledek zlepší (test přes 5000 seedů). Když se změní čísla v `batoh.ts`, musí se změnit i otázky v `Krokovani.tsx`.
 
+### Dlaždice Webovky (9. 11. 2026)
+- Karel chtěl v informatice dlaždici **Webovky** s odkazem na https://webzaklady.netlify.app/ (HTML & CSS
+  Základy: šest témat, výklad, kvíz, doplňovačka, bez přihlášení; autor na webu neuvedený).
+- Téma 12 (`TOPIC_EXTRA[12]` „Tvorba webových stránek“), složka `public/materialy/1L/12/HTML a CSS základy/_zdroj.json`,
+  pravidlo `tvorba webov` v `toolOf` (úplně nahoře), v `TOOL_ORDER` před Programováním, NAME_EN.
+- Ikona `webovky.png` = zeměkoule (Karel vybral z pěti návrhů 9. 11.; job a602cf6d…). Generátor ji udělal
+  o 8 % vyšší než širší („šišatá“), proto je roztažená do kruhu a pak `normalizuj.py`. Lucide `Globe` zůstává
+  jako záloha v `toolIcon`.
+
 ## Otevřené / nápady (nic naléhavého)
 
 - Karel si může projít PDF náhledy plánů a listů hodin 1, 4, 6 (vyexportované

@@ -31,6 +31,7 @@ import {
   Check,
   Play,
   Info,
+  Globe,
 } from "lucide-react";
 import type { Lang } from "@/lib/content";
 import { NAHLED_STR, canPreview } from "@/lib/nahled";
@@ -308,6 +309,8 @@ function toolIcon(tool: string) {
       return ShieldCheck;
     case "Umělá inteligence":
       return Sparkles;
+    case "Webovky":
+      return Globe;
     default:
       return Files;
   }

@@ -217,6 +217,7 @@ const NAME_EN: Record<string, string> = {
   // Umělá inteligence: hostované materiály nahrazene odkazem na kurz Elements of AI
   "Kurz Elements of AI": "The Elements of AI course",
   "Online nástroje": "Online tools",
+  "HTML a CSS základy": "HTML and CSS basics",
   "Vibecoding": "Vibe coding",
   // Excel: sbírka úloh z Katedry informatiky PF JU (vedle cvičebnice)
   "Sbírka úloh": "Exercise collection",
@@ -379,6 +380,12 @@ const TOPIC_EXTRA: Record<number, { cs: string; en: string }> = {
     cs: "Operační systémy a práce se soubory",
     en: "Operating systems and working with files",
   },
+  // Dlaždice Webovky (Karel 9. 11. 2026). Název musí sedět na pravidlo
+  // „tvorba webových“ v `toolOf`.
+  12: {
+    cs: "Tvorba webových stránek",
+    en: "Building web pages",
+  },
 };
 
 function topicLabelOf(topicIndex: number): { cs: string; en: string } {
@@ -423,6 +430,8 @@ function toolOf(hay: string, ext: string, groupCs?: string): string {
   if (podleSlozky) return podleSlozky;
 
   const h = hay.toLowerCase();
+  // Úplně nahoře: názvy webů o HTML a CSS by jinak mohly chytit jiné pravidlo.
+  if (/tvorba webov/.test(h)) return "Webovky";
   if (/internet, bezpečnost|internet a bezpe/.test(h)) return "Internet a bezpečnost";
   if (/umělá inteligence|ai fluency|práce s ai/.test(h)) return "Umělá inteligence";
   if (/power\s?bi/.test(h) || ext === "pbix") return "Power BI";

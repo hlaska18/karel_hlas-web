@@ -1,0 +1,11 @@
+[
+  {
+    "cs": "HTML & CSS Základy – tvorba webových stránek",
+    "en": "HTML & CSS basics – building web pages",
+    "url": "https://webzaklady.netlify.app/",
+    "note": {
+      "cs": "Šest témat: kostra HTML stránky, textové tagy, odkazy a obrázky, selektory CSS, box model a flexbox. Každé má výklad s ukázkami kódu, kvíz a doplňovačku s kontrolou. Bez přihlášení, česky.",
+      "en": "Six topics: the skeleton of an HTML page, text tags, links and images, CSS selectors, the box model and flexbox. Each has an explanation with code samples, a quiz and a fill-in exercise with checking. No login needed. The site is in Czech."
+    }
+  }
+]

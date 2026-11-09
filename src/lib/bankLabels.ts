@@ -50,6 +50,7 @@ export const TOOL_ORDER = [
   "Umělá inteligence",
   "Power BI",
   "Databáze",
+  "Webovky",
   "Python",
   "Ostatní",
 ];
@@ -66,6 +67,7 @@ export const TOOL_LABEL: Record<string, { cs: string; en: string }> = {
   "Umělá inteligence": { cs: "Umělá inteligence", en: "Artificial intelligence" },
   Databáze: { cs: "Databáze", en: "Database" },
   "Power BI": { cs: "Power BI", en: "Power BI" },
+  Webovky: { cs: "Webovky", en: "Web pages" },
   Ostatní: { cs: "Ostatní", en: "Other" },
 };
 
@@ -88,6 +90,7 @@ export const TOOL_ICON: Record<string, string> = {
   "Umělá inteligence": "/images/tools/glass/umela-inteligence.png",
   Databáze: "/images/tools/glass/databaze.png",
   "Power BI": "/images/tools/glass/powerbi.png",
+  Webovky: "/images/tools/glass/webovky.png",
 };
 
 export function countMaterials(n: number, lang: Lang): string {

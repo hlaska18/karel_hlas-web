@@ -17,7 +17,7 @@ ve světlém i tmavém režimu, ne zvětšené.
   vzniká s ní jako referencí, jinak do sady nesedne.
 - Motivy: databáze = válce, programování (soubor python.png) = značka </> (Karel 1. 11. 2026), Power BI = tři sloupce bez podstavy, matematika = ±,
   chemie = baňka, hudební výchova = dvě noty, strojírenství = ozubené kolo,
-  Excel = list s ohnutým rohem a mřížkou (ladí s Wordem), grafika = paleta
+  Webovky = zeměkoule s poledníky (musí být přesně kulatá), Excel = list s ohnutým rohem a mřížkou (ladí s Wordem), grafika = paleta
   se štětcem, angličtina = dvě bubliny rozhovoru.
   Motiv neměň bez Karlova souhlasu; dvě varianty ukaž vedle sebe.
 
