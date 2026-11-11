@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   dekodujOdevzdani,
   najdiOdevzdani,
+  nenactenaOdevzdani,
   prazdneOdpovedi,
   cisloOdpovedi,
   spoctiBody,
@@ -129,6 +130,16 @@ describe("závěrečné ověření", () => {
     // Ostatní situace mají jedinou správnou odpověď.
     const v = vytvorVariantu("Jan Novák", "K7M2QX");
     for (const s of v.situace) if (!s.text.startsWith("Robot")) expect(spravneStrategie(s)).toEqual([s.s]);
+  });
+
+  it("useknutý kód ve vloženém vláknu se ohlásí i se jménem ze zprávy", () => {
+    const od = (jmeno: string): Odevzdani => ({ verze: 1, zadani: "K7M2QX", jmeno, datum: "2027-03-15", odpovedi: prazdneOdpovedi() });
+    const adam = zpravaProUcitele(vytvorVariantu("Adam Malý", "K7M2QX"), od("Adam Malý"));
+    const beta = zpravaProUcitele(vytvorVariantu("Běta Velká", "K7M2QX"), od("Běta Velká"));
+    const vlakno = `Adam 10:41\n${adam}\n\nBěta 10:43\n${beta.slice(0, beta.length - 40)}\n\nněkdo: ALGZ1-nesmysl`;
+    expect(najdiOdevzdani(vlakno).map((o) => o.jmeno)).toEqual(["Adam Malý"]);
+    expect(nenactenaOdevzdani(vlakno)).toEqual(["Běta Velká", ""]);
+    expect(nenactenaOdevzdani(`${adam}\n${beta}`)).toEqual([]);
   });
 
   it("číslo v odpovědi smí být i mocnina", () => {

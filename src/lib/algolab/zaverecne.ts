@@ -262,6 +262,26 @@ export function dekodujOdevzdani(kod: string): Odevzdani | null {
   }
 }
 
+/**
+ * Kódy ve vloženém textu, které se nepodařilo načíst (useknuté, upravené).
+ * Vrací jméno ze zprávy před kódem („Jméno: …“), aby vyučující věděl, kdo má
+ * poslat zprávu znovu. Bez jména ve zprávě vrátí prázdný řetězec.
+ */
+export function nenactenaOdevzdani(text: string): string[] {
+  const jmena: string[] = [];
+  const kody = /ALGZ1-[A-Za-z0-9_-]+/g;
+  let odkud = 0;
+  for (let m = kody.exec(text); m; m = kody.exec(text)) {
+    if (!dekodujOdevzdani(m[0])) {
+      const pred = text.slice(odkud, m.index);
+      const radky = [...pred.matchAll(/Jméno:[ \t]*([^\r\n]{1,80})/g)];
+      jmena.push(radky.length ? radky[radky.length - 1][1].trim() : "");
+    }
+    odkud = m.index + m[0].length;
+  }
+  return jmena;
+}
+
 /** Všechny kódy ve vloženém textu (zprávy z Teams), každý jednou. */
 export function najdiOdevzdani(text: string): Odevzdani[] {
   const kody = text.match(/ALGZ1-[A-Za-z0-9_-]+/g) ?? [];

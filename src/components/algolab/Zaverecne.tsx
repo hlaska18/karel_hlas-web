@@ -20,6 +20,7 @@ import {
   dekodujOdevzdani,
   MAX_ODPOVEDI,
   najdiOdevzdani,
+  nenactenaOdevzdani,
   noveZadani,
   prazdneOdpovedi,
   RUBRIKA,
@@ -724,7 +725,13 @@ function Ucitel({ zpet }: { zpet: () => void }) {
     const nove = (vlozeno.match(/ALGZ1-[A-Za-z0-9_-]+/g) ?? []).filter((k) => dekodujOdevzdani(k));
     nastavKody([...kody.filter((k) => !nove.includes(k)), ...nove]);
     nastavVlozeno("");
-    nastavHlasku(`Načteno odevzdání: ${nalezene.length}.`);
+    // Useknutý kód nesmí zapadnout: žák by v přehledu chyběl a nikdo by nevěděl proč.
+    const vadne = nenactenaOdevzdani(vlozeno);
+    const cich = vadne.filter((j) => j).join(", ");
+    nastavHlasku(
+      `Načteno odevzdání: ${nalezene.length}.` +
+        (vadne.length ? ` Nenačtené kódy (useknuté nebo upravené): ${vadne.length}${cich ? `, ve zprávě od: ${cich}` : ""}. Ať pošlou celou zprávu znovu.` : ""),
+    );
   };
 
   const rubrika = (klic: string): Rubrika => hodnoceni[klic] ?? [null, null, null];
