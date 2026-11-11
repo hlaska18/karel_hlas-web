@@ -17,6 +17,7 @@ import {
   type Plan,
   type Zakazka,
 } from "./batoh";
+import { generator, zamichej } from "./nahoda";
 
 export interface Vyzva {
   seed: number;
@@ -33,27 +34,6 @@ export interface Vyzva {
 const NAZVY = ["Konzoly", "Víka", "Pouzdra", "Čepy", "Kryty", "Rámy", "Spojky", "Podložky", "Objímky", "Matice"];
 const POCTY = ["", "jednoho", "dvou", "tří", "čtyř", "pěti"];
 const POKUSU = 20000;
-
-/** mulberry32: stejný seed dá v každém prohlížeči stejná čísla. */
-function generator(seed: number) {
-  let a = seed >>> 0;
-  return () => {
-    a = (a + 0x6d2b79f5) >>> 0;
-    let t = a;
-    t = Math.imul(t ^ (t >>> 15), t | 1);
-    t ^= t + Math.imul(t ^ (t >>> 7), t | 61);
-    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
-  };
-}
-
-function zamichej<T>(pole: T[], nahoda: () => number): T[] {
-  const kopie = pole.slice();
-  for (let i = kopie.length - 1; i > 0; i--) {
-    const j = Math.floor(nahoda() * (i + 1));
-    [kopie[i], kopie[j]] = [kopie[j], kopie[i]];
-  }
-  return kopie;
-}
 
 function vyberBunky(kroky: Krok[], nahoda: () => number): Krok[] | null {
   const uvnitr = kroky.filter((k) => k.radek >= 2 && k.sloupec >= 1);

@@ -10,6 +10,7 @@ import { ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from "lucide-react"
 import { KAPACITA, ZAKAZKY, komentarKroku, krokyTabulky, optimalniPlan, spoctiTabulku, zpetnaCesta } from "@/lib/algolab/batoh";
 import type { StavBatohu } from "@/lib/algolab/stav";
 import { Hlaska, Karta, TabulkaDP, hlavni, poleTrida, tlacitko, type Bunka } from "./spolecne";
+import { JakFunguje } from "./JakFunguje";
 
 const TABULKA = spoctiTabulku(ZAKAZKY, KAPACITA);
 const KROKY = krokyTabulky(ZAKAZKY, KAPACITA);
@@ -121,12 +122,7 @@ export function Krokovani({ stav, zmen, dal }: { stav: StavBatohu; zmen: (zmena:
 
   return (
     <div className="flex flex-col gap-3.5">
-      <Hlaska>
-        <b>Co znamená buňka:</b> nejlepší přínos v tisících Kč, když smíš vybírat jen z prvních několika úkolů a stroj má daný počet
-        hodin. Malé úlohy se spočítají dřív a větší se z nich jen skládají. Každá buňka porovná dvě možnosti: úkol nevzít (hodnota přímo
-        nad ní), nebo ho vzít a k jeho přínosu přičíst nejlepší výsledek za zbylé hodiny. Ten se bere z řádku nad, protože stejný úkol
-        nejde udělat podruhé.
-      </Hlaska>
+      <JakFunguje algoritmus="batoh" />
 
       <TabulkaDP
         zakazky={ZAKAZKY}

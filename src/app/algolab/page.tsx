@@ -4,7 +4,7 @@ import { Algolab } from "@/components/algolab/Algolab";
 import { JenNaPocitaci } from "@/components/JenNaPocitaci";
 import { sdileni } from "@/lib/sdileni";
 
-const POPIS = "Algoritmická dílna pro střední školy: problém batohu, tabulka dynamického programování krok za krokem a srovnání s hladovými pravidly.";
+const POPIS = "Algoritmická dílna pro střední školy v osmi hodinách: vyhledávání, řazení, dynamické programování, heuristiky, grafy a závěrečné ověření s přehledem pro učitele.";
 
 export const metadata: Metadata = {
   title: "ALGOLAB",

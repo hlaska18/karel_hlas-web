@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { GraduationCap, Briefcase } from "lucide-react";
 
 import { useLang } from "@/lib/i18n";
@@ -54,6 +54,35 @@ export function CasovaOsa() {
   const [vybral, setVybral] = useState(false);
   /** Myš nebo klávesnice uvnitř – jen pozastavit. */
   const [pauza, setPauza] = useState(false);
+
+  /* Přímka má končit v POSLEDNÍM bodu, ne pod textem poslední položky.
+     Když vedla až ke spodku panelu, vypadalo hotové studium, že pořád
+     pokračuje (Karel 10. 11. 2026). Kde přesně leží poslední bod, záleží
+     na tom, na kolik řádků se zalomí popis, proto se to měří. Bez JS
+     zůstane přímka v CSS přes celý panel. */
+  const panely = useRef<(HTMLDivElement | null)[]>([]);
+  useEffect(() => {
+    const zmer = () => {
+      for (const panel of panely.current) {
+        if (!panel) continue;
+        const linka = panel.querySelector<HTMLElement>(".osa__linka");
+        const tecky = panel.querySelectorAll<HTMLElement>(".osa__tecka");
+        const posledni = tecky[tecky.length - 1];
+        if (!linka || !posledni) continue;
+        const p = panel.getBoundingClientRect();
+        const t = posledni.getBoundingClientRect();
+        linka.style.bottom = `${Math.max(0, p.bottom - (t.top + t.height / 2))}px`;
+      }
+    };
+    zmer();
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", zmer);
+      return () => window.removeEventListener("resize", zmer);
+    }
+    const ro = new ResizeObserver(zmer);
+    panely.current.forEach((p) => p && ro.observe(p));
+    return () => ro.disconnect();
+  }, []);
 
   useEffect(() => {
     if (vybral || pauza) return;
@@ -115,6 +144,9 @@ export function CasovaOsa() {
           {skupiny.map((s, i) => (
             <div
               key={s.druh}
+              ref={(el) => {
+                panely.current[i] = el;
+              }}
               className={`osa__panel osa__strana--${s.druh}${
                 i === aktivni ? " osa__panel--aktivni" : ""
               }`}

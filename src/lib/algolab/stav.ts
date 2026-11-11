@@ -1,5 +1,5 @@
 /**
- * Stav lekce o batohu. Hodiny 1–7 jsou formativní, proto žádné přihlášení:
+ * Stav lekce o batohu (hodina 4, starší formát než `lekce.ts`). Hodiny 1–7 jsou formativní, proto žádné přihlášení:
  * všechno zůstává v prohlížeči žáka. Na jiný počítač si práci přenese sám
  * kódem postupu ALG1- (`kod.ts`, Karel 7. 11. 2026).
  */
@@ -20,16 +20,16 @@ export const FAZE = [
 export type Faze = (typeof FAZE)[number]["id"];
 export type Pravidlo = "nejvynosnejsi" | "zaHodinu" | "stejne";
 
-/** Hodiny bloku ve finálním pořadí. Hotová je zatím jen hodina 4. */
-export const HODINY: { cislo: number; nazev: string; hotova: boolean }[] = [
-  { cislo: 1, nazev: "Efektivita algoritmů", hotova: false },
-  { cislo: 2, nazev: "Rozděl a panuj", hotova: false },
-  { cislo: 3, nazev: "Dynamické programování: mřížka", hotova: false },
-  { cislo: 4, nazev: "Dynamické programování: batoh", hotova: true },
-  { cislo: 5, nazev: "Heuristiky", hotova: false },
-  { cislo: 6, nazev: "Grafy a simulace", hotova: false },
-  { cislo: 7, nazev: "Laboratoř efektivity", hotova: false },
-  { cislo: 8, nazev: "Závěrečné ověření", hotova: false },
+/** Hodiny bloku ve finálním pořadí. */
+export const HODINY: { cislo: number; nazev: string }[] = [
+  { cislo: 1, nazev: "Efektivita algoritmů" },
+  { cislo: 2, nazev: "Rozděl a panuj" },
+  { cislo: 3, nazev: "Dynamické programování: mřížka" },
+  { cislo: 4, nazev: "Dynamické programování: batoh" },
+  { cislo: 5, nazev: "Heuristiky" },
+  { cislo: 6, nazev: "Grafy a simulace" },
+  { cislo: 7, nazev: "Laboratoř efektivity" },
+  { cislo: 8, nazev: "Závěrečné ověření" },
 ];
 
 export interface OdpovediVyzvy {

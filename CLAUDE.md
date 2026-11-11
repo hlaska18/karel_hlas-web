@@ -506,13 +506,101 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   platit pro generátor a přehled hodiny 8; ty se zatím nestaví). Hotová je kostra a hodina 4:
   **`/algolab`**, `src/components/algolab/`, `src/lib/algolab/` (`batoh.ts`, `vyzva.ts`, `stav.ts`).
 - Zatím schválně skryté: noindex, bez odkazu z úvodu a banky, mimo sitemap. O odkazu rozhoduje Karel
-  po ukázce. Bez přihlášení, stav v localStorage (`algolab-batoh`). Od 7. 11. (rada + Codex, opravy A1–A19) má panel „Moje práce“ (`Prace.tsx`): kód postupu **ALG1-** (`lib/algolab/kod.ts`, nese i reflexi), pokračování z kódu a „Začít celou lekci znovu“; druhá otevřená karta přestane ukládat a zeptá se (`ziJinde` v Algolab.tsx). Pruh o neukládání má pro /algolab vlastní text. Ve Vlastním pokusu (8. 11.) blok pravidel ukazuje seřazené úkoly s klíčem
+  po ukázce. Bez přihlášení, stav v localStorage (`algolab-batoh`). Od 7. 11. (rada + Codex, opravy A1–A19) má panel „Moje práce“ (`Prace.tsx`): kód postupu **ALG1-** (`lib/algolab/kod.ts`, nese i reflexi), pokračování z kódu a mazání (od 8. 11. „Začít hodinu N znovu“ a „Smazat všechny hodiny“); druhá otevřená karta přestane ukládat a zeptá se (`ziJinde` v Algolab.tsx). Pruh o neukládání má pro /algolab vlastní text. Ve Vlastním pokusu (8. 11.) blok pravidel ukazuje seřazené úkoly s klíčem
   (přínos, přínos : doba = Kč/h) a po tipu průchod krok za krokem se zbývajícími hodinami; karty ve Změň zadání mají větu, jak pravidlo postupuje. Přehledu třídy
   a simulátorů se to nedotýká. Běží jen na počítači (`JenNaPocitaci`).
 - Zadání: stroj 10 h, pět zakázek, nejvýnosnější první 49, přínos za hodinu 50, optimum 51 (jediné,
   Hřídele + Příruby). Pořadí řádků tabulky je od nejkratší zakázky, aby „nevejde se“ opisovalo nenulovou
   hodnotu. Čísla výzvy dává `vygenerujVyzvu(seed)`: optimum jediné, obě pravidla ho minou, kapacita +1
   výsledek zlepší (test přes 5000 seedů). Když se změní čísla v `batoh.ts`, musí se změnit i otázky v `Krokovani.tsx`.
+
+### ALGOLAB: všech osm hodin (8. 11. 2026)
+- Karel: „udělej všechny hodiny“ (rada radila nejdřív pilotovat h4, řekl jsem jednou). Postavené hodiny 1–3, 5–7
+  (`Hodina1.tsx` … `Hodina7.tsx`, h4 vyčleněná do `Hodina4.tsx`) a hodina 8 (`Zaverecne.tsx`). Společné díly
+  v `Kostra.tsx` (`KostraLekce`, `TipniSi`, `Krokovac`, `ReflexeLekce`, `useLekce`). Pořád skryté a neodučené.
+- Logika a čísla v `src/lib/algolab/`: `vyhledavani.ts` (h1), `razeni.ts` (h2), `mrizka.ts` (h3), `trasy.ts` (h5),
+  `grafy.ts` (h6), `laborator.ts` (h7), `zaverecne.ts` (h8), `registr.ts` (fáze a výchozí stav h1–7), `lekce.ts`
+  (`StavLekce`, `podleVzoru`). Testy `hodiny.test.ts`. Texty otázek s čísly (např. 28 cest v h6) hlídají testy.
+- Úložiště: `algolab-h1` … `algolab-h7` (h4 dál `algolab-batoh`), poslední hodina `algolab-hodina`, h8 `algolab-h8`,
+  učitel `algolab-hodnoceni` (rubrika podle `zadání|jméno`) a `algolab-odevzdane`. Adresy `?hodina=N`, `?zaverecne=ID`.
+- Kód **ALG1-** nese všechny hodiny 1–7 (`{v:1,h4,h1…}`, výchozí hodiny vynechá).
+- **Kódy ALG1- a ALGZ1- jsou podepsané a zamíchané** (`lib/algolab/obal.ts`, Karel 10. 11. 2026 po dotazu na Codex):
+  6 bajtů podpisu z obsahu a klíče, obsah XOR s proudem z podpisu. Po „base64 decode“ jsou jen nesmyslné bajty,
+  změna znaku kód rozbije. Starší kódy bez podpisu už neplatí (nikdo cizí je neměl). Klíč ani postup neměnit,
+  zneplatnilo by to vydané kódy.
+- **Heslo zadání v hodině 8:** „Vytvořit nové zadání“ dá heslo XXXX-XXXX-XXXX a id zadání se z něj spočítá
+  (`zadaniZHesla`, zmrazené v `obal.test.ts`). Přehled vyhodnotí jen zadání, ke kterým má heslo
+  (`algolab-hesla-zadani`); ostatní „čekají na heslo“. Dřív si žák mohl přes „Pro vyučující“ zobrazit správné
+  odpovědi a odevzdat znovu. Kdo čte kód stránky, ochranu obejde (řečeno v textu pro vyučující).
+- Hodina 8: varianta ze jména a zadání, kód **ALGZ1-** s odpověďmi i zdůvodněním. **`zaverecne.zmrazene.test.ts`
+  nesmí spadnout** – při změně generátoru (i vyzva/vyhledavani/razeni/trasy) zvýšit `VERZE_GENERATORU` a starou
+  cestu nechat. Učitel: „Pro vyučující“ → nové zadání a text pro třídu, vložit zprávy, rubrika, CSV (`bezVzorce`).
+  Cvičné zadání `CVICNE` ukáže body a správné odpovědi. Sdílený Přehled třídy simulátorů se nemění.
+- Každý algoritmus má kartu „Jak to funguje“ (`JakFunguje.tsx`, Karel 8. 11.): myšlenka, postup, příklad, pozor
+  a rozbalovací zápis v Pythonu. Stojí na začátku experimentu (až po vlastním pokusu), v h7 jako připomenutí.
+  Text nesmí prozradit odpověď na „Tipni si nejdřív“ ve stejné části. Python je ověřený spuštěním na číslech hodin.
+  Karel 9. 11.: musí to pochopit člověk, který o tom nikdy neslyšel. Proto přirovnání z běžného života, krátké
+  věty, každý pojem (heuristika, rekurze, k!, 2ⁿ, název algoritmu) vysvětlený, příklad na malých číslech krok
+  za krokem a Python bez triků. Podle rady 9. 11. (Karel: „udělej 1–9“): nad tipem má karta `odkryto={konec}`
+  a ukáže jen myšlenku a postup, zbytek po vyhodnocení tipu nebo tlačítkem „Ukázat celé vysvětlení“; v reflexi
+  každé hodiny je sbalený souhrn `AlgoritmyHodiny`. Čísla v příkladech hlídá `JakFunguje.test.ts` (počítá je kódem
+  hodin) – při změně dat nebo textu karty uprav obojí.
+- **Vysvětlení obrazem** (Karel 9. 11.: „čím méně textu, tím lépe“, prototyp Dijkstry pochopil): každá karta
+  začíná krokovačem `Obrazem.tsx` (obrázek na malém příkladu + jedna věta, Zpět/Další). Slovní text a Python
+  jsou sbalené pod „Podrobněji“. Čísla v krokovačích počítá kód hodin (binarniKroky, bubbleKroky, slij,
+  spoctiMrizku, spoctiTabulku, nejblizsiSoused, dvaOpt, dijkstra, generator), ručně jsou jen malá zadání.
+  Krokovač je vidět i nad tipem, proto jeho věty tip neprozradí: soused bez délky trasy a s trasou bez
+  křížení, 2-opt bez km, Merge bez počtu porovnání (hlídá `JakFunguje.test.ts`, `textKarty` obsahuje i věty).
+  Karel: počítat **kroky**, ne „pohledy“ ani „otevření“ – algoritmy jsou na krocích založené.
+  Podle rady 9. 11. počítá kroky i hodina 1 (počítadlo, tipy, tabulka růstu); krok je jednou
+  zavedený v zadání jako „otevřeš krabici a porovnáš její číslo s hledaným“ (podmínky v programu se nepočítají, Codex 9. 11.).
+- **Slévání v Merge Sortu (h2, experiment B) skládá žák sám** (Karel 9. 11.): vrchní kartu z levé
+  nebo pravé hromádky přetáhne do dalšího prázdného políčka slité hromádky (nebo na ni klikne,
+  kvůli klávesnici). Přijme jen menší kartu, jinak věta proč; krok drží `krokMerge`, Krokovač
+  zůstal pod tím. Vlastní pokus h2 (prohazování sousedů) je schválně beze změny: drag and drop
+  do políček by z něj udělal jiný algoritmus.
+  Po revizi Codexem (9. 11.): fokus po přesunu skočí na další vrchní kartu (na konci na „Dál“),
+  Krokovač chybovou hlášku maže, a když jedna hromádka dojde, pokyn to řekne a tlačítko „Přesunout
+  zbytek“ přesune zbytek najednou. Otevřené (Karel se podívá): „Na konec“ a „Další krok“ dovolí
+  skládání přeskočit – schválně kvůli promítání, rozhodnout, jestli to tak nechat.
+- **Průchod všemi hodinami 10. 11.** (tipy, krokovače, výzvy, cvičné ověření h8; žádné undefined/NaN ani
+  chyby v konzoli). Opravené texty: h1 krok „zbývá jen krabice N“ a „16. krabice s číslem“, výzva h1 i h8
+  „kolik kroků“ u binárního hledání; h2 výzva a h8 otázka 12 „kolik úrovní půlení“ (dřív „kolikrát rozpůlí“,
+  šlo číst i jako 1 023); h3 výzva „ve 3. řadě a 3. sloupci“; pojem Hladové pravidlo v h4 měl příklad
+  „nejkratší cesta“, který odporuje h3 – teď vracení drobných v českých mincích; h6 „3 dny“ místo „3 dní“
+  a u špatného tipu v Dijkstrovi vysvětlení místo „ještě ne“ (shody nejmenších časů v síti nejsou);
+  h7 hypotéza „když počet karet bude 1 000“; v h8 výsledky buněk s názvem řádku.
+- **Revize 10. 11. večer (Karel: „oprav 1–10“):** h3 výzva – buňka pro otázku na význam nesmí být žádná ze tří
+  skrytých (dřív ve 23 % zadání prozradila odpověď); h5 výzva – otázka 2 zůstane odemčená (`vyzvaOdemceno`),
+  dokud žák nezmění pořadí v otázce 1; h7 – čísla od 10¹⁵ píše `cislo()` mocninou deseti („1,3 · 10³²“) a trasy
+  mají strop 150 zákazníků (nad 170 se n!/2 nevejde do čísla, dřív „∞“); h5 vzor „skoro čtyřicet let“ podle
+  tabulky; h1 hláška, když žák najde díl se štěstím; h3 tip se hodnotí proti cestě, ke které žák tipoval
+  (`tipCas`); h2 vrchní karta je `div role="button"` (Firefox tlačítko přetáhnout nedovolí).
+- **Hodina 8 po revizi:** u situace s robotem v mřížce se uzná dynamické programování i Dijkstra (`spravneStrategie`
+  v zaverecne.ts – mimo `SITUACE`, generátor se nezměnil); dvě karty s ověřením – starší přestane ukládat a zeptá
+  se. V hodinách 1–7 druhá karta pozná i smazání práce vedle (i `localStorage.clear()`).
+- **Druhý názor Codexu a rady 11. 11. (Karel: „udělej, co říkal Codex i rada“):**
+  - Hodina 8 ukládá práce **zvlášť podle zadání a jména** (`lib/algolab/praceH8.ts`, klíč `algolab-h8` =
+    `{v:2, prace:{"ZADANI|jmeno": …}}`, nejvýš 60, starší podobu převede). Dřív bylo místo jedno: cvičné ověření
+    tiše přepsalo ostré a „Ne, začít se svým jménem“ mazalo spolužákovu práci. Teď se nic nemaže (jen cvičné
+    „Zkusit znovu s jiným jménem“ svou práci). Sama se otevře jen práce rozdělaná v téhle kartě
+    (sessionStorage `algolab-h8-ja`); jinak žák napíše jméno a stejné jméno pokračuje v uložené práci. Obrazovka
+    jmen uložených prací jmenuje. „Nejsi to ty?“ práci jen zavře. Vědomé riziko: kdo napíše cizí jméno, otevře
+    cizí práci (varianta je ale jiná a platí poslední zpráva).
+  - `cisloOdpovedi` čte „131 072“, „131.072“, „2^17“, „2**17“, „2¹⁷“ i „2^17 = 131072“ (platí výsledek za
+    posledním rovnítkem). Faktoriál se nevyhodnocuje, pokyn nad částí 3 říká ho dopočítat (kalkulačka smí).
+  - Část 1 má větu „vyber z postupů, které znáš z hodin, ten nejúspornější, který splní, co situace žádá“.
+  - Opravené nepravdy: h5 vzor „Nikdo zatím nezná přesný postup, který by byl vždy rychlý“ (dřív „žádný známý
+    postup nezaručí nejkratší trasu výrazně rychleji“ – Held–Karp je rychlejší), h8 situace s 500 zastávkami
+    „Jistě nejkratší trasu by počítač za tu dobu nenašel“.
+  - h1: správné půlení přesně na 5 kroků už nedostane hlášku o štěstí (tři případy: méně, přesně, víc).
+  - Rada vědomě **nedělat**: ruční opravu automatických bodů v aplikaci (známku Karel zapisuje ručně a body
+    opraví v Excelu), vyhodnocovač výrazů, úspěšnost po otázkách, přepis generátoru kvůli robotovi.
+  - **Na Karlovi před prvním použitím:** vyzkoušet přetahování a klávesnici v hodině 2 ve školním Firefoxu;
+    generálka hodiny 8 (dva vymyšlení žáci na jednom školním počítači, sdílený účet, až po CSV, i po odhlášení –
+    jestli škola úložiště nemaže); první běh hodiny 8 ve třídě bez známky.
+- Pozor: `useEffect(() => el.scrollTo(...))` vrací v novém prohlížeči Promise → React „destroy is not a function“.
+  Efekty vždy se složenými závorkami.
 
 ### Dlaždice Webovky (9. 11. 2026)
 - Karel chtěl v informatice dlaždici **Webovky** s odkazem na https://webzaklady.netlify.app/ (HTML & CSS
@@ -522,6 +610,10 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Ikona `webovky.png` = zeměkoule (Karel vybral z pěti návrhů 9. 11.; job a602cf6d…). Generátor ji udělal
   o 8 % vyšší než širší („šišatá“), proto je roztažená do kruhu a pak `normalizuj.py`. Lucide `Globe` zůstává
   jako záloha v `toolIcon`.
+
+### Časová osa v O mně (10. 11. 2026)
+- Přímka osy (`CasovaOsa.tsx`) končí v posledním bodu, ne pod textem poslední položky – hotové
+  studium vypadalo, že pokračuje (Karel). Konec se měří v JS (ResizeObserver), bez JS vede přes celý panel.
 
 ## Otevřené / nápady (nic naléhavého)
 

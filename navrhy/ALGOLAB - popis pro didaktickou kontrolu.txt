@@ -5,30 +5,30 @@ Blok osmi vyučovacích hodin o algoritmech a jejich efektivitě pro 3. ročník
 
 Autor: Karel Hlas, SPŠ Tábor
 Rozsah: 8 × 45 min
-Stav: koncepce celá, hotová hodina 4
+Stav: postavené všechny hodiny 1–8, se žáky zatím neodučené
 
 
 CO ALGOLAB JE
 
 Webová aplikace na adrese karelhlas.vercel.app/algolab. Běží celá v prohlížeči, bez účtů a bez serveru. Rozdělaná práce žáka se ukládá jen v jeho prohlížeči a nikam se neodesílá. Kvůli práci s tabulkami a myší běží jen na počítači, na telefonu se nespustí.
 
-Kód postupu: v panelu „Moje práce“ si žák zkopíruje kód (začíná ALG1-). Nese celou rozdělanou práci včetně odpovědi v reflexi. Žák si ho uloží třeba do OneNotu nebo pošle v Teams a na jiném počítači ho vloží a pokračuje, kde skončil. Před přepsáním rozdělané práce se aplikace zeptá. Ve stejném panelu jde začít celou lekci znovu, aby na sdíleném školním počítači další žák nepokračoval v cizí práci. Kód postupu je zatím jen pro žáka. Učitel podle něj hodiny 1–7 nehodnotí, odevzdání učiteli řeší až hodina 8.
+Kód postupu: v panelu „Moje práce“ si žák zkopíruje kód (začíná ALG1-). Nese celou rozdělanou práci včetně odpovědi v reflexi. Žák si ho uloží třeba do OneNotu nebo pošle v Teams a na jiném počítači ho vloží a pokračuje, kde skončil. Před přepsáním rozdělané práce se aplikace zeptá. Ve stejném panelu jde začít hodinu znovu nebo smazat všechny hodiny, aby na sdíleném školním počítači další žák nepokračoval v cizí práci. Jeden kód nese všechny hodiny 1–7. Je jen pro žáka, učitel podle něj hodiny 1–7 nehodnotí. Odevzdání učiteli řeší až hodina 8 vlastním kódem (ALGZ1-).
 
-Zatím je stránka schválně skrytá: web na ni neodkazuje a vyhledávače ji neindexují. Postavená je jedna hodina (problém batohu), se žáky zatím odučená nebyla. Ostatní hodiny jsou rozmyšlené na úrovni tématu a činností, ale ještě nepostavené.
+Zatím je stránka schválně skrytá: web na ni neodkazuje a vyhledávače ji neindexují. Postavené jsou všechny hodiny 1–8, se žáky zatím odučené nebyly. Podrobně je níž popsaná hodina 4 (problém batohu), ostatní hodiny mají stejnou stavbu.
 
 Předpoklady: žák zná proměnné, podmínky, cykly a pole. Rekurzi vysvětluje až hodina 2.
 
 
 PLÁN OSMI HODIN
 
-1. Efektivita algoritmů – lineární a binární vyhledávání, proč binární potřebuje seřazená data (připravuje se)
-2. Rozděl a panuj – Merge Sort a Bubble Sort, rekurze (připravuje se)
-3. Dynamické programování – nejlevnější cesta mřížkou (připravuje se)
-4. Dynamické programování – problém batohu (HOTOVÁ, popsáno níž)
-5. Heuristiky – nejbližší soused a 2-opt u hledání trasy (připravuje se)
-6. Grafy a simulace – Dijkstrův algoritmus na hotové síti, náhodné výpadky spojů (připravuje se)
-7. Laboratoř efektivity – dvojice měří dva postupy na stejné úloze, počet operací (připravuje se)
-8. Závěrečné ověření – jediný známkovaný výstup bloku (popsaná)
+1. Efektivita algoritmů – lineární a binární vyhledávání, proč binární potřebuje seřazená data
+2. Rozděl a panuj – Merge Sort a Bubble Sort, rekurze
+3. Dynamické programování – nejlevnější cesta mřížkou
+4. Dynamické programování – problém batohu (popsaná níž)
+5. Heuristiky – nejbližší soused a 2-opt u hledání trasy
+6. Grafy a simulace – Dijkstrův algoritmus na hotové síti, náhodné výpadky spojů
+7. Laboratoř efektivity – dvojice měří dva postupy na stejné úloze, počet operací
+8. Závěrečné ověření – jediný známkovaný výstup bloku
 
 V hodině 7 se vždy porovnávají dva postupy na stejné úloze: lineární × binární vyhledávání, Bubble × Merge Sort, hrubá síla × dynamické programování u batohu, hrubá síla × nejbližší soused a 2-opt u tras (tam se vedle počtu operací porovnává i délka trasy). Hlavní měřítko je počet operací. Velikost vstupů je omezená, nad limitem aplikace jen odhadne.
 
@@ -90,18 +90,18 @@ ZÁMĚRNÁ DIDAKTICKÁ ROZHODNUTÍ
 
 HODNOCENÍ
 
-Hodiny 1–7 jsou formativní a neznámkují se. Známku dává jen hodina 8 (zatím nepostavená):
+Hodiny 1–7 jsou formativní a neznámkují se. Známku dává jen hodina 8:
 
-- Rozpoznání vhodné strategie u čtyř situací: 8 min, 20 bodů, automaticky
+- Rozpoznání vhodné strategie u čtyř situací: 8 min, 20 bodů, automaticky. Žák vybírá z postupů z hodin ten nejúspornější, který splní, co situace žádá. U cesty mřížkou jen vpravo a dolů se uzná dynamické programování i Dijkstrův algoritmus, oba najdou nejrychlejší cestu jistě.
 - Dynamické programování (tři buňky, význam buňky, dopad kapacity +1): 12 min, 30 bodů, automaticky
-- Porovnání algoritmů: 12 min, 25 bodů, automaticky
+- Porovnání algoritmů: 12 min, 25 bodů, automaticky. Odpovídá se číslem, uzná se i zápis mocninou (2^17, 2¹⁷), tisíce s mezerou nebo tečkou a výsledek za rovnítkem. Faktoriál žák dopočítá, kalkulačka je povolená.
 - Zdůvodnění a kontrola, 2–3 krátké odpovědi: 13 min, 25 bodů, učitel podle rubriky
 
 Rubrika ručně hodnocené části: výběr algoritmu 0/5/10, souvislost postupu a výsledku 0/5/10, podmínka nebo omezení 0/2/5 bodů. Hranice známek určuje učitel.
 
-Průběh: učitel pošle odkaz se zadáním, žák napíše jméno a dostane svou variantu čísel. Během práce nevidí správnost ani body. Na konci zkopíruje jednu zprávu s odpověďmi a kódem a pošle ji učiteli, který zprávy vloží do přehledu třídy.
+Průběh: učitel pošle odkaz se zadáním, žák napíše jméno a dostane svou variantu čísel. Práce se v prohlížeči ukládají zvlášť podle zadání a jména, takže na sdíleném počítači si žáci nic nepřepíšou a cvičné ověření nepřepíše ostré. Kdo se vrátí, napíše stejné jméno a pokračuje. Během práce nevidí správnost ani body. Na konci zkopíruje jednu zprávu s odpověďmi a kódem a pošle ji učiteli. Ten zprávy vloží v části „Pro vyučující“, body za první tři části se spočítají samy, zdůvodnění obodová podle rubriky a výsledky si stáhne do Excelu.
 
-Omezení: bez serveru nejde ověřit totožnost žáka ani zabránit úpravě kódu. Je to nástroj pro běžné školní hodnocení, ne pro zabezpečenou zkoušku. Žák si může v jiné kartě spustit nástroje z lekcí, proto se boduje hlavně porozumění, ne výsledek, který spočítá počítač.
+Omezení: bez serveru nejde ověřit totožnost žáka. Kód je podepsaný a zamíchaný, upravený se nenačte. Učitel při vytvoření zadání dostane heslo a bez něj se odevzdané práce nevyhodnotí, takže žák si v části pro vyučující nezobrazí správné odpovědi. Kdo umí číst kód stránky, ochranu obejde. Je to nástroj pro běžné školní hodnocení, ne pro zabezpečenou zkoušku. Žák si může v jiné kartě spustit nástroje z lekcí, proto se boduje hlavně porozumění, ne výsledek, který spočítá počítač.
 
 
 NA CO SE PTÁM

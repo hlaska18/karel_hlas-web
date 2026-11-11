@@ -2,18 +2,22 @@
 
 /**
  * Panel „Moje práce“: kód postupu ke zkopírování, pokračování z kódu a začátek
- * celé lekce znovu (rada a Codex 7. 11. 2026: na sdíleném počítači by další žák
- * jinak sedl do cizí práce).
+ * znovu (rada a Codex 7. 11. 2026: na sdíleném počítači by další žák jinak sedl
+ * do cizí práce). Kód nese všechny hodiny 1–7 najednou.
  */
 
 import { useEffect, useRef, useState } from "react";
 import { Check, Copy, RotateCcw, X } from "lucide-react";
-import { dekodujAlgolab, zakodujAlgolab } from "@/lib/algolab/kod";
-import { vychoziStav, type StavBatohu } from "@/lib/algolab/stav";
+import { dekodujAlgolab, zakodujAlgolab, type PraceAlgolabu } from "@/lib/algolab/kod";
+import { jeVychozi } from "@/lib/algolab/lekce";
+import { CISLA_LEKCI, LEKCE } from "@/lib/algolab/registr";
+import { vychoziStav } from "@/lib/algolab/stav";
 import { Hlaska, hlavni, poleTrida, tlacitko } from "./spolecne";
 
-/** Je v lekci něco rozdělané? Jen tehdy se před přepsáním ptá. */
-const neniPrazdna = (s: StavBatohu) => JSON.stringify(s) !== JSON.stringify(vychoziStav());
+/** Je někde něco rozdělané? Jen tehdy se před přepsáním ptá. */
+const neniPrazdna = (p: PraceAlgolabu) =>
+  JSON.stringify(p.h4) !== JSON.stringify(vychoziStav()) ||
+  CISLA_LEKCI.some((c) => p.lekce[c] && !jeVychozi(p.lekce[c], LEKCE[c].faze, LEKCE[c].vychozi));
 
 function kopiruj(text: string, hotovo: () => void, nejde: () => void) {
   if (navigator.clipboard?.writeText) {
@@ -24,23 +28,28 @@ function kopiruj(text: string, hotovo: () => void, nejde: () => void) {
 }
 
 export function MojePrace({
-  stav,
+  prace,
+  hodina,
   nahrad,
+  smazHodinu,
   zavri,
 }: {
-  stav: StavBatohu;
-  /** Nahradí celou práci (načtení z kódu, začátek znovu). */
-  nahrad: (novy: StavBatohu) => void;
+  prace: PraceAlgolabu;
+  /** Hodina, která je právě otevřená (8 = závěrečné ověření, to kód nenese). */
+  hodina: number;
+  /** Nahradí celou práci (načtení z kódu, smazání všeho). */
+  nahrad: (novy: PraceAlgolabu | null) => void;
+  smazHodinu: (cislo: number) => void;
   zavri: () => void;
 }) {
-  const kod = zakodujAlgolab(stav);
+  const kod = zakodujAlgolab(prace);
   const [zkopirovano, nastavZkopirovano] = useState(false);
   const [rucne, nastavRucne] = useState(false);
   const [vlozeny, nastavVlozeny] = useState("");
   const [hlaska, nastavHlasku] = useState<{ ok: boolean; text: string } | null>(null);
   /** Kód je platný a čeká na potvrzení, že smí přepsat rozdělanou práci. */
-  const [nacist, nastavNacist] = useState<StavBatohu | null>(null);
-  const [ptaSeNaSmazani, nastavPtaSeNaSmazani] = useState(false);
+  const [nacist, nastavNacist] = useState<PraceAlgolabu | null>(null);
+  const [ptaSeNaSmazani, nastavPtaSeNaSmazani] = useState<"hodina" | "vse" | null>(null);
   const panel = useRef<HTMLDivElement>(null);
   const kodPole = useRef<HTMLTextAreaElement>(null);
 
@@ -54,17 +63,17 @@ export function MojePrace({
   const nactiKod = () => {
     const novy = dekodujAlgolab(vlozeny);
     if (!novy) {
-      nastavHlasku({ ok: false, text: "Tohle není kód postupu ALGOLABu. Vlož ho celý, začíná ALG1-." });
+      nastavHlasku({ ok: false, text: "Kód se nepodařilo načíst. Je neúplný nebo upravený, nebo to není kód ALGOLABu. Zkopíruj ho znovu celý, začíná ALG1-." });
       return;
     }
-    if (neniPrazdna(stav)) {
+    if (neniPrazdna(prace)) {
       nastavNacist(novy);
       return;
     }
     potvrdNacteni(novy);
   };
 
-  const potvrdNacteni = (novy: StavBatohu) => {
+  const potvrdNacteni = (novy: PraceAlgolabu) => {
     nahrad(novy);
     nastavNacist(null);
     nastavVlozeny("");
@@ -89,7 +98,7 @@ export function MojePrace({
       </div>
       <p className="text-[13px] leading-relaxed text-[#c5d6cf]">
         Práce se ukládá jen v tomhle prohlížeči. Chceš pokračovat jinde? Zkopíruj si kód postupu, ulož ho do OneNotu nebo si ho pošli
-        v Teams a na druhém počítači ho vlož níž. Kód nese i tvoji odpověď v reflexi.
+        v Teams a na druhém počítači ho vlož níž. Kód nese všechny hodiny 1–7 i tvoje odpovědi v reflexi.
       </p>
 
       <div>
@@ -185,23 +194,34 @@ export function MojePrace({
       </div>
 
       <div className="border-t border-white/10 pt-3">
-        {!ptaSeNaSmazani ? (
-          <button type="button" onClick={() => nastavPtaSeNaSmazani(true)} className={tlacitko}>
-            <RotateCcw className="h-4 w-4" /> Začít celou lekci znovu
-          </button>
+        {ptaSeNaSmazani === null ? (
+          <div className="flex flex-wrap gap-2">
+            {hodina !== 8 && (
+              <button type="button" onClick={() => nastavPtaSeNaSmazani("hodina")} className={tlacitko}>
+                <RotateCcw className="h-4 w-4" /> Začít hodinu {hodina} znovu
+              </button>
+            )}
+            <button type="button" onClick={() => nastavPtaSeNaSmazani("vse")} className={tlacitko}>
+              <RotateCcw className="h-4 w-4" /> Smazat všechny hodiny
+            </button>
+          </div>
         ) : (
           <div className="flex flex-col gap-2">
             <Hlaska druh="tip">
-              Smaže se plán, odpovědi i reflexe v tomhle prohlížeči. Jestli se k práci chceš vrátit, zkopíruj si nejdřív kód postupu.
+              {ptaSeNaSmazani === "hodina"
+                ? `Smaže se tvoje práce v hodině ${hodina} v tomhle prohlížeči, ostatní hodiny zůstanou.`
+                : "Smaže se tvoje práce ve všech hodinách 1–7 v tomhle prohlížeči."}{" "}
+              Jestli se k ní chceš vrátit, zkopíruj si nejdřív kód postupu.
             </Hlaska>
             <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => nastavPtaSeNaSmazani(false)} className={tlacitko}>
+              <button type="button" onClick={() => nastavPtaSeNaSmazani(null)} className={tlacitko}>
                 Nechat být
               </button>
               <button
                 type="button"
                 onClick={() => {
-                  nahrad(vychoziStav());
+                  if (ptaSeNaSmazani === "hodina") smazHodinu(hodina);
+                  else nahrad(null);
                   zavri();
                 }}
                 className={hlavni}

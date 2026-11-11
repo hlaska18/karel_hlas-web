@@ -4,48 +4,61 @@
  * práci včetně vlastní odpovědi v reflexi.
  *
  * Jeden kód na celý blok: hodiny se do něj přidávají pod vlastním klíčem
- * (`h4` = batoh), takže kód z dřívější hodiny zůstane platný i po přidání
+ * (`h4` = batoh, `h1` …), takže kód z dřívější hodiny zůstane platný i po přidání
  * dalších. `v` je verze formátu – měnit jen s převodem starých kódů, žáci je
- * budou mít uložené. Hodina 8 sem později přidá jméno.
+ * budou mít uložené. Hodina 8 má vlastní kód ALGZ1- (`zaverecne.ts`).
  *
- * Je to shrnutí, ne důkaz: vzniká v prohlížeči a dá se upravit. Při načtení se
- * proto celý obsah prověří stejně jako zápis z úložiště (`zOdlozeneho`).
+ * Obsah je podepsaný a zamíchaný (`obal.ts`, Karel 10. 11. 2026): žákovi kód
+ * nedává smysl a upravený se nenačte. Vzniká ale v prohlížeči, takže při
+ * načtení se celý obsah stejně prověří jako zápis z úložiště (`zOdlozeneho`).
  */
 
 import { KAPACITA, ZAKAZKY } from "./batoh";
-import { zOdlozeneho, type StavBatohu } from "./stav";
+import { rozbal, zabal } from "./obal";
+import { jeVychozi, zDatLekce, type StavLekce } from "./lekce";
+import { CISLA_LEKCI, LEKCE } from "./registr";
+import { vychoziStav, zOdlozeneho, type StavBatohu } from "./stav";
 
 export const PREDPONA_ALGOLAB = "ALG1-";
-const MAX_DELKA = 20000;
+const MAX_DELKA = 60000;
 
-function doBase64Url(text: string): string {
-  return btoa(unescape(encodeURIComponent(text))).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
-}
-
-function zBase64Url(text: string): string {
-  let b = text.replace(/-/g, "+").replace(/_/g, "/");
-  while (b.length % 4) b += "=";
-  return decodeURIComponent(escape(atob(b)));
+/** Celá práce bloku: hodina 4 ve starším formátu, ostatní hodiny 1–7 společně. */
+export interface PraceAlgolabu {
+  h4: StavBatohu;
+  lekce: Record<number, StavLekce<object>>;
 }
 
 const puvodniUprava = (u: StavBatohu["uprava"]) =>
   u.kapacita === KAPACITA && u.zakazky.every((z, i) => z.doba === ZAKAZKY[i].doba && z.prinos === ZAKAZKY[i].prinos);
 
-export function zakodujAlgolab(batoh: StavBatohu): string {
-  // Nezměněné zadání v „Změň zadání“ se nenese, kód je pak skoro o polovinu kratší.
-  const { uprava, ...zbytek } = batoh;
-  const h4 = puvodniUprava(uprava) ? zbytek : batoh;
-  return PREDPONA_ALGOLAB + doBase64Url(JSON.stringify({ v: 1, h4 }));
+/** Nezačaté hodiny se nenesou, kód je pak kratší. */
+export function zakodujAlgolab(prace: PraceAlgolabu): string {
+  const data: Record<string, unknown> = { v: 1 };
+  if (JSON.stringify(prace.h4) !== JSON.stringify(vychoziStav())) {
+    // Nezměněné zadání v „Změň zadání“ se nenese, kód je pak skoro o polovinu kratší.
+    const { uprava, ...zbytek } = prace.h4;
+    data.h4 = puvodniUprava(uprava) ? zbytek : prace.h4;
+  }
+  for (const c of CISLA_LEKCI) {
+    const l = prace.lekce[c];
+    if (l && !jeVychozi(l, LEKCE[c].faze, LEKCE[c].vychozi)) data[`h${c}`] = l;
+  }
+  return PREDPONA_ALGOLAB + zabal(JSON.stringify(data), "ALG1");
 }
 
 /** Najde kód ve vloženém textu (třeba v celé zprávě z Teams). Cizí nebo poškozený text vrátí jako null. */
-export function dekodujAlgolab(text: string): StavBatohu | null {
+export function dekodujAlgolab(text: string): PraceAlgolabu | null {
   const m = /ALG1-([A-Za-z0-9_-]+)/.exec(text);
   if (!m || m[1].length > MAX_DELKA) return null;
   try {
-    const d = JSON.parse(zBase64Url(m[1])) as { v?: unknown; h4?: unknown };
-    if (!d || d.v !== 1 || !d.h4 || typeof d.h4 !== "object") return null;
-    return zOdlozeneho(JSON.stringify(d.h4));
+    const text = rozbal(m[1], "ALG1");
+    if (text === null) return null;
+    const d = JSON.parse(text) as Record<string, unknown>;
+    if (!d || d.v !== 1) return null;
+    const h4 = d.h4 && typeof d.h4 === "object" ? zOdlozeneho(JSON.stringify(d.h4)) : vychoziStav();
+    const lekce: Record<number, StavLekce<object>> = {};
+    for (const c of CISLA_LEKCI) lekce[c] = zDatLekce(d[`h${c}`], LEKCE[c].faze, LEKCE[c].vychozi);
+    return { h4, lekce };
   } catch {
     return null;
   }

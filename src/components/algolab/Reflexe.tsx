@@ -3,6 +3,7 @@
 /** Závěr lekce: vlastní slova nejdřív, vzorová odpověď až potom. */
 
 import type { StavBatohu } from "@/lib/algolab/stav";
+import { AlgoritmyHodiny } from "./JakFunguje";
 import { Hlaska, Karta, NovyPojem, hlavni, tlacitko } from "./spolecne";
 
 export function FazeReflexe({ stav, zmen }: { stav: StavBatohu; zmen: (zmena: Partial<StavBatohu>) => void }) {
@@ -50,7 +51,7 @@ export function FazeReflexe({ stav, zmen }: { stav: StavBatohu; zmen: (zmena: Pa
         </NovyPojem>
         <NovyPojem pojem="Hladové pravidlo">
           V každém kroku bere to, co teď vypadá nejlépe, a rozhodnutí už nemění. Bývá rychlé. U batohu nejlepší výsledek nezaručuje,
-          protože úkol jde vzít jen celý. U některých úloh ho zaručí, třeba u hledání nejkratší cesty.
+          protože úkol jde vzít jen celý. U některých úloh ho zaručí, třeba když vracíš drobné v českých mincích co nejmenším počtem mincí a máš jich dost: vždycky vezmeš největší minci, která se ještě vejde.
         </NovyPojem>
         <NovyPojem pojem="Dílčí problém">
           Menší verze téže úlohy: méně úkolů, méně hodin. Z výsledků menších úloh se skládá výsledek větší.
@@ -59,6 +60,7 @@ export function FazeReflexe({ stav, zmen }: { stav: StavBatohu; zmen: (zmena: Pa
           Postup, který si výsledky dílčích problémů ukládá, aby je nemusel počítat znovu. Tady je tou pamětí tabulka.
         </NovyPojem>
       </div>
+      <AlgoritmyHodiny algoritmy={["batoh"]} />
     </div>
   );
 }
