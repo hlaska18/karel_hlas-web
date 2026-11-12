@@ -63,6 +63,8 @@ export type Dialog =
       bezVychoziho?: boolean;
     }
   | { druh: "zprava"; titulek: string; text: string }
+  /** Přihlášení jménem nebo kódem postupu na začátku nové karty. `odesli` vrací chybu, nebo `null` a dialog zavře samo. */
+  | { druh: "prihlaseni"; odesli: (text: string) => { cs: string; en: string } | null; priZavreni: () => void }
   /** Zápis do úložiště prohlížeče se nepovedl – nabídne stažení souboru. */
   | { druh: "chybaZapisu"; nazev: string; bajty: Uint8Array };
 

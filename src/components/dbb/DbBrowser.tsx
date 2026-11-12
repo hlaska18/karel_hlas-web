@@ -62,6 +62,8 @@ import { vyhodnotDotaz, type SpusteniKontroly } from "@/lib/dbb/kontrola";
 import { dekodujUlohu, lekceZOdkazu, ID_ULOHY } from "@/lib/dbb/odkazUlohy";
 import { splnenoZKodu, KLIC_NAZVY_ULOH } from "@/lib/dbb/obnovaPostupu";
 import type { Postup } from "@/lib/dbb/kodPostupu";
+import { vstupPrihlaseni } from "@/lib/dbb/prihlaseni";
+import { stejneJmeno } from "@/lib/postupSimulatoru";
 import { t, jeAnglicky, adresaVJazyce } from "@/lib/dbb/jazyk";
 import { pisemka, lekcePisemky } from "@/lib/dbb/pisemka";
 import { dekodujText, radkuCesky, sqlVytvoreni, sqlVlozeni, type PripravenaTabulka } from "@/lib/dbb/csv";
@@ -895,42 +897,12 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
           ulozDisk(d);
         }
         otevri(dbPisemky ? dbPisemky.soubor : souborUlohy || (posledni && d[posledni] ? posledni : KNIHOVNA));
-        // Nová karta a v kurzu je rozdělaná práce: sedí tu pořád týž žák? Jinak
-        // by kód postupu odešel do Teams pod cizím jménem. Ptá se i bez
-        // jména – to se ukládá až v Moje výsledky (rada 24. 9. 2026).
-        const jmeno = (prectiText("dbb-jmeno") || "").trim().slice(0, 40);
-        const novaRelace = !relace(KLIC_RELACE);
-        oznacRelaci(KLIC_RELACE);
-        if (novaRelace && (jmeno || s.size > 0) && !predvadeni) {
-          const lp2 = lekcePisemky();
-          const sada = lp2 ? SADY.filter((x) => x.lekce.id === lp2)[0] : undefined;
-          const skore = rozdelSkore(KURZ.filter((l) => lekceHotova(l, s)).map((l) => l.id));
-          const co = sada
-            ? t(
-                `písemka ${pisemka()} – splněno ${sada.lekce.ukoly.filter((u) => s.has(u.klic)).length} z ${sada.lekce.ukoly.length} úloh`,
-                `test ${pisemka()} – ${sada.lekce.ukoly.filter((u) => s.has(u.klic)).length} of ${sada.lekce.ukoly.length} tasks done`,
-              )
-            : t(
-                `Dotazy ${skore.dotazy[0]}/${skore.dotazy[1]} · Program ${skore.program[0]}/${skore.program[1]}`,
-                `Queries ${skore.dotazy[0]}/${skore.dotazy[1]} · Program ${skore.program[0]}/${skore.program[1]}`,
-              );
-          const dnes = !!naposledy && new Date(naposledy).toDateString() === new Date().toDateString();
-          otevritDialog({
-            druh: "potvrdit",
-            titulek: t("Kdo sedí u počítače?", "Who is at this computer?"),
-            text: t(
-              `Na tomhle počítači je rozdělaná práce${jmeno ? ` – ${jmeno}` : ""}: ${co}${naposledy ? `, naposledy ${kdyNaposledy(naposledy)}` : ""}.\n\nJe tvoje? Když ne, smaže se a začneš od začátku.`,
-              `There is unfinished work on this computer${jmeno ? ` – ${jmeno}` : ""}: ${co}${naposledy ? `, last time on ${kdyNaposledy(naposledy)}` : ""}.\n\nIs it yours? If not, it is deleted and you start from the beginning.`,
-            ),
-            tlacitko: t("Ne, jsem nový žák", "No, I'm a New Pupil"),
-            akce: () => provedNovyZakRef.current(),
-            zrusit: jmeno ? t(`Ano, jsem ${jmeno}`, `Yes, I'm ${jmeno}`) : t("Ano, je moje", "Yes, It's Mine"),
-            priZruseni: () => zkontrolujVychozi(lekceIdRef.current),
-            // Enter nesmí potichu pokračovat pod cizím jménem: výchozí „Ano“
-            // jen tehdy, když se tu pracovalo dnes (nejspíš týž žák po obnovení).
-            bezVychoziho: !dnes,
-          });
-        } else {
+        // Nová karta: přihlášení jménem nebo kódem postupu (Karel 11. 11. 2026).
+        // Když v kurzu zůstala rozdělaná práce pod jiným jménem, zeptá se, čí je –
+        // jinak by kód postupu odešel do Teams pod cizím jménem.
+        if (!relace(KLIC_RELACE) && !predvadeni) otevriPrihlaseniRef.current(naposledy);
+        else {
+          oznacRelaci(KLIC_RELACE);
           zkontrolujVychozi(lekceIdRef.current);
         }
       })
@@ -1120,9 +1092,14 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
       titulek: t("Nový žák", "New Pupil"),
       text: t("Smaže se postup ve všech lekcích, rozepsaný dotaz i všechny databáze – zůstane jen původní knihovna.db. Hodí se, když si u počítače sedá někdo jiný.", "This deletes the progress in all lessons, the unfinished query and all databases – only the original knihovna.db stays. Useful when someone else sits down at this computer."),
       tlacitko: t("Začít jako nový žák", "Start as a New Pupil"),
-      akce: provedNovyZak,
+      // Nový žák se hned přihlásí (jméno nebo kód postupu), jako na začátku karty.
+      akce: () => {
+        provedNovyZak();
+        if (!predvadeni) otevriPrihlaseniRef.current(0);
+      },
     });
-  }, [provedNovyZak]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [provedNovyZak, predvadeni]);
 
   /**
    * Pokračovat z kódu – postup z jiného počítače (kód z Teams) se přidá
@@ -1153,6 +1130,104 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
     },
     [vyberLekci, status],
   );
+
+  const obnovZKoduRef = useRef(obnovZKodu);
+  obnovZKoduRef.current = obnovZKodu;
+
+  /**
+   * Přihlášení na začátku nové karty (Karel 11. 11. 2026): žák napíše jméno,
+   * nebo vloží kód postupu z jiného počítače. Rozdělaná práce pod jiným jménem
+   * (nebo beze jména) se nepřevezme bez otázky. Když žák dialog zavře, kurz
+   * běží jako dřív a jméno doplní v Moje výsledky.
+   */
+  const otevriPrihlaseni = useCallback(
+    (naposledy: number) => {
+      const ulozeneJmeno = () => (prectiText("dbb-jmeno") || "").trim().slice(0, 40);
+      /** Co je v kurzu rozdělané, do otázky „Kdo sedí u počítače?“. */
+      const rozdelano = () => {
+        const s = splnenoRef.current;
+        const lp = lekcePisemky();
+        const sada = lp ? SADY.filter((x) => x.lekce.id === lp)[0] : undefined;
+        const skore = rozdelSkore(KURZ.filter((l) => lekceHotova(l, s)).map((l) => l.id));
+        return sada
+          ? t(
+              `písemka ${pisemka()} – splněno ${sada.lekce.ukoly.filter((u) => s.has(u.klic)).length} z ${sada.lekce.ukoly.length} úloh`,
+              `test ${pisemka()} – ${sada.lekce.ukoly.filter((u) => s.has(u.klic)).length} of ${sada.lekce.ukoly.length} tasks done`,
+            )
+          : t(
+              `Dotazy ${skore.dotazy[0]}/${skore.dotazy[1]} · Program ${skore.program[0]}/${skore.program[1]}`,
+              `Queries ${skore.dotazy[0]}/${skore.dotazy[1]} · Program ${skore.program[0]}/${skore.program[1]}`,
+            );
+      };
+      const otazka = (jmeno: string) =>
+        t(
+          `Na tomhle počítači je rozdělaná práce${jmeno ? ` – ${jmeno}` : ""}: ${rozdelano()}${naposledy ? `, naposledy ${kdyNaposledy(naposledy)}` : ""}.\n\nJe tvoje? Když ne, smaže se a začneš od začátku.`,
+          `There is unfinished work on this computer${jmeno ? ` – ${jmeno}` : ""}: ${rozdelano()}${naposledy ? `, last time on ${kdyNaposledy(naposledy)}` : ""}.\n\nIs it yours? If not, it is deleted and you start from the beginning.`,
+        );
+      /** Uloží jméno a pustí žáka do kurzu; `postup` = hotové lekce z kódu. */
+      const dokonci = (jmeno: string, postup: Postup | null, novyZak: boolean) => {
+        oznacRelaci(KLIC_RELACE);
+        if (novyZak) provedNovyZakRef.current();
+        uloz("dbb-jmeno", jmeno);
+        // Po „novém žákovi“ až v dalším kroku: kurz se musí nejdřív vyprázdnit.
+        if (postup && novyZak) window.setTimeout(() => obnovZKoduRef.current(postup), 0);
+        else if (postup) obnovZKoduRef.current(postup);
+        else if (!novyZak) zkontrolujVychozi(lekceIdRef.current);
+      };
+      otevritDialog({
+        druh: "prihlaseni",
+        odesli: (text) => {
+          const v = vstupPrihlaseni(text, !!pisemka());
+          if (v.druh === "chyba") return { cs: v.cs, en: v.en };
+          const postup = v.druh === "kod" ? v.postup : null;
+          const ulozene = ulozeneJmeno();
+          const cizi = (!!ulozene || splnenoRef.current.size > 0) && !(ulozene && stejneJmeno(ulozene, v.jmeno));
+          if (!cizi) {
+            otevritDialog(null);
+            dokonci(v.jmeno, postup, false);
+            return null;
+          }
+          otevritDialog({
+            druh: "potvrdit",
+            titulek: t("Kdo sedí u počítače?", "Who is at this computer?"),
+            text: otazka(ulozene),
+            tlacitko: t("Ne, jsem nový žák", "No, I'm a New Pupil"),
+            akce: () => dokonci(v.jmeno, postup, true),
+            zrusit: t("Ano, je moje", "Yes, It's Mine"),
+            priZruseni: () => dokonci(v.jmeno, postup, false),
+            // Žák napsal jiné jméno, než je u práce: Enter nesmí cizí práci převzít ani smazat.
+            bezVychoziho: true,
+          });
+          return null;
+        },
+        // Zavřený dialog: jako před přihlašováním – jen otázka nad rozdělanou prací.
+        priZavreni: () => {
+          oznacRelaci(KLIC_RELACE);
+          const ulozene = ulozeneJmeno();
+          if (!ulozene && splnenoRef.current.size === 0) {
+            zkontrolujVychozi(lekceIdRef.current);
+            return;
+          }
+          const dnes = !!naposledy && new Date(naposledy).toDateString() === new Date().toDateString();
+          otevritDialog({
+            druh: "potvrdit",
+            titulek: t("Kdo sedí u počítače?", "Who is at this computer?"),
+            text: otazka(ulozene),
+            tlacitko: t("Ne, jsem nový žák", "No, I'm a New Pupil"),
+            akce: () => provedNovyZakRef.current(),
+            zrusit: ulozene ? t(`Ano, jsem ${ulozene}`, `Yes, I'm ${ulozene}`) : t("Ano, je moje", "Yes, It's Mine"),
+            priZruseni: () => zkontrolujVychozi(lekceIdRef.current),
+            // Enter nesmí potichu pokračovat pod cizím jménem: výchozí „Ano“
+            // jen tehdy, když se tu pracovalo dnes (nejspíš týž žák po obnovení).
+            bezVychoziho: !dnes,
+          });
+        },
+      });
+    },
+    [zkontrolujVychozi],
+  );
+  const otevriPrihlaseniRef = useRef(otevriPrihlaseni);
+  otevriPrihlaseniRef.current = otevriPrihlaseni;
 
   /** Zapne nebo vypne režim předvádění – s novým načtením stránky, ať se nic nesmíchá. */
   const prepniPredvadeni = useCallback(() => {

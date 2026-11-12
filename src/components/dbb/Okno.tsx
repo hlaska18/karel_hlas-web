@@ -79,7 +79,8 @@ export function Hlavicka({
       <IkonaProgramu className="mr-2 h-4 w-4 shrink-0" />
       <span className="shrink-0 whitespace-nowrap text-[13px]">
         <span className="text-dbb-slaby">Karel Hlas · </span>
-        <b className="font-semibold">{t("Kurz SQL", "SQL Course")}</b>
+        {/* Značka je od 12. 11. 2026 DBLAB (Karel); panel s lekcemi se dál jmenuje Kurz SQL. */}
+        <b className="font-semibold">DBLAB</b>
       </span>
       {soubor && (
         <span className="ml-3 flex min-w-0 items-center truncate text-[12px] text-dbb-slaby" title={soubor}>

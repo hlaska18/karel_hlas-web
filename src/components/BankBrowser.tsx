@@ -170,10 +170,10 @@ const TOOL_INTERACTIVE: Record<string, Interaktivni> = {
   Databáze: {
     cesta: "/sql",
     popis: {
-      cs: "Projdi si interaktivní kurz SQL ve virtuálním programu DB Browser – přímo v prohlížeči, nic se neinstaluje.",
-      en: "Take the interactive SQL course inside a virtual DB Browser – right in your browser, nothing to install. The program and the lessons are in English; the practice data stay in Czech, with a glossary.",
+      cs: "DBLAB: interaktivní kurz SQL ve virtuálním programu DB Browser. Přímo v prohlížeči, nic se neinstaluje.",
+      en: "DBLAB: an interactive SQL course inside a virtual DB Browser – right in your browser, nothing to install. The program and the lessons are in English; the practice data stay in Czech, with a glossary.",
     },
-    cta: { cs: "Spustit kurz", en: "Start the course" },
+    cta: { cs: "Otevřít DBLAB", en: "Open DBLAB" },
   },
   "Digitální gramotnost": {
     cesta: "/sitova-dilna",

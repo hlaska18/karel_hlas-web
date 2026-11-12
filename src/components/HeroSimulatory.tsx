@@ -72,8 +72,7 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
       href: lang === "en" ? "/sitova-dilna?z=en" : "/sitova-dilna",
       nazev: tr.hero.simDilna,
       pocet: pocetZakazek(ulohy.dilna, lang),
-      /* NETLAB přihlášení kódem postupu zatím nemá. */
-      poznamka: tr.hero.simNote,
+      poznamka: tr.hero.simNoteKod,
       /* Dílna má vlastní zadání: tlačítko Úkoly ani Moje výsledky v ní nejsou. */
       zadani: tr.hero.zadatTextDilna,
       znak: <ZnakDilna className="h-6 w-6" />,

@@ -12,7 +12,8 @@
 import { useCallback, useEffect, useRef, useState, type ComponentType } from "react";
 import Link from "next/link";
 import { ArrowLeft, Grid3x3, Save } from "lucide-react";
-import type { PraceAlgolabu } from "@/lib/algolab/kod";
+import { jePrazdna, type PraceAlgolabu } from "@/lib/algolab/kod";
+import { KLIC_JMENA, ctiJmeno, jeVSezeni, jmenoPlatne, zapamatujSezeni } from "@/lib/algolab/prihlaseni";
 import { klicHodiny, vychoziLekce, zDatLekce } from "@/lib/algolab/lekce";
 import { CISLA_LEKCI, LEKCE } from "@/lib/algolab/registr";
 import { HODINY, KLIC_BATOHU, zOdlozeneho } from "@/lib/algolab/stav";
@@ -26,6 +27,7 @@ import { Hodina6 } from "./Hodina6";
 import { Hodina7 } from "./Hodina7";
 import { UkladaniAlgolabu } from "./Kostra";
 import { MojePrace } from "./Prace";
+import { PrihlaseniAlgolabu } from "./Prihlaseni";
 import { Hlaska, hlavni, tlacitko } from "./spolecne";
 import { Zaverecne } from "./Zaverecne";
 
@@ -57,6 +59,9 @@ export function Algolab() {
   const [uvod] = useState(uvodniHodina);
   const [hodina, nastavHodinu] = useState(uvod.hodina);
   const [prace, nastavPrace] = useState(false);
+  /** Jméno žáka a jestli se v téhle kartě už přihlásil (Karel 11. 11. 2026). */
+  const [jmeno, nastavJmeno] = useState(ctiJmeno);
+  const [prihlasen, nastavPrihlasen] = useState(() => jeVSezeni() && jmenoPlatne(ctiJmeno()));
   /** Po načtení kódu nebo smazání se hodina vykreslí od nuly. */
   const [verze, nastavVerzi] = useState(0);
   /** Poslední zápis každého klíče v téhle kartě. */
@@ -107,7 +112,7 @@ export function Algolab() {
       }
       lekce[c] = zDatLekce(data, LEKCE[c].faze, LEKCE[c].vychozi);
     }
-    return { h4: zOdlozeneho(text(KLIC_BATOHU)), lekce };
+    return { h4: zOdlozeneho(text(KLIC_BATOHU)), lekce, ...(jmeno ? { jmeno } : {}) };
   };
 
   /** Přepíše práci ve všech hodinách 1–7 (null = smazat). */
@@ -136,6 +141,21 @@ export function Algolab() {
     nastavVerzi((v) => v + 1);
   };
 
+  /** Přihlášení jménem (práce zůstane, nebo se začne načisto) nebo kódem postupu (práce z kódu). */
+  const prihlas = (nove: string, nova: PraceAlgolabu | null | undefined) => {
+    if (nova !== undefined) nahrad(nova);
+    ulozDoProhlizece(KLIC_JMENA, nove);
+    nastavJmeno(nove);
+    zapamatujSezeni(true);
+    nastavPrihlasen(true);
+  };
+
+  const odhlas = () => {
+    zapamatujSezeni(false);
+    nastavPrace(false);
+    nastavPrihlasen(false);
+  };
+
   const Hodina = KOMPONENTY[hodina];
 
   return (
@@ -148,16 +168,24 @@ export function Algolab() {
             <span className="text-[13px] text-[#a6bdb4]">algoritmická dílna, výsledky zůstávají v prohlížeči</span>
           </div>
           <div className="flex items-center gap-4">
-            <button type="button" onClick={() => nastavPrace((p) => !p)} aria-expanded={prace} className={tlacitko}>
-              <Save className="h-4 w-4" /> Moje práce
-            </button>
+            {prihlasen && (
+              <>
+                <span className="max-w-[220px] truncate text-[13px] text-[#c5d6cf]">{jmeno}</span>
+                <button type="button" onClick={() => nastavPrace((p) => !p)} aria-expanded={prace} className={tlacitko}>
+                  <Save className="h-4 w-4" /> Moje práce
+                </button>
+              </>
+            )}
             <Link href="/" className="flex items-center gap-1.5 text-[13px] text-[#a6bdb4] hover:text-[#e8f3ef]">
               <ArrowLeft className="h-3.5 w-3.5" /> Zpět na web
             </Link>
           </div>
         </header>
-        {prace && <MojePrace prace={aktualniPrace()} hodina={hodina} nahrad={nahrad} smazHodinu={smazHodinu} zavri={() => nastavPrace(false)} />}
-        {ziJinde && (
+        {prihlasen && prace && (
+          <MojePrace prace={aktualniPrace()} hodina={hodina} nahrad={nahrad} smazHodinu={smazHodinu} odhlas={odhlas} zavri={() => nastavPrace(false)} />
+        )}
+        {!prihlasen && <PrihlaseniAlgolabu ulozeneJmeno={jmeno} rozdelano={!jePrazdna(aktualniPrace())} onHotovo={prihlas} />}
+        {prihlasen && ziJinde && (
           <div role="alert" className="flex flex-wrap items-center gap-3 border-b border-white/10 px-5 py-2.5">
             <div className="min-w-0 flex-1">
               <Hlaska druh="tip">
@@ -191,6 +219,7 @@ export function Algolab() {
           </div>
         )}
 
+        {prihlasen && (
         <div className="flex min-h-0 flex-1">
           <nav aria-label="Hodiny" className="flex w-[250px] shrink-0 flex-col gap-0.5 overflow-y-auto border-r border-white/10 px-3 py-4">
             <div className="px-2 pb-1.5 text-[12px] font-semibold tracking-[.06em] text-[#a6bdb4]">OSM HODIN</div>
@@ -210,8 +239,9 @@ export function Algolab() {
             ))}
           </nav>
 
-          {hodina === 8 ? <Zaverecne key={`8-${verze}`} zadaniZAdresy={uvod.zadani} /> : <Hodina key={`${hodina}-${verze}`} />}
+          {hodina === 8 ? <Zaverecne key={`8-${verze}`} zadaniZAdresy={uvod.zadani} jmeno={jmeno} /> : <Hodina key={`${hodina}-${verze}`} />}
         </div>
+        )}
       </div>
     </UkladaniAlgolabu.Provider>
   );

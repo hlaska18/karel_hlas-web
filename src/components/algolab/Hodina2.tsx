@@ -375,16 +375,18 @@ function Merge({ data, zmen }: { data: DataH2; zmen: Zmen }) {
                   ? `${zLeva === s.levy.length ? "Levá" : "Pravá"} hromádka je prázdná. Zbytek ${zLeva === s.levy.length ? "pravé" : "levé"} jde do slité hromádky bez porovnání.`
                   : "Přetáhni do dalšího volného políčka menší z obou vrchních karet (nebo na ni klikni)."}
           </p>
-          {prazdna && (
-            <button type="button" onClick={presunZbytek} className={`${tlacitko} self-start`}>
-              Přesunout zbytek
-            </button>
-          )}
-          <div className="flex flex-wrap gap-8">
+          {/* select-none: tah za kartu, která není navrchu, jinak označí okolní text. */}
+          <div className="flex select-none flex-wrap gap-8">
             <Hromadka nazev="Levá hromádka" karty={s.levy} vzato={zLeva} strana="L" aktivni={!zamceno && !konec} vezmi={vezmi} />
             <Hromadka nazev="Pravá hromádka" karty={s.pravy} vzato={zPrava} strana="P" aktivni={!zamceno && !konec} vezmi={vezmi} />
+            {/* Vedle hromádek, ne nad nimi: karty pod kurzorem neposkočí. */}
+            {prazdna && (
+              <button type="button" onClick={presunZbytek} className={`${tlacitko} self-end`}>
+                Přesunout zbytek
+              </button>
+            )}
           </div>
-          <div className="flex flex-col gap-1">
+          <div className="flex select-none flex-col gap-1">
             <div className="text-[12px] text-[#a6bdb4]">Slitá hromádka</div>
             <div className="flex flex-wrap gap-1.5">
               {Array.from({ length: s.levy.length + s.pravy.length }, (_, i) => {

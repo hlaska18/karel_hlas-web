@@ -24,14 +24,14 @@ import {
 } from "@/components/dbb/PodleSirky";
 
 export const metadata: Metadata = {
-  title: "Kurz SQL ve virtuálním DB Browseru",
+  title: "DBLAB – kurz SQL ve virtuálním DB Browseru",
   description:
     "Interaktivní kurz základů databází a SQL uvnitř napodobeniny programu DB Browser for SQLite: 13 lekcí od SELECTu po zápis dat, 6 lekcí o práci s programem – soubor, zápis změn, vlastní tabulka – a navíc detektivka a procvičování na jiných datech. Úkoly se kontrolují samy, přímo v prohlížeči, nic se neinstaluje.",
   alternates: { canonical: "/sql" },
   // Bez vlastního openGraph sdílel Facebook u /sql titulek, popis i adresu
   // homepage – odkaz na kurz vypadal jako odkaz na úvod webu.
   ...sdileni({
-    title: "Kurz SQL ve virtuálním DB Browseru",
+    title: "DBLAB – kurz SQL ve virtuálním DB Browseru",
     description:
       "Základy databází a SQL přímo v prohlížeči: 22 lekcí v napodobenině programu DB Browser, úkoly se kontrolují samy. Nic se neinstaluje.",
     url: "/sql",
@@ -90,7 +90,7 @@ export default async function SqlPage({
 
       <HlavniWebu className="container-page py-10 sm:py-14">
         <p className="text-sm font-semibold uppercase tracking-widest text-accent-700 dark:text-accent-400">
-          Interaktivní kurz
+          DBLAB · interaktivní kurz
         </p>
         <h1 className="mt-3 max-w-2xl font-display text-3xl font-bold tracking-nadpis text-balance sm:text-4xl">
           Základy databází a SQL – kurz v prohlížeči
@@ -130,7 +130,7 @@ export default async function SqlPage({
               <Proza>
                 <b>Když nestihnou.</b> Nic se neztratí: postup i rozepsané dotazy zůstávají
                 v prohlížeči, takže na stejném počítači žák pokračuje tam, kde skončil. Na jiném
-                počítači, třeba doma, vloží kód postupu (Moje výsledky → Pokračovat z kódu) a hotové
+                počítači, třeba doma, vloží při přihlášení místo jména svůj kód postupu a hotové
                 lekce se mu odškrtnou; rozepsané lekce a dotazy se nepřenesou.
               </Proza>
             </p>

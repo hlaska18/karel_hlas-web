@@ -183,8 +183,11 @@ export function MojeVysledkySimulatoru({
   jmeno: string;
   nastavJmeno: (jmeno: string) => void;
   splneno: string[];
-  /** Pokračovat z kódu: přidá splněné úlohy z kódu k těm, co tu jsou. */
-  obnov: (ids: string[]) => void;
+  /**
+   * Pokračovat z kódu: přidá splněné úlohy z kódu k těm, co tu jsou. Bez něj
+   * se oddíl nezobrazí (NETLAB od 11. 11. 2026: kód se vkládá při přihlášení).
+   */
+  obnov?: (ids: string[]) => void;
   otevriPrehled: () => void;
   zavri: () => void;
   vzhled: Vzhled;
@@ -224,7 +227,7 @@ export function MojeVysledkySimulatoru({
       return;
     }
     const ids = p.splneno.filter((id) => vKodu(simulator, id));
-    obnov(ids);
+    obnov?.(ids);
     if (!platne && p.jmeno) {
       nastavUpravovane(p.jmeno);
       nastavJmeno(p.jmeno);
@@ -286,33 +289,37 @@ export function MojeVysledkySimulatoru({
         </button>
       </div>
 
-      <p className="mt-4 font-semibold">Pokračovat z kódu</p>
-      <p className={vzhled.slaby}>Začal(a) jsi na jiném počítači? Vlož svůj kód postupu a úlohy se ti odškrtnou i tady.</p>
-      <div className="mt-1 flex items-center">
-        <input
-          value={vlozeny}
-          onChange={(e) => {
-            nastavVlozeny(e.target.value);
-            nastavObnovu(null);
-          }}
-          onKeyDown={(e) => {
-            if (e.key === "Enter") nactiKod();
-          }}
-          spellCheck={false}
-          placeholder={PREDPONA_KODU[simulator]}
-          aria-label="Kód postupu z jiného počítače"
-          className={`h-[28px] min-w-0 flex-1 rounded-[4px] px-2 font-mono text-[11px] ${vzhled.pole}`}
-        />
-        <button
-          type="button"
-          disabled={!vlozeny.trim()}
-          onClick={nactiKod}
-          className={`ml-2 h-[28px] shrink-0 rounded-[4px] border px-3 disabled:opacity-45 ${vzhled.linka} ${vzhled.najeti}`}
-        >
-          Načíst
-        </button>
-      </div>
-      {obnova && <p className={`mt-1 ${obnova.ok ? "text-[#1e8a3c]" : "text-[#c42b1c]"}`}>{obnova.text}</p>}
+      {obnov && (
+        <>
+          <p className="mt-4 font-semibold">Pokračovat z kódu</p>
+          <p className={vzhled.slaby}>Začal(a) jsi na jiném počítači? Vlož svůj kód postupu a úlohy se ti odškrtnou i tady.</p>
+          <div className="mt-1 flex items-center">
+            <input
+              value={vlozeny}
+              onChange={(e) => {
+                nastavVlozeny(e.target.value);
+                nastavObnovu(null);
+              }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") nactiKod();
+              }}
+              spellCheck={false}
+              placeholder={PREDPONA_KODU[simulator]}
+              aria-label="Kód postupu z jiného počítače"
+              className={`h-[28px] min-w-0 flex-1 rounded-[4px] px-2 font-mono text-[11px] ${vzhled.pole}`}
+            />
+            <button
+              type="button"
+              disabled={!vlozeny.trim()}
+              onClick={nactiKod}
+              className={`ml-2 h-[28px] shrink-0 rounded-[4px] border px-3 disabled:opacity-45 ${vzhled.linka} ${vzhled.najeti}`}
+            >
+              Načíst
+            </button>
+          </div>
+          {obnova && <p className={`mt-1 ${obnova.ok ? "text-[#1e8a3c]" : "text-[#c42b1c]"}`}>{obnova.text}</p>}
+        </>
+      )}
 
       <button type="button" onClick={otevriPrehled} className={`mt-5 underline ${vzhled.akcentPismo}`}>
         Pro učitele: Přehled třídy
@@ -352,7 +359,7 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
     });
     sql.forEach((z) => {
       radky.push([
-        z.pisemka ? `Kurz SQL – písemka ${z.pisemka}` : "Kurz SQL",
+        z.pisemka ? `DBLAB – písemka ${z.pisemka}` : "DBLAB",
         z.jmeno,
         z.datum,
         z.pisemka ? String(((z.sady || {})[PISEMKA_SADA[z.pisemka]] || [0])[0]) : `Dotazy ${pocet(z.hotove, 1, 13)}/13, Program ${pocet(z.hotove, 14, 19)}/6`,
@@ -445,7 +452,7 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
     <Okno titulek="Přehled třídy (pro učitele)" zavri={zavri} sirka={860} vzhled={vzhled}>
       <p>
         Vlož kódy postupu od žáků – klidně celé zprávy z Teams, kódy se v textu najdou samy. Rozumí kódům z Windows (WIN1-),
-        z macOS (MAC1-), z NETLABu (WSIT1-) i z kurzu SQL (SQLKURZ1-). Kódy téhož žáka se sčítají. Kód je shrnutí, ne důkaz: vzniká v prohlížeči
+        z macOS (MAC1-), z NETLABu (WSIT1-) i z DBLABu, kurzu SQL (SQLKURZ1-). Kódy téhož žáka se sčítají. Kód je shrnutí, ne důkaz: vzniká v prohlížeči
         žáka a dá se upravit.
       </p>
       <p className={`mt-2 ${vzhled.slaby}`}>
@@ -470,7 +477,7 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
           {sekce("macos")}
           {sql.length > 0 && (
             <section className="mt-4">
-              <h3 className="text-[13px] font-semibold">Kurz SQL</h3>
+              <h3 className="text-[13px] font-semibold">DBLAB – kurz SQL</h3>
               <table className="mt-1 w-full" style={{ borderSpacing: 0 }}>
                 <thead>
                   <tr className={`text-left ${vzhled.slaby}`}>
@@ -494,7 +501,7 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
                 </tbody>
               </table>
               <p className={`mt-1 ${vzhled.slaby}`}>
-                Podrobný přehled kurzu SQL (lekce, zobrazená řešení, kde začít příště) je v programu na /sql v nabídce Nápověda → Přehled
+                Podrobný přehled DBLABu (lekce, zobrazená řešení, kde začít příště) je v programu na /sql v nabídce Nápověda → Přehled
                 třídy.
               </p>
             </section>

@@ -1,23 +1,18 @@
 "use client";
 
 /**
- * Panel „Moje práce“: kód postupu ke zkopírování, pokračování z kódu a začátek
- * znovu (rada a Codex 7. 11. 2026: na sdíleném počítači by další žák jinak sedl
- * do cizí práce). Kód nese všechny hodiny 1–7 najednou.
+ * Panel „Moje práce“: kód postupu ke zkopírování, odhlášení a začátek znovu
+ * (rada a Codex 7. 11. 2026: na sdíleném počítači by další žák jinak sedl
+ * do cizí práce). Kód nese jméno a všechny hodiny 1–7 najednou.
+ *
+ * Pokračování z kódu tu od 11. 11. 2026 není (Karel): kód se vkládá místo
+ * jména při přihlášení.
  */
 
 import { useEffect, useRef, useState } from "react";
-import { Check, Copy, RotateCcw, X } from "lucide-react";
-import { dekodujAlgolab, zakodujAlgolab, type PraceAlgolabu } from "@/lib/algolab/kod";
-import { jeVychozi } from "@/lib/algolab/lekce";
-import { CISLA_LEKCI, LEKCE } from "@/lib/algolab/registr";
-import { vychoziStav } from "@/lib/algolab/stav";
+import { Check, Copy, LogOut, RotateCcw, X } from "lucide-react";
+import { zakodujAlgolab, type PraceAlgolabu } from "@/lib/algolab/kod";
 import { Hlaska, hlavni, poleTrida, tlacitko } from "./spolecne";
-
-/** Je někde něco rozdělané? Jen tehdy se před přepsáním ptá. */
-const neniPrazdna = (p: PraceAlgolabu) =>
-  JSON.stringify(p.h4) !== JSON.stringify(vychoziStav()) ||
-  CISLA_LEKCI.some((c) => p.lekce[c] && !jeVychozi(p.lekce[c], LEKCE[c].faze, LEKCE[c].vychozi));
 
 function kopiruj(text: string, hotovo: () => void, nejde: () => void) {
   if (navigator.clipboard?.writeText) {
@@ -32,23 +27,22 @@ export function MojePrace({
   hodina,
   nahrad,
   smazHodinu,
+  odhlas,
   zavri,
 }: {
   prace: PraceAlgolabu;
   /** Hodina, která je právě otevřená (8 = závěrečné ověření, to kód nenese). */
   hodina: number;
-  /** Nahradí celou práci (načtení z kódu, smazání všeho). */
+  /** Nahradí celou práci (null = smazání všeho). */
   nahrad: (novy: PraceAlgolabu | null) => void;
   smazHodinu: (cislo: number) => void;
+  /** Zpět na přihlašovací obrazovku; práce v prohlížeči zůstane. */
+  odhlas: () => void;
   zavri: () => void;
 }) {
   const kod = zakodujAlgolab(prace);
   const [zkopirovano, nastavZkopirovano] = useState(false);
   const [rucne, nastavRucne] = useState(false);
-  const [vlozeny, nastavVlozeny] = useState("");
-  const [hlaska, nastavHlasku] = useState<{ ok: boolean; text: string } | null>(null);
-  /** Kód je platný a čeká na potvrzení, že smí přepsat rozdělanou práci. */
-  const [nacist, nastavNacist] = useState<PraceAlgolabu | null>(null);
   const [ptaSeNaSmazani, nastavPtaSeNaSmazani] = useState<"hodina" | "vse" | null>(null);
   const panel = useRef<HTMLDivElement>(null);
   const kodPole = useRef<HTMLTextAreaElement>(null);
@@ -59,26 +53,6 @@ export function MojePrace({
     window.addEventListener("keydown", esc);
     return () => window.removeEventListener("keydown", esc);
   }, [zavri]);
-
-  const nactiKod = () => {
-    const novy = dekodujAlgolab(vlozeny);
-    if (!novy) {
-      nastavHlasku({ ok: false, text: "Kód se nepodařilo načíst. Je neúplný nebo upravený, nebo to není kód ALGOLABu. Zkopíruj ho znovu celý, začíná ALG1-." });
-      return;
-    }
-    if (neniPrazdna(prace)) {
-      nastavNacist(novy);
-      return;
-    }
-    potvrdNacteni(novy);
-  };
-
-  const potvrdNacteni = (novy: PraceAlgolabu) => {
-    nahrad(novy);
-    nastavNacist(null);
-    nastavVlozeny("");
-    nastavHlasku({ ok: true, text: "Načteno. Pokračuješ tam, kde jsi skončil(a)." });
-  };
 
   return (
     <div
@@ -98,7 +72,7 @@ export function MojePrace({
       </div>
       <p className="text-[13px] leading-relaxed text-[#c5d6cf]">
         Práce se ukládá jen v tomhle prohlížeči. Chceš pokračovat jinde? Zkopíruj si kód postupu, ulož ho do OneNotu nebo si ho pošli
-        v Teams a na druhém počítači ho vlož níž. Kód nese všechny hodiny 1–7 i tvoje odpovědi v reflexi.
+        v Teams. Na druhém počítači ho vlož místo jména při přihlášení. Kód nese tvoje jméno, všechny hodiny 1–7 i odpovědi v reflexi.
       </p>
 
       <div>
@@ -143,59 +117,12 @@ export function MojePrace({
         )}
       </div>
 
-      <div>
-        <label htmlFor="algolab-vlozeny-kod" className="mb-1 block text-[13px] font-semibold">
-          Pokračovat z kódu
-        </label>
-        <form
-          className="flex items-center gap-2"
-          onSubmit={(e) => {
-            e.preventDefault();
-            nactiKod();
-          }}
-        >
-          <input
-            id="algolab-vlozeny-kod"
-            value={vlozeny}
-            onChange={(e) => {
-              nastavVlozeny(e.target.value);
-              nastavHlasku(null);
-              nastavNacist(null);
-            }}
-            placeholder="ALG1-…"
-            spellCheck={false}
-            autoComplete="off"
-            aria-describedby={hlaska ? "algolab-hlaska-kodu" : undefined}
-            aria-invalid={hlaska?.ok === false || undefined}
-            className={`${poleTrida} min-w-0 flex-1 font-mono !text-[12px]`}
-          />
-          <button type="submit" disabled={!vlozeny.trim()} className={tlacitko}>
-            Načíst
-          </button>
-        </form>
-        {nacist && (
-          <div className="mt-2 flex flex-col gap-2">
-            <Hlaska druh="tip">Načtení nahradí práci, kterou máš teď v tomhle prohlížeči. Pokračovat?</Hlaska>
-            <div className="flex flex-wrap gap-2">
-              <button type="button" onClick={() => nastavNacist(null)} className={tlacitko}>
-                Nechat být
-              </button>
-              <button type="button" onClick={() => potvrdNacteni(nacist)} className={hlavni}>
-                Nahradit prací z kódu
-              </button>
-            </div>
-          </div>
-        )}
-        {hlaska && (
-          <p id="algolab-hlaska-kodu" role="status" className={`mt-1.5 text-[13px] ${hlaska.ok ? "text-[#6fe3c2]" : "text-[#ff9d8a]"}`}>
-            {hlaska.text}
-          </p>
-        )}
-      </div>
-
       <div className="border-t border-white/10 pt-3">
         {ptaSeNaSmazani === null ? (
           <div className="flex flex-wrap gap-2">
+            <button type="button" onClick={odhlas} className={tlacitko}>
+              <LogOut className="h-4 w-4" /> Odhlásit se
+            </button>
             {hodina !== 8 && (
               <button type="button" onClick={() => nastavPtaSeNaSmazani("hodina")} className={tlacitko}>
                 <RotateCcw className="h-4 w-4" /> Začít hodinu {hodina} znovu

@@ -222,9 +222,12 @@ export type KodPriPrihlaseni = { ok: true; jmeno: string; splneno: string[] } | 
 
 /**
  * Kód postupu místo jména na přihlašovací obrazovce Windows a macOS (Karel
- * 7. 11. 2026): kdo je tu poprvé, napíše jméno, kdo pokračuje z jiného
- * počítače, vloží kód. Jméno se vezme z kódu a splněné úlohy se odškrtnou.
- * Soubory a plocha se nepřenesou – kód je nenese.
+ * 7. 11. 2026) a NETLABu (11. 11. 2026): kdo je tu poprvé, napíše jméno, kdo
+ * pokračuje z jiného počítače, vloží kód. Jméno se vezme z kódu a splněné
+ * úlohy se odškrtnou. Soubory a plocha se nepřenesou – kód je nenese.
+ *
+ * NETLAB bere i kód WIN1- z doby, kdy byla síť ve Windows (nese id `sit-*`),
+ * stejně jako Přehled třídy.
  *
  * `null` = text kód nepřipomíná, je to jméno. `patri` vybere úlohy, které
  * do simulátoru patří (stejně jako „Pokračovat z kódu“ v Mých výsledcích).
@@ -233,11 +236,16 @@ export function kodPriPrihlaseni(text: string, simulator: Simulator, patri: (id:
   if (!vypadaJakoKod(text)) return null;
   const p = najdiKodySimulatoru(text)[0];
   if (!p) return { ok: false, hlaska: "Tohle není celý kód postupu. Vlož ho celý, jak jsi ho zkopíroval(a)." };
-  if (p.simulator !== simulator) {
+  const zeSite = simulator === "sit" && p.simulator === "windows" && p.splneno.some(patri);
+  if (p.simulator !== simulator && !zeSite) {
     return { ok: false, hlaska: `Tohle je kód postupu pro ${NAZEV_SIMULATORU[p.simulator]}, tady je ${NAZEV_SIMULATORU[simulator]}.` };
   }
   if (!jmenoPlatne(p.jmeno)) {
-    return { ok: false, hlaska: "V kódu chybí jméno. Přihlas se jménem a kód vlož potom v Úkoly → Moje výsledky." };
+    // V NETLABu se kód jinde než při přihlášení nevkládá.
+    return {
+      ok: false,
+      hlaska: simulator === "sit" ? "V kódu chybí jméno. Přihlas se jménem." : "V kódu chybí jméno. Přihlas se jménem a kód vlož potom v Úkoly → Moje výsledky.",
+    };
   }
   return { ok: true, jmeno: p.jmeno, splneno: p.splneno.filter(patri) };
 }

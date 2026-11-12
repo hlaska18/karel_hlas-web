@@ -39,7 +39,7 @@ nasazení na Vercel to nezastaví.
 | `/`, `/en` | jednostránkový web (česky, anglicky) | `src/components/Site.tsx`, texty v `src/lib/content.ts` |
 | `/windows` | výuková simulace Windows 11 | `src/lib/win/`, `src/components/win/` – podrobně v [`WINDOWS.md`](WINDOWS.md) |
 | `/macos` | výuková simulace macOS (srovnání s Windows) | `src/lib/mac/`, `src/components/mac/` |
-| `/sql` | kurz SQL v DB Browseru (`?z=en` anglicky) | `src/lib/dbb/`, `src/components/dbb/` |
+| `/sql` | DBLAB: kurz SQL v DB Browseru (`?z=en` anglicky, krátká adresa `/dblab`) | `src/lib/dbb/`, `src/components/dbb/` |
 | `/soukromi` | co web ukládá | `src/app/soukromi/` |
 
 Do simulátorů i kurzu SQL se žák přihlásí jen svým jménem. Práce se ukládá

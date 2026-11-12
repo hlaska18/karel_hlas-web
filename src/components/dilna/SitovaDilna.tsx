@@ -17,7 +17,7 @@ import Link from "next/link";
 import { ArrowLeft, Check, ChevronDown, Play } from "lucide-react";
 import { ZnakDilna } from "@/components/ZnakDilna";
 import { MojeVysledkySimulatoru, PrehledTridySimulatoru, type Vzhled } from "@/components/postup/VysledkySimulatoru";
-import { VYCHOZI_JMENO, jmenoPlatne, stejneJmeno } from "@/lib/postupSimulatoru";
+import { VYCHOZI_JMENO, jmenoPlatne, kodPriPrihlaseni, stejneJmeno, vypadaJakoKod } from "@/lib/postupSimulatoru";
 import { jePrihlasen, zapamatujPrihlaseni } from "@/lib/win/pristup";
 import { CHYBY_SITE, sitFunguje, type Kabely, type Porucha, type Router, type SitStav } from "@/lib/win/sit";
 import { SITUACE, SKUPINY_SIT, UKOLY_SIT, type Zakazka, type Zalozka } from "@/lib/dilna/ukoly";
@@ -96,24 +96,50 @@ export function SitovaDilna() {
       {faze === "prihlaseni" && (
         <Prihlaseni
           stav={stav}
-          onHotovo={(jmeno, nacisto) => {
+          onHotovo={(jmeno, nacisto, zKodu) => {
             poslat(nacisto ? { typ: "nacti", stav: vychoziDilna(jmeno) } : { typ: "jmeno", jmeno });
+            // Kód postupu vložený místo jména: hotové zakázky z jiného počítače.
+            if (zKodu.length) poslat({ typ: "obnov", ids: zKodu });
             zapamatujPrihlaseni(true, "dilna");
             nastavFazi("bezi");
           }}
         />
       )}
-      {faze === "bezi" && <Dilna stav={stav} poslat={poslat} />}
+      {faze === "bezi" && (
+        <Dilna
+          stav={stav}
+          poslat={poslat}
+          odhlas={() => {
+            // Práce v prohlížeči zůstane, jen se znovu ukáže přihlášení.
+            zapamatujPrihlaseni(false, "dilna");
+            nastavFazi("prihlaseni");
+          }}
+        />
+      )}
     </div>
   );
 }
 
-function Prihlaseni({ stav, onHotovo }: { stav: StavDilny; onHotovo: (jmeno: string, nacisto: boolean) => void }) {
+const patriDoDilny = (id: string) => UKOLY_SIT.some((u) => u.id === id);
+
+/** „1 hotová zakázka“, „3 hotové zakázky“, „12 hotových zakázek“. */
+const hotovychZakazek = (n: number) => (n === 1 ? "1 hotová zakázka" : n >= 2 && n <= 4 ? `${n} hotové zakázky` : `${n} hotových zakázek`);
+
+/**
+ * Přihlášení jménem, nebo kódem postupu z jiného počítače (Karel 11. 11. 2026,
+ * stejně jako ve Windows a na Macu). Z kódu se vezme jméno a hotové zakázky;
+ * síť, rozdělaná porucha ani nápovědy se nepřenesou, kód je nenese.
+ */
+function Prihlaseni({ stav, onHotovo }: { stav: StavDilny; onHotovo: (jmeno: string, nacisto: boolean, zKodu: string[]) => void }) {
   // Pole je vždycky prázdné: předvyplněné jméno předchozího žáka by nový jen odklepl.
   const [jmeno, nastavJmeno] = useState("");
   const [hlaska, nastavHlasku] = useState("");
   const [ptaSe, nastavPtaSe] = useState(false);
   const hotovo = UKOLY_SIT.filter((u) => stav.splneno.includes(u.id)).length;
+  /** Vložený kód postupu místo jména; `null` = pole obsahuje jméno. */
+  const kod = kodPriPrihlaseni(jmeno, "sit", patriDoDilny);
+  const jmenoPrihlaseni = kod?.ok ? kod.jmeno : jmeno.trim().slice(0, 60);
+  const zKodu = kod?.ok ? kod.splneno : [];
 
   return (
     <div className="flex flex-1 flex-col items-center justify-center overflow-y-auto p-6">
@@ -128,30 +154,42 @@ function Prihlaseni({ stav, onHotovo }: { stav: StavDilny; onHotovo: (jmeno: str
         className="flex w-full max-w-sm flex-col gap-3"
         onSubmit={(e) => {
           e.preventDefault();
-          if (!jmenoPlatne(jmeno)) {
+          if (kod && !kod.ok) {
+            nastavHlasku(kod.hlaska);
+            return;
+          }
+          if (!jmenoPlatne(jmenoPrihlaseni)) {
             nastavHlasku("Napiš své jméno a příjmení.");
             return;
           }
           nastavHlasku("");
-          if (stav.jmeno && stav.jmeno !== VYCHOZI_JMENO && !stejneJmeno(stav.jmeno, jmeno) && hotovo > 0) nastavPtaSe(true);
-          else onHotovo(jmeno.trim(), false);
+          if (stav.jmeno && stav.jmeno !== VYCHOZI_JMENO && !stejneJmeno(stav.jmeno, jmenoPrihlaseni) && hotovo > 0) nastavPtaSe(true);
+          else onHotovo(jmenoPrihlaseni, false, zKodu);
         }}
       >
         <label className="block">
-          <span className="mb-1 block text-[13px] text-[#a6bdb4]">Jméno a příjmení</span>
+          <span className="mb-1 block text-[13px] text-[#a6bdb4]">Jméno a příjmení, nebo kód postupu</span>
           <input
             autoFocus
             value={jmeno}
             onChange={(e) => {
               nastavJmeno(e.target.value);
               nastavPtaSe(false);
+              nastavHlasku("");
             }}
             autoComplete="off"
             spellCheck={false}
-            className="w-full rounded-lg border border-white/[.18] bg-[#0d1714] px-3 py-2 text-[15px] text-[#e8f3ef]"
+            // Kód postupu je delší než jméno, jméno se zkrátí na 60 znaků v `jmenoPrihlaseni`.
+            maxLength={4000}
+            className={`w-full rounded-lg border border-white/[.18] bg-[#0d1714] px-3 py-2 text-[#e8f3ef] ${vypadaJakoKod(jmeno) ? "font-mono text-[12px]" : "text-[15px]"}`}
           />
         </label>
         {hlaska && <p role="alert" className="text-[13px] text-[#ffd9d0]">{hlaska}</p>}
+        {!hlaska && kod?.ok && (
+          <p role="status" className="text-[13px] text-[#6fe3c2]">
+            Pokračuješ z kódu postupu: {kod.jmeno}, {hotovychZakazek(kod.splneno.length)}.
+          </p>
+        )}
         <button type="submit" disabled={ptaSe} className={`${hlavni} disabled:opacity-40`}>
           Vstoupit do dílny
         </button>
@@ -163,24 +201,25 @@ function Prihlaseni({ stav, onHotovo }: { stav: StavDilny; onHotovo: (jmeno: str
           </p>
           {/* Žádné tlačítko není výchozí: Enter nesmí převzít cizí práci. */}
           <div className="flex gap-2">
-            <button type="button" onClick={() => onHotovo(jmeno.trim(), true)} className={tlacitko}>
+            <button type="button" onClick={() => onHotovo(jmenoPrihlaseni, true, zKodu)} className={tlacitko}>
               Ne, začít načisto
             </button>
-            <button type="button" onClick={() => onHotovo(jmeno.trim(), false)} className={tlacitko}>
+            <button type="button" onClick={() => onHotovo(jmenoPrihlaseni, false, zKodu)} className={tlacitko}>
               Ano, pokračovat
             </button>
           </div>
         </div>
       )}
       <p className="mt-6 max-w-md text-center text-[12px] leading-relaxed text-[#a6bdb4]">
-        Jméno ani práce se nikam neodesílají, zůstávají v tomhle prohlížeči. Učiteli je pošleš sám kódem postupu.
+        Jsi tu poprvé? Napiš jméno a příjmení. Pokračuješ z jiného počítače? Vlož místo jména svůj kód postupu a hotové zakázky
+        se ti odškrtnou. Jméno ani práce se nikam neodesílají, zůstávají v tomhle prohlížeči. Učiteli je pošleš sám kódem postupu.
       </p>
       <OdkazZpet className="mt-4 flex items-center gap-1.5 text-[13px] text-[#6fe3c2] hover:underline" />
     </div>
   );
 }
 
-function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Parameters<typeof reducerDilny>[1]> }) {
+function Dilna({ stav, poslat, odhlas }: { stav: StavDilny; poslat: React.Dispatch<Parameters<typeof reducerDilny>[1]>; odhlas: () => void }) {
   const [vybranaId, nastavVybranou] = useState(() => (UKOLY_SIT.find((u) => !stav.splneno.includes(u.id)) ?? UKOLY_SIT[0]).id);
   const zakazka = UKOLY_SIT.find((u) => u.id === vybranaId) ?? UKOLY_SIT[0];
   const [zalozka, nastavZalozku] = useState<Zalozka>(zakazka.zalozka ?? "terminal");
@@ -280,6 +319,9 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
           </span>
           <button type="button" onClick={() => nastavOkno("vysledky")} className={tlacitko}>
             Kód postupu
+          </button>
+          <button type="button" onClick={odhlas} className={tlacitko}>
+            Odhlásit se
           </button>
           <OdkazZpet className="flex items-center gap-1.5 hover:text-[#e8f3ef]" />
         </div>
@@ -503,7 +545,6 @@ function Dilna({ stav, poslat }: { stav: StavDilny; poslat: React.Dispatch<Param
           jmeno={stav.jmeno}
           nastavJmeno={(jmeno) => poslat({ typ: "jmeno", jmeno })}
           splneno={stav.splneno}
-          obnov={(ids) => poslat({ typ: "obnov", ids })}
           otevriPrehled={() => nastavOkno("prehled")}
           zavri={() => nastavOkno(null)}
           vzhled={VZHLED}

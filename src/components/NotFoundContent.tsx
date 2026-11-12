@@ -9,7 +9,7 @@ import { odhadniSimulator, type Simulator } from "@/lib/preklep";
 const SIMULATOR: Record<Simulator, { cs: string; en: string; href: string; hrefEn: string }> = {
   windows: { cs: "Chtěl jsi simulátor Windows?", en: "Looking for the Windows simulator?", href: "/windows", hrefEn: "/windows" },
   macos: { cs: "Chtěl jsi simulátor macOS?", en: "Looking for the macOS simulator?", href: "/macos", hrefEn: "/macos" },
-  sql: { cs: "Chtěl jsi kurz SQL?", en: "Looking for the SQL course?", href: "/sql", hrefEn: "/sql?z=en" },
+  sql: { cs: "Chtěl jsi DBLAB (kurz SQL)?", en: "Looking for DBLAB (the SQL course)?", href: "/sql", hrefEn: "/sql?z=en" },
 };
 
 const nic = () => () => {};

@@ -26,7 +26,19 @@ const MAX_DELKA = 60000;
 export interface PraceAlgolabu {
   h4: StavBatohu;
   lekce: Record<number, StavLekce<object>>;
+  /**
+   * Jméno žáka (Karel 11. 11. 2026): kód se vkládá místo jména při přihlášení.
+   * Kódy z doby před přihlašováním ho nemají.
+   */
+  jmeno?: string;
 }
+
+const MAX_JMENO = 60;
+
+/** Je v práci aspoň něco rozdělaného? */
+export const jePrazdna = (p: PraceAlgolabu) =>
+  JSON.stringify(p.h4) === JSON.stringify(vychoziStav()) &&
+  CISLA_LEKCI.every((c) => !p.lekce[c] || jeVychozi(p.lekce[c], LEKCE[c].faze, LEKCE[c].vychozi));
 
 const puvodniUprava = (u: StavBatohu["uprava"]) =>
   u.kapacita === KAPACITA && u.zakazky.every((z, i) => z.doba === ZAKAZKY[i].doba && z.prinos === ZAKAZKY[i].prinos);
@@ -34,6 +46,8 @@ const puvodniUprava = (u: StavBatohu["uprava"]) =>
 /** Nezačaté hodiny se nenesou, kód je pak kratší. */
 export function zakodujAlgolab(prace: PraceAlgolabu): string {
   const data: Record<string, unknown> = { v: 1 };
+  const jmeno = (prace.jmeno ?? "").trim().slice(0, MAX_JMENO);
+  if (jmeno) data.j = jmeno;
   if (JSON.stringify(prace.h4) !== JSON.stringify(vychoziStav())) {
     // Nezměněné zadání v „Změň zadání“ se nenese, kód je pak skoro o polovinu kratší.
     const { uprava, ...zbytek } = prace.h4;
@@ -58,7 +72,8 @@ export function dekodujAlgolab(text: string): PraceAlgolabu | null {
     const h4 = d.h4 && typeof d.h4 === "object" ? zOdlozeneho(JSON.stringify(d.h4)) : vychoziStav();
     const lekce: Record<number, StavLekce<object>> = {};
     for (const c of CISLA_LEKCI) lekce[c] = zDatLekce(d[`h${c}`], LEKCE[c].faze, LEKCE[c].vychozi);
-    return { h4, lekce };
+    const jmeno = typeof d.j === "string" ? d.j.trim().slice(0, MAX_JMENO) : "";
+    return jmeno ? { h4, lekce, jmeno } : { h4, lekce };
   } catch {
     return null;
   }

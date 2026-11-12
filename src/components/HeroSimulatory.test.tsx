@@ -32,7 +32,7 @@ describe("HeroSimulatory", () => {
 
   it("dílna ukáže předaný počet zakázek a z angličtiny vede zpět na /en", () => {
     vykresli("cs", 33, 14, 3);
-    expect(screen.getAllByRole("link")[2].textContent).toContain("3 zakázky · přihlášení jménem");
+    expect(screen.getAllByRole("link")[2].textContent).toContain("3 zakázky · jménem či kódem");
     cleanup();
     vykresli("en", 33, 14, 20);
     const dilna = screen.getAllByRole("link")[2];

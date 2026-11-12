@@ -8,6 +8,7 @@
 import { useMemo, useRef, useState } from "react";
 import { HelpCircle, Info, Database, ExternalLink, Plus, Minus, ArrowUp, ArrowDown, Trash2, Upload } from "lucide-react";
 import { useDbb, precti, uvoz, type Dialog } from "@/components/dbb/kontext";
+import { PrihlaseniKurzu } from "@/components/dbb/Prihlaseni";
 import { IkonaProgramu } from "@/components/dbb/Okno";
 import { MojeVysledky, PrehledTridy } from "@/components/dbb/Vysledky";
 import { UlohaOdkazem } from "@/components/dbb/UlohaOdkazem";
@@ -532,7 +533,7 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
   return (
     <Okno titulek="O kurzu a pro učitele" zavrit={zavrit} sirka={640}>
       <div className="dbb-posuv min-h-0 flex-1 overflow-auto px-5 py-4 text-[12px] leading-relaxed">
-        <p className="text-[14px] font-semibold">Kurz SQL ve virtuálním DB Browseru</p>
+        <p className="text-[14px] font-semibold">DBLAB – kurz SQL ve virtuálním DB Browseru</p>
         <p className={odst}>
           <b>Co to je.</b> Napodobenina programu DB Browser for SQLite, ve které běží kurz SQL. Lekce 1–13 jsou
           stejné jako na pracovním listu v bance, lekce 14–19 učí práci s programem: strukturu databáze, úpravu dat
@@ -551,7 +552,7 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
           úlohy splněné po zobrazení řešení počítají zvlášť („12/16 (3 s řešením)“). Stačí obejít třídu, nebo
           ať pošlou fotku. Kopírovat zkopíruje jméno, skóre i kód najednou. Kód postupu z téhož okna vlož do <i>Nápověda → Přehled třídy</i> a dostaneš tabulku
           (i do Excelu) – kódy téhož žáka se sčítají a pod tabulkou vidíš, kolik žáků má kterou lekci. Na jiném
-          počítači žák kód vloží v <i>Moje výsledky → Pokračovat z kódu</i>. Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je soubor z lekce 19, který si žák
+          počítači žák kód vloží místo jména při přihlášení (nebo později v <i>Moje výsledky → Pokračovat z kódu</i>). Kód je shrnutí, ne důkaz – dá se upravit. Důkazem práce je soubor z lekce 19, který si žák
           stáhne. A spolehlivá je pořád otázka: „Přečti nahlas, co tvůj dotaz dělá.“
         </p>
         <p className={odst}>
@@ -598,7 +599,7 @@ function OKurzu({ zavrit }: { zavrit: () => void }) {
           <b>Před první hodinou.</b> Na jednom školním počítači pod žákovským účtem: (1) otevři kurz a spusť dotaz
           v lekci 1 – SQL engine se stahuje z tohoto webu, záložně z cdn.jsdelivr.net; (2) splň úkol a přihlas se na
           jiném počítači v učebně – když tam postup není, žáci si na konci hodiny zkopírují kód postupu do Teams
-          a příště ho vloží v Moje výsledky → Pokračovat z kódu; (3) na školní klávesnici napiš &apos; * ; &lt; &gt; = – prváci je
+          a příště ho vloží místo jména při přihlášení; (3) na školní klávesnici napiš &apos; * ; &lt; &gt; = – prváci je
           hledají (nad editorem je jde i naklikat). Klávesa vedle = píše ´ a s tím dotaz neprojde – program to pozná
           a nabídne Nahradit apostrofem;
           (4) zkus promítnout v režimu předvádění, jestli je písmo čitelné ze zadní lavice. Odkaz do Teams posílej
@@ -631,7 +632,7 @@ function OKurzuAnglicky({ zavrit }: { zavrit: () => void }) {
   return (
     <Okno titulek="About the course / for teachers" zavrit={zavrit} sirka={640}>
       <div className="dbb-posuv min-h-0 flex-1 overflow-auto px-5 py-4 text-[12px] leading-relaxed">
-        <p className="text-[14px] font-semibold">SQL course in a virtual DB Browser</p>
+        <p className="text-[14px] font-semibold">DBLAB – SQL course in a virtual DB Browser</p>
         <p className={odst}>
           <b>What it is.</b> A replica of DB Browser for SQLite with an SQL course inside. Lessons 1–13 teach SQL
           from SELECT to changing data, lessons 14–19 teach the program itself: the database structure, editing data in
@@ -822,6 +823,16 @@ export function Dialogy({
       return <ImportSql soubor={dialog.soubor} text={dialog.text} zavrit={zavrit} />;
     case "exportCsv":
       return <ExportCsv zdroj={dialog.zdroj} zavrit={zavrit} />;
+    case "prihlaseni":
+      return (
+        <PrihlaseniKurzu
+          odesli={dialog.odesli}
+          zavrit={() => {
+            zavrit();
+            dialog.priZavreni();
+          }}
+        />
+      );
     case "potvrdit":
       return (
         <Okno titulek={dialog.titulek} zavrit={zavrit}>

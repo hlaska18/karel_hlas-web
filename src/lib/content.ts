@@ -1137,9 +1137,7 @@ type Dict = {
     simWindows: string;
     simMacos: string;
     simDilna: string;
-    /** Řádek pod názvem NETLABu. `{tasks}` je počet úloh i se slovem. */
-    simNote: string;
-    /** Totéž u Windows a macOS: od 7. 11. 2026 se tam dá přihlásit i kódem postupu. */
+    /** Řádek pod názvem simulátoru nebo labu. `{tasks}` je počet úloh i se slovem. Přihlášení kódem postupu: Windows a macOS od 7. 11. 2026, NETLAB od 11. 11. 2026. */
     simNoteKod: string;
     /** Štítek vpravo na tlačítku simulátoru. */
     simOpen: string;
@@ -1410,14 +1408,13 @@ export const t: Record<Lang, Dict> = {
       simWindows: "Virtuální Windows 11",
       simMacos: "Virtuální macOS",
       simDilna: "NETLAB",
-      simNote: "{tasks} · přihlášení jménem",
       simNoteKod: "{tasks} · jménem či kódem",
       simOpen: "Spustit",
       zadatTitle: "Jak zadat simulátor nebo lab žákům",
       zadatKroky: [
         "Zkopíruj hotové zadání níž a vlož ho do Teams nebo Classroomu. Adresa je v něm na samostatném řádku, aby se neslepila s textem.",
         "Žáci pracují na počítači s myší (na telefonu to nejde). Přihlásí se jménem a příjmením, nic se jim nezakládá. V simulátoru jsou úlohy v tlačítku Úkoly vpravo dole, v NETLABu zakázky v levém panelu. Odškrtávají se samy.",
-        "Na konci hodiny ti žák pošle kód postupu jako odpověď. V simulátoru ho najde v panelu Úkoly pod Moje výsledky, v NETLABu pod tlačítkem Kód postupu nahoře. Práce se ukládá jen v prohlížeči. Na jiném počítači může v simulátoru pokračovat, když se místo jménem přihlásí kódem postupu.",
+        "Na konci hodiny ti žák pošle kód postupu jako odpověď. V simulátoru ho najde v panelu Úkoly pod Moje výsledky, v NETLABu pod tlačítkem Kód postupu nahoře. Práce se ukládá jen v prohlížeči. Na jiném počítači může pokračovat, když se místo jménem přihlásí kódem postupu.",
         "Kódy vlož do Přehledu třídy. V simulátoru je v panelu Úkoly, v NETLABu dole v levém panelu (Pro učitele: Přehled třídy). Stačí celé zprávy, kódy se v nich najdou samy. Přehled stáhneš do Excelu.",
       ],
       zadatText:
@@ -1428,7 +1425,7 @@ export const t: Record<Lang, Dict> = {
       zadatCopied: "Zkopírováno",
       novinkyTitle: "Co je nového v simulátorech a labech",
       novinky: [
-        "Listopad 2026: ve Windows a na Macu jde v práci pokračovat rovnou při přihlášení. Kdo je tu poprvé, napíše jméno, kdo pokračuje z jiného počítače, vloží místo jména svůj kód postupu. Odškrtnou se mu splněné úlohy, soubory a plocha se nepřenesou.",
+        "Listopad 2026: kurz SQL se nově jmenuje DBLAB. Adresa /sql, lekce i kódy postupu jsou beze změny. Ve Windows, na Macu, v NETLABu i v DBLABu jde v práci pokračovat rovnou při přihlášení. Kdo je tu poprvé, napíše jméno, kdo pokračuje z jiného počítače, vloží místo jména svůj kód postupu. Odškrtnou se mu splněné úlohy, soubory, plocha ani rozdělaná práce se nepřenesou. V DBLABu se jméno nově píše hned na začátku, ne až v Moje výsledky.",
         "Síťové úlohy jsem ze simulátoru Windows vyndal, jsou teď v NETLABu v tématu Digitální gramotnost: 20 zakázek se schématem domácí sítě, Terminálem a routerem. U pěti poruch si žák tipne, kde je chyba, doloží to příkazy, opraví ji a opravu ověří.",
         "Kódy se síťovými úlohami (WSIT1- i WIN1-) Přehled třídy čte dál a ukáže je v sekci NETLAB. Rozdělaná práce se v tomtéž prohlížeči přenese do NETLABu sama.",
         "Beze změny: 33 úloh Windows, úlohy macOS a formát kódu postupu. Kódy, které už žáci odevzdali, Přehled třídy čte stejně jako dřív.",
@@ -2110,7 +2107,7 @@ export const t: Record<Lang, Dict> = {
         {
           nadpis: "Virtuální Windows a macOS",
           odstavce: [
-            "Do prostředí se přihlásíš svým jménem. Jméno není účet: zůstává jen v tomhle prohlížeči a na server se neodesílá. Pryč odejde jen v kódu postupu, který sám zkopíruješ a pošleš učiteli – třeba do Teams. Stejně to funguje v kurzu SQL.",
+            "Do prostředí se přihlásíš svým jménem. Jméno není účet: zůstává jen v tomhle prohlížeči a na server se neodesílá. Pryč odejde jen v kódu postupu, který sám zkopíruješ a pošleš učiteli – třeba do Teams. Stejně to funguje v DBLABu (kurz SQL).",
             "Co v prostředí uděláš – jaká okna otevřeš, co nakreslíš v Malování, jak daleko dojdeš v úlohách – zůstává v tomhle prohlížeči a na server se neodesílá. Když si smažeš data prohlížeče, zmizí to i tobě.",
             "Dřív si tu žáci mohli zakládat účet a postup se ukládal na server. To bylo 1. 9. 2026 zrušené a 4. 9. 2026 bylo smazané i úložiště včetně účtů, které do té doby vznikly.",
           ],
@@ -2123,7 +2120,7 @@ export const t: Record<Lang, Dict> = {
           nadpis: "Cookies a co zůstane v prohlížeči",
           odstavce: [
             "Web nenastavuje žádnou cookie. Ani vlastní, ani cizí – proto tu nenajdeš lištu, kterou by bylo potřeba odklikávat. Změřeno na všech stránkách včetně virtuálního Windows a SQL hřiště.",
-            "Do prohlížeče se ukládají dvě věci, a obě až ve chvíli, kdy si o ně sám řekneš: zvolený světlý nebo tmavý režim a stav simulátorů (Windows, macOS, kurz SQL), tedy tvoje rozdělaná práce i jméno, pod kterým ses přihlásil(a). Nic z toho se neodesílá na server. Kdo ale po tobě usedne ke stejnému počítači a prohlížeči, uvidí to taky – i tabulky, které sis nahrál(a) do kurzu SQL. Na sdíleném počítači proto nenahrávej skutečné známky ani jména a po práci v kurzu SQL použij Nápověda → Nový žák, nebo smaž data webu v prohlížeči.",
+            "Do prohlížeče se ukládají dvě věci, a obě až ve chvíli, kdy si o ně sám řekneš: zvolený světlý nebo tmavý režim a stav simulátorů a labů (Windows, macOS, DBLAB, NETLAB), tedy tvoje rozdělaná práce i jméno, pod kterým ses přihlásil(a). Nic z toho se neodesílá na server. Kdo ale po tobě usedne ke stejnému počítači a prohlížeči, uvidí to taky – i tabulky, které sis nahrál(a) do kurzu SQL. Na sdíleném počítači proto nenahrávej skutečné známky ani jména a po práci v kurzu SQL použij Nápověda → Nový žák, nebo smaž data webu v prohlížeči.",
             "Souhlas se na tohle nevyžaduje, protože bez toho uložení by ta funkce nefungovala – motiv by se zapomněl při každém načtení a práce v prostředí by zmizela. Smažeš to v nastavení prohlížeče (historie → data webů).",
           ],
         },
@@ -2205,7 +2202,7 @@ export const t: Record<Lang, Dict> = {
       top: "Nahoru",
       // Kurz je vlastní stránka mimo jednostránkový web – bez tohohle odkazu
       // se k němu dá dojít jen přes dlaždici Databáze v bance.
-      sqlCourse: "Kurz SQL v prohlížeči",
+      sqlCourse: "DBLAB – kurz SQL v prohlížeči",
       windows: "Virtuální Windows 11",
       macos: "Virtuální macOS",
     },
@@ -2233,14 +2230,13 @@ export const t: Record<Lang, Dict> = {
       simWindows: "Virtual Windows 11",
       simMacos: "Virtual macOS",
       simDilna: "NETLAB",
-      simNote: "{tasks} in Czech",
       simNoteKod: "{tasks} in Czech",
       simOpen: "Open",
       zadatTitle: "How to assign a simulator or lab",
       zadatKroky: [
         "Copy the ready-made assignment below and paste it into Teams or Classroom. The link sits on its own line so it does not merge with the text.",
         "Students work on a computer with a mouse (it does not run on phones). They sign in with their full name; no account is created. In a simulator, tasks are under the Úkoly (Tasks) button bottom right; in NETLAB, jobs are in the left panel. They tick themselves off.",
-        "At the end of the lesson the student sends you the progress code as a reply. In a simulator it is under Moje výsledky (My results) in the task panel; in NETLAB under the Kód postupu (Progress code) button at the top. Work is saved only in the browser. On another computer, students can continue in a simulator by signing in with their progress code instead of their name.",
+        "At the end of the lesson the student sends you the progress code as a reply. In a simulator it is under Moje výsledky (My results) in the task panel; in NETLAB under the Kód postupu (Progress code) button at the top. Work is saved only in the browser. On another computer, students can continue by signing in with their progress code instead of their name.",
         "Paste the codes into Pro učitele: Přehled třídy (class overview). In a simulator it is in the task panel; in NETLAB at the bottom of the left panel. Whole messages are fine; the codes are found automatically. You can download the overview for Excel.",
       ],
       zadatText:
@@ -2251,7 +2247,7 @@ export const t: Record<Lang, Dict> = {
       zadatCopied: "Copied",
       novinkyTitle: "New in simulators and labs",
       novinky: [
-        "November 2026: in Windows and macOS, students can continue their work right at sign-in. First time here, they type their name; continuing from another computer, they paste their progress code instead of the name. Completed tasks are ticked off; files and the desktop do not carry over.",
+        "November 2026: the SQL course is now called DBLAB. The address /sql, the lessons and the progress codes are unchanged. In Windows, macOS, NETLAB and DBLAB, students can continue their work right at sign-in. First time here, they type their name; continuing from another computer, they paste their progress code instead of the name. Completed tasks are ticked off; files, the desktop and unfinished work do not carry over. In DBLAB the name is now typed right at the start, not later in My Results.",
         "I took the network tasks out of the Windows simulator. They are now in NETLAB in the Digital literacy topic: 20 jobs with a diagram of a home network, a Terminal and a router. With five faults, students guess where the problem is, back it up with commands, fix it and verify the fix. NETLAB is in Czech.",
         "The class overview still reads codes with network tasks (WSIT1- and WIN1-) and shows them in the NETLAB section. Work in progress moves to NETLAB by itself in the same browser.",
         "Unchanged: the 33 Windows tasks, the macOS tasks and the progress code format. The class overview reads codes students have already submitted exactly as before.",
@@ -2931,7 +2927,7 @@ export const t: Record<Lang, Dict> = {
         {
           nadpis: "Virtual Windows and macOS",
           odstavce: [
-            "You sign in to the environment with your name. The name is not an account: it stays in this browser only and is never sent to a server. It only leaves inside the progress code that you copy yourself and send to your teacher – in Teams, for example. The SQL course works the same way.",
+            "You sign in to the environment with your name. The name is not an account: it stays in this browser only and is never sent to a server. It only leaves inside the progress code that you copy yourself and send to your teacher – in Teams, for example. DBLAB (the SQL course) works the same way.",
             "What you do inside – which windows you open, what you draw in Paint, how far you get in the tasks – stays in this browser and is never sent to a server. Clear your browser data and it is gone for you too.",
             "Pupils used to be able to create an account here, with progress stored on a server. That was removed on 1 September 2026, and on 4 September 2026 the storage itself was deleted, including the accounts created until then.",
           ],
@@ -2944,7 +2940,7 @@ export const t: Record<Lang, Dict> = {
           nadpis: "Cookies and what stays in your browser",
           odstavce: [
             "This site sets no cookies at all – neither its own nor anyone else's. That is why there is no consent bar to click away. Measured across every page, including the virtual Windows and the SQL playground.",
-            "Two things are stored in your browser, and both only once you ask for them: the light or dark theme you picked, and the state of the simulators (Windows, macOS, the SQL course) – your unfinished work, including the name you signed in with. None of it is sent to a server. But whoever sits down at the same computer and browser after you will see it too – including tables you uploaded to the SQL course. On a shared computer, don't upload real grades or names, and when you finish in the SQL course use Help → New Pupil, or clear the site's data in the browser.",
+            "Two things are stored in your browser, and both only once you ask for them: the light or dark theme you picked, and the state of the simulators and labs (Windows, macOS, DBLAB, NETLAB) – your unfinished work, including the name you signed in with. None of it is sent to a server. But whoever sits down at the same computer and browser after you will see it too – including tables you uploaded to the SQL course. On a shared computer, don't upload real grades or names, and when you finish in the SQL course use Help → New Pupil, or clear the site's data in the browser.",
             "No consent is required for this, because without that storage the feature would not work – the theme would be forgotten on every load and your work in the environment would vanish. You can clear it in your browser settings (history → site data).",
           ],
         },
@@ -3017,7 +3013,7 @@ export const t: Record<Lang, Dict> = {
       soukromiOdkaz: "What this site stores",
       top: "Top",
       // Program i lekce kurzu jsou s ?z=en anglicky, data zůstávají česká (se slovníčkem).
-      sqlCourse: "SQL course in the browser",
+      sqlCourse: "DBLAB – SQL course in the browser",
       windows: "Virtual Windows 11 (in Czech)",
       macos: "Virtual macOS (in Czech)",
     },

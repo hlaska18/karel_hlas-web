@@ -12,7 +12,9 @@ CO ALGOLAB JE
 
 Webová aplikace na adrese karelhlas.vercel.app/algolab. Běží celá v prohlížeči, bez účtů a bez serveru. Rozdělaná práce žáka se ukládá jen v jeho prohlížeči a nikam se neodesílá. Kvůli práci s tabulkami a myší běží jen na počítači, na telefonu se nespustí.
 
-Kód postupu: v panelu „Moje práce“ si žák zkopíruje kód (začíná ALG1-). Nese celou rozdělanou práci včetně odpovědi v reflexi. Žák si ho uloží třeba do OneNotu nebo pošle v Teams a na jiném počítači ho vloží a pokračuje, kde skončil. Před přepsáním rozdělané práce se aplikace zeptá. Ve stejném panelu jde začít hodinu znovu nebo smazat všechny hodiny, aby na sdíleném školním počítači další žák nepokračoval v cizí práci. Jeden kód nese všechny hodiny 1–7. Je jen pro žáka, učitel podle něj hodiny 1–7 nehodnotí. Odevzdání učiteli řeší až hodina 8 vlastním kódem (ALGZ1-).
+Přihlášení: na začátku žák napíše jméno a příjmení. Kdo pokračuje z jiného počítače, vloží do stejného pole místo jména svůj kód postupu. Když v prohlížeči zůstala rozdělaná práce pod jiným jménem, aplikace se zeptá, čí je, a nabídne začít načisto.
+
+Kód postupu: v panelu „Moje práce“ si žák zkopíruje kód (začíná ALG1-). Nese jeho jméno a celou rozdělanou práci včetně odpovědi v reflexi. Žák si ho uloží třeba do OneNotu nebo pošle v Teams a na jiném počítači ho vloží při přihlášení a pokračuje, kde skončil. Před přepsáním rozdělané práce se aplikace zeptá. Ve stejném panelu se jde odhlásit, začít hodinu znovu nebo smazat všechny hodiny. Jeden kód nese všechny hodiny 1–7. Je jen pro žáka, učitel podle něj hodiny 1–7 nehodnotí. Odevzdání učiteli řeší až hodina 8 vlastním kódem (ALGZ1-).
 
 Zatím je stránka schválně skrytá: web na ni neodkazuje a vyhledávače ji neindexují. Postavené jsou všechny hodiny 1–8, se žáky zatím odučené nebyly. Podrobně je níž popsaná hodina 4 (problém batohu), ostatní hodiny mají stejnou stavbu.
 

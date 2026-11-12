@@ -125,6 +125,27 @@ describe("kód postupu místo jména při přihlášení (7. 11. 2026)", () => {
     expect(kodPriPrihlaseni(zakodujSimulator(zak({ jmeno: "Žák" })), "macos", patri)).toMatchObject({ ok: false });
   });
 
+  it("NETLAB bere kód WSIT1- i starší kód WIN1- se síťovými úlohami (11. 11. 2026)", () => {
+    const vDilne = (id: string) => id.startsWith("sit-");
+    const sit = zakodujSimulator(zak({ simulator: "sit", splneno: ["sit-ip-pocitace", "sit-brana"], celkem: 20, chyby: { db: 1 } }));
+    expect(kodPriPrihlaseni(`Šárka · NETLAB 2/20 · ${sit}`, "sit", vDilne)).toEqual({
+      ok: true,
+      jmeno: "Šárka Řeháková",
+      splneno: ["sit-ip-pocitace", "sit-brana"],
+    });
+    const stary = zakodujSimulator(zak({ simulator: "windows", splneno: ["otevri-pruzkumnik", "sit-brana"], celkem: 33 }));
+    expect(kodPriPrihlaseni(stary, "sit", vDilne)).toEqual({ ok: true, jmeno: "Šárka Řeháková", splneno: ["sit-brana"] });
+    // Kód Windows bez síťových úloh a kód z Macu do NETLABu nepatří.
+    const bezSite = zakodujSimulator(zak({ simulator: "windows", splneno: ["otevri-pruzkumnik"], celkem: 33 }));
+    expect(kodPriPrihlaseni(bezSite, "sit", vDilne)).toMatchObject({ ok: false });
+    expect(kodPriPrihlaseni(zakodujSimulator(zak()), "sit", vDilne)).toMatchObject({ ok: false });
+    // Windows kód NETLABu dál odmítne.
+    expect(kodPriPrihlaseni(sit, "windows", () => true)).toMatchObject({ ok: false });
+    // Bez jména: v NETLABu neodkazuje na Moje výsledky, kód se tam už nevkládá.
+    const bezJmena = kodPriPrihlaseni(zakodujSimulator(zak({ simulator: "sit", jmeno: "Žák", splneno: [] })), "sit", vDilne);
+    expect(bezJmena).toEqual({ ok: false, hlaska: "V kódu chybí jméno. Přihlas se jménem." });
+  });
+
   it("skloňuje počet úloh", () => {
     expect([0, 1, 3, 5].map(splnenychUloh)).toEqual(["0 splněných úloh", "1 splněná úloha", "3 splněné úlohy", "5 splněných úloh"]);
   });

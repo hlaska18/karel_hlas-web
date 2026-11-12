@@ -68,7 +68,7 @@ const dnes = () => {
   return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
 };
 
-export function Zaverecne({ zadaniZAdresy }: { zadaniZAdresy: string | null }) {
+export function Zaverecne({ zadaniZAdresy, jmeno }: { zadaniZAdresy: string | null; /** Jméno z přihlášení, předvyplní se. */ jmeno: string }) {
   const [rezim, nastavRezim] = useState<"uvod" | "zak" | "ucitel">(zadaniZAdresy ? "zak" : "uvod");
   const [zadani, nastavZadani] = useState(zadaniZAdresy ?? CVICNE_ZADANI);
   const obsah = useRef<HTMLDivElement>(null);
@@ -89,7 +89,7 @@ export function Zaverecne({ zadaniZAdresy }: { zadaniZAdresy: string | null }) {
             ucitel={() => nastavRezim("ucitel")}
           />
         )}
-        {rezim === "zak" && <Zak zadani={zadani} zpet={zadaniZAdresy ? undefined : () => nastavRezim("uvod")} />}
+        {rezim === "zak" && <Zak zadani={zadani} prihlaseny={jmeno} zpet={zadaniZAdresy ? undefined : () => nastavRezim("uvod")} />}
         {rezim === "ucitel" && <Ucitel zpet={() => nastavRezim("uvod")} />}
       </div>
     </main>
@@ -195,14 +195,15 @@ function zapisJa(klic: string | null) {
 
 const bezZmeny = ({ zadani, jmeno, odpovedi, odevzdano, datum }: PraceZaka): PraceZaka => ({ zadani, jmeno, odpovedi, odevzdano, datum });
 
-function Zak({ zadani, zpet }: { zadani: string; zpet?: () => void }) {
+function Zak({ zadani, prihlaseny, zpet }: { zadani: string; prihlaseny: string; zpet?: () => void }) {
   // Práce se drží zvlášť podle zadání a jména. Sama se otevře jen ta, kterou žák rozdělal v téhle kartě.
   const [prace, nastavPraci] = useState<PraceZaka | null>(() => {
     const ja = ctiJa();
     const p = ja ? ctiSklad()[ja] : undefined;
     return p && p.zadani === zadani ? bezZmeny(p) : null;
   });
-  const [jmeno, nastavJmeno] = useState("");
+  // Předvyplněné je jméno z přihlášení do ALGOLABu, ne jméno předchozího žáka.
+  const [jmeno, nastavJmeno] = useState(prihlaseny);
   const [chyba, nastavChybu] = useState("");
   const cvicne = zadani === CVICNE_ZADANI;
 
