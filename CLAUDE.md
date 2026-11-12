@@ -651,9 +651,11 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   „Odhlásit se“. Hodina 8 má pole se jménem předvyplněné jménem z přihlášení.
 - Texty: karta NETLABu „jménem či kódem“ (`simNote` zrušeno, zůstalo `simNoteKod`), první novinka přepsaná, návod
   „Jak zadat“ a stránka /sql říkají „místo jména při přihlášení“.
-- Ověřeno v prohlížeči lokálně ve všech třech (jméno, kód, celý řádek z Teams, cizí práce, odhlášení, písemka,
-  angličtina). **Neověřeno na ostrém webu** a kurz SQL s přihlášením nikdo se třídou nezkoušel – cizí učitelé ho
-  mají v zadáních, dialog na začátku je pro jejich žáky nový.
+- Ověřeno lokálně a 12. 11. i na ostrém webu (commit 8e3c33d, vestavěný prohlížeč): jméno, kód, celý řádek z Teams,
+  cizí práce, odhlášení, písemka, angličtina, `/dblab`, Přehled třídy s oddílem „DBLAB – kurz SQL“; Windows má
+  „Pokračovat z kódu“ dál. Přihlášení do ALGOLABu a přetahování v hodině 2 prošlo na ostrém webu i ve zkušebním
+  Firefoxu 111 a 159. Se třídou přihlášení v DBLABu nikdo nezkoušel – cizí učitelé ho mají v zadáních, dialog
+  na začátku je pro jejich žáky nový.
 
 ### Kurz SQL se jmenuje DBLAB (12. 11. 2026)
 - Karel: „Databáze přejmenuj na taky něco s LABem, ale ne datalab“, vybral **DBLAB** a jen pro kurz na /sql (dlaždice
