@@ -24,7 +24,7 @@ export function About() {
             i šířkou okna – tedy konstantou, která se dřív nebo později
             rozejde. */}
         <SectionHeader
-          no="04"
+          no="05"
           kicker={a.kicker}
           heading={a.heading}
           headingClassName="mt-3 max-w-2xl font-display text-3xl font-bold tracking-nadpis text-balance sm:text-4xl"

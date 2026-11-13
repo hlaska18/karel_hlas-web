@@ -704,6 +704,18 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   a `/sql?z=en`), vlastní zadání `zadatTextDblab`. Rubrika článků má strop **3** (`KOLIK_CLANKU`), ranní rutina
   `rano-clanky-karel-hlas` má v zadání pořád čtyři (její úprava mi neprošla).
 
+### Sekce Poradenství (13. 11. 2026)
+- Karel: „Vytvoř novou sekci pro školní poradenská pracoviště / Kariérové poradenství – career-ops.org (popiš, co to je
+  a jak to použít).“ Sekce **04 Pro školní poradenská pracoviště** (`src/components/Poradenstvi.tsx`, `#poradenstvi`)
+  stojí za AI Hubem; O mně je teď 05, Kontakt 06. Data v `poradenstvi` v content.ts (cs i en): kategorie → nástroje
+  s poli `co`, `kroky` (příkazy mezi zpětnými apostrofy se kreslí jako kód), `pouziti`, `pozor`, `overeno`.
+  Karta je široká a popis je vidět hned (ne jako v AI Hubu).
+- career-ops: open-source (MIT) agent pro hledání práce, běží lokálně v AI CLI (Claude Code, Codex, OpenCode).
+  V „Na co pozor“: je pro dospělé, terminál a účet u AI, věkové limity (Claude 18+), životopis odchází poskytovateli
+  AI, web a návody jen anglicky, portály hlavně zahraniční. Ověřeno na webu projektu 13. 11.
+- V hlavičce na počítači Poradenství **není** (šestá pilulka se nevejde, popisky se lámaly), jen v mobilním menu.
+  Na šířce 1024 px se lámou popisky pilulek už teď (stav před sekcí).
+
 ### Přetahování v hodině 2 ALGOLABu ve Firefoxu (11. 11. 2026)
 - Karel nemá Firefox, ověřeno zkušebními sestaveními z Playwrightu: Firefox 111 (playwright-core 1.32.3) a Firefox
   159. V obou se karta přesune, špatná dostane hlášku, klávesnice i klik fungují. Firefox po přesunu neposílá

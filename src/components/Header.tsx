@@ -22,11 +22,14 @@ export function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
-  // One-page: všechno jsou kotvy na téže stránce, v pořadí sekcí 01–05.
+  // One-page: všechno jsou kotvy na téže stránce, v pořadí sekcí 01–06.
   const links = [
     { href: "#banka", label: tr.nav.bank },
     { href: "#jinam", label: tr.cross.kicker },
     { href: "#ai-hub", label: tr.aihub.kicker },
+    // Poradenství (13. 11. 2026) je jen v mobilním menu: šestá pilulka se do
+    // lišty na počítači nevejde (obsah má pevnou šířku, popisky se lámaly).
+    { href: "#poradenstvi", label: tr.poradenstvi.kicker },
     { href: "#about", label: tr.nav.about },
     { href: "#contact", label: tr.nav.contact },
   ];

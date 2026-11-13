@@ -1230,6 +1230,35 @@ type Dict = {
     countFew: string;
     countMany: string;
   };
+  /**
+   * Sekce pro školní poradenská pracoviště (Karel 13. 11. 2026): výchovní a
+   * kariéroví poradci, školní psychologové, metodici prevence. Zatím jedna
+   * kategorie s jedním nástrojem; u nástroje je rovnou vidět, co to je a jak
+   * se to používá, ne až po rozkliknutí jako v AI Hubu.
+   */
+  poradenstvi: {
+    kicker: string;
+    heading: string;
+    intro: string;
+    labelCo: string;
+    labelJak: string;
+    labelPouziti: string;
+    labelPozor: string;
+    items: {
+      kategorie: string;
+      what: string;
+      tools: {
+        name: string;
+        url: string;
+        co: string;
+        kroky: string[];
+        pouziti: string;
+        pozor: string;
+        /** Kdy jsem nástroj naposledy ověřil („2026-11“). */
+        overeno: string;
+      }[];
+    }[];
+  };
   cross: {
     kicker: string;
     heading: string;
@@ -1529,6 +1558,40 @@ export const t: Record<Lang, Dict> = {
       countOne: "výstup",
       countFew: "výstupy",
       countMany: "výstupů",
+    },
+    poradenstvi: {
+      kicker: "Poradenství",
+      heading: "Pro školní poradenská pracoviště",
+      intro:
+        "Pro výchovné a kariérové poradce, školní psychology a metodiky prevence. U každého nástroje je napsané, co to je, jak se to používá a na co si dát pozor.",
+      labelCo: "Co to je",
+      labelJak: "Jak to použít",
+      labelPouziti: "K čemu se hodí v poradenství",
+      labelPozor: "Na co pozor",
+      items: [
+        {
+          kategorie: "Kariérové poradenství",
+          what: "Hledání práce po škole: čtení inzerátu, životopis na konkrétní pozici, příprava na pohovor.",
+          tools: [
+            {
+              name: "career-ops",
+              url: "https://career-ops.org",
+              co: "Open-source AI agent pro hledání práce (licence MIT, zdarma, bez účtu). Neběží na webu, ale na vlastním počítači uvnitř AI asistenta v terminálu (Claude Code, Codex, OpenCode a další). Porovná inzerát s životopisem a ohodnotí ho od 1 do 5 i s odůvodněním a s tím, co v životopisu chybí. Připraví životopis upravený na danou pozici (PDF), návrh odpovědí do přihlášky a přípravu na pohovor a vede přehled podaných přihlášek. Nic sám neodešle, přihlášku posílá člověk.",
+              kroky: [
+                "Na počítači musí být Node.js 22.13 nebo novější, Git a AI asistent v terminálu (Claude Code, Codex, OpenCode…). Zdarma to jde s OpenCode a bezplatným poskytovatelem AI.",
+                "V terminálu ve složce, kam to chceš dát, spusť `npx @santifer/career-ops init` a pak `cd career-ops`.",
+                "Spusť AI asistenta (třeba `claude`). Před prvním hodnocením se na pár minut vyptá na životopis, hledané pozice, plat a místo.",
+                "Vlož odkaz na inzerát nebo jeho text (v Claude Code: `/career-ops auto-pipeline` a odkaz). Asi za dvě minuty je hodnocení, zpráva ve složce `reports` a upravený životopis ve složce `output`.",
+              ],
+              pouziti:
+                "Spíš do rukou poradce než celé třídě. Na jednom inzerátu s maturantem, který po škole hledá práci, projdeš, co nabídka chce, co v jeho životopisu chybí a jak se připravit na pohovor. Zpráva cituje konkrétní řádky inzerátu i životopisu, takže je o čem mluvit.",
+              pozor:
+                "Je to nástroj pro dospělé uchazeče, ne hotová aplikace pro žáky: chce terminál a AI asistenta s účtem, který má vlastní podmínky a věkové limity (Claude například od 18 let). Životopis jsou osobní údaje a odchází k poskytovateli AI; nezůstane na počítači jen s místním modelem, který potřebuje výkonný počítač. Web a návody jsou anglicky a prohledávané portály hlavně zahraniční, český inzerát se dá vložit odkazem nebo textem. Projekt je zdarma; stránka, která za career-ops chce peníze, je jiný produkt.",
+              overeno: "2026-11",
+            },
+          ],
+        },
+      ],
     },
     cross: {
       kicker: "Pro ostatní předměty",
@@ -2355,6 +2418,40 @@ export const t: Record<Lang, Dict> = {
       countOne: "output",
       countFew: "outputs",
       countMany: "outputs",
+    },
+    poradenstvi: {
+      kicker: "Counselling",
+      heading: "For school counselling services",
+      intro:
+        "For school counsellors, career advisers, school psychologists and prevention coordinators. Each tool says what it is, how to use it and what to watch out for.",
+      labelCo: "What it is",
+      labelJak: "How to use it",
+      labelPouziti: "Where it helps in counselling",
+      labelPozor: "Watch out for",
+      items: [
+        {
+          kategorie: "Career guidance",
+          what: "Finding a job after school: reading a job ad, a CV tailored to the role, interview preparation.",
+          tools: [
+            {
+              name: "career-ops",
+              url: "https://career-ops.org",
+              co: "An open-source AI job search agent (MIT licence, free, no account). It does not run on a website but on your own computer, inside an AI assistant in the terminal (Claude Code, Codex, OpenCode and others). It compares a job ad with a CV and scores it from 1 to 5, with reasons and with what the CV is missing. It prepares a CV tailored to the role (PDF), draft answers for the application form and interview preparation, and keeps track of applications. It never submits anything itself; a person sends the application.",
+              kroky: [
+                "The computer needs Node.js 22.13 or later, Git and an AI assistant in the terminal (Claude Code, Codex, OpenCode…). It can run for free with OpenCode and a free AI provider.",
+                "In a terminal, in the folder where you want it, run `npx @santifer/career-ops init` and then `cd career-ops`.",
+                "Start the AI assistant (for example `claude`). Before the first evaluation it spends a few minutes asking about the CV, target roles, pay and location.",
+                "Paste a link to the job ad or its text (in Claude Code: `/career-ops auto-pipeline` and the link). In about two minutes you get the score, a report in the `reports` folder and a tailored CV in the `output` folder.",
+              ],
+              pouziti:
+                "Better in the hands of a counsellor than a whole class. With a school leaver looking for work, go through one job ad together: what the role asks for, what their CV is missing and how to prepare for the interview. The report quotes specific lines of the ad and the CV, so there is something concrete to talk about.",
+              pozor:
+                "It is a tool for adult job seekers, not a ready-made app for students: it needs a terminal and an AI assistant with an account, which has its own terms and age limits (Claude, for example, is 18+). A CV is personal data and goes to the AI provider; it stays on the computer only with a local model, which needs a powerful machine. The website and guides are in English and the job sources it scans are mostly international; any job ad can be pasted as a link or text. The project is free; a site asking money for career-ops is a different product.",
+              overeno: "2026-11",
+            },
+          ],
+        },
+      ],
     },
     cross: {
       kicker: "For other subjects",

@@ -293,7 +293,7 @@ export function AiHub({ vystupy }: { vystupy: Vystup[] }) {
         </p>
 
         {/* Bez tohohle řetěz šipek u této sekce končil a další se přeskočila. */}
-        <SectionJump href="#about" label={tr.nav.about} />
+        <SectionJump href="#poradenstvi" label={tr.poradenstvi.kicker} />
       </div>
     </section>
   );

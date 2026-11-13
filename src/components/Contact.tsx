@@ -42,7 +42,7 @@ export function Contact() {
     <section id="contact" className="sekce">
       <div className="container-page">
         <SectionHeader
-          no="05"
+          no="06"
           kicker={c.kicker}
           heading={c.heading}
           intro={sazba(c.intro, lang)}
