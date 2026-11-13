@@ -40,12 +40,15 @@ export function Mrizka({
   /** Escape úpravu zahodí; uložení i zrušení jdou jedinou cestou přes blur. */
   const zrusenoRef = useRef(false);
 
+  // Označit hodnotu jen na začátku úpravy, ne po každé klávese – jinak další
+  // napsaný znak přepsal ten předchozí („690“ se uložilo jako „0“).
+  const upravovanaBunka = upravuje ? `${upravuje.r}:${upravuje.s}` : null;
   useEffect(() => {
-    if (upravuje && vstupRef.current) {
+    if (upravovanaBunka && vstupRef.current) {
       vstupRef.current.focus();
       vstupRef.current.select();
     }
-  }, [upravuje]);
+  }, [upravovanaBunka]);
 
   const potvrd = () => {
     if (!upravuje || !ulozBunku) return;
@@ -88,7 +91,7 @@ export function Mrizka({
                       placeholder={t("Filtr", "Filter")}
                       aria-label={`${t("Filtr sloupce", "Filter column")} ${s}`}
                       spellCheck={false}
-                      className="h-[18px] w-full min-w-[60px] border border-dbb-linka px-1 text-[12px] placeholder:text-dbb-slaby/70 focus:border-dbb-akcent"
+                      className="h-[18px] w-full min-w-[60px] border border-dbb-linka bg-dbb-povrch px-1 text-[12px] text-dbb-text placeholder:text-dbb-slaby/70 focus:border-dbb-akcent"
                     />
                   </th>
                 ))}
@@ -138,7 +141,7 @@ export function Mrizka({
                           }}
                           spellCheck={false}
                           aria-label={t("Upravit hodnotu buňky", "Edit cell value")}
-                          className="absolute left-0 top-0 h-full w-full min-w-[80px] border border-dbb-akcent bg-dbb-povrch px-1.5 text-[12px]"
+                          className="absolute left-0 top-0 h-full w-full min-w-[80px] border border-dbb-akcent bg-dbb-povrch px-1.5 text-[12px] text-dbb-text"
                         />
                       ) : bunka === null ? (
                         <span className="italic text-dbb-slaby/80">NULL</span>

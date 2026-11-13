@@ -190,7 +190,7 @@ const DETEKTIVKA_LEKCE: LekceKurzu = {
   id: 20,
   title: "Detektivka: Kdo odnesl Krakatit?",
   teach:
-    "Ve čtvrtek 16. 10. 2026 zmizelo ze školní knihovny první vydání Krakatitu. Všechno, co potřebuješ, je v databázi detektivka.db: hlášení, osoby s jejich čipy, průchody dveřmi a záznamy z kamer. Postupuj jako vyšetřovatel – každý dotaz tě posune o kus dál. Časy jsou text ve tvaru 14:05, takže mezi dvěma časy se hledá pomocí BETWEEN '14:00' AND '15:00'.",
+    "V pátek 16. 10. 2026 zmizelo ze školní knihovny první vydání Krakatitu. Všechno, co potřebuješ, je v databázi detektivka.db: hlášení, osoby s jejich čipy, průchody dveřmi a záznamy z kamer. Postupuj jako vyšetřovatel – každý dotaz tě posune o kus dál. Časy jsou text ve tvaru 14:05, takže mezi dvěma časy se hledá pomocí BETWEEN '14:00' AND '15:00'.",
   tabulka: "hlaseni",
   knihovna: false,
   databaze: D,

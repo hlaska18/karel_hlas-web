@@ -194,6 +194,32 @@ export function najdiKody(text: string): Postup[] {
   return vysledek;
 }
 
+/**
+ * Kódy ve vloženém textu, které se nepodařilo načíst (useknuté nebo upravené).
+ * Bez tohohle je Přehled tiše přeskočil a žák v něm prostě chyběl (test
+ * 13. 11. 2026). Vrací jméno ze zprávy („Jméno · Dotazy … · SQLKURZ1-…“),
+ * aby učitel věděl, kdo má poslat kód znovu; bez jména prázdný řetězec.
+ */
+export function nenacteneKody(text: string): string[] {
+  const jmena: string[] = [];
+  const videno: Record<string, boolean> = {};
+  const re = /SQLKURZ1-[A-Za-z0-9_-]*/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) {
+    if (videno[m[0]] || dekoduj(m[0])) continue;
+    videno[m[0]] = true;
+    const radky = text.slice(0, m.index).split(/\r?\n/);
+    let pred = radky[radky.length - 1];
+    // Kód na vlastním řádku – jméno je na předchozím neprázdném.
+    if (!pred.trim()) {
+      for (let i = radky.length - 2; i >= 0 && !pred.trim(); i--) pred = radky[i];
+    }
+    const casti = pred.split("·");
+    jmena.push(casti.length > 1 ? casti[0].trim().slice(0, 80) : "");
+  }
+  return jmena;
+}
+
 /* ─────────────────────────── přehled třídy ─────────────────────────── */
 
 /** Jméno pro porovnání: bez diakritiky, malými písmeny, slova podle abecedy („Novák Adam“ = „Adam Novák“). */

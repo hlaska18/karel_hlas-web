@@ -16,6 +16,7 @@ import { KURZ, SADY, lekceHotova, povinne, rozdelSkore } from "@/lib/dbb/kurz";
 import {
   zakoduj,
   najdiKody,
+  nenacteneKody,
   dekoduj,
   sloucitPostupy,
   souhrnTridy,
@@ -341,6 +342,7 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
   // Kódy z Windows a macOS (WIN1-, MAC1-) – učitel často vloží celé vlákno
   // z Teams, kde jsou všechny tři simulátory pohromadě.
   const simulatory = sloucitSimulatory(najdiKodySimulatoru(text));
+  const vadne = nenacteneKody(text);
   const souhrn = souhrnTridy(zaci, KURZ.map((l) => l.id));
   const zacit = kdeZacit(souhrn, zaci.length);
   const bezLekce = (id: number) => zaci.filter((z) => z.hotove.indexOf(id) === -1).map((z) => z.jmeno || "?");
@@ -403,6 +405,18 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
           placeholder="SQLKURZ1-…"
           className="dbb-kod mt-2 h-[90px] w-full shrink-0 resize-none border border-dbb-linka bg-dbb-povrch p-2 text-[11px] text-dbb-text focus:border-dbb-akcent"
         />
+        {vadne.length > 0 && (
+          <p role="alert" className="mt-2 shrink-0 border border-[#e3b341] bg-[#fff8e1] px-2 py-1.5 leading-snug text-[#5c4400]">
+            {t(
+              `${vadne.length === 1 ? "Jeden kód se nepodařilo načíst – je useknutý nebo upravený" : `Některé kódy (${vadne.length}) se nepodařilo načíst – jsou useknuté nebo upravené`}, takže v přehledu chybí: ${vadne
+                .map((j) => j || "(jméno ve zprávě není)")
+                .join(", ")}. Ať žák zkopíruje kód znovu v Moje výsledky a pošle ho celý.`,
+              `${vadne.length === 1 ? "One code could not be read – it is cut off or edited" : `${vadne.length} codes could not be read – they are cut off or edited`}, so missing from the overview: ${vadne
+                .map((j) => j || "(no name in the message)")
+                .join(", ")}. Ask the pupil to copy the code again in My Results and send all of it.`,
+            )}
+          </p>
+        )}
         <div className="dbb-posuv mt-3 min-h-[120px] flex-1 overflow-auto border border-dbb-linka">
           {vsichni.length === 0 && simulatory.length === 0 ? (
             <p className="p-3 text-dbb-slaby">{t("Zatím žádný kód.", "No codes yet.")}</p>

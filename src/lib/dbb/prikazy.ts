@@ -260,6 +260,19 @@ export function tabulkyDotazu(sql: string): string[] {
  * skončí až za Z. Skutečný DB Browser to dělá stejně – není to chyba žáka ani
  * simulace, ale bez vysvětlení to vypadá jako chyba.
  */
+/**
+ * UPDATE nebo DELETE s WHERE, který nezasáhl žádný řádek: podmínce nic
+ * neodpovídá (třeba 'Priruba' místo 'Příruba'). Program to hlásí jen číslem
+ * „0 řádků ovlivněno“, které žák přehlédne (test 13. 11. 2026).
+ */
+export function poznamkaKNicNezmenil(sql: string, zmenenoRadku: number): string | undefined {
+  if (zmenenoRadku !== 0 || !/^\s*(update|delete)\b/i.test(sql) || !/\bwhere\b/i.test(sql)) return undefined;
+  return t(
+    "Příkaz nezměnil ani jeden řádek – podmínce ve WHERE nic v tabulce neodpovídá. Zkontroluj hodnotu v podmínce: překlep, háčky a čárky, velká písmena.",
+    "The command didn't change a single row – nothing in the table matches the WHERE condition. Check the value in the condition: typos, accents, capitals.",
+  );
+}
+
 export function poznamkaKRazeni(sql: string, vysledek: SqlResult | null): string | undefined {
   if (!vysledek || !/\border\s+by\b/i.test(sql)) return undefined;
   const diakritika = /^[ÁČĎÉĚÍŇÓŘŠŤÚŮÝŽáčďéěíňóřšťúůýž]/;

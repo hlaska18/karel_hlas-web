@@ -163,6 +163,14 @@ export function sqlErrorCs(raw: string, en = false): string {
     );
   }
 
+  const pocty = m.match(/(\d+)\s+values\s+for\s+(\d+)\s+columns/i) || m.match(/has\s+(\d+)\s+columns\s+but\s+(\d+)\s+values/i);
+  if (pocty) {
+    return tt(
+      "Počet hodnot ve VALUES nesedí na počet sloupců. Ke každému sloupci patří právě jedna hodnota ve stejném pořadí. Desetinná čísla se píšou s tečkou (0.05) – čárka odděluje hodnoty.",
+      "The number of values in VALUES doesn't match the number of columns. Each column gets exactly one value in the same order. Decimals are written with a dot (0.05) – a comma separates values.",
+    );
+  }
+
   if (/incomplete input/i.test(m)) {
     return tt(
       "Dotaz vypadá nedopsaně – zkontroluj, jestli máš uzavřené apostrofy a závorky.",
@@ -186,6 +194,156 @@ const maWhere = (q: string) => /\bwhere\b/i.test(q);
 /** Je v dotazu textová hodnota v apostrofech? */
 const maText = (q: string) => /'[^']*'/.test(q);
 
+const holeText = (s: string) =>
+  s
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+/** Texty v apostrofech, jak jsou v dotazu (bez apostrofů). */
+const textyDotazu = (q: string) => (q.match(/'[^']*'/g) || []).map((x) => x.slice(1, -1));
+const bezZastupnych = (s: string) => s.replace(/[%_]/g, "");
+const ISO_DATUM = /^\d{4}-\d{2}-\d{2}$/;
+const CAS = /^\d{2}:\d{2}$/;
+
+/**
+ * Proč textová podmínka nic nenašla – konkrétněji než „pozor na velká písmena“
+ * (rada 13. 11. 2026: 'roman', 'vychod', LIKE bez % i datum 5. 9. 2026
+ * dostávaly radu o 'Čapek' a 'čapek', která je navedla jinam).
+ */
+function radaKTextum(zak: string, ref: string, en: boolean): string | null {
+  const tt = (cs: string, anglicky: string) => (en ? anglicky : cs);
+  const zt = textyDotazu(zak);
+  const rt = textyDotazu(ref);
+  const cizi = zt.filter((z) => rt.indexOf(z) === -1);
+  if (!cizi.length) return null;
+
+  const likeBez = (zak.match(/\blike\s+'[^']*'/gi) || [])
+    .map((x) => x.replace(/^[^']*'|'$/g, ""))
+    .filter((x) => x && !/[%_]/.test(x));
+  if (likeBez.length && rt.some((r) => /[%_]/.test(r))) {
+    return tt(
+      " LIKE bez % hledá přesnou shodu – celý text musí být přesně takový. Kde smí být cokoli dalšího, napiš %: 'Č%' = začíná na Č, '%ek' = končí na ek, '%apek%' = obsahuje apek.",
+      " LIKE without % looks for an exact match – the whole text has to be exactly that. Where anything else may follow, write %: 'Č%' = starts with Č, '%ek' = ends with ek, '%apek%' = contains apek.",
+    );
+  }
+
+  for (const z of cizi) {
+    const holy = holeText(bezZastupnych(z));
+    const blizky = rt.filter((r) => holeText(bezZastupnych(r)) === holy)[0];
+    if (blizky === undefined) continue;
+    if (bezZastupnych(blizky).toLowerCase() !== bezZastupnych(z).toLowerCase()) {
+      return tt(
+        ` Pozor na háčky a čárky: '${z}' se od textu v datech liší právě v nich – a pro databázi je to jiný text. Napiš ho přesně tak, jak je v datech.`,
+        ` Mind the accents: '${z}' differs from the text in the data exactly in them – and to the database that is a different text. Write it exactly as it is in the data.`,
+      );
+    }
+    return tt(
+      ` Pozor na velká písmena – '${z}' se od textu v datech liší jen v nich, a pro databázi jsou to dvě různé hodnoty.`,
+      ` Mind the capitals – '${z}' differs from the text in the data only in them, and to the database those are two different values.`,
+    );
+  }
+
+  if (rt.some((r) => ISO_DATUM.test(bezZastupnych(r))) && cizi.some((z) => /\d/.test(z) && !ISO_DATUM.test(bezZastupnych(z)) && !CAS.test(z))) {
+    return tt(
+      " Data jsou v databázi uložená jako text ve tvaru rok-měsíc-den, třeba '2026-09-05' – i s nulou před jednocifernými čísly.",
+      " Dates are stored in the database as text in the form year-month-day, such as '2026-09-05' – with a zero in front of single digits.",
+    );
+  }
+  if (rt.some((r) => CAS.test(r)) && cizi.some((z) => /^\d{1,2}[.,:]\d{1,2}$/.test(z) && !CAS.test(z))) {
+    return tt(
+      " Časy jsou v databázi text ve tvaru 14:05 – s dvojtečkou a vždy dvěma číslicemi u hodin i minut (09:30).",
+      " Times are stored as text in the form 14:05 – with a colon and always two digits for hours and minutes (09:30).",
+    );
+  }
+  return null;
+}
+
+/** Názvy sloupců bez tabulky („ctenari.jmeno“ → „jmeno“), seřazené. */
+const holeSloupce = (s: string) =>
+  s
+    .split(",")
+    .map((x) => x.trim().toLowerCase().split(".").pop() || "")
+    .filter(Boolean)
+    .sort()
+    .join(",");
+const groupBy = (q: string) => {
+  const m = q.match(/\bgroup\s+by\s+([\s\S]*?)(?=\bhaving\b|\border\s+by\b|\blimit\b|;|$)/i);
+  return m ? holeSloupce(m[1]) : null;
+};
+/** Dvojice sloupců za ON (bez tabulek, bez ohledu na pořadí stran). */
+const spojeni = (q: string) => {
+  const vysledek: string[] = [];
+  const re = /\bon\s+([\s\S]*?)(?=\b(?:left\s+|inner\s+|cross\s+)?join\b|\bwhere\b|\bgroup\b|\border\b|\blimit\b|;|$)/gi;
+  let n: RegExpExecArray | null;
+  while ((n = re.exec(q))) {
+    vysledek.push(
+      n[1]
+        .split("=")
+        .map((x) => x.trim().toLowerCase().split(".").pop() || "")
+        .sort()
+        .join("="),
+    );
+  }
+  return vysledek.sort().join(";");
+};
+
+/**
+ * Rada ke stavbě dotazu: skupiny a propojení tabulek. Bez ní dostal žák se
+ * špatným GROUP BY nebo ON radu „vybíráš ze správné tabulky?“ (rada 13. 11. 2026).
+ */
+function radaKeStavbe(zak: string, ref: string, en: boolean): string | null {
+  const tt = (cs: string, anglicky: string) => (en ? anglicky : cs);
+  const rg = groupBy(ref);
+  const zg = groupBy(zak);
+  if (rg && !zg) {
+    return tt(
+      " Úkol chce výsledek po skupinách – chybí ti GROUP BY.",
+      " The task wants the result in groups – you are missing GROUP BY.",
+    );
+  }
+  if (rg && zg && rg !== zg) {
+    return tt(
+      " Seskupuješ podle jiného sloupce, než úkol chce. Za GROUP BY patří to, podle čeho se mají řádky sloučit – obvykle sloupec, který vypisuješ vedle počtu.",
+      " You are grouping by a different column than the task wants. After GROUP BY goes what the rows should be merged by – usually the column you list next to the count.",
+    );
+  }
+  const refJoin = /\bjoin\b/i.test(ref);
+  const zakJoin = /\bjoin\b/i.test(zak);
+  if (refJoin && !zakJoin) {
+    return tt(
+      " Údaje, které úkol chce, jsou ve víc tabulkách – propoj je pomocí JOIN … ON.",
+      " The data the task wants is in more than one table – link them with JOIN … ON.",
+    );
+  }
+  if (refJoin && zakJoin && spojeni(ref) !== spojeni(zak)) {
+    return tt(
+      " Zkontroluj podmínku za ON: cizí klíč (sloupec s _id na konci) se páruje s id tabulky, na kterou ukazuje. Když spojíš jiné sloupce, řádky k sobě nepatří.",
+      " Check the condition after ON: a foreign key (the column ending in _id) pairs with the id of the table it points to. If you join other columns, the rows don't belong together.",
+    );
+  }
+  return null;
+}
+
+/**
+ * Výsledek sedí, ale dotaz ho nečte z tabulky – `SELECT 10;` nebo
+ * `SELECT 'Radek Vondra';` (žák opsal číslo, které spočítal jinde, nebo
+ * uhodl jméno). Úkol se pak neodškrtne (test 13. 11. 2026).
+ */
+export function opisujeVysledek(zak: string, ref: string): boolean {
+  const bezTextu = (q: string) => q.replace(/'[^']*'/g, "''").replace(/--[^\n]*/g, "").replace(/\/\*[\s\S]*?\*\//g, "");
+  return /\bfrom\b/i.test(bezTextu(ref)) && !/\bfrom\b/i.test(bezTextu(zak));
+}
+
+export function radaOpisujeVysledek(en = false): string {
+  return en
+    ? "The result matches, but your query doesn't read it from a table – it just writes it out. The task wants a query that finds it in the data: SELECT … FROM …"
+    : "Výsledek sedí, ale tvůj dotaz ho nečte z tabulky – jen ho vypíše. Úkol chce dotaz, který ho v datech najde: SELECT … FROM …";
+}
+
+/** UPDATE bez WHERE, když úkol WHERE potřebuje – změní celou tabulku. */
+const updateBezWhere = (zak: string, ref: string) =>
+  maWhere(ref) && zak.split(";").some((p) => /^\s*update\b/i.test(p) && !maWhere(p));
+
 export function diffMessage(
   mine: Rows | null,
   ref: Rows | null,
@@ -205,6 +363,10 @@ export function diffMessage(
   const zakMaWhere = dotazy ? maWhere(dotazy.zak) : true;
   const refMaWhere = dotazy ? maWhere(dotazy.ref) : true;
 
+  const bezWhereUpdate = mutating && !!dotazy && updateBezWhere(dotazy.zak, dotazy.ref);
+  const stavba = !mutating && dotazy ? radaKeStavbe(dotazy.zak, dotazy.ref, en) : null;
+  const kTextum = !mutating && dotazy ? radaKTextum(dotazy.zak, dotazy.ref, en) : null;
+
   if (mv.length === 0 && rv.length > 0) {
     if (mutating) {
       return tt(
@@ -213,6 +375,12 @@ export function diffMessage(
       );
     }
     if (!zakMaWhere) {
+      if (stavba) {
+        return tt(
+          `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}.${stavba}`,
+          `Your query returned no rows; it should return ${rv.length}.${stavba}`,
+        );
+      }
       return tt(
         `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínku v něm nemáš, takže se podívej, jestli vybíráš ze správné tabulky.`,
         `Your query returned no rows; it should return ${rv.length}. It has no condition, so check that you are selecting from the right table.`,
@@ -229,12 +397,20 @@ export function diffMessage(
           " Pozor na velká písmena: LIKE je bere jako stejná jen u písmen bez háčků a čárek – 'č%' proto nenajde „Čapek“. Napiš písmeno tak, jak je v datech (Č). Stejně se chová i skutečný DB Browser.",
           " Mind the capitals: LIKE treats upper and lower case as the same only for letters without accents – so 'č%' won't find “Čapek”. Write the letter as it is in the data (Č). The real DB Browser behaves the same way.",
         )
-      : dotazy && maText(dotazy.zak)
-        ? tt(
-            " Pozor i na velká písmena – 'Čapek' a 'čapek' jsou pro databázi dvě různé hodnoty.",
-            " Mind the capitals too – to the database, 'Čapek' and 'čapek' are two different values.",
-          )
-        : "";
+      : kTextum
+        ? kTextum
+        : dotazy && textyDotazu(dotazy.zak).some((z) => textyDotazu(dotazy.ref).indexOf(z) === -1)
+          ? tt(
+              " Pozor i na velká písmena a háčky – 'Čapek' a 'čapek' jsou pro databázi dvě různé hodnoty.",
+              " Mind the capitals and accents too – to the database, 'Čapek' and 'čapek' are two different values.",
+            )
+          : "";
+    if (stavba && !kTextum && !likeDiakritika) {
+      return tt(
+        `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}.${stavba}`,
+        `Your query returned no rows; it should return ${rv.length}.${stavba}`,
+      );
+    }
     return tt(
       `Tvůj dotaz nevrátil žádný řádek, správně jich je ${rv.length}. Podmínka ve WHERE je nejspíš moc přísná.${velikost}`,
       `Your query returned no rows; it should return ${rv.length}. The WHERE condition is probably too strict.${velikost}`,
@@ -243,6 +419,12 @@ export function diffMessage(
   if (mv.length !== rv.length) {
     if (mutating) {
       // Směr chyby se u INSERTu a DELETu obrací, tak ho neuhodneme – jen počty.
+      if (bezWhereUpdate) {
+        return tt(
+          `Po tvém příkazu má tabulka ${mv.length} ${radky(mv.length)}, správně jich má být ${rv.length}. Tvůj UPDATE nemá WHERE, takže změnil úplně všechny řádky tabulky – doplň podmínku, kterých řádků se změna týká.`,
+          `After your command the table has ${rowsEn(mv.length)}; it should have ${rv.length}. Your UPDATE has no WHERE, so it changed every single row of the table – add a condition saying which rows the change is for.`,
+        );
+      }
       return tt(
         `Po tvém příkazu má tabulka ${mv.length} ${radky(mv.length)}, správně jich má být ${rv.length}. Zkontroluj podmínku, příkaz zasáhl jiné řádky, než měl.`,
         `After your command the table has ${rowsEn(mv.length)}; it should have ${rv.length}. Check the condition – the command hit different rows than it should have.`,
@@ -251,7 +433,9 @@ export function diffMessage(
     // Radit „oprav podmínku" tomu, kdo žádnou nenapsal, je matoucí – takový
     // žák si nejspíš spletl tabulku (klasika: opíše ukázku z výkladu).
     let konec: string;
-    if (!zakMaWhere && !refMaWhere) {
+    if (stavba) {
+      konec = stavba;
+    } else if (!zakMaWhere && !refMaWhere) {
       konec = tt(" Zkontroluj, jestli vybíráš ze správné tabulky.", " Check that you are selecting from the right table.");
     } else if (!zakMaWhere) {
       konec = tt(
@@ -266,9 +450,10 @@ export function diffMessage(
               " Podmínka nejspíš odfiltrovala i řádky, které tam patří.",
               " The condition has probably filtered out rows that belong there too.",
             );
+      if (kTextum) konec += kTextum;
     }
     return tt(
-      `Vrátil jsi ${mv.length} ${radky(mv.length)}, správně jich je ${rv.length}.${konec}`,
+      `Tvůj dotaz vrátil ${mv.length} ${radky(mv.length)}, správně jich je ${rv.length}.${konec}`,
       `You returned ${rowsEn(mv.length)}; it should be ${rv.length}.${konec}`,
     );
   }
@@ -308,6 +493,15 @@ export function diffMessage(
     }
   }
 
+  if (bezWhereUpdate) {
+    return tt(
+      "Tvůj UPDATE nemá WHERE, takže změnil úplně všechny řádky tabulky. Doplň podmínku, kterých řádků se změna týká.",
+      "Your UPDATE has no WHERE, so it changed every single row of the table. Add a condition saying which rows the change is for.",
+    );
+  }
+  if (stavba) {
+    return tt(`Počet řádků i sloupců sedí, ale hodnoty ne.${stavba}`, `The numbers of rows and columns are right, but the values aren't.${stavba}`);
+  }
   return mutating
     ? tt(
         "Počet řádků sedí, ale hodnoty ne. Zkontroluj, jestli měníš správný řádek a jestli do správného sloupce zapisuješ správnou hodnotu.",

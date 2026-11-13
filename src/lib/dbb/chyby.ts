@@ -117,6 +117,74 @@ export function opravUvozovky(sql: string): string {
   return znaky.join("");
 }
 
+/** Která tabulka kurzu odkazuje na kterou (cizím klíčem) – pro radu u DELETE. */
+const ODKAZUJE: Record<string, string> = {
+  knihy: "vypujcky", ctenari: "vypujcky",
+  dily: "objednavky", dodavatele: "objednavky",
+  materialy: "dodavky", stavby: "dodavky",
+};
+
+/** Dotaz bez textů v apostrofech – čárka v textu („Novák, Jan“) není desetinná. */
+function desetinneKandidaty(sql: string): string {
+  return sql.replace(/'[^']*'/g, "''");
+}
+
+/** Tabulky za FROM a JOIN v pořadí, jak jsou v dotazu. */
+export function tabulkyVDotazu(sql: string): string[] {
+  const vysledek: string[] = [];
+  const re = /\b(?:from|join)\s+["`[]?([A-Za-z_][A-Za-z0-9_]*)/gi;
+  let n: RegExpExecArray | null;
+  while ((n = re.exec(desetinneKandidaty(sql)))) {
+    if (vysledek.indexOf(n[1]) === -1) vysledek.push(n[1]);
+  }
+  return vysledek;
+}
+
+/** Části SELECTu v pořadí, v jakém se musí psát. */
+const CASTI: { slovo: string; re: RegExp; nazev: string }[] = [
+  { slovo: "where", re: /\bwhere\b/gi, nazev: "WHERE" },
+  { slovo: "group", re: /\bgroup\s+by\b/gi, nazev: "GROUP BY" },
+  { slovo: "having", re: /\bhaving\b/gi, nazev: "HAVING" },
+  { slovo: "order", re: /\border\s+by\b/gi, nazev: "ORDER BY" },
+  { slovo: "limit", re: /\blimit\b/gi, nazev: "LIMIT" },
+];
+
+/**
+ * Syntaktická chyba u WHERE, GROUP, ORDER… má u začátečníka skoro vždycky
+ * jednu ze dvou příčin: části dotazu jsou v jiném pořadí (ORDER BY před WHERE),
+ * nebo je v dotazu druhé WHERE místo AND. Obecná rada „překlep“ ho nenavede.
+ */
+export function radaKPoradi(blizko: string, sql: string): string | null {
+  const slovo = blizko.toLowerCase();
+  const index = CASTI.map((c) => c.slovo).indexOf(slovo);
+  if (index === -1) return null;
+  const cisty = desetinneKandidaty(sql).replace(/--[^\n]*/g, "");
+  const vyskyty = (re: RegExp) => {
+    const pozice: number[] = [];
+    let n: RegExpExecArray | null;
+    re.lastIndex = 0;
+    while ((n = re.exec(cisty))) pozice.push(n.index);
+    return pozice;
+  };
+  const moje = vyskyty(CASTI[index].re);
+  if (slovo === "where" && moje.length > 1) {
+    return t(
+      "V jednom dotazu smí být jen jedno WHERE. Další podmínku k němu připoj slovem AND (musí platit obě), nebo OR (stačí jedna).",
+      "A query may only have one WHERE. Attach the next condition to it with AND (both must hold) or OR (one is enough).",
+    );
+  }
+  const prvni = moje.length ? moje[moje.length - 1] : -1;
+  const predtim = CASTI.slice(index + 1).filter((c) => vyskyty(c.re).some((p) => p < prvni));
+  if (predtim.length) {
+    const poradi = "SELECT … FROM … WHERE … GROUP BY … ORDER BY … LIMIT";
+    return t(
+      `${CASTI[index].nazev} patří před ${predtim[0].nazev}. Části dotazu mají pevné pořadí: ${poradi}.`,
+      `${CASTI[index].nazev} goes before ${predtim[0].nazev}. The parts of a query have a fixed order: ${poradi}.`,
+    );
+  }
+  return null;
+}
+
 /** Tabulky databází kurzu – ty se znovu nezakládají a DROP se u nich neradí. */
 const TABULKY_KURZU = [
   "knihy", "ctenari", "vypujcky", "dily", "dodavatele", "objednavky",
@@ -205,10 +273,90 @@ export function chybaCesky(raw: string, tabulky: string[], kontext: KontextChyby
   }
 
   if (/FOREIGN KEY constraint failed/i.test(m)) {
+    const sql = kontext.sql || "";
+    const smaz = sql.match(/\bdelete\s+from\s+["`[]?([A-Za-z_][A-Za-z0-9_]*)/i);
+    if (smaz) {
+      const tabulka = smaz[1];
+      const odkud = ODKAZUJE[tabulka.toLowerCase()];
+      const bezWhere = !/\bwhere\b/i.test(sql);
+      const kdo = odkud ? `tabulka ${odkud}` : "jiná tabulka";
+      const kdoEn = odkud ? `the ${odkud} table` : "another table";
+      if (bezWhere) {
+        return t(
+          `Bez WHERE bys smazal(a) celou tabulku ${tabulka}. Na některé její řádky ale odkazuje ${kdo} a cizí klíč nedovolí smazat řádek, na který se něco odkazuje. Databáze proto nesmazala nic. Doplň WHERE, ať mažeš jen to, co máš.`,
+          `Without WHERE you would delete the whole ${tabulka} table. But ${kdoEn} points to some of its rows, and the foreign key won't let you delete a row that something points to. So the database deleted nothing. Add WHERE so you only delete what you should.`,
+        );
+      }
+      return t(
+        `Na to, co mažeš, odkazuje ${kdo} a cizí klíč nedovolí smazat řádek, na který se něco odkazuje. Databáze proto nesmazala nic. Smazat by to šlo, až bys nejdřív smazal(a) i řádky ${odkud ? `v tabulce ${odkud}` : "v té druhé tabulce"}, které na to ukazují.`,
+        `${odkud ? `The ${odkud} table` : "Another table"} points to what you are deleting, and the foreign key won't let you delete a row that something points to. So the database deleted nothing. You could only delete it after first deleting the rows in ${kdoEn} that point to it.`,
+      );
+    }
+    if (/^\s*update\b/i.test(sql) || /\bupdate\s+["`[]?[A-Za-z_]/i.test(sql)) {
+      return t(
+        "Takovou hodnotu cizí klíč nepustí: buď odkazuješ na řádek, který v druhé tabulce není, nebo měníš id, na které se odkazuje jiná tabulka. Databáze proto nezměnila nic.",
+        "The foreign key won't allow that value: either you point to a row that isn't in the other table, or you change an id that another table points to. So the database changed nothing.",
+      );
+    }
     return t(
-      "Na tenhle řádek odkazuje jiná tabulka (třeba výpůjčky), nebo odkazuješ na řádek, který neexistuje. Cizí klíč hlídá, aby odkazy nevedly do prázdna.",
-      "Another table (loans, for example) points to this row, or you are pointing to a row that doesn't exist. The foreign key makes sure links don't lead nowhere.",
+      "Odkazuješ na řádek, který v druhé tabulce není – zkontroluj čísla id v cizích klíčích. Cizí klíč hlídá, aby odkazy nevedly do prázdna, a proto se řádek nezapsal.",
+      "You are pointing to a row that isn't in the other table – check the id numbers in the foreign keys. The foreign key makes sure links don't lead nowhere, so the row wasn't written.",
     );
+  }
+
+  if (/foreign key mismatch/i.test(m)) {
+    const nesedi = m.match(/"([^"]+)"\s+referencing\s+"([^"]+)"/i);
+    const kde = nesedi ? nesedi[1] : "";
+    const kam = nesedi ? nesedi[2] : "";
+    if (nesedi) {
+      return t(
+        `Cizí klíč v tabulce ${kde} ukazuje do tabulky ${kam} na sloupec, který tam není primárním klíčem (nebo tam vůbec není). Cizí klíč má ukazovat na primární klíč – obvykle REFERENCES ${kam}(id). Dokud to neopravíš, zápis do tabulky ${kde} skončí touto chybou. Oprav to v definici tabulky ${kde}, nebo ji smaž a založ znovu.`,
+        `The foreign key in the ${kde} table points into the ${kam} table at a column that isn't its primary key (or isn't there at all). A foreign key should point to the primary key – usually REFERENCES ${kam}(id). Until you fix it, writing to the ${kde} table ends with this error. Fix it in the definition of ${kde}, or drop the table and create it again.`,
+      );
+    }
+    return t(
+      "Cizí klíč ukazuje na sloupec, který v druhé tabulce není primárním klíčem (nebo tam vůbec není). Má ukazovat na primární klíč – obvykle REFERENCES tabulka(id).",
+      "A foreign key points at a column that isn't the other table's primary key (or isn't there at all). It should point to the primary key – usually REFERENCES table(id).",
+    );
+  }
+
+  // „7 values for 6 columns“ (INSERT se sloupci), „table x has 6 columns but
+  // 7 values were supplied“ (INSERT bez nich).
+  const pocty = m.match(/(\d+)\s+values\s+for\s+(\d+)\s+columns/i);
+  const pocty2 = m.match(/has\s+(\d+)\s+columns\s+but\s+(\d+)\s+values/i);
+  if (pocty || pocty2) {
+    const hodnot = Number(pocty ? pocty[1] : pocty2![2]);
+    const sloupcu = Number(pocty ? pocty[2] : pocty2![1]);
+    // Nejčastější česká chyba: 0,05 místo 0.05 – čárka je pro SQL oddělovač hodnot.
+    const carka = /\d\s*,\s*\d/.test(desetinneKandidaty(kontext.sql || ""));
+    if (carka && hodnot > sloupcu) {
+      return t(
+        `Ve VALUES máš ${hodnot} hodnot, ale sloupců je ${sloupcu}. Nemáš tam desetinné číslo s čárkou? Čárka v SQL odděluje hodnoty, takže 0,05 jsou dvě hodnoty 0 a 05. Desetinné číslo se píše s tečkou: 0.05.`,
+        `VALUES has ${hodnot} values but there are ${sloupcu} columns. Is there a decimal number written with a comma? In SQL a comma separates values, so 0,05 is two values, 0 and 05. Write decimals with a dot: 0.05.`,
+      );
+    }
+    return t(
+      `Ve VALUES máš ${hodnot} ${hodnot >= 2 && hodnot <= 4 ? "hodnoty" : hodnot === 1 ? "hodnotu" : "hodnot"}, ale sloupců je ${sloupcu}. Ke každému sloupci patří právě jedna hodnota ve stejném pořadí – nějaká ti chybí nebo přebývá. Desetinná čísla se píšou s tečkou (0.05), ne s čárkou.`,
+      `VALUES has ${hodnot} ${hodnot === 1 ? "value" : "values"} but there are ${sloupcu} columns. Each column gets exactly one value in the same order – one is missing or extra. Decimals are written with a dot (0.05), not a comma.`,
+    );
+  }
+
+  const nejasny = m.match(/ambiguous column name:\s*(\S+)/i);
+  if (nejasny && kontext.sql) {
+    const tabulkyDotazu = tabulkyVDotazu(kontext.sql);
+    if (tabulkyDotazu.length) {
+      const sloupec = nejasny[1];
+      return t(
+        `Sloupec „${sloupec}“ je ve víc propojených tabulkách naráz a SQL neví, který myslíš. Napiš ho i s tabulkou, například ${tabulkyDotazu[0]}.${sloupec}.`,
+        `The column “${sloupec}” is in more than one of the joined tables and SQL doesn't know which one you mean. Write it with the table name, for example ${tabulkyDotazu[0]}.${sloupec}.`,
+      );
+    }
+  }
+
+  const blizko = m.match(/near "([^"]+)":\s*syntax error/i);
+  if (blizko && kontext.sql) {
+    const rada = radaKPoradi(blizko[1], kontext.sql);
+    if (rada) return rada;
   }
 
   const existuje = m.match(/table\s+(\S+)\s+already exists/i);

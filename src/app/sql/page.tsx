@@ -98,11 +98,11 @@ export default async function SqlPage({
         <p className="mt-4 max-w-2xl text-lg leading-relaxed text-zinc-600 dark:text-zinc-400">
           <Proza>
             Třináct lekcí od úplného začátku po zápis vlastních dat. Každá lekce tě nejdřív krátce
-            naučí nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny. Napiš dotaz, klikni na{" "}
-            <b>Spustit</b> a hned vidíš výsledek; <b>Zkontrolovat</b> ti řekne, jestli to máš správně.
+            naučí nový příkaz, pak ho vyzkoušíš na ukázkové databázi knihovny. Napiš dotaz, spusť ho
+            a hned vidíš výsledek i to, jestli máš úkol správně.
             Nic se neinstaluje a tvůj postup se pamatuje. Na počítači se kurz otevře rovnou ve
-            virtuálním programu DB Browser – se šesti lekcemi navíc o práci se souborem a vlastní
-            tabulce.
+            virtuálním programu DB Browser – s devíti lekcemi navíc: práce se souborem a vlastní
+            tabulkou, detektivka a procvičování na dalších databázích.
           </Proza>
         </p>
         <TlacitkoDoProgramu />

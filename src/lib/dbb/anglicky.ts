@@ -115,7 +115,7 @@ export const EN_LEKCE: Record<number, Lekce> = {
   20: {
     title: "Detective story: Who took Krakatit?",
     teach:
-      "On Thursday 16 October 2026 a first edition of Krakatit vanished from the school library. Everything you need is in the detektivka.db database: reports, people and their door chips, passages through doors and camera records. Work like a detective – every query takes you a step further. Times are stored as text such as 14:05, so between two times you search with BETWEEN '14:00' AND '15:00'. The records are in Czech; the glossary below the tasks translates what you need, including the report itself.",
+      "On Friday 16 October 2026 a first edition of Krakatit vanished from the school library. Everything you need is in the detektivka.db database: reports, people and their door chips, passages through doors and camera records. Work like a detective – every query takes you a step further. Times are stored as text such as 14:05, so between two times you search with BETWEEN '14:00' AND '15:00'. The records are in Czech; the glossary below the tasks translates what you need, including the report itself.",
   },
   21: {
     title: "Practice A: Workshop",

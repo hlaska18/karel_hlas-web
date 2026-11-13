@@ -39,6 +39,7 @@ import {
   pocetRadku,
   tabulkyDotazu,
   poznamkaKRazeni,
+  poznamkaKNicNezmenil,
   zakomentujZmeny,
   sloupceDb,
   type Prikaz,
@@ -1478,7 +1479,12 @@ export function VirtualniDbBrowser({ domu = "/" }: { domu?: string }) {
           vysledek: druh === "cteni" ? beh.vysledek : null,
           zprava: [t("Provádění dokončeno bez chyb.", "Execution finished without errors."), vysledekText].concat(naRadku),
           chyba: false,
-          poznamka: druh === "cteni" && posledni ? poznamkaKRazeni(posledni.text, beh.vysledek) : undefined,
+          poznamka:
+            druh === "cteni" && posledni
+              ? poznamkaKRazeni(posledni.text, beh.vysledek)
+              : druh === "data" && posledni
+                ? poznamkaKNicNezmenil(posledni.text, beh.zmenenoRadku)
+                : undefined,
         });
         status(t("Provádění dokončeno bez chyb.", "Execution finished without errors."));
 

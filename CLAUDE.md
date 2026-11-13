@@ -667,6 +667,26 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
   materiály v bance („Kurz SQL v prohlížeči“, „Plán hodin – Kurz SQL“) a meta popisy webu.
 - Skloňuj „v DBLABu“, „z DBLABu“. Kde je potřeba říct, co to je, piš „DBLAB (kurz SQL)“.
 
+### DBLAB: opravy po testu na ostrém webu (13. 11. 2026)
+- Test žákem v Karlově Chromu (lekce 1–22, písemka A, Přehled, angličtina), Karel: „oprav všechno, i rady 7–11“.
+  Texty úloh, id a kód SQLKURZ1- se nezměnily (režim údržby).
+- Úprava buňky v Prohlížet data: `useEffect` v `Mrizka.tsx` označoval hodnotu po každé klávese („690“ → „0“),
+  teď jen při začátku úpravy. `.dbb { color-scheme: light }` v globals.css – v tmavém motivu webu byla pole
+  bez vlastního pozadí (filtr, název tabulky) tmavá s tmavým textem.
+- Nové české hlášky v `chyby.ts`: počet hodnot ve VALUES (desetinná čárka 0,05), DELETE/UPDATE proti cizímu
+  klíči (lekce 13: příklad z výkladu i `DELETE FROM knihy;` narazí na výpůjčky – `ODKAZUJE`), foreign key
+  mismatch, pořadí WHERE/GROUP BY/ORDER BY a druhé WHERE (`radaKPoradi`), nejednoznačný sloupec s tabulkou
+  z dotazu. Rady u výsledku v `diffMessage`: `radaKeStavbe` (GROUP BY, ON), `radaKTextum` (háčky a čárky,
+  LIKE bez %, formát data a času, velká písmena), UPDATE bez WHERE, „Tvůj dotaz vrátil“ místo „Vrátil jsi“.
+  UPDATE/DELETE s WHERE, který nic nezměnil, má poznámku (`poznamkaKNicNezmenil`).
+- Výsledek opsaný bez FROM (`SELECT 10;`, `SELECT 'Radek Vondra';`) úkol nesplní (`opisujeVysledek`, i ve
+  webovém kurzu). Přehled třídy hlásí useknuté kódy se jménem ze zprávy (`nenacteneKody`).
+- Texty: detektivka „V pátek 16. 10. 2026“ (byl čtvrtek), nápovědy lekcí 2 a 11 v programu ukazují na panel
+  Schéma DB (`napovedaProProgram` v kurz.ts, web beze změny), popis na /sql (devět lekcí navíc, bez tlačítka
+  Zkontrolovat), v písemce bez položek knihovny v Nápovědě a bez věty „hodí se na písemku“.
+- Zůstává: písemka A má stejné úlohy jako lekce 21, kde jsou nápověda i řešení (druhá karta) – věc zadání,
+  ne kódu. Testy `src/lib/dbb/test1311.test.ts`.
+
 ### Přetahování v hodině 2 ALGOLABu ve Firefoxu (11. 11. 2026)
 - Karel nemá Firefox, ověřeno zkušebními sestaveními z Playwrightu: Firefox 111 (playwright-core 1.32.3) a Firefox
   159. V obou se karta přesune, špatná dostane hlášku, klávesnice i klik fungují. Firefox po přesunu neposílá

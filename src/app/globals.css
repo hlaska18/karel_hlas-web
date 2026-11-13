@@ -1745,6 +1745,10 @@
   --dbb-vyber: 204 232 255;
   --dbb-hover: 229 243 255;
 
+  /* Program je vždy světlý. Tmavý motiv webu dává stránce color-scheme: dark
+     a pole bez vlastního pozadí (filtr v mřížce, název tabulky v dialogu)
+     pak byla tmavá s tmavým textem. */
+  color-scheme: light;
   color: rgb(var(--dbb-text));
   background-color: rgb(var(--dbb-okno));
   font-family: "Segoe UI Variable Text", "Segoe UI", ui-sans-serif, system-ui, sans-serif;

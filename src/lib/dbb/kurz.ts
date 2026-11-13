@@ -93,11 +93,21 @@ export function hlavniTabulka(sql: string): string | undefined {
   return m ? m[1] : undefined;
 }
 
+/**
+ * Nápovědy lekcí 2 a 11 posílají do „přehledu tabulek“ webového kurzu.
+ * V programu je ten přehled panel Schéma DB vpravo (test 13. 11. 2026).
+ */
+function napovedaProProgram(hint: string): string {
+  return hint
+    .replace(/v přehledu tabulek pod úkolem/g, "v panelu Schéma DB vpravo")
+    .replace(/v přehledu tabulek/g, "v panelu Schéma DB vpravo");
+}
+
 function zKurzu(t: SqlTask, klic: string, navic: boolean): UkolKurzu {
   return {
     klic,
     zadani: t.zadani,
-    hint: t.hint,
+    hint: napovedaProProgram(t.hint),
     reseni: t.reference,
     reseniJeSql: true,
     navic: navic || undefined,

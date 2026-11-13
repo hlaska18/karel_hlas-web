@@ -9,7 +9,7 @@
  * naopak pracují s tím, co si žák sám vytvořil, tak se kontrolují naživo.
  */
 
-import { SCHEMA, diffMessage, sameResult } from "@/lib/sqlExercise";
+import { SCHEMA, diffMessage, opisujeVysledek, radaOpisujeVysledek, sameResult } from "@/lib/sqlExercise";
 import type { SqlDb, SqlResult } from "@/lib/sqljs";
 import { KNIHOVNA } from "@/lib/dbb/soubory";
 import { jeAnglicky, t } from "@/lib/dbb/jazyk";
@@ -103,6 +103,7 @@ export function vyhodnotDotaz(ukol: UkolKurzu, beh: SpusteniKontroly, p: Prostre
     }
   }
   if (sameResult(mine, ref, ordered)) {
+    if (opisujeVysledek(beh.text, k.reference)) return { ok: false, proc: radaOpisujeVysledek(jeAnglicky()) };
     // Stejné řádky, ale jiný počet sloupců (SELECT * místo dvou sloupců)
     // sameResult odhalí sám – porovnává celé řádky.
     return { ok: true };

@@ -231,14 +231,19 @@ export function NabidkaOkna({
       nazev: t("Nápověda", "Help"),
       polozky: [
         { text: t("Moje výsledky…", "My Results…"), akce: () => api.otevritDialog({ druh: "vysledky" }) },
-        {
-          text: t("Stáhnout knihovna.db do počítače", "Download knihovna.db to This Computer"),
-          akce: () => {
-            const s = api.disk[KNIHOVNA];
-            if (s) stahni(KNIHOVNA, s.bajty);
-          },
-        },
-        { text: t("Obnovit původní knihovna.db…", "Restore Original knihovna.db…"), akce: obnovitKnihovnu },
+        // V písemce se s knihovnou nepracuje – položky by jen mátly.
+        ...(pisemka()
+          ? []
+          : [
+              {
+                text: t("Stáhnout knihovna.db do počítače", "Download knihovna.db to This Computer"),
+                akce: () => {
+                  const s = api.disk[KNIHOVNA];
+                  if (s) stahni(KNIHOVNA, s.bajty);
+                },
+              },
+              { text: t("Obnovit původní knihovna.db…", "Restore Original knihovna.db…"), akce: obnovitKnihovnu },
+            ]),
         "-",
         { text: t("O kurzu a pro učitele…", "About the Course / For Teachers…"), akce: () => api.otevritDialog({ druh: "okurzu" }) },
         { text: t("Přehled třídy (pro učitele)…", "Class Overview (for Teachers)…"), akce: () => api.otevritDialog({ druh: "prehled" }) },

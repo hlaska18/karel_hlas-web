@@ -391,7 +391,10 @@ export function PanelKurzu() {
           </div>
         )}
 
-        <p className="mt-2 text-[13px] leading-relaxed">{sazba(lekce.teach, JAZYK)}</p>
+        {/* V písemce věta „Varianta B … se hodí na písemku“ z úvodu procvičování nepatří. */}
+        <p className="mt-2 text-[13px] leading-relaxed">
+          {sazba(PISEMKA ? lekce.teach.replace(/\s*(Varianta|Variant) B \([^)]*\)[^.]*\.\s*$/, "") : lekce.teach, JAZYK)}
+        </p>
         {lekce.example && <Kod sql={lekce.example} />}
 
         {lekce.id === 1 && (

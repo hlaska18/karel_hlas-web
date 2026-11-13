@@ -16,7 +16,7 @@ import {
   RotateCcw,
   Sparkles,
 } from "lucide-react";
-import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, radky, sameResult, sqlErrorCs } from "@/lib/sqlExercise";
+import { SCHEMA, SCHEMA_INFO, LESSONS, diffMessage, opisujeVysledek, radaOpisujeVysledek, radky, sameResult, sqlErrorCs } from "@/lib/sqlExercise";
 import { createDb, forkDb, type SqlDb, type SqlResult } from "@/lib/sqljs";
 import { sazba } from "@/lib/sazba";
 import { ulozDoProhlizece } from "@/lib/ulozeni";
@@ -225,7 +225,10 @@ export function SqlPlayground() {
       // databází – bez téhle věty se tabulka mezi dvěma kliknutími záhadně mění.
       setChanged(task.check ? "Stav tabulky po tvém příkazu (kontrola běží nad čistou databází):" : "");
       const ordered = /order\s+by/i.test(task.reference);
-      if (sameResult(mine, ref, ordered)) {
+      if (!task.check && sameResult(mine, ref, ordered) && opisujeVysledek(sql, task.reference)) {
+        setStatus("wrong");
+        setWhy(radaOpisujeVysledek());
+      } else if (sameResult(mine, ref, ordered)) {
         setStatus("correct");
         setWhy("");
         addTo(bonus ? BONUS_KEY : STORAGE_KEY, bonus ? setDoneBonus : setDone, lesson.id);
