@@ -22,13 +22,14 @@ import {
   dnes,
   jmenoPlatne,
   najdiKodySimulatoru,
+  nenacteneKodySimulatoru,
   sloucitSimulatory,
   textKopieSimulatoru,
   zakodujSimulator,
   type PostupSimulatoru,
   type Simulator,
 } from "@/lib/postupSimulatoru";
-import { najdiKody, sloucitPostupy } from "@/lib/dbb/kodPostupu";
+import { najdiKody, nenacteneKody, sloucitPostupy } from "@/lib/dbb/kodPostupu";
 import { bezVzorce } from "@/lib/dbb/csv";
 import { stahni } from "@/lib/dbb/stahni";
 import { UKOLY as UKOLY_WIN } from "@/lib/win/ukoly";
@@ -338,6 +339,8 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
   // Kurz SQL: stačí shrnutí. Podrobný přehled (lekce, šedé, písemky) je
   // v programu na /sql, Nápověda → Přehled třídy.
   const sql = sloucitPostupy(najdiKody(text));
+  // Useknuté a upravené kódy se dřív tiše vynechaly (13. 11. 2026).
+  const vadne = nenacteneKodySimulatoru(text).concat(nenacteneKody(text));
   const pocet = (hotove: number[], od: number, po: number) => hotove.filter((id) => id >= od && id <= po).length;
   const bunka = `border-b px-2 py-1 ${vzhled.linka}`;
 
@@ -468,6 +471,15 @@ export function PrehledTridySimulatoru({ zavri, vzhled }: { zavri: () => void; v
         placeholder="WIN1-…  MAC1-…  WSIT1-…  SQLKURZ1-…"
         className={`mt-2 h-[90px] w-full resize-none rounded-[4px] p-2 font-mono text-[11px] ${vzhled.pole}`}
       />
+      {vadne.length > 0 && (
+        <p role="alert" className="mt-2 rounded-[4px] border border-[#e3b341] bg-[#fff8e1] px-2 py-1.5 leading-snug text-[#5c4400]">
+          {vadne.length === 1
+            ? "Jeden kód se nepodařilo načíst – je useknutý nebo upravený"
+            : `Některé kódy (${vadne.length}) se nepodařilo načíst – jsou useknuté nebo upravené`}
+          , takže v přehledu chybí: {vadne.map((j) => j || "(jméno ve zprávě není)").join(", ")}. Ať žák kód zkopíruje znovu
+          a pošle ho celý.
+        </p>
+      )}
       {!simulatory.length && !sql.length ? (
         <p className={`mt-3 ${vzhled.slaby}`}>Zatím žádný kód.</p>
       ) : (

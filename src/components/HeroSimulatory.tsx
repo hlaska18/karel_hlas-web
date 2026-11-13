@@ -7,10 +7,11 @@ import { SITE } from "@/lib/content";
 import { ZnakWindows } from "@/components/ZnakWindows";
 import { ZnakJablko } from "@/components/ZnakJablko";
 import { ZnakDilna } from "@/components/ZnakDilna";
+import { Database } from "lucide-react";
 import type { Lang } from "@/lib/content";
 
 /**
- * Tlačítka na oba simulátory a Síťovou dílnu v pravém sloupci úvodu – nahradila
+ * Tlačítka na oba simulátory, NETLAB a DBLAB v pravém sloupci úvodu – nahradila
  * ukázku materiálů (tři náhodné soubory z banky).
  *
  * Vzhled drží stoh článků pod nimi: stejná skleněná karta, čtverec se
@@ -23,7 +24,7 @@ import type { Lang } from "@/lib/content";
  * se do simulátorů vstupuje jménem, bez kódu.
  */
 
-export type PoctyUloh = { windows: number; macos: number; dilna: number };
+export type PoctyUloh = { windows: number; macos: number; dilna: number; dblab: number };
 
 /** Anglicky „tasks“, ne „exercises“ jako na dlaždici – kratší řádek
  *  se v kartě široké 22 rem neořízne. */
@@ -37,6 +38,13 @@ function pocetUloh(n: number, lang: Lang): string {
 function pocetZakazek(n: number, lang: Lang): string {
   if (lang === "en") return `${n} ${n === 1 ? "job" : "jobs"}`;
   const slovo = n === 1 ? "zakázka" : n >= 2 && n <= 4 ? "zakázky" : "zakázek";
+  return `${n} ${slovo}`;
+}
+
+/** DBLAB má lekce: všech 22 i s detektivkou a procvičováním, jako píše /sql (bez písemek). */
+function pocetLekci(n: number, lang: Lang): string {
+  if (lang === "en") return `${n} ${n === 1 ? "lesson" : "lessons"}`;
+  const slovo = n >= 1 && n <= 4 ? "lekce" : "lekcí";
   return `${n} ${slovo}`;
 }
 
@@ -76,6 +84,15 @@ export function HeroSimulatory({ ulohy }: { ulohy: PoctyUloh }) {
       /* Dílna má vlastní zadání: tlačítko Úkoly ani Moje výsledky v ní nejsou. */
       zadani: tr.hero.zadatTextDilna,
       znak: <ZnakDilna className="h-6 w-6" />,
+    },
+    {
+      /* `?z=en` přepne DBLAB do angličtiny a odkaz vede zpět na /en. */
+      href: lang === "en" ? "/sql?z=en" : "/sql",
+      nazev: tr.hero.simDblab,
+      pocet: pocetLekci(ulohy.dblab, lang),
+      poznamka: tr.hero.simNoteDblab,
+      zadani: tr.hero.zadatTextDblab,
+      znak: <Database className="h-6 w-6" aria-hidden />,
     },
   ];
 

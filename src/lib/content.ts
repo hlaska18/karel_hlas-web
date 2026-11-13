@@ -78,7 +78,7 @@ export type Clanek = {
 };
 
 /**
- * Rubrika je KOLOTOČ, ne archiv – ukazují se jen čtyři nejnovější (viz
+ * Rubrika je KOLOTOČ, ne archiv – ukazují se jen tři nejnovější (viz
  * `KOLIK_CLANKU` v `Ctenie.tsx`) a ranní rutina sem nové přidává NAHORU
  * a stejný počet nejstarších maže.
  *
@@ -110,13 +110,6 @@ export const CLANKY: Clanek[] = [
       en: "report behind a business sign-up form",
     },
     logo: { src: "/images/clanky/googlecloud.png", pomer: 1.243 },
-    jazyk: "en",
-  },
-  {
-    title: "Everything We Announced at Meta Connect 2026",
-    source: "Meta",
-    url: "https://www.meta.com/blog/meta-connect-2026-everything-we-announced/",
-    logo: { src: "/images/clanky/meta.png", pomer: 1.506 },
     jazyk: "en",
   },
 ];
@@ -1137,8 +1130,11 @@ type Dict = {
     simWindows: string;
     simMacos: string;
     simDilna: string;
+    simDblab: string;
     /** Řádek pod názvem simulátoru nebo labu. `{tasks}` je počet úloh i se slovem. Přihlášení kódem postupu: Windows a macOS od 7. 11. 2026, NETLAB od 11. 11. 2026. */
     simNoteKod: string;
+    /** DBLAB je v angličtině anglicky (`?z=en`), proto vlastní řádek místo „in Czech“. */
+    simNoteDblab: string;
     /** Štítek vpravo na tlačítku simulátoru. */
     simOpen: string;
     /**
@@ -1153,6 +1149,8 @@ type Dict = {
     zadatText: string;
     /** Totéž pro Síťovou dílnu: nemá tlačítko Úkoly ani Moje výsledky. */
     zadatTextDilna: string;
+    /** Totéž pro DBLAB: lekce a Moje výsledky jsou v panelu Kurz SQL. */
+    zadatTextDblab: string;
     zadatCopy: string;
     zadatCopied: string;
     /**
@@ -1408,19 +1406,23 @@ export const t: Record<Lang, Dict> = {
       simWindows: "Virtuální Windows 11",
       simMacos: "Virtuální macOS",
       simDilna: "NETLAB",
+      simDblab: "DBLAB (kurz SQL)",
       simNoteKod: "{tasks} · jménem či kódem",
+      simNoteDblab: "{tasks} · jménem či kódem",
       simOpen: "Spustit",
       zadatTitle: "Jak zadat simulátor nebo lab žákům",
       zadatKroky: [
         "Zkopíruj hotové zadání níž a vlož ho do Teams nebo Classroomu. Adresa je v něm na samostatném řádku, aby se neslepila s textem.",
-        "Žáci pracují na počítači s myší (na telefonu to nejde). Přihlásí se jménem a příjmením, nic se jim nezakládá. V simulátoru jsou úlohy v tlačítku Úkoly vpravo dole, v NETLABu zakázky v levém panelu. Odškrtávají se samy.",
-        "Na konci hodiny ti žák pošle kód postupu jako odpověď. V simulátoru ho najde v panelu Úkoly pod Moje výsledky, v NETLABu pod tlačítkem Kód postupu nahoře. Práce se ukládá jen v prohlížeči. Na jiném počítači může pokračovat, když se místo jménem přihlásí kódem postupu.",
-        "Kódy vlož do Přehledu třídy. V simulátoru je v panelu Úkoly, v NETLABu dole v levém panelu (Pro učitele: Přehled třídy). Stačí celé zprávy, kódy se v nich najdou samy. Přehled stáhneš do Excelu.",
+        "Žáci pracují na počítači s myší (na telefonu to nejde). Přihlásí se jménem a příjmením, nic se jim nezakládá. Ve Windows a na Macu jsou úlohy v tlačítku Úkoly vpravo dole, v NETLABu zakázky v levém panelu, v DBLABu lekce v panelu Kurz SQL. Odškrtávají se samy.",
+        "Na konci hodiny ti žák pošle kód postupu jako odpověď. Ve Windows a na Macu ho najde v panelu Úkoly pod Moje výsledky, v NETLABu pod tlačítkem Kód postupu nahoře, v DBLABu pod Moje výsledky v panelu Kurz SQL. Práce se ukládá jen v prohlížeči. Na jiném počítači může pokračovat, když se místo jménem přihlásí kódem postupu.",
+        "Kódy vlož do Přehledu třídy. Ve Windows a na Macu je v panelu Úkoly, v NETLABu dole v levém panelu (Pro učitele: Přehled třídy), v DBLABu v nabídce Nápověda. Stačí celé zprávy, kódy se v nich najdou samy. Přehled stáhneš do Excelu.",
       ],
       zadatText:
         "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Vpravo dole klikni na Úkoly a plň úlohy – odškrtávají se samy.\n3. Na konci klikni v panelu Úkoly na Moje výsledky, zkopíruj kód postupu a pošli mi ho jako odpověď.\n",
       zadatTextDilna:
         "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Vlevo vyber zakázku a plň ji – hotové se odškrtávají samy.\n3. Na konci klikni nahoře na Kód postupu, zkopíruj ho a pošli mi ho jako odpověď.\n",
+      zadatTextDblab:
+        "Úkol: {nazev}\n\nOtevři na počítači (ne v telefonu) tuto adresu:\n\n{url}\n\n1. Přihlas se svým jménem a příjmením.\n2. Plň lekce v panelu Kurz SQL – splněné úkoly se odškrtávají samy.\n3. Na konci klikni v panelu Kurz SQL na Moje výsledky, zkopíruj kód postupu a pošli mi ho jako odpověď.\n",
       zadatCopy: "Zkopírovat zadání",
       zadatCopied: "Zkopírováno",
       novinkyTitle: "Co je nového v simulátorech a labech",
@@ -2230,19 +2232,23 @@ export const t: Record<Lang, Dict> = {
       simWindows: "Virtual Windows 11",
       simMacos: "Virtual macOS",
       simDilna: "NETLAB",
+      simDblab: "DBLAB (SQL course)",
       simNoteKod: "{tasks} in Czech",
+      simNoteDblab: "{tasks} in English",
       simOpen: "Open",
       zadatTitle: "How to assign a simulator or lab",
       zadatKroky: [
         "Copy the ready-made assignment below and paste it into Teams or Classroom. The link sits on its own line so it does not merge with the text.",
-        "Students work on a computer with a mouse (it does not run on phones). They sign in with their full name; no account is created. In a simulator, tasks are under the Úkoly (Tasks) button bottom right; in NETLAB, jobs are in the left panel. They tick themselves off.",
-        "At the end of the lesson the student sends you the progress code as a reply. In a simulator it is under Moje výsledky (My results) in the task panel; in NETLAB under the Kód postupu (Progress code) button at the top. Work is saved only in the browser. On another computer, students can continue by signing in with their progress code instead of their name.",
-        "Paste the codes into Pro učitele: Přehled třídy (class overview). In a simulator it is in the task panel; in NETLAB at the bottom of the left panel. Whole messages are fine; the codes are found automatically. You can download the overview for Excel.",
+        "Students work on a computer with a mouse (it does not run on phones). They sign in with their full name; no account is created. In Windows and macOS, tasks are under the Úkoly (Tasks) button bottom right; in NETLAB, jobs are in the left panel; in DBLAB, lessons are in the SQL Course panel. They tick themselves off.",
+        "At the end of the lesson the student sends you the progress code as a reply. In Windows and macOS it is under Moje výsledky (My results) in the task panel; in NETLAB under the Kód postupu (Progress code) button at the top; in DBLAB under My Results in the SQL Course panel. Work is saved only in the browser. On another computer, students can continue by signing in with their progress code instead of their name.",
+        "Paste the codes into Pro učitele: Přehled třídy (class overview). In Windows and macOS it is in the task panel; in NETLAB at the bottom of the left panel; in DBLAB in the Help menu. Whole messages are fine; the codes are found automatically. You can download the overview for Excel.",
       ],
       zadatText:
         "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Click Úkoly (Tasks) bottom right and work through the tasks – they tick themselves off.\n3. At the end click Moje výsledky (My results) in the task panel, copy the progress code and send it to me as a reply.\n\n(The simulator is in Czech.)\n",
       zadatTextDilna:
         "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Pick a job on the left (Zakázky) and work through it – finished jobs tick themselves off.\n3. At the end click Kód postupu (Progress code) at the top, copy the code and send it to me as a reply.\n\n(NETLAB is in Czech.)\n",
+      zadatTextDblab:
+        "Task: {nazev}\n\nOpen this address on a computer (not a phone):\n\n{url}\n\n1. Sign in with your full name.\n2. Work through the lessons in the SQL Course panel – completed tasks tick themselves off.\n3. At the end click My Results in the SQL Course panel, copy the progress code and send it to me as a reply.\n",
       zadatCopy: "Copy the assignment",
       zadatCopied: "Copied",
       novinkyTitle: "New in simulators and labs",

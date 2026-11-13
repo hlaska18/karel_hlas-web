@@ -42,8 +42,9 @@ const SIRKA_LOGA = 28;
  * zároveň zkracuje. Kdyby rutina jednou selhala nebo Karel přidal článek
  * ručně, seznam by se natáhl a sekce by přerostla sloupec vedle nadpisu.
  * Takhle je nejhorší možný následek pár řádků navíc v souboru, ne rozbitý web.
+ * Od 13. 11. 2026 tři, ne čtyři: nad články přibyla karta DBLABu (Karel).
  */
-const KOLIK_CLANKU = 4;
+const KOLIK_CLANKU = 3;
 
 /** Natočení karet – volnější obdoba stohu výš, ať nevznikne pravidelný vzor. */
 const NATOCENI = [

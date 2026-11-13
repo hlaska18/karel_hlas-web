@@ -26,7 +26,7 @@ import {
   type SkoreSady,
 } from "@/lib/dbb/kodPostupu";
 import { pisemka, LEKCE_PISEMKY, type Varianta } from "@/lib/dbb/pisemka";
-import { NAZEV_SIMULATORU, najdiKodySimulatoru, sloucitSimulatory } from "@/lib/postupSimulatoru";
+import { NAZEV_SIMULATORU, najdiKodySimulatoru, nenacteneKodySimulatoru, sloucitSimulatory } from "@/lib/postupSimulatoru";
 import { POVINNE_KLICE, KLIC_NAZVY_ULOH } from "@/lib/dbb/obnovaPostupu";
 import { stahni } from "@/lib/dbb/stahni";
 import { bezVzorce } from "@/lib/dbb/csv";
@@ -342,7 +342,7 @@ export function PrehledTridy({ zavrit }: { zavrit: () => void }) {
   // Kódy z Windows a macOS (WIN1-, MAC1-) – učitel často vloží celé vlákno
   // z Teams, kde jsou všechny tři simulátory pohromadě.
   const simulatory = sloucitSimulatory(najdiKodySimulatoru(text));
-  const vadne = nenacteneKody(text);
+  const vadne = nenacteneKody(text).concat(nenacteneKodySimulatoru(text));
   const souhrn = souhrnTridy(zaci, KURZ.map((l) => l.id));
   const zacit = kdeZacit(souhrn, zaci.length);
   const bezLekce = (id: number) => zaci.filter((z) => z.hotove.indexOf(id) === -1).map((z) => z.jmeno || "?");

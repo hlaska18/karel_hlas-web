@@ -43,6 +43,17 @@ describe("příkazový řádek", () => {
     expect(nahoru.cesta).toEqual(["C:", "Users", "Zak"]);
   });
 
+  it("cd.. a cd\\ bez mezery fungují jako ve skutečném cmd i PowerShellu (13. 11. 2026)", () => {
+    const k = ctx();
+    const nahoru = spust("cd..", k, "cmd");
+    expect(nahoru.cesta).toEqual(["C:", "Users"]);
+    expect(nahoru.stopy).toContain("prikaz:cd");
+    expect(spust("CD..", k, "powershell").cesta).toEqual(["C:", "Users"]);
+    expect(spust("cd\\", k, "cmd").cesta).toEqual(["C:"]);
+    // Jiné slepené příkazy cmd dál nezná.
+    expect(vypis(spust("cdDocuments", k, "cmd").vystup)).toContain("není názvem");
+  });
+
   it("cd na neexistující cestu hlásí chybu a nikam nepřejde", () => {
     const v = spust("cd Neexistuje", ctx(), "cmd");
     expect(v.cesta).toBeUndefined();

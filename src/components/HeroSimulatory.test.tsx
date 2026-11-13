@@ -15,19 +15,45 @@ import { t, type Lang } from "@/lib/content";
  * Právě ručně psané „34 úloh" se jednou rozjelo se skutečností.
  */
 
-function vykresli(lang: Lang, windows: number, macos: number, dilna = 20) {
+function vykresli(lang: Lang, windows: number, macos: number, dilna = 20, dblab = 22) {
   return render(
     <LanguageProvider lang={lang} tr={t[lang]}>
-      <HeroSimulatory ulohy={{ windows, macos, dilna }} />
+      <HeroSimulatory ulohy={{ windows, macos, dilna, dblab }} />
     </LanguageProvider>,
   );
 }
 
 describe("HeroSimulatory", () => {
-  it("vede na oba simulátory a pod nimi do dílny", () => {
+  it("vede na oba simulátory, pod nimi do NETLABu a DBLABu", () => {
     vykresli("cs", 33, 14);
     const odkazy = screen.getAllByRole("link").map((a) => a.getAttribute("href"));
-    expect(odkazy).toEqual(["/windows", "/macos", "/sitova-dilna"]);
+    expect(odkazy).toEqual(["/windows", "/macos", "/sitova-dilna", "/sql"]);
+  });
+
+  it("DBLAB ukáže předaný počet lekcí, anglicky je anglicky a vede na ?z=en", () => {
+    vykresli("cs", 33, 14, 20, 22);
+    expect(screen.getAllByRole("link")[3].textContent).toContain("DBLAB (kurz SQL)22 lekcí · jménem či kódem");
+    cleanup();
+    vykresli("cs", 33, 14, 20, 3);
+    expect(screen.getAllByRole("link")[3].textContent).toContain("3 lekce");
+    cleanup();
+    vykresli("en", 33, 14, 20, 22);
+    const dblab = screen.getAllByRole("link")[3];
+    expect(dblab.getAttribute("href")).toBe("/sql?z=en");
+    expect(dblab.textContent).toContain("22 lessons in English");
+  });
+
+  it("DBLAB má vlastní zadání s panelem Kurz SQL", async () => {
+    const zapis = vi.fn().mockResolvedValue(undefined);
+    Object.assign(navigator, { clipboard: { writeText: zapis } });
+    vykresli("cs", 33, 14);
+    fireEvent.click(screen.getByRole("button", { name: /Zkopírovat zadání – DBLAB/ }));
+    await waitFor(() => expect(zapis).toHaveBeenCalled());
+    const text: string = zapis.mock.calls[0][0];
+    expect(text).toMatch(/\n\nhttps:\/\/karelhlas\.vercel\.app\/sql\n\n/);
+    expect(text).toContain("Kurz SQL");
+    expect(text).toContain("Moje výsledky");
+    expect(text).not.toMatch(/Úkoly/);
   });
 
   it("dílna ukáže předaný počet zakázek a z angličtiny vede zpět na /en", () => {
@@ -44,7 +70,7 @@ describe("HeroSimulatory", () => {
     const zapis = vi.fn().mockResolvedValue(undefined);
     Object.assign(navigator, { clipboard: { writeText: zapis } });
     vykresli("cs", 33, 14);
-    expect(screen.getAllByRole("button", { name: /Zkopírovat zadání/ })).toHaveLength(3);
+    expect(screen.getAllByRole("button", { name: /Zkopírovat zadání/ })).toHaveLength(4);
     fireEvent.click(screen.getByRole("button", { name: /Zkopírovat zadání – NETLAB/ }));
     await waitFor(() => expect(zapis).toHaveBeenCalled());
     const text: string = zapis.mock.calls[0][0];

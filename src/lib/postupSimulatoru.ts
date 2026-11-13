@@ -141,6 +141,33 @@ export function najdiKodySimulatoru(text: string): PostupSimulatoru[] {
 }
 
 /**
+ * Kódy WIN1-, MAC1- a WSIT1-, které se nedají načíst (useknuté v Teams nebo
+ * upravené). Přehled třídy je dřív tiše vynechal a žák v tabulce prostě chyběl
+ * (test na ostrém webu 13. 11. 2026). Vrací jméno ze zprávy („Jméno · Windows
+ * 7/33 · WIN1-…“), aby učitel věděl, kdo má poslat kód znovu; bez jména prázdný
+ * řetězec. Obdoba `nenacteneKody` v DBLABu.
+ */
+export function nenacteneKodySimulatoru(text: string): string[] {
+  const jmena: string[] = [];
+  const videno: Record<string, boolean> = {};
+  const re = /(?:WSIT1|WIN1|MAC1)-[A-Za-z0-9_-]+/g;
+  let m: RegExpExecArray | null;
+  while ((m = re.exec(text))) {
+    if (videno[m[0]] || dekodujSimulator(m[0])) continue;
+    videno[m[0]] = true;
+    const radky = text.slice(0, m.index).split(/\r?\n/);
+    let pred = radky[radky.length - 1];
+    // Kód na vlastním řádku – jméno je na předchozím neprázdném.
+    if (!pred.trim()) {
+      for (let i = radky.length - 2; i >= 0 && !pred.trim(); i--) pred = radky[i];
+    }
+    const casti = pred.split("·");
+    jmena.push(casti.length > 1 ? casti[0].trim().slice(0, 80) : "");
+  }
+  return jmena;
+}
+
+/**
  * Síťové úlohy byly od 1. do 3. 11. 2026 v běžném seznamu Windows, takže je
  * z té doby nese i kód WIN1- (a kdo je má uložené, nese je dál). Přehled je
  * ukáže stejně jako z kódu WSIT1-, „x/33“ zůstává čisté.
@@ -215,8 +242,18 @@ export function splnenychUloh(n: number): string {
   return `${n} splněných úloh`;
 }
 
+/**
+ * Kódy z labů, které simulátory neumí načíst. Bez nich by se kód DBLABu nebo
+ * ALGOLABu přihlásil jako jméno „SQLKURZ1-…“ (test na ostrém webu 13. 11. 2026).
+ */
+const CIZI_KODY: [RegExp, string][] = [
+  [/SQLKURZ1-/, "z DBLABu (kurz SQL)"],
+  [/ALGZ?1-/, "z ALGOLABu"],
+];
+
 /** Napsal žák na přihlašovací obrazovce místo jména kód postupu? */
-export const vypadaJakoKod = (text: string) => /(?:WSIT1|WIN1|MAC1)-/.test(text);
+export const vypadaJakoKod = (text: string) =>
+  /(?:WSIT1|WIN1|MAC1)-/.test(text) || CIZI_KODY.some(([vzor]) => vzor.test(text));
 
 export type KodPriPrihlaseni = { ok: true; jmeno: string; splneno: string[] } | { ok: false; hlaska: string };
 
@@ -235,7 +272,13 @@ export type KodPriPrihlaseni = { ok: true; jmeno: string; splneno: string[] } | 
 export function kodPriPrihlaseni(text: string, simulator: Simulator, patri: (id: string) => boolean): KodPriPrihlaseni | null {
   if (!vypadaJakoKod(text)) return null;
   const p = najdiKodySimulatoru(text)[0];
-  if (!p) return { ok: false, hlaska: "Tohle není celý kód postupu. Vlož ho celý, jak jsi ho zkopíroval(a)." };
+  if (!p) {
+    const cizi = CIZI_KODY.find(([vzor]) => vzor.test(text));
+    if (cizi && !/(?:WSIT1|WIN1|MAC1)-/.test(text)) {
+      return { ok: false, hlaska: `Tohle je kód postupu ${cizi[1]}, tady je ${NAZEV_SIMULATORU[simulator]}. Přihlas se jménem.` };
+    }
+    return { ok: false, hlaska: "Tohle není celý kód postupu. Vlož ho celý, jak jsi ho zkopíroval(a)." };
+  }
   const zeSite = simulator === "sit" && p.simulator === "windows" && p.splneno.some(patri);
   if (p.simulator !== simulator && !zeSite) {
     return { ok: false, hlaska: `Tohle je kód postupu pro ${NAZEV_SIMULATORU[p.simulator]}, tady je ${NAZEV_SIMULATORU[simulator]}.` };

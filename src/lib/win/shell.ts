@@ -417,6 +417,11 @@ export function vyzva(rezim: Rezim, cesta: string[]): string {
 export function spust(radek: string, ctx: Kontext, rezim: Rezim): Vysledek {
   const kusy = rozdel(radek.trim());
   if (kusy.length === 0) return { vystup: [] };
+  // „cd..“ a „cd\“ bez mezery: cmd ukončí název příkazu cd i tečkou nebo
+  // lomítkem a PowerShell má pro „cd..“ a „cd\“ vlastní funkce. Žáci to tak
+  // píšou běžně a simulace to dřív odmítla (test na ostrém webu 13. 11. 2026).
+  const spojene = /^(cd|chdir)([.\\/].*)$/i.exec(kusy[0]);
+  if (spojene) kusy.splice(0, 1, spojene[1], spojene[2]);
   const prikaz = kusy[0].toLowerCase();
   const argumenty = kusy.slice(1);
 

@@ -687,6 +687,23 @@ blokuje. Bonus pro rychlíky, uvedeno v plánu hodiny 6.
 - Zůstává: písemka A má stejné úlohy jako lekce 21, kde jsou nápověda i řešení (druhá karta) – věc zadání,
   ne kódu. Testy `src/lib/dbb/test1311.test.ts`.
 
+### Test Windows a macOS na ostrém webu, DBLAB v úvodu (13. 11. 2026)
+- Karel povolil opravy ve Windows (body 1–4 z testu). Úlohy, jejich texty, id ani formát kódů se nezměnily.
+- Přihlášení ve Windows, na Macu a v NETLABu pozná kódy SQLKURZ1-, ALG1- a ALGZ1- (`CIZI_KODY` v postupSimulatoru.ts)
+  a odmítne je („Tohle je kód postupu z DBLABu (kurz SQL), tady je Windows. Přihlas se jménem.“). Dřív se přihlásily
+  jako jméno.
+- Přehled třídy simulátorů (sdílený `VysledkySimulatoru.tsx`) i DBLABu hlásí useknuté kódy WIN1-/MAC1-/WSIT1-
+  (`nenacteneKodySimulatoru`), Přehled simulátorů i useknuté SQLKURZ1-.
+- Příkazový řádek Windows bere `cd..` a `cd\` bez mezery (cmd i PowerShell, `spust` v win/shell.ts).
+- Místní nabídka Windows: kliknutí podnabídku („Nový“, „Zobrazit“) jen otevře. Dřív ji po najetí myší kliknutí
+  zavřelo (`KontextovaNabidka` v win/ui.tsx, test `KontextovaNabidka.test.tsx`).
+- Neopravené drobnosti z testu (Karel nerozhodl): cmd u `cd Neexistuje` píše navíc název cesty; na Macu je v nabídce
+  Soubor „Nová složka“ vždy zašedlá, po přepnutí na Terminál v Docku nejde psaní do okna, `ls -a` bez `.` a `..`,
+  `ls /Volumes` bez Macintosh HD. Ověřit na Karlově Macu: nová složka „bez názvu“ a české názvy složek ve Finderu.
+- Úvod: karta **DBLAB (kurz SQL)** pod NETLABem (`HeroSimulatory.tsx`, 22 lekcí z `VSECHNY_LEKCE`, anglicky „in English“
+  a `/sql?z=en`), vlastní zadání `zadatTextDblab`. Rubrika článků má strop **3** (`KOLIK_CLANKU`), ranní rutina
+  `rano-clanky-karel-hlas` má v zadání pořád čtyři (její úprava mi neprošla).
+
 ### Přetahování v hodině 2 ALGOLABu ve Firefoxu (11. 11. 2026)
 - Karel nemá Firefox, ověřeno zkušebními sestaveními z Playwrightu: Firefox 111 (playwright-core 1.32.3) a Firefox
   159. V obou se karta přesune, špatná dostane hlášku, klávesnice i klik fungují. Firefox po přesunu neposílá

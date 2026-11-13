@@ -3,6 +3,7 @@ import {
   dekodujSimulator,
   jmenoPlatne,
   kodPriPrihlaseni,
+  nenacteneKodySimulatoru,
   najdiKodySimulatoru,
   splnenychUloh,
   sloucitSimulatory,
@@ -122,6 +123,13 @@ describe("kód postupu místo jména při přihlášení (7. 11. 2026)", () => {
     const win = zakodujSimulator(zak({ simulator: "windows" }));
     expect(kodPriPrihlaseni(win, "macos", patri)).toMatchObject({ ok: false });
     expect(kodPriPrihlaseni("MAC1-abc", "macos", patri)).toMatchObject({ ok: false });
+    // Kódy z labů se nesmí přihlásit jako jméno (13. 11. 2026).
+    expect(kodPriPrihlaseni("SQLKURZ1-abcdef", "windows", patri)).toEqual({
+      ok: false,
+      hlaska: "Tohle je kód postupu z DBLABu (kurz SQL), tady je Windows. Přihlas se jménem.",
+    });
+    expect(kodPriPrihlaseni("ALG1-xyz", "macos", patri)).toMatchObject({ ok: false, hlaska: expect.stringContaining("z ALGOLABu") });
+    expect(kodPriPrihlaseni("ALGZ1-xyz", "sit", patri)).toMatchObject({ ok: false, hlaska: expect.stringContaining("tady je NETLAB") });
     expect(kodPriPrihlaseni(zakodujSimulator(zak({ jmeno: "Žák" })), "macos", patri)).toMatchObject({ ok: false });
   });
 
@@ -148,5 +156,19 @@ describe("kód postupu místo jména při přihlášení (7. 11. 2026)", () => {
 
   it("skloňuje počet úloh", () => {
     expect([0, 1, 3, 5].map(splnenychUloh)).toEqual(["0 splněných úloh", "1 splněná úloha", "3 splněné úlohy", "5 splněných úloh"]);
+  });
+});
+
+describe("Přehled hlásí useknuté kódy (13. 11. 2026)", () => {
+  it("najde useknutý kód a jméno ze zprávy, platný kód nehlásí", () => {
+    const p = zak({ simulator: "windows" });
+    const cely = zakodujSimulator(p);
+    const radek = textKopieSimulatoru(p, cely, 1, 33);
+    const useknuty = `Petr Malý · Windows 3/33 · ${cely.slice(0, 30)}`;
+    expect(nenacteneKodySimulatoru(radek)).toEqual([]);
+    expect(nenacteneKodySimulatoru(`${radek}\n${useknuty}`)).toEqual(["Petr Malý"]);
+    expect(nenacteneKodySimulatoru(`Odpověď: MAC1-eyJqIjoi`)).toEqual([""]);
+    // Kód na vlastním řádku pod jménem.
+    expect(nenacteneKodySimulatoru(`Jana Nová · NETLAB 2/20 ·\nWSIT1-abc`)).toEqual(["Jana Nová"]);
   });
 });

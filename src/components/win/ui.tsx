@@ -323,8 +323,11 @@ export function KontextovaNabidka({
                 // skutecnem Windows to tak je taky - a hlavne: na dotykovem
                 // displeji zadne najeti neexistuje, takze drive se k polozkam
                 // "Zobrazit" a "Novy" nedalo dostat vubec.
+                // Kliknutí podnabídku jen otevře, nezavře: najetí myší ji
+                // otevřelo dřív a přepínání ji pak kliknutím zavřelo – žák
+                // měl dojem, že „Nový“ nic nedělá (test 13. 11. 2026).
                 if (p.podnabidka) {
-                  nastavPodnabidku(otevrenaPodnabidka === p.id ? null : p.id);
+                  nastavPodnabidku(p.id);
                   return;
                 }
                 p.akce?.();
