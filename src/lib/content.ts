@@ -1561,7 +1561,7 @@ export const t: Record<Lang, Dict> = {
     },
     poradenstvi: {
       kicker: "Poradenství",
-      heading: "Pro školní poradenská pracoviště",
+      heading: "Školní poradenská pracoviště",
       intro:
         "Pro výchovné a kariérové poradce, školní psychology a metodiky prevence. U každého nástroje je napsané, co to je, jak se to používá a na co si dát pozor.",
       labelCo: "Co to je",
@@ -2421,7 +2421,7 @@ export const t: Record<Lang, Dict> = {
     },
     poradenstvi: {
       kicker: "Counselling",
-      heading: "For school counselling services",
+      heading: "School counselling services",
       intro:
         "For school counsellors, career advisers, school psychologists and prevention coordinators. Each tool says what it is, how to use it and what to watch out for.",
       labelCo: "What it is",
